@@ -19,7 +19,7 @@ namespace EMBC.ESS.Utilities.Cas
             var configuration = configurationServices.Configuration;
             var services = configurationServices.Services;
 
-            var options = configuration.GetSection("CAS").Get<CasConfiguration>();
+            var options = configuration.GetSection("CAS").Get<CasConfiguration>()!;
 
             services.Configure<CasConfiguration>(opts => configuration.GetSection("CAS").Bind(opts));
 

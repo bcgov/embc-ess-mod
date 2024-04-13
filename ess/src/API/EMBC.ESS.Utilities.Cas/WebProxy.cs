@@ -48,10 +48,10 @@ namespace EMBC.ESS.Utilities.Cas
             };
 
             var token = await httpClient.RequestClientCredentialsTokenAsync(request, ct);
-            if (token.IsError) throw token.Exception;
+            if (token.IsError || token.HttpResponse == null) throw token.Exception ?? new InvalidOperationException(token.Error);
             token.HttpResponse.EnsureSuccessStatusCode();
 
-            return token.AccessToken;
+            return token.AccessToken!;
         }
 
         private async Task<string> GetToken(CancellationToken ct) => await cache.GetOrSet("cas_token", () => CreateTokenAsync(ct), TimeSpan.FromMinutes(5), ct) ?? null!;

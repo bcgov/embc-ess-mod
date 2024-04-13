@@ -10,10 +10,6 @@ namespace EMBC.Utilities.Messaging
             Type = type;
         }
 
-        protected ClientException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-
         public string Type { get; } = string.Empty;
 
         public override string ToString()

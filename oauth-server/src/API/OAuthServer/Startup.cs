@@ -228,7 +228,7 @@ namespace OAuthServer
                             else
                             {
                                 //handle non encrypted userinfo response
-                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Json.GetRawText()) }));
+                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Json.Value.GetRawText()) }));
                             }
                         },
                         OnUserInformationReceived = async ctx =>
@@ -252,7 +252,6 @@ namespace OAuthServer
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
-            services.AddOpenTelemetry(applicationName);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

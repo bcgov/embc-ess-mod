@@ -56,7 +56,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             if (response.IsError) throw new InvalidOperationException(response.Error);
 
             logger.LogInformation("ADFS token acquired");
-            return response.AccessToken;
+            return response.AccessToken!;
         }
     }
 }
