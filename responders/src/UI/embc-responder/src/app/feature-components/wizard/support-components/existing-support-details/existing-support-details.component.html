@@ -238,7 +238,7 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="selectedSupport?.subCategory !== 'Lodging_Billeting'">
+          <div class="row" *ngIf="canCloneSupport()">
             <div class="col-md-12">
               <a (click)="extendSupport()"
                 ><img
@@ -297,7 +297,7 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="selectedSupport?.subCategory !== 'Lodging_Billeting'">
+          <div class="row" *ngIf="canCloneSupport()">
             <div class="col-md-12">
               <a (click)="extendSupport()"
                 ><img
@@ -314,7 +314,7 @@
           *ngIf="selectedSupport?.status === 'Draft'"
           class="col-md-4 link-padding"
         >
-          <div class="row" *ngIf="selectedSupport?.subCategory !== 'Lodging_Billeting'">
+          <div class="row" *ngIf="canEditSupport()">
             <div class="col-md-12">
               <a (click)="editDraft()"
                 ><img
@@ -340,7 +340,7 @@
         </div>
 
         <div
-          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && selectedSupport?.subCategory !== 'Lodging_Billeting'"
+          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && canCloneSupport()"
           class="col-md-4 link-padding"
         >
           <div class="row">

@@ -143,7 +143,7 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
-        : event.value.description;
+        : event.value.value;
     this.filterTerm = { type: filterType, value: selectedValue };
   }
 

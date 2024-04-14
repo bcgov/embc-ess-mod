@@ -88,6 +88,17 @@ export class ExistingSupportDetailsComponent implements OnInit {
       return subCategory?.description;
     }
   }
+  canCloneSupport(): boolean {
+    return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
+  }
+
+  canExtendSupport(): boolean {
+    return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
+  }
+
+  canEditSupport(): boolean {
+    return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
+  }
 
   checkGroceryMaxRate(): boolean {
     const maxRate =
