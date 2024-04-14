@@ -92,10 +92,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
     return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
   }
 
-  canExtendSupport(): boolean {
-    return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
-  }
-
   canEditSupport(): boolean {
     return (this.selectedSupport?.subCategory !== 'Lodging_Billeting')
   }
