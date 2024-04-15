@@ -297,7 +297,7 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="canCloneSupport()">
+          <div class="row" *ngIf="canCloneSupport() && canExtendSupport()">
             <div class="col-md-12">
               <a (click)="extendSupport()"
                 ><img
@@ -340,7 +340,7 @@
         </div>
 
         <div
-          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && canCloneSupport()"
+          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && canCloneSupport() && canExtendSupport()"
           class="col-md-4 link-padding"
         >
           <div class="row">
