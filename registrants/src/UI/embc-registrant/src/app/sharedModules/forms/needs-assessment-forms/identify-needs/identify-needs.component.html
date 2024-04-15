@@ -3,7 +3,7 @@
   <mat-card class="card-align" style="padding-bottom: 0px">
     <mat-card-content>
       <p class="card-heading">If you require supports while evacuated, please let us know about your household’s needs. *</p>
-
+      <mat-error *ngIf="identifyNeedsForm.touched && identifyNeedsForm.hasError('invalid')"> Please select at least one option before proceeding. </mat-error>
       <div class="row row-tile">
         <div class="col-md-12">
           <label class="tab-subtitle" for="shelter">
@@ -36,6 +36,7 @@
                 </span>
               </label>
             </mat-radio-group>
+            <mat-error *ngIf="identifyNeedsForm.controls.requiresShelterType.touched && identifyNeedsForm.controls.requiresShelterType.hasError('required')"> Required </mat-error>
           </div>
         </div>
 
