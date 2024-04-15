@@ -97,7 +97,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
-        : event.value.description;
+        : event.value.value;
     const filterTerm = { type: filterType, value: selectedValue };
     this.filter(filterTerm);
   }

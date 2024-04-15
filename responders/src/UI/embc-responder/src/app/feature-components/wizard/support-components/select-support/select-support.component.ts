@@ -6,7 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Code } from 'src/app/core/api/models';
+import { Code, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -31,7 +31,7 @@ export class SelectSupportComponent implements OnInit {
   ngOnInit(): void {
     this.supportList = this.loadEvacueeListService
       .getSupportTypeList()
-      .filter((element) => element.description !== '');
+      .filter((element) => element.description !== '' && element.value !== SupportSubCategory.Lodging_Billeting);
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
