@@ -2,12 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormCreationService } from '../../core/services/formCreation.service';
-import {
-  CaptchaResponse,
-  CaptchaResponseType
-} from 'src/app/core/components/captcha-v2/captcha-v2.component';
-import { ConfigService } from 'src/app/core/services/config.service';
-import { IdentifyNeedsForm } from 'src/app/core/model/needs.model';
+import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { UntypedFormGroup } from '@angular/forms';
 import { ShelterType } from 'src/app/core/services/globalConstants';
 
@@ -30,10 +25,7 @@ export class ReviewComponent implements OnInit {
   hideCard = false;
   navigationExtras: NavigationExtras;
 
-  constructor(
-    private router: Router,
-    public formCreationService: FormCreationService
-  ) { }
+  constructor(private router: Router, public formCreationService: FormCreationService) {}
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };
@@ -74,10 +66,15 @@ export class ReviewComponent implements OnInit {
       needs.push('Incidentals');
     }
     if (form.controls.requiresShelterType?.value === ShelterType.referral) {
-      needs.push('Shelter referral');
+      needs.push('Shelter');
     } else if (form.controls.requiresShelterType?.value === ShelterType.allowance) {
       needs.push('Shelter allowance');
     }
+
+    if (form.controls.requiresNothing?.value) {
+      needs.push('Household currently does not require assistance.');
+    }
+
     return needs;
   }
 }
