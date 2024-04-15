@@ -32,6 +32,9 @@
           <p *ngIf="element.subCategory === 'Lodging_Group'">
             {{ getGroupReferral(element).facilityName }}
           </p>
+          <p *ngIf="element.subCategory === 'Lodging_Allowance'">
+            {{ element.issuedToPersonName }}
+          </p>
           <p *ngIf="element.method === 'ETransfer'">e-Transfer</p>
         </td>
       </ng-container>
@@ -162,6 +165,15 @@
                 <p>{{ getGroupReferral(element).facilityAddress }}</p>
                 <p>{{ getGroupReferral(element).facilityCity }}</p>
               </div>
+
+              <div
+              class="col-md-5"
+              *ngIf="element.subCategory === 'Lodging_Allowance'"
+            >
+            <b>{{ element?.issuedToPersonName }}</b>
+              <p>{{ getShelterAllowanceReferral(element)?.contactEmail }}</p>
+              <p>{{ getShelterAllowanceReferral(element)?.contactPhone }}</p>
+            </div>
 
               <!-- <div class="col-md-5"><b>Support Issued By</b></div>
               <div class="col-md-5">{{ element.issuingMemberTeamName }}</div> -->
