@@ -302,6 +302,7 @@ namespace EMBC.Registrants.API.Controllers
     [KnownType(typeof(FoodRestaurantSupport))]
     [KnownType(typeof(FoodRestaurantSupport))]
     [KnownType(typeof(LodgingBilletingSupport))]
+    [KnownType(typeof(LodgingAllowanceSupport))]
     [KnownType(typeof(LodgingGroupSupport))]
     [KnownType(typeof(LodgingHotelSupport))]
     [KnownType(typeof(TransportationOtherSupport))]
