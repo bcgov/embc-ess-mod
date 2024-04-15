@@ -89,9 +89,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
       return subCategory?.description;
     }
   }
-  canCloneSupport(): boolean {
-    return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
-  }
 
   canExtendSupport(): boolean {
     return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
