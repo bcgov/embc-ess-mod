@@ -25,8 +25,7 @@ spec:
   ingress:
     - from:
         - podSelector:
-            matchLabels:
-              role: external-app              
+            matchLabels: {}
       ports:
         - protocol: {{ .Values.protocol | upper }}
           port: {{ .Values.port }}

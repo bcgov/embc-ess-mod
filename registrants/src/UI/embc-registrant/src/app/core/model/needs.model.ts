@@ -94,11 +94,11 @@ export class IdentifyNeedsForm {
   requiresClothing = new UntypedFormControl();
   requiresFood = new UntypedFormControl();
   requiresIncidentals = new UntypedFormControl();
-  requiresShelterType = new UntypedFormControl();
+  requiresShelterType = new UntypedFormControl(null, [this.customValidator.conditionalValidation(() => this.requiresShelter.value, Validators.required)]);
   requiresShelter = new UntypedFormControl();
   requiresNothing = new UntypedFormControl();
 
-  constructor(identifyNeeds: IdentifyNeeds) {
+  constructor(identifyNeeds: IdentifyNeeds, private customValidator: CustomValidationService) {
     this.requiresClothing.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Clothing));
     this.requiresFood.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Food));
     this.requiresIncidentals.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Incidentals));

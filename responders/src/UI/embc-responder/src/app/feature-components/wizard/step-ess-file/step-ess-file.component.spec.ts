@@ -10,6 +10,7 @@ import { WizardDataService } from '../wizard-data.service';
 import { StepEssFileService } from './step-ess-file.service';
 import { MockStepEssFileService } from 'src/app/unit-tests/mockStepEssFile.service';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 
 describe('StepEssFileComponent', () => {
   let component: StepEssFileComponent;
@@ -26,9 +27,10 @@ describe('StepEssFileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, ReactiveFormsModule],
       declarations: [StepEssFileComponent],
       providers: [
+        UntypedFormBuilder,
         WizardDataService,
         { provide: Router, useValue: routerMock },
         {

@@ -13,7 +13,8 @@ import {
   LodgingGroupSupport,
   Referral,
   Interac,
-  LodgingAllowanceSupport
+  LodgingAllowanceSupport,
+  SupportSubCategory
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -87,6 +88,14 @@ export class ExistingSupportDetailsComponent implements OnInit {
         .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
+  }
+
+  canExtendSupport(): boolean {
+    return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
+  }
+
+  canEditSupport(): boolean {
+    return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
   }
 
   checkGroceryMaxRate(): boolean {

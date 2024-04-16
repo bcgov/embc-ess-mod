@@ -195,8 +195,6 @@ namespace EMBC.Utilities.Hosting
 
             services.ConfigureComponentServices(configuration, hostEnvironment, telemetryProvider, assemblies);
 
-            services.AddOpenTelemetry(appName);
-
             // add background tasks
             if (configuration.GetValue("backgroundTask:enabled", true))
             {

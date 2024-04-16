@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
@@ -84,32 +82,6 @@ namespace EMBC.Utilities.Hosting
             return ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
                     ? LogEventLevel.Verbose
                     : LogEventLevel.Information;
-        }
-
-        public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string appName)
-        {
-            //services.AddOpenTelemetryTracing(builder =>
-            //{
-            //    builder
-            //        .AddConsoleExporter()
-            //        .AddSource(appName)
-            //        .SetResourceBuilder(ResourceBuilder
-            //            .CreateDefault()
-            //            .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
-            //        .AddHttpClientInstrumentation()
-            //        .AddAspNetCoreInstrumentation()
-            //        .AddGrpcCoreInstrumentation()
-            //        .AddGrpcClientInstrumentation()
-            //        .AddRedisInstrumentation()
-            //        .AddConsoleExporter();
-            //});
-
-            //services.AddSingleton(TracerProvider.Default.GetTracer(appName));
-
-            var listener = new SerilogTraceListener.SerilogTraceListener();
-            Trace.Listeners.Add(listener);
-
-            return services;
         }
     }
 }

@@ -32,6 +32,7 @@ export { IncidentalsSupport } from './models/incidentals-support';
 export { FoodGroceriesSupport } from './models/food-groceries-support';
 export { FoodRestaurantSupport } from './models/food-restaurant-support';
 export { LodgingBilletingSupport } from './models/lodging-billeting-support';
+export { LodgingAllowanceSupport } from './models/lodging-allowance-support';
 export { LodgingGroupSupport } from './models/lodging-group-support';
 export { LodgingHotelSupport } from './models/lodging-hotel-support';
 export { TransportationOtherSupport } from './models/transportation-other-support';

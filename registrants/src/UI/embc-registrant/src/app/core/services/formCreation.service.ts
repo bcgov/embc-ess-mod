@@ -60,7 +60,9 @@ export class FormCreationService {
 
   petsForm$: Observable<UntypedFormGroup> = this.petsForm.asObservable();
 
-  identifyNeedsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
+  identifyNeedsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), { validators: [this.customValidator.needsValidator()] })
+  );
 
   identifyNeedsForm$: Observable<UntypedFormGroup> = this.identifyNeedsForm.asObservable();
 
@@ -162,7 +164,7 @@ export class FormCreationService {
     this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
     this.householdMembersForm.next(this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder)));
     this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
-    this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
+    this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), { validators: [this.customValidator.needsValidator()] }));
     this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
   }
 }

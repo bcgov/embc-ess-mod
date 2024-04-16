@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEssFileService } from './step-ess-file.service';
@@ -8,7 +8,7 @@ import { StepEssFileService } from './step-ess-file.service';
   templateUrl: './step-ess-file.component.html',
   styleUrls: ['./step-ess-file.component.scss']
 })
-export class StepEssFileComponent {
+export class StepEssFileComponent implements OnInit {
   stepId: string;
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
@@ -29,6 +29,10 @@ export class StepEssFileComponent {
     }
 
     this.tabs = this.stepEssFileService.essTabs;
+  }
+
+  ngOnInit() {
+    this.stepEssFileService.createNeedsForm();
   }
 
   /**
