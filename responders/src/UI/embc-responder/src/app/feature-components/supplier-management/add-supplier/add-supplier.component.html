@@ -7,8 +7,19 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <mat-label>Supplier Legal Name</mat-label>
-              <input formControlName="supplierLegalName" maxlength="100" matInput placeholder="Supplier Legal Name" required />
-              <mat-error *ngIf="addFormControl.supplierLegalName.invalid && addFormControl.supplierLegalName.hasError('whitespaceError')">
+              <input
+                formControlName="supplierLegalName"
+                maxlength="100"
+                matInput
+                placeholder="Supplier Legal Name"
+                required
+              />
+              <mat-error
+                *ngIf="
+                  addFormControl.supplierLegalName.invalid &&
+                  addFormControl.supplierLegalName.hasError('whitespaceError')
+                "
+              >
                 Supplier Legal Name is required</mat-error
               >
             </mat-form-field>
@@ -20,7 +31,9 @@
             <mat-form-field appearance="outline">
               <mat-label>Supplier Name</mat-label>
               <input formControlName="supplierName" maxlength="100" matInput placeholder="Supplier Name" required />
-              <mat-error *ngIf="addFormControl.supplierName.invalid && addFormControl.supplierName.hasError('whitespaceError')">
+              <mat-error
+                *ngIf="addFormControl.supplierName.invalid && addFormControl.supplierName.hasError('whitespaceError')"
+              >
                 Supplier Name is required</mat-error
               >
             </mat-form-field>
@@ -49,8 +62,8 @@
         <span class="tips-heading"><b>Tips: </b>Legal Name</span>
       </div>
       <p class="tips-info">
-        The business legal name is the official name of the person or entity that owns the company and is used on government forms and
-        business paperwork.
+        The business legal name is the official name of the person or entity that owns the company and is used on
+        government forms and business paperwork.
       </p>
     </mat-card>
   </div>

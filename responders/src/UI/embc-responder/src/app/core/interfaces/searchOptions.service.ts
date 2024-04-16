@@ -20,7 +20,10 @@ export interface SearchOptionsService {
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
   createForm(formType: string): UntypedFormGroup;
-  search(value: string | EvacueeSearchContextModel, type?: string): Promise<boolean | void | EvacueeSearchResults> | void;
+  search(
+    value: string | EvacueeSearchContextModel,
+    type?: string
+  ): Promise<boolean | void | EvacueeSearchResults> | void;
   getDashboardBanner(fileStatus: string): DashboardBanner;
   loadEssFile(): Promise<EvacuationFileModel>;
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel>;

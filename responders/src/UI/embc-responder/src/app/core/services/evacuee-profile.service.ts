@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
-import { EvacuationFileSearchResult, EvacuationFileSummary, RegistrantProfile, RegistrationResult } from '../api/models';
+import {
+  EvacuationFileSearchResult,
+  EvacuationFileSummary,
+  RegistrantProfile,
+  RegistrationResult
+} from '../api/models';
 import { AddressModel } from '../models/address.model';
 import { EvacuationFileSearchResultModel } from '../models/evacuation-file-search-result.model';
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
@@ -102,7 +107,10 @@ export class EvacueeProfileService {
           }
 
           for (const file of essFiles) {
-            const fileAddressModel: AddressModel = this.mapAddressFields(file.evacuatedFrom.communityCode, file.evacuatedFrom.countryCode);
+            const fileAddressModel: AddressModel = this.mapAddressFields(
+              file.evacuatedFrom.communityCode,
+              file.evacuatedFrom.countryCode
+            );
 
             file.evacuatedFrom = {
               ...fileAddressModel,
@@ -111,7 +119,9 @@ export class EvacueeProfileService {
           }
 
           searchResult?.files?.sort((a, b) => new Date(b.modifiedOn).valueOf() - new Date(a.modifiedOn).valueOf());
-          searchResult?.registrants?.sort((a, b) => new Date(b.modifiedOn).valueOf() - new Date(a.modifiedOn).valueOf());
+          searchResult?.registrants?.sort(
+            (a, b) => new Date(b.modifiedOn).valueOf() - new Date(a.modifiedOn).valueOf()
+          );
 
           return searchResult;
         })
@@ -168,7 +178,11 @@ export class EvacueeProfileService {
    * @param registrantId ID of Registrant Profile
    * @returns an Array of matched ESS Files with the Registrant ID
    */
-  public getProfileFiles(registrantId?: string, manualFileId?: string, id?: string): Observable<Array<EvacuationFileSummaryModel>> {
+  public getProfileFiles(
+    registrantId?: string,
+    manualFileId?: string,
+    id?: string
+  ): Observable<Array<EvacuationFileSummaryModel>> {
     const evacFileSummaryModelArray: Array<EvacuationFileSummaryModel> = [];
     return this.registrationsService
       .registrationsGetFiles({
@@ -199,7 +213,11 @@ export class EvacueeProfileService {
     });
   }
 
-  public createMemberRegistration(regProfile: RegistrantProfile, memberId: string, essFileId: string): Observable<string> {
+  public createMemberRegistration(
+    regProfile: RegistrantProfile,
+    memberId: string,
+    essFileId: string
+  ): Observable<string> {
     const profile$ = this.registrationsService.registrationsCreateRegistrantProfile({
       body: regProfile
     });
@@ -226,7 +244,11 @@ export class EvacueeProfileService {
    * @param dateOfBirth date of birth of the Evacuee
    * @returns an array of possible ESS File matches related to this evacuee
    */
-  public getFileMatches(firstName: string, lastName: string, dateOfBirth: string): Observable<Array<EvacuationFileSearchResultModel>> {
+  public getFileMatches(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string
+  ): Observable<Array<EvacuationFileSearchResultModel>> {
     const evacFileSearchResultsModelArray: Array<EvacuationFileSearchResultModel> = [];
     return this.registrationsService
       .registrationsSearchMatchingEvacuationFiles({

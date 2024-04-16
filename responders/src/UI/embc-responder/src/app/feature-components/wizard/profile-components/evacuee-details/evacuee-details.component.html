@@ -62,7 +62,9 @@
                       {{ gen.name }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="detailsFormControl.gender.invalid && detailsFormControl.gender.hasError('whitespaceError')">
+                  <mat-error
+                    *ngIf="detailsFormControl.gender.invalid && detailsFormControl.gender.hasError('whitespaceError')"
+                  >
                     Gender is required</mat-error
                   >
                 </mat-form-field>

@@ -70,7 +70,10 @@ describe('SearchOptionsComponent', () => {
 
     fixture.detectChanges();
     component.next();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/wrapper'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/wrapper'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   it('should display a warning message to select search option', () => {

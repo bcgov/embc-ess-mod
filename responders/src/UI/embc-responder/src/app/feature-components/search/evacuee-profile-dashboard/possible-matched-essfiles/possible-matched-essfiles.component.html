@@ -7,13 +7,19 @@
   <div class="row section-info info-box">
     <div class="col-md-12">
       <p>
-        <b>If there is a match</b> between a household member on an ESS File and a profile, you will see matches below. IF you believe this
-        is a correct match, please link to this ESS File.
+        <b>If there is a match</b> between a household member on an ESS File and a profile, you will see matches below.
+        IF you believe this is a correct match, please link to this ESS File.
       </p>
     </div>
   </div>
   <div class="loader-align" *ngIf="isLoading">
-    <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="30" [color]="color"></app-loader>
+    <app-loader
+      class="spinner"
+      [showLoader]="isLoading"
+      [strokeWidth]="10"
+      [diameter]="30"
+      [color]="color"
+    ></app-loader>
   </div>
   <mat-accordion>
     <mat-expansion-panel

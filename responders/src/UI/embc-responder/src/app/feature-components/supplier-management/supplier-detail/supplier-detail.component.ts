@@ -147,7 +147,9 @@ export class SupplierDetailComponent implements OnInit {
             this.supplierService.deleteSupplier(this.selectedSupplier.id).subscribe({
               next: (value) => {
                 const stateIndicator = { action: 'delete' };
-                this.router.navigate(['/responder-access/supplier-management/suppliers-list'], { state: stateIndicator });
+                this.router.navigate(['/responder-access/supplier-management/suppliers-list'], {
+                  state: stateIndicator
+                });
               },
               error: (error) => {
                 this.alertService.clearAlert();

@@ -71,7 +71,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
    */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.setloadingOverlay(true);
-    (this.optionInjectionService?.instance?.search(evacueeSearchContext, SearchPages.searchResults) as Promise<EvacueeSearchResults>)
+    (
+      this.optionInjectionService?.instance?.search(
+        evacueeSearchContext,
+        SearchPages.searchResults
+      ) as Promise<EvacueeSearchResults>
+    )
       ?.then((results: EvacueeSearchResults) => {
         this.evacueeSearchResultsService.setloadingOverlay(false);
         this.fileResults = results?.files;

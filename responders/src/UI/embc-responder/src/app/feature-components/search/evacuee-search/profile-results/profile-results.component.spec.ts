@@ -1,5 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -102,7 +111,13 @@ describe('ProfileResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProfileResultsComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, RouterTestingModule],
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+        RouterTestingModule
+      ],
       providers: [
         ProfileResultsComponent,
         {

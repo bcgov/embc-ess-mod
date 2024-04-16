@@ -117,7 +117,9 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<string> {
-    return this.reportsCreateEvacueeReport$Response(params).pipe(map((r: StrictHttpResponse<string>) => r.body as string));
+    return this.reportsCreateEvacueeReport$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
   }
 
   /**
@@ -220,6 +222,8 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<string> {
-    return this.reportsCreateSupportReport$Response(params).pipe(map((r: StrictHttpResponse<string>) => r.body as string));
+    return this.reportsCreateSupportReport$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
   }
 }

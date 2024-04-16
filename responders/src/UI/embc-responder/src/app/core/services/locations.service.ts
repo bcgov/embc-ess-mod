@@ -119,14 +119,17 @@ export class LocationsService {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
-      communityCode: (addressObject.community as Community).code === undefined ? null : (addressObject.community as Community).code,
+      communityCode:
+        (addressObject.community as Community).code === undefined ? null : (addressObject.community as Community).code,
       city:
         (addressObject.community as Community).code === undefined && typeof addressObject.community === 'string'
           ? addressObject.community
           : null,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
-        addressObject.stateProvince === null || addressObject.stateProvince === undefined ? null : addressObject.stateProvince?.code
+        addressObject.stateProvince === null || addressObject.stateProvince === undefined
+          ? null
+          : addressObject.stateProvince?.code
     };
 
     return address;
@@ -171,7 +174,9 @@ export class LocationsService {
             isActive: c.isActive
           }))
         );
-        this.setRegionalDistricts(Array.from(new Set(results[0].filter((comm) => comm.districtName).map((comm) => comm.districtName))));
+        this.setRegionalDistricts(
+          Array.from(new Set(results[0].filter((comm) => comm.districtName).map((comm) => comm.districtName)))
+        );
 
         this.setStateProvinceList(
           [...results[1]].map((sp) => ({
@@ -220,7 +225,9 @@ export class LocationsService {
             isActive: c.isActive
           }))
         );
-        this.setRegionalDistricts(Array.from(new Set(communities.filter((comm) => comm.districtName).map((comm) => comm.districtName))));
+        this.setRegionalDistricts(
+          Array.from(new Set(communities.filter((comm) => comm.districtName).map((comm) => comm.districtName)))
+        );
       },
       error: (error) => {
         this.alertService.clearAlert();

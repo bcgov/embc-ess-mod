@@ -84,7 +84,8 @@ export class ReferralComponent implements OnInit {
     const storedSupplierDetails = this.supplierService.getSupplierDetails();
     if (this.component === 'I') {
       const rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
-      this.reloadedFiles = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralAttachments;
+      this.reloadedFiles =
+        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralAttachments;
       this.reloadedFiles.forEach((element) => {
         this.referralAttachments.push(
           this.createAttachmentObject({
@@ -93,7 +94,8 @@ export class ReferralComponent implements OnInit {
           })
         );
       });
-      this.reloadedFiles2 = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].receiptAttachments;
+      this.reloadedFiles2 =
+        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].receiptAttachments;
       this.reloadedFiles2.forEach((element) => {
         this.receiptAttachments.push(
           this.createAttachmentObject({

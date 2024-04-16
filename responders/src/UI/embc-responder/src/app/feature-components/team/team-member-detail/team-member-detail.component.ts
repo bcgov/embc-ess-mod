@@ -57,7 +57,9 @@ export class TeamMemberDetailComponent {
             this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe({
               next: (value) => {
                 const stateIndicator = { action: 'delete' };
-                this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
+                this.router.navigate(['/responder-access/responder-management/details/member-list'], {
+                  state: stateIndicator
+                });
               },
               error: (error) => {
                 this.alertService.clearAlert();
@@ -106,7 +108,9 @@ export class TeamMemberDetailComponent {
     } else if (loggedInRole === MemberRole.Tier3) {
       return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
     } else if (loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3
+        ? true
+        : false;
     }
   }
 }

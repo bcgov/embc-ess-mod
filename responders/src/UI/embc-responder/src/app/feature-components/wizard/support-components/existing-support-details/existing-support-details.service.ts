@@ -91,7 +91,12 @@ export class ExistingSupportDetailsService {
    * @param reprintReason
    * @returns
    */
-  reprintSupport(fileId: string, supportId: string, reprintReason: SupportReprintReason, includeSummary: boolean): Observable<Blob> {
+  reprintSupport(
+    fileId: string,
+    supportId: string,
+    reprintReason: SupportReprintReason,
+    includeSummary: boolean
+  ): Observable<Blob> {
     return this.registrationService
       .registrationsReprintSupport({
         fileId,
@@ -146,7 +151,9 @@ export class ExistingSupportDetailsService {
         })
       : null;
 
-    const supplierValue = this.stepSupportsService?.supplierList?.find((supplier) => supplier.id === referralDelivery.supplierId);
+    const supplierValue = this.stepSupportsService?.supplierList?.find(
+      (supplier) => supplier.id === referralDelivery.supplierId
+    );
 
     const category = this.loadEvacueeListService
       .getSupportCategories()

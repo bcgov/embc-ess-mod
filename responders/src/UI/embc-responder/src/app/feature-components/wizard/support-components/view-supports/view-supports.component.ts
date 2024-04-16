@@ -105,7 +105,9 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
           } else {
             const value = {
               ...support,
-              hostAddress: this.locationsService.getAddressModelFromAddress((support.supportDelivery as Referral).supplierAddress)
+              hostAddress: this.locationsService.getAddressModelFromAddress(
+                (support.supportDelivery as Referral).supplierAddress
+              )
             };
             supportModel.push(value);
           }

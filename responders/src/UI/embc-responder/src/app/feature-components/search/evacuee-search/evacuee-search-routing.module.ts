@@ -6,7 +6,8 @@ const routes: Routes = [
   { path: '', component: EvacueeSearchComponent },
   {
     path: 'wrapper',
-    loadChildren: () => import('../evacuee-search/search-wrapper/search-wrapper.module').then((m) => m.SearchWrapperModule)
+    loadChildren: () =>
+      import('../evacuee-search/search-wrapper/search-wrapper.module').then((m) => m.SearchWrapperModule)
   },
   {
     path: 'remote-search',
@@ -14,20 +15,25 @@ const routes: Routes = [
   },
   {
     path: 'caseNotes-search',
-    loadChildren: () => import('../evacuee-search/case-note-search/case-note-search.module').then((m) => m.CaseNoteSearchModule)
+    loadChildren: () =>
+      import('../evacuee-search/case-note-search/case-note-search.module').then((m) => m.CaseNoteSearchModule)
   },
   {
     path: 'id-search',
-    loadChildren: () => import('../evacuee-search/evacuee-id-verify/evacuee-id-verify.module').then((m) => m.EvacueeIdVerifyModule)
+    loadChildren: () =>
+      import('../evacuee-search/evacuee-id-verify/evacuee-id-verify.module').then((m) => m.EvacueeIdVerifyModule)
   },
   {
     path: 'name-search',
-    loadChildren: () => import('../evacuee-search/evacuee-name-search/evacuee-name-search.module').then((m) => m.EvacueeNameSearchModule)
+    loadChildren: () =>
+      import('../evacuee-search/evacuee-name-search/evacuee-name-search.module').then((m) => m.EvacueeNameSearchModule)
   },
   {
     path: 'search-results',
     loadChildren: () =>
-      import('../evacuee-search/evacuee-search-results/evacuee-search-results.module').then((m) => m.EvacueeSearchResultsModule)
+      import('../evacuee-search/evacuee-search-results/evacuee-search-results.module').then(
+        (m) => m.EvacueeSearchResultsModule
+      )
   }
 ];
 

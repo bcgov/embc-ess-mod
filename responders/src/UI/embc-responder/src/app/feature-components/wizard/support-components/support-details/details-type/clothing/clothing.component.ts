@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -89,7 +98,8 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
   validateUserTotalAmount() {
     const exceedsTotal =
-      !this.isPaperBased && Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
+      !this.isPaperBased &&
+      Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
 
     if (!exceedsTotal && this.referralForm.get('approverName').value) {
       this.referralForm.get('approverName').patchValue('');

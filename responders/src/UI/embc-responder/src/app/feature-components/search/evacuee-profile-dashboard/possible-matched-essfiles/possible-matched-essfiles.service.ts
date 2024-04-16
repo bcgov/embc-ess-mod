@@ -39,7 +39,10 @@ export class PossibleMatchedEssfilesService {
     this.computeState.triggerEvent();
   }
 
-  public getRegistrantIdToLink(householdMembers: Array<EvacuationFileHouseholdMember>, evacueeProfile: RegistrantProfileModel): string {
+  public getRegistrantIdToLink(
+    householdMembers: Array<EvacuationFileHouseholdMember>,
+    evacueeProfile: RegistrantProfileModel
+  ): string {
     for (const member of householdMembers) {
       if (
         member.firstName.toLocaleLowerCase() === evacueeProfile.personalDetails.firstName.toLocaleLowerCase() &&

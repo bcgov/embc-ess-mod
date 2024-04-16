@@ -98,22 +98,37 @@ export class WizardActivateGuard implements CanActivate {
   }
 
   private isProfileCreationAllowed(): boolean {
-    return this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined;
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    );
   }
 
   private isFileReviewAllowed(): boolean {
-    return this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined; // add file status for review
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    ); // add file status for review
   }
 
   private isFileCompletionAllowed(): boolean {
-    return this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined; // add file status for complete
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    ); // add file status for complete
   }
 
   private isExtendSupportsAllowed(): boolean {
-    return this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined;
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    );
   }
 
   private isCaseNotesAllowed(): boolean {
-    return this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined;
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    );
   }
 }

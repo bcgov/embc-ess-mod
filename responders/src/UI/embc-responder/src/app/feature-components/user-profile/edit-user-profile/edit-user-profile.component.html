@@ -13,7 +13,9 @@
             <mat-label>First Name</mat-label>
             <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
 
-            <mat-error *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')">
+            <mat-error
+              *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')"
+            >
               First Name is required
             </mat-error>
           </mat-form-field>
@@ -76,7 +78,9 @@
           <mat-form-field appearance="outline">
             <mat-label>Email Address</mat-label>
             <input formControlName="email" maxlength="254" matInput placeholder="Email Address" />
-            <mat-error *ngIf="editFormControl.email.invalid && editFormControl.email.hasError('email')"> Invalid email </mat-error>
+            <mat-error *ngIf="editFormControl.email.invalid && editFormControl.email.hasError('email')">
+              Invalid email
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -103,7 +107,8 @@
     <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
     <button class="button-p width-button" [disabled]="!editForm.valid || !isSubmitted" mat-button (click)="save()">
       Save
-      <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color"> </app-loader>
+      <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color">
+      </app-loader>
     </button>
   </div>
   <br />

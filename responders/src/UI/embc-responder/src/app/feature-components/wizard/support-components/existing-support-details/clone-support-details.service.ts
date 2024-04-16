@@ -61,7 +61,9 @@ export class CloneSupportDetailsService {
         })
       : null;
 
-    const supplierValue = this.stepSupportsService?.supplierList?.find((supplier) => supplier.id === referralDelivery.supplierId);
+    const supplierValue = this.stepSupportsService?.supplierList?.find(
+      (supplier) => supplier.id === referralDelivery.supplierId
+    );
 
     const category = this.loadEvacueeListService
       .getSupportCategories()

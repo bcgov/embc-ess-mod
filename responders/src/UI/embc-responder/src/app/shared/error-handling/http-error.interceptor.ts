@@ -16,7 +16,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     ) as Observable<HttpEvent<any>>;
   }
 
-  private delayedRetry(delayMs: number, maxRetry: number, requestUrl: string): (src: Observable<any>) => Observable<any> {
+  private delayedRetry(
+    delayMs: number,
+    maxRetry: number,
+    requestUrl: string
+  ): (src: Observable<any>) => Observable<any> {
     let retries = maxRetry;
     return (src: Observable<any>) =>
       src.pipe(

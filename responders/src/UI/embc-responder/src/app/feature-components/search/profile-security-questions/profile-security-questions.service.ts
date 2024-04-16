@@ -62,7 +62,10 @@ export class ProfileSecurityQuestionsService {
    * @param body an Array of security questions with answer to be sent to the API
    * @returns number of correct answers from the given body
    */
-  public verifySecurityQuestions(registrantId: string, body: VerifySecurityQuestionsRequest): Observable<VerifySecurityQuestionsResponse> {
+  public verifySecurityQuestions(
+    registrantId: string,
+    body: VerifySecurityQuestionsRequest
+  ): Observable<VerifySecurityQuestionsResponse> {
     return this.registrationService.registrationsVerifySecurityQuestions({
       registrantId,
       body

@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { EssfileDashboardComponent } from './essfile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -27,7 +36,13 @@ describe('EssfileDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, BrowserAnimationsModule],
+      imports: [
+        MatDialogModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule
+      ],
       declarations: [EssfileDashboardComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },

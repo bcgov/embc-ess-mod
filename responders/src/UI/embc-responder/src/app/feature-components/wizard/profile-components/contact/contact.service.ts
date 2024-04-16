@@ -26,7 +26,9 @@ export class ContactService {
     this.contactInfoForm = this.formBuilder.group(
       {
         email: [
-          this.stepEvacueeProfileService?.contactDetails?.email !== undefined ? this.stepEvacueeProfileService?.contactDetails?.email : '',
+          this.stepEvacueeProfileService?.contactDetails?.email !== undefined
+            ? this.stepEvacueeProfileService?.contactDetails?.email
+            : '',
           [
             Validators.email,
             this.customValidation.conditionalValidation(
@@ -40,7 +42,9 @@ export class ContactService {
           ]
         ],
         phone: [
-          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined ? this.stepEvacueeProfileService?.contactDetails?.phone : '',
+          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined
+            ? this.stepEvacueeProfileService?.contactDetails?.phone
+            : '',
           [
             this.customValidation.maskedNumberLengthValidator().bind(this.customValidation),
             this.customValidation.conditionalValidation(
@@ -54,7 +58,9 @@ export class ContactService {
           ]
         ],
         confirmEmail: [
-          this.stepEvacueeProfileService?.confirmEmail !== undefined ? this.stepEvacueeProfileService?.confirmEmail : '',
+          this.stepEvacueeProfileService?.confirmEmail !== undefined
+            ? this.stepEvacueeProfileService?.confirmEmail
+            : '',
           [
             Validators.email,
             this.customValidation.conditionalValidation(

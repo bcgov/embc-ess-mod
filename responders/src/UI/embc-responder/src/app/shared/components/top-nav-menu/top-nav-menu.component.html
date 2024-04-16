@@ -37,7 +37,12 @@
       Responder Management
     </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('suppliers')" class="top-nav" mat-button [routerLink]="'/responder-access/supplier-management'">
+    <a
+      *ngIf="hasPermission('suppliers')"
+      class="top-nav"
+      mat-button
+      [routerLink]="'/responder-access/supplier-management'"
+    >
       Supplier Management
     </a>
     <span class="divider"></span>
@@ -51,6 +56,8 @@
       Community Management
     </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('reports')" class="top-nav" mat-button [routerLink]="'/responder-access/reporting'"> Reporting </a>
+    <a *ngIf="hasPermission('reports')" class="top-nav" mat-button [routerLink]="'/responder-access/reporting'">
+      Reporting
+    </a>
   </div>
 </mat-toolbar>

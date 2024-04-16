@@ -9,7 +9,8 @@ const routes: Routes = [
     children: [
       {
         path: 'evacuee-profile',
-        loadChildren: () => import('./step-evacuee-profile/step-evacuee-profile.module').then((m) => m.StepEvacueeProfileModule)
+        loadChildren: () =>
+          import('./step-evacuee-profile/step-evacuee-profile.module').then((m) => m.StepEvacueeProfileModule)
       },
       {
         path: 'ess-file',

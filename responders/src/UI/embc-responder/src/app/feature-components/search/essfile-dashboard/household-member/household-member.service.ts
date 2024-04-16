@@ -71,7 +71,10 @@ export class HouseholdMemberService {
     this.computeState.triggerEvent();
   }
 
-  public multipleMatchedRegistrantLink(multipleLinkRegistrants: MultipleLinkRegistrantModel, essFile: EvacuationFileModel): void {
+  public multipleMatchedRegistrantLink(
+    multipleLinkRegistrants: MultipleLinkRegistrantModel,
+    essFile: EvacuationFileModel
+  ): void {
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -148,7 +151,9 @@ export class HouseholdMemberService {
       firstName: memberDetails.firstName,
       lastName: memberDetails.lastName,
       dateOfBirth: memberDetails.dateOfBirth,
-      profiles: this.sortByVerificationFactor(this.sortByAuthenticationFactor(this.essfileDashboardService.matchedProfiles)),
+      profiles: this.sortByVerificationFactor(
+        this.sortByAuthenticationFactor(this.essfileDashboardService.matchedProfiles)
+      ),
       householdMemberId: memberDetails.id
     };
   }

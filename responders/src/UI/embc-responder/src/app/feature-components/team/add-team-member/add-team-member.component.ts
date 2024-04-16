@@ -165,11 +165,15 @@ export class AddTeamMemberComponent implements OnInit {
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
-      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
+      return this.listService
+        .getMemberRoles()
+        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
         .getMemberRoles()
-        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3);
+        .filter(
+          (role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3
+        );
     }
   }
 }

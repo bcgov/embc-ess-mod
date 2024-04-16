@@ -5,7 +5,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
         <input [formControlName]="'addressLine1'" maxlength="100" matInput placeholder="Address Line 1" required />
-        <mat-error *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
+        <mat-error
+          *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')"
+        >
           Address Line 1 is required</mat-error
         >
       </mat-form-field>
@@ -52,13 +54,21 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Province</mat-label>
-        <input type="text" [formControlName]="'stateProvince'" matInput placeholder="Province" [matAutocomplete]="auto" />
+        <input
+          type="text"
+          [formControlName]="'stateProvince'"
+          matInput
+          placeholder="Province"
+          [matAutocomplete]="auto"
+        />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')">
+        <mat-error
+          *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')"
+        >
           Province is required</mat-error
         >
         <mat-error *ngIf="validateProvince()"> Province is invalid</mat-error>

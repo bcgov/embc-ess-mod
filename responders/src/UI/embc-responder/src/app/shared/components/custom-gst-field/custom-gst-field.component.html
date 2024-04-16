@@ -4,7 +4,9 @@
       <mat-form-field class="custom-padding" appearance="outline">
         <mat-label>GST Number</mat-label>
         <input formControlName="part1" maxlength="9" matInput placeholder="999999999" required />
-        <mat-error *ngIf="gstFormControl.part1.invalid && gstFormControl.part1.hasError('maxLength')"> 9 Digits allowed</mat-error>
+        <mat-error *ngIf="gstFormControl.part1.invalid && gstFormControl.part1.hasError('maxLength')">
+          9 Digits allowed</mat-error
+        >
       </mat-form-field>
     </div>
     <span class="bold gst-text">RT</span>
@@ -16,7 +18,10 @@
   </div>
   <small class="field-error" *ngIf="gstFormGroup.hasError('groupRequiredError')"> GST Number is required </small>
   <small class="field-error" *ngIf="gstFormGroup.hasError('groupMinLengthError')"> GST Number is incomplete </small>
-  <small class="field-error" *ngIf="gstFormGroup.get('part1').hasError('pattern') || gstFormGroup.get('part2').hasError('pattern')">
+  <small
+    class="field-error"
+    *ngIf="gstFormGroup.get('part1').hasError('pattern') || gstFormGroup.get('part2').hasError('pattern')"
+  >
     Only Digits allowed
   </small>
 </div>

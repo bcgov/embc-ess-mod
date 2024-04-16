@@ -69,7 +69,11 @@
             <label class="tab-subtitle">Household Members</label>
             <div class="row">
               <div class="col-8">
-                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.householdMembers" *ngIf="!this.essFileNumber">
+                <mat-table
+                  class="bottom-space"
+                  [dataSource]="stepEssFileService?.householdMembers"
+                  *ngIf="!this.essFileNumber"
+                >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
@@ -117,7 +121,11 @@
                   ></mat-row>
                 </mat-table>
 
-                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.selectedHouseholdMembers" *ngIf="this.essFileNumber">
+                <mat-table
+                  class="bottom-space"
+                  [dataSource]="stepEssFileService?.selectedHouseholdMembers"
+                  *ngIf="this.essFileNumber"
+                >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">

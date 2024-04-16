@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { EvacueeSearchResultsComponent } from './evacuee-search-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -37,7 +46,13 @@ describe('EvacueeSearchResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeSearchResultsComponent, ZeroFileResultStubComponent],
-      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, ReactiveFormsModule, RouterTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        RouterTestingModule
+      ],
       providers: [
         EvacueeSearchResultsComponent,
         { provide: EvacueeSearchService, useClass: MockEvacueeSearchService },
@@ -128,7 +143,9 @@ describe('EvacueeSearchResultsComponent', () => {
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const titleElem = nativeElem.querySelector('.result-text');
 
-    expect(titleElem.textContent).toEqual(' Results for "FIVE, Evac" with a date of birth "12-Dec-2000" and a paper ESS File # T123456.');
+    expect(titleElem.textContent).toEqual(
+      ' Results for "FIVE, Evac" with a date of birth "12-Dec-2000" and a paper ESS File # T123456.'
+    );
   });
 
   it('should appear digital based search results title', () => {

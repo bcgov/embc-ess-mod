@@ -13,14 +13,20 @@ import { ContactService } from './contact.service';
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
+    return (
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
+    );
   }
 }
 
 export class CustomErrorMobileMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('mobileMatch');
+    return (
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('mobileMatch')
+    );
   }
 }
 

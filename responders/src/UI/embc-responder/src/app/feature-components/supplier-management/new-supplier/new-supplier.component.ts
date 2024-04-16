@@ -73,11 +73,20 @@ export class NewSupplierComponent implements OnInit {
   private createNewSupplierForm(): void {
     this.newForm = this.formBuilder.group({
       address: this.formBuilder.group({
-        addressLine1: [this.addSupplierService.supplierAddress?.addressLine1 ?? '', [this.customValidation.whitespaceValidator()]],
+        addressLine1: [
+          this.addSupplierService.supplierAddress?.addressLine1 ?? '',
+          [this.customValidation.whitespaceValidator()]
+        ],
         addressLine2: [this.addSupplierService.supplierAddress?.addressLine2 ?? ''],
         community: [this.addSupplierService.supplierAddress?.community ?? '', [Validators.required]],
-        stateProvince: [this.addSupplierService.supplierAddress?.stateProvince ?? globalConst.defaultProvince, [Validators.required]],
-        country: [this.addSupplierService.supplierAddress?.country ?? globalConst.defaultCountry, [Validators.required]],
+        stateProvince: [
+          this.addSupplierService.supplierAddress?.stateProvince ?? globalConst.defaultProvince,
+          [Validators.required]
+        ],
+        country: [
+          this.addSupplierService.supplierAddress?.country ?? globalConst.defaultCountry,
+          [Validators.required]
+        ],
         postalCode: [
           this.addSupplierService.supplierAddress?.postalCode ?? '',
           [this.customValidation.postalValidation().bind(this.customValidation)]

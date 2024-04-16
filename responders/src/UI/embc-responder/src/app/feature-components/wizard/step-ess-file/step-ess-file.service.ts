@@ -5,7 +5,14 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
-import { EvacuationFile, HouseholdMemberType, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
+import {
+  EvacuationFile,
+  HouseholdMemberType,
+  IdentifiedNeed,
+  InsuranceOption,
+  NeedsAssessment,
+  Pet
+} from 'src/app/core/api/models';
 import { UntypedFormBuilder, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
@@ -400,7 +407,11 @@ export class StepEssFileService {
     this.needsForm = this.formBuilder.group({
       requiresShelter: [this.requiresShelterAllowance || this.requiresShelterReferral],
       requiresShelterType: [
-        this.requiresShelterReferral ? ShelterType.referral : this.requiresShelterAllowance ? ShelterType.allowance : undefined,
+        this.requiresShelterReferral
+          ? ShelterType.referral
+          : this.requiresShelterAllowance
+            ? ShelterType.allowance
+            : undefined,
         this.customValidationService.conditionalValidation(
           () => this.needsForm.controls.requiresShelter.value === true,
           Validators.required
@@ -612,7 +623,9 @@ export class StepEssFileService {
     this.evacueeSession.currentNeedsAssessment = essNeeds;
     this.evacueeSession.evacFile = essFile;
     this.wizardService.createObjectReference(essFile, 'file');
-    const primaryLastName = essFile.householdMembers?.find((member) => member.type === HouseholdMemberType.Registrant).lastName;
+    const primaryLastName = essFile.householdMembers?.find(
+      (member) => member.type === HouseholdMemberType.Registrant
+    ).lastName;
 
     //Additional Behind the scenes variables
     this.taskNumber = essFile.task.taskNumber;
@@ -645,7 +658,9 @@ export class StepEssFileService {
 
     this.selectedHouseholdMembers = undefined;
 
-    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find((ins) => ins.apiValue === this.householdMembers?.length > 2)?.value;
+    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === this.householdMembers?.length > 2
+    )?.value;
 
     // Animals tab
     const petsArray = [];
@@ -688,7 +703,9 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.essTabs?.some((tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review');
+    return this.essTabs?.some(
+      (tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review'
+    );
   }
 
   /**

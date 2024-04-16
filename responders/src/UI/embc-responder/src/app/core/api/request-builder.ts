@@ -57,7 +57,9 @@ abstract class Parameter {
     if (value === null || value === undefined) {
       return '';
     } else if (value instanceof Array) {
-      return value.map((v) => this.serializeValue(v).split(separator).join(encodeURIComponent(separator))).join(separator);
+      return value
+        .map((v) => this.serializeValue(v).split(separator).join(encodeURIComponent(separator)))
+        .join(separator);
     } else if (typeof value === 'object') {
       const array: string[] = [];
       for (const key of Object.keys(value)) {
@@ -145,7 +147,8 @@ class QueryParameter extends Parameter {
           params = params.append(this.name, this.serializeValue(v));
         }
       } else {
-        const separator = this.options.style === 'spaceDelimited' ? ' ' : this.options.style === 'pipeDelimited' ? '|' : ',';
+        const separator =
+          this.options.style === 'spaceDelimited' ? ' ' : this.options.style === 'pipeDelimited' ? '|' : ',';
         return params.append(this.name, this.serializeValue(this.value, separator));
       }
     } else if (this.value !== null && typeof this.value === 'object') {

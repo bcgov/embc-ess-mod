@@ -47,7 +47,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         if (state?.action === 'edit') {
           this.editFlag = true;
         }
-        if (state?.action === 'clone' || this.appBaseService.wizardProperties.wizardType === WizardType.ExtendSupports) {
+        if (
+          state?.action === 'clone' ||
+          this.appBaseService.wizardProperties.wizardType === WizardType.ExtendSupports
+        ) {
           this.cloneFlag = true;
         }
       }
@@ -129,7 +132,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         recipientLastName: [
           this.cloneFlag
             ? this.cloneSupportDetailsService.recipientLastName
-            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() || ''
+            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+              ''
         ],
         receivingRegistrantId: [
           this.cloneFlag
@@ -198,7 +202,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         ]
       },
       {
-        validators: [this.customValidation.confirmNotificationEmailValidator(), this.customValidation.confirmNotificationMobileValidator()]
+        validators: [
+          this.customValidation.confirmNotificationEmailValidator(),
+          this.customValidation.confirmNotificationMobileValidator()
+        ]
       }
     );
   }
@@ -315,9 +322,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   private billetingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostAddress: [this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''],
-      hostCity: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '', [this.customValidation.whitespaceValidator()]],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
         this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
@@ -353,8 +366,14 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   private groupLodgingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostCity: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '', [Validators.required]],
       hostCommunityCode: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? ''],
       hostPhone: [
@@ -366,7 +385,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   private groupShelterAllowanceSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
         this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [

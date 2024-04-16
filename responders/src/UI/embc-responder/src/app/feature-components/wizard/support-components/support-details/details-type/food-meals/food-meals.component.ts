@@ -65,9 +65,12 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
    * Calculates the total restaurant meals amount
    */
   updateTotalAmount() {
-    const breakfastAmount = globalConst.mealRate.breakfast * this.referralForm.get('noOfBreakfast').value * this.noOfHouseholdMembers;
-    const lunchAmount = globalConst.mealRate.lunch * this.referralForm.get('noOfLunches').value * this.noOfHouseholdMembers;
-    const dinnerAmount = globalConst.mealRate.dinner * this.referralForm.get('noOfDinners').value * this.noOfHouseholdMembers;
+    const breakfastAmount =
+      globalConst.mealRate.breakfast * this.referralForm.get('noOfBreakfast').value * this.noOfHouseholdMembers;
+    const lunchAmount =
+      globalConst.mealRate.lunch * this.referralForm.get('noOfLunches').value * this.noOfHouseholdMembers;
+    const dinnerAmount =
+      globalConst.mealRate.dinner * this.referralForm.get('noOfDinners').value * this.noOfHouseholdMembers;
     this.totalAmount = breakfastAmount + lunchAmount + dinnerAmount;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
     this.checkOverlimit(this.totalAmount);

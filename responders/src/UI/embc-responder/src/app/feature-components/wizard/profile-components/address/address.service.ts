@@ -45,10 +45,15 @@ export class AddressService {
         [Validators.required]
       ],
       isBcMailingAddress: [
-        this.stepEvacueeProfileService.isBcMailingAddress !== null ? this.stepEvacueeProfileService.isBcMailingAddress : '',
+        this.stepEvacueeProfileService.isBcMailingAddress !== null
+          ? this.stepEvacueeProfileService.isBcMailingAddress
+          : '',
         [
           this.customValidation
-            .conditionalValidation(() => this.primaryAddressForm.get('isNewMailingAddress').value === 'No', Validators.required)
+            .conditionalValidation(
+              () => this.primaryAddressForm.get('isNewMailingAddress').value === 'No',
+              Validators.required
+            )
             .bind(this.customValidation)
         ]
       ],
@@ -173,7 +178,8 @@ export class AddressService {
     this.stepEvacueeProfileService.primaryAddressDetails = this.primaryAddressForm.get('address').value;
     this.stepEvacueeProfileService.mailingAddressDetails = this.primaryAddressForm.get('mailingAddress').value;
     this.stepEvacueeProfileService.isBcAddress = this.primaryAddressForm.get('isBcAddress').value;
-    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress = this.primaryAddressForm.get('isNewMailingAddress').value;
+    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress =
+      this.primaryAddressForm.get('isNewMailingAddress').value;
     this.stepEvacueeProfileService.isBcMailingAddress = this.primaryAddressForm.get('isBcMailingAddress').value;
   }
 
@@ -222,8 +228,14 @@ export class AddressService {
             .conditionalValidation(
               () =>
                 this.primaryAddressForm.get('address.country').value !== null &&
-                (this.compareObjects(this.primaryAddressForm.get('address.country').value, globalConst.defaultCountry) ||
-                  this.compareObjects(this.primaryAddressForm.get('address.country').value, globalConst.usDefaultObject)),
+                (this.compareObjects(
+                  this.primaryAddressForm.get('address.country').value,
+                  globalConst.defaultCountry
+                ) ||
+                  this.compareObjects(
+                    this.primaryAddressForm.get('address.country').value,
+                    globalConst.usDefaultObject
+                  )),
               Validators.required
             )
             .bind(this.customValidation)
@@ -277,8 +289,14 @@ export class AddressService {
             .conditionalValidation(
               () =>
                 this.primaryAddressForm.get('mailingAddress.country').value !== null &&
-                (this.compareObjects(this.primaryAddressForm.get('mailingAddress.country').value, globalConst.defaultCountry) ||
-                  this.compareObjects(this.primaryAddressForm.get('mailingAddress.country').value, globalConst.usDefaultObject)),
+                (this.compareObjects(
+                  this.primaryAddressForm.get('mailingAddress.country').value,
+                  globalConst.defaultCountry
+                ) ||
+                  this.compareObjects(
+                    this.primaryAddressForm.get('mailingAddress.country').value,
+                    globalConst.usDefaultObject
+                  )),
               Validators.required
             )
             .bind(this.customValidation)

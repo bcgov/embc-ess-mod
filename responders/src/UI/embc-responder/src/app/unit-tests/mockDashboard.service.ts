@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CommunityType, EvacuationFileStatus, HouseholdMemberType, InsuranceOption, NeedsAssessmentType } from '../core/api/models';
+import {
+  CommunityType,
+  EvacuationFileStatus,
+  HouseholdMemberType,
+  InsuranceOption,
+  NeedsAssessmentType
+} from '../core/api/models';
 import { EvacuationFileModel } from '../core/models/evacuation-file.model';
 import { RegistrantProfileModel } from '../core/models/registrant-profile.model';
 import { ComputeRulesService } from '../core/services/computeRules.service';
@@ -240,7 +246,8 @@ export class MockDashboardService extends SearchDataService {
           id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
           linkedRegistrantId: null,
           firstName: 'abcd',
-          lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+          lastName:
+            'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
           initials: null,
           gender: 'Female',
           dateOfBirth: '09/09/1999',
@@ -283,7 +290,8 @@ export class MockDashboardService extends SearchDataService {
         id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
         linkedRegistrantId: null,
         firstName: 'abcd',
-        lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+        lastName:
+          'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
         initials: null,
         gender: 'Female',
         dateOfBirth: '09/09/1999',
@@ -320,7 +328,15 @@ export class MockDashboardService extends SearchDataService {
     essFileService: EssFileService,
     evacueeSearchService: MockEvacueeSearchService
   ) {
-    super(customValidation, appBaseService, computeState, evacueeProfileService, alertService, essFileService, evacueeSearchService);
+    super(
+      customValidation,
+      appBaseService,
+      computeState,
+      evacueeProfileService,
+      alertService,
+      essFileService,
+      evacueeSearchService
+    );
   }
 
   async getEvacueeProfile(evacueeProfileId: string): Promise<RegistrantProfileModel> {

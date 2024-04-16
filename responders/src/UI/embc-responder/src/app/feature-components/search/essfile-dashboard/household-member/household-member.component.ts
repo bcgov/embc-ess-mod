@@ -1,6 +1,10 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
-import { EvacuationFileHouseholdMember, HouseholdMemberType, RegistrantProfileSearchResult } from 'src/app/core/api/models';
+import {
+  EvacuationFileHouseholdMember,
+  HouseholdMemberType,
+  RegistrantProfileSearchResult
+} from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';

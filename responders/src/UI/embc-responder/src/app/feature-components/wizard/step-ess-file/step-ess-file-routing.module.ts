@@ -15,12 +15,16 @@ const routes: Routes = [
       {
         path: 'evacuation-details',
         loadChildren: () =>
-          import('../ess-file-components/evacuation-details/evacuation-details.module').then((m) => m.EvacuationDetailsModule)
+          import('../ess-file-components/evacuation-details/evacuation-details.module').then(
+            (m) => m.EvacuationDetailsModule
+          )
       },
       {
         path: 'household-members-pets',
         loadChildren: () =>
-          import('../ess-file-components/household-members-pets/household-members-pets.module').then((m) => m.HouseholdMembersPetsModule)
+          import('../ess-file-components/household-members-pets/household-members-pets.module').then(
+            (m) => m.HouseholdMembersPetsModule
+          )
       },
       {
         path: 'needs',
@@ -28,11 +32,13 @@ const routes: Routes = [
       },
       {
         path: 'security-phrase',
-        loadChildren: () => import('../ess-file-components/security-phrase/security-phrase.module').then((m) => m.SecurityPhraseModule)
+        loadChildren: () =>
+          import('../ess-file-components/security-phrase/security-phrase.module').then((m) => m.SecurityPhraseModule)
       },
       {
         path: 'review',
-        loadChildren: () => import('../ess-file-components/ess-file-review/ess-file-review.module').then((m) => m.EssFileReviewModule)
+        loadChildren: () =>
+          import('../ess-file-components/ess-file-review/ess-file-review.module').then((m) => m.EssFileReviewModule)
       }
     ]
   }

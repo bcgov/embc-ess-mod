@@ -26,12 +26,18 @@ export class UserService {
       tap((response) => {
         const userClaims = this.authorizationService.getClaimsForRole(MemberRole[response.role]);
         const taskNumber =
-          this.cacheService.get('loggedInTaskNumber') === null || undefined ? null : this.cacheService.get('loggedInTaskNumber');
+          this.cacheService.get('loggedInTaskNumber') === null || undefined
+            ? null
+            : this.cacheService.get('loggedInTaskNumber');
         const taskCommunity =
-          this.cacheService.get('loggedInTaskCommunity') === null || undefined ? null : this.cacheService.get('loggedInTaskCommunity');
-        const taskStartDate = this.cacheService.get('taskStartDate') === null || undefined ? null : this.cacheService.get('taskStartDate');
+          this.cacheService.get('loggedInTaskCommunity') === null || undefined
+            ? null
+            : this.cacheService.get('loggedInTaskCommunity');
+        const taskStartDate =
+          this.cacheService.get('taskStartDate') === null || undefined ? null : this.cacheService.get('taskStartDate');
 
-        const taskEndDate = this.cacheService.get('taskEndDate') === null || undefined ? null : this.cacheService.get('taskEndDate');
+        const taskEndDate =
+          this.cacheService.get('taskEndDate') === null || undefined ? null : this.cacheService.get('taskEndDate');
         this.currentProfileVal = {
           ...response,
           taskNumber,
@@ -53,11 +59,18 @@ export class UserService {
 
   public hasClaim(claimType: ClaimType, value: string): boolean {
     return (
-      this.currentProfileVal && this.currentProfileVal.claims.findIndex((c) => c.claimType === claimType && c.claimValue === value) >= 0
+      this.currentProfileVal &&
+      this.currentProfileVal.claims.findIndex((c) => c.claimType === claimType && c.claimValue === value) >= 0
     );
   }
 
-  public updateTaskNumber(taskNumber: string, taskStatus: string, taskCommunity: string, taskStartDate: string, taskEndDate: string): void {
+  public updateTaskNumber(
+    taskNumber: string,
+    taskStatus: string,
+    taskCommunity: string,
+    taskStartDate: string,
+    taskEndDate: string
+  ): void {
     this.cacheService.set('loggedInTaskNumber', taskNumber);
     this.cacheService.set('loggedInTaskCommunity', taskCommunity);
     this.cacheService.set('taskStartDate', taskStartDate);

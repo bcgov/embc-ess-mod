@@ -32,7 +32,10 @@ export class ViewSupportsService {
           label: this.defaultStatus,
           values: this.loadEvacueeListService
             .getSupportStatus()
-            .filter((status, index, self) => status.description && self.findIndex((s) => s.description === status.description) === index)
+            .filter(
+              (status, index, self) =>
+                status.description && self.findIndex((s) => s.description === status.description) === index
+            )
         }
       ]
     };

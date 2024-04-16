@@ -189,7 +189,10 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private formValidation() {
-    if (this.appBaseService?.appModel?.selectedEssFile?.id !== null && this.appBaseService?.appModel?.selectedEssFile?.id !== undefined) {
+    if (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    ) {
       if (this.stepEssFileService.securityPhrase === this.stepEssFileService.originalSecurityPhrase) {
         this.securityFormControl.securityPhrase.disable();
         this.editedSecurityPhrase = false;
@@ -203,7 +206,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   private editedPhraseFlag() {
     if (this.wizardType === 'review-file' || this.wizardType === 'complete-file') {
       // If the editedSecurityFlag is not defined, set its default as false
-      if (this.stepEssFileService.editedSecurityPhrase === undefined) this.stepEssFileService.editedSecurityPhrase = false;
+      if (this.stepEssFileService.editedSecurityPhrase === undefined)
+        this.stepEssFileService.editedSecurityPhrase = false;
 
       // Set up editedSecurityPhrase
       this.editedSecurityPhrase = this.stepEssFileService.editedSecurityPhrase;

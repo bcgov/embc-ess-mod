@@ -1,7 +1,9 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
+      >
     </div>
   </div>
 
@@ -84,7 +86,9 @@
       <mat-card
         id="interacCard"
         class="support-delivery-card"
-        [class.disabled]="appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available || cloneFlag"
+        [class.disabled]="
+          appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available || cloneFlag
+        "
         [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
         (click)="setSupportMethod(supportMethod.ETransfer)"
       >
@@ -116,9 +120,16 @@
         </div>
 
         <ng-template #etransferRequirementsBlock>
-          <div *ngIf="appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available" class="etransfer-ineligible">
-            <p *ngIf="appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible">Evacuee Ineligible</p>
-            <p *ngIf="appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.unavailable">Not Available</p>
+          <div
+            *ngIf="appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available"
+            class="etransfer-ineligible"
+          >
+            <p *ngIf="appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible">
+              Evacuee Ineligible
+            </p>
+            <p *ngIf="appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.unavailable">
+              Not Available
+            </p>
             <p *ngIf="appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.notAllowed">
               Not Available for this Support Type
             </p>

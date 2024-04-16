@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GetSecurityPhraseResponse, VerifySecurityPhraseRequest, VerifySecurityPhraseResponse } from 'src/app/core/api/models';
+import {
+  GetSecurityPhraseResponse,
+  VerifySecurityPhraseRequest,
+  VerifySecurityPhraseResponse
+} from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 
 @Injectable({
@@ -33,7 +37,10 @@ export class EssFileSecurityPhraseService {
    * @param body The secrurity phase given as an answer by the evacuee
    * @returns whether or not the given response is correct
    */
-  public verifySecurityPhrase(fileId: string, body: VerifySecurityPhraseRequest): Observable<VerifySecurityPhraseResponse> {
+  public verifySecurityPhrase(
+    fileId: string,
+    body: VerifySecurityPhraseRequest
+  ): Observable<VerifySecurityPhraseResponse> {
     return this.registrationService.registrationsVerifySecurityPhrase({
       fileId,
       body

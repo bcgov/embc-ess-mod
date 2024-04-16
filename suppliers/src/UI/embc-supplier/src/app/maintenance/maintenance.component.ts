@@ -8,7 +8,8 @@ import { ConfigGuard } from '../core/guards/config.guard';
   styleUrls: ['./maintenance.component.scss']
 })
 export class MaintenanceComponent implements OnInit {
-  @Input() bannerMsg: SafeHtml = 'The ERA Supplier Portal is currently undergoing maintenance and will be back as soon as possible.';
+  @Input() bannerMsg: SafeHtml =
+    'The ERA Supplier Portal is currently undergoing maintenance and will be back as soon as possible.';
 
   constructor(
     private configGuard: ConfigGuard,

@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { ExistingSupportDetailsComponent } from './existing-support-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

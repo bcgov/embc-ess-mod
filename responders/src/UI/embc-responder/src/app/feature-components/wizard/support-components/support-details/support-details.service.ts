@@ -57,9 +57,18 @@ export class SupportDetailsService {
   mealForm(): UntypedFormGroup {
     return this.formBuilder.group(
       {
-        noOfBreakfast: [(this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfBreakfast ?? '', [Validators.required]],
-        noOfLunches: [(this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfLunches ?? '', [Validators.required]],
-        noOfDinners: [(this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfDinners ?? '', [Validators.required]],
+        noOfBreakfast: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfBreakfast ?? '',
+          [Validators.required]
+        ],
+        noOfLunches: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfLunches ?? '',
+          [Validators.required]
+        ],
+        noOfDinners: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.noOfDinners ?? '',
+          [Validators.required]
+        ],
         totalAmount: [(this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)?.totalAmount ?? '']
       },
       {
@@ -70,11 +79,18 @@ export class SupportDetailsService {
 
   groceriesForm(): UntypedFormGroup {
     const groceriesForm = this.formBuilder.group({
-      noOfMeals: [(this.stepSupportsService?.supportDetails?.referral as Groceries)?.noOfMeals ?? '', [Validators.required]],
+      noOfMeals: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)?.noOfMeals ?? '',
+        [Validators.required]
+      ],
       totalAmount: [(this.stepSupportsService?.supportDetails?.referral as Groceries)?.totalAmount ?? ''],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern), this.customValidation.totalZeroValidator()]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)?.approverName ?? '',
@@ -114,36 +130,59 @@ export class SupportDetailsService {
       ],
       totalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as OtherTransport)?.totalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern), this.customValidation.totalZeroValidator()]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ]
     });
   }
 
   hotelMotelForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      noOfNights: [(this.stepSupportsService?.supportDetails?.referral as HotelMotel)?.noOfNights ?? '', [Validators.required]],
-      noOfRooms: [(this.stepSupportsService?.supportDetails?.referral as HotelMotel)?.noOfRooms ?? '', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as HotelMotel)?.noOfNights ?? '',
+        [Validators.required]
+      ],
+      noOfRooms: [
+        (this.stepSupportsService?.supportDetails?.referral as HotelMotel)?.noOfRooms ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   billetingForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      noOfNights: [(this.stepSupportsService?.supportDetails?.referral as Billeting)?.noOfNights ?? '', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as Billeting)?.noOfNights ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   groupLodgingForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      noOfNights: [(this.stepSupportsService?.supportDetails?.referral as GroupLodging)?.noOfNights ?? '', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as GroupLodging)?.noOfNights ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   shelterAllowanceLodgingForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      noOfNights: [(this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)?.noOfNights ?? '', [Validators.required]],
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)?.noOfNights ?? '',
+        [Validators.required]
+      ],
       totalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)?.totalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern), this.customValidation.totalZeroValidator()]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       processEvacueeCert: ['', [Validators.requiredTrue]]
     });
@@ -155,10 +194,17 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)?.approvedItems ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
-      totalAmount: [(this.stepSupportsService?.supportDetails?.referral as Incidentals)?.totalAmount ?? '', [Validators.required]],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Incidentals)?.totalAmount ?? '',
+        [Validators.required]
+      ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern), this.customValidation.totalZeroValidator()]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)?.approverName ?? '',
@@ -184,10 +230,17 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as Clothing)?.extremeWinterConditions ?? null,
         [Validators.required]
       ],
-      totalAmount: [(this.stepSupportsService?.supportDetails?.referral as Clothing)?.totalAmount ?? '', [Validators.required]],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Clothing)?.totalAmount ?? '',
+        [Validators.required]
+      ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern), this.customValidation.totalZeroValidator()]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)?.approverName ?? '',

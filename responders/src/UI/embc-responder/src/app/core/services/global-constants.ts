@@ -502,9 +502,11 @@ export const addNotesError = 'Unable to add notes at this time. Please try again
 export const hideNoteError = 'Unable to hide note at this time. Please try again later';
 export const showNoteError = 'Unable to show note at this time. Please try again later';
 export const editNotesError = 'Unable to edit note at this time. Please try again later';
-export const verifyRegistrantProfileError = 'Unable to verify the Registrant Profile at this time. Please try again later';
+export const verifyRegistrantProfileError =
+  'Unable to verify the Registrant Profile at this time. Please try again later';
 export const bcscInviteError = 'Unable to send BC Services Card invitation at this time. Please try again later';
-export const getProfileEssFilesError = 'Unable to retrieve ESS Files associated to the registrant at this time. Please try again later';
+export const getProfileEssFilesError =
+  'Unable to retrieve ESS Files associated to the registrant at this time. Please try again later';
 export const getPossibleEssfileMatchError =
   'Unable to retrieve possible ESS Files matches associated to the registrant at this time. Please try again later';
 export const fileDashboardError = 'Unable to load ESS File at this time. Please try again later';
@@ -521,7 +523,8 @@ export const supportCategoryListError = 'Unable to retrieve support categories a
 export const supportStatusListError = 'Unable to retrieve support status at this time. Please try again later';
 export const supportMethodListError = 'Unable to retrieve support payment methods at this time. Please try again later';
 export const supportVoidReasonsError = 'Unable to retrieve support void reasons at this time. Please try again later';
-export const supportReprintReasonsError = 'Unable to retrieve support reprint reasons at this time. Please try again later';
+export const supportReprintReasonsError =
+  'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const communityTypesError = 'Unable to retrieve community types at this time. Please try again later';
 export const identifiedNeedsError = 'Unable to retrieve identified needs at this time. Please try again later';
 export const securityPhraseError = 'Unable to retrieve security phrase at this time. Please try again later';
@@ -542,7 +545,8 @@ export const deleteSupplierError = 'Unable to remove supplier at this time. Plea
 export const evacueeReportError = 'Unable to retrieve an Evacuee Report at this time. Please try again later';
 export const supportReportError = 'Unable to retrieve a Support Report at this time. Please try again later';
 
-export const paperIdQuestion = 'Did the evacuee present any <b>government-issued photo ID</b> when the paper ESS File was completed?';
+export const paperIdQuestion =
+  'Did the evacuee present any <b>government-issued photo ID</b> when the paper ESS File was completed?';
 export const digitalIdQuestion = 'Can you present any <b>government-issued photo ID</b> to verify your identity?';
 
 export const newRegistrationTipText =
@@ -573,7 +577,8 @@ export const paperCompletedStatusText: DashboardBanner = {
 
 export const completedStatusText: DashboardBanner = {
   heading: 'Complete:',
-  content: 'Task number end date has expired and ESS File is closed. To extend or to add new supports, task number must be extended.'
+  content:
+    'Task number end date has expired and ESS File is closed. To extend or to add new supports, task number must be extended.'
 };
 
 export const activeStatusText: DashboardBanner = {

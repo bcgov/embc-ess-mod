@@ -129,7 +129,9 @@ export class TeamsService extends BaseService {
      */
     communityCode: string;
   }): Observable<Array<Team>> {
-    return this.teamsGetTeamsByCommunity$Response(params).pipe(map((r: StrictHttpResponse<Array<Team>>) => r.body as Array<Team>));
+    return this.teamsGetTeamsByCommunity$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<Team>>) => r.body as Array<Team>)
+    );
   }
 
   /**
@@ -178,7 +180,9 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsGetTeamMembers(params?: {}): Observable<Array<TeamMember>> {
-    return this.teamsGetTeamMembers$Response(params).pipe(map((r: StrictHttpResponse<Array<TeamMember>>) => r.body as Array<TeamMember>));
+    return this.teamsGetTeamMembers$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<TeamMember>>) => r.body as Array<TeamMember>)
+    );
   }
 
   /**
@@ -238,7 +242,9 @@ export class TeamsService extends BaseService {
      */
     body: TeamMember;
   }): Observable<TeamMemberResult> {
-    return this.teamsCreateTeamMember$Response(params).pipe(map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult));
+    return this.teamsCreateTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
+    );
   }
 
   /**
@@ -298,7 +304,9 @@ export class TeamsService extends BaseService {
      */
     memberId: string;
   }): Observable<TeamMember> {
-    return this.teamsGetTeamMember$Response(params).pipe(map((r: StrictHttpResponse<TeamMember>) => r.body as TeamMember));
+    return this.teamsGetTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<TeamMember>) => r.body as TeamMember)
+    );
   }
 
   /**
@@ -369,7 +377,9 @@ export class TeamsService extends BaseService {
      */
     body: TeamMember;
   }): Observable<TeamMemberResult> {
-    return this.teamsUpdateTeamMember$Response(params).pipe(map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult));
+    return this.teamsUpdateTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
+    );
   }
 
   /**
@@ -429,7 +439,9 @@ export class TeamsService extends BaseService {
      */
     memberId: string;
   }): Observable<TeamMemberResult> {
-    return this.teamsDeleteTeamMember$Response(params).pipe(map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult));
+    return this.teamsDeleteTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
+    );
   }
 
   /**
@@ -489,7 +501,9 @@ export class TeamsService extends BaseService {
      */
     memberId: string;
   }): Observable<TeamMemberResult> {
-    return this.teamsActivateTeamMember$Response(params).pipe(map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult));
+    return this.teamsActivateTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
+    );
   }
 
   /**
@@ -563,7 +577,10 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsIsUserNameExists$Response(params?: { userName?: string; memberId?: string }): Observable<StrictHttpResponse<boolean>> {
+  teamsIsUserNameExists$Response(params?: {
+    userName?: string;
+    memberId?: string;
+  }): Observable<StrictHttpResponse<boolean>> {
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsIsUserNameExistsPath, 'get');
     if (params) {
       rb.query('userName', params.userName, {});
@@ -580,7 +597,9 @@ export class TeamsService extends BaseService {
       .pipe(
         filter((r: any) => r instanceof HttpResponse),
         map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
+          return (r as HttpResponse<any>).clone({
+            body: String((r as HttpResponse<any>).body) === 'true'
+          }) as StrictHttpResponse<boolean>;
         })
       );
   }

@@ -20,7 +20,11 @@ export class MockEssfileDashboardService extends EssfileDashboardService {
     this.essFileValue = value;
   }
 
-  getPossibleProfileMatches(firstName: string, lastName: string, dateOfBirth: string): Observable<RegistrantProfileSearchResult[]> {
+  getPossibleProfileMatches(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string
+  ): Observable<RegistrantProfileSearchResult[]> {
     return new BehaviorSubject<RegistrantProfileSearchResult[]>(this.possibleProfileMatches);
   }
 

@@ -78,7 +78,10 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   linkToESSFile(fileId: string) {
     this.essFileService.getFileFromId(fileId).subscribe({
       next: (essFile) => {
-        const householdMemberId = this.possibleMatchedEssfilesService.getRegistrantIdToLink(essFile.householdMembers, this.evacueeProfile);
+        const householdMemberId = this.possibleMatchedEssfilesService.getRegistrantIdToLink(
+          essFile.householdMembers,
+          this.evacueeProfile
+        );
         this.possibleMatchedEssfilesService.setLinkMetaData(fileId, householdMemberId, this.evacueeProfile.id);
         this.router.navigate(['responder-access/search/security-phrase']);
       },

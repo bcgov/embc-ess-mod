@@ -1,5 +1,13 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';

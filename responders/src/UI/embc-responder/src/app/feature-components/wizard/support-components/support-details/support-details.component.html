@@ -1,7 +1,9 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
+      >
     </div>
   </div>
 
@@ -52,7 +54,10 @@
             <p
               class="bold"
               [ngStyle]="{
-                color: validTaskDate(evacueeSessionService?.evacFile?.task?.from, evacueeSessionService?.evacFile?.task?.to)
+                color: validTaskDate(
+                  evacueeSessionService?.evacFile?.task?.from,
+                  evacueeSessionService?.evacFile?.task?.to
+                )
                   ? 'black'
                   : 'red'
               }"
@@ -242,14 +247,18 @@
 
                             <mat-error
                               *ngIf="
-                                supportDetailsFormControl.fromDate.invalid && supportDetailsFormControl.fromDate.hasError('invalidDate')
+                                supportDetailsFormControl.fromDate.invalid &&
+                                supportDetailsFormControl.fromDate.hasError('invalidDate')
                               "
                             >
                               Please enter a valid date</mat-error
                             >
 
                             <mat-error
-                              *ngIf="supportDetailsFormControl.fromDate.invalid && supportDetailsFormControl.fromDate.hasError('required')"
+                              *ngIf="
+                                supportDetailsFormControl.fromDate.invalid &&
+                                supportDetailsFormControl.fromDate.hasError('required')
+                              "
                             >
                               From Date is required</mat-error
                             >
@@ -258,9 +267,18 @@
                         <div class="col-md-6">
                           <mat-form-field appearance="outline">
                             <mat-label>Valid From Time</mat-label>
-                            <input type="time" formControlName="fromTime" matInput placeholder="Valid From Time" required />
+                            <input
+                              type="time"
+                              formControlName="fromTime"
+                              matInput
+                              placeholder="Valid From Time"
+                              required
+                            />
                             <mat-error
-                              *ngIf="supportDetailsFormControl.fromTime.invalid && supportDetailsFormControl.fromTime.hasError('required')"
+                              *ngIf="
+                                supportDetailsFormControl.fromTime.invalid &&
+                                supportDetailsFormControl.fromTime.hasError('required')
+                              "
                             >
                               From Time is required</mat-error
                             >
@@ -278,7 +296,10 @@
                               </mat-option>
                             </mat-select>
                             <mat-error
-                              *ngIf="supportDetailsFormControl.noOfDays.invalid && supportDetailsFormControl.noOfDays.hasError('required')"
+                              *ngIf="
+                                supportDetailsFormControl.noOfDays.invalid &&
+                                supportDetailsFormControl.noOfDays.hasError('required')
+                              "
                             >
                               Required</mat-error
                             >
@@ -302,13 +323,19 @@
                             <mat-datepicker #toDatepicker></mat-datepicker>
 
                             <mat-error
-                              *ngIf="supportDetailsFormControl.toDate.invalid && supportDetailsFormControl.toDate.hasError('invalidDate')"
+                              *ngIf="
+                                supportDetailsFormControl.toDate.invalid &&
+                                supportDetailsFormControl.toDate.hasError('invalidDate')
+                              "
                             >
                               Please enter a valid date</mat-error
                             >
 
                             <mat-error
-                              *ngIf="supportDetailsFormControl.toDate.invalid && supportDetailsFormControl.toDate.hasError('required')"
+                              *ngIf="
+                                supportDetailsFormControl.toDate.invalid &&
+                                supportDetailsFormControl.toDate.hasError('required')
+                              "
                             >
                               To Date is required</mat-error
                             >
@@ -323,7 +350,10 @@
                             <mat-label>Valid To Time</mat-label>
                             <input type="time" formControlName="toTime" matInput placeholder="Valid To Time" required />
                             <mat-error
-                              *ngIf="supportDetailsFormControl.toTime.invalid && supportDetailsFormControl.toTime.hasError('required')"
+                              *ngIf="
+                                supportDetailsFormControl.toTime.invalid &&
+                                supportDetailsFormControl.toTime.hasError('required')
+                              "
                             >
                               To Time Required</mat-error
                             >
@@ -368,7 +398,10 @@
                       >
                     </div>
                   </div>
-                  <div class="row" *ngFor="let member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers">
+                  <div
+                    class="row"
+                    *ngFor="let member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers"
+                  >
                     <div class="col-md-12">
                       <mat-checkbox
                         (click)="$event.stopPropagation()"
@@ -381,7 +414,10 @@
                   </div>
                   <mat-error
                     class="custom-mat-error"
-                    *ngIf="supportDetailsFormControl.members.invalid && supportDetailsFormControl.members.hasError('noSelection')"
+                    *ngIf="
+                      supportDetailsFormControl.members.invalid &&
+                      supportDetailsFormControl.members.hasError('noSelection')
+                    "
                   >
                     Required</mat-error
                   >

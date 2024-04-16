@@ -11,7 +11,13 @@
       </p>
     </div>
     <div class="col-md-4 image-align">
-      <button *ngIf="note?.isEditable" class="list-image button-margin" (click)="editNote(note)" mat-icon-button aria-label="Edit">
+      <button
+        *ngIf="note?.isEditable"
+        class="list-image button-margin"
+        (click)="editNote(note)"
+        mat-icon-button
+        aria-label="Edit"
+      >
         <img src="/assets/images/edit.svg" height="40" width="40" />
         <img src="/assets/images/edit_onhover.svg" height="40" width="40" />
       </button>

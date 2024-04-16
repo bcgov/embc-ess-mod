@@ -90,8 +90,14 @@ export class EditSupplierComponent implements OnInit {
    */
   private createEditForm(): void {
     this.editForm = this.formBuilder.group({
-      supplierLegalName: [this.editSupplierService.editedSupplier?.legalName ?? '', [this.customValidation.whitespaceValidator()]],
-      supplierName: [this.editSupplierService.editedSupplier?.name ?? '', [this.customValidation.whitespaceValidator()]],
+      supplierLegalName: [
+        this.editSupplierService.editedSupplier?.legalName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      supplierName: [
+        this.editSupplierService.editedSupplier?.name ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       gstNumber: this.formBuilder.group(
         {
           part1: [
@@ -125,14 +131,20 @@ export class EditSupplierComponent implements OnInit {
    */
   private createSupplierAddressEditForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      addressLine1: [this.editSupplierService.editedSupplier?.address?.addressLine1 ?? '', [this.customValidation.whitespaceValidator()]],
+      addressLine1: [
+        this.editSupplierService.editedSupplier?.address?.addressLine1 ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       addressLine2: [this.editSupplierService.editedSupplier?.address?.addressLine2 ?? ''],
       community: [this.editSupplierService.editedSupplier?.address?.community ?? '', [Validators.required]],
       stateProvince: [
         this.editSupplierService.editedSupplier?.address?.stateProvince ?? globalConst.defaultProvince,
         [Validators.required]
       ],
-      country: [this.editSupplierService.editedSupplier?.address?.country ?? globalConst.defaultCountry, [Validators.required]],
+      country: [
+        this.editSupplierService.editedSupplier?.address?.country ?? globalConst.defaultCountry,
+        [Validators.required]
+      ],
       postalCode: [
         this.editSupplierService.editedSupplier?.address?.postalCode ?? '',
         [this.customValidation.postalValidation().bind(this.customValidation)]
@@ -142,8 +154,14 @@ export class EditSupplierComponent implements OnInit {
 
   private createContactEditForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      lastName: [this.editSupplierService.editedSupplier?.contact?.lastName ?? '', [this.customValidation.whitespaceValidator()]],
-      firstName: [this.editSupplierService.editedSupplier?.contact?.firstName ?? '', [this.customValidation.whitespaceValidator()]],
+      lastName: [
+        this.editSupplierService.editedSupplier?.contact?.lastName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      firstName: [
+        this.editSupplierService.editedSupplier?.contact?.firstName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       phone: [
         this.editSupplierService.editedSupplier?.contact?.phone ?? '',
         [Validators.required, this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]

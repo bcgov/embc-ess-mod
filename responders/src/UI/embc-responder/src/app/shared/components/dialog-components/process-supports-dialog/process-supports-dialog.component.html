@@ -14,7 +14,9 @@
 <form [formGroup]="addEvacForm" *ngIf="!includesEtranfer">
   <div class="row checkbox-section">
     <div class="col-md-12">
-      <mat-checkbox formControlName="addSummary" (change)="evacueeSummChangeEvent($event)">Include evacuee summary. </mat-checkbox>
+      <mat-checkbox formControlName="addSummary" (change)="evacueeSummChangeEvent($event)"
+        >Include evacuee summary.
+      </mat-checkbox>
     </div>
   </div>
 </form>

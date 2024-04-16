@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
@@ -165,7 +174,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     } else if (this.loggedInRole === MemberRole.Tier3) {
       return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3
+        ? true
+        : false;
     }
   }
 }

@@ -55,7 +55,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     // this.securityQuestions =
     //   this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
-    if (this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id === undefined && this.securityQuestions.length === 0) {
+    if (
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id === undefined &&
+      this.securityQuestions.length === 0
+    ) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else if (this.securityQuestions.length === 0) {
       this.profileSecurityQuestionsService.getSecurityQuestions(this.evacueeProfileId).subscribe({

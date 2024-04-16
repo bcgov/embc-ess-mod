@@ -198,6 +198,15 @@ export class MockStepEvacueeProfileService extends StepEvacueeProfileService {
     alertService: AlertService,
     router: Router
   ) {
-    super(dialog, wizardService, locationService, appBaseService, computeState, securityQuestionsService, alertService, router);
+    super(
+      dialog,
+      wizardService,
+      locationService,
+      appBaseService,
+      computeState,
+      securityQuestionsService,
+      alertService,
+      router
+    );
   }
 }

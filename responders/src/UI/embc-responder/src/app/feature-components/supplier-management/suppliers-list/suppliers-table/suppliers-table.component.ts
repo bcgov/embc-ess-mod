@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -84,7 +93,11 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
           case 'name':
             return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
           case 'mutualAid':
-            return compare(a.mutualAid?.givenToTeam?.name.toLowerCase(), b.mutualAid?.givenToTeam?.name.toLowerCase(), isAsc);
+            return compare(
+              a.mutualAid?.givenToTeam?.name.toLowerCase(),
+              b.mutualAid?.givenToTeam?.name.toLowerCase(),
+              isAsc
+            );
           case 'status':
             return compare(a.status, b.status, isAsc);
           case 'providesMutualAid':
@@ -124,7 +137,8 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
-        (data.legalName !== null && data.legalName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
+        (data.legalName !== null &&
+          data.legalName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
         (data.name !== null && data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1)
       ) {
         return true;

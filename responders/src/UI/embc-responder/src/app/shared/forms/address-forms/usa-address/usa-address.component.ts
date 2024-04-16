@@ -18,7 +18,9 @@ export class UsaAddressComponent implements OnInit {
   constructor(private locationService: LocationsService) {}
 
   ngOnInit(): void {
-    this.states = this.locationService.getActiveStateProvinceList().filter((sp) => sp.countryCode === this.country.countryCode);
+    this.states = this.locationService
+      .getActiveStateProvinceList()
+      .filter((sp) => sp.countryCode === this.country.countryCode);
 
     this.filteredOptions = this.addressForm.get('stateProvince').valueChanges.pipe(
       startWith(''),

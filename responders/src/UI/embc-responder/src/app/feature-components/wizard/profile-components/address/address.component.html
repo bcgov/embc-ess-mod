@@ -10,8 +10,9 @@
     <div class="col-md-12 content-container">
       <form id="primaryAddressForm" [formGroup]="primaryAddressForm">
         <p>
-          Primary residence is the primary location that a person or household inhabits. A primary residence can be any type of dwelling
-          (e.g. house, apartment, trailer, boat), but is where the person or household lives the majority of the time.
+          Primary residence is the primary location that a person or household inhabits. A primary residence can be any
+          type of dwelling (e.g. house, apartment, trailer, boat), but is where the person or household lives the
+          majority of the time.
         </p>
         <p>A person can only have one primary residence.</p>
         <div class="row">
@@ -21,8 +22,8 @@
             </label>
             <br />
             <p class="hint">
-              A valid B.C. postal code must be entered in order to be eligible to receive an e-Transfer for qualifying supports in the event
-              of an evacuation.
+              A valid B.C. postal code must be entered in order to be eligible to receive an e-Transfer for qualifying
+              supports in the event of an evacuation.
             </p>
 
             <mat-radio-group
@@ -70,19 +71,26 @@
                     [matAutocomplete]="auto"
                     required
                   />
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn" (optionSelected)="setCountryConfig($event)">
+                  <mat-autocomplete
+                    #auto="matAutocomplete"
+                    [displayWith]="countryDisplayFn"
+                    (optionSelected)="setCountryConfig($event)"
+                  >
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option" [id]="option.name">
                       {{ option.name }}
                     </mat-option>
                   </mat-autocomplete>
                   <mat-error
                     *ngIf="
-                      primaryAddressFormGroup?.controls?.country.invalid && primaryAddressFormGroup?.controls?.country.hasError('required')
+                      primaryAddressFormGroup?.controls?.country.invalid &&
+                      primaryAddressFormGroup?.controls?.country.hasError('required')
                     "
                   >
                     Country is required</mat-error
                   >
-                  <mat-error *ngIf="validateCountry(primaryAddressFormGroup?.controls?.country)"> Country is invalid</mat-error>
+                  <mat-error *ngIf="validateCountry(primaryAddressFormGroup?.controls?.country)">
+                    Country is invalid</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
@@ -147,7 +155,9 @@
         <div *ngIf="primaryAddressFormControl?.isNewMailingAddress?.value === 'No'">
           <div class="row">
             <div class="col-md-12">
-              <label id="isBcMailingAddress-radio-group-label"> Is your <strong>mailing address</strong> within British Columbia? </label>
+              <label id="isBcMailingAddress-radio-group-label">
+                Is your <strong>mailing address</strong> within British Columbia?
+              </label>
               <mat-radio-group
                 formControlName="isBcMailingAddress"
                 aria-labelledby="isBcMailingAddress-radio-group-label"
@@ -196,7 +206,11 @@
                       [displayWith]="countryDisplayFn"
                       (optionSelected)="setMailingCountryConfig($event)"
                     >
-                      <mat-option *ngFor="let option of mailingFilteredOptions | async" [value]="option" [id]="option.name">
+                      <mat-option
+                        *ngFor="let option of mailingFilteredOptions | async"
+                        [value]="option"
+                        [id]="option.name"
+                      >
                         {{ option.name }}
                       </mat-option>
                     </mat-autocomplete>
@@ -208,7 +222,9 @@
                     >
                       Country is required</mat-error
                     >
-                    <mat-error *ngIf="validateCountry(mailingAddressFormGroup?.controls?.country)"> Country is invalid</mat-error>
+                    <mat-error *ngIf="validateCountry(mailingAddressFormGroup?.controls?.country)">
+                      Country is invalid</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>

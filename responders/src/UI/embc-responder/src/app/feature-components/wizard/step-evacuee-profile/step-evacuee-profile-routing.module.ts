@@ -14,15 +14,20 @@ const routes: Routes = [
       // },
       {
         path: 'collection-notice',
-        loadChildren: () => import('../profile-components/collection-notice/collection-notice.module').then((m) => m.CollectionNoticeModule)
+        loadChildren: () =>
+          import('../profile-components/collection-notice/collection-notice.module').then(
+            (m) => m.CollectionNoticeModule
+          )
       },
       {
         path: 'restriction',
-        loadChildren: () => import('../profile-components/restriction/restriction.module').then((m) => m.RestrictionModule)
+        loadChildren: () =>
+          import('../profile-components/restriction/restriction.module').then((m) => m.RestrictionModule)
       },
       {
         path: 'evacuee-details',
-        loadChildren: () => import('../profile-components/evacuee-details/evacuee-details.module').then((m) => m.EvacueeDetailsModule)
+        loadChildren: () =>
+          import('../profile-components/evacuee-details/evacuee-details.module').then((m) => m.EvacueeDetailsModule)
       },
       {
         path: 'address',
@@ -35,11 +40,14 @@ const routes: Routes = [
       {
         path: 'security-questions',
         loadChildren: () =>
-          import('../profile-components/security-questions/security-questions.module').then((m) => m.SecurityQuestionsModule)
+          import('../profile-components/security-questions/security-questions.module').then(
+            (m) => m.SecurityQuestionsModule
+          )
       },
       {
         path: 'review',
-        loadChildren: () => import('../profile-components/profile-review/profile-review.module').then((m) => m.ProfileReviewModule)
+        loadChildren: () =>
+          import('../profile-components/profile-review/profile-review.module').then((m) => m.ProfileReviewModule)
       }
     ]
   }

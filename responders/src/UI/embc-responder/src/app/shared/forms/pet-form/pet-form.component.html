@@ -8,7 +8,8 @@
         <input matInput formControlName="type" placeholder="e.g. dog, cat and/or hamster" maxlength="100" />
         <mat-error
           *ngIf="
-            petFormControl.type.invalid && (petFormControl.type.hasError('required') || petFormControl.type.hasError('whitespaceError'))
+            petFormControl.type.invalid &&
+            (petFormControl.type.hasError('required') || petFormControl.type.hasError('whitespaceError'))
           "
           >Pet Type is required
         </mat-error>
@@ -26,7 +27,9 @@
           "
           >How many pets is required</mat-error
         >
-        <mat-error *ngIf="petFormControl.quantity.invalid && petFormControl.quantity.hasError('pattern')">Quantity is invalid</mat-error>
+        <mat-error *ngIf="petFormControl.quantity.invalid && petFormControl.quantity.hasError('pattern')"
+          >Quantity is invalid</mat-error
+        >
       </mat-form-field>
     </div>
   </div>

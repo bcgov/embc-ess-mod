@@ -157,7 +157,10 @@ export class StepSupportsService {
     const referral: Referral | Interac =
       method === SupportMethod.Referral
         ? {
-            manualReferralId: this.supportDetails.externalReferenceId !== undefined ? 'R' + this.supportDetails.externalReferenceId : '',
+            manualReferralId:
+              this.supportDetails.externalReferenceId !== undefined
+                ? 'R' + this.supportDetails.externalReferenceId
+                : '',
             issuedToPersonName:
               this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
                 ? this.supportDelivery.details.hostName

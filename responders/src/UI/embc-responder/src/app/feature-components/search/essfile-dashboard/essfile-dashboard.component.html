@@ -63,7 +63,8 @@
       <div class="col-md-12">
         <span class="field-label">Main Applicant:</span>
         <span class="bold" *ngIf="essFile?.primaryRegistrantLastName || essFile?.primaryRegistrantFirstName">
-          {{ essFile?.primaryRegistrantLastName | uppercase }}, {{ essFile?.primaryRegistrantFirstName | titlecase }}</span
+          {{ essFile?.primaryRegistrantLastName | uppercase }},
+          {{ essFile?.primaryRegistrantFirstName | titlecase }}</span
         >
       </div>
     </div>
@@ -131,7 +132,9 @@
 
     <div class="row">
       <div class="col-md-12 address-col">
-        <span class="bold" *ngIf="essFile?.evacuatedFromAddress?.addressLine1"> {{ essFile?.evacuatedFromAddress?.addressLine1 }}</span>
+        <span class="bold" *ngIf="essFile?.evacuatedFromAddress?.addressLine1">
+          {{ essFile?.evacuatedFromAddress?.addressLine1 }}</span
+        >
         <span *ngIf="essFile?.evacuatedFromAddress?.addressLine2 !== null" class="bold"
           >, {{ essFile?.evacuatedFromAddress?.addressLine2 }}</span
         >
@@ -233,7 +236,15 @@
   <div class="row content-row">
     <div class="col-md-12 file-side-menu">
       <mat-sidenav-container class="file-container">
-        <mat-sidenav [autoFocus]="true" #sidenav mode="side" opened class="file-sideNav" [fixedInViewport]="false" [disableClose]="true">
+        <mat-sidenav
+          [autoFocus]="true"
+          #sidenav
+          mode="side"
+          opened
+          class="file-sideNav"
+          [fixedInViewport]="false"
+          [disableClose]="true"
+        >
           <a
             mat-button
             class="a-mat-button"
@@ -243,8 +254,18 @@
           >
             <div class="row">
               <div class="col-md-3 img-align-col">
-                <img class="img-align" src="/assets/images/file-dashboard-menu/overview-inactive.svg" width="32" height="32" />
-                <img class="img-align" src="/assets/images/file-dashboard-menu/overview-active.svg" width="32" height="32" />
+                <img
+                  class="img-align"
+                  src="/assets/images/file-dashboard-menu/overview-inactive.svg"
+                  width="32"
+                  height="32"
+                />
+                <img
+                  class="img-align"
+                  src="/assets/images/file-dashboard-menu/overview-active.svg"
+                  width="32"
+                  height="32"
+                />
               </div>
               <div class="col-md-9 menu-title">Overview</div>
             </div>

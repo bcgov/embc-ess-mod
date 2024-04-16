@@ -14,7 +14,9 @@
               <mat-form-field appearance="outline">
                 <mat-label>Last Name</mat-label>
                 <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
-                <mat-error *ngIf="contactFormControl.lastName.invalid && contactFormControl.lastName.hasError('whitespaceError')">
+                <mat-error
+                  *ngIf="contactFormControl.lastName.invalid && contactFormControl.lastName.hasError('whitespaceError')"
+                >
                   Last Name is required</mat-error
                 >
               </mat-form-field>
@@ -26,7 +28,11 @@
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
                 <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
-                <mat-error *ngIf="contactFormControl.firstName.invalid && contactFormControl.firstName.hasError('whitespaceError')">
+                <mat-error
+                  *ngIf="
+                    contactFormControl.firstName.invalid && contactFormControl.firstName.hasError('whitespaceError')
+                  "
+                >
                   First Name is required</mat-error
                 >
               </mat-form-field>
@@ -47,7 +53,9 @@
                 <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
                   Telephone Number is required</mat-error
                 >
-                <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')">
+                <mat-error
+                  *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')"
+                >
                   Telephone number must have 10 digits</mat-error
                 >
               </mat-form-field>
@@ -59,7 +67,9 @@
               <mat-form-field appearance="outline">
                 <mat-label>Email Address</mat-label>
                 <input formControlName="email" matInput placeholder="Email Address" />
-                <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')">Invalid email</mat-error>
+                <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')"
+                  >Invalid email</mat-error
+                >
               </mat-form-field>
             </div>
           </div>
@@ -82,8 +92,8 @@
         <span class="tips-heading"><b>Tips: </b>Contact Person</span>
       </div>
       <p class="tips-info">
-        The supplier contact person may be asked for additional information and/ or clarification regarding an invoice/ receipt
-        reimbursement submission.
+        The supplier contact person may be asked for additional information and/ or clarification regarding an invoice/
+        receipt reimbursement submission.
       </p>
     </mat-card>
   </div>

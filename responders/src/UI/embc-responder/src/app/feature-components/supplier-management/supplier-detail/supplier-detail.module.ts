@@ -10,6 +10,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SupplierDetailComponent],
-  imports: [CommonModule, SupplierDetailRoutingModule, ReactiveFormsModule, MaterialModule, SharedModule, CustomPipeModule]
+  imports: [
+    CommonModule,
+    SupplierDetailRoutingModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    SharedModule,
+    CustomPipeModule
+  ]
 })
 export class SupplierDetailModule {}

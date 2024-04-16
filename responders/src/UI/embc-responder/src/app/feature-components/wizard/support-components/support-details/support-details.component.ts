@@ -1,6 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -98,7 +105,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   paperCompletedDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
-    return moment(date).isBetween(moment(this.evacueeSessionService?.evacFile?.task?.from), moment(new Date()), 'D', '[]');
+    return moment(date).isBetween(
+      moment(this.evacueeSessionService?.evacFile?.task?.from),
+      moment(new Date()),
+      'D',
+      '[]'
+    );
   };
 
   ngOnInit(): void {
@@ -265,7 +277,8 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   isChecked() {
     return (
-      this.supportDetailsForm.get('members').value.length === this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.length
+      this.supportDetailsForm.get('members').value.length ===
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.length
     );
   }
 
@@ -318,20 +331,28 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
 
   generateSupportTypeValue(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.value;
     } else {
-      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.value;
     }
   }
@@ -410,7 +431,8 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   mapPaperFields() {
-    this.stepSupportsService.supportDetails.externalReferenceId = this.supportDetailsForm.get('paperSupportNumber').value;
+    this.stepSupportsService.supportDetails.externalReferenceId =
+      this.supportDetailsForm.get('paperSupportNumber').value;
     this.stepSupportsService.supportDetails.issuedBy =
       this.supportDetailsForm.get('paperIssuedBy.firstName').value +
       ' ' +
@@ -467,7 +489,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   private setFromDate() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.fromDate ? this.stepSupportsService?.supportDetails?.fromDate : '';
+      return this.stepSupportsService?.supportDetails?.fromDate
+        ? this.stepSupportsService?.supportDetails?.fromDate
+        : '';
     } else {
       return this.stepSupportsService?.supportDetails?.fromDate
         ? this.stepSupportsService?.supportDetails?.fromDate
@@ -477,9 +501,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   private setFromTime() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.fromTime ? this.stepSupportsService?.supportDetails?.fromTime : '';
+      return this.stepSupportsService?.supportDetails?.fromTime
+        ? this.stepSupportsService?.supportDetails?.fromTime
+        : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.fromTime ? this.stepSupportsService?.supportDetails?.fromTime : this.currentTime;
+      return this.stepSupportsService?.supportDetails?.fromTime
+        ? this.stepSupportsService?.supportDetails?.fromTime
+        : this.currentTime;
     }
   }
 
@@ -487,7 +515,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (this.evacueeSessionService.isPaperBased) {
       return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : this.currentTime;
+      return this.stepSupportsService?.supportDetails?.toTime
+        ? this.stepSupportsService?.supportDetails?.toTime
+        : this.currentTime;
     }
   }
 
@@ -510,17 +540,25 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       members: this.formBuilder.array([], [this.customValidation.memberCheckboxValidator()]),
       referral: this.supportDetailsService.generateDynamicForm(this.stepSupportsService?.supportTypeToAdd?.value),
       paperSupportNumber: [
-        this.stepSupportsService?.supportDetails?.externalReferenceId ? this.stepSupportsService?.supportDetails?.externalReferenceId : '',
+        this.stepSupportsService?.supportDetails?.externalReferenceId
+          ? this.stepSupportsService?.supportDetails?.externalReferenceId
+          : '',
         [
           this.customValidation
-            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.whitespaceValidator()
+            )
             .bind(this.customValidation),
 
           this.customValidation
             .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.pattern(globalConst.supportNumberPattern))
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.pattern(globalConst.supportNumberPattern)
+            )
             .bind(this.customValidation)
         ]
       ],
@@ -531,7 +569,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             : '',
           [
             this.customValidation
-              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
               .bind(this.customValidation)
           ]
         ],
@@ -541,7 +582,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             : '',
           [
             this.customValidation
-              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
               .bind(this.customValidation)
           ]
         ]
@@ -553,7 +597,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.required)
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.validDateValidator())
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.validDateValidator()
+            )
             .bind(this.customValidation)
         ]
       ]
@@ -566,14 +613,20 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       .setValidators([
         this.customValidation.userNameExistsValidator(filteredReferrals.length > 0).bind(this.customValidation),
         this.customValidation
-          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+          .conditionalValidation(
+            () => this.evacueeSessionService.isPaperBased,
+            this.customValidation.whitespaceValidator()
+          )
           .bind(this.customValidation),
 
         this.customValidation
           .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
           .bind(this.customValidation),
         this.customValidation
-          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.pattern(globalConst.supportNumberPattern))
+          .conditionalValidation(
+            () => this.evacueeSessionService.isPaperBased,
+            Validators.pattern(globalConst.supportNumberPattern)
+          )
           .bind(this.customValidation)
       ]);
     this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();

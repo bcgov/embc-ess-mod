@@ -133,7 +133,10 @@ export class SubmissionComponent implements OnInit {
         '',
         [
           this.customValidator
-            .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, this.customValidator.whitespaceValidator())
+            .conditionalValidation(
+              () => this.supplierForm.get('remitToOtherBusiness').value,
+              this.customValidator.whitespaceValidator()
+            )
             .bind(this.customValidator)
         ]
       ],
@@ -169,7 +172,10 @@ export class SubmissionComponent implements OnInit {
           '',
           [
             this.customValidator
-              .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, this.customValidator.whitespaceValidator())
+              .conditionalValidation(
+                () => this.supplierForm.get('remitToOtherBusiness').value,
+                this.customValidator.whitespaceValidator()
+              )
               .bind(this.customValidator)
           ]
         ],
@@ -280,7 +286,10 @@ export class SubmissionComponent implements OnInit {
 
   createInvoiceFormArray() {
     return this.builder.group({
-      invoiceNumber: ['', [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]],
+      invoiceNumber: [
+        '',
+        [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]
+      ],
       invoiceDate: [
         null,
         [
@@ -298,7 +307,10 @@ export class SubmissionComponent implements OnInit {
 
   createReceiptFormArray() {
     return this.builder.group({
-      referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]],
+      referralNumber: [
+        '',
+        [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]
+      ],
       referrals: this.builder.array([]),
       receiptTotalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),

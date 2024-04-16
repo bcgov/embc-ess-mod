@@ -1,5 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -105,7 +114,10 @@ describe('EvacueeNameSearchComponent', () => {
     component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
     component.search();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/search-results'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/search-results'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   it('should set paper form and navigate to search results page', inject([Router], (router: Router) => {
@@ -121,7 +133,10 @@ describe('EvacueeNameSearchComponent', () => {
     component.nameSearchForm.get('paperBasedEssFile').setValue('T123456');
     component.search();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/search-results'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/search-results'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   afterAll(() => {

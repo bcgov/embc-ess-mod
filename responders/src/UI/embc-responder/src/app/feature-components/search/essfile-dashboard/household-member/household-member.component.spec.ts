@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { HouseholdMemberComponent } from './household-member.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -24,7 +33,13 @@ describe('HouseholdMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, BrowserAnimationsModule],
+      imports: [
+        MatDialogModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule
+      ],
       declarations: [HouseholdMemberComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },

@@ -51,7 +51,9 @@ export class EssfileDashboardService {
   ) {}
 
   get essFile(): EvacuationFileModel {
-    return this.essFileVal === null || this.essFileVal === undefined ? JSON.parse(this.cacheService.get('essFile')) : this.essFileVal;
+    return this.essFileVal === null || this.essFileVal === undefined
+      ? JSON.parse(this.cacheService.get('essFile'))
+      : this.essFileVal;
   }
 
   set essFile(essFileVal: EvacuationFileModel) {
@@ -87,7 +89,11 @@ export class EssfileDashboardService {
     this.displayMemberButtonVal = value;
   }
 
-  public getPossibleProfileMatches(firstName: string, lastName: string, dateOfBirth: string): Observable<RegistrantProfileSearchResult[]> {
+  public getPossibleProfileMatches(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string
+  ): Observable<RegistrantProfileSearchResult[]> {
     return this.registrationService.registrationsSearchMatchingRegistrants({
       firstName,
       lastName,
@@ -107,7 +113,10 @@ export class EssfileDashboardService {
         this.displayMemberButton = HouseholdMemberButtons.createProfile;
 
         // Member has 1 match and has security questions OR Member has more than 1 match
-      } else if ((this.matchedProfiles?.length === 1 && this.matchedProfiles[0]?.isProfileCompleted) || this.matchedProfiles?.length > 1) {
+      } else if (
+        (this.matchedProfiles?.length === 1 && this.matchedProfiles[0]?.isProfileCompleted) ||
+        this.matchedProfiles?.length > 1
+      ) {
         this.displayMemberButton = HouseholdMemberButtons.linkProfile;
 
         // Member has 1 match and doesn't have security questions
@@ -192,8 +201,10 @@ export class EssfileDashboardService {
     return (
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !== null &&
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !== '' &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !== undefined &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.stateProvince?.code === 'BC'
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !==
+        undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.stateProvince?.code ===
+        'BC'
     );
   }
 

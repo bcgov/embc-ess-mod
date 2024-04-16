@@ -11,7 +11,13 @@
     </div>
   </div>
   <div class="loader-align" *ngIf="isLoading">
-    <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="30" [color]="color"></app-loader>
+    <app-loader
+      class="spinner"
+      [showLoader]="isLoading"
+      [strokeWidth]="10"
+      [diameter]="30"
+      [color]="color"
+    ></app-loader>
   </div>
   <mat-accordion>
     <mat-expansion-panel

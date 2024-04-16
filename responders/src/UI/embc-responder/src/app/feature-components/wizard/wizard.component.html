@@ -1,6 +1,13 @@
 <div class="div-container">
   <mat-sidenav-container class="wizard-container">
-    <mat-sidenav [autoFocus]="true" #sidenav mode="side" opened class="wizard-sideNav" [fixedBottomGap]="0" [disableClose]="true"
+    <mat-sidenav
+      [autoFocus]="true"
+      #sidenav
+      mode="side"
+      opened
+      class="wizard-sideNav"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
       ><!--fullscreen [fixedInViewport]="true"  [fixedTopGap]="0"-->
       <div class="row logo">
         <div class="col-md-12">
@@ -17,8 +24,18 @@
         >
           <div (click)="goToStep(menu?.isLocked, $event, menu?.route)" class="row outer-div">
             <div class="col-md-3 img-align-col">
-              <img class="img-align" src="{{ menu?.img?.imgSrc }}" width="{{ menu?.img?.width }}" height="{{ menu?.img?.height }}" />
-              <img class="img-align" src="{{ menu?.img?.altSrc }}" width="{{ menu?.img?.width }}" height="{{ menu?.img?.height }}" />
+              <img
+                class="img-align"
+                src="{{ menu?.img?.imgSrc }}"
+                width="{{ menu?.img?.width }}"
+                height="{{ menu?.img?.height }}"
+              />
+              <img
+                class="img-align"
+                src="{{ menu?.img?.altSrc }}"
+                width="{{ menu?.img?.width }}"
+                height="{{ menu?.img?.height }}"
+              />
             </div>
             <div class="col-md-6">
               <p class="menu-p">

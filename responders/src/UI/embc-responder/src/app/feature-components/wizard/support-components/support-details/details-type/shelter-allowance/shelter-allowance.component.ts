@@ -66,7 +66,8 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
 
       if (count.adultCount === 0) {
         this.totalAmount =
-          this.nofNight * (globalConst.shelterAllowanceRate.rate + (count.minorCount - 1) * globalConst.shelterAllowanceRate.child);
+          this.nofNight *
+          (globalConst.shelterAllowanceRate.rate + (count.minorCount - 1) * globalConst.shelterAllowanceRate.child);
       } else {
         this.totalAmount =
           this.nofNight *

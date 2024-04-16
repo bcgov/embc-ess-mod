@@ -174,7 +174,10 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       .subscribe({
         next: async (profileId) => {
           if (this.inviteEmailControl.email.value) {
-            await this.sendEmailInvite(this.inviteEmailControl.email.value, this.evacueeSessionService.newHouseholdRegistrantId);
+            await this.sendEmailInvite(
+              this.inviteEmailControl.email.value,
+              this.evacueeSessionService.newHouseholdRegistrantId
+            );
           }
           this.disableButton = true;
           this.saveLoader = false;

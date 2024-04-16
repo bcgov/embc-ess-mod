@@ -14,7 +14,10 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
+    return (
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
+    );
   }
 }
 
@@ -57,14 +60,24 @@ export class BcscInviteDialogComponent implements OnInit {
           [
             Validators.email,
             this.customValidation.conditionalValidation(
-              () => !this.hideForm || this.profileData === null || this.profileData === '' || this.profileData === undefined,
+              () =>
+                !this.hideForm ||
+                this.profileData === null ||
+                this.profileData === '' ||
+                this.profileData === undefined,
               this.customValidation.whitespaceValidator()
             )
           ]
         ],
         confirmEmail: [
           '',
-          [Validators.email, this.customValidation.conditionalValidation(() => !this.hideForm, this.customValidation.whitespaceValidator())]
+          [
+            Validators.email,
+            this.customValidation.conditionalValidation(
+              () => !this.hideForm,
+              this.customValidation.whitespaceValidator()
+            )
+          ]
         ]
       },
       {

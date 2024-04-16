@@ -113,7 +113,16 @@ export class LoadEvacueeListService {
       forEnumType: 'IdentifiedNeed'
     });
 
-    const list$ = forkJoin([categories, subcategories, status, methods, voidReasons, reprintReasons, communityTypes, identifiedNeeds]).pipe(
+    const list$ = forkJoin([
+      categories,
+      subcategories,
+      status,
+      methods,
+      voidReasons,
+      reprintReasons,
+      communityTypes,
+      identifiedNeeds
+    ]).pipe(
       map((results) => {
         this.setSupportCategories(results[0].filter((value) => value.description !== ''));
         this.setSupportSubCategories(results[1]);

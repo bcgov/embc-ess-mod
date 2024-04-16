@@ -78,8 +78,14 @@ export class EditTeamMemberComponent implements OnInit {
     this.editForm = this.builder.group({
       firstName: [this.teamMember?.firstName, [this.customValidation.whitespaceValidator()]],
       lastName: [this.teamMember?.lastName, [this.customValidation.whitespaceValidator()]],
-      userName: [{ value: this.teamMember?.userName, disabled: !this.isEditAllowed() }, [this.customValidation.whitespaceValidator()]],
-      role: [{ value: this.teamMember?.role, disabled: this.isNotTier2() }, [this.customValidation.whitespaceValidator()]],
+      userName: [
+        { value: this.teamMember?.userName, disabled: !this.isEditAllowed() },
+        [this.customValidation.whitespaceValidator()]
+      ],
+      role: [
+        { value: this.teamMember?.role, disabled: this.isNotTier2() },
+        [this.customValidation.whitespaceValidator()]
+      ],
       label: [this.teamMember?.label],
       email: [{ value: this.teamMember?.email, disabled: true }],
       phone: [{ value: this.teamMember?.phone, disabled: true }]
@@ -168,11 +174,15 @@ export class EditTeamMemberComponent implements OnInit {
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
-      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
+      return this.listService
+        .getMemberRoles()
+        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
         .getMemberRoles()
-        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3);
+        .filter(
+          (role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3
+        );
     }
   }
 

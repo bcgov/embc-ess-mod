@@ -82,7 +82,9 @@ export class AppComponent implements OnInit {
         //team member roles and labels
         const team = await this.loadTeamListService.loadStaticTeamLists();
 
-        const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement ? 'electronic-agreement' : nextUrl || 'responder-access');
+        const nextRoute = decodeURIComponent(
+          userProfile.requiredToSignAgreement ? 'electronic-agreement' : nextUrl || 'responder-access'
+        );
         await this.router.navigate([nextRoute]);
       } catch (error) {
         this.isLoading = false;

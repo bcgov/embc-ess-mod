@@ -4,7 +4,12 @@
       <div class="col-md-7">
         <mat-form-field appearance="outline">
           <mat-label>{{ filtersToLoad?.loadInputFilter?.label }}</mat-label>
-          <input id="searchInput" [(ngModel)]="searchTerm" matInput placeholder="{{ filtersToLoad?.loadInputFilter?.label }}" />
+          <input
+            id="searchInput"
+            [(ngModel)]="searchTerm"
+            matInput
+            placeholder="{{ filtersToLoad?.loadInputFilter?.label }}"
+          />
         </mat-form-field>
       </div>
       <div class="col-md-3">

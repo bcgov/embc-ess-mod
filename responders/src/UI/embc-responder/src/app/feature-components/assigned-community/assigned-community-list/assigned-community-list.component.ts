@@ -86,7 +86,8 @@ export class AssignedCommunityListComponent implements OnInit {
         const districtTerm = terms[0];
         const typeTerm = terms[1];
         const matchFilter = [];
-        const districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
+        const districtBoolean =
+          data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
         const typeBoolean = data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);

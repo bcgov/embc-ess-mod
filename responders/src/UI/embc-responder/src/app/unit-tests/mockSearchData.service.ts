@@ -150,7 +150,15 @@ export class MockSearchDataService extends MockDashboardService {
     essFileService: EssFileService,
     evacueeSearchService: MockEvacueeSearchService
   ) {
-    super(customValidation, appBaseService, computeState, evacueeProfileService, alertService, essFileService, evacueeSearchService);
+    super(
+      customValidation,
+      appBaseService,
+      computeState,
+      evacueeProfileService,
+      alertService,
+      essFileService,
+      evacueeSearchService
+    );
   }
 
   public evacueeSearch(evacueeSearchContext: EvacueeDetailsModel): Promise<EvacueeSearchResults> {

@@ -13,7 +13,9 @@
         <p class="details-subtitle" *ngIf="reviewAction !== 'add-existing'">
           Please review all of the information below before submitting.
         </p>
-        <p class="bold" *ngIf="reviewAction === 'add-existing'">Please review all of the information below prior to saving the supplier.</p>
+        <p class="bold" *ngIf="reviewAction === 'add-existing'">
+          Please review all of the information below prior to saving the supplier.
+        </p>
       </div>
     </div>
     <br />
@@ -34,7 +36,9 @@
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">GST Number</div>
-      <div class="col-md-8">{{ selectedSupplier?.supplierGstNumber?.part1 }}-RT-{{ selectedSupplier?.supplierGstNumber?.part2 }}</div>
+      <div class="col-md-8">
+        {{ selectedSupplier?.supplierGstNumber?.part1 }}-RT-{{ selectedSupplier?.supplierGstNumber?.part2 }}
+      </div>
     </div>
 
     <div class="row row-align">
@@ -74,7 +78,13 @@
       <div class="col-md-6">
         <button class="button-s button-width button-margin" mat-button (click)="back()">Back</button>
 
-        <button class="button-p button-width" mat-button [disabled]="isSubmitted" (click)="save()" *ngIf="reviewAction !== 'add-existing'">
+        <button
+          class="button-p button-width"
+          mat-button
+          [disabled]="isSubmitted"
+          (click)="save()"
+          *ngIf="reviewAction !== 'add-existing'"
+        >
           Save Supplier
           <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
         </button>

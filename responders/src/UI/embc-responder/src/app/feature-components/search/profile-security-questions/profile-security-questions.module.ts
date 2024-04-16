@@ -9,6 +9,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ProfileSecurityQuestionsComponent, SecurityQuestionCardComponent],
-  imports: [CommonModule, ProfileSecurityQuestionsComponentRoutingModule, MaterialModule, SharedModule, ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    ProfileSecurityQuestionsComponentRoutingModule,
+    MaterialModule,
+    SharedModule,
+    ReactiveFormsModule
+  ]
 })
 export class ProfileSecurityQuestionsModule {}

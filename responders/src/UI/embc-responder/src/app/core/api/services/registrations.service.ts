@@ -240,7 +240,8 @@ export class RegistrationsService extends BaseService {
   /**
    * Path part for operation registrationsSetRegistrantVerified
    */
-  static readonly RegistrationsSetRegistrantVerifiedPath = '/api/Registrations/registrants/{registrantId}/verified/{verified}';
+  static readonly RegistrationsSetRegistrantVerifiedPath =
+    '/api/Registrations/registrants/{registrantId}/verified/{verified}';
 
   /**
    * Sets the Registrant Profile Verified flag to the supplied value.
@@ -488,7 +489,9 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsInviteToRegistrantPortal(params: { registrantId: string; body: InviteRequest }): Observable<void> {
-    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
   }
 
   /**
@@ -559,7 +562,9 @@ export class RegistrationsService extends BaseService {
      */
     needsAssessmentId?: string;
   }): Observable<EvacuationFile> {
-    return this.registrationsGetFile$Response(params).pipe(map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile));
+    return this.registrationsGetFile$Response(params).pipe(
+      map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile)
+    );
   }
 
   /**
@@ -1172,7 +1177,11 @@ export class RegistrationsService extends BaseService {
     fileId: string;
     body: RegistrantLinkRequest;
   }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath, 'post');
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath,
+      'post'
+    );
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
@@ -1199,7 +1208,10 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsLinkRegistrantToHouseholdMember(params: { fileId: string; body: RegistrantLinkRequest }): Observable<string> {
+  registrationsLinkRegistrantToHouseholdMember(params: {
+    fileId: string;
+    body: RegistrantLinkRequest;
+  }): Observable<string> {
     return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -1265,7 +1277,9 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<SearchResults> {
-    return this.registrationsSearch$Response(params).pipe(map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults));
+    return this.registrationsSearch$Response(params).pipe(
+      map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults)
+    );
   }
 
   /**
@@ -1321,7 +1335,9 @@ export class RegistrationsService extends BaseService {
     ManualFileId?: string;
   }): Observable<Array<RegistrantProfileSearchResult>> {
     return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>) => r.body as Array<RegistrantProfileSearchResult>)
+      map(
+        (r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>) => r.body as Array<RegistrantProfileSearchResult>
+      )
     );
   }
 
@@ -1342,7 +1358,11 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath, 'get');
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath,
+      'get'
+    );
     if (params) {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
@@ -1523,7 +1543,9 @@ export class RegistrationsService extends BaseService {
      */
     body: ProcessPaperReferralsRequest;
   }): Observable<void> {
-    return this.registrationsProcessPaperReferrals$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+    return this.registrationsProcessPaperReferrals$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
   }
 
   /**
@@ -1913,6 +1935,8 @@ export class RegistrationsService extends BaseService {
      */
     fileId?: string;
   }): Observable<Array<Support>> {
-    return this.registrationsSearchSupports$Response(params).pipe(map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>));
+    return this.registrationsSearchSupports$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>)
+    );
   }
 }

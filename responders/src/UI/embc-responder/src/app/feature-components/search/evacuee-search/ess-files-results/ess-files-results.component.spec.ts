@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EssFilesResultsComponent } from './ess-files-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -117,7 +126,13 @@ describe('EssFilesResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EssFilesResultsComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule, BrowserAnimationsModule, RouterTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+        RouterTestingModule
+      ],
       providers: [
         EssFilesResultsComponent,
         {

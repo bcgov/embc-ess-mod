@@ -8,7 +8,11 @@ import { MockStepEvacueeProfileService } from './mockStepEvacueeProfile.service'
   providedIn: 'root'
 })
 export class MockRestrictionService extends RestrictionService {
-  constructor(stepEvacueeProfileService: MockStepEvacueeProfileService, formBuilder: UntypedFormBuilder, wizardService: WizardService) {
+  constructor(
+    stepEvacueeProfileService: MockStepEvacueeProfileService,
+    formBuilder: UntypedFormBuilder,
+    wizardService: WizardService
+  ) {
     super(stepEvacueeProfileService, formBuilder, wizardService);
   }
 }

@@ -125,7 +125,9 @@ export class SupplierListDataService {
           const filteredEssTeams = this.filterEssTeams(essTeamsList);
           this.setNonMutualAidTeams(filteredEssTeams);
 
-          this.router.navigate(['/responder-access/supplier-management/supplier-detail'], { queryParams: { type: viewType } });
+          this.router.navigate(['/responder-access/supplier-management/supplier-detail'], {
+            queryParams: { type: viewType }
+          });
           resolve();
         },
         error: (error) => {

@@ -15,15 +15,16 @@
         <div>
           <p>
             Are you a
-            <b>registered supplier with Emergency Support Services (ESS)</b> who has provided goods or services to people affected by a
-            disaster? ESS is making the way you invoice for services/goods and submit receipts simpler and more straightforward, by shifting
-            to a
+            <b>registered supplier with Emergency Support Services (ESS)</b> who has provided goods or services to
+            people affected by a disaster? ESS is making the way you invoice for services/goods and submit receipts
+            simpler and more straightforward, by shifting to a
             <b>digital invoice/receipt submission</b>
             experience.
           </p>
           <p>
-            Just fill in the form below and attach electronic copies of your invoices/receipts & all referral forms. The EMBC finance team
-            will then review your submission. Payment turn around time is estimated at 30 days, if all information received is correct.
+            Just fill in the form below and attach electronic copies of your invoices/receipts & all referral forms. The
+            EMBC finance team will then review your submission. Payment turn around time is estimated at 30 days, if all
+            information received is correct.
           </p>
           <p>All required fields are marked with a red asterisk(<span style="color: red">*</span>)</p>
         </div>
@@ -42,7 +43,10 @@
                   required
                 />
                 <div
-                  *ngIf="control.supplierLegalName?.invalid && (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)"
+                  *ngIf="
+                    control.supplierLegalName?.invalid &&
+                    (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)
+                  "
                   class="text-danger"
                 >
                   <div *ngIf="control.supplierLegalName?.errors.whitespaceError">Supplier Legal name is required</div>
@@ -59,9 +63,17 @@
             <div class="row">
               <div class="form-group col-lg-5">
                 <label class="requiredField" for="supplierName">Supplier Name</label>
-                <input type="text" class="form-control form-control-lg" formControlName="supplierName" id="supplierName" required />
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  formControlName="supplierName"
+                  id="supplierName"
+                  required
+                />
                 <div
-                  *ngIf="control.supplierName?.invalid && (control.supplierName?.dirty || control.supplierName?.touched)"
+                  *ngIf="
+                    control.supplierName?.invalid && (control.supplierName?.dirty || control.supplierName?.touched)
+                  "
                   class="text-danger"
                 >
                   <div *ngIf="control.supplierName?.errors.whitespaceError">Supplier name is required</div>
@@ -79,8 +91,18 @@
             <div class="row">
               <div class="form-group col-lg-5">
                 <label class="requiredField" for="gstNumber">GST Number (999999999-RT-9999)</label>
-                <input type="text" class="form-control form-control-lg" formControlName="gstNumber" appGSTMask id="gstNumber" required />
-                <div *ngIf="control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)" class="text-danger">
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  formControlName="gstNumber"
+                  appGSTMask
+                  id="gstNumber"
+                  required
+                />
+                <div
+                  *ngIf="control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)"
+                  class="text-danger"
+                >
                   <div *ngIf="control.gstNumber?.errors.required">GST number is required</div>
                   <div *ngIf="control.gstNumber?.errors.minlength">GST number is incomplete</div>
                 </div>
@@ -94,7 +116,13 @@
               <div class="row">
                 <div class="form-group col-lg-8">
                   <label class="requiredField" for="address1">Address Line 1</label>
-                  <input type="text" class="form-control form-control-lg" formControlName="address1" id="address1" required />
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    formControlName="address1"
+                    id="address1"
+                    required
+                  />
                   <div
                     *ngIf="
                       control.address['controls'].address1?.invalid &&
@@ -144,14 +172,26 @@
               <div class="row">
                 <div class="form-group col-lg-4">
                   <label for="province">Province</label>
-                  <input type="text" id="province" readonly class="form-control form-control-lg" formControlName="province" />
+                  <input
+                    type="text"
+                    id="province"
+                    readonly
+                    class="form-control form-control-lg"
+                    formControlName="province"
+                  />
                 </div>
               </div>
 
               <div class="row">
                 <div class="form-group col-lg-4">
                   <label class="requiredField" for="postalCode">Postal Code</label>
-                  <input type="text" class="form-control form-control-lg" formControlName="postalCode" id="postalCode" required />
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    formControlName="postalCode"
+                    id="postalCode"
+                    required
+                  />
                   <!--[pattern]="globalConst.postalPattern"-->
                   <div
                     *ngIf="
@@ -169,26 +209,43 @@
               <div class="row">
                 <div class="form-group col-lg-4">
                   <label for="country">Country</label>
-                  <input type="text" id="country" readonly class="form-control form-control-lg" formControlName="country" />
+                  <input
+                    type="text"
+                    id="country"
+                    readonly
+                    class="form-control form-control-lg"
+                    formControlName="country"
+                  />
                 </div>
               </div>
             </div>
             <br />
             <div formGroupName="contactPerson">
               <p style="font-weight: bold">Contact Person</p>
-              <p>The contact person may be asked for additional information or clarification regarding this submission.</p>
+              <p>
+                The contact person may be asked for additional information or clarification regarding this submission.
+              </p>
               <div class="row">
                 <div class="form-group col-lg-6">
                   <label class="requiredField" for="firstName">First Name</label>
-                  <input type="text" class="form-control form-control-lg" formControlName="firstName" id="firstName" required />
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    formControlName="firstName"
+                    id="firstName"
+                    required
+                  />
                   <div
                     *ngIf="
                       control.contactPerson['controls'].firstName?.invalid &&
-                      (control.contactPerson['controls'].firstName?.dirty || control.contactPerson['controls'].firstName?.touched)
+                      (control.contactPerson['controls'].firstName?.dirty ||
+                        control.contactPerson['controls'].firstName?.touched)
                     "
                     class="text-danger"
                   >
-                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.whitespaceError">First Name is required</div>
+                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.whitespaceError">
+                      First Name is required
+                    </div>
                   </div>
                 </div>
               </div>
@@ -196,15 +253,24 @@
               <div class="row">
                 <div class="form-group col-lg-6">
                   <label class="requiredField" for="lastName">Last Name</label>
-                  <input type="text" class="form-control form-control-lg" formControlName="lastName" id="lastName" required />
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    formControlName="lastName"
+                    id="lastName"
+                    required
+                  />
                   <div
                     *ngIf="
                       control.contactPerson['controls'].lastName?.invalid &&
-                      (control.contactPerson['controls'].lastName?.dirty || control.contactPerson['controls'].lastName?.touched)
+                      (control.contactPerson['controls'].lastName?.dirty ||
+                        control.contactPerson['controls'].lastName?.touched)
                     "
                     class="text-danger"
                   >
-                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.whitespaceError">Last Name is required</div>
+                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.whitespaceError">
+                      Last Name is required
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,7 +279,9 @@
                 <div class="form-group col-lg-6">
                   <label for="email">Email Address</label>
                   <input type="email" class="form-control form-control-lg" formControlName="email" id="email" />
-                  <div *ngIf="control.contactPerson['controls'].email?.errors?.email" class="text-danger">Email is not valid</div>
+                  <div *ngIf="control.contactPerson['controls'].email?.errors?.email" class="text-danger">
+                    Email is not valid
+                  </div>
                 </div>
               </div>
 
@@ -232,12 +300,15 @@
                   <div
                     *ngIf="
                       control.contactPerson['controls'].phone?.invalid &&
-                      (control.contactPerson['controls'].phone?.dirty || control.contactPerson['controls'].phone?.touched)
+                      (control.contactPerson['controls'].phone?.dirty ||
+                        control.contactPerson['controls'].phone?.touched)
                     "
                     class="text-danger"
                   >
                     <div *ngIf="control.contactPerson['controls'].phone?.errors.required">Phone Number is required</div>
-                    <div *ngIf="control.contactPerson['controls'].phone?.errors.minlength">Phone number must have 10 digits</div>
+                    <div *ngIf="control.contactPerson['controls'].phone?.errors.minlength">
+                      Phone number must have 10 digits
+                    </div>
                   </div>
                 </div>
               </div>
@@ -260,7 +331,9 @@
                     "
                     class="text-danger"
                   >
-                    <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">Fax number must have 10 digits</div>
+                    <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">
+                      Fax number must have 10 digits
+                    </div>
                   </div>
                 </div>
               </div>
@@ -284,9 +357,16 @@
                 <div class="row">
                   <div class="form-group col-lg-6">
                     <label class="requiredField" for="businessName"><b>Legal Business Name</b></label>
-                    <input type="text" class="form-control form-control-lg" id="businessName" formControlName="businessName" />
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="businessName"
+                      formControlName="businessName"
+                    />
                     <div
-                      *ngIf="control.businessName?.invalid && (control.businessName?.dirty || control.businessName?.touched)"
+                      *ngIf="
+                        control.businessName?.invalid && (control.businessName?.dirty || control.businessName?.touched)
+                      "
                       class="text-danger"
                     >
                       <div *ngIf="control.businessName?.errors.whitespaceError">Legal Business Name is required</div>
@@ -296,7 +376,9 @@
 
                 <div class="row">
                   <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located In?</b> </label>
+                    <label class="requiredField" for="businessCountry"
+                      ><b>What Country Is This Supplier Located In?</b>
+                    </label>
                     <input
                       id="businessCountry"
                       type="text"
@@ -310,7 +392,10 @@
                       [editable]="false"
                     />
                     <div
-                      *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"
+                      *ngIf="
+                        control.businessCountry?.invalid &&
+                        (control.businessCountry?.dirty || control.businessCountry?.touched)
+                      "
                       class="text-danger"
                     >
                       <div *ngIf="control.businessCountry?.errors.required">Country required or invalid</div>
@@ -350,15 +435,23 @@
                   <div class="row">
                     <div class="form-group col-lg-6">
                       <label class="requiredField" for="address1">Address Line 1</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="address1" id="address1" />
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="address1"
+                        id="address1"
+                      />
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].address1?.invalid &&
-                          (control.remittanceAddress['controls'].address1?.dirty || control.remittanceAddress['controls'].address1?.touched)
+                          (control.remittanceAddress['controls'].address1?.dirty ||
+                            control.remittanceAddress['controls'].address1?.touched)
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.whitespaceError">Address is required</div>
+                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.whitespaceError">
+                          Address is required
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -366,7 +459,12 @@
                   <div class="row">
                     <div class="form-group col-lg-6">
                       <label for="address2">Address Line 2</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="address2" id="address2" />
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="address2"
+                        id="address2"
+                      />
                     </div>
                   </div>
 
@@ -377,7 +475,8 @@
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].city?.invalid &&
-                          (control.remittanceAddress['controls'].city?.dirty || control.remittanceAddress['controls'].city?.touched)
+                          (control.remittanceAddress['controls'].city?.dirty ||
+                            control.remittanceAddress['controls'].city?.touched)
                         "
                         class="text-danger"
                       >
@@ -386,7 +485,10 @@
                     </div>
                   </div>
 
-                  <div *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'" class="row">
+                  <div
+                    *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
+                    class="row"
+                  >
                     <div class="form-group col-lg-4">
                       <label for="region">Region/Province/State</label>
                       <input type="text" class="form-control form-control-lg" formControlName="region" id="region" />
@@ -410,11 +512,14 @@
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].state?.invalid &&
-                          (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)
+                          (control.remittanceAddress['controls'].state?.dirty ||
+                            control.remittanceAddress['controls'].state?.touched)
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].state?.errors.required">State is required or invalid</div>
+                        <div *ngIf="control.remittanceAddress['controls'].state?.errors.required">
+                          State is required or invalid
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -436,11 +541,14 @@
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].province?.invalid &&
-                          (control.remittanceAddress['controls'].province?.dirty || control.remittanceAddress['controls'].province?.touched)
+                          (control.remittanceAddress['controls'].province?.dirty ||
+                            control.remittanceAddress['controls'].province?.touched)
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].province?.errors.required">Province is required or invalid</div>
+                        <div *ngIf="control.remittanceAddress['controls'].province?.errors.required">
+                          Province is required or invalid
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -448,7 +556,12 @@
                   <div *ngIf="selectedRemitCountry === 'Canada'" class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="postalCode">Postal Code</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="postalCode" id="postalCode" />
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="postalCode"
+                        id="postalCode"
+                      />
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].postalCode?.invalid &&
@@ -457,8 +570,12 @@
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.required">Postal Code is required</div>
-                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.pattern">Invalid postal code</div>
+                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.required">
+                          Postal Code is required
+                        </div>
+                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.pattern">
+                          Invalid postal code
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -470,20 +587,33 @@
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].zipCode?.invalid &&
-                          (control.remittanceAddress['controls'].zipCode?.dirty || control.remittanceAddress['controls'].zipCode?.touched)
+                          (control.remittanceAddress['controls'].zipCode?.dirty ||
+                            control.remittanceAddress['controls'].zipCode?.touched)
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.required">Zip Code is required</div>
-                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.pattern">Invalid Zip Code</div>
+                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.required">
+                          Zip Code is required
+                        </div>
+                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.pattern">
+                          Invalid Zip Code
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'" class="row">
+                  <div
+                    *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
+                    class="row"
+                  >
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="otherCode">Postal/Zip Code</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="otherCode" id="otherCode" />
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="otherCode"
+                        id="otherCode"
+                      />
                       <div
                         *ngIf="
                           control.remittanceAddress['controls'].otherCode?.invalid &&
@@ -492,7 +622,9 @@
                         "
                         class="text-danger"
                       >
-                        <div *ngIf="control.remittanceAddress['controls'].otherCode?.errors.required">Postal/Zip Code is required</div>
+                        <div *ngIf="control.remittanceAddress['controls'].otherCode?.errors.required">
+                          Postal/Zip Code is required
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -535,13 +667,19 @@
                     <p><b>Important Tips:</b></p>
                     <ul>
                       <li>Please include an electronic copy of each referral associated to this invoice submission.</li>
-                      <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the page.</li>
+                      <li>
+                        If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
+                        page.
+                      </li>
                       <li>Please complete all information regarding each referral separately.</li>
                       <li>
-                        If a referral references more than 1 support or service provided, please separate the costs associated with each by
-                        clicking the "Add another line item" button.
+                        If a referral references more than 1 support or service provided, please separate the costs
+                        associated with each by clicking the "Add another line item" button.
                       </li>
-                      <li>If you have receipts associated with a referral, please remember to attach them under that relevant referral.</li>
+                      <li>
+                        If you have receipts associated with a referral, please remember to attach them under that
+                        relevant referral.
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -560,10 +698,14 @@
                 <br />
                 <div class="row" style="justify-content: space-between">
                   <div style="padding-left: 13px">
-                    <button type="button" (click)="addInvoiceTemplate()" class="btn primary-button">Add Another Invoice</button>
+                    <button type="button" (click)="addInvoiceTemplate()" class="btn primary-button">
+                      Add Another Invoice
+                    </button>
                   </div>
                   <div style="padding-right: 13px">
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">I am Done! Next</button>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
+                      I am Done! Next
+                    </button>
                   </div>
                 </div>
                 <br />
@@ -575,11 +717,14 @@
                     <p><b>Important Tips:</b></p>
                     <ul>
                       <li>Please list all receipts associated with a single referral number only.</li>
-                      <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of this page.</li>
+                      <li>
+                        If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
+                        this page.
+                      </li>
                       <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
                       <li>
-                        If a receipt references more than 1 support or service provided, please separate the costs associated with each by
-                        clicking the "Add another line item to this receipt" link.
+                        If a receipt references more than 1 support or service provided, please separate the costs
+                        associated with each by clicking the "Add another line item to this receipt" link.
                       </li>
                     </ul>
                   </div>
@@ -600,10 +745,14 @@
                 <br />
                 <div class="row" style="justify-content: space-between">
                   <div style="padding-left: 13px">
-                    <button type="button" (click)="addReceiptTemplate()" class="btn primary-button">Add Another Referral</button>
+                    <button type="button" (click)="addReceiptTemplate()" class="btn primary-button">
+                      Add Another Referral
+                    </button>
                   </div>
                   <div style="padding-right: 13px">
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">I am Done! Next</button>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
+                      I am Done! Next
+                    </button>
                   </div>
                 </div>
                 <br />
@@ -624,17 +773,19 @@
             </div>
             <span class="side-box-body">
               <p class="card-text">
-                The following checklist is provided for your convenience to ensure your invoice & receipt documentation is complete and
-                accurate prior to submitting to Emergency Management BC (EMBC) for payment.
+                The following checklist is provided for your convenience to ensure your invoice & receipt documentation
+                is complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
               </p>
               <ul>
                 <li>
-                  Charges for goods and services, including all applicable taxes, must not exceed the Emergency Support Services rates.
+                  Charges for goods and services, including all applicable taxes, must not exceed the Emergency Support
+                  Services rates.
                 </li>
                 <li>Goods or services are rendered only to those listed on the referral.</li>
                 <li>Goods or services rendered are eligible items as listed on the Referral.</li>
                 <li>
-                  Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached to the submission.
+                  Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached
+                  to the submission.
                 </li>
                 <li>Make copies of invoices and receipts for your records.</li>
               </ul>
@@ -651,8 +802,8 @@
             </div>
             <span class="side-box-body">
               <p class="card-text">
-                If you have any questions or need assistance regarding the navigation and submission of this form, please contact the ERA
-                Tool Support team at 1-844-537-7377.
+                If you have any questions or need assistance regarding the navigation and submission of this form,
+                please contact the ERA Tool Support team at 1-844-537-7377.
               </p>
             </span>
           </div>

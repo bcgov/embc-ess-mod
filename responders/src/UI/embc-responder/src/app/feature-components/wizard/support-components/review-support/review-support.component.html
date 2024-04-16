@@ -1,7 +1,9 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
+      >
     </div>
   </div>
 
@@ -9,8 +11,8 @@
     <div class="col-md-12 bottom-padding">
       <p class="review-heading">Review & Process Supports</p>
       <p>
-        Please confirm that all details you entered are correct by reading through the summary below and having your supervisor sign off on
-        your work.
+        Please confirm that all details you entered are correct by reading through the summary below and having your
+        supervisor sign off on your work.
       </p>
     </div>
   </div>
@@ -131,8 +133,15 @@
               </div>
               <div class="row row-padding" *ngIf="!checkGroceryMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
+                  <img
+                    src="../../../../../assets/images/warning-red.svg"
+                    width="25px"
+                    height="27px"
+                    class="warning-icon"
+                  />
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{ getGroceryReferral(support)?.approverName }}</strong></span
@@ -267,8 +276,15 @@
               </div>
               <div class="row row-padding" *ngIf="!checkClothingMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
+                  <img
+                    src="../../../../../assets/images/warning-red.svg"
+                    width="25px"
+                    height="27px"
+                    class="warning-icon"
+                  />
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{ getClothingReferral(support)?.approverName }}</strong></span
@@ -293,8 +309,15 @@
               </div>
               <div class="row row-padding" *ngIf="!checkIncidentalMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
+                  <img
+                    src="../../../../../assets/images/warning-red.svg"
+                    width="25px"
+                    height="27px"
+                    class="warning-icon"
+                  />
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{ getIncidentalReferral(support)?.approverName }}</strong></span
@@ -326,7 +349,10 @@
           </mat-card>
         </div>
         <!-- Lodging-Billeting Support Delivery -->
-        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer">
+        <div
+          class="col-md-4"
+          *ngIf="support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer"
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -342,7 +368,10 @@
         </div>
 
         <!-- Shelter Allowance Support Delivery -->
-        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer">
+        <div
+          class="col-md-4"
+          *ngIf="support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer"
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -355,7 +384,10 @@
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
-        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer">
+        <div
+          class="col-md-4"
+          *ngIf="support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer"
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -378,7 +410,9 @@
 
             <p class="no-margin"><b>e-Transfer Recipient</b></p>
             <p>
-              {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() }},
+              {{
+                appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+              }},
               {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName }}
             </p>
 
@@ -403,7 +437,8 @@
   <div *ngIf="!evacueeSessionService.isPaperBased" class="row">
     <div class="col-md-8 accept-box">
       <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)"
-        >I certify that a supervisor or ESSD has checked my work and approved the above supports for distribution to the evacuee.
+        >I certify that a supervisor or ESSD has checked my work and approved the above supports for distribution to the
+        evacuee.
       </mat-checkbox>
     </div>
   </div>

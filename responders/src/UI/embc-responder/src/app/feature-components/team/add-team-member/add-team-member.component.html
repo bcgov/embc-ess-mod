@@ -14,7 +14,9 @@
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
                 <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
-                <mat-error *ngIf="addFormControl.firstName.invalid && addFormControl.firstName.hasError('whitespaceError')">
+                <mat-error
+                  *ngIf="addFormControl.firstName.invalid && addFormControl.firstName.hasError('whitespaceError')"
+                >
                   First Name is required</mat-error
                 >
               </mat-form-field>
@@ -26,7 +28,9 @@
               <mat-form-field appearance="outline">
                 <mat-label>Last Name</mat-label>
                 <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
-                <mat-error *ngIf="addFormControl.lastName.invalid && addFormControl.lastName.hasError('whitespaceError')">
+                <mat-error
+                  *ngIf="addFormControl.lastName.invalid && addFormControl.lastName.hasError('whitespaceError')"
+                >
                   Last Name is required</mat-error
                 >
               </mat-form-field>
@@ -45,10 +49,14 @@
                   placeholder="BCeID Username"
                   required
                 />
-                <mat-error *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('whitespaceError')">
+                <mat-error
+                  *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('whitespaceError')"
+                >
                   BCeID Username is required</mat-error
                 >
-                <mat-error *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('userNameExists')">
+                <mat-error
+                  *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('userNameExists')"
+                >
                   BCeID Username Already in Use</mat-error
                 >
               </mat-form-field>
@@ -103,18 +111,20 @@
         <span class="tips-heading"><b>Tips: </b>User Roles</span>
       </div>
       <p class="tips-p">
-        Access is based on a user hierarchy where each level is based on roles and responsibilities. This provides a way of granting
-        different permissions to users within your organization.
+        Access is based on a user hierarchy where each level is based on roles and responsibilities. This provides a way
+        of granting different permissions to users within your organization.
       </p>
       <p class="tips-p">
-        <span class="tips-gold">Tier 1: Responder</span> can register and complete registrations, as well as add supports based on a evacuee
-        need’s assessment.
+        <span class="tips-gold">Tier 1: Responder</span> can register and complete registrations, as well as add
+        supports based on a evacuee need’s assessment.
       </p>
       <p class="tips-p">
-        <span class="tips-gold">Tier 2: Supervisor</span> have the additional ability to manage supplier and user lists. With access to
-        restricted files and basic reporting.
+        <span class="tips-gold">Tier 2: Supervisor</span> have the additional ability to manage supplier and user lists.
+        With access to restricted files and basic reporting.
       </p>
-      <p class="tips-p"><span class="tips-gold">Tier 3: Director/Manager</span> have the additional access to detailed reporting.</p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 3: Director/Manager</span> have the additional access to detailed reporting.
+      </p>
       <p class="tips-p">
         <span class="tips-gold">Tier 4: Local Emergency Program Administrator</span>
         is the primary contact for the organization and responsible for the initial setup and delegation of roles.

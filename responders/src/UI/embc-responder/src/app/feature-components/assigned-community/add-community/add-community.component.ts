@@ -52,7 +52,10 @@ export class AddCommunityComponent implements OnInit {
         }
       });
 
-    if (this.addCommunityService.getAddedCommunities() !== undefined && this.addCommunityService.getAddedCommunities().length > 0) {
+    if (
+      this.addCommunityService.getAddedCommunities() !== undefined &&
+      this.addCommunityService.getAddedCommunities().length > 0
+    ) {
       this.existingSelection = this.addCommunityService.getAddedCommunities();
       this.selectedCommunitiesList = this.addCommunityService.getAddedCommunities();
     }

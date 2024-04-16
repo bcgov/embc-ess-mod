@@ -151,7 +151,9 @@ export class SuppliersService extends BaseService {
      */
     body: Supplier;
   }): Observable<SupplierResult> {
-    return this.suppliersCreateSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersCreateSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**
@@ -211,7 +213,9 @@ export class SuppliersService extends BaseService {
      */
     supplierId: string;
   }): Observable<Supplier> {
-    return this.suppliersGetSupplierById$Response(params).pipe(map((r: StrictHttpResponse<Supplier>) => r.body as Supplier));
+    return this.suppliersGetSupplierById$Response(params).pipe(
+      map((r: StrictHttpResponse<Supplier>) => r.body as Supplier)
+    );
   }
 
   /**
@@ -282,7 +286,9 @@ export class SuppliersService extends BaseService {
      */
     body: Supplier;
   }): Observable<SupplierResult> {
-    return this.suppliersUpdateSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersUpdateSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**
@@ -342,7 +348,9 @@ export class SuppliersService extends BaseService {
      */
     supplierId: string;
   }): Observable<SupplierResult> {
-    return this.suppliersRemoveSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersRemoveSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**
@@ -402,7 +410,9 @@ export class SuppliersService extends BaseService {
      */
     supplierId: string;
   }): Observable<SupplierResult> {
-    return this.suppliersActivateSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersActivateSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**
@@ -462,7 +472,9 @@ export class SuppliersService extends BaseService {
      */
     supplierId: string;
   }): Observable<SupplierResult> {
-    return this.suppliersDeactivateSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersDeactivateSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**
@@ -522,7 +534,9 @@ export class SuppliersService extends BaseService {
      */
     supplierId: string;
   }): Observable<SupplierResult> {
-    return this.suppliersClaimSupplier$Response(params).pipe(map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult));
+    return this.suppliersClaimSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
   }
 
   /**

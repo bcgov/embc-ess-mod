@@ -44,13 +44,15 @@ export class EssfileDashboardComponent implements OnInit {
     ) {
       this.isLoading = !this.isLoading;
       const $p = await this.optionInjectionService.instance.loadEssFile().then(async (file) => {
-        const $pp = await this.optionInjectionService.instance.loadEvcaueeProfile(file.primaryRegistrantId).then((profile) => {
-          this.notesList = this.essfileDashboardService.loadNotes(file.notes);
-          this.essFile = file;
-          this.loadDefaultOverviewSection(file);
-          this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
-          this.isLoading = !this.isLoading;
-        });
+        const $pp = await this.optionInjectionService.instance
+          .loadEvcaueeProfile(file.primaryRegistrantId)
+          .then((profile) => {
+            this.notesList = this.essfileDashboardService.loadNotes(file.notes);
+            this.essFile = file;
+            this.loadDefaultOverviewSection(file);
+            this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
+            this.isLoading = !this.isLoading;
+          });
       });
     } else {
       this.getEssFile();
@@ -86,7 +88,10 @@ export class EssfileDashboardComponent implements OnInit {
   }
 
   openWizard() {
-    const wizardType = this.essfileDashboardService.getWizardType(this.optionInjectionService.instance.optionType, this.essFile);
+    const wizardType = this.essfileDashboardService.getWizardType(
+      this.optionInjectionService.instance.optionType,
+      this.essFile
+    );
     this.isLoading = !this.isLoading;
     this.optionInjectionService?.instance
       ?.openWizard(wizardType)

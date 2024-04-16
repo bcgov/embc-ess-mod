@@ -21,7 +21,10 @@
                       {{ stepEssFileService?.paperESSFile }}
                     </p>
 
-                    <p>If you need to update the Paper ESS File Number, please start a new search using the correct information.</p>
+                    <p>
+                      If you need to update the Paper ESS File Number, please start a new search using the correct
+                      information.
+                    </p>
                   </div>
                 </div>
 
@@ -122,10 +125,16 @@
             <div class="row">
               <ng-container *ngIf="!essFileNumber; else editEssFile">
                 <div class="col-12">
-                  <label id="evacuatedFromPrimary-radio-group-label" class="tab-subtitle requiredField" *ngIf="isBCAddress">
+                  <label
+                    id="evacuatedFromPrimary-radio-group-label"
+                    class="tab-subtitle requiredField"
+                    *ngIf="isBCAddress"
+                  >
                     Are you being evacuated from your primary address?
                   </label>
-                  <label class="tab-subtitle requiredField" *ngIf="!isBCAddress"> Where are you being evacuated from? </label>
+                  <label class="tab-subtitle requiredField" *ngIf="!isBCAddress">
+                    Where are you being evacuated from?
+                  </label>
 
                   <ng-container *ngIf="isBCAddress">
                     <mat-radio-group
@@ -171,7 +180,10 @@
                     class="evac-address"
                     [innerHTML]="stepEssFileService?.evacAddress | maskEvacuatedaddress"
                   ></p>
-                  <app-bc-address *ngIf="wizardType === 'complete-file'" [addressForm]="evacAddressFormGroup"></app-bc-address>
+                  <app-bc-address
+                    *ngIf="wizardType === 'complete-file'"
+                    [addressForm]="evacAddressFormGroup"
+                  ></app-bc-address>
                 </div>
               </ng-template>
 
@@ -182,8 +194,8 @@
 
                 <p>
                   A facility name is the location of the
-                  <strong>Reception Centre</strong>. If there is no Reception Centre, use the address or physical location of the emergency
-                  event (e.g. use the street name for a level one house fire).
+                  <strong>Reception Centre</strong>. If there is no Reception Centre, use the address or physical
+                  location of the emergency event (e.g. use the street name for a level one house fire).
                 </p>
 
                 <div class="row">
@@ -213,13 +225,18 @@
                 <label class="tab-subtitle requiredField"> Do you have insurance to cover your immediate needs? </label>
 
                 <p>
-                  If you have insurance (e.g. home, tenant, or travel) please contact your insurance provider as soon as possible. If you
-                  are having difficulty contacting your insurance provider, please contact the Insurance Bureau of Canada at 1-844-227-5422.
-                  It is strongly recommended to keep a record of all receipts and invoices if immediate needs can be covered by your
-                  insurance provider.
+                  If you have insurance (e.g. home, tenant, or travel) please contact your insurance provider as soon as
+                  possible. If you are having difficulty contacting your insurance provider, please contact the
+                  Insurance Bureau of Canada at 1-844-227-5422. It is strongly recommended to keep a record of all
+                  receipts and invoices if immediate needs can be covered by your insurance provider.
                 </p>
 
-                <mat-radio-group formControlName="insurance" class="options-group" (change)="insuranceChange($event)" required>
+                <mat-radio-group
+                  formControlName="insurance"
+                  class="options-group"
+                  (change)="insuranceChange($event)"
+                  required
+                >
                   <mat-radio-button *ngFor="let option of insuranceOption" [id]="option.value" [value]="option.value">
                     {{ option.name }}
                   </mat-radio-button>
@@ -249,9 +266,13 @@
                 <span class="tips-heading"> <span class="bold">Tip:</span> Task Number </span>
               </div>
 
-              <p class="tips-info">This ESS File will be associated with the Task Number that you are signed in under.</p>
+              <p class="tips-info">
+                This ESS File will be associated with the Task Number that you are signed in under.
+              </p>
 
-              <p class="tips-info">If this is not the correct task number, please sign in under the correct task number.</p>
+              <p class="tips-info">
+                If this is not the correct task number, please sign in under the correct task number.
+              </p>
             </mat-card>
           </div>
         </div>

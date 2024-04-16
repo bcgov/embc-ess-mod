@@ -14,11 +14,13 @@ const routes: Routes = [
       },
       {
         path: 'responder-dashboard',
-        loadChildren: () => import('../responder-dashboard/responder-dashboard.module').then((m) => m.ResponderDashboardModule)
+        loadChildren: () =>
+          import('../responder-dashboard/responder-dashboard.module').then((m) => m.ResponderDashboardModule)
       },
       {
         path: 'search',
-        loadChildren: () => import('../search/search-registration/search-registration.module').then((m) => m.SearchRegistrationModule)
+        loadChildren: () =>
+          import('../search/search-registration/search-registration.module').then((m) => m.SearchRegistrationModule)
       },
       {
         path: 'user-profile',
@@ -33,11 +35,15 @@ const routes: Routes = [
       },
       {
         path: 'responder-management',
-        loadChildren: () => import('../team/team-member-management/team-member-management.module').then((m) => m.TeamMemberManagementModule)
+        loadChildren: () =>
+          import('../team/team-member-management/team-member-management.module').then(
+            (m) => m.TeamMemberManagementModule
+          )
       },
       {
         path: 'supplier-management',
-        loadChildren: () => import('../supplier-management/supplier-management.module').then((m) => m.SupplierManagementModule)
+        loadChildren: () =>
+          import('../supplier-management/supplier-management.module').then((m) => m.SupplierManagementModule)
       },
       {
         path: 'reporting',

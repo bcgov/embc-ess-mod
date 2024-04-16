@@ -14,19 +14,23 @@ const routes: Routes = [
       },
       {
         path: 'view',
-        loadChildren: () => import('../support-components/view-supports/view-supports.module').then((m) => m.ViewSupportsModule)
+        loadChildren: () =>
+          import('../support-components/view-supports/view-supports.module').then((m) => m.ViewSupportsModule)
       },
       {
         path: 'select-support',
-        loadChildren: () => import('../support-components/select-support/select-support.module').then((m) => m.SelectSupportModule)
+        loadChildren: () =>
+          import('../support-components/select-support/select-support.module').then((m) => m.SelectSupportModule)
       },
       {
         path: 'details',
-        loadChildren: () => import('../support-components/support-details/support-details.module').then((m) => m.SupportDetailsModule)
+        loadChildren: () =>
+          import('../support-components/support-details/support-details.module').then((m) => m.SupportDetailsModule)
       },
       {
         path: 'delivery',
-        loadChildren: () => import('../support-components/support-delivery/support-delivery.module').then((m) => m.SupportDeliveryModule)
+        loadChildren: () =>
+          import('../support-components/support-delivery/support-delivery.module').then((m) => m.SupportDeliveryModule)
       },
       {
         path: 'view-detail',
@@ -37,7 +41,8 @@ const routes: Routes = [
       },
       {
         path: 'review',
-        loadChildren: () => import('../support-components/review-support/review-support.module').then((m) => m.ReviewSupportModule)
+        loadChildren: () =>
+          import('../support-components/review-support/review-support.module').then((m) => m.ReviewSupportModule)
       }
     ]
   }

@@ -81,16 +81,28 @@ export class EvacueeDetailsService {
 
   public createForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      firstName: [this.stepEvacueeProfileService.personalDetails?.firstName, [this.customValidation.whitespaceValidator()]],
-      lastName: [this.stepEvacueeProfileService.personalDetails?.lastName, [this.customValidation.whitespaceValidator()]],
+      firstName: [
+        this.stepEvacueeProfileService.personalDetails?.firstName,
+        [this.customValidation.whitespaceValidator()]
+      ],
+      lastName: [
+        this.stepEvacueeProfileService.personalDetails?.lastName,
+        [this.customValidation.whitespaceValidator()]
+      ],
       preferredName: [
-        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.preferredName : ''
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.preferredName
+          : ''
       ],
       initials: [
-        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.initials : ''
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.initials
+          : ''
       ],
       gender: [
-        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.gender : '',
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.gender
+          : '',
         [this.customValidation.whitespaceValidator()]
       ],
       dateOfBirth: [

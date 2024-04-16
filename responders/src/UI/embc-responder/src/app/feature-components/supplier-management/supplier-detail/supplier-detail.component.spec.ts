@@ -1,5 +1,13 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NavigationStart, Router } from '@angular/router';

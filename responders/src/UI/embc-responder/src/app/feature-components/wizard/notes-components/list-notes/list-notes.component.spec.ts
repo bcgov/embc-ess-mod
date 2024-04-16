@@ -1,4 +1,12 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { ListNotesComponent } from './list-notes.component';
 import { RouterTestingModule } from '@angular/router/testing';

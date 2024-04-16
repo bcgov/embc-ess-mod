@@ -54,7 +54,9 @@
           <mat-error *ngIf="emailFormControl?.email.invalid && emailFormControl?.email.hasError('whitespaceError')">
             Email is required</mat-error
           >
-          <mat-error *ngIf="emailFormControl.email.invalid && emailFormControl.email.hasError('email')">Invalid email</mat-error>
+          <mat-error *ngIf="emailFormControl.email.invalid && emailFormControl.email.hasError('email')"
+            >Invalid email</mat-error
+          >
         </mat-form-field>
       </div>
     </div>
@@ -70,14 +72,26 @@
         <div class="col-md-6">
           <mat-form-field appearance="outline">
             <mat-label class="requiredField">Confirm Email Address</mat-label>
-            <input formControlName="confirmEmail" matInput placeholder="joe@myemail.com" [errorStateMatcher]="emailMatcher" />
-            <mat-error *ngIf="emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('whitespaceError')">
+            <input
+              formControlName="confirmEmail"
+              matInput
+              placeholder="joe@myemail.com"
+              [errorStateMatcher]="emailMatcher"
+            />
+            <mat-error
+              *ngIf="
+                emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('whitespaceError')
+              "
+            >
               Confirm email is required</mat-error
             >
-            <mat-error *ngIf="emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('email')"
+            <mat-error
+              *ngIf="emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('email')"
               >Invalid email</mat-error
             >
-            <mat-error *ngIf="emailFormControl?.confirmEmail?.parent?.hasError('emailMatch')"> Email address mismatch</mat-error>
+            <mat-error *ngIf="emailFormControl?.confirmEmail?.parent?.hasError('emailMatch')">
+              Email address mismatch</mat-error
+            >
           </mat-form-field>
         </div>
       </div>

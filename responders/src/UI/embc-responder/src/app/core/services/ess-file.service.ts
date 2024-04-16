@@ -50,7 +50,8 @@ export class EssFileService {
           );
           this.appBaseService.appModel.selectedEssFile = fileModel;
           this.appBaseService.etransferProperties = {
-            interacAllowed: fileModel?.task?.features.find((feature) => feature?.name === 'digital-support-etransfer')?.enabled
+            interacAllowed: fileModel?.task?.features.find((feature) => feature?.name === 'digital-support-etransfer')
+              ?.enabled
           };
           this.computeState.triggerEvent();
           return fileModel;

@@ -8,13 +8,20 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-select formControlName="issuedTo" (selectionChange)="memberSelect($event)" required>
-          <mat-option *ngFor="let member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers" [value]="member">
+          <mat-option
+            *ngFor="let member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers"
+            [value]="member"
+          >
             {{ member.lastName | uppercase }},
             {{ member.firstName }}
           </mat-option>
           <mat-option [value]="'Someone else'">Someone else</mat-option>
         </mat-select>
-        <mat-error *ngIf="supportDeliveryFormControl?.issuedTo.invalid && supportDeliveryFormControl?.issuedTo.hasError('required')">
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl?.issuedTo.invalid && supportDeliveryFormControl?.issuedTo.hasError('required')
+          "
+        >
           Required</mat-error
         >
       </mat-form-field>
@@ -26,7 +33,9 @@
         <input formControlName="name" maxlength="100" matInput placeholder="Enter Name" />
         <mat-error
           class="custom-mat-error"
-          *ngIf="supportDeliveryFormControl?.name.invalid && supportDeliveryFormControl?.name.hasError('whitespaceError')"
+          *ngIf="
+            supportDeliveryFormControl?.name.invalid && supportDeliveryFormControl?.name.hasError('whitespaceError')
+          "
         >
           Name is required</mat-error
         >
@@ -50,8 +59,20 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label>Supplier</mat-label>
-          <input maxlength="100" type="text" formControlName="supplier" matInput placeholder="Supplier" [matAutocomplete]="auto" required />
-          <mat-autocomplete (optionSelected)="showDetails($event)" #auto="matAutocomplete" [displayWith]="displaySupplier">
+          <input
+            maxlength="100"
+            type="text"
+            formControlName="supplier"
+            matInput
+            placeholder="Supplier"
+            [matAutocomplete]="auto"
+            required
+          />
+          <mat-autocomplete
+            (optionSelected)="showDetails($event)"
+            #auto="matAutocomplete"
+            [displayWith]="displaySupplier"
+          >
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
               <div class="row">
                 <div class="col-md-6 supplier-name">
@@ -64,7 +85,11 @@
               </div>
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="supportDeliveryFormControl?.supplier.invalid && supportDeliveryFormControl?.supplier.hasError('required')">
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl?.supplier.invalid && supportDeliveryFormControl?.supplier.hasError('required')
+            "
+          >
             Supplier is required</mat-error
           >
           <mat-error *ngIf="validateSupplier()"> Supplier is invalid</mat-error>
@@ -73,7 +98,9 @@
 
       <div class="col-md-4">
         <button class="search-button button-transparent" mat-button (click)="refreshList()">
-          <img src="/assets/images/reset.svg" height="20" width="20" /><span class="reset-img">Refresh Supplier List</span>
+          <img src="/assets/images/reset.svg" height="20" width="20" /><span class="reset-img"
+            >Refresh Supplier List</span
+          >
         </button>
       </div>
       <div class="col-md-4">

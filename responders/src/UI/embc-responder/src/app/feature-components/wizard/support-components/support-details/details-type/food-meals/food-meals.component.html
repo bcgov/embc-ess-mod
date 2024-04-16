@@ -18,7 +18,9 @@
             {{ no }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="referralFormControl.noOfBreakfast.invalid && referralFormControl.noOfBreakfast.hasError('required')">
+        <mat-error
+          *ngIf="referralFormControl.noOfBreakfast.invalid && referralFormControl.noOfBreakfast.hasError('required')"
+        >
           Required</mat-error
         >
       </mat-form-field>
@@ -37,7 +39,9 @@
             {{ no }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="referralFormControl.noOfLunches.invalid && referralFormControl.noOfLunches.hasError('required')">
+        <mat-error
+          *ngIf="referralFormControl.noOfLunches.invalid && referralFormControl.noOfLunches.hasError('required')"
+        >
           Required</mat-error
         >
       </mat-form-field>
@@ -56,7 +60,9 @@
             {{ no }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="referralFormControl.noOfDinners.invalid && referralFormControl.noOfDinners.hasError('required')">
+        <mat-error
+          *ngIf="referralFormControl.noOfDinners.invalid && referralFormControl.noOfDinners.hasError('required')"
+        >
           Required</mat-error
         >
       </mat-form-field>

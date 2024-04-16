@@ -86,16 +86,18 @@ export class AssignedCommunityReviewComponent implements OnInit {
   remove(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.removeCommunities(this.deleteCommunityList.map((comm) => comm.communityCode)).subscribe({
-      next: (response) => {
-        this.router.navigate(['/responder-access/community-management/list-communities']);
-      },
-      error: (error) => {
-        this.showLoader = !this.showLoader;
-        this.isSubmitted = !this.isSubmitted;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.removeCommunityListError);
-      }
-    });
+    this.assignedCommunityReviewService
+      .removeCommunities(this.deleteCommunityList.map((comm) => comm.communityCode))
+      .subscribe({
+        next: (response) => {
+          this.router.navigate(['/responder-access/community-management/list-communities']);
+        },
+        error: (error) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.removeCommunityListError);
+        }
+      });
   }
 }

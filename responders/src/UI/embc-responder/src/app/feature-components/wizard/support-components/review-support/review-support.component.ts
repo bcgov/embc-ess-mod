@@ -260,7 +260,9 @@ export class ReviewSupportComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
-    const lastName = this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find((member) => member.id === memberId).lastName;
+    const lastName = this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
+      (member) => member.id === memberId
+    ).lastName;
     const firstName = this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
       (member) => member.id === memberId
     ).firstName;
@@ -350,7 +352,11 @@ export class ReviewSupportComponent implements OnInit {
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: async (response) => {
         const blob = new Blob([response], { type: response.type });
-        await this.downloadService.downloadFile(window, blob, `support-${fileId}-${new FlatDateFormatPipe().transform(new Date())}.pdf`);
+        await this.downloadService.downloadFile(
+          window,
+          blob,
+          `support-${fileId}-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+        );
 
         //Clearing Draft supports array and updating the supports list for the selected ESS File
         this.referralService.clearDraftSupport();

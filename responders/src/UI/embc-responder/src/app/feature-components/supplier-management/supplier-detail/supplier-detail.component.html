@@ -54,7 +54,9 @@
 
     <div class="row buttons-section" *ngIf="detailsType === 'supplier'">
       <div class="col-md-6">
-        <button class="button-s button-width button-margin" mat-button (click)="deleteSupplier()">Remove Supplier</button>
+        <button class="button-s button-width button-margin" mat-button (click)="deleteSupplier()">
+          Remove Supplier
+        </button>
         <button class="button-p button-width" mat-button (click)="editSupplier()">Edit Supplier Details</button>
       </div>
     </div>
@@ -69,8 +71,8 @@
           <div class="col-md-12">
             <p class="aid-heading">Mutual Aid</p>
             <p>
-              Add ESS Team below to activate a <b>mutual aid agreement</b> to share suppliers with another LEP. Search by ESS Team Name, or,
-              if you do not know the name of the ESS Team, search by the community.
+              Add ESS Team below to activate a <b>mutual aid agreement</b> to share suppliers with another LEP. Search
+              by ESS Team Name, or, if you do not know the name of the ESS Team, search by the community.
             </p>
           </div>
         </div>
@@ -87,7 +89,11 @@
                   [matAutocomplete]="essTeamAuto"
                 />
                 <mat-autocomplete #essTeamAuto="matAutocomplete" [displayWith]="essTeamDisplayFn">
-                  <mat-option *ngFor="let option of essTeamFilteredOptions | async" [value]="option" (click)="searchEssTeamByName(option)">
+                  <mat-option
+                    *ngFor="let option of essTeamFilteredOptions | async"
+                    [value]="option"
+                    (click)="searchEssTeamByName(option)"
+                  >
                     {{ option.name }}
                   </mat-option>
                 </mat-autocomplete>
@@ -98,7 +104,13 @@
             <div class="col-md-5">
               <mat-form-field appearance="outline">
                 <mat-label>Community</mat-label>
-                <input formControlName="community" maxlength="100" matInput placeholder="Community" [matAutocomplete]="commAuto" />
+                <input
+                  formControlName="community"
+                  maxlength="100"
+                  matInput
+                  placeholder="Community"
+                  [matAutocomplete]="commAuto"
+                />
                 <mat-autocomplete #commAuto="matAutocomplete" [displayWith]="cityDisplayFn">
                   <mat-option
                     *ngFor="let option of communityFilteredOptions | async"
@@ -111,7 +123,8 @@
               </mat-form-field>
             </div>
             <div class="col-md-1 loader-col">
-              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="searchESSTeamLoader" [color]="blueColor"> </app-loader>
+              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="searchESSTeamLoader" [color]="blueColor">
+              </app-loader>
             </div>
           </div>
           <div class="row">
@@ -136,7 +149,11 @@
               <p class="no-results"><b>None ESS Team were found</b></p>
             </div>
             <div class="col-md-12 btn-section" *ngIf="essTeamsListResult?.length > 0">
-              <button class="button-p secondary-btn-width" [disabled]="!searchMutualAidForm.valid" (click)="addMutualAidEssTeam()">
+              <button
+                class="button-p secondary-btn-width"
+                [disabled]="!searchMutualAidForm.valid"
+                (click)="addMutualAidEssTeam()"
+              >
                 Add this ESS Team
                 <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="addESSTeamLoader"></app-loader>
               </button>

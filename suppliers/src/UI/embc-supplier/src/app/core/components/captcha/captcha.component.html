@@ -146,7 +146,14 @@
               </g>
               <g transform="rotate(320 50 50)">
                 <rect x="47" y="22" rx="9.4" ry="4.4" width="6" height="16" fill="#1d3f72">
-                  <animate attributeName="opacity" values="1;0" times="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+                  <animate
+                    attributeName="opacity"
+                    values="1;0"
+                    times="0;1"
+                    dur="1s"
+                    begin="0s"
+                    repeatCount="indefinite"
+                  ></animate>
                 </rect>
               </g>
             </svg>
@@ -283,7 +290,14 @@
                   </g>
                   <g transform="rotate(320 50 50)">
                     <rect x="45" y="9" rx="2.7" ry="0.54" width="10" height="22" fill="#1d3f72">
-                      <animate attributeName="opacity" values="1;0" times="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+                      <animate
+                        attributeName="opacity"
+                        values="1;0"
+                        times="0;1"
+                        dur="1s"
+                        begin="0s"
+                        repeatCount="indefinite"
+                      ></animate>
                     </rect>
                   </g>
                 </svg>
@@ -333,7 +347,10 @@
 
               <span>
                 {{
-                  translatedMessages.errorRetrievingImg[language].substring(0, translatedMessages.errorRetrievingImg[language].indexOf('{'))
+                  translatedMessages.errorRetrievingImg[language].substring(
+                    0,
+                    translatedMessages.errorRetrievingImg[language].indexOf('{')
+                  )
                 }}
                 <a href="javascript:void(0)" (click)="getNewCaptcha(false)">{{
                   translatedMessages.errorRetrievingImg[language].substring(
@@ -356,8 +373,9 @@
             <div style="clear: both"></div>
             <div style="margin-left: 5px">
               <strong>
-                If you cannot reload the captcha please try to save your registration by clicking the save button below. This error may not
-                prevent you from submitting. If you see the confirmation page with your ESS number your registration was successful.
+                If you cannot reload the captcha please try to save your registration by clicking the save button below.
+                This error may not prevent you from submitting. If you see the confirmation page with your ESS number
+                your registration was successful.
               </strong>
             </div>
           </div>
@@ -391,7 +409,13 @@
             <p></p>
           </div>
 
-          <div class="captcha-error" style="margin-top: 2px" *ngIf="incorrectAnswer === true" role="alert" aria-live="assertive">
+          <div
+            class="captcha-error"
+            style="margin-top: 2px"
+            *ngIf="incorrectAnswer === true"
+            role="alert"
+            aria-live="assertive"
+          >
             {{ translatedMessages.incorrectAnswer[language] }}
           </div>
         </div>

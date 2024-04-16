@@ -10,6 +10,13 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [EvacueeSearchComponent, SearchOptionsComponent],
-  imports: [CommonModule, EvacueeSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, CustomPipeModule]
+  imports: [
+    CommonModule,
+    EvacueeSearchRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    SharedModule,
+    CustomPipeModule
+  ]
 })
 export class EvacueeSearchModule {}

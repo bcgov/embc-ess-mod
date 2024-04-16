@@ -55,12 +55,15 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
           file: EvacuationFileModel;
         };
         this.essFile = state.file;
-        this.supportList = state.file?.supports?.sort((a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf());
+        this.supportList = state.file?.supports?.sort(
+          (a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
+        );
 
         this.supportList.forEach((support) => {
           support.includedHouseholdMembers.sort(
             (a, b) =>
-              this.essFile?.householdMembers.findIndex((m) => m.id === a) - this.essFile?.householdMembers.findIndex((m) => m.id === b)
+              this.essFile?.householdMembers.findIndex((m) => m.id === a) -
+              this.essFile?.householdMembers.findIndex((m) => m.id === b)
           );
         });
       }
@@ -199,10 +202,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }

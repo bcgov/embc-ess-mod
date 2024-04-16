@@ -76,10 +76,14 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
@@ -101,7 +105,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   checkIncidentalMaxRate(): boolean {
-    const maxRate = globalConst.incidentals.rate * (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers.length;
+    const maxRate =
+      globalConst.incidentals.rate * (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers.length;
     return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount ? false : true;
   }
 
@@ -197,18 +202,20 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .subscribe({
         next: (reason) => {
           if (reason !== undefined && reason !== 'close') {
-            this.existingSupportService.voidSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id, reason).subscribe({
-              next: (value) => {
-                const stateIndicator = { action: 'void' };
-                this.router.navigate(['/ess-wizard/add-supports/view'], {
-                  state: stateIndicator
-                });
-              },
-              error: (error) => {
-                this.alertService.clearAlert();
-                this.alertService.setAlert('danger', globalConst.voidReferralError);
-              }
-            });
+            this.existingSupportService
+              .voidSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id, reason)
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'void' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.voidReferralError);
+                }
+              });
           }
         }
       });
@@ -229,7 +236,12 @@ export class ExistingSupportDetailsComponent implements OnInit {
           if (output !== undefined && output.reason !== undefined && output.reason !== 'close') {
             this.isLoading = !this.isLoading;
             this.existingSupportService
-              .reprintSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id, output.reason, output.includeSummary)
+              .reprintSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id,
+                output.reason,
+                output.includeSummary
+              )
               .subscribe({
                 next: async (response) => {
                   const blob = new Blob([response], { type: response.type });
@@ -294,13 +306,17 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value === 'confirm') {
-          const supportType = this.selectedSupport.subCategory ? this.selectedSupport.subCategory : this.selectedSupport.category;
-          this.referralCreationService.clearDraftSupports(supportType, this.selectedSupport).subscribe((incomingValue) => {
-            const stateIndicator = { action: 'delete' };
-            this.router.navigate(['/ess-wizard/add-supports/view'], {
-              state: stateIndicator
+          const supportType = this.selectedSupport.subCategory
+            ? this.selectedSupport.subCategory
+            : this.selectedSupport.category;
+          this.referralCreationService
+            .clearDraftSupports(supportType, this.selectedSupport)
+            .subscribe((incomingValue) => {
+              const stateIndicator = { action: 'delete' };
+              this.router.navigate(['/ess-wizard/add-supports/view'], {
+                state: stateIndicator
+              });
             });
-          });
         }
       });
   }
@@ -326,25 +342,28 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response === 'cancel') {
-            this.existingSupportService.cancelSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id).subscribe({
-              next: (value) => {
-                const stateIndicator = { action: 'cancel' };
-                this.router.navigate(['/ess-wizard/add-supports/view'], {
-                  state: stateIndicator
-                });
-              },
-              error: (error) => {
-                this.alertService.clearAlert();
-                this.alertService.setAlert('danger', globalConst.cancelEtransferError);
-              }
-            });
+            this.existingSupportService
+              .cancelSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id)
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'cancel' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.cancelEtransferError);
+                }
+              });
           }
         }
       });
   }
 
   getStatusTextToDisplay(enumToText: string): string {
-    return this.loadEvacueeListService.getSupportStatus().find((statusValue) => statusValue.value === enumToText)?.description;
+    return this.loadEvacueeListService.getSupportStatus().find((statusValue) => statusValue.value === enumToText)
+      ?.description;
   }
 
   getMethodTextToDisplay(enumToText: string): string {

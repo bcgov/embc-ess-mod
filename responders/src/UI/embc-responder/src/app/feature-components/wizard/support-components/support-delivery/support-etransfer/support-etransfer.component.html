@@ -49,7 +49,12 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label>Email Address</mat-label>
-          <input formControlName="notificationEmail" matInput placeholder="Email Address" (input)="notificationEmailChange()" />
+          <input
+            formControlName="notificationEmail"
+            matInput
+            placeholder="Email Address"
+            (input)="notificationEmailChange()"
+          />
           <mat-error
             *ngIf="
               supportDeliveryFormControl.notificationEmail.invalid &&
@@ -59,7 +64,10 @@
             Email is required</mat-error
           >
           <mat-error
-            *ngIf="supportDeliveryFormControl.notificationEmail.invalid && supportDeliveryFormControl.notificationEmail.hasError('email')"
+            *ngIf="
+              supportDeliveryFormControl.notificationEmail.invalid &&
+              supportDeliveryFormControl.notificationEmail.hasError('email')
+            "
             >Invalid email</mat-error
           >
         </mat-form-field>

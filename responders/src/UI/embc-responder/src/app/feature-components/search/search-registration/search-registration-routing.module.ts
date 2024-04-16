@@ -27,22 +27,28 @@ const routes: Routes = [
       },
       {
         path: 'security-phrase',
-        loadChildren: () => import('../essfile-security-phrase/essfile-security-phrase.module').then((m) => m.EssfileSecurityPhraseModule)
+        loadChildren: () =>
+          import('../essfile-security-phrase/essfile-security-phrase.module').then((m) => m.EssfileSecurityPhraseModule)
       },
       {
         path: 'security-questions',
         loadChildren: () =>
-          import('../profile-security-questions/profile-security-questions.module').then((m) => m.ProfileSecurityQuestionsModule)
+          import('../profile-security-questions/profile-security-questions.module').then(
+            (m) => m.ProfileSecurityQuestionsModule
+          )
       },
       {
         path: 'evacuee-profile-dashboard',
         loadChildren: () =>
-          import('../evacuee-profile-dashboard/evacuee-profile-dashboard.module').then((m) => m.EvacueeProfileDashboardModule),
+          import('../evacuee-profile-dashboard/evacuee-profile-dashboard.module').then(
+            (m) => m.EvacueeProfileDashboardModule
+          ),
         canActivate: [DashboardActivateGuard]
       },
       {
         path: 'essfile-dashboard',
-        loadChildren: () => import('../essfile-dashboard/essfile-dashboard.module').then((m) => m.EssfileDashboardModule),
+        loadChildren: () =>
+          import('../essfile-dashboard/essfile-dashboard.module').then((m) => m.EssfileDashboardModule),
         canActivate: [DashboardActivateGuard]
       }
     ]

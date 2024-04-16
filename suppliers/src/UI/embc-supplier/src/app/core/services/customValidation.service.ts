@@ -17,7 +17,9 @@ export class CustomValidationService {
       const currentContrrol = control.value;
       let check = '';
       if (invoices.value.length > 0 && currentContrrol !== '') {
-        check = invoices.value.some((invoice) => invoice.invoiceNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase());
+        check = invoices.value.some(
+          (invoice) => invoice.invoiceNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase()
+        );
         if (check) {
           return { duplicateInvoice: true };
         }
@@ -36,7 +38,9 @@ export class CustomValidationService {
       const currentContrrol = control.value;
       let check = '';
       if (referrals.value.length > 0 && currentContrrol !== '') {
-        check = referrals.value.some((referral) => referral.referralNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase());
+        check = referrals.value.some(
+          (referral) => referral.referralNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase()
+        );
         if (check) {
           return { duplicateReferral: true };
         }

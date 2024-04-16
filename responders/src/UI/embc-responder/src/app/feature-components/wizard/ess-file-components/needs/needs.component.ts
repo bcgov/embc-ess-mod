@@ -125,8 +125,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.stepEssFileService.requiresFood = this.needsForm.controls.requiresFood.value;
     this.stepEssFileService.requiresIncidentals = this.needsForm.controls.requiresIncidentals.value;
     this.stepEssFileService.requiresTransportation = this.needsForm.controls.requiresTransportation.value;
-    this.stepEssFileService.requiresShelterAllowance = this.needsForm.controls.requiresShelterType.value === ShelterType.allowance;
-    this.stepEssFileService.requiresShelterReferral = this.needsForm.controls.requiresShelterType.value === ShelterType.referral;
+    this.stepEssFileService.requiresShelterAllowance =
+      this.needsForm.controls.requiresShelterType.value === ShelterType.allowance;
+    this.stepEssFileService.requiresShelterReferral =
+      this.needsForm.controls.requiresShelterType.value === ShelterType.referral;
     this.stepEssFileService.requiresNothing = this.needsForm.controls.requiresNothing.value;
   }
 }

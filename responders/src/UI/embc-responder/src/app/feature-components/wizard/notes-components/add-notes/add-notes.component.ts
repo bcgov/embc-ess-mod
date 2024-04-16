@@ -81,7 +81,9 @@ export class AddNotesComponent implements OnInit {
    */
   editNote(): void {
     this.stepNotesService
-      .editNote(this.stepNotesService.createNoteDTO(this.notesForm.get('note').value, this.stepNotesService.selectedNote.id))
+      .editNote(
+        this.stepNotesService.createNoteDTO(this.notesForm.get('note').value, this.stepNotesService.selectedNote.id)
+      )
       .subscribe({
         next: (result) => {
           this.closeEvent.emit(true);

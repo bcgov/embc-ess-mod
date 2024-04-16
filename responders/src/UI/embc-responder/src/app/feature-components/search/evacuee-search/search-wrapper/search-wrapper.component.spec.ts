@@ -56,7 +56,10 @@ describe('SearchWrapperComponent', () => {
 
     fixture.detectChanges();
     component.ngOnInit();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/id-search'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/id-search'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   it('should navigate to paper based path', inject([Router], (router: Router) => {
@@ -68,7 +71,10 @@ describe('SearchWrapperComponent', () => {
 
     fixture.detectChanges();
     component.ngOnInit();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/id-search'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/id-search'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   it('should navigate to remote extension path', inject([Router], (router: Router) => {
@@ -80,7 +86,10 @@ describe('SearchWrapperComponent', () => {
 
     fixture.detectChanges();
     component.ngOnInit();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/remote-search'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/remote-search'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   afterAll(() => {

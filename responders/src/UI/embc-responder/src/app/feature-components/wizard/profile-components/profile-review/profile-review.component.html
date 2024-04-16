@@ -17,8 +17,8 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox [checked]="!stepEvacueeProfileService?.restrictedAccess" disabled>
-                  You have given your consent to have your registration status, location and contact information shared with friends and
-                  family who may ask about your wellbeing.
+                  You have given your consent to have your registration status, location and contact information shared
+                  with friends and family who may ask about your wellbeing.
                 </mat-checkbox>
               </div>
             </div>
@@ -188,8 +188,8 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox [checked]="stepEvacueeProfileService?.showContact" [disabled]="true">
-                  You have given your consent for Emergency Management British Columbia and your Local Emergency Program to communicate with
-                  you by email or phone regarding your emergency situation.
+                  You have given your consent for Emergency Management British Columbia and your Local Emergency Program
+                  to communicate with you by email or phone regarding your emergency situation.
                 </mat-checkbox>
               </div>
             </div>
@@ -222,7 +222,10 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 0">
+            <div
+              class="row"
+              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 0"
+            >
               <div class="col-4">
                 {{ displayQuestions[0]?.question }}
               </div>
@@ -231,7 +234,10 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 1">
+            <div
+              class="row"
+              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 1"
+            >
               <div class="col-4">
                 {{ displayQuestions[1]?.question }}
               </div>
@@ -240,7 +246,10 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 2">
+            <div
+              class="row"
+              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 2"
+            >
               <div class="col-4">
                 {{ displayQuestions[2]?.question }}
               </div>
@@ -310,8 +319,8 @@
 
             <p>
               <strong>
-                Send an email invitation to the evacuee to confirm their identity by logging in to their profile using the BC Services Card
-                app.
+                Send an email invitation to the evacuee to confirm their identity by logging in to their profile using
+                the BC Services Card app.
               </strong>
             </p>
 
@@ -332,11 +341,22 @@
                 <div class="col-md-5">
                   <mat-form-field appearance="outline">
                     <mat-label>Confirm Email Address</mat-label>
-                    <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address" [errorStateMatcher]="emailMatcher" />
-                    <mat-error *ngIf="inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')">
+                    <input
+                      formControlName="confirmEmail"
+                      matInput
+                      placeholder="Confirm Email Address"
+                      [errorStateMatcher]="emailMatcher"
+                    />
+                    <mat-error
+                      *ngIf="
+                        inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')
+                      "
+                    >
                       Invalid email</mat-error
                     >
-                    <mat-error *ngIf="inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')"> Email address mismatch</mat-error>
+                    <mat-error *ngIf="inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')">
+                      Email address mismatch</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>

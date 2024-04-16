@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { ContactComponent } from './contact.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -194,7 +203,9 @@ describe('ContactComponent', () => {
       fixture.detectChanges();
       const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
-      expect(dialogContent.textContent).toEqual('Please complete all sections of the Evacuee Profile prior to submitting. Close ');
+      expect(dialogContent.textContent).toEqual(
+        'Please complete all sections of the Evacuee Profile prior to submitting. Close '
+      );
     })
   ));
 

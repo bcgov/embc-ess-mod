@@ -149,7 +149,10 @@ export class InvoiceComponent implements OnInit {
    */
   createReferralFormArray() {
     return this.builder.group({
-      referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]],
+      referralNumber: [
+        '',
+        [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]
+      ],
       referralRows: this.builder.array([], Validators.required),
       totalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),

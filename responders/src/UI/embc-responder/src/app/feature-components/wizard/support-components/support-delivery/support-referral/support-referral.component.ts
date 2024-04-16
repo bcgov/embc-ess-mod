@@ -93,7 +93,8 @@ export class SupportReferralComponent implements OnInit {
   }
 
   populateExistingIssuedTo() {
-    const allMembers: EvacuationFileHouseholdMember[] = this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers;
+    const allMembers: EvacuationFileHouseholdMember[] =
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers;
 
     if (this.editFlag) {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {

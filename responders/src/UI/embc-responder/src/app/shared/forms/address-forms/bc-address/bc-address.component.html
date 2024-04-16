@@ -4,7 +4,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
         <input formControlName="addressLine1" matInput placeholder="Address Line 1" maxlength="100" required />
-        <mat-error *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
+        <mat-error
+          *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')"
+        >
           Address Line 1 is required</mat-error
         >
       </mat-form-field>
@@ -24,7 +26,15 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
-        <input maxlength="100" type="text" formControlName="community" matInput placeholder="City" [matAutocomplete]="auto" required />
+        <input
+          maxlength="100"
+          type="text"
+          formControlName="community"
+          matInput
+          placeholder="City"
+          [matAutocomplete]="auto"
+          required
+        />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="cityDisplayFn">
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option" [id]="option.name">
             {{ option.name }}

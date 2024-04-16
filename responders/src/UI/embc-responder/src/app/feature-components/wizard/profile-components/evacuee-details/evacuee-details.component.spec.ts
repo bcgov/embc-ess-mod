@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { EvacueeDetailsComponent } from './evacuee-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -228,7 +237,8 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue =
+        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -254,7 +264,9 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'evacuee-details');
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'evacuee-details'
+      );
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -266,7 +278,8 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue =
+        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -292,7 +305,9 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'evacuee-details');
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'evacuee-details'
+      );
 
       expect(tabMetaData.status).toEqual('incomplete');
     })
@@ -304,7 +319,8 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue =
+        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -334,7 +350,8 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue =
+        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',

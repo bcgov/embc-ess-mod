@@ -139,7 +139,9 @@ export class MatchedEssfilesComponent implements OnInit {
               this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
             ) {
               this.essFiles = essFilesArray.filter(
-                (files) => files.manualFileId === this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
+                (files) =>
+                  files.manualFileId ===
+                  this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
               );
             }
           } else {

@@ -88,7 +88,9 @@ describe('TaskSearchComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     component.submitTask();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], { state: { essTask: taskResult } });
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], {
+      state: { essTask: taskResult }
+    });
   }));
 
   it('should navigate to task details with Expired task', inject([Router], (router: Router) => {
@@ -117,7 +119,9 @@ describe('TaskSearchComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     component.submitTask();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], { state: { essTask: taskResult } });
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], {
+      state: { essTask: taskResult }
+    });
   }));
 
   it('should navigate to task details with Invalid task', inject([Router], (router: Router) => {
@@ -136,7 +140,9 @@ describe('TaskSearchComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     component.submitTask();
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], { state: { essTask: taskResult } });
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/task-details'], {
+      state: { essTask: taskResult }
+    });
   }));
 
   afterAll(() => {

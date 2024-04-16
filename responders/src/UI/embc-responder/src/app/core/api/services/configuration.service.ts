@@ -69,7 +69,9 @@ export class ConfigurationService extends BaseService {
    * This method doesn't expect any request body.
    */
   configurationGetConfiguration(params?: {}): Observable<Configuration> {
-    return this.configurationGetConfiguration$Response(params).pipe(map((r: StrictHttpResponse<Configuration>) => r.body as Configuration));
+    return this.configurationGetConfiguration$Response(params).pipe(
+      map((r: StrictHttpResponse<Configuration>) => r.body as Configuration)
+    );
   }
 
   /**
@@ -129,7 +131,9 @@ export class ConfigurationService extends BaseService {
      */
     forEnumType?: string;
   }): Observable<Array<Code>> {
-    return this.configurationGetCodes$Response(params).pipe(map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>));
+    return this.configurationGetCodes$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>)
+    );
   }
 
   /**
@@ -197,7 +201,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetStateProvinces$Response(params?: { countryId?: string }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+  configurationGetStateProvinces$Response(params?: {
+    countryId?: string;
+  }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetStateProvincesPath, 'get');
     if (params) {
       rb.query('countryId', params.countryId, {});

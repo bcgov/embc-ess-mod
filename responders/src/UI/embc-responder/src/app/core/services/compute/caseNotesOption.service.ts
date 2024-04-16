@@ -36,7 +36,9 @@ export class CaseNotesOptionService implements SearchOptionsService {
   search(value: string | EvacueeSearchContextModel, id: string): void | Promise<boolean> {
     this.dataService.saveSearchParams(value);
 
-    return this.dataService.searchForEssFiles(undefined, undefined, id).then((fileResult) => this.navigate(fileResult, value));
+    return this.dataService
+      .searchForEssFiles(undefined, undefined, id)
+      .then((fileResult) => this.navigate(fileResult, value));
   }
   getDashboardBanner(fileStatus: string): DashboardBanner {
     return this.dataService.getDashboardText(fileStatus);
@@ -84,7 +86,8 @@ export class CaseNotesOptionService implements SearchOptionsService {
     } else if (
       fileSummary.length !== 0 &&
       this.userService.currentProfile.role !== MemberRole.Tier1 &&
-      (fileSummary[0].status === EvacuationFileStatus.Active || fileSummary[0].status === EvacuationFileStatus.Completed)
+      (fileSummary[0].status === EvacuationFileStatus.Active ||
+        fileSummary[0].status === EvacuationFileStatus.Completed)
     ) {
       return true;
     }

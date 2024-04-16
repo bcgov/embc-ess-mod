@@ -1,6 +1,15 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -25,7 +34,13 @@ describe('EvacueeIdVerifyComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeIdVerifyComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        BrowserAnimationsModule
+      ],
       providers: [
         EvacueeIdVerifyComponent,
         UntypedFormBuilder,
@@ -67,7 +82,9 @@ describe('EvacueeIdVerifyComponent', () => {
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const labelElem = nativeElem.querySelector('#photoId-label');
 
-    expect(labelElem.textContent).toEqual('Did the evacuee present any government-issued photo ID when the paper ESS File was completed?');
+    expect(labelElem.textContent).toEqual(
+      'Did the evacuee present any government-issued photo ID when the paper ESS File was completed?'
+    );
   });
 
   it('shoulddisplay id question for Digital selection', () => {
@@ -93,7 +110,10 @@ describe('EvacueeIdVerifyComponent', () => {
     component.idVerifyForm.get('photoId').setValue(true);
     component.next();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/name-search'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/name-search'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   it('should set id value and navigate to name search for paper flow', inject([Router], (router: Router) => {
@@ -106,7 +126,10 @@ describe('EvacueeIdVerifyComponent', () => {
     component.idVerifyForm.get('photoId').setValue(false);
     component.next();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/name-search'], Object({ skipLocationChange: true }));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/name-search'],
+      Object({ skipLocationChange: true })
+    );
   }));
 
   afterAll(() => {

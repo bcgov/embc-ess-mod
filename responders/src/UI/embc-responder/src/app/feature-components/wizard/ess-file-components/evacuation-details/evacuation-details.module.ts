@@ -10,6 +10,13 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [EvacuationDetailsComponent],
-  imports: [CommonModule, CustomPipeModule, EvacuationDetailsRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
+  imports: [
+    CommonModule,
+    CustomPipeModule,
+    EvacuationDetailsRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    SharedModule
+  ]
 })
 export class EvacuationDetailsModule {}

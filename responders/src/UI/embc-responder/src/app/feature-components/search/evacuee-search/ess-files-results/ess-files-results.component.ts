@@ -74,7 +74,10 @@ export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewIni
     this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
     const profile$ = await this.essFilesResultsService.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
-      if (this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber !== selectedESSFile.manualFileId) {
+      if (
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber !==
+        selectedESSFile.manualFileId
+      ) {
         this.essFilesResultsService.openUnableAccessESSFileDialog();
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
@@ -84,20 +87,22 @@ export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewIni
         this.essFilesResultsService.openUnableAccessDialog();
       } else if (!this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
         this.essFilesResultsService.setloadingOverlay(true);
-        this.essFileSecurityPhraseService.getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
-          next: (results) => {
-            this.essFilesResultsService.setloadingOverlay(false);
-            this.essFileSecurityPhraseService.securityPhrase = results;
-            setTimeout(() => {
-              this.router.navigate(['responder-access/search/security-phrase']);
-            }, 200);
-          },
-          error: (error) => {
-            this.essFilesResultsService.setloadingOverlay(false);
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.securityPhraseError);
-          }
-        });
+        this.essFileSecurityPhraseService
+          .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
+          .subscribe({
+            next: (results) => {
+              this.essFilesResultsService.setloadingOverlay(false);
+              this.essFileSecurityPhraseService.securityPhrase = results;
+              setTimeout(() => {
+                this.router.navigate(['responder-access/search/security-phrase']);
+              }, 200);
+            },
+            error: (error) => {
+              this.essFilesResultsService.setloadingOverlay(false);
+              this.alertService.clearAlert();
+              this.alertService.setAlert('danger', globalConst.securityPhraseError);
+            }
+          });
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }

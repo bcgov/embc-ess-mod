@@ -47,15 +47,17 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     if (this.appBaseService?.appModel?.selectedEssFile?.id === undefined && this.securityPhrase === undefined) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else {
-      this.essFileSecurityPhraseService.getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
-        next: (results) => {
-          this.securityPhrase = results;
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.securityPhraseError);
-        }
-      });
+      this.essFileSecurityPhraseService
+        .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
+        .subscribe({
+          next: (results) => {
+            this.securityPhrase = results;
+          },
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.securityPhraseError);
+          }
+        });
     }
   }
 
@@ -76,40 +78,42 @@ export class EssfileSecurityPhraseComponent implements OnInit {
       answer: this.securityPhraseForm.get('phraseAnswer').value
     };
 
-    this.essFileSecurityPhraseService.verifySecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id, body).subscribe({
-      next: (results) => {
-        this.showLoader = !this.showLoader;
-        if (results.isCorrect) {
-          this.wrongAnswerFlag = false;
-          this.correctAnswerFlag = true;
-          this.essFileSecurityPhraseService.securityPhrase = undefined;
-          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-            this.evacueeProfileService.linkMemberProfile(this.evacueeSessionService.fileLinkMetaData).subscribe({
-              next: (value) => {
-                this.evacueeSessionService.fileLinkStatus = 'S';
-                this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
-              },
-              error: (error) => {
-                this.evacueeSessionService.fileLinkStatus = 'E';
-                this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
-              }
-            });
+    this.essFileSecurityPhraseService
+      .verifySecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id, body)
+      .subscribe({
+        next: (results) => {
+          this.showLoader = !this.showLoader;
+          if (results.isCorrect) {
+            this.wrongAnswerFlag = false;
+            this.correctAnswerFlag = true;
+            this.essFileSecurityPhraseService.securityPhrase = undefined;
+            if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+              this.evacueeProfileService.linkMemberProfile(this.evacueeSessionService.fileLinkMetaData).subscribe({
+                next: (value) => {
+                  this.evacueeSessionService.fileLinkStatus = 'S';
+                  this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+                },
+                error: (error) => {
+                  this.evacueeSessionService.fileLinkStatus = 'E';
+                  this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+                }
+              });
+            } else {
+              setTimeout(() => {
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
+              }, 1000);
+            }
           } else {
-            setTimeout(() => {
-              this.router.navigate(['responder-access/search/essfile-dashboard']);
-            }, 1000);
+            this.securityPhraseForm.get('phraseAnswer').reset();
+            this.attemptsRemaning--;
+            this.wrongAnswerFlag = true;
           }
-        } else {
-          this.securityPhraseForm.get('phraseAnswer').reset();
-          this.attemptsRemaning--;
-          this.wrongAnswerFlag = true;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.verifySecurityPhraseError);
         }
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.verifySecurityPhraseError);
-      }
-    });
+      });
   }
 
   /**

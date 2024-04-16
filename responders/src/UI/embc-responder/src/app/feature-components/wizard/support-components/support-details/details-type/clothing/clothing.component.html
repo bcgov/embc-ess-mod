@@ -16,7 +16,10 @@
         <mat-radio-button [value]="false">No</mat-radio-button>
         <mat-error
           class="custom-mat-error field-error"
-          *ngIf="referralFormControl?.extremeWinterConditions.invalid && referralFormControl?.extremeWinterConditions.hasError('required')"
+          *ngIf="
+            referralFormControl?.extremeWinterConditions.invalid &&
+            referralFormControl?.extremeWinterConditions.hasError('required')
+          "
         >
           Required</mat-error
         >
@@ -53,13 +56,19 @@
           required
         />
         <span matPrefix>$&nbsp;</span>
-        <mat-error *ngIf="referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('required')">
+        <mat-error
+          *ngIf="
+            referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('required')
+          "
+        >
           Total Amount is required</mat-error
         >
         <mat-error
           *ngIf="
-            (referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('pattern')) ||
-            (referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('totalZeroError'))
+            (referralFormControl?.userTotalAmount.invalid &&
+              referralFormControl?.userTotalAmount.hasError('pattern')) ||
+            (referralFormControl?.userTotalAmount.invalid &&
+              referralFormControl?.userTotalAmount.hasError('totalZeroError'))
           "
         >
           Invalid amount</mat-error
@@ -85,7 +94,11 @@
         <mat-form-field appearance="outline">
           <input formControlName="approverName" maxlength="100" matInput />
 
-          <mat-error *ngIf="referralFormControl?.approverName.invalid && referralFormControl?.approverName.hasError('whitespaceError')">
+          <mat-error
+            *ngIf="
+              referralFormControl?.approverName.invalid && referralFormControl?.approverName.hasError('whitespaceError')
+            "
+          >
             Approver name is required</mat-error
           >
         </mat-form-field>

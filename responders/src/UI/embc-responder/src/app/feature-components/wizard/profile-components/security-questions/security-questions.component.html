@@ -19,9 +19,10 @@
       >
         <div class="col-12">
           <p>
-            You will be asked to answer your questions should you meet with an Emergency Support Services (ESS) Responder in the future, to
-            confirm your identity and gain access to your account. If you are unable to answer your security questions, you will be asked to
-            provide government issued photo identification to confirm your identity.
+            You will be asked to answer your questions should you meet with an Emergency Support Services (ESS)
+            Responder in the future, to confirm your identity and gain access to your account. If you are unable to
+            answer your security questions, you will be asked to provide government issued photo identification to
+            confirm your identity.
           </p>
 
           <p>
@@ -45,12 +46,17 @@
                     <mat-label>Security Question 1</mat-label>
 
                     <mat-select formControlName="question1">
-                      <mat-option *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions" [value]="question">
+                      <mat-option
+                        *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions"
+                        [value]="question"
+                      >
                         {{ question }}
                       </mat-option>
                     </mat-select>
 
-                    <mat-error *ngIf="questionFormControl?.question1?.hasError('required')"> Security Question is required. </mat-error>
+                    <mat-error *ngIf="questionFormControl?.question1?.hasError('required')">
+                      Security Question is required.
+                    </mat-error>
                     <mat-error *ngIf="questionFormControl?.question1?.hasError('notUnique')">
                       Security Questions must all be different.
                     </mat-error>
@@ -64,13 +70,17 @@
 
                     <mat-error
                       *ngIf="
-                        questionFormControl?.answer1?.hasError('required') || questionFormControl?.answer1?.hasError('whitespaceError')
+                        questionFormControl?.answer1?.hasError('required') ||
+                        questionFormControl?.answer1?.hasError('whitespaceError')
                       "
                     >
                       Answer is required.
                     </mat-error>
                     <mat-error
-                      *ngIf="questionFormControl?.answer1?.hasError('minlength') || questionFormControl?.answer1?.hasError('maxlength')"
+                      *ngIf="
+                        questionFormControl?.answer1?.hasError('minlength') ||
+                        questionFormControl?.answer1?.hasError('maxlength')
+                      "
                     >
                       Answer must be between 3 and 50 characters long.
                     </mat-error>
@@ -87,12 +97,17 @@
                     <mat-label>Security Question 2</mat-label>
 
                     <mat-select formControlName="question2">
-                      <mat-option *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions" [value]="question">
+                      <mat-option
+                        *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions"
+                        [value]="question"
+                      >
                         {{ question }}
                       </mat-option>
                     </mat-select>
 
-                    <mat-error *ngIf="questionFormControl?.question2?.hasError('required')"> Security Question is required. </mat-error>
+                    <mat-error *ngIf="questionFormControl?.question2?.hasError('required')">
+                      Security Question is required.
+                    </mat-error>
                     <mat-error *ngIf="questionFormControl?.question2?.hasError('notUnique')">
                       Security Questions must all be different.
                     </mat-error>
@@ -107,13 +122,17 @@
 
                     <mat-error
                       *ngIf="
-                        questionFormControl?.answer2?.hasError('required') || questionFormControl?.answer2?.hasError('whitespaceError')
+                        questionFormControl?.answer2?.hasError('required') ||
+                        questionFormControl?.answer2?.hasError('whitespaceError')
                       "
                     >
                       Answer is required.
                     </mat-error>
                     <mat-error
-                      *ngIf="questionFormControl?.answer2?.hasError('minlength') || questionFormControl?.answer2?.hasError('maxlength')"
+                      *ngIf="
+                        questionFormControl?.answer2?.hasError('minlength') ||
+                        questionFormControl?.answer2?.hasError('maxlength')
+                      "
                     >
                       Answer must be between 3 and 50 characters long.
                     </mat-error>
@@ -130,12 +149,17 @@
                     <mat-label>Security Question 3</mat-label>
 
                     <mat-select formControlName="question3">
-                      <mat-option *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions" [value]="question">
+                      <mat-option
+                        *ngFor="let question of stepEvacueeProfileService?.securityQuestionOptions"
+                        [value]="question"
+                      >
                         {{ question }}
                       </mat-option>
                     </mat-select>
 
-                    <mat-error *ngIf="questionFormControl?.question3?.hasError('required')"> Security Question is required. </mat-error>
+                    <mat-error *ngIf="questionFormControl?.question3?.hasError('required')">
+                      Security Question is required.
+                    </mat-error>
                     <mat-error *ngIf="questionFormControl?.question3?.hasError('notUnique')">
                       Security Questions must all be different.
                     </mat-error>
@@ -150,13 +174,17 @@
 
                     <mat-error
                       *ngIf="
-                        questionFormControl?.answer3?.hasError('required') || questionFormControl?.answer3?.hasError('whitespaceError')
+                        questionFormControl?.answer3?.hasError('required') ||
+                        questionFormControl?.answer3?.hasError('whitespaceError')
                       "
                     >
                       Answer is required.
                     </mat-error>
                     <mat-error
-                      *ngIf="questionFormControl?.answer3?.hasError('minlength') || questionFormControl?.answer3?.hasError('maxlength')"
+                      *ngIf="
+                        questionFormControl?.answer3?.hasError('minlength') ||
+                        questionFormControl?.answer3?.hasError('maxlength')
+                      "
                     >
                       Answer must be between 3 and 50 characters long.
                     </mat-error>
@@ -198,10 +226,18 @@
       </div>
 
       <div class="row edit-toggle bottom-space-large" *ngIf="stepEvacueeProfileService?.savedQuestions?.length > 0">
-        <button class="btn btn-link col-12" (click)="toggleEditQuestions(true)" *ngIf="!stepEvacueeProfileService?.editQuestions">
+        <button
+          class="btn btn-link col-12"
+          (click)="toggleEditQuestions(true)"
+          *ngIf="!stepEvacueeProfileService?.editQuestions"
+        >
           Add new security questions
         </button>
-        <button class="btn btn-link col-12" (click)="toggleEditQuestions(false)" *ngIf="stepEvacueeProfileService?.editQuestions">
+        <button
+          class="btn btn-link col-12"
+          (click)="toggleEditQuestions(false)"
+          *ngIf="stepEvacueeProfileService?.editQuestions"
+        >
           Cancel
         </button>
       </div>

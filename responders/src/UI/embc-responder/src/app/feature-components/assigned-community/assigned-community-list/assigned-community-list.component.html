@@ -5,7 +5,12 @@
   </div>
   <div class="row data-margin">
     <div class="col-md-6">
-      <button class="button-s" mat-stroked-button [disabled]="communitiesToDeleteList?.length === 0" (click)="deleteCommunities()">
+      <button
+        class="button-s"
+        mat-stroked-button
+        [disabled]="communitiesToDeleteList?.length === 0"
+        (click)="deleteCommunities()"
+      >
         Remove Communities
       </button>
     </div>

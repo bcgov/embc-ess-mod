@@ -66,7 +66,9 @@ export class ProfileService extends BaseService {
    * This method doesn't expect any request body.
    */
   profileGetCurrentUserProfile(params?: {}): Observable<UserProfile> {
-    return this.profileGetCurrentUserProfile$Response(params).pipe(map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile));
+    return this.profileGetCurrentUserProfile$Response(params).pipe(
+      map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile)
+    );
   }
 
   /**

@@ -165,7 +165,11 @@ export class SearchDataService extends DashboardService {
     });
   }
 
-  public searchForEssFiles(registrantId?: string, manualFileId?: string, id?: string): Promise<Array<EvacuationFileSummaryModel>> {
+  public searchForEssFiles(
+    registrantId?: string,
+    manualFileId?: string,
+    id?: string
+  ): Promise<Array<EvacuationFileSummaryModel>> {
     const file$ = this.evacueeProfileService.getProfileFiles(registrantId, manualFileId, id).pipe(
       tap({
         next: (result) => {},

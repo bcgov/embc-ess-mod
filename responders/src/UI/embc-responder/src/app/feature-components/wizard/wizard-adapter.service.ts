@@ -189,7 +189,9 @@ export class WizardAdapterService {
 
     this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(profile.primaryAddress);
 
-    const mainMember = this.stepEssFileService.householdMembers.find((member) => member.type === HouseholdMemberType.Registrant);
+    const mainMember = this.stepEssFileService.householdMembers.find(
+      (member) => member.type === HouseholdMemberType.Registrant
+    );
     const index = this.stepEssFileService.householdMembers.indexOf(mainMember);
 
     const updatedMainMember = {

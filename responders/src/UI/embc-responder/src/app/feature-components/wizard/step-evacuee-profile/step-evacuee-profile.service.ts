@@ -303,7 +303,9 @@ export class StepEvacueeProfileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.profileTabs?.some((tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review');
+    return this.profileTabs?.some(
+      (tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review'
+    );
   }
 
   /**
@@ -441,7 +443,9 @@ export class StepEvacueeProfileService {
 
     this.isBcMailingAddress = this.checkForBCAddress(profile.mailingAddress.stateProvinceCode);
     this.mailingAddressDetails = this.wizardService.setAddressObjectForForm(profile.mailingAddress);
-    this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(profile.isMailingAddressSameAsPrimaryAddress);
+    this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(
+      profile.isMailingAddressSameAsPrimaryAddress
+    );
 
     // Contact tab
     this.contactDetails = profile.contactDetails;

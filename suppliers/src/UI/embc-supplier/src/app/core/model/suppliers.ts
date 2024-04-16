@@ -114,7 +114,14 @@ export class Attachment {
   referralNumber: string;
   type: number;
 
-  constructor(content: string, contentType: string, fileName: string, invoiceNumber: string, referralNumber: string, type: number) {
+  constructor(
+    content: string,
+    contentType: string,
+    fileName: string,
+    invoiceNumber: string,
+    referralNumber: string,
+    type: number
+  ) {
     this.content = content;
     this.contentType = contentType;
     this.fileName = fileName;

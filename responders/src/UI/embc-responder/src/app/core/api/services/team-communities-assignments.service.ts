@@ -107,7 +107,11 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
      */
     body: Array<string>;
   }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, TeamCommunitiesAssignmentsService.TeamCommunitiesAssignmentsAssignCommunitiesPath, 'post');
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      TeamCommunitiesAssignmentsService.TeamCommunitiesAssignmentsAssignCommunitiesPath,
+      'post'
+    );
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -144,7 +148,9 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
      */
     body: Array<string>;
   }): Observable<void> {
-    return this.teamCommunitiesAssignmentsAssignCommunities$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+    return this.teamCommunitiesAssignmentsAssignCommunities$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
   }
 
   /**
@@ -208,6 +214,8 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
      */
     communityCodes?: Array<string>;
   }): Observable<void> {
-    return this.teamCommunitiesAssignmentsRemoveCommunities$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+    return this.teamCommunitiesAssignmentsRemoveCommunities$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
   }
 }

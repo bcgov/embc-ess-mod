@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { SupportSubCategory } from '../../api/models';
-import { SelectedPathType, ETransferStatus, EtransferRequirementStatus, EtransferContent } from '../../models/appBase.model';
+import {
+  SelectedPathType,
+  ETransferStatus,
+  EtransferRequirementStatus,
+  EtransferContent
+} from '../../models/appBase.model';
 import { Compute } from '../../interfaces/compute';
 import { AppBaseService } from '../helper/appBase.service';
 
@@ -39,10 +44,13 @@ export class ComputeFeaturesService implements Compute {
       };
     } else if (
       this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Lodging_Hotel ||
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Lodging_Billeting ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
+        SupportSubCategory.Lodging_Billeting ||
       this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Lodging_Group ||
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Transportation_Other ||
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Transportation_Taxi
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
+        SupportSubCategory.Transportation_Other ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
+        SupportSubCategory.Transportation_Taxi
     ) {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.notAllowed
@@ -100,8 +108,10 @@ export class ComputeFeaturesService implements Compute {
     return (
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.postalCode !== null &&
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.postalCode !== '' &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.postalCode !== undefined &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.stateProvince.code === 'BC'
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.postalCode !==
+        undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.stateProvince.code ===
+        'BC'
     );
   }
 }

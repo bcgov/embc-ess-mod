@@ -28,7 +28,12 @@ export class DataService {
     let remitSupplierInformation = null;
     if (supplierDetails.remitToOtherBusiness) {
       const remittanceAddress = this.createRemitAddressRecord(supplierDetails);
-      remitSupplierInformation = this.createSupplierRemitInformationRecord(supplierDetails, contact, remittanceAddress, true);
+      remitSupplierInformation = this.createSupplierRemitInformationRecord(
+        supplierDetails,
+        contact,
+        remittanceAddress,
+        true
+      );
     }
     const supplierInformationArr = [supplierInformation];
     if (remitSupplierInformation) {
@@ -40,7 +45,14 @@ export class DataService {
     const attachments = this.createAttachmentsRecord(supplierDetails);
     const referrals = this.createReferralsRecord(supplierDetails);
     const receipts = this.createReceiptslRecord(supplierDetails);
-    const suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
+    const suppliers: Suppliers = new Suppliers(
+      supplierInformationArr,
+      receipts,
+      invoices,
+      referrals,
+      lineItems,
+      attachments
+    );
     this.setPayload(suppliers);
   }
 
@@ -173,7 +185,9 @@ export class DataService {
     supplierDetails.invoices.forEach((invoice) => {
       invoice.referrals.forEach((ref) => {
         ref.referralRows.forEach((element) => {
-          lineItems.push(new LineItems(element.supportProvided.name, element.description, +element.amount, null, ref.referralNumber));
+          lineItems.push(
+            new LineItems(element.supportProvided.name, element.description, +element.amount, null, ref.referralNumber)
+          );
         });
       });
     });
@@ -181,7 +195,13 @@ export class DataService {
       receipt.referrals.forEach((ref) => {
         ref.referralRows.forEach((element) => {
           lineItems.push(
-            new LineItems(element.supportProvided.name, element.description, +element.amount, ref.receiptNumber, receipt.referralNumber)
+            new LineItems(
+              element.supportProvided.name,
+              element.description,
+              +element.amount,
+              ref.receiptNumber,
+              receipt.referralNumber
+            )
           );
         });
       });
@@ -195,7 +215,14 @@ export class DataService {
       supplierDetails.invoices.forEach((invoice) => {
         invoice.invoiceAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, invoice.invoiceNumber, null, 2)
+            new Attachment(
+              e.file.substring(e.file.indexOf(',') + 1),
+              e.contentType,
+              e.fileName,
+              invoice.invoiceNumber,
+              null,
+              2
+            )
           );
         });
         invoice.referrals.forEach((ref) => {
@@ -229,12 +256,26 @@ export class DataService {
       supplierDetails.receipts.forEach((ref) => {
         ref.referralAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1)
+            new Attachment(
+              e.file.substring(e.file.indexOf(',') + 1),
+              e.contentType,
+              e.fileName,
+              null,
+              ref.referralNumber,
+              1
+            )
           );
         });
         ref.receiptAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1)
+            new Attachment(
+              e.file.substring(e.file.indexOf(',') + 1),
+              e.contentType,
+              e.fileName,
+              null,
+              ref.referralNumber,
+              1
+            )
           );
         });
       });

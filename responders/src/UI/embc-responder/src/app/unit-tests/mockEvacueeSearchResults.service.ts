@@ -11,7 +11,10 @@ import { EvacueeSearchResultsService } from '../feature-components/search/evacue
 export class MockEvacueeSearchResultsService extends EvacueeSearchResultsService {
   public evacueeSearchResultsValue: EvacueeSearchResults;
 
-  public searchForEvacuee(evacueeSearchParameters: EvacueeDetailsModel, paperBasedEssFile?: string): Observable<EvacueeSearchResults> {
+  public searchForEvacuee(
+    evacueeSearchParameters: EvacueeDetailsModel,
+    paperBasedEssFile?: string
+  ): Observable<EvacueeSearchResults> {
     return new BehaviorSubject<EvacueeSearchResults>(this.evacueeSearchResultsValue);
   }
 }

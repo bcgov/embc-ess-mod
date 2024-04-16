@@ -154,10 +154,14 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
@@ -201,7 +205,10 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
       case SupportCategory.Food: {
         if (element?.subCategory === SupportSubCategory.Food_Groceries) {
           const foodGroceriesSupport = element as FoodGroceriesSupport;
-          rate = globalConst.groceriesRate.rate * foodGroceriesSupport.includedHouseholdMembers.length * foodGroceriesSupport.numberOfDays;
+          rate =
+            globalConst.groceriesRate.rate *
+            foodGroceriesSupport.includedHouseholdMembers.length *
+            foodGroceriesSupport.numberOfDays;
           return foodGroceriesSupport.totalAmount > rate;
         } else {
           return false;

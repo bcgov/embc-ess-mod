@@ -7,12 +7,15 @@ import { AccessDeniedComponent } from './shared/error-handling/access-denied/acc
 const routes: Routes = [
   {
     path: 'responder-access',
-    loadChildren: () => import('./feature-components/responder-access/responder-access.module').then((m) => m.ResponderAccessModule)
+    loadChildren: () =>
+      import('./feature-components/responder-access/responder-access.module').then((m) => m.ResponderAccessModule)
   },
   {
     path: 'electronic-agreement',
     loadChildren: () =>
-      import('./feature-components/electronic-agreement/electronic-agreement.module').then((m) => m.ElectronicAgreementModule)
+      import('./feature-components/electronic-agreement/electronic-agreement.module').then(
+        (m) => m.ElectronicAgreementModule
+      )
   },
   {
     path: 'ess-wizard',

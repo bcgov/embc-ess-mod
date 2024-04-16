@@ -5,7 +5,8 @@
 <div class="row dashboard-container container-frame">
   <div class="col-md-12">
     <span class="page-heading" [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#003366' }"
-      >{{ evacueeProfile?.personalDetails?.lastName | uppercase }}, {{ evacueeProfile?.personalDetails?.firstName | titlecase }}</span
+      >{{ evacueeProfile?.personalDetails?.lastName | uppercase }},
+      {{ evacueeProfile?.personalDetails?.firstName | titlecase }}</span
     >
   </div>
 </div>
@@ -29,7 +30,9 @@
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
 
-    <button *ngIf="!evacueeProfile?.verifiedUser" class="button-p verify-button" (click)="verifyEvacuee()" mat-button>Verify</button>
+    <button *ngIf="!evacueeProfile?.verifiedUser" class="button-p verify-button" (click)="verifyEvacuee()" mat-button>
+      Verify
+    </button>
   </div>
 
   <div class="col-md-1 divider">
@@ -95,9 +98,10 @@
                 Send an email invitation to the evacuee to log in to their profile using the BC Services Card app.
               </p>
               <p>
-                Evacuees’ can log in using the BC Services Card app to access their Evacuee Registration & Assistance profile to view
-                emergency events and supports received during those events. To receive an Interac e-Transfer for qualifying support, the
-                evacuee must log in to their profile using the BC Services Card app to confirm their identity.
+                Evacuees’ can log in using the BC Services Card app to access their Evacuee Registration & Assistance
+                profile to view emergency events and supports received during those events. To receive an Interac
+                e-Transfer for qualifying support, the evacuee must log in to their profile using the BC Services Card
+                app to confirm their identity.
               </p>
               <div class="button-div">
                 <button (click)="sendEmail()" class="button-p invite-button" mat-button>
@@ -110,14 +114,20 @@
                   ></app-loader>
                 </button>
                 <span class="email-success bold" *ngIf="emailSuccessMessage"
-                  ><img src="/assets/images/status/complete.svg" height="20" width="20" /> {{ emailSuccessMessage }}</span
+                  ><img src="/assets/images/status/complete.svg" height="20" width="20" />
+                  {{ emailSuccessMessage }}</span
                 >
               </div>
             </div>
             <div class="col-md-4">
               <div class="services-card-container">
                 <div class="services-card-img-container">
-                  <img src="/assets/images/bc-services-card.png" height="137" width="132" class="bc-services-card-img" />
+                  <img
+                    src="/assets/images/bc-services-card.png"
+                    height="137"
+                    width="132"
+                    class="bc-services-card-img"
+                  />
                 </div>
                 <div class="services-card-border"></div>
               </div>
@@ -190,7 +200,10 @@
                   <p>Contact</p>
                   <p>Details</p>
                 </div>
-                <div class="col-md-9 table-parent" *ngIf="evacueeProfile?.contactDetails?.email || evacueeProfile?.contactDetails?.phone">
+                <div
+                  class="col-md-9 table-parent"
+                  *ngIf="evacueeProfile?.contactDetails?.email || evacueeProfile?.contactDetails?.phone"
+                >
                   <table class="table-details">
                     <tr>
                       <th>Email Address:</th>
@@ -206,10 +219,13 @@
                     </tr>
                   </table>
                 </div>
-                <div class="col-md-9 table-parent" *ngIf="!evacueeProfile?.contactDetails?.email && !evacueeProfile?.contactDetails?.phone">
+                <div
+                  class="col-md-9 table-parent"
+                  *ngIf="!evacueeProfile?.contactDetails?.email && !evacueeProfile?.contactDetails?.phone"
+                >
                   <mat-radio-button class="primary-radio-button disabled" [value]="true" [checked]="true">
-                    <b>No</b> - Do you authorize Emergency Management British Columbia and your Local Emergency Program to communicate with
-                    you by email or phone regarding your emergency situation?
+                    <b>No</b> - Do you authorize Emergency Management British Columbia and your Local Emergency Program
+                    to communicate with you by email or phone regarding your emergency situation?
                   </mat-radio-button>
                 </div>
               </div>

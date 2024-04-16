@@ -1,4 +1,13 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { AddressComponent } from './address.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -145,7 +154,8 @@ describe('AddressComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue =
+        addressService.stepEvacueeProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -165,7 +175,8 @@ describe('AddressComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue =
+        addressService.stepEvacueeProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -187,7 +198,8 @@ describe('AddressComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue =
+        addressService.stepEvacueeProfileService.evacueeProfileTabs;
       addressService.stepEvacueeProfileService.primaryAddressDetailsVal = {
         addressLine1: '',
         addressLine2: '',
@@ -225,7 +237,8 @@ describe('AddressComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: true
       };
-      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue =
+        addressService.stepEvacueeProfileService.evacueeProfileTabs;
 
       addressService.stepEvacueeProfileService.isBcAddressVal = 'Yes';
       addressService.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddressVal = 'Yes';

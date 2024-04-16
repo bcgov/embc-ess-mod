@@ -16,7 +16,10 @@ export class MockEvacueeProfileService extends EvacueeProfileService {
     return new BehaviorSubject<RegistrantProfileModel>(this.registrantProfileValue);
   }
 
-  public getProfileFiles(registrantId?: string, externalReferenceId?: string): Observable<Array<EvacuationFileSummaryModel>> {
+  public getProfileFiles(
+    registrantId?: string,
+    externalReferenceId?: string
+  ): Observable<Array<EvacuationFileSummaryModel>> {
     return new BehaviorSubject<EvacuationFileSummaryModel[]>(this.evacuationFileSummaryValue);
   }
 

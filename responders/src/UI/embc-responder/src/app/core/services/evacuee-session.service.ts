@@ -54,7 +54,9 @@ export class EvacueeSessionService {
   }
 
   get memberRegistration(): EvacuationFileHouseholdMember {
-    return this.memberRegistrationVal ? this.memberRegistrationVal : JSON.parse(this.cacheService.get('memberRegistration'));
+    return this.memberRegistrationVal
+      ? this.memberRegistrationVal
+      : JSON.parse(this.cacheService.get('memberRegistration'));
   }
 
   set securityQuestionsOpenedFrom(securityQuestionsOpenedFromVal: string) {
@@ -63,7 +65,9 @@ export class EvacueeSessionService {
   }
 
   get securityQuestionsOpenedFrom(): string {
-    return this.securityQuestionsOpenedFromVal ? this.securityQuestionsOpenedFromVal : this.cacheService.get('securityQuestionsOpenedFrom');
+    return this.securityQuestionsOpenedFromVal
+      ? this.securityQuestionsOpenedFromVal
+      : this.cacheService.get('securityQuestionsOpenedFrom');
   }
 
   set securityPhraseOpenedFrom(securityPhraseOpenedFromVal: string) {
@@ -72,7 +76,9 @@ export class EvacueeSessionService {
   }
 
   get securityPhraseOpenedFrom(): string {
-    return this.securityPhraseOpenedFromVal ? this.securityPhraseOpenedFromVal : this.cacheService.get('securityPhraseOpenedFrom');
+    return this.securityPhraseOpenedFromVal
+      ? this.securityPhraseOpenedFromVal
+      : this.cacheService.get('securityPhraseOpenedFrom');
   }
 
   get fileLinkStatus(): string {

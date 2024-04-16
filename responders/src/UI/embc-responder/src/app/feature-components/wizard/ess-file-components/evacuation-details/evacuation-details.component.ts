@@ -166,14 +166,20 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       evacuatedFromPrimary: [
         this.stepEssFileService.evacuatedFromPrimary !== null ? this.stepEssFileService.evacuatedFromPrimary : '',
         this.customValidation
-          .conditionalValidation(() => this.evacDetailsForm.get('primaryAddressIndicator').value === true, Validators.required)
+          .conditionalValidation(
+            () => this.evacDetailsForm.get('primaryAddressIndicator').value === true,
+            Validators.required
+          )
           .bind(this.customValidation)
       ],
       facilityName: [
         this.stepEssFileService.facilityName !== undefined ? this.stepEssFileService.facilityName : '',
         [this.customValidation.whitespaceValidator()]
       ],
-      insurance: [this.stepEssFileService.insurance !== undefined ? this.stepEssFileService.insurance : '', Validators.required],
+      insurance: [
+        this.stepEssFileService.insurance !== undefined ? this.stepEssFileService.insurance : '',
+        Validators.required
+      ],
       primaryAddressIndicator: [true],
       evacAddress: this.createEvacAddressForm(),
       paperIssuedBy: this.formBuilder.group({
@@ -181,7 +187,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           this.stepEssFileService.completedBy ? this.stepEssFileService.completedBy.split(' ')[0] : '',
           [
             this.customValidation
-              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
               .bind(this.customValidation)
           ]
         ],
@@ -189,24 +198,34 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           this.stepEssFileService.completedBy ? this.stepEssFileService.completedBy.split(' ')[1] : '',
           [
             this.customValidation
-              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
               .bind(this.customValidation)
           ]
         ]
       }),
       paperCompletedOn: [
-        this.stepEssFileService.completedOn ? this.dateConversionService.convertDateTimeToDate(this.stepEssFileService.completedOn) : '',
+        this.stepEssFileService.completedOn
+          ? this.dateConversionService.convertDateTimeToDate(this.stepEssFileService.completedOn)
+          : '',
         [
           this.customValidation
             .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.required)
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.validDateValidator())
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.validDateValidator()
+            )
             .bind(this.customValidation)
         ]
       ],
       paperCompletedTime: [
-        this.stepEssFileService.completedOn ? this.dateConversionService.convertDateTimeToTime(this.stepEssFileService.completedOn) : '',
+        this.stepEssFileService.completedOn
+          ? this.dateConversionService.convertDateTimeToTime(this.stepEssFileService.completedOn)
+          : '',
         [
           this.customValidation
             .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.required)
@@ -224,14 +243,20 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   private createEvacAddressForm(): UntypedFormGroup {
     return this.formBuilder.group({
       addressLine1: [
-        this.stepEssFileService?.evacAddress?.addressLine1 !== undefined ? this.stepEssFileService.evacAddress.addressLine1 : '',
+        this.stepEssFileService?.evacAddress?.addressLine1 !== undefined
+          ? this.stepEssFileService.evacAddress.addressLine1
+          : '',
         [this.customValidation.whitespaceValidator()]
       ],
       addressLine2: [
-        this.stepEssFileService?.evacAddress?.addressLine2 !== undefined ? this.stepEssFileService.evacAddress.addressLine2 : ''
+        this.stepEssFileService?.evacAddress?.addressLine2 !== undefined
+          ? this.stepEssFileService.evacAddress.addressLine2
+          : ''
       ],
       community: [
-        this.stepEssFileService?.evacAddress?.community !== undefined ? this.stepEssFileService.evacAddress.community : '',
+        this.stepEssFileService?.evacAddress?.community !== undefined
+          ? this.stepEssFileService.evacAddress.community
+          : '',
         [Validators.required]
       ],
       stateProvince: [
@@ -247,7 +272,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         [Validators.required]
       ],
       postalCode: [
-        this.stepEssFileService?.evacAddress?.postalCode !== undefined ? this.stepEssFileService.evacAddress.postalCode : '',
+        this.stepEssFileService?.evacAddress?.postalCode !== undefined
+          ? this.stepEssFileService.evacAddress.postalCode
+          : '',
         [this.customValidation.postalValidation().bind(this.customValidation)]
       ]
     });
@@ -312,6 +339,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       this.evacDetailsForm.get('paperCompletedTime').value
     );
     this.stepEssFileService.completedBy =
-      this.evacDetailsForm.get('paperIssuedBy.firstName').value + ' ' + this.evacDetailsForm.get('paperIssuedBy.lastNameInitial').value;
+      this.evacDetailsForm.get('paperIssuedBy.firstName').value +
+      ' ' +
+      this.evacDetailsForm.get('paperIssuedBy.lastNameInitial').value;
   }
 }

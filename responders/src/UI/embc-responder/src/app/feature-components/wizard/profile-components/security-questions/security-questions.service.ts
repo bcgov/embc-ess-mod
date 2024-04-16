@@ -72,7 +72,10 @@ export class SecurityQuestionsService {
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   public updateTabStatus(form: UntypedFormGroup) {
-    if (form.valid || (!this.stepEvacueeProfileService.editQuestions && this.stepEvacueeProfileService.savedQuestions?.length > 0)) {
+    if (
+      form.valid ||
+      (!this.stepEvacueeProfileService.editQuestions && this.stepEvacueeProfileService.savedQuestions?.length > 0)
+    ) {
       this.stepEvacueeProfileService.setTabStatus('security-questions', 'complete');
     } else if (this.stepEvacueeProfileService.checkForPartialUpdates(form)) {
       this.stepEvacueeProfileService.setTabStatus('security-questions', 'incomplete');
@@ -105,7 +108,8 @@ export class SecurityQuestionsService {
    * @param clear If true, reset securityQuestions to empty/default values
    */
   setQuestionArray(clear) {
-    if (!this.stepEvacueeProfileService.securityQuestions || clear) this.stepEvacueeProfileService.securityQuestions = [];
+    if (!this.stepEvacueeProfileService.securityQuestions || clear)
+      this.stepEvacueeProfileService.securityQuestions = [];
 
     // Set up 3 blank security question values if not already there
     while (this.stepEvacueeProfileService.securityQuestions.length < 3) {

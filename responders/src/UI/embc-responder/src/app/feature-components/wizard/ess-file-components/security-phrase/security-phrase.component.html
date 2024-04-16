@@ -10,16 +10,20 @@
   <div class="row">
     <div class="col-12 content-container">
       <div class="row">
-        <div class="col-8" *ngIf="essFileNumber === null || essFileNumber === undefined || editedSecurityPhrase; else editEssFile">
+        <div
+          class="col-8"
+          *ngIf="essFileNumber === null || essFileNumber === undefined || editedSecurityPhrase; else editEssFile"
+        >
           <p>
-            The security phrase is to ensure an Emergency Support Services (ESS) Responder can verbally verify your identity with your
-            registration.
+            The security phrase is to ensure an Emergency Support Services (ESS) Responder can verbally verify your
+            identity with your registration.
           </p>
 
           <p>
             Enter a
             <strong>memorable security phrase that is over 6 characters in length.</strong>
-            You may include numbers and letters. Do not include any special characters. The security phrase is not case sensitive.
+            You may include numbers and letters. Do not include any special characters. The security phrase is not case
+            sensitive.
           </p>
 
           <p>Your security phrase should never include your email address.</p>
@@ -41,7 +45,8 @@
                 </mat-error>
                 <mat-error
                   *ngIf="
-                    securityFormControl?.securityPhrase?.hasError('minlength') || securityFormControl?.securityPhrase?.hasError('maxlength')
+                    securityFormControl?.securityPhrase?.hasError('minlength') ||
+                    securityFormControl?.securityPhrase?.hasError('maxlength')
                   "
                 >
                   Phrase must be between 6 and 50 characters long.
@@ -81,8 +86,9 @@
             </div>
 
             <p class="tips-info">
-              If you have been evacuated, please share your security phrase with your listed household members. This will allow an Emergency
-              Support Services (ESS) Responder to assist each household member registered under the same file.
+              If you have been evacuated, please share your security phrase with your listed household members. This
+              will allow an Emergency Support Services (ESS) Responder to assist each household member registered under
+              the same file.
             </p>
           </mat-card>
         </div>

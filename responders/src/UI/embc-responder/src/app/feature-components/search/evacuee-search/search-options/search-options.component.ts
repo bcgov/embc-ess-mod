@@ -42,7 +42,10 @@ export class SearchOptionsComponent implements OnInit {
 
   isEnabled(name: string): boolean {
     if (name === 'remote-extensions') {
-      return !this.workflows?.find((flow) => flow.name === name)?.enabled || !this.hasPermission('canSignIntoRemoteExtensions');
+      return (
+        !this.workflows?.find((flow) => flow.name === name)?.enabled ||
+        !this.hasPermission('canSignIntoRemoteExtensions')
+      );
     }
 
     return !this.workflows?.find((flow) => flow.name === name)?.enabled;

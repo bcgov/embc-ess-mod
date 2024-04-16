@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -58,7 +67,10 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
    * @param selectedRegistrant selected profile
    */
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
-    if (this.evacueeSessionService.isPaperBased && !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
+    if (
+      this.evacueeSessionService.isPaperBased &&
+      !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+    ) {
       this.profileResultsService.openUnableAccessDialog();
     } else {
       this.profileResultsService.updateProfile(selectedRegistrant);
