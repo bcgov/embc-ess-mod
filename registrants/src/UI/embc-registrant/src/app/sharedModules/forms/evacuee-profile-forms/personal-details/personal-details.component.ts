@@ -25,18 +25,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly dateMask = [
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
   createVerifiedProfile = '/verified-registration/create-profile';
   disableFields = false;
@@ -50,11 +39,9 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.personalDetailsForm$ = this.formCreationService
-      .getPersonalDetailsForm()
-      .subscribe((personalDetails) => {
-        this.personalDetailsForm = personalDetails;
-      });
+    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {
+      this.personalDetailsForm = personalDetails;
+    });
 
     if (
       window.location.pathname === this.editVerifiedPersonalDetails ||

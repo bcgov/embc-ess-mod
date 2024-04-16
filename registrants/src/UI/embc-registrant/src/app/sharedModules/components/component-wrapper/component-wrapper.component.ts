@@ -50,9 +50,7 @@ export class ComponentWrapperComponent implements OnInit {
    */
   loadComponent(): Promise<any> {
     return Promise.resolve(
-      import(
-        `../../forms/${this.folderPath}/${this.componentName}/${this.componentName}.component`
-      )
+      import(`../../forms/${this.folderPath}/${this.componentName}/${this.componentName}.component`)
     );
   }
 }

@@ -10,14 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [PetFormComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
   exports: [PetFormComponent]
 })
 export class PetFormModule {}

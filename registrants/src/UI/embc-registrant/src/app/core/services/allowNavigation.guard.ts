@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  Router,
-  RoutesRecognized,
-  UrlTree
-} from '@angular/router';
+import { CanActivate, Router, RoutesRecognized, UrlTree } from '@angular/router';
 import { ProfileMappingService } from '../../feature-components/profile/profile-mapping.service';
 import { filter, pairwise } from 'rxjs';
 
@@ -26,10 +21,7 @@ export class AllowNavigationGuard implements CanActivate {
       .subscribe((events: RoutesRecognized[]) => {
         this.fromUrl = events[0].urlAfterRedirects;
       });
-    if (
-      this.fromUrl &&
-      this.fromUrl.startsWith('/verified-registration/dashboard')
-    ) {
+    if (this.fromUrl && this.fromUrl.startsWith('/verified-registration/dashboard')) {
       return false;
     } else {
       return true;

@@ -47,7 +47,10 @@
             </span>
           </div>
           <div class="col-md-9">
-            <p>You have given your consent to have your location and contact information shared with concerned family or friends who enquire about your wellbeing.</p>
+            <p>
+              You have given your consent to have your location and contact information shared with concerned family or
+              friends who enquire about your wellbeing.
+            </p>
           </div>
         </div>
       </mat-card-content>
@@ -152,8 +155,18 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'">Postal Code:</div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'">Zip Code:</div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'"
+          >
+            Postal Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'"
+          >
+            Zip Code:
+          </div>
           <div
             class="col-md-3"
             *ngIf="
@@ -168,8 +181,18 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'">Province:</div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'">State:</div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'"
+          >
+            Province:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'"
+          >
+            State:
+          </div>
 
           <div class="col-md-3">
             {{ (formCreationService.addressForm$ | async)?.value?.address?.stateProvince?.name }}
@@ -225,16 +248,32 @@
           >
             City/ Jurisdiction:
           </div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name !== undefined">
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name !== undefined"
+          >
             {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name }}
           </div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name === undefined">
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name === undefined"
+          >
             {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community }}
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'">Postal Code:</div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'">Zip Code:</div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'"
+          >
+            Postal Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'"
+          >
+            Zip Code:
+          </div>
           <div
             class="col-md-3"
             *ngIf="
@@ -249,8 +288,18 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'">Province:</div>
-          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'">State:</div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'"
+          >
+            Province:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'"
+          >
+            State:
+          </div>
           <div class="col-md-3">
             {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.stateProvince?.name }}
           </div>
@@ -285,8 +334,8 @@
           </div>
           <div class="col-md-9">
             <p>
-              You have given your consent for Emergency Management British Columbia and your Local Emergency Program to communicate with you by email or phone regarding your
-              emergency situation.
+              You have given your consent for Emergency Management British Columbia and your Local Emergency Program to
+              communicate with you by email or phone regarding your emergency situation.
             </p>
           </div>
         </div>
@@ -371,7 +420,10 @@
             </span>
           </div>
           <div class="col-md-9">
-            <p>You have given your consent to have your location and contact information shared with concerned family or friends who enquire about your wellbeing.</p>
+            <p>
+              You have given your consent to have your location and contact information shared with concerned family or
+              friends who enquire about your wellbeing.
+            </p>
           </div>
         </div>
       </mat-card-content>
@@ -391,12 +443,22 @@
           <div class="col-md-3">Evacuated From:</div>
           <div class="col-md-3">
             <p class="no-bottom-margin">
-              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine1 }},</span>
-              <span>&nbsp;{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2 }}</span>
+              <span
+                >{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine1 }},</span
+              >
+              <span
+                >&nbsp;{{
+                  (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2
+                }}</span
+              >
             </p>
             <p>
-              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.community?.name }}, </span>
-              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.stateProvince?.name }}</span>
+              <span
+                >{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.community?.name }},
+              </span>
+              <span>{{
+                (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.stateProvince?.name
+              }}</span>
               <span
                 [hidden]="
                   (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode === '' ||
@@ -428,10 +490,10 @@
               (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unknown'
                 ? "I don't know"
                 : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unsure'
-                ? 'Yes, but I am unsure if I have coverage for this event.'
-                : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Yes'
-                ? 'Yes'
-                : 'No'
+                  ? 'Yes, but I am unsure if I have coverage for this event.'
+                  : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Yes'
+                    ? 'Yes'
+                    : 'No'
             }}
           </div>
         </div>
@@ -511,7 +573,10 @@
           </div>
         </div>
         <hr />
-        <div class="row info-detail" *ngFor="let item of getNeedsIdentifiedCaptions(formCreationService.identifyNeedsForm$ | async)">
+        <div
+          class="row info-detail"
+          *ngFor="let item of getNeedsIdentifiedCaptions(formCreationService.identifyNeedsForm$ | async)"
+        >
           <div class="col-md-3">{{ item }}</div>
         </div>
       </mat-card-content>

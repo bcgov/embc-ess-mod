@@ -62,21 +62,19 @@ export class ProfileMappingService {
         });
       });
 
-    this.profileDataService.primaryAddressDetails =
-      this.locationService.getAddressRegFromAddress(profile.primaryAddress);
+    this.profileDataService.primaryAddressDetails = this.locationService.getAddressRegFromAddress(
+      profile.primaryAddress
+    );
     this.formCreationService
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
         address.setValue({
           address: {
-            addressLine1:
-              this.profileDataService.primaryAddressDetails?.addressLine1,
-            addressLine2:
-              this.profileDataService.primaryAddressDetails.addressLine2,
+            addressLine1: this.profileDataService.primaryAddressDetails?.addressLine1,
+            addressLine2: this.profileDataService.primaryAddressDetails.addressLine2,
             community: null,
-            stateProvince:
-              this.profileDataService.primaryAddressDetails.stateProvince,
+            stateProvince: this.profileDataService.primaryAddressDetails.stateProvince,
             country: this.profileDataService.primaryAddressDetails.country,
             postalCode: null
           },
@@ -125,29 +123,23 @@ export class ProfileMappingService {
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
-        const primaryAddress = this.locationService.getAddressRegFromAddress(
-          profile.primaryAddress
-        );
-        const mailingAddress = this.locationService.getAddressRegFromAddress(
-          profile.mailingAddress
-        );
+        const primaryAddress = this.locationService.getAddressRegFromAddress(profile.primaryAddress);
+        const mailingAddress = this.locationService.getAddressRegFromAddress(profile.mailingAddress);
         address.setValue({
           address: primaryAddress,
           isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
-          isNewMailingAddress: this.isSameMailingAddress(
-            profile.isMailingAddressSameAsPrimaryAddress
-          ),
-          isBcMailingAddress: this.isBCAddress(
-            profile.mailingAddress.stateProvince
-          ),
+          isNewMailingAddress: this.isSameMailingAddress(profile.isMailingAddressSameAsPrimaryAddress),
+          isBcMailingAddress: this.isBCAddress(profile.mailingAddress.stateProvince),
           mailingAddress
         });
         formGroup = address;
       });
-    this.profileDataService.primaryAddressDetails =
-      this.locationService.getAddressRegFromAddress(profile.primaryAddress);
-    this.profileDataService.mailingAddressDetails =
-      this.locationService.getAddressRegFromAddress(profile.mailingAddress);
+    this.profileDataService.primaryAddressDetails = this.locationService.getAddressRegFromAddress(
+      profile.primaryAddress
+    );
+    this.profileDataService.mailingAddressDetails = this.locationService.getAddressRegFromAddress(
+      profile.mailingAddress
+    );
   }
 
   private setContactDetails(profile: Profile): void {
@@ -160,10 +152,7 @@ export class ProfileMappingService {
         contact.setValue({
           ...profile.contactDetails,
           confirmEmail: profile.contactDetails.email,
-          showContacts: this.setShowContactsInfo(
-            profile.contactDetails.phone,
-            profile.contactDetails.email
-          )
+          showContacts: this.setShowContactsInfo(profile.contactDetails.phone, profile.contactDetails.email)
         });
         formGroup = contact;
       });
@@ -200,9 +189,7 @@ export class ProfileMappingService {
     this.profileDataService.securityQuestions = profile.securityQuestions;
   }
 
-  private isSameMailingAddress(
-    isMailingAddressSameAsPrimaryAddress: boolean
-  ): string {
+  private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
     return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
   }
 

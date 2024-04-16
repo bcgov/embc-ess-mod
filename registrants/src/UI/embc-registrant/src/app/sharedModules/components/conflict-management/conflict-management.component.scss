@@ -1,38 +1,38 @@
 .card-border {
-    border: none;
+  border: none;
 }
 
 .custom-label {
-    font-size: 18px !important;
-    font-weight: 400 !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
 }
 
 .conflicts-table {
-    width: 100%;
-    p {
-        margin: 0px !important;
-    }
+  width: 100%;
+  p {
+    margin: 0px !important;
+  }
 }
 
 .mobile-label {
-    display: none;
+  display: none;
 }
 
 .alt-BCSC {
-    display: none;
+  display: none;
 }
 
 @media (max-width: 600px) {
-    .mobile-label {
-        width: 80px;
-        display: inline-block;
-    }
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+  }
 
-    .main-view {
-        display: none;
-    }
+  .main-view {
+    display: none;
+  }
 
-    .alt-BCSC {
-        display: table-row;
-    }
+  .alt-BCSC {
+    display: table-row;
+  }
 }

@@ -85,54 +85,42 @@ describe('AppComponent', () => {
   it('should have environment name', waitForAsync(() => {
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      expect(component.environment.envName).toContain(
-        bannerService.getEnvironmentBanner().envName
-      );
+      expect(component.environment.envName).toContain(bannerService.getEnvironmentBanner().envName);
     });
   }));
 
   it('should have environment banner subtitle', waitForAsync(() => {
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      expect(component.environment.bannerSubTitle).toContain(
-        bannerService.getEnvironmentBanner().bannerSubTitle
-      );
+      expect(component.environment.bannerSubTitle).toContain(bannerService.getEnvironmentBanner().bannerSubTitle);
     });
   }));
 
   it('should have environment banner title', waitForAsync(() => {
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      expect(component.environment.bannerTitle).toContain(
-        bannerService.getEnvironmentBanner().bannerTitle
-      );
+      expect(component.environment.bannerTitle).toContain(bannerService.getEnvironmentBanner().bannerTitle);
     });
   }));
 
@@ -156,10 +144,8 @@ describe('AppComponent', () => {
   it('should display environment banner', () => {
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();

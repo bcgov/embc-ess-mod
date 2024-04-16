@@ -25,7 +25,10 @@ export default class IdentifyNeedsComponent implements OnInit {
   identifyNeedsForm: UntypedFormGroup;
   identifyNeedsForm$: Subscription;
 
-  constructor(private formCreationService: FormCreationService, private dialog: MatDialog) {}
+  constructor(
+    private formCreationService: FormCreationService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.identifyNeedsForm$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
@@ -61,7 +64,16 @@ export default class IdentifyNeedsComponent implements OnInit {
 }
 
 @NgModule({
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatRadioModule, MatCheckboxModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatRadioModule,
+    MatCheckboxModule
+  ],
   declarations: [IdentifyNeedsComponent]
 })
-class IdentifyNeedsModule { }
+class IdentifyNeedsModule {}

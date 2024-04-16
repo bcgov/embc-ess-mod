@@ -1,9 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,14 +29,7 @@ export default class FamilyInformationComponent implements OnInit {
   householdMemberForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
-  displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'initials',
-    'gender',
-    'dateOfBirth',
-    'buttons'
-  ];
+  displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'buttons'];
   dataSource = new BehaviorSubject([]);
   data = [];
   editIndex: number;
@@ -57,17 +46,13 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.householdMemberForm$ = this.formCreationService
-      .getHouseholdMembersForm()
-      .subscribe((householdMemberForm) => {
-        this.householdMemberForm = householdMemberForm;
-      });
+    this.householdMemberForm$ = this.formCreationService.getHouseholdMembersForm().subscribe((householdMemberForm) => {
+      this.householdMemberForm = householdMemberForm;
+    });
     this.householdMemberForm
       .get('addHouseholdMemberIndicator')
       .valueChanges.subscribe((value) => this.updateOnVisibility());
-    this.dataSource.next(
-      this.householdMemberForm.get('householdMembers').value
-    );
+    this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
   }
 
@@ -81,8 +66,7 @@ export default class FamilyInformationComponent implements OnInit {
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] =
-          this.householdMemberForm.get('householdMember').value;
+        this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
@@ -127,9 +111,7 @@ export default class FamilyInformationComponent implements OnInit {
           this.dataSource.next(this.data);
           this.householdMemberForm.get('householdMembers').setValue(this.data);
           if (this.data.length === 0) {
-            this.householdMemberForm
-              .get('addHouseholdMemberIndicator')
-              .setValue(false);
+            this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
           }
         }
       });
@@ -146,20 +128,11 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   updateOnVisibility(): void {
-    this.householdMemberForm
-      .get('householdMember.firstName')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.lastName')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.gender')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.dateOfBirth')
-      .updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.firstName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
   }
-
 }
 
 @NgModule({

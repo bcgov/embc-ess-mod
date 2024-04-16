@@ -1,10 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -43,48 +38,32 @@ export default class EvacAddressComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.evacuatedForm$ = this.formCreationService
-      .getEvacuatedForm()
-      .subscribe((evacuatedForm) => {
-        this.evacuatedForm = evacuatedForm;
-      });
+    this.evacuatedForm$ = this.formCreationService.getEvacuatedForm().subscribe((evacuatedForm) => {
+      this.evacuatedForm = evacuatedForm;
+    });
 
-    this.primaryAddressForm$ = this.formCreationService
-      .getAddressForm()
-      .subscribe((primaryAddressForm) => {
-        this.primaryAddressForm = primaryAddressForm;
-      });
+    this.primaryAddressForm$ = this.formCreationService.getAddressForm().subscribe((primaryAddressForm) => {
+      this.primaryAddressForm = primaryAddressForm;
+    });
 
     this.otherAddressTemplate();
   }
 
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === 'Yes') {
-      this.evacuatedForm
-        .get('evacuatedFromAddress')
-        .setValue(this.primaryAddressForm.get('address').value);
+      this.evacuatedForm.get('evacuatedFromAddress').setValue(this.primaryAddressForm.get('address').value);
     } else {
       this.evacuatedForm.get('evacuatedFromAddress').reset();
-      this.evacuatedForm
-        .get('evacuatedFromAddress.stateProvince')
-        .setValue(globalConst.defaultProvince);
-      this.evacuatedForm
-        .get('evacuatedFromAddress.country')
-        .setValue(globalConst.defaultCountry);
+      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
+      this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
     }
   }
 
   otherAddressTemplate(): void {
-    if (
-      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value === ''
-    ) {
+    if (this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value === '') {
       this.evacuatedForm.get('evacuatedFromAddress').reset();
-      this.evacuatedForm
-        .get('evacuatedFromAddress.stateProvince')
-        .setValue(globalConst.defaultProvince);
-      this.evacuatedForm
-        .get('evacuatedFromAddress.country')
-        .setValue(globalConst.defaultCountry);
+      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
+      this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
     }
   }
 

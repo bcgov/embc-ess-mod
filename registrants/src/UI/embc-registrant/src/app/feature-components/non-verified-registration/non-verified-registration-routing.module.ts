@@ -16,45 +16,32 @@ const routes: Routes = [
       {
         path: 'collection-notice',
         loadChildren: () =>
-          import('../collection-notice/collection-notice.module').then(
-            (m) => m.CollectionNoticeModule
-          ),
+          import('../collection-notice/collection-notice.module').then((m) => m.CollectionNoticeModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'restriction',
-        loadChildren: () =>
-          import('../restriction/restriction.module').then(
-            (m) => m.RestrictionModule
-          ),
+        loadChildren: () => import('../restriction/restriction.module').then((m) => m.RestrictionModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'create-profile',
-        loadChildren: () =>
-          import('../profile/profile.module').then((m) => m.ProfileModule),
+        loadChildren: () => import('../profile/profile.module').then((m) => m.ProfileModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'needs-assessment',
-        loadChildren: () =>
-          import('../needs-assessment/needs-assessment.module').then(
-            (m) => m.NeedsAssessmentModule
-          ),
+        loadChildren: () => import('../needs-assessment/needs-assessment.module').then((m) => m.NeedsAssessmentModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'edit/:type',
-        loadChildren: () =>
-          import('../edit/edit.module').then((m) => m.EditModule),
+        loadChildren: () => import('../edit/edit.module').then((m) => m.EditModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'file-submission',
-        loadChildren: () =>
-          import('../file-submission/file-submission.module').then(
-            (m) => m.FileSubmissionModule
-          ),
+        loadChildren: () => import('../file-submission/file-submission.module').then((m) => m.FileSubmissionModule),
         data: { flow: 'non-verified-registration' },
         canDeactivate: [DisableBackGuard]
       }

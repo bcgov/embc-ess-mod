@@ -42,8 +42,7 @@ export class FileSubmissionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    const registrationResult =
-      this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
+    const registrationResult = this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
       if (!this.referenceNumber) {
@@ -76,22 +75,17 @@ export class FileSubmissionComponent implements OnInit {
       .subscribe((emailId) => {
         if (emailId !== 'close') {
           this.showLoader = !this.showLoader;
-          this.fileSubmissionService
-            .inviteByEmail(emailId, this.referenceNumber)
-            .subscribe({
-              next: (value) => {
-                this.showLoader = !this.showLoader;
-                this.openSuccessModal(globalConst.successfulBcscInvite);
-              },
-              error: (error) => {
-                this.showLoader = !this.showLoader;
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.bcscInviteError
-                );
-              }
-            });
+          this.fileSubmissionService.inviteByEmail(emailId, this.referenceNumber).subscribe({
+            next: (value) => {
+              this.showLoader = !this.showLoader;
+              this.openSuccessModal(globalConst.successfulBcscInvite);
+            },
+            error: (error) => {
+              this.showLoader = !this.showLoader;
+              this.alertService.clearAlert();
+              this.alertService.setAlert('danger', globalConst.bcscInviteError);
+            }
+          });
         }
       });
   }

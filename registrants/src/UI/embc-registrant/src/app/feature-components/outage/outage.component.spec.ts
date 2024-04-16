@@ -15,12 +15,7 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        OAuthModule.forRoot()
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
       declarations: [OutageComponent],
       providers: [
         OutageComponent,
@@ -53,9 +48,7 @@ describe('OutageComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.content).toEqual(
-      'Outage testing in Responders portal'
-    );
+    expect(outageService.outageInfo.content).toEqual('Outage testing in Responders portal');
   });
 
   it('should display outage Start Date', () => {
@@ -67,9 +60,7 @@ describe('OutageComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageStartDate).toEqual(
-      '2021-12-15T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageStartDate).toEqual('2021-12-15T21:00:00Z');
   });
 
   it('should display outage End Date', () => {
@@ -81,8 +72,6 @@ describe('OutageComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageEndDate).toEqual(
-      '2021-12-16T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageEndDate).toEqual('2021-12-16T21:00:00Z');
   });
 });
