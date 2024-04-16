@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
-import {
-  Suppliers,
-  ContactPerson,
-  SupplierInformation,
-  Address,
-  Attachment
-} from '../model/suppliers';
+import { Suppliers, ContactPerson, SupplierInformation, Address, Attachment } from '../model/suppliers';
 import { Invoices } from '../model/invoices';
 import { LineItems } from '../model/lineItems';
 import { Referrals } from '../model/referrals';
@@ -30,21 +24,11 @@ export class DataService {
   createPayload(supplierDetails: any) {
     const contact = this.createContactRecord(supplierDetails);
     const address = this.createAddressRecord(supplierDetails);
-    const supplierInformation = this.createSupplierInformationRecord(
-      supplierDetails,
-      contact,
-      address,
-      false
-    );
+    const supplierInformation = this.createSupplierInformationRecord(supplierDetails, contact, address, false);
     let remitSupplierInformation = null;
     if (supplierDetails.remitToOtherBusiness) {
       const remittanceAddress = this.createRemitAddressRecord(supplierDetails);
-      remitSupplierInformation = this.createSupplierRemitInformationRecord(
-        supplierDetails,
-        contact,
-        remittanceAddress,
-        true
-      );
+      remitSupplierInformation = this.createSupplierRemitInformationRecord(supplierDetails, contact, remittanceAddress, true);
     }
     const supplierInformationArr = [supplierInformation];
     if (remitSupplierInformation) {
@@ -56,14 +40,7 @@ export class DataService {
     const attachments = this.createAttachmentsRecord(supplierDetails);
     const referrals = this.createReferralsRecord(supplierDetails);
     const receipts = this.createReceiptslRecord(supplierDetails);
-    const suppliers: Suppliers = new Suppliers(
-      supplierInformationArr,
-      receipts,
-      invoices,
-      referrals,
-      lineItems,
-      attachments
-    );
+    const suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
     this.setPayload(suppliers);
   }
 
@@ -100,10 +77,7 @@ export class DataService {
       let provinceName = '';
       let provinceCode = '';
 
-      if (
-        supplierDetails.remittanceAddress.province === '' ||
-        supplierDetails.remittanceAddress.province === null
-      ) {
+      if (supplierDetails.remittanceAddress.province === '' || supplierDetails.remittanceAddress.province === null) {
         provinceName = 'British Columbia';
         provinceCode = 'BC';
       } else {
@@ -149,12 +123,7 @@ export class DataService {
     }
   }
 
-  createSupplierInformationRecord(
-    supplierDetails: any,
-    contact: ContactPerson,
-    address: Address,
-    remit: boolean
-  ) {
+  createSupplierInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
     return new SupplierInformation(
       supplierDetails.gstNumber,
       supplierDetails.supplierName,
@@ -166,12 +135,7 @@ export class DataService {
     );
   }
 
-  createSupplierRemitInformationRecord(
-    supplierDetails: any,
-    contact: ContactPerson,
-    address: Address,
-    remit: boolean
-  ) {
+  createSupplierRemitInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
     return new SupplierInformation(
       supplierDetails.gstNumber,
       supplierDetails.supplierName,
@@ -188,13 +152,7 @@ export class DataService {
     supplierDetails.invoices.forEach((element) => {
       const invDate = new Date(element.invoiceDate);
       const formattedDate = invDate.toISOString();
-      invoices.push(
-        new Invoices(
-          element.invoiceNumber,
-          formattedDate,
-          +element.invoiceTotalAmount
-        )
-      );
+      invoices.push(new Invoices(element.invoiceNumber, formattedDate, +element.invoiceTotalAmount));
     });
     return invoices;
   }
@@ -203,18 +161,8 @@ export class DataService {
     const receipts = [];
     supplierDetails.receipts.forEach((element) => {
       element.referrals.forEach((ref) => {
-        const formattedDate = new DatePipe('en-US').transform(
-          ref.referralDate,
-          'yyyy-MM-dd'
-        );
-        receipts.push(
-          new Receipts(
-            ref.receiptNumber,
-            formattedDate,
-            +ref.totalAmount,
-            element.referralNumber
-          )
-        );
+        const formattedDate = new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd');
+        receipts.push(new Receipts(ref.receiptNumber, formattedDate, +ref.totalAmount, element.referralNumber));
       });
     });
     return receipts;
@@ -225,15 +173,7 @@ export class DataService {
     supplierDetails.invoices.forEach((invoice) => {
       invoice.referrals.forEach((ref) => {
         ref.referralRows.forEach((element) => {
-          lineItems.push(
-            new LineItems(
-              element.supportProvided.name,
-              element.description,
-              +element.amount,
-              null,
-              ref.referralNumber
-            )
-          );
+          lineItems.push(new LineItems(element.supportProvided.name, element.description, +element.amount, null, ref.referralNumber));
         });
       });
     });
@@ -241,13 +181,7 @@ export class DataService {
       receipt.referrals.forEach((ref) => {
         ref.referralRows.forEach((element) => {
           lineItems.push(
-            new LineItems(
-              element.supportProvided.name,
-              element.description,
-              +element.amount,
-              ref.receiptNumber,
-              receipt.referralNumber
-            )
+            new LineItems(element.supportProvided.name, element.description, +element.amount, ref.receiptNumber, receipt.referralNumber)
           );
         });
       });
@@ -261,14 +195,7 @@ export class DataService {
       supplierDetails.invoices.forEach((invoice) => {
         invoice.invoiceAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(
-              e.file.substring(e.file.indexOf(',') + 1),
-              e.contentType,
-              e.fileName,
-              invoice.invoiceNumber,
-              null,
-              2
-            )
+            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, invoice.invoiceNumber, null, 2)
           );
         });
         invoice.referrals.forEach((ref) => {
@@ -302,26 +229,12 @@ export class DataService {
       supplierDetails.receipts.forEach((ref) => {
         ref.referralAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(
-              e.file.substring(e.file.indexOf(',') + 1),
-              e.contentType,
-              e.fileName,
-              null,
-              ref.referralNumber,
-              1
-            )
+            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1)
           );
         });
         ref.receiptAttachments.forEach((e) => {
           attachments.push(
-            new Attachment(
-              e.file.substring(e.file.indexOf(',') + 1),
-              e.contentType,
-              e.fileName,
-              null,
-              ref.referralNumber,
-              1
-            )
+            new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1)
           );
         });
       });
@@ -334,19 +247,11 @@ export class DataService {
     const referrals = [];
     supplierDetails.invoices.forEach((invoice) => {
       invoice.referrals.forEach((element) => {
-        referrals.push(
-          new Referrals(
-            element.referralNumber,
-            +element.totalAmount,
-            invoice.invoiceNumber
-          )
-        );
+        referrals.push(new Referrals(element.referralNumber, +element.totalAmount, invoice.invoiceNumber));
       });
     });
     supplierDetails.receipts.forEach((receipt) => {
-      referrals.push(
-        new Referrals(receipt.referralNumber, +receipt.receiptTotalAmount, null)
-      );
+      referrals.push(new Referrals(receipt.referralNumber, +receipt.receiptTotalAmount, null));
     });
     return referrals;
   }

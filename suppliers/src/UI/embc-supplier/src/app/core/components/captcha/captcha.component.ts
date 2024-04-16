@@ -12,7 +12,7 @@ import {
   OnInit,
   OnChanges,
   EventEmitter,
-  OnDestroy,
+  OnDestroy
 } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription, Subject } from 'rxjs';
@@ -27,7 +27,7 @@ export const SupportedLanguages = [
   ['zh', 'Chinese'],
   ['en', 'English'],
   ['fr', 'French'],
-  ['pa', 'Punjabi'],
+  ['pa', 'Punjabi']
 ];
 
 // 7 mutually exclusive states
@@ -38,18 +38,16 @@ enum CAPTCHA_STATE {
   ERROR_FETCH_IMG = 3,
   VERIFYING_ANSWER = 4,
   SUCCESS_VERIFY_ANSWER_CORRECT = 5,
-  ERROR_VERIFY = 6,
+  ERROR_VERIFY = 6
 }
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'captcha',
   templateUrl: './captcha.component.html',
-  styleUrls: ['./captcha.component.scss'],
+  styleUrls: ['./captcha.component.scss']
 })
-export class CaptchaComponent
-  implements AfterViewInit, OnInit, OnChanges, OnDestroy
-{
+export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('image') imageContainer: ElementRef;
   @ViewChild('audioElement') audioElement: ElementRef;
 
@@ -66,68 +64,68 @@ export class CaptchaComponent
       en: 'Play Audio',
       zh: '播放声音',
       fr: 'Lecture audio',
-      pa: 'ਆਡੀਓ ਚਲਾਓ',
+      pa: 'ਆਡੀਓ ਚਲਾਓ'
     },
     tryAnotherImg: {
       en: 'Try another image',
       zh: '换个图像',
       fr: 'Essayez une autre image',
-      pa: 'ਕੋਈ ਹੋਰ ਚਿੱਤਰ ਅਜ਼ਮਾਓ',
+      pa: 'ਕੋਈ ਹੋਰ ਚਿੱਤਰ ਅਜ਼ਮਾਓ'
     },
     userPromptMessage: {
       en: 'Enter the text you either see in the box or you hear in the audio',
       zh: '请输入看到或听到的文字',
       fr: 'Entrez le texte que vous voyez dans la case ou que vous entendez dans le son',
-      pa: 'ਉਹ ਟੈਕਸਟ ਦਾਖਲ ਕਰੋ ਜੋ ਤੁਸੀਂ ਬਕਸੇ ਵਿੱਚ ਦੇਖਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਆਡੀਓ ਵਿੱਚ ਸੁਣਦੇ ਹੋ',
+      pa: 'ਉਹ ਟੈਕਸਟ ਦਾਖਲ ਕਰੋ ਜੋ ਤੁਸੀਂ ਬਕਸੇ ਵਿੱਚ ਦੇਖਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਆਡੀਓ ਵਿੱਚ ਸੁਣਦੇ ਹੋ'
     },
     incorrectAnswer: {
       en: 'Incorrect answer, please try again.',
       zh: '答案不对。请重试。',
       fr: 'Mauvaise réponse, veuillez réessayer.',
-      pa: 'ਗਲਤ ਜਵਾਬ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.',
+      pa: 'ਗਲਤ ਜਵਾਬ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.'
     },
     successMessage: {
       en: 'You can submit your application now.',
       zh: '你现在可以提交申请了。',
       fr: 'Vous pouvez soumettre votre candidature maintenant.',
-      pa: 'ਤੁਸੀਂ ਆਪਣੀ ਅਰਜ਼ੀ ਹੁਣੇ ਪੇਸ਼ ਕਰ ਸਕਦੇ ਹੋ',
+      pa: 'ਤੁਸੀਂ ਆਪਣੀ ਅਰਜ਼ੀ ਹੁਣੇ ਪੇਸ਼ ਕਰ ਸਕਦੇ ਹੋ'
     },
     correct: {
       en: 'Correct.',
       zh: '正确。',
       fr: 'Correct.',
-      pa: 'ਸਹੀ ਕਰੋ',
+      pa: 'ਸਹੀ ਕਰੋ'
     },
     loadingImage: {
       en: 'Loading CAPTCHA image',
       zh: '正在下载验证码',
       fr: "Chargement de l'image CAPTCHA",
-      pa: 'ਕੈਪਟਚਾ ਚਿੱਤਰ ਲੋਡ ਕਰ ਰਿਹਾ ਹੈ',
+      pa: 'ਕੈਪਟਚਾ ਚਿੱਤਰ ਲੋਡ ਕਰ ਰਿਹਾ ਹੈ'
     },
     browserNotSupportAudio: {
       en: 'Your browser does not support the audio element.',
       zh: '你的浏览器不支持播音',
       fr: "Votre navigateur ne supporte pas l'élément audio.",
-      pa: 'ਤੁਹਾਡਾ ਬ੍ਰਾਉਜ਼ਰ ਆਡੀਓ ਐਲੀਮੈਂਟ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ.',
+      pa: 'ਤੁਹਾਡਾ ਬ੍ਰਾਉਜ਼ਰ ਆਡੀਓ ਐਲੀਮੈਂਟ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ.'
     },
     verifyingAnswer: {
       en: 'Verifying your answer...',
       zh: '正在验证答案...',
       fr: 'Vérification de votre réponse ...',
-      pa: 'ਤੁਹਾਡਾ ਜਵਾਬ ਤਸਦੀਕ ਕਰ ਰਿਹਾ ਹੈ ...',
+      pa: 'ਤੁਹਾਡਾ ਜਵਾਬ ਤਸਦੀਕ ਕਰ ਰਿਹਾ ਹੈ ...'
     },
     errorRetrievingImg: {
       en: 'Error happened while retrieving CAPTCHA image. please {{click here}} to try again',
       zh: '验证码下载错误。请{{点击这里}}重试',
       fr: `Une erreur s'est produite lors de la récupération de l'image CAPTCHA. s'il vous plaît {{cliquez ici}} pour réessayer`,
-      pa: 'ਕੈਪਟਚਾ ਚਿੱਤਰ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਦੇ ਸਮੇਂ ਤਰੁੱਟੀ ਉਤਪੰਨ ਹੋਈ. ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਲਈ {{ਇੱਥੇ ਕਲਿਕ ਕਰੋ}}',
+      pa: 'ਕੈਪਟਚਾ ਚਿੱਤਰ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਦੇ ਸਮੇਂ ਤਰੁੱਟੀ ਉਤਪੰਨ ਹੋਈ. ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਲਈ {{ਇੱਥੇ ਕਲਿਕ ਕਰੋ}}'
     },
     errorVerifyingAnswer: {
       en: 'Error happened while verifying your answer. please {{click here}} to try again',
       zh: '验证答案过程发生错误。请{{点击这里}}重试',
       fr: `Une erreur s'est produite lors de la vérification de votre réponse. s'il vous plaît {{cliquez ici}} pour réessayer`,
-      pa: 'ਤੁਹਾਡਾ ਜਵਾਬ ਤਸਦੀਕ ਕਰਨ ਵੇਲੇ ਗਲਤੀ ਆਈ ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਲਈ {{ਇੱਥੇ ਕਲਿਕ ਕਰੋ}}',
-    },
+      pa: 'ਤੁਹਾਡਾ ਜਵਾਬ ਤਸਦੀਕ ਕਰਨ ਵੇਲੇ ਗਲਤੀ ਆਈ ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰਨ ਲਈ {{ਇੱਥੇ ਕਲਿਕ ਕਰੋ}}'
+    }
   };
 
   /**
@@ -181,10 +179,8 @@ export class CaptchaComponent
       if (
         !(
           changes.reloadCaptcha &&
-          (true === changes.reloadCaptcha.previousValue ||
-            false === changes.reloadCaptcha.previousValue) &&
-          changes.reloadCaptcha.currentValue !==
-            changes.reloadCaptcha.previousValue
+          (true === changes.reloadCaptcha.previousValue || false === changes.reloadCaptcha.previousValue) &&
+          changes.reloadCaptcha.currentValue !== changes.reloadCaptcha.previousValue
         )
       ) {
         return;

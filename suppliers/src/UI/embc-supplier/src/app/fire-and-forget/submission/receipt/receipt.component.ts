@@ -1,17 +1,5 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  UntypedFormArray,
-  Validators
-} from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -83,8 +71,7 @@ export class ReceiptComponent implements OnInit {
     const storedSupplierDetails = this.supplierService.getSupplierDetails();
     const referralList = storedSupplierDetails.receipts[this.index].referrals;
 
-    this.reloadedFiles =
-      storedSupplierDetails.receipts[this.index].referralAttachments;
+    this.reloadedFiles = storedSupplierDetails.receipts[this.index].referralAttachments;
     this.reloadedFiles.forEach((element) => {
       this.referralAttachments.push(
         this.createAttachmentObject({
@@ -93,8 +80,7 @@ export class ReceiptComponent implements OnInit {
         })
       );
     });
-    this.reloadedFiles2 =
-      storedSupplierDetails.receipts[this.index].receiptAttachments;
+    this.reloadedFiles2 = storedSupplierDetails.receipts[this.index].receiptAttachments;
     this.reloadedFiles2.forEach((element) => {
       this.receiptAttachments.push(
         this.createAttachmentObject({
@@ -131,9 +117,7 @@ export class ReceiptComponent implements OnInit {
 
   onChanges() {
     this.receiptForm.get('referrals').valueChanges.subscribe((template) => {
-      const totalAmount = template
-        .reduce((prev, next) => prev + +next.totalAmount, 0)
-        .toFixed(2);
+      const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0).toFixed(2);
       this.receiptForm.get('receiptTotalAmount').setValue(totalAmount);
     });
   }
@@ -220,16 +204,11 @@ export class ReceiptComponent implements OnInit {
    * @param event : Output event for delete
    */
   removeReferral(event: any) {
-    this.supplierService
-      .confirmModal(
-        globalConst.deleteReceiptsMsg,
-        globalConst.deleteReceiptButton
-      )
-      .subscribe((e) => {
-        if (e) {
-          this.referrals.removeAt(event);
-        }
-      });
+    this.supplierService.confirmModal(globalConst.deleteReceiptsMsg, globalConst.deleteReceiptButton).subscribe((e) => {
+      if (e) {
+        this.referrals.removeAt(event);
+      }
+    });
   }
 
   /**

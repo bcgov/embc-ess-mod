@@ -1,19 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  UntypedFormArray,
-  Validators
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../../core/services/supplier.service';
 import { Observable } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { NgbModal, NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../../core/components/modal/modal.component';
 import { Country } from '../../core/model/country';
@@ -61,11 +51,9 @@ export class SubmissionComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
-    this.supplierForm
-      .get('remitToOtherBusiness')
-      .valueChanges.subscribe((value) => {
-        this.updateOnVisibility();
-      });
+    this.supplierForm.get('remitToOtherBusiness').valueChanges.subscribe((value) => {
+      this.updateOnVisibility();
+    });
     this.supplierForm.get('supplierBC').valueChanges.subscribe((value) => {
       this.updateRadioVisibility();
     });
@@ -80,15 +68,7 @@ export class SubmissionComponent implements OnInit {
       switchMap((term) =>
         this.supplierService
           .getCityList()
-          .pipe(
-            map((resp) =>
-              resp
-                .filter((v) =>
-                  v.name.toLowerCase().startsWith(term.toLowerCase())
-                )
-                .splice(0, 10)
-            )
-          )
+          .pipe(map((resp) => resp.filter((v) => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
       )
     );
 
@@ -101,15 +81,7 @@ export class SubmissionComponent implements OnInit {
       switchMap((term) =>
         this.supplierService
           .getStateList()
-          .pipe(
-            map((resp) =>
-              resp
-                .filter((v) =>
-                  v.name.toLowerCase().startsWith(term.toLowerCase())
-                )
-                .splice(0, 10)
-            )
-          )
+          .pipe(map((resp) => resp.filter((v) => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
       )
     );
 
@@ -122,15 +94,7 @@ export class SubmissionComponent implements OnInit {
       switchMap((term) =>
         this.supplierService
           .getProvinceList()
-          .pipe(
-            map((resp) =>
-              resp
-                .filter((v) =>
-                  v.name.toLowerCase().startsWith(term.toLowerCase())
-                )
-                .splice(0, 10)
-            )
-          )
+          .pipe(map((resp) => resp.filter((v) => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
       )
     );
 
@@ -143,15 +107,7 @@ export class SubmissionComponent implements OnInit {
       switchMap((term) =>
         this.supplierService
           .getCountryListt()
-          .pipe(
-            map((resp) =>
-              resp
-                .filter((v) =>
-                  v.name.toLowerCase().startsWith(term.toLowerCase())
-                )
-                .splice(0, 10)
-            )
-          )
+          .pipe(map((resp) => resp.filter((v) => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
       )
     );
 
@@ -177,10 +133,7 @@ export class SubmissionComponent implements OnInit {
         '',
         [
           this.customValidator
-            .conditionalValidation(
-              () => this.supplierForm.get('remitToOtherBusiness').value,
-              this.customValidator.whitespaceValidator()
-            )
+            .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, this.customValidator.whitespaceValidator())
             .bind(this.customValidator)
         ]
       ],
@@ -188,10 +141,7 @@ export class SubmissionComponent implements OnInit {
         '',
         [
           this.customValidator
-            .conditionalValidation(
-              () => this.supplierForm.get('remitToOtherBusiness').value,
-              Validators.required
-            )
+            .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, Validators.required)
             .bind(this.customValidator)
         ]
       ],
@@ -202,10 +152,7 @@ export class SubmissionComponent implements OnInit {
         address2: [''],
         city: ['', Validators.required],
         province: [globalConst.defaultProvince.name],
-        postalCode: [
-          '',
-          [Validators.required, Validators.pattern(globalConst.postalPattern)]
-        ],
+        postalCode: ['', [Validators.required, Validators.pattern(globalConst.postalPattern)]],
         country: [globalConst.defaultCountry.name]
       }),
 
@@ -222,10 +169,7 @@ export class SubmissionComponent implements OnInit {
           '',
           [
             this.customValidator
-              .conditionalValidation(
-                () => this.supplierForm.get('remitToOtherBusiness').value,
-                this.customValidator.whitespaceValidator()
-              )
+              .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, this.customValidator.whitespaceValidator())
               .bind(this.customValidator)
           ]
         ],
@@ -234,10 +178,7 @@ export class SubmissionComponent implements OnInit {
           '',
           [
             this.customValidator
-              .conditionalValidation(
-                () => this.supplierForm.get('remitToOtherBusiness').value,
-                Validators.required
-              )
+              .conditionalValidation(() => this.supplierForm.get('remitToOtherBusiness').value, Validators.required)
               .bind(this.customValidator)
           ]
         ],
@@ -248,10 +189,7 @@ export class SubmissionComponent implements OnInit {
               .conditionalValidation(
                 () =>
                   this.supplierForm.get('remitToOtherBusiness').value &&
-                  this.compareCountry(
-                    this.supplierForm.get('businessCountry').value,
-                    globalConst.defaultCountry
-                  ) &&
+                  this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry) &&
                   this.supplierForm.get('supplierBC').value === 'no',
                 Validators.required
               )
@@ -265,10 +203,7 @@ export class SubmissionComponent implements OnInit {
               .conditionalValidation(
                 () =>
                   this.supplierForm.get('remitToOtherBusiness').value &&
-                  this.compareCountry(
-                    this.supplierForm.get('businessCountry').value,
-                    globalConst.usDefaultObject
-                  ),
+                  this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.usDefaultObject),
                 Validators.required
               )
               .bind(this.customValidator)
@@ -283,10 +218,7 @@ export class SubmissionComponent implements OnInit {
               .conditionalValidation(
                 () =>
                   this.supplierForm.get('remitToOtherBusiness').value &&
-                  this.compareCountry(
-                    this.supplierForm.get('businessCountry').value,
-                    globalConst.defaultCountry
-                  ),
+                  this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry),
                 this.customValidator.whitespaceValidator()
               )
               .bind(this.customValidator)
@@ -300,10 +232,7 @@ export class SubmissionComponent implements OnInit {
               .conditionalValidation(
                 () =>
                   this.supplierForm.get('remitToOtherBusiness').value &&
-                  this.compareCountry(
-                    this.supplierForm.get('businessCountry').value,
-                    globalConst.usDefaultObject
-                  ),
+                  this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.usDefaultObject),
                 Validators.required
               )
               .bind(this.customValidator)
@@ -351,15 +280,7 @@ export class SubmissionComponent implements OnInit {
 
   createInvoiceFormArray() {
     return this.builder.group({
-      invoiceNumber: [
-        '',
-        [
-          Validators.required,
-          this.customValidator
-            .invoiceValidator(this.invoices)
-            .bind(this.customValidator)
-        ]
-      ],
+      invoiceNumber: ['', [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]],
       invoiceDate: [
         null,
         [
@@ -377,15 +298,7 @@ export class SubmissionComponent implements OnInit {
 
   createReceiptFormArray() {
     return this.builder.group({
-      referralNumber: [
-        '',
-        [
-          Validators.required,
-          this.customValidator
-            .referralNumberValidator(this.receipts)
-            .bind(this.customValidator)
-        ]
-      ],
+      referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]],
       referrals: this.builder.array([]),
       receiptTotalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),
@@ -394,12 +307,8 @@ export class SubmissionComponent implements OnInit {
   }
 
   onSubmit() {
-    this.supplierForm
-      .get('address.province')
-      .setValue(globalConst.defaultProvince);
-    this.supplierForm
-      .get('address.country')
-      .setValue(globalConst.defaultCountry);
+    this.supplierForm.get('address.province').setValue(globalConst.defaultProvince);
+    this.supplierForm.get('address.country').setValue(globalConst.defaultCountry);
     const supplierDetails = this.supplierForm.value;
     this.supplierService.setSupplierDetails(supplierDetails);
     this.supplierService.createPayload(supplierDetails);
@@ -425,17 +334,13 @@ export class SubmissionComponent implements OnInit {
           (res) => {
             //When user closes modal
             if (res !== 'action') {
-              this.supplierForm
-                .get('supplierSubmissionType')
-                .setValue('receipt');
+              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
             }
           },
           (res) => {
             //On backdrop click
             if (res !== 'action') {
-              this.supplierForm
-                .get('supplierSubmissionType')
-                .setValue('receipt');
+              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
             }
           }
         );
@@ -459,17 +364,11 @@ export class SubmissionComponent implements OnInit {
         modalRef.result.then(
           (res) => {
             //When user closes modal
-            if (res !== 'action')
-              this.supplierForm
-                .get('supplierSubmissionType')
-                .setValue('invoice');
+            if (res !== 'action') this.supplierForm.get('supplierSubmissionType').setValue('invoice');
           },
           (res) => {
             //On backdrop click
-            if (res !== 'action')
-              this.supplierForm
-                .get('supplierSubmissionType')
-                .setValue('invoice');
+            if (res !== 'action') this.supplierForm.get('supplierSubmissionType').setValue('invoice');
           }
         );
       } else {
@@ -507,76 +406,38 @@ export class SubmissionComponent implements OnInit {
   }
 
   deleteInvoice(event: any) {
-    this.supplierService
-      .confirmModal(
-        globalConst.deleteInvoiceMsg,
-        globalConst.deleteInvoiceButton
-      )
-      .subscribe((e) => {
-        if (e) {
-          this.invoices.removeAt(event);
-        }
-      });
+    this.supplierService.confirmModal(globalConst.deleteInvoiceMsg, globalConst.deleteInvoiceButton).subscribe((e) => {
+      if (e) {
+        this.invoices.removeAt(event);
+      }
+    });
   }
 
   deleteReceipt(event: any) {
-    this.supplierService
-      .confirmModal(
-        globalConst.deleteRefferalMsg,
-        globalConst.deleteReferalButton
-      )
-      .subscribe((e) => {
-        if (e) {
-          this.receipts.removeAt(event);
-        }
-      });
+    this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+      if (e) {
+        this.receipts.removeAt(event);
+      }
+    });
   }
 
   mapFormValues(storedSupplierDetails: any) {
     this.supplierService.isReload = true;
-    this.supplierForm
-      .get('address.address1')
-      .setValue(storedSupplierDetails.address.address1);
-    this.supplierForm
-      .get('address.address2')
-      .setValue(storedSupplierDetails.address.address2);
-    this.supplierForm
-      .get('address.city')
-      .setValue(storedSupplierDetails.address.city);
-    this.supplierForm
-      .get('address.postalCode')
-      .setValue(storedSupplierDetails.address.postalCode);
-    this.supplierForm
-      .get('contactPerson')
-      .setValue(storedSupplierDetails.contactPerson);
-    this.supplierForm
-      .get('supplierBC')
-      .setValue(storedSupplierDetails.supplierBC);
-    this.supplierForm
-      .get('supplierLegalName')
-      .setValue(storedSupplierDetails.supplierLegalName);
-    this.supplierForm
-      .get('supplierName')
-      .setValue(storedSupplierDetails.supplierName);
-    this.supplierForm
-      .get('supplierSubmissionType')
-      .setValue(storedSupplierDetails.supplierSubmissionType);
-    this.supplierForm
-      .get('businessCountry')
-      .setValue(storedSupplierDetails.businessCountry);
-    this.supplierForm
-      .get('businessName')
-      .setValue(storedSupplierDetails.businessName);
-    this.supplierForm
-      .get('gstNumber')
-      .setValue(storedSupplierDetails.gstNumber);
+    this.supplierForm.get('address.address1').setValue(storedSupplierDetails.address.address1);
+    this.supplierForm.get('address.address2').setValue(storedSupplierDetails.address.address2);
+    this.supplierForm.get('address.city').setValue(storedSupplierDetails.address.city);
+    this.supplierForm.get('address.postalCode').setValue(storedSupplierDetails.address.postalCode);
+    this.supplierForm.get('contactPerson').setValue(storedSupplierDetails.contactPerson);
+    this.supplierForm.get('supplierBC').setValue(storedSupplierDetails.supplierBC);
+    this.supplierForm.get('supplierLegalName').setValue(storedSupplierDetails.supplierLegalName);
+    this.supplierForm.get('supplierName').setValue(storedSupplierDetails.supplierName);
+    this.supplierForm.get('supplierSubmissionType').setValue(storedSupplierDetails.supplierSubmissionType);
+    this.supplierForm.get('businessCountry').setValue(storedSupplierDetails.businessCountry);
+    this.supplierForm.get('businessName').setValue(storedSupplierDetails.businessName);
+    this.supplierForm.get('gstNumber').setValue(storedSupplierDetails.gstNumber);
     this.supplierForm.get('location').setValue(storedSupplierDetails.location);
-    this.supplierForm
-      .get('remitToOtherBusiness')
-      .setValue(storedSupplierDetails.remitToOtherBusiness);
-    this.supplierForm
-      .get('remittanceAddress')
-      .setValue(storedSupplierDetails.remittanceAddress);
+    this.supplierForm.get('remitToOtherBusiness').setValue(storedSupplierDetails.remitToOtherBusiness);
+    this.supplierForm.get('remittanceAddress').setValue(storedSupplierDetails.remittanceAddress);
     this.loadExistingRemittanceValues(storedSupplierDetails);
     const submissionType = this.supplierForm.get('supplierSubmissionType');
     this.loadWithExistingValues(submissionType);
@@ -591,10 +452,7 @@ export class SubmissionComponent implements OnInit {
 
   loadExistingRemittanceValues(storedSupplierDetails: any) {
     this.remitDiv = storedSupplierDetails.remitToOtherBusiness;
-    if (
-      storedSupplierDetails.businessCountry !== null &&
-      storedSupplierDetails.businessCountry !== undefined
-    ) {
+    if (storedSupplierDetails.businessCountry !== null && storedSupplierDetails.businessCountry !== undefined) {
       this.selectedRemitCountry = storedSupplierDetails.businessCountry.name;
       if (this.selectedRemitCountry === 'Canada') {
         this.addressDiv = false;
@@ -651,25 +509,17 @@ export class SubmissionComponent implements OnInit {
   }
 
   updateOnVisibility() {
-    this.supplierForm
-      .get('remittanceAddress.postalCode')
-      .updateValueAndValidity();
+    this.supplierForm.get('remittanceAddress.postalCode').updateValueAndValidity();
     this.supplierForm.get('remittanceAddress.zipCode').updateValueAndValidity();
     this.supplierForm.get('businessCountry').updateValueAndValidity();
     this.supplierForm.get('businessName').updateValueAndValidity();
-    this.supplierForm
-      .get('remittanceAddress.address1')
-      .updateValueAndValidity();
+    this.supplierForm.get('remittanceAddress.address1').updateValueAndValidity();
     this.supplierForm.get('remittanceAddress.city').updateValueAndValidity();
-    this.supplierForm
-      .get('remittanceAddress.province')
-      .updateValueAndValidity();
+    this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
     this.supplierForm.get('remittanceAddress.state').updateValueAndValidity();
   }
 
   updateRadioVisibility() {
-    this.supplierForm
-      .get('remittanceAddress.province')
-      .updateValueAndValidity();
+    this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
   }
 }

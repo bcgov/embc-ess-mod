@@ -19,18 +19,12 @@
   </p>
   <p class="file-type">Allowed file types - pdf, jpg, jpeg, png</p>
   <p class="file-format">Restricted characters in file name:</p>
-  <p class="invalid-characters">
-    ~ " # % & * : . &lt; &gt; ? / &#123; | &#125;. Leading and trailing spaces
-    in file name aren't allowed.
-  </p>
+  <p class="invalid-characters">~ " # % & * : . &lt; &gt; ? / &#123; | &#125;. Leading and trailing spaces in file name aren't allowed.</p>
 </div>
 <div *ngIf="attachSizeError" style="color: red">
   <p>Only one attachment allowed</p>
 </div>
-<div
-  class="attach-list"
-  *ngFor="let attach of invoiceAttachments; let fileIndex = index"
->
+<div class="attach-list" *ngFor="let attach of invoiceAttachments; let fileIndex = index">
   <div class="row file-style">
     <p>{{ attach }}</p>
     <i (click)="deleteAttachedInvoice(fileIndex)" class="fas fa-trash-alt"></i>

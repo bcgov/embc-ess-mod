@@ -5,17 +5,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 export class DecimalCurrencyDirective {
   private regex = new RegExp(/^\d*\.?\d{0,2}$/g);
-  private specialKeys: Array<string> = [
-    'Backspace',
-    'Tab',
-    'End',
-    'Home',
-    '-',
-    'ArrowLeft',
-    'ArrowRight',
-    'Del',
-    'Delete'
-  ];
+  private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', '-', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];
 
   constructor(private el: ElementRef) {}
 
@@ -27,11 +17,7 @@ export class DecimalCurrencyDirective {
 
     const current: string = this.el.nativeElement.value;
     const position = this.el.nativeElement.selectionStart;
-    const next: string = [
-      current.slice(0, position),
-      event.key === 'Decimal' ? '.' : event.key,
-      current.slice(position)
-    ].join('');
+    const next: string = [current.slice(0, position), event.key === 'Decimal' ? '.' : event.key, current.slice(position)].join('');
     if (next && !String(next).match(this.regex)) {
       event.preventDefault();
     }

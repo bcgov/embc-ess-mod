@@ -1,5 +1,4 @@
 .bcgov-captcha {
-
   .confirm-correct-answer {
     display: block;
     color: green;
@@ -29,11 +28,11 @@
   }
 
   .captcha-box-visible {
-    display: block
+    display: block;
   }
 
   .captcha-box-invisible {
-    display: none
+    display: none;
   }
 
   .captcha-image {
@@ -62,7 +61,7 @@
     }
   }
 
-  input[type="text"] {
+  input[type='text'] {
     display: block;
     margin: 0;
     width: 100%;
@@ -71,11 +70,13 @@
     border-radius: none;
     padding: 6px;
     border: solid 1px #ccc;
-    transition: box-shadow 0.3s, border 0.3s;
+    transition:
+      box-shadow 0.3s,
+      border 0.3s;
 
     &:focus {
       border: solid 1px white;
-      box-shadow: 0 0 1px 1px #2196F3;
+      box-shadow: 0 0 1px 1px #2196f3;
     }
 
     &.captcha-wrong-answer {
@@ -83,7 +84,7 @@
     }
   }
 
-  input[type="text"]:focus {
+  input[type='text']:focus {
     outline: none;
   }
 
@@ -135,8 +136,12 @@
   }
 
   @keyframes rotator {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(270deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(270deg);
+    }
   }
 
   .path {
@@ -145,15 +150,25 @@
     transform-origin: center;
     animation:
       dash $duration ease-in-out infinite,
-      colors ($duration*4) ease-in-out infinite;
+      colors ($duration * 4) ease-in-out infinite;
   }
 
   @keyframes colors {
-    0% { stroke: #9E9E9E; }
-    25% { stroke: #757575; }
-    50% { stroke: #616161; }
-    75% { stroke: #424242; }
-    100% { stroke: #212121; }
+    0% {
+      stroke: #9e9e9e;
+    }
+    25% {
+      stroke: #757575;
+    }
+    50% {
+      stroke: #616161;
+    }
+    75% {
+      stroke: #424242;
+    }
+    100% {
+      stroke: #212121;
+    }
   }
 
   @keyframes dash {

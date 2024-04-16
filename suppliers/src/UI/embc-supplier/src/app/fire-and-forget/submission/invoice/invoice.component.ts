@@ -1,23 +1,6 @@
-import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  OnInit
-} from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  UntypedFormArray,
-  Validators
-} from '@angular/forms';
-import {
-  NgbDateParserFormatter,
-  NgbCalendar,
-  NgbDateAdapter,
-  NgbDatepickerConfig
-} from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
@@ -105,18 +88,15 @@ export class InvoiceComponent implements OnInit {
    */
   loadWithExistingValues() {
     const storedSupplierDetails = this.supplierService.getSupplierDetails();
-    this.reloadedFiles =
-      storedSupplierDetails.invoices[this.index].invoiceAttachments;
-    storedSupplierDetails.invoices[this.index].invoiceAttachments.forEach(
-      (element) => {
-        this.invoiceAttachments.push(
-          this.createAttachmentObject({
-            fileName: element.fileName,
-            file: element.file
-          })
-        );
-      }
-    );
+    this.reloadedFiles = storedSupplierDetails.invoices[this.index].invoiceAttachments;
+    storedSupplierDetails.invoices[this.index].invoiceAttachments.forEach((element) => {
+      this.invoiceAttachments.push(
+        this.createAttachmentObject({
+          fileName: element.fileName,
+          file: element.file
+        })
+      );
+    });
     const referralList = storedSupplierDetails.invoices[this.index].referrals;
     if (referralList.length > 0) {
       this.hidden = true;
@@ -150,9 +130,7 @@ export class InvoiceComponent implements OnInit {
 
   onChanges() {
     this.invoiceForm.get('referrals').valueChanges.subscribe((template) => {
-      const totalAmount = template
-        .reduce((prev, next) => prev + +next.totalAmount, 0)
-        .toFixed(2);
+      const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0).toFixed(2);
       this.invoiceForm.get('invoiceTotalAmount').setValue(totalAmount);
     });
   }
@@ -171,15 +149,7 @@ export class InvoiceComponent implements OnInit {
    */
   createReferralFormArray() {
     return this.builder.group({
-      referralNumber: [
-        '',
-        [
-          Validators.required,
-          this.customValidator
-            .referralNumberValidator(this.referrals)
-            .bind(this.customValidator)
-        ]
-      ],
+      referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]],
       referralRows: this.builder.array([], Validators.required),
       totalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),
@@ -223,16 +193,11 @@ export class InvoiceComponent implements OnInit {
    * @param event : Output event for delete
    */
   removeReferral(event: any) {
-    this.supplierService
-      .confirmModal(
-        globalConst.deleteRefferalMsg,
-        globalConst.deleteReferalButton
-      )
-      .subscribe((e) => {
-        if (e) {
-          this.referrals.removeAt(event);
-        }
-      });
+    this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+      if (e) {
+        this.referrals.removeAt(event);
+      }
+    });
   }
 
   /**

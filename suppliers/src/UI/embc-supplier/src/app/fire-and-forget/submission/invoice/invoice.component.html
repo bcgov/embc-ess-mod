@@ -4,36 +4,16 @@
       <div class="row">
         <div class="col-md-6 mr-auto">
           <div class="form-group">
-            <label class="requiredField" for="invoiceNumber"
-              >Invoice Number</label
-            >
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              id="invoiceNumber"
-              [formControlName]="'invoiceNumber'"
-              required
-            />
+            <label class="requiredField" for="invoiceNumber">Invoice Number</label>
+            <input type="text" class="form-control form-control-lg" id="invoiceNumber" [formControlName]="'invoiceNumber'" required />
             <div
               *ngIf="
-                invoiceControl.invoiceNumber?.invalid &&
-                (invoiceControl.invoiceNumber?.dirty ||
-                  invoiceControl.invoiceNumber?.touched)
+                invoiceControl.invoiceNumber?.invalid && (invoiceControl.invoiceNumber?.dirty || invoiceControl.invoiceNumber?.touched)
               "
               class="text-white"
             >
-              <div
-                *ngIf="invoiceControl.invoiceNumber?.errors.required"
-                style="color: red"
-              >
-                Invoice Number is required
-              </div>
-              <div
-                *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice"
-                style="color: red"
-              >
-                Invoice Number is duplicate
-              </div>
+              <div *ngIf="invoiceControl.invoiceNumber?.errors.required" style="color: red">Invoice Number is required</div>
+              <div *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice" style="color: red">Invoice Number is duplicate</div>
             </div>
           </div>
         </div>
@@ -59,33 +39,20 @@
                 #d2="ngbDatepicker"
               />
               <div class="input-group-append">
-                <button
-                  class="btn btn-outline-primary"
-                  (click)="d2.toggle()"
-                  type="button"
-                >
+                <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button">
                   <i class="far fa-calendar-alt"></i>
                 </button>
               </div>
             </div>
             <div
-              *ngIf="
-                invoiceControl.invoiceDate?.invalid &&
-                (invoiceControl.invoiceDate?.dirty ||
-                  invoiceControl.invoiceDate?.touched)
-              "
+              *ngIf="invoiceControl.invoiceDate?.invalid && (invoiceControl.invoiceDate?.dirty || invoiceControl.invoiceDate?.touched)"
               class="text-danger"
             >
-              <div *ngIf="invoiceControl.invoiceDate?.errors.required">
-                Invoice Date is required
-              </div>
-              <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">
-                Future Date not allowed
-              </div>
+              <div *ngIf="invoiceControl.invoiceDate?.errors.required">Invoice Date is required</div>
+              <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">Future Date not allowed</div>
               <div
                 *ngIf="
-                  (invoiceControl.invoiceDate?.status === 'INVALID' &&
-                    invoiceControl.invoiceDate?.value !== null) ||
+                  (invoiceControl.invoiceDate?.status === 'INVALID' && invoiceControl.invoiceDate?.value !== null) ||
                   invoiceControl.invoiceDate?.errors.pattern
                 "
               >
@@ -94,45 +61,28 @@
             </div>
           </div>
 
-          <p *ngIf="hidden" class="note">
-            Note: To add more referrals, click "Add another referral" at the
-            bottom of the page.
-          </p>
+          <p *ngIf="hidden" class="note">Note: To add more referrals, click "Add another referral" at the bottom of the page.</p>
 
           <div *ngIf="!hidden">
             <div class="form-group">
-              <label class="requiredField" for="referralList"
-                >How many referrals are listed on your invoice?</label
-              >
-              <select
-                class="form-control form-control-lg"
-                id="referralList"
-                [formControlName]="'referralList'"
-              >
+              <label class="requiredField" for="referralList">How many referrals are listed on your invoice?</label>
+              <select class="form-control form-control-lg" id="referralList" [formControlName]="'referralList'">
                 <option *ngFor="let no of referralList" [ngValue]="no">
                   {{ no.name }}
                 </option>
               </select>
               <div
-                *ngIf="
-                  invoiceControl.referralList?.invalid &&
-                  (invoiceControl.referralList?.dirty ||
-                    invoiceControl.referralList?.touched)
-                "
+                *ngIf="invoiceControl.referralList?.invalid && (invoiceControl.referralList?.dirty || invoiceControl.referralList?.touched)"
                 class="text-danger"
               >
-                <div *ngIf="invoiceControl.referralList?.errors.required">
-                  Number of referrals is required
-                </div>
+                <div *ngIf="invoiceControl.referralList?.errors.required">Number of referrals is required</div>
               </div>
             </div>
 
             <div>
               <button
                 type="button"
-                (click)="
-                  addReferralTemplate(invoiceForm.get('referralList').value.id)
-                "
+                (click)="addReferralTemplate(invoiceForm.get('referralList').value.id)"
                 class="btn primary-button referral-button"
               >
                 Next
@@ -143,9 +93,7 @@
 
         <div class="col-md-6">
           <div class="form-group">
-            <label class="requiredField"
-              >Attach a photo/scanned copy of your invoice</label
-            >
+            <label class="requiredField">Attach a photo/scanned copy of your invoice</label>
             <app-file-upload
               [reloadedFiles]="reloadedFiles"
               [noOfAttachments]="noOfAttachments"
@@ -153,14 +101,7 @@
               (deleteFile)="deleteFileFormControl($event)"
             >
             </app-file-upload>
-            <div
-              *ngIf="
-                !checkAttachmentLength(invoiceControl.invoiceAttachments.value)
-              "
-              style="color: red"
-            >
-              Attachment is required
-            </div>
+            <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red">Attachment is required</div>
           </div>
         </div>
       </div>
@@ -181,11 +122,7 @@
 
       <div *ngIf="referrals.controls.length > 0" class="row">
         <div class="col-12">
-          <a
-            (click)="addSingleReferralTemplate()"
-            class="btn btn-block add-referral-button"
-            >+ Add another referral to this invoice</a
-          >
+          <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button">+ Add another referral to this invoice</a>
         </div>
       </div>
       <br />
