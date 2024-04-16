@@ -95,7 +95,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.runValidation();
 
     this.householdForm.valueChanges.subscribe(() => {
-      console.log('98: Household form value changes:');
       this.runValidation();
     });
     this.selection.changed.subscribe(() => {
