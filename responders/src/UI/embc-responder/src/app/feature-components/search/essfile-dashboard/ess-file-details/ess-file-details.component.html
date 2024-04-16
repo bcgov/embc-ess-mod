@@ -176,12 +176,15 @@
       <hr class="dotted-hr hr-padding" />
       <div class="row">
         <div class="col-md-12">
-          <p class="subsection-heading">Needs Assessment</p>
+          <p class="subsection-heading">Needs</p>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
+          <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
+            <div class="col-12 bold">Household currently does not require assistance.</div>
+          </div>
           <div class="row" *ngFor="let item of getIdentifiedNeeds()">
             <div class="col-12 bold">{{ item }}</div>
           </div>
