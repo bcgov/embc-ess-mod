@@ -80,7 +80,7 @@ describe('SearchOptionsComponent', () => {
 
     const warningMessage = document.getElementsByClassName('field-error')[0] as HTMLElement;
     fixture.detectChanges();
-    expect(warningMessage.textContent).toEqual(' Please make a selection ');
+    expect(warningMessage.textContent).toEqual('Please make a selection');
   });
 
   it('should display Remote Extensions as disable if not enabled', () => {
