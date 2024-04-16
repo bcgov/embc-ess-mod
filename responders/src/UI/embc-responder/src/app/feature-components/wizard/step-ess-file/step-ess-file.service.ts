@@ -6,7 +6,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
 import { EvacuationFile, HouseholdMemberType, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -21,6 +21,12 @@ import { WizardSteps, WizardType } from 'src/app/core/models/wizard-type.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+
+export enum ShelterType {
+  allowance = 'shelterAllowance',
+  referral = 'shelterReferral'
+}
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -78,7 +84,9 @@ export class StepEssFileService {
         private evacueeSearchService: EvacueeSearchService,
         private appBaseService: AppBaseService,
         private computeState: ComputeRulesService,
-        private loadEvacueeListService: LoadEvacueeListService
+        private loadEvacueeListService: LoadEvacueeListService,
+        private formBuilder: UntypedFormBuilder,
+        private customValidationService: CustomValidationService
     ) {}
 
     // Selected ESS File Model getter and setter
@@ -383,6 +391,70 @@ export class StepEssFileService {
     }
     public set editedSecurityPhrase(editedSecurityPhraseVal: boolean) {
         this.editedSecurityPhraseVal = editedSecurityPhraseVal;
+    }
+
+    needsForm: UntypedFormGroup;
+    createNeedsForm(): UntypedFormGroup {
+      this.needsForm = this.formBuilder.group({
+        requiresShelter: [this.requiresShelterAllowance || this.requiresShelterReferral],
+        requiresShelterType: [
+          this.requiresShelterReferral ? ShelterType.referral : this.requiresShelterAllowance ? ShelterType.allowance : undefined,
+          this.customValidationService.conditionalValidation(() => this.needsForm.controls.requiresShelter.value === true, Validators.required)
+        ],
+        requiresFood: [this.requiresFood ?? false],
+        requiresClothing: [this.requiresClothing ?? false],
+        requiresTransportation: [this.requiresTransportation ?? false],
+        requiresIncidentals: [this.requiresIncidentals ?? false],
+        requiresNothing: [this.requiresNothing ?? false]
+      });
+      this.needsForm.addValidators(this.customValidationService.needsValidator());
+      this.needsForm.controls.requiresNothing.valueChanges.subscribe((data) => {
+        if (data) {
+          this.disableNeeds();
+        } else {
+          this.enableNeeds();
+        }
+      });
+      this.needsForm.controls.requiresShelter.valueChanges.subscribe((checked) => {
+        if (!checked) {
+          this.needsForm.controls.requiresShelterType.reset();
+        }
+      });
+      if (this.requiresNothing) {
+        this.disableNeeds();
+      }
+
+      return this.needsForm;
+    }
+
+    private disableNeeds() {
+      this.disableFormControl('requiresIncidentals');
+      this.disableFormControl('requiresTransportation');
+      this.disableFormControl('requiresClothing');
+      this.disableFormControl('requiresFood');
+      this.disableFormControl('requiresShelter');
+      this.disableFormControl('requiresShelterType');
+    }
+
+    private enableNeeds() {
+      this.enableFormControl('requiresIncidentals');
+      this.enableFormControl('requiresTransportation');
+      this.enableFormControl('requiresClothing');
+      this.enableFormControl('requiresFood');
+      this.enableFormControl('requiresShelter');
+      this.enableFormControl('requiresShelterType');
+    }
+
+    private disableFormControl(formControlName: string) {
+      const formControl = this.needsForm.controls[formControlName];
+      formControl.disable();
+      formControl.reset();
+    }
+
+    private enableFormControl(formControlName: string) {
+      const formControl = this.needsForm.controls[formControlName];
+      formControl.enable();
+      formControl.reset();
     }
 
     /**
