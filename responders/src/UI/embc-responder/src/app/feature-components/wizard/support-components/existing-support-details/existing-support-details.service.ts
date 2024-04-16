@@ -39,10 +39,7 @@ import {
   Taxi
 } from 'src/app/core/models/support-details.model';
 import { mergeMap } from 'rxjs/operators';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
@@ -64,11 +61,7 @@ export class ExistingSupportDetailsService {
    * @param voidReason
    * @returns
    */
-  voidSupport(
-    fileId: string,
-    supportId: string,
-    voidReason: SupportVoidReason
-  ): Observable<void> {
+  voidSupport(fileId: string, supportId: string, voidReason: SupportVoidReason): Observable<void> {
     return this.registrationService.registrationsVoidSupport({
       fileId,
       supportId,
@@ -129,10 +122,7 @@ export class ExistingSupportDetailsService {
    * @param needsAssessmentForSupport
    * @returns
    */
-  mapMember(
-    memberId: string,
-    needsAssessmentForSupport: EvacuationFileModel
-  ): EvacuationFileHouseholdMember {
+  mapMember(memberId: string, needsAssessmentForSupport: EvacuationFileModel): EvacuationFileHouseholdMember {
     return needsAssessmentForSupport.householdMembers.find((value) => {
       if (value?.id === memberId) {
         return value;
@@ -146,14 +136,10 @@ export class ExistingSupportDetailsService {
    * @param selectedSupport
    * @param needsAssessmentForSupport
    */
-  createEditableDraft(
-    selectedSupport: Support,
-    needsAssessmentForSupport: EvacuationFileModel
-  ) {
-    const members: Array<EvacuationFileHouseholdMember> =
-      selectedSupport.includedHouseholdMembers.map((id) => {
-        return this.mapMember(id, needsAssessmentForSupport);
-      });
+  createEditableDraft(selectedSupport: Support, needsAssessmentForSupport: EvacuationFileModel) {
+    const members: Array<EvacuationFileHouseholdMember> = selectedSupport.includedHouseholdMembers.map((id) => {
+      return this.mapMember(id, needsAssessmentForSupport);
+    });
 
     const referralDelivery = selectedSupport.supportDelivery as Referral;
     const name = referralDelivery.issuedToPersonName?.split(',');
@@ -174,32 +160,23 @@ export class ExistingSupportDetailsService {
       .find((supportValue) => supportValue.value === selectedSupport.category);
     const subCategory = this.loadEvacueeListService
       .getSupportSubCategories()
-      .find(
-        (supportValue) => supportValue.value === selectedSupport.subCategory
-      );
+      .find((supportValue) => supportValue.value === selectedSupport.subCategory);
 
     this.stepSupportsService.supportTypeToAdd =
-      selectedSupport.category === SupportCategory.Clothing ||
-      selectedSupport.category === SupportCategory.Incidentals
+      selectedSupport.category === SupportCategory.Clothing || selectedSupport.category === SupportCategory.Incidentals
         ? category
         : subCategory;
 
     //fix bug where from/to time was being pushed forward during save. Save expects the date to have a time of 0,0,0,0
     //and adds the time field to it
     const fromDate = new Date(selectedSupport.from);
-    const fromTime = this.dateConversionService.convertDateTimeToTime(
-      fromDate.toISOString()
-    );
+    const fromTime = this.dateConversionService.convertDateTimeToTime(fromDate.toISOString());
     const toDate = new Date(selectedSupport.to);
-    const toTime = this.dateConversionService.convertDateTimeToTime(
-      toDate.toISOString()
-    );
+    const toTime = this.dateConversionService.convertDateTimeToTime(toDate.toISOString());
     fromDate.setHours(0, 0, 0, 0);
     toDate.setHours(0, 0, 0, 0);
     this.stepSupportsService.supportDetails = {
-      externalReferenceId: (
-        selectedSupport.supportDelivery as Referral
-      ).manualReferralId?.substring(1),
+      externalReferenceId: (selectedSupport.supportDelivery as Referral).manualReferralId?.substring(1),
       issuedBy: selectedSupport.issuedBy,
       issuedOn: selectedSupport.issuedOn,
       fromDate: fromDate.toISOString(),
@@ -207,10 +184,7 @@ export class ExistingSupportDetailsService {
       toTime,
       fromTime,
       members,
-      noOfDays: this.dateConversionService.getNoOfDays(
-        selectedSupport.to,
-        selectedSupport.from
-      ),
+      noOfDays: this.dateConversionService.getNoOfDays(selectedSupport.to, selectedSupport.from),
       referral: this.createReferral(selectedSupport)
     };
 
@@ -221,8 +195,7 @@ export class ExistingSupportDetailsService {
 
     this.stepSupportsService.supportDelivery = {
       issuedTo: issuedToVal !== null ? issuedToVal : null,
-      name:
-        issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
+      name: issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
       supplierNote: referralDelivery.supplierNotes,
       details: this.createDeliveryDetails(selectedSupport),
@@ -247,15 +220,11 @@ export class ExistingSupportDetailsService {
         hostPhone: (selectedSupport as LodgingBilletingSupport).hostPhone,
         emailAddress: (selectedSupport as LodgingBilletingSupport).hostEmail
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Group
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
       return {
         hostName: (selectedSupport as LodgingGroupSupport).facilityName,
         hostAddress: (selectedSupport as LodgingGroupSupport).facilityAddress,
-        hostCity: this.parseCommunityString(
-          (selectedSupport as LodgingGroupSupport).facilityCommunityCode
-        ),
+        hostCity: this.parseCommunityString((selectedSupport as LodgingGroupSupport).facilityCommunityCode),
         hostPhone: (selectedSupport as LodgingGroupSupport).facilityContactPhone
       };
     }
@@ -282,60 +251,42 @@ export class ExistingSupportDetailsService {
     | Clothing {
     if (selectedSupport.subCategory === SupportSubCategory.Food_Restaurant) {
       return {
-        noOfBreakfast: (selectedSupport as FoodRestaurantSupport)
-          .numberOfBreakfastsPerPerson,
-        noOfLunches: (selectedSupport as FoodRestaurantSupport)
-          .numberOfLunchesPerPerson,
-        noOfDinners: (selectedSupport as FoodRestaurantSupport)
-          .numberOfDinnersPerPerson,
+        noOfBreakfast: (selectedSupport as FoodRestaurantSupport).numberOfBreakfastsPerPerson,
+        noOfLunches: (selectedSupport as FoodRestaurantSupport).numberOfLunchesPerPerson,
+        noOfDinners: (selectedSupport as FoodRestaurantSupport).numberOfDinnersPerPerson,
         totalAmount: (selectedSupport as FoodRestaurantSupport).totalAmount
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Food_Groceries
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Food_Groceries) {
       return {
         noOfMeals: (selectedSupport as FoodGroceriesSupport).numberOfDays,
         totalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
         userTotalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
         approverName: (selectedSupport as FoodGroceriesSupport).approverName
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi) {
       return {
         fromAddress: (selectedSupport as TransportationTaxiSupport).fromAddress,
         toAddress: (selectedSupport as TransportationTaxiSupport).toAddress
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Transportation_Other
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Other) {
       return {
-        transportMode: (selectedSupport as TransportationOtherSupport)
-          .transportMode,
+        transportMode: (selectedSupport as TransportationOtherSupport).transportMode,
         totalAmount: (selectedSupport as TransportationOtherSupport).totalAmount
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
       return {
         noOfNights: (selectedSupport as LodgingBilletingSupport).numberOfNights
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Group
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
       return {
         noOfNights: (selectedSupport as LodgingGroupSupport).numberOfNights
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel) {
       return {
         noOfNights: (selectedSupport as LodgingHotelSupport).numberOfNights,
         noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance) {
       return {
         noOfNights: (selectedSupport as LodgingAllowanceSupport).numberOfNights,
         totalAmount: (selectedSupport as LodgingAllowanceSupport).totalAmount,
@@ -343,7 +294,7 @@ export class ExistingSupportDetailsService {
         contactPhone: (selectedSupport as LodgingAllowanceSupport).contactPhone,
         fullName: (selectedSupport.supportDelivery as Referral).issuedToPersonName
       };
-    }else if (selectedSupport.category === SupportCategory.Incidentals) {
+    } else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {
         approvedItems: (selectedSupport as IncidentalsSupport).approvedItems,
         totalAmount: (selectedSupport as IncidentalsSupport).totalAmount,
@@ -352,8 +303,7 @@ export class ExistingSupportDetailsService {
       };
     } else if (selectedSupport.category === SupportCategory.Clothing) {
       return {
-        extremeWinterConditions: (selectedSupport as ClothingSupport)
-          .extremeWinterConditions,
+        extremeWinterConditions: (selectedSupport as ClothingSupport).extremeWinterConditions,
         totalAmount: (selectedSupport as ClothingSupport).totalAmount,
         userTotalAmount: (selectedSupport as ClothingSupport).totalAmount,
         approverName: (selectedSupport as FoodGroceriesSupport).approverName

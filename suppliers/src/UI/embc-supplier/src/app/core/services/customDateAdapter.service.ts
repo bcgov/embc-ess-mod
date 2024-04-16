@@ -18,8 +18,6 @@ export class CustomDateAdapterService extends NgbDateAdapter<string> {
   }
 
   toModel(date: NgbDateStruct | null): string | null {
-    return date
-      ? date.month + this.delimiter + date.day + this.delimiter + date.year
-      : null;
+    return date ? date.month + this.delimiter + date.day + this.delimiter + date.year : null;
   }
 }

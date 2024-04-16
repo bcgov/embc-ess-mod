@@ -9,14 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [RestrictionFormComponent],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatRadioModule,
-    ReactiveFormsModule,
-    MatFormFieldModule
-  ],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatRadioModule, ReactiveFormsModule, MatFormFieldModule],
   exports: [RestrictionFormComponent]
 })
 export class RestrictionFormModule {}

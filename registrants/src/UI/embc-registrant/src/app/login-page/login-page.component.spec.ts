@@ -15,16 +15,8 @@ describe('LoginPageComponent', () => {
     let loginService: jasmine.SpyObj<LoginService>;
     TestBed.configureTestingModule({
       declarations: [LoginPageComponent],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        OAuthModule.forRoot()
-      ],
-      providers: [
-        UntypedFormBuilder,
-        { provides: LoginService, useValue: loginService }
-      ]
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule, OAuthModule.forRoot()],
+      providers: [UntypedFormBuilder, { provides: LoginService, useValue: loginService }]
     }).compileComponents();
   }));
 

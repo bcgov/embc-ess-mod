@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import {
-  OptionInjectionService,
-  SearchOptionsService
-} from '../core/interfaces/searchOptions.service';
+import { OptionInjectionService, SearchOptionsService } from '../core/interfaces/searchOptions.service';
 import { SelectedPathType } from '../core/models/appBase.model';
 import { AppBaseService } from '../core/services/helper/appBase.service';
 import { MockDataService } from './mockData.service';
@@ -29,33 +26,12 @@ export class MockOptionInjectionService {
   }
 
   private selectTestService() {
-    if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.digital
-    ) {
-      return new MockDigitalOptionService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
-    } else if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.paperBased
-    ) {
-      return new MockPaperOptionService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
-    } else if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.remoteExtensions
-    ) {
-      return new MockRemoteExtService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
+    if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.digital) {
+      return new MockDigitalOptionService(this.router, this.dataService, this.builder);
+    } else if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.paperBased) {
+      return new MockPaperOptionService(this.router, this.dataService, this.builder);
+    } else if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.remoteExtensions) {
+      return new MockRemoteExtService(this.router, this.dataService, this.builder);
     }
   }
 }

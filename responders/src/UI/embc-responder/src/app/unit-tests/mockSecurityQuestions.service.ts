@@ -6,12 +6,7 @@ import { SecurityQuestionsService } from '../core/services/security-questions.se
   providedIn: 'root'
 })
 export class MockSecurityQuestionsService extends SecurityQuestionsService {
-  testQuestions = [
-    'Test Question 1?',
-    'Test Question 2?',
-    'Test Question 3?',
-    'Test Question 4?'
-  ];
+  testQuestions = ['Test Question 1?', 'Test Question 2?', 'Test Question 3?', 'Test Question 4?'];
   getSecurityQuestionList(): Observable<string[]> {
     return of(this.testQuestions);
   }

@@ -17,13 +17,6 @@ export class MockEvacueeDetailsService extends EvacueeDetailsService {
     appBaseService: AppBaseService,
     dialog: MatDialog
   ) {
-    super(
-      stepEvacueeProfileService,
-      formBuilder,
-      wizardService,
-      customValidation,
-      appBaseService,
-      dialog
-    );
+    super(stepEvacueeProfileService, formBuilder, wizardService, customValidation, appBaseService, dialog);
   }
 }

@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserProfile } from '../core/api/models';
-import {
-  ActionPermission,
-  ClaimType
-} from '../core/services/authorization.service';
-import {
-  LoggedInUserProfile,
-  UserService
-} from '../core/services/user.service';
+import { ActionPermission, ClaimType } from '../core/services/authorization.service';
+import { LoggedInUserProfile, UserService } from '../core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MockUserService extends UserService {

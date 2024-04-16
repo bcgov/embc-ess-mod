@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [RemoteSearchComponent],
-  imports: [
-    CommonModule,
-    RemoteSearchRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, RemoteSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class RemoteSearchModule {}

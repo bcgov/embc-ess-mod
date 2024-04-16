@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import {
-  ObjectWrapper,
-  TableFilterModel
-} from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
 

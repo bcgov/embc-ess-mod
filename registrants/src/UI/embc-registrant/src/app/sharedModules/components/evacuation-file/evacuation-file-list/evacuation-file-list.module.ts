@@ -10,13 +10,6 @@ import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [EvacuationFileListComponent, EvacuationCardComponent],
-  imports: [
-    CommonModule,
-    CoreModule,
-    EvacuationFileListRoutingModule,
-    MatCardModule,
-    MatButtonModule,
-    MatTabsModule
-  ]
+  imports: [CommonModule, CoreModule, EvacuationFileListRoutingModule, MatCardModule, MatButtonModule, MatTabsModule]
 })
 export class EvacuationFileListModule {}

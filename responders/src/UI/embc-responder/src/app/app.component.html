@@ -4,9 +4,7 @@
     (closeEvent)="closeOutageBanner($event)"
   ></app-outage-banner>
 
-  <app-environment-banner
-    *ngIf="environment !== null && environment !== undefined"
-  ></app-environment-banner>
+  <app-environment-banner *ngIf="environment !== null && environment !== undefined"></app-environment-banner>
 
   <app-header
     *ngIf="show"
@@ -60,11 +58,5 @@
     <app-footer></app-footer>
   </div>
 
-  <app-loader
-    class="spinner"
-    [showLoader]="isLoading"
-    [strokeWidth]="10"
-    [diameter]="50"
-    [color]="color"
-  ></app-loader>
+  <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"></app-loader>
 </div>

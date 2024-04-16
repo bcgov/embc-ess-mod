@@ -12,11 +12,7 @@ export class MockEssFileSecurityPhraseService extends EssFileSecurityPhraseServi
     securityPhrase: 's****e'
   };
 
-  public getSecurityPhrase(
-    fileId: string
-  ): Observable<GetSecurityPhraseResponse> {
-    return new BehaviorSubject<GetSecurityPhraseResponse>(
-      this.mockSecurityPhraseValue
-    );
+  public getSecurityPhrase(fileId: string): Observable<GetSecurityPhraseResponse> {
+    return new BehaviorSubject<GetSecurityPhraseResponse>(this.mockSecurityPhraseValue);
   }
 }

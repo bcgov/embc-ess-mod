@@ -9,13 +9,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [HouseholdMembersComponent],
-  imports: [
-    CommonModule,
-    HouseholdMembersRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ],
+  imports: [CommonModule, HouseholdMembersRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule],
   exports: [HouseholdMembersComponent]
 })
 export class HouseholdMembersModule {}

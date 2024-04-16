@@ -14,10 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatCheckboxModule,
-  MatCheckboxChange
-} from '@angular/material/checkbox';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
@@ -28,17 +25,11 @@ import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return (
-      !!(
-        control &&
-        control.invalid &&
-        (control.dirty || control.touched || isSubmitted)
-      ) || control.parent.hasError('emailMatch')
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
     );
   }
 }
@@ -53,20 +44,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly phoneMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   emailMatcher = new CustomErrorMailMatcher();
 
   constructor(
@@ -79,17 +57,11 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.contactInfoForm$ = this.formCreationService
-      .getContactDetailsForm()
-      .subscribe((contactInfo) => {
-        this.contactInfoForm = contactInfo;
-        this.contactInfoForm.setValidators([
-          this.customValidator
-            .confirmEmailValidator()
-            .bind(this.customValidator)
-        ]);
-        this.contactInfoForm.updateValueAndValidity();
-      });
+    this.contactInfoForm$ = this.formCreationService.getContactDetailsForm().subscribe((contactInfo) => {
+      this.contactInfoForm = contactInfo;
+      this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)]);
+      this.contactInfoForm.updateValueAndValidity();
+    });
 
     this.contactInfoForm
       .get('phone')

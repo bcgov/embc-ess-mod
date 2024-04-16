@@ -24,17 +24,14 @@ export class RestrictionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.restrictionForm$ = this.formCreationService
-      .getRestrictionForm()
-      .subscribe((restrictionForm) => {
-        this.restrictionForm = restrictionForm;
-      });
+    this.restrictionForm$ = this.formCreationService.getRestrictionForm().subscribe((restrictionForm) => {
+      this.restrictionForm = restrictionForm;
+    });
   }
 
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.restrictionService.restrictedAccess =
-        this.restrictionForm.get('restrictedAccess').value;
+      this.restrictionService.restrictedAccess = this.restrictionForm.get('restrictedAccess').value;
       const navigationPath = '/' + this.currentFlow + '/create-profile';
       this.router.navigate([navigationPath]);
     } else {

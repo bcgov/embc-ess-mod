@@ -12,14 +12,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
   styleUrls: ['./supplier-exist.component.scss']
 })
 export class SupplierExistComponent implements OnInit {
-  displayedColumns: string[] = [
-    'legalName',
-    'name',
-    'gstNumber',
-    'address',
-    'primaryTeam',
-    'action'
-  ];
+  displayedColumns: string[] = ['legalName', 'name', 'gstNumber', 'address', 'primaryTeam', 'action'];
   dataSource = new BehaviorSubject([]);
   constructor(
     private addSupplierService: AddSupplierService,
@@ -36,9 +29,7 @@ export class SupplierExistComponent implements OnInit {
    * Navigates to the step 2 of 3 of creating a new supplier
    */
   continue(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/new-supplier'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/new-supplier']);
   }
 
   /**
@@ -46,9 +37,7 @@ export class SupplierExistComponent implements OnInit {
    */
   close(): void {
     this.addSupplierService.clearAddedSupplier();
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 
   /**
@@ -59,10 +48,10 @@ export class SupplierExistComponent implements OnInit {
   addSupplier($event): void {
     this.supplierService.getSupplierById($event.id).subscribe({
       next: (supplier) => {
-        this.router.navigate(
-          ['/responder-access/supplier-management/review-supplier'],
-          { state: { ...supplier }, queryParams: { action: 'add-existing' } }
-        );
+        this.router.navigate(['/responder-access/supplier-management/review-supplier'], {
+          state: { ...supplier },
+          queryParams: { action: 'add-existing' }
+        });
       },
       error: (error) => {
         this.alertService.clearAlert();

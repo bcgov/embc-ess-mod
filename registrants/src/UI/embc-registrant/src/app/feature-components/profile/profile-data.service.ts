@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Address,
-  Profile,
-  PersonDetails,
-  ContactDetails,
-  SecurityQuestion
-} from 'src/app/core/api/models';
+import { Address, Profile, PersonDetails, ContactDetails, SecurityQuestion } from 'src/app/core/api/models';
 import { RegAddress } from 'src/app/core/model/address';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LocationService } from 'src/app/core/services/location.service';
@@ -20,8 +14,7 @@ export class ProfileDataService {
   private primaryAddressDetail: RegAddress;
   private mailingAddressDetail: RegAddress;
   private contactDetail: ContactDetails;
-  private securityQuestionsVal: Array<SecurityQuestion> =
-    new Array<SecurityQuestion>();
+  private securityQuestionsVal: Array<SecurityQuestion> = new Array<SecurityQuestion>();
 
   public get personalDetails(): PersonDetails {
     return this.personalDetail;
@@ -98,13 +91,9 @@ export class ProfileDataService {
   public createProfileDTO(): Profile {
     return {
       contactDetails: this.contactDetails,
-      mailingAddress: this.locationService.setAddressObjectForDTO(
-        this.mailingAddressDetails
-      ),
+      mailingAddress: this.locationService.setAddressObjectForDTO(this.mailingAddressDetails),
       personalDetails: this.personalDetails,
-      primaryAddress: this.locationService.setAddressObjectForDTO(
-        this.primaryAddressDetails
-      ),
+      primaryAddress: this.locationService.setAddressObjectForDTO(this.primaryAddressDetails),
       restrictedAccess: this.restrictionService.restrictedAccess,
       securityQuestions: this.securityQuestions
     };

@@ -2,12 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormCreationService } from '../../core/services/formCreation.service';
-import {
-  CaptchaResponse,
-  CaptchaResponseType
-} from 'src/app/core/components/captcha-v2/captcha-v2.component';
-import { ConfigService } from 'src/app/core/services/config.service';
-import { IdentifyNeedsForm } from 'src/app/core/model/needs.model';
+import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { UntypedFormGroup } from '@angular/forms';
 import { ShelterType } from 'src/app/core/services/globalConstants';
 
@@ -33,7 +28,7 @@ export class ReviewComponent implements OnInit {
   constructor(
     private router: Router,
     public formCreationService: FormCreationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };

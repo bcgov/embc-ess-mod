@@ -28,8 +28,7 @@ import { OutageDialogComponent } from './sharedModules/outage-components/outage-
       resourceServer: {
         sendAccessToken: true,
         customUrlValidation: (url) =>
-          url.toLowerCase().includes('/api/') &&
-          !url.toLowerCase().endsWith('/configuration')
+          url.toLowerCase().includes('/api/') && !url.toLowerCase().endsWith('/configuration')
       }
     })
   ],

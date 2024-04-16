@@ -24,8 +24,7 @@ export class LoginService {
           this.oauthService.initImplicitFlow(targetUrl);
           this.isLoggedIn$.next(false);
           return Promise.resolve(false);
-        }
-        else {
+        } else {
           this.router.navigateByUrl('/');
           this.isLoggedIn$.next(false);
           return Promise.resolve(false);
@@ -50,9 +49,7 @@ export class LoginService {
   }
 
   public async getUserProfile(): Promise<Profile> {
-    const profile = await lastValueFrom(
-      this.profileService.profileGetProfile()
-    );
+    const profile = await lastValueFrom(this.profileService.profileGetProfile());
     return profile;
   }
   public async tryLogin(): Promise<void> {

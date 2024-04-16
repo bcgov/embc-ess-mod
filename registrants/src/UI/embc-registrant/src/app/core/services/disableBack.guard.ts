@@ -7,15 +7,11 @@ import * as globalConst from '../services/globalConstants';
 import { InformationDialogComponent } from '../components/dialog-components/information-dialog/information-dialog.component';
 
 @Injectable({ providedIn: 'root' })
-export class DisableBackGuard
-  implements CanDeactivate<FileSubmissionComponent>
-{
+export class DisableBackGuard implements CanDeactivate<FileSubmissionComponent> {
   constructor(public dialog: MatDialog) {}
 
   canDeactivate(): boolean {
-    if (
-      window.location.pathname === '/non-verified-registration/file-submission'
-    ) {
+    if (window.location.pathname === '/non-verified-registration/file-submission') {
       return true;
     } else {
       this.dialog.open(DialogComponent, {

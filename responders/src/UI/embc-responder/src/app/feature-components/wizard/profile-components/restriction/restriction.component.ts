@@ -25,9 +25,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     this.restrictionService.init();
     this.restrictionForm = this.restrictionService.createForm();
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
-    this.tabUpdateSubscription = this.restrictionService.updateTabStatus(
-      this.restrictionForm
-    );
+    this.tabUpdateSubscription = this.restrictionService.updateTabStatus(this.restrictionForm);
   }
 
   /**

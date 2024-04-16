@@ -32,7 +32,7 @@ export default class PetsComponent implements OnInit {
   editIndex: number;
   rowEdit = false;
   showTable = true;
-   
+
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
@@ -42,20 +42,16 @@ export default class PetsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.petsForm$ = this.formCreationService
-      .getPetsForm()
-      .subscribe((petsForm) => {
-        this.petsForm = petsForm;
-      });
+    this.petsForm$ = this.formCreationService.getPetsForm().subscribe((petsForm) => {
+      this.petsForm = petsForm;
+    });
 
-    this.petsForm
-      .get('addPetIndicator')
-      .valueChanges.subscribe((value) => this.updateOnVisibility());
+    this.petsForm.get('addPetIndicator').valueChanges.subscribe((value) => this.updateOnVisibility());
 
-      this.dataSource.next(this.petsForm.get('pets').value);
+    this.dataSource.next(this.petsForm.get('pets').value);
     this.data = this.petsForm.get('pets').value;
   }
-   
+
   addPets(): void {
     this.petsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;

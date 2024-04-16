@@ -7,9 +7,7 @@
   <br />
   <div class="row">
     <div class="col-md-8">
-      <div
-        *ngIf="essTask?.status === 'Active' || essTask?.status === 'Expired'"
-      >
+      <div *ngIf="essTask?.status === 'Active' || essTask?.status === 'Expired'">
         <ng-container *ngTemplateOutlet="activeTask"></ng-container>
       </div>
       <div *ngIf="essTask?.status === 'Invalid'">
@@ -20,18 +18,10 @@
     <div class="col-md-3">
       <mat-card class="tips-card">
         <div>
-          <img
-            class="img-align"
-            src="/assets/images/tips-lightbulb.svg"
-            height="63"
-            width="62"
-          />
+          <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
           <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
         </div>
-        <p class="tips-info">
-          If you have not been provided with a task number, please contact your
-          supervisor.
-        </p>
+        <p class="tips-info">If you have not been provided with a task number, please contact your supervisor.</p>
       </mat-card>
     </div>
   </div>
@@ -58,40 +48,20 @@
       <div class="col-md-4 status-active" *ngIf="essTask?.status === 'Active'">
         {{ essTask.status }}
       </div>
-      <div
-        class="col-md-4 status-expired"
-        *ngIf="essTask?.status === 'Expired'"
-      >
+      <div class="col-md-4 status-expired" *ngIf="essTask?.status === 'Expired'">
         {{ essTask.status }}
       </div>
     </div>
     <br />
     <div class="row">
       <div class="col-md-4">
-        <button
-          class="button-p submit"
-          type="button"
-          mat-button
-          [disabled]="isSubmitted"
-          (click)="signInTask()"
-        >
+        <button class="button-p submit" type="button" mat-button [disabled]="isSubmitted" (click)="signInTask()">
           Sign in to Task
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
+          <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
         </button>
       </div>
       <div class="col-md-4">
-        <button
-          mat-button
-          type="button"
-          class="link-button"
-          (click)="searchTask()"
-        >
-          Incorrect Task?
-        </button>
+        <button mat-button type="button" class="link-button" (click)="searchTask()">Incorrect Task?</button>
       </div>
     </div>
   </mat-card>
@@ -100,10 +70,7 @@
   <mat-card>
     <p class="heading">Sign in to a Task Number</p>
     <p>The task number entered does not exist within the ERA Tool.</p>
-    <p>
-      Please contact your supervisor or Local Government if you believe this is
-      an error.
-    </p>
+    <p>Please contact your supervisor or Local Government if you believe this is an error.</p>
 
     <div class="row">
       <div class="col-md-12 task-details">
@@ -114,14 +81,7 @@
     <br />
     <div class="row">
       <div class="col-md-4">
-        <button
-          class="button-p submit"
-          type="button"
-          mat-button
-          (click)="searchTask()"
-        >
-          Go Back & Search Again
-        </button>
+        <button class="button-p submit" type="button" mat-button (click)="searchTask()">Go Back & Search Again</button>
       </div>
     </div>
   </mat-card>

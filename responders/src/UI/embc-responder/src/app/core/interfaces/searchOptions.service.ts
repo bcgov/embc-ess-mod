@@ -47,43 +47,14 @@ export class OptionInjectionService {
   }
 
   private selectService() {
-    if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.digital
-    ) {
-      return new DigitalOptionService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
-    } else if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.paperBased
-    ) {
-      return new PaperOptionService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
-    } else if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.remoteExtensions
-    ) {
-      return new RemoteExtOptionService(
-        this.router,
-        this.dataService,
-        this.builder
-      );
-    } else if (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.caseNotes
-    ) {
-      return new CaseNotesOptionService(
-        this.router,
-        this.dataService,
-        this.builder,
-        this.userService
-      );
+    if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.digital) {
+      return new DigitalOptionService(this.router, this.dataService, this.builder);
+    } else if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.paperBased) {
+      return new PaperOptionService(this.router, this.dataService, this.builder);
+    } else if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.remoteExtensions) {
+      return new RemoteExtOptionService(this.router, this.dataService, this.builder);
+    } else if (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.caseNotes) {
+      return new CaseNotesOptionService(this.router, this.dataService, this.builder, this.userService);
     }
   }
 }

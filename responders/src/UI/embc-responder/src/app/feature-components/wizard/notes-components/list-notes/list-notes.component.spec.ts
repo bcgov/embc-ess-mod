@@ -26,12 +26,7 @@ describe('ListNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule
-      ],
+      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, BrowserAnimationsModule],
       declarations: [ListNotesComponent],
       providers: [
         { provide: StepNotesService, useClass: MockStepNotesService },
@@ -64,9 +59,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));
@@ -82,9 +75,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));

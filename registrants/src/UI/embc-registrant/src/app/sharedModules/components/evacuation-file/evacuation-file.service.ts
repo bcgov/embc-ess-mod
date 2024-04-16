@@ -20,44 +20,32 @@ export class EvacuationFileService {
   getCurrentEvacuationFiles(): Observable<Array<EvacuationFileModel>> {
     const currentEssFilesResult: Array<EvacuationFileModel> = [];
     return this.evacuationService.evacuationsGetCurrentEvacuations().pipe(
-      map(
-        (
-          currentEssFiles: Array<EvacuationFile>
-        ): Array<EvacuationFileModel> => {
-          currentEssFiles.forEach((item) => {
-            const essFileItem: EvacuationFileModel = {
-              ...item,
-              evacuatedAddress: this.locationService.getAddressRegFromAddress(
-                item.evacuatedFromAddress
-              )
-            };
-            currentEssFilesResult.push(essFileItem);
-          });
-          return currentEssFilesResult;
-        }
-      )
+      map((currentEssFiles: Array<EvacuationFile>): Array<EvacuationFileModel> => {
+        currentEssFiles.forEach((item) => {
+          const essFileItem: EvacuationFileModel = {
+            ...item,
+            evacuatedAddress: this.locationService.getAddressRegFromAddress(item.evacuatedFromAddress)
+          };
+          currentEssFilesResult.push(essFileItem);
+        });
+        return currentEssFilesResult;
+      })
     );
   }
 
   getPastEvacuationFiles(): Observable<Array<EvacuationFileModel>> {
     const pastEssFilesResult: Array<EvacuationFileModel> = [];
     return this.evacuationService.evacuationsGetPastEvacuations().pipe(
-      map(
-        (
-          currentEssFiles: Array<EvacuationFile>
-        ): Array<EvacuationFileModel> => {
-          currentEssFiles.forEach((item) => {
-            const essFileItem: EvacuationFileModel = {
-              ...item,
-              evacuatedAddress: this.locationService.getAddressRegFromAddress(
-                item.evacuatedFromAddress
-              )
-            };
-            pastEssFilesResult.push(essFileItem);
-          });
-          return pastEssFilesResult;
-        }
-      )
+      map((currentEssFiles: Array<EvacuationFile>): Array<EvacuationFileModel> => {
+        currentEssFiles.forEach((item) => {
+          const essFileItem: EvacuationFileModel = {
+            ...item,
+            evacuatedAddress: this.locationService.getAddressRegFromAddress(item.evacuatedFromAddress)
+          };
+          pastEssFilesResult.push(essFileItem);
+        });
+        return pastEssFilesResult;
+      })
     );
   }
 
@@ -70,15 +58,12 @@ export class EvacuationFileService {
         mergeMap((essFileNumber) => this.getCurrentEvacuationFiles()),
         map((evacFiles: EvacuationFile[]) => {
           const updatedEvacFile: EvacuationFile = evacFiles.filter(
-            (evacFile) =>
-              evacFile.fileId === this.evacuationFileDataService.essFileId
+            (evacFile) => evacFile.fileId === this.evacuationFileDataService.essFileId
           )[0];
 
           const updatedEvacFileModel: EvacuationFileModel = {
             ...updatedEvacFile,
-            evacuatedAddress: this.locationService.getAddressRegFromAddress(
-              updatedEvacFile.evacuatedFromAddress
-            )
+            evacuatedAddress: this.locationService.getAddressRegFromAddress(updatedEvacFile.evacuatedFromAddress)
           };
           this.evacuationFileMapping.mapEvacuationFile(updatedEvacFileModel);
           return updatedEvacFile.fileId;

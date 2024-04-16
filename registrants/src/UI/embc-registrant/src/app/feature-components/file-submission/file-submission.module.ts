@@ -10,13 +10,6 @@ import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [FileSubmissionComponent],
-  imports: [
-    CommonModule,
-    FileSubmissionRoutingModule,
-    MatCardModule,
-    MatButtonModule,
-    MatDialogModule,
-    CoreModule
-  ]
+  imports: [CommonModule, FileSubmissionRoutingModule, MatCardModule, MatButtonModule, MatDialogModule, CoreModule]
 })
 export class FileSubmissionModule {}

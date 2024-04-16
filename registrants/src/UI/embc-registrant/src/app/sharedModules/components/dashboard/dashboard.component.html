@@ -3,13 +3,8 @@
     <div class="row heading-container">
       <div class="col-md-12">
         <span class="page-heading"
-          ><b>{{
-            (formCreationService.personalDetailsForm$ | async)?.value?.lastName
-          }}</b
-          >,
-          {{
-            (formCreationService.personalDetailsForm$ | async)?.value?.firstName
-          }}</span
+          ><b>{{ (formCreationService.personalDetailsForm$ | async)?.value?.lastName }}</b
+          >, {{ (formCreationService.personalDetailsForm$ | async)?.value?.firstName }}</span
         >
       </div>
     </div>
@@ -19,32 +14,21 @@
           <mat-card-content>
             <div
               class="row"
-              *ngIf="
-                (evacuationFilesDataService.currentEvacuationFileCount$
-                  | async) === 0;
-                else activeFileBanner
-              "
+              *ngIf="(evacuationFilesDataService.currentEvacuationFileCount$ | async) === 0; else activeFileBanner"
             >
               <div class="col-md-9">
                 <p class="top-detail">
-                  Create an <b>Emergency Support Services (ESS) File</b> if you
-                  are currently being instructed by your First Nation or Local
-                  Authority to complete an online self-registration because you
-                  are either on Evacuation Alert or Order.
+                  Create an <b>Emergency Support Services (ESS) File</b> if you are currently being instructed by your
+                  First Nation or Local Authority to complete an online self-registration because you are either on
+                  Evacuation Alert or Order.
                 </p>
                 <p>
-                  Completing an Emergency Support Services (ESS) File now will
-                  not only save you time but allows your local Emergency Support
-                  Services (ESS) team to better support your needs.
+                  Completing an Emergency Support Services (ESS) File now will not only save you time but allows your
+                  local Emergency Support Services (ESS) team to better support your needs.
                 </p>
               </div>
               <div class="col-md-3 button-align">
-                <button
-                  class="button-p start-button"
-                  mat-stroked-button
-                  type="button"
-                  (click)="startAssessment()"
-                >
+                <button class="button-p start-button" mat-stroked-button type="button" (click)="startAssessment()">
                   Create ESS File
                 </button>
               </div>
@@ -52,46 +36,27 @@
           </mat-card-content>
 
           <ng-template #activeFileBanner>
-            <ng-container
-              *ngIf="evacuationFilesDataService.hasPendingEssFiles$ | async"
-            >
+            <ng-container *ngIf="evacuationFilesDataService.hasPendingEssFiles$ | async">
               <div class="col-md-12">
                 <p class="top-detail">
                   <b
-                    >Please connect with an Emergency Support Services Responder
-                    or proceed to your closest Reception Centre.</b
+                    >Please connect with an Emergency Support Services Responder or proceed to your closest Reception
+                    Centre.</b
                   >
                 </p>
                 <p>
-                  <b
-                    >Please remember to bring government-issued identification
-                    with you if you have it.</b
-                  >
+                  <b>Please remember to bring government-issued identification with you if you have it.</b>
                 </p>
-                <p>
-                  All details pertaining to your event can be found below, under
-                  the "Current Events" tab.
-                </p>
+                <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
               </div>
             </ng-container>
 
-            <ng-container
-              *ngIf="
-                (evacuationFilesDataService.hasPendingEssFiles$ | async) ===
-                false
-              "
-            >
+            <ng-container *ngIf="(evacuationFilesDataService.hasPendingEssFiles$ | async) === false">
               <div class="col-md-12">
                 <p class="top-detail">
-                  <b
-                    >Are you still on evacuation order and require additional
-                    supports?</b
-                  >
+                  <b>Are you still on evacuation order and require additional supports?</b>
                 </p>
-                <p>
-                  Please connect with your Local Emergency Program for
-                  assistance.
-                </p>
+                <p>Please connect with your Local Emergency Program for assistance.</p>
               </div>
             </ng-container>
           </ng-template>
@@ -103,24 +68,9 @@
 <div class="container" style="padding-bottom: 50px">
   <app-alert></app-alert>
   <nav mat-tab-nav-bar dynamicHeight>
-    <a
-      mat-tab-link
-      *ngFor="let tabItem of tabs"
-      [routerLink]="tabItem.route"
-      routerLinkActive="active-tab"
-    >
-      <img
-        class="inactive-curr"
-        [src]="tabItem.inactiveImage"
-        height="15"
-        width="15"
-      />
-      <img
-        class="active-curr"
-        [src]="tabItem.activeImage"
-        height="15"
-        width="15"
-      />
+    <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
+      <img class="inactive-curr" [src]="tabItem.inactiveImage" height="15" width="15" />
+      <img class="active-curr" [src]="tabItem.activeImage" height="15" width="15" />
       &nbsp;&nbsp; {{ tabItem.label }}
     </a>
   </nav>

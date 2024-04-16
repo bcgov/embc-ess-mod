@@ -10,13 +10,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [EditSupplierComponent],
-  imports: [
-    CommonModule,
-    EditSupplierRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule,
-    TextMaskModule
-  ]
+  imports: [CommonModule, EditSupplierRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, TextMaskModule]
 })
 export class EditSupplierModule {}

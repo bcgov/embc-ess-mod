@@ -2,7 +2,9 @@
 <form [formGroup]="identifyNeedsForm">
   <mat-card class="card-align" style="padding-bottom: 0px">
     <mat-card-content>
-      <p class="card-heading">If you require supports while evacuated, please let us know about your household’s needs. *</p>
+      <p class="card-heading">
+        If you require supports while evacuated, please let us know about your household’s needs. *
+      </p>
 
       <div class="row row-tile">
         <div class="col-md-12">
@@ -14,9 +16,15 @@
           <div class="shelter">
             <p>
               There are several ways to meet your shelter needs.<br />
-              You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
+              You can receive a shelter allowance and use that money to find your own shelter or be provided with a
+              referral to shelter (like a cot in a gym or a hotel/motel).
             </p>
-            <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option" *ngIf="needsFormControl['requiresShelter'].value">
+            <mat-radio-group
+              id="shelterRadio"
+              formControlName="requiresShelterType"
+              aria-label="Select an option"
+              *ngIf="needsFormControl['requiresShelter'].value"
+            >
               <label for="shelterAllowance">
                 <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>
                 I need the shelter allowance and can find my own shelter.
@@ -65,7 +73,9 @@
             <img src="../../../../../assets/images/needs-incidentals.svg" width="40px" height="40px" />
             Incidentals
             <span>
-              <a class="status-info" (click)="openIncidentalsDialog()"> <img src="../../../../../assets/images/info.svg" height="28" width="28" /></a>
+              <a class="status-info" (click)="openIncidentalsDialog()">
+                <img src="../../../../../assets/images/info.svg" height="28" width="28"
+              /></a>
             </span>
           </label>
         </div>

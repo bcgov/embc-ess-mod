@@ -2,10 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
-import {
-  SearchFormRegistery,
-  SearchPages
-} from 'src/app/core/services/helper/search-data.service';
+import { SearchFormRegistery, SearchPages } from 'src/app/core/services/helper/search-data.service';
 
 @Component({
   selector: 'app-evacuee-id-verify',
@@ -28,9 +25,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    * On component init, constructs the form
    */
   ngOnInit(): void {
-    this.idVerifyForm = this.optionInjectionService?.instance?.createForm(
-      SearchFormRegistery.idVerifySearchForm
-    );
+    this.idVerifyForm = this.optionInjectionService?.instance?.createForm(SearchFormRegistery.idVerifySearchForm);
     this.idQuestion = this.optionInjectionService?.instance?.idSearchQuestion;
   }
 
@@ -48,9 +43,6 @@ export class EvacueeIdVerifyComponent implements OnInit {
     const idVerify = {
       hasShownIdentification: this.idVerifyForm.get('photoId').value
     };
-    this.optionInjectionService?.instance?.search(
-      idVerify,
-      SearchPages.idVerifySearch
-    );
+    this.optionInjectionService?.instance?.search(idVerify, SearchPages.idVerifySearch);
   }
 }

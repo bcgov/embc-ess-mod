@@ -55,10 +55,7 @@ describe('StepEssFileComponent', () => {
   it('should load ess file tabs', () => {
     stepEssFileService.essTabsValue = stepEssFileService.essFileTabs;
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEssFileComponent(
-      test,
-      stepEssFileService
-    );
+    const testMockComponent = new StepEssFileComponent(test, stepEssFileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs).toBeDefined();
   });
@@ -74,10 +71,7 @@ describe('StepEssFileComponent', () => {
       previous: '/ess-wizard/ess-file/needs'
     };
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEssFileComponent(
-      test,
-      stepEssFileService
-    );
+    const testMockComponent = new StepEssFileComponent(test, stepEssFileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs).toContain(expectedTab);
   });
@@ -93,10 +87,7 @@ describe('StepEssFileComponent', () => {
       previous: '/ess-wizard/ess-file/needs'
     };
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEssFileComponent(
-      test,
-      stepEssFileService
-    );
+    const testMockComponent = new StepEssFileComponent(test, stepEssFileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs.indexOf(expectedTab)).toBe(-1);
   });

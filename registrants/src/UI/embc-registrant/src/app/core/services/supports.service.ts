@@ -33,21 +33,14 @@ export class SupportsService {
   }
 
   public getSupportStatusList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportStatus' })
-      .subscribe({
-        next: (supStatus: Code[]) => {
-          this.supportStatus = supStatus.filter(
-            (status) => status.description !== null
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportStatusListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportStatus' }).subscribe({
+      next: (supStatus: Code[]) => {
+        this.supportStatus = supStatus.filter((status) => status.description !== null);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportStatusListError);
+      }
+    });
   }
 }

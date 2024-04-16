@@ -26,9 +26,7 @@
         </div>
 
         <div class="col-md-6 app-heading">
-          <span class="heading-text1"
-            >Evacuee Registration & Assistance&nbsp;</span
-          >
+          <span class="heading-text1">Evacuee Registration & Assistance&nbsp;</span>
           <span class="heading-text2">(ERA)</span>
         </div>
 
@@ -37,12 +35,7 @@
             <button mat-button class="button-align" [matMenuTriggerFor]="menu">
               <div class="row">
                 <div class="col-md-2">
-                  <img
-                    class="img-align"
-                    src="/assets/images/user.svg"
-                    height="34"
-                    width="34"
-                  />
+                  <img class="img-align" src="/assets/images/user.svg" height="34" width="34" />
                 </div>
                 <div class="col-md-8">
                   <span style="color: white"
@@ -53,29 +46,15 @@
                   </p>
                 </div>
                 <div class="col-md-2">
-                  <img
-                    src="/assets/images/down-arrow-head.svg"
-                    height="7"
-                    width="12"
-                  />
+                  <img src="/assets/images/down-arrow-head.svg" height="7" width="12" />
                 </div>
               </div>
             </button>
             <mat-menu #menu="matMenu">
-              <button
-                *ngIf="allowSignIn()"
-                mat-menu-item
-                (click)="newTaskSignIn()"
-              >
+              <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">
                 Sign in to a different task #
               </button>
-              <button
-                mat-menu-item
-                (click)="openUserProfile()"
-                *ngIf="allowMyProfile()"
-              >
-                My Profile
-              </button>
+              <button mat-menu-item (click)="openUserProfile()" *ngIf="allowMyProfile()">My Profile</button>
               <button mat-menu-item (click)="signOut()">Sign out</button>
             </mat-menu>
           </ng-container>

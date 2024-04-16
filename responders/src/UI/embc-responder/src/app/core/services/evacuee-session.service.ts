@@ -61,10 +61,7 @@ export class EvacueeSessionService {
 
   set securityQuestionsOpenedFrom(securityQuestionsOpenedFromVal: string) {
     this.securityQuestionsOpenedFromVal = securityQuestionsOpenedFromVal;
-    this.cacheService.set(
-      'securityQuestionsOpenedFrom',
-      securityQuestionsOpenedFromVal
-    );
+    this.cacheService.set('securityQuestionsOpenedFrom', securityQuestionsOpenedFromVal);
   }
 
   get securityQuestionsOpenedFrom(): string {
@@ -75,10 +72,7 @@ export class EvacueeSessionService {
 
   set securityPhraseOpenedFrom(securityPhraseOpenedFromVal: string) {
     this.securityPhraseOpenedFromVal = securityPhraseOpenedFromVal;
-    this.cacheService.set(
-      'securityPhraseOpenedFrom',
-      securityPhraseOpenedFromVal
-    );
+    this.cacheService.set('securityPhraseOpenedFrom', securityPhraseOpenedFromVal);
   }
 
   get securityPhraseOpenedFrom(): string {
@@ -88,9 +82,7 @@ export class EvacueeSessionService {
   }
 
   get fileLinkStatus(): string {
-    return this.fileLinkStatusVal
-      ? this.fileLinkStatusVal
-      : this.cacheService.get('fileLinkStatus');
+    return this.fileLinkStatusVal ? this.fileLinkStatusVal : this.cacheService.get('fileLinkStatus');
   }
 
   set fileLinkStatus(fileLinkStatusVal: string) {
@@ -103,9 +95,7 @@ export class EvacueeSessionService {
   }
 
   get fileLinkFlag(): string {
-    return this.fileLinkFlagVal
-      ? this.fileLinkFlagVal
-      : this.cacheService.get('fileLinkFlag');
+    return this.fileLinkFlagVal ? this.fileLinkFlagVal : this.cacheService.get('fileLinkFlag');
   }
 
   set fileLinkFlag(fileLinkFlagVal: string) {
@@ -118,9 +108,7 @@ export class EvacueeSessionService {
   }
 
   get fileLinkMetaData(): FileLinkRequestModel {
-    return this.fileLinkMetaDataVal
-      ? this.fileLinkMetaDataVal
-      : JSON.parse(this.cacheService.get('fileLinkMetaData'));
+    return this.fileLinkMetaDataVal ? this.fileLinkMetaDataVal : JSON.parse(this.cacheService.get('fileLinkMetaData'));
   }
 
   set fileLinkMetaData(fileLinkMetaDataVal: FileLinkRequestModel) {
@@ -133,9 +121,7 @@ export class EvacueeSessionService {
   }
 
   public get isPaperBased(): boolean {
-    return this.isPaperBasedVal !== undefined
-      ? this.isPaperBasedVal
-      : JSON.parse(this.cacheService.get('paperBased'));
+    return this.isPaperBasedVal !== undefined ? this.isPaperBasedVal : JSON.parse(this.cacheService.get('paperBased'));
   }
   public set isPaperBased(value: boolean) {
     this.isPaperBasedVal = value;

@@ -52,15 +52,10 @@ export class EvacueeProfileDashboardService {
    * @returns profileId
    */
   fetchProfileId(): string {
-    if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.householdMemberRegistrantId !== undefined
-    ) {
-      return this.appBaseService?.appModel?.selectedProfile
-        ?.householdMemberRegistrantId;
+    if (this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId !== undefined) {
+      return this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
     } else {
-      return this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext?.id;
+      return this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     }
   }
 

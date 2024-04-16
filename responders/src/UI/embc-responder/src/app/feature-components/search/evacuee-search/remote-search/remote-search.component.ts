@@ -18,9 +18,7 @@ export class RemoteSearchComponent implements OnInit {
   constructor(private optionInjectionService: OptionInjectionService) {}
 
   ngOnInit(): void {
-    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(
-      SearchFormRegistery.remoteSearchForm
-    );
+    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(SearchFormRegistery.remoteSearchForm);
   }
 
   search() {
@@ -28,9 +26,7 @@ export class RemoteSearchComponent implements OnInit {
       this.isLoading = !this.isLoading;
       this.isSubmitted = !this.isSubmitted;
       const searchParams: EvacueeDetailsModel = {
-        essFileNumber: padFileIdForSearch(
-          this.fileSearchForm.get('essFileNumber').value
-        )
+        essFileNumber: padFileIdForSearch(this.fileSearchForm.get('essFileNumber').value)
       };
 
       (

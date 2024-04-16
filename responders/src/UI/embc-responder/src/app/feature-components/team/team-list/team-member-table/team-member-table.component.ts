@@ -95,14 +95,8 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
-        data.lastName
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-        data.userName
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+        data.userName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1
       ) {
         return true;
       }
@@ -113,27 +107,15 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
       const labelTerm = terms[2];
       const matchFilter = [];
       const isActive = data.isActive === true ? 'Active' : 'Deactivated';
-      const roleBoolean =
-        data.roleDescription
-          .trim()
-          .toLowerCase()
-          .indexOf(roleTerm.trim().toLowerCase()) !== -1;
-      const statusBoolean =
-        isActive
-          .trim()
-          .toLowerCase()
-          .indexOf(statusTerm.trim().toLowerCase()) !== -1;
+      const roleBoolean = data.roleDescription.trim().toLowerCase().indexOf(roleTerm.trim().toLowerCase()) !== -1;
+      const statusBoolean = isActive.trim().toLowerCase().indexOf(statusTerm.trim().toLowerCase()) !== -1;
       const labelBoolean =
         labelTerm === ''
           ? true
-          : data.labelDescription === null ||
-            data.labelDescription === undefined
-          ? false
-          : data.labelDescription
-              .trim()
-              .toLowerCase()
-              .indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
-            data.labelDescription.trim().length === labelTerm.trim().length;
+          : data.labelDescription === null || data.labelDescription === undefined
+            ? false
+            : data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
+              data.labelDescription.trim().length === labelTerm.trim().length;
 
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
@@ -190,13 +172,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     if (this.loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier3) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2
-        ? true
-        : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 ||
-        row.role === MemberRole.Tier2 ||
-        row.role === MemberRole.Tier3
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3
         ? true
         : false;
     }

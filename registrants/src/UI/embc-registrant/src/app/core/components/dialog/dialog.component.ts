@@ -1,13 +1,7 @@
 import { ViewChild } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
-import {
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({

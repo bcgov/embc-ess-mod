@@ -97,13 +97,7 @@ export class ContactPerson {
   phone: string;
   fax: string;
 
-  constructor(
-    firstName: string,
-    lastName: string,
-    email: string,
-    phone: string,
-    fax: string
-  ) {
+  constructor(firstName: string, lastName: string, email: string, phone: string, fax: string) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;

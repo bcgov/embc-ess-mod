@@ -3,30 +3,23 @@
     <p class="card-heading">Security Questions</p>
     <div class="section-intro">
       <p>
-        You will be asked to answer your questions should you be evacuated and
-        meet with an Emergency Support Services (ESS).<br />
-        If you are unable to answer your security questions, you will be asked
-        to provide government issue identification to confirm your identity.
+        You will be asked to answer your questions should you be evacuated and meet with an Emergency Support Services
+        (ESS).<br />
+        If you are unable to answer your security questions, you will be asked to provide government issue
+        identification to confirm your identity.
       </p>
 
       <p>
         Tips for creating strong security questions:<br />
-        1. Choose answers that are easy to remember, but difficult for others to
-        guess.<br />
-        2. Try not to choose questions that you have answered on public sites or
-        social media.
+        1. Choose answers that are easy to remember, but difficult for others to guess.<br />
+        2. Try not to choose questions that you have answered on public sites or social media.
       </p>
 
-      <p>
-        Please select <span class="bold">3 security questions</span> from the
-        list of options below.
-      </p>
+      <p>Please select <span class="bold">3 security questions</span> from the list of options below.</p>
 
       <p>
-        Please Note: Your answers need to be greater than 2 characters and
-        should not include any special characters.<br />
-        You may include numbers and letters. Your security answers are not case
-        sensitive.
+        Please Note: Your answers need to be greater than 2 characters and should not include any special characters.<br />
+        You may include numbers and letters. Your security answers are not case sensitive.
       </p>
     </div>
     <br />
@@ -37,22 +30,15 @@
             <mat-label>Security Question 1</mat-label>
 
             <mat-select formControlName="question1">
-              <mat-option
-                *ngFor="let question of securityQuestionOptions"
-                [value]="question"
-              >
+              <mat-option *ngFor="let question of securityQuestionOptions" [value]="question">
                 {{ question }}
               </mat-option>
             </mat-select>
 
-            <mat-error
-              *ngIf="questionsFormControl?.question1?.hasError('required')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question1?.hasError('required')">
               Security Question is required.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.question1?.hasError('notUnique')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question1?.hasError('notUnique')">
               Security Questions must all be different.
             </mat-error>
           </mat-form-field>
@@ -78,9 +64,7 @@
             >
               Answer must be between 3 and 50 characters long.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.answer1?.hasError('pattern')"
-            >
+            <mat-error *ngIf="questionsFormControl?.answer1?.hasError('pattern')">
               Answer cannot contain special characters.
             </mat-error>
           </mat-form-field>
@@ -91,22 +75,15 @@
             <mat-label>Security Question 2</mat-label>
 
             <mat-select formControlName="question2">
-              <mat-option
-                *ngFor="let question of securityQuestionOptions"
-                [value]="question"
-              >
+              <mat-option *ngFor="let question of securityQuestionOptions" [value]="question">
                 {{ question }}
               </mat-option>
             </mat-select>
 
-            <mat-error
-              *ngIf="questionsFormControl?.question2?.hasError('required')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question2?.hasError('required')">
               Security Question is required.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.question2?.hasError('notUnique')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question2?.hasError('notUnique')">
               Security Questions must all be different.
             </mat-error>
           </mat-form-field>
@@ -132,9 +109,7 @@
             >
               Answer must be between 3 and 50 characters long.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.answer2?.hasError('pattern')"
-            >
+            <mat-error *ngIf="questionsFormControl?.answer2?.hasError('pattern')">
               Answer cannot contain special characters.
             </mat-error>
           </mat-form-field>
@@ -145,22 +120,15 @@
             <mat-label>Security Question 3</mat-label>
 
             <mat-select formControlName="question3">
-              <mat-option
-                *ngFor="let question of securityQuestionOptions"
-                [value]="question"
-              >
+              <mat-option *ngFor="let question of securityQuestionOptions" [value]="question">
                 {{ question }}
               </mat-option>
             </mat-select>
 
-            <mat-error
-              *ngIf="questionsFormControl?.question3?.hasError('required')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question3?.hasError('required')">
               Security Question is required.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.question3?.hasError('notUnique')"
-            >
+            <mat-error *ngIf="questionsFormControl?.question3?.hasError('notUnique')">
               Security Questions must all be different.
             </mat-error>
           </mat-form-field>
@@ -186,9 +154,7 @@
             >
               Answer must be between 3 and 50 characters long.
             </mat-error>
-            <mat-error
-              *ngIf="questionsFormControl?.answer3?.hasError('pattern')"
-            >
+            <mat-error *ngIf="questionsFormControl?.answer3?.hasError('pattern')">
               Answer cannot contain special characters.
             </mat-error>
           </mat-form-field>

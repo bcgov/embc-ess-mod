@@ -9,7 +9,8 @@
     <div class="col-md-12">
       <p class="bold">Full Name (including middle name if applicable)</p>
       <p class="requiredField">
-        Please provide the name and address of the individual to whom reimbursement should be issued for the shelter expenses incurred.
+        Please provide the name and address of the individual to whom reimbursement should be issued for the shelter
+        expenses incurred.
       </p>
     </div>
   </div>
@@ -18,12 +19,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Full Name</mat-label>
-        <input
-          formControlName="hostName"
-          maxlength="255"
-          matInput
-          placeholder="Enter Name"
-        />
+        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" />
         <mat-error
           class="custom-mat-error"
           *ngIf="
@@ -36,13 +32,12 @@
       </mat-form-field>
     </div>
   </div>
- 
 
   <div class="row">
     <div class="col-md-12">
       <p class="bold">Contact Information</p>
       <p class="requiredField">
-        Please provide at least 1 point of contact for the individual to whom reimbursement should be issued. 
+        Please provide at least 1 point of contact for the individual to whom reimbursement should be issued.
       </p>
     </div>
   </div>
@@ -81,12 +76,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Email Address</mat-label>
-        <input
-          formControlName="emailAddress"
-          maxlength="100"
-          matInput
-          placeholder="Email Address"
-        />
+        <input formControlName="emailAddress" maxlength="100" matInput placeholder="Email Address" />
         <mat-error
           *ngIf="
             supportDeliveryFormControl.emailAddress.invalid &&
@@ -97,8 +87,7 @@
         >
         <mat-error
           *ngIf="
-            supportDeliveryFormControl.emailAddress.invalid &&
-            supportDeliveryFormControl.emailAddress.hasError('email')
+            supportDeliveryFormControl.emailAddress.invalid && supportDeliveryFormControl.emailAddress.hasError('email')
           "
           >Invalid email</mat-error
         >

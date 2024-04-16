@@ -6,15 +6,8 @@
   </div>
   <div class="row">
     <div class="col-12 content-container">
-      <p>
-        Please answer all questions to the best of your knowledge. Required
-        fields are marked with a red asterisk.
-      </p>
-      <app-restriction-form
-        *ngIf="componentToLoad === 'restriction'"
-        [restrictionForm]="form"
-      >
-      </app-restriction-form>
+      <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+      <app-restriction-form *ngIf="componentToLoad === 'restriction'" [restrictionForm]="form"> </app-restriction-form>
       <app-component-wrapper
         *ngIf="componentToLoad !== 'restriction'"
         [componentName]="componentToLoad"
@@ -25,14 +18,7 @@
       <br />
       <div class="row justify-content-between resp-style">
         <div class="col-md-6">
-          <button
-            class="button-s edit-button"
-            mat-button
-            type="button"
-            (click)="cancel()"
-          >
-            Cancel
-          </button>
+          <button class="button-s edit-button" mat-button type="button" (click)="cancel()">Cancel</button>
         </div>
         <div class="col-md-6">
           <button
@@ -43,11 +29,7 @@
             (click)="save()"
           >
             Save
-            <app-loader
-              [strokeWidth]="3"
-              [diameter]="25"
-              [showLoader]="showLoader"
-            ></app-loader>
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>
         </div>
       </div>

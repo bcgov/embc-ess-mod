@@ -177,9 +177,7 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/suppliers-list']);
   }));
 
   it('should navigate to edit supplier', fakeAsync(() => {
@@ -193,8 +191,6 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/edit-supplier'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/edit-supplier']);
   }));
 });

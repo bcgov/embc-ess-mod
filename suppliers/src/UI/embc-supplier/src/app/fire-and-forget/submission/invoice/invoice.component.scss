@@ -1,13 +1,13 @@
 @import '../../../../styles/styles.scss';
 
-.invoice-template{
+.invoice-template {
   margin-top: 10px;
 }
 
 .requiredField::after {
-    content: "*";
-    color: red;
- }
+  content: '*';
+  color: red;
+}
 
 .note {
   color: grey;
@@ -23,8 +23,8 @@
 
 .add-referral-button {
   font-weight: bold;
-  color: #2F6699 !important;
-  border: 1px #2F6699 solid;
+  color: #2f6699 !important;
+  border: 1px #2f6699 solid;
   background-color: white;
   margin-top: 1rem;
   &:hover,

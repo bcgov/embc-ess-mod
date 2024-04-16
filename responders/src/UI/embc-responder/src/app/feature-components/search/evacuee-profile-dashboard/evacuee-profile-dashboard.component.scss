@@ -246,16 +246,13 @@
   margin-bottom: 20px;
 }
 
-@media(max-width: 1200px)
-{
+@media (max-width: 1200px) {
   .invite-button {
     width: 100%;
   }
 }
 
-@media(max-width: 992px)
-{
-
+@media (max-width: 992px) {
   .services-card-img-container {
     position: static;
   }
@@ -266,9 +263,8 @@
   .bc-services-card-img {
     position: inherit;
     border-radius: 10%;
-  }  
+  }
 }
-
 
 @media (max-width: 864px) {
   .divider {

@@ -7,10 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
   declarations: [AssignedCommunityManagementComponent],
-  imports: [
-    CommonModule,
-    AssignedCommunityManagementRoutingModule,
-    MaterialModule
-  ]
+  imports: [CommonModule, AssignedCommunityManagementRoutingModule, MaterialModule]
 })
 export class AssignedCommunityManagementModule {}

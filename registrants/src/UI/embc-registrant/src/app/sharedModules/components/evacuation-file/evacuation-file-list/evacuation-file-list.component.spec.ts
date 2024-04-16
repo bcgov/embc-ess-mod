@@ -13,12 +13,7 @@ describe('EvacuationFileListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacuationFileListComponent],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        MatDialogModule
-      ],
+      imports: [RouterTestingModule, ReactiveFormsModule, BrowserAnimationsModule, MatDialogModule],
       providers: [UntypedFormBuilder, HttpClient, HttpHandler]
     }).compileComponents();
   });

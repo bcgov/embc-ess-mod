@@ -8,8 +8,7 @@ import { Compute } from '../interfaces/compute';
 })
 export class ComputeRulesService {
   public eventSubject = new Subject<void>();
-  public readonly eventSubject$: Observable<void> =
-    this.eventSubject.asObservable();
+  public readonly eventSubject$: Observable<void> = this.eventSubject.asObservable();
 
   constructor(@Inject(computeInterfaceToken) private compute: Compute[]) {
     this.listener();

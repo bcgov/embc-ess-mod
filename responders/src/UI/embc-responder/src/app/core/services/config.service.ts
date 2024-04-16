@@ -19,13 +19,11 @@ export class ConfigService {
       return this.config;
     }
 
-    const config$ = this.configurationService
-      .configurationGetConfiguration()
-      .pipe(
-        tap((c: Configuration) => {
-          this.config = { ...c };
-        })
-      );
+    const config$ = this.configurationService.configurationGetConfiguration().pipe(
+      tap((c: Configuration) => {
+        this.config = { ...c };
+      })
+    );
 
     return lastValueFrom(config$);
   }

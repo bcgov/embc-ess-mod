@@ -26,20 +26,14 @@ export class CaseNotesOptionService implements SearchOptionsService {
   ) {}
 
   loadDefaultComponent(): void {
-    this.router.navigate(
-      ['/responder-access/search/evacuee/caseNotes-search'],
-      {
-        skipLocationChange: true
-      }
-    );
+    this.router.navigate(['/responder-access/search/evacuee/caseNotes-search'], {
+      skipLocationChange: true
+    });
   }
   createForm(formType: string): UntypedFormGroup {
     return this.builder.group(this.dataService.fetchForm(formType));
   }
-  search(
-    value: string | EvacueeSearchContextModel,
-    id: string
-  ): void | Promise<boolean> {
+  search(value: string | EvacueeSearchContextModel, id: string): void | Promise<boolean> {
     this.dataService.saveSearchParams(value);
 
     return this.dataService
@@ -73,22 +67,15 @@ export class CaseNotesOptionService implements SearchOptionsService {
   private navigate(fileResult: EvacuationFileSummaryModel[], value) {
     if (this.allowDashboardNavigation(fileResult)) {
       this.dataService.setSelectedFile(fileResult[0].id);
-      return this.router.navigate([
-        'responder-access/search/essfile-dashboard'
-      ]);
+      return this.router.navigate(['responder-access/search/essfile-dashboard']);
     } else {
-      return this.router.navigate(
-        ['/responder-access/search/evacuee/search-results'],
-        {
-          skipLocationChange: true
-        }
-      );
+      return this.router.navigate(['/responder-access/search/evacuee/search-results'], {
+        skipLocationChange: true
+      });
     }
   }
 
-  private allowDashboardNavigation(
-    fileSummary: EvacuationFileSummaryModel[]
-  ): boolean {
+  private allowDashboardNavigation(fileSummary: EvacuationFileSummaryModel[]): boolean {
     if (
       fileSummary.length !== 0 &&
       this.userService.currentProfile.role === MemberRole.Tier1 &&

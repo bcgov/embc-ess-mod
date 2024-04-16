@@ -3,18 +3,9 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
-        <input
-          [formControlName]="'addressLine1'"
-          matInput
-          maxlength="100"
-          placeholder="Address Line 1"
-          required
-        />
+        <input [formControlName]="'addressLine1'" matInput maxlength="100" placeholder="Address Line 1" required />
         <mat-error
-          *ngIf="
-            addressFormControl?.addressLine1.invalid &&
-            addressFormControl?.addressLine1.hasError('required')
-          "
+          *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')"
         >
           Address Line 1 is required</mat-error
         >
@@ -26,12 +17,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address Line 2</mat-label>
-        <input
-          [formControlName]="'addressLine2'"
-          matInput
-          maxlength="100"
-          placeholder="Address Line 2"
-        />
+        <input [formControlName]="'addressLine2'" matInput maxlength="100" placeholder="Address Line 2" />
       </mat-form-field>
     </div>
   </div>
@@ -40,19 +26,8 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
-        <input
-          maxlength="100"
-          [formControlName]="'community'"
-          matInput
-          placeholder="City"
-          required
-        />
-        <mat-error
-          *ngIf="
-            addressFormControl?.community.invalid &&
-            addressFormControl?.community.hasError('required')
-          "
-        >
+        <input maxlength="100" [formControlName]="'community'" matInput placeholder="City" required />
+        <mat-error *ngIf="addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')">
           City is required</mat-error
         >
       </mat-form-field>
@@ -63,20 +38,11 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-label>Zip Code</mat-label>
-        <input
-          [formControlName]="'postalCode'"
-          matInput
-          placeholder="Zip Code"
-        />
+        <input [formControlName]="'postalCode'" matInput placeholder="Zip Code" />
         <!-- <mat-error
                         *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
                         Zip Code is required</mat-error> -->
-        <mat-error
-          *ngIf="
-            addressFormControl?.postalCode.invalid &&
-            addressFormControl?.postalCode.hasError('pattern')
-          "
-        >
+        <mat-error *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
           Zip Code is invalid</mat-error
         >
       </mat-form-field>
@@ -87,29 +53,14 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">State</mat-label>
-        <input
-          type="text"
-          [formControlName]="'stateProvince'"
-          matInput
-          placeholder="State"
-          [matAutocomplete]="auto"
-        />
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          [displayWith]="stateDisplayFn"
-        >
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-          >
+        <input type="text" [formControlName]="'stateProvince'" matInput placeholder="State" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="stateDisplayFn">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
         <mat-error
-          *ngIf="
-            addressFormControl?.stateProvince.invalid &&
-            addressFormControl?.stateProvince.hasError('required')
-          "
+          *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')"
         >
           State is required</mat-error
         >

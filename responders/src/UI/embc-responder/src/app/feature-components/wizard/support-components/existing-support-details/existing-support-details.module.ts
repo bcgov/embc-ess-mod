@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ExistingSupportDetailsComponent],
-  imports: [
-    CommonModule,
-    ExistingSupportDetailsRoutingModule,
-    CustomPipeModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, ExistingSupportDetailsRoutingModule, CustomPipeModule, MaterialModule, SharedModule]
 })
 export class ExistingSupportDetailsModule {}

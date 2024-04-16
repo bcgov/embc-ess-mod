@@ -4,9 +4,7 @@
       <div class="row">
         <div class="col-md-6 mr-auto">
           <div class="form-group">
-            <label class="requiredField" for="referralNumber"
-              >Referral Number</label
-            >
+            <label class="requiredField" for="referralNumber">Referral Number</label>
             <input
               type="text"
               class="form-control form-control-lg"
@@ -17,21 +15,14 @@
             <div
               *ngIf="
                 receiptControl.referralNumber?.invalid &&
-                (receiptControl.referralNumber?.dirty ||
-                  receiptControl.referralNumber?.touched)
+                (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)
               "
               class="text-white"
             >
-              <div
-                *ngIf="receiptControl.referralNumber?.errors.required"
-                style="color: red"
-              >
+              <div *ngIf="receiptControl.referralNumber?.errors.required" style="color: red">
                 Referral Number is required
               </div>
-              <div
-                *ngIf="receiptControl.referralNumber?.errors.duplicateReferral"
-                style="color: red"
-              >
+              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral" style="color: red">
                 Referral Number is duplicate
               </div>
             </div>
@@ -61,9 +52,7 @@
 
       <div class="row">
         <div class="col-12">
-          <a
-            (click)="addSingleReferralTemplate()"
-            class="btn btn-block add-referral-button"
+          <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button"
             >+ Add another receipt to this referral</a
           >
         </div>
@@ -72,9 +61,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <label class="requiredField attach-header"
-              >Attach a photo/scanned copies of the referral below</label
-            >
+            <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
             <app-file-upload
               [reloadedFiles]="reloadedFiles"
               [noOfAttachments]="noOfAttachments"
@@ -82,33 +69,21 @@
               (deleteFile)="deleteReferralFormControl($event)"
             >
             </app-file-upload>
-            <div
-              *ngIf="
-                !checkAttachmentLength(receiptControl.referralAttachments.value)
-              "
-              style="color: red"
-            >
+            <div *ngIf="!checkAttachmentLength(receiptControl.referralAttachments.value)" style="color: red">
               Attachment is required
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="requiredField attach-header"
-              >Attach any receipt related to this referral below</label
-            >
+            <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
             <app-file-upload
               [reloadedFiles]="reloadedFiles2"
               (attachedFile)="setReceiptFormControl($event)"
               (deleteFile)="deleteReceiptFormControl($event)"
             >
             </app-file-upload>
-            <div
-              *ngIf="
-                !checkAttachmentLength(receiptControl.receiptAttachments.value)
-              "
-              style="color: red"
-            >
+            <div *ngIf="!checkAttachmentLength(receiptControl.receiptAttachments.value)" style="color: red">
               Attachment is required
             </div>
           </div>

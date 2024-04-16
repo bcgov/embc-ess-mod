@@ -18,11 +18,10 @@
 // NB: same font as PDF renderer service
 @font-face {
   font-family: 'LiberationMono';
-  src: url('/assets/LiberationMono-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff')
-      format('woff'),
-    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf')
-      format('truetype'); /* Safari, Android, iOS */
+  src:
+    url('/assets/LiberationMono-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
+    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 $custom-typography: mat.define-typography-config(
@@ -92,16 +91,10 @@ footer nav {
   top: 40px !important;
 }
 
-.mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:first-child)::before,
-[dir='rtl']
-  .mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:last-child)::before,
-.mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:last-child)::after,
-[dir='rtl']
-  .mat-stepper-label-position-bottom
-  .mat-horizontal-stepper-header:not(:first-child)::after {
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+[dir='rtl'] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before,
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+[dir='rtl'] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
   border-top-width: 2px !important;
 }
 
@@ -252,15 +245,9 @@ mat-card {
   border-radius: 0px !important;
 }
 
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-start,
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-end,
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-gap {
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
   border-width: 1px !important;
 }
 
@@ -297,9 +284,7 @@ mat-card {
 }
 
 .mat-radio-button.mat-accent .mat-radio-inner-circle,
-.mat-radio-button.mat-accent
-  .mat-radio-ripple
-  .mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
 .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
   background-color: #169bd5 !important;

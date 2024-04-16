@@ -15,13 +15,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input
-          formControlName="hostName"
-          maxlength="255"
-          matInput
-          placeholder="Enter Name"
-          required
-        />
+        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" required />
         <mat-error
           class="custom-mat-error"
           *ngIf="
@@ -45,13 +39,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address</mat-label>
-        <input
-          formControlName="hostAddress"
-          maxlength="255"
-          matInput
-          placeholder="Enter Address"
-          required
-        />
+        <input formControlName="hostAddress" maxlength="255" matInput placeholder="Enter Address" required />
         <mat-error
           class="custom-mat-error"
           *ngIf="
@@ -83,18 +71,13 @@
           [displayWith]="cityDisplayFn"
           (optionSelected)="getCommunityCode($event.option.value)"
         >
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-            [id]="option.name"
-          >
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option" [id]="option.name">
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
         <mat-error
           *ngIf="
-            supportDeliveryFormControl?.hostCity.invalid &&
-            supportDeliveryFormControl?.hostCity.hasError('required')
+            supportDeliveryFormControl?.hostCity.invalid && supportDeliveryFormControl?.hostCity.hasError('required')
           "
         >
           City is required</mat-error

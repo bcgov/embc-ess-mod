@@ -27,12 +27,7 @@
             {{ getReasonDescription(gen) }}
           </mat-option>
         </mat-select>
-        <mat-error
-          *ngIf="
-            reprintFormControl.reason.invalid &&
-            reprintFormControl.reason.hasError('required')
-          "
-        >
+        <mat-error *ngIf="reprintFormControl.reason.invalid && reprintFormControl.reason.hasError('required')">
           Reason for reprint is required</mat-error
         >
       </mat-form-field>
@@ -47,22 +42,16 @@
 
   <div class="row row-padding">
     <div class="col-md-12">
-      <mat-checkbox (change)="evacueeSummChangeEvent($event)"
-        >Include evacuee summary
-      </mat-checkbox>
+      <mat-checkbox (change)="evacueeSummChangeEvent($event)">Include evacuee summary </mat-checkbox>
     </div>
   </div>
 </form>
 
 <div class="row row-padding">
   <div class="col-md-6">
-    <button class="button-s button-width" mat-button (click)="close()">
-      Close
-    </button>
+    <button class="button-s button-width" mat-button (click)="close()">Close</button>
   </div>
   <div class="col-md-6">
-    <button class="button-p button-width" mat-button (click)="reprintSupport()">
-      Reprint Support
-    </button>
+    <button class="button-p button-width" mat-button (click)="reprintSupport()">Reprint Support</button>
   </div>
 </div>
