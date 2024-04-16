@@ -13,6 +13,7 @@ import {
 import { EvacuationFileModel } from '../core/models/evacuation-file.model';
 import { TabModel } from '../core/models/tab.model';
 import { StepEssFileService } from '../feature-components/wizard/step-ess-file/step-ess-file.service';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,8 @@ import { StepEssFileService } from '../feature-components/wizard/step-ess-file/s
 export class MockStepEssFileService extends StepEssFileService {
   public essTabsValue: Array<TabModel>;
   public essFileValue: EvacuationFileModel;
+
+  needsForm: UntypedFormGroup = this.createNeedsForm();
 
   public get selectedEssFile(): EvacuationFileModel {
     return this.essFileValue;
