@@ -59,9 +59,7 @@ export class DateConversionService {
   }
 
   getNoOfDays(to: string, from: string) {
-    const milliseconds = moment(this.datePipe.transform(to, 'yyyy-MM-dd')).diff(
-      this.datePipe.transform(from, 'yyy-MM-dd')
-    );
+    const milliseconds = moment(this.datePipe.transform(to, 'yyyy-MM-dd')).diff(this.datePipe.transform(from, 'yyy-MM-dd'));
 
     return milliseconds / 86400000;
   }

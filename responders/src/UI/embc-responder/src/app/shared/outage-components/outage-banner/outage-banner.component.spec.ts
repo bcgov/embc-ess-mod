@@ -1,10 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OutageService } from 'src/app/feature-components/outage/outage.service';
@@ -21,12 +16,7 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        OAuthModule.forRoot()
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
       declarations: [OutageBannerComponent],
       providers: [
         OutageBannerComponent,
@@ -60,9 +50,7 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.content).toEqual(
-      'Outage testing in Responders portal'
-    );
+    expect(outageService.outageInfo.content).toEqual('Outage testing in Responders portal');
   });
 
   it('should display outage Start Date', () => {
@@ -75,9 +63,7 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageStartDate).toEqual(
-      '2021-12-15T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageStartDate).toEqual('2021-12-15T21:00:00Z');
   });
 
   it('should display outage End Date', () => {
@@ -89,8 +75,6 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageEndDate).toEqual(
-      '2021-12-16T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageEndDate).toEqual('2021-12-16T21:00:00Z');
   });
 });

@@ -19,15 +19,11 @@ export class CollectionNoticeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.tabMetaData =
-      this.stepEvacueeProfileService.getNavLinks('collection-notice');
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('collection-notice');
   }
 
   ngOnDestroy(): void {
-    this.stepEvacueeProfileService.setTabStatus(
-      'collection-notice',
-      'complete'
-    );
+    this.stepEvacueeProfileService.setTabStatus('collection-notice', 'complete');
   }
 
   /**

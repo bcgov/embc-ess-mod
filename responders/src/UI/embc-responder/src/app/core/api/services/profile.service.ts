@@ -13,13 +13,10 @@ import { UpdateUserProfileRequest } from '../models/update-user-profile-request'
 import { UserProfile } from '../models/user-profile';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ProfileService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -38,22 +35,24 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetCurrentUserProfile$Response(params?: {
-  }): Observable<StrictHttpResponse<UserProfile>> {
-
+  profileGetCurrentUserProfile$Response(params?: {}): Observable<StrictHttpResponse<UserProfile>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetCurrentUserProfilePath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<UserProfile>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<UserProfile>;
+        })
+      );
   }
 
   /**
@@ -66,12 +65,8 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetCurrentUserProfile(params?: {
-  }): Observable<UserProfile> {
-
-    return this.profileGetCurrentUserProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile)
-    );
+  profileGetCurrentUserProfile(params?: {}): Observable<UserProfile> {
+    return this.profileGetCurrentUserProfile$Response(params).pipe(map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile));
   }
 
   /**
@@ -90,27 +85,29 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpdate$Response(params: {
-
     /**
      * The profile information
      */
-    body: UpdateUserProfileRequest
+    body: UpdateUserProfileRequest;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpdatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -124,16 +121,12 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpdate(params: {
-
     /**
      * The profile information
      */
-    body: UpdateUserProfileRequest
+    body: UpdateUserProfileRequest;
   }): Observable<void> {
-
-    return this.profileUpdate$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+    return this.profileUpdate$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -151,22 +144,24 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileSignAgreement$Response(params?: {
-  }): Observable<StrictHttpResponse<void>> {
-
+  profileSignAgreement$Response(params?: {}): Observable<StrictHttpResponse<void>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileSignAgreementPath, 'post');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -179,12 +174,7 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileSignAgreement(params?: {
-  }): Observable<void> {
-
-    return this.profileSignAgreement$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  profileSignAgreement(params?: {}): Observable<void> {
+    return this.profileSignAgreement$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
-
 }

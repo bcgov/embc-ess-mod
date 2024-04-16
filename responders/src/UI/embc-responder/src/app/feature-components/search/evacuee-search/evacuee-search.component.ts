@@ -44,15 +44,8 @@ export class EvacueeSearchComponent implements OnInit {
       next: (result: EssTaskModel) => {
         this.isLoading = !this.isLoading;
         this.showDataEntryComponent = !this.showDataEntryComponent;
-        this.userService.updateTaskNumber(
-          result.id,
-          result.status,
-          result.communityName,
-          result.startDate,
-          result.endDate
-        );
-        this.evacueeSessionService.isPaperBased =
-          result.status === 'Expired' ? true : false;
+        this.userService.updateTaskNumber(result.id, result.status, result.communityName, result.startDate, result.endDate);
+        this.evacueeSessionService.isPaperBased = result.status === 'Expired' ? true : false;
       },
       error: (error) => {
         this.isLoading = !this.isLoading;

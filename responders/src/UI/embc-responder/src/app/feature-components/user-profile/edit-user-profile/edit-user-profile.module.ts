@@ -9,13 +9,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [EditUserProfileComponent],
-  imports: [
-    CommonModule,
-    EditUserProfileRoutingModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    SharedModule,
-    TextMaskModule
-  ]
+  imports: [CommonModule, EditUserProfileRoutingModule, ReactiveFormsModule, MaterialModule, SharedModule, TextMaskModule]
 })
 export class EditUserProfileModule {}

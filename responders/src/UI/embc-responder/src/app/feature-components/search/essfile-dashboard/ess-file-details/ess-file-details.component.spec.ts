@@ -9,13 +9,7 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { NavigationStart, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import {
-  CommunityType,
-  EvacuationFileStatus,
-  HouseholdMemberType,
-  InsuranceOption,
-  NeedsAssessmentType
-} from 'src/app/core/api/models';
+import { CommunityType, EvacuationFileStatus, HouseholdMemberType, InsuranceOption, NeedsAssessmentType } from 'src/app/core/api/models';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
@@ -82,8 +76,7 @@ describe('EssFileDetailsComponent', () => {
           id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
           linkedRegistrantId: null,
           firstName: 'abcd',
-          lastName:
-            'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+          lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
           initials: null,
           gender: 'Female',
           dateOfBirth: '09/09/1999',
@@ -126,8 +119,7 @@ describe('EssFileDetailsComponent', () => {
         id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
         linkedRegistrantId: null,
         firstName: 'abcd',
-        lastName:
-          'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+        lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
         initials: null,
         gender: 'Female',
         dateOfBirth: '09/09/1999',
@@ -164,13 +156,7 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        CustomPipeModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule
-      ],
+      imports: [RouterTestingModule, CustomPipeModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule],
       declarations: [EssFileDetailsComponent],
       providers: [
         EssFileDetailsComponent,
@@ -206,10 +192,7 @@ describe('EssFileDetailsComponent', () => {
   it('should get essFile from router', () => {
     mockEssfileState = { file: mockEssfile };
     const routingTest = TestBed.inject(Router);
-    const testMockComponent = new EssFileDetailsComponent(
-      routingTest,
-      essfileDashboardService
-    );
+    const testMockComponent = new EssFileDetailsComponent(routingTest, essfileDashboardService);
     fixture.detectChanges();
     expect(testMockComponent.essFile).toBeDefined();
   });

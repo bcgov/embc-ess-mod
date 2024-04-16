@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Code } from 'src/app/core/api/models';
 import { SupportStatus } from 'src/app/core/api/models/support-status';
-import {
-  ObjectWrapper,
-  TableFilterModel
-} from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
@@ -35,12 +32,7 @@ export class ViewSupportsService {
           label: this.defaultStatus,
           values: this.loadEvacueeListService
             .getSupportStatus()
-            .filter(
-              (status, index, self) =>
-                status.description &&
-                self.findIndex((s) => s.description === status.description) ===
-                  index
-            )
+            .filter((status, index, self) => status.description && self.findIndex((s) => s.description === status.description) === index)
         }
       ]
     };

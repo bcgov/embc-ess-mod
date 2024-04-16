@@ -8,11 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [TaskDetailsComponent],
-  imports: [
-    CommonModule,
-    TaskDetailsRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, TaskDetailsRoutingModule, MaterialModule, SharedModule]
 })
 export class TaskDetailsModule {}

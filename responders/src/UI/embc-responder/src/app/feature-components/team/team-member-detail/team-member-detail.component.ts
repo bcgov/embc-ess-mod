@@ -2,10 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -33,13 +30,11 @@ export class TeamMemberDetailComponent {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras
-          .state as TeamMemberModel;
+        const state = this.router.getCurrentNavigation().extras.state as TeamMemberModel;
         this.teamMember = state;
       }
     } else {
-      this.teamMember =
-        this.teamDataService.getSelectedTeamMember() as TeamMemberModel;
+      this.teamMember = this.teamDataService.getSelectedTeamMember() as TeamMemberModel;
     }
   }
 
@@ -59,26 +54,16 @@ export class TeamMemberDetailComponent {
       .subscribe({
         next: (event) => {
           if (event === 'delete') {
-            this.teamDetailsService
-              .deleteTeamMember(this.teamMember.id)
-              .subscribe({
-                next: (value) => {
-                  const stateIndicator = { action: 'delete' };
-                  this.router.navigate(
-                    [
-                      '/responder-access/responder-management/details/member-list'
-                    ],
-                    { state: stateIndicator }
-                  );
-                },
-                error: (error) => {
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.teamMemberDeleteError
-                  );
-                }
-              });
+            this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe({
+              next: (value) => {
+                const stateIndicator = { action: 'delete' };
+                this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
+              },
+              error: (error) => {
+                this.alertService.clearAlert();
+                this.alertService.setAlert('danger', globalConst.teamMemberDeleteError);
+              }
+            });
           }
         }
       });
@@ -91,29 +76,21 @@ export class TeamMemberDetailComponent {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 
   /**
    * Navigates to edit team member component
    */
   editUser(): void {
-    this.router.navigate(
-      ['/responder-access/responder-management/details/edit'],
-      { state: this.teamMember }
-    );
+    this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
   }
 
   /**
    * Navigates to team members list
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/responder-management/details/member-list'
-    ]);
+    this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
   /**
@@ -127,15 +104,9 @@ export class TeamMemberDetailComponent {
     if (loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (loggedInRole === MemberRole.Tier3) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2
-        ? true
-        : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
     } else if (loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 ||
-        row.role === MemberRole.Tier2 ||
-        row.role === MemberRole.Tier3
-        ? true
-        : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
     }
   }
 }

@@ -48,9 +48,7 @@
     </div>
 
     <div class="row row-align">
-      <div class="col-md-4 detail-label">
-        Electronic Access Agreement Signed
-      </div>
+      <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
       <div class="col-md-8">
         {{ teamMember?.agreementSignDate | date: 'dd-MMM-yyyy' }}
       </div>
@@ -74,10 +72,7 @@
     <div class="row">
       <div class="col-md-1">
         <button
-          *ngIf="
-            hasPermission('canDeleteTeamMembers') &&
-            teamMember?.role !== 'Tier4'
-          "
+          *ngIf="hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4'"
           class="button-s"
           mat-button
           (click)="deleteUser()"
@@ -87,14 +82,7 @@
       </div>
 
       <div class="col-md-1">
-        <button
-          *ngIf="isEditAllowed(teamMember)"
-          class="button-p"
-          mat-button
-          (click)="editUser()"
-        >
-          Edit User Details
-        </button>
+        <button *ngIf="isEditAllowed(teamMember)" class="button-p" mat-button (click)="editUser()">Edit User Details</button>
       </div>
     </div>
   </div>

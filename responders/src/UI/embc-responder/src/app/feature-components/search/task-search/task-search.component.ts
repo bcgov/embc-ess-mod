@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -59,31 +55,29 @@ export class TaskSearchComponent implements OnInit {
   submitTask(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.taskSearchService
-      .searchTask(this.taskSearchForm.get('taskNumber').value)
-      .subscribe({
-        next: (result) => {
+    this.taskSearchService.searchTask(this.taskSearchForm.get('taskNumber').value).subscribe({
+      next: (result) => {
+        this.router.navigate(['/responder-access/search/task-details'], {
+          state: { essTask: result }
+        });
+      },
+      error: (error) => {
+        if (error?.status && error?.status === 404) {
           this.router.navigate(['/responder-access/search/task-details'], {
-            state: { essTask: result }
-          });
-        },
-        error: (error) => {
-          if (error?.status && error?.status === 404) {
-            this.router.navigate(['/responder-access/search/task-details'], {
-              state: {
-                essTask: {
-                  id: this.taskSearchForm.get('taskNumber').value,
-                  status: 'Invalid'
-                }
+            state: {
+              essTask: {
+                id: this.taskSearchForm.get('taskNumber').value,
+                status: 'Invalid'
               }
-            });
-          } else {
-            this.showLoader = !this.showLoader;
-            this.isSubmitted = !this.isSubmitted;
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.taskSearchError);
-          }
+            }
+          });
+        } else {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.taskSearchError);
         }
-      });
+      }
+    });
   }
 }

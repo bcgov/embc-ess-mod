@@ -30,9 +30,7 @@ import { EssFilesResultsService } from './ess-files-results.service';
   templateUrl: './ess-files-results.component.html',
   styleUrls: ['./ess-files-results.component.scss']
 })
-export class EssFilesResultsComponent
-  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked
-{
+export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();
@@ -74,50 +72,32 @@ export class EssFilesResultsComponent
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
     this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
-    const profile$ = await this.essFilesResultsService.getSearchedUserProfile(
-      selectedESSFile
-    );
+    const profile$ = await this.essFilesResultsService.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
-      if (
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-          ?.paperFileNumber !== selectedESSFile.manualFileId
-      ) {
+      if (this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber !== selectedESSFile.manualFileId) {
         this.essFilesResultsService.openUnableAccessESSFileDialog();
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }
     } else {
-      if (
-        !this.evacueeSearchService.evacueeSearchContext
-          .hasShownIdentification &&
-        !selectedESSFile.isFileCompleted
-      ) {
+      if (!this.evacueeSearchService.evacueeSearchContext.hasShownIdentification && !selectedESSFile.isFileCompleted) {
         this.essFilesResultsService.openUnableAccessDialog();
-      } else if (
-        !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
-      ) {
+      } else if (!this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
         this.essFilesResultsService.setloadingOverlay(true);
-        this.essFileSecurityPhraseService
-          .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
-          .subscribe({
-            next: (results) => {
-              this.essFilesResultsService.setloadingOverlay(false);
-              this.essFileSecurityPhraseService.securityPhrase = results;
-              setTimeout(() => {
-                this.router.navigate([
-                  'responder-access/search/security-phrase'
-                ]);
-              }, 200);
-            },
-            error: (error) => {
-              this.essFilesResultsService.setloadingOverlay(false);
-              this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.securityPhraseError
-              );
-            }
-          });
+        this.essFileSecurityPhraseService.getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
+          next: (results) => {
+            this.essFilesResultsService.setloadingOverlay(false);
+            this.essFileSecurityPhraseService.securityPhrase = results;
+            setTimeout(() => {
+              this.router.navigate(['responder-access/search/security-phrase']);
+            }, 200);
+          },
+          error: (error) => {
+            this.essFilesResultsService.setloadingOverlay(false);
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.securityPhraseError);
+          }
+        });
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }

@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
@@ -18,20 +13,7 @@ import { SupplierStatus } from 'src/app/core/api/models';
 })
 export class NewSupplierComponent implements OnInit {
   newForm: UntypedFormGroup;
-  readonly phoneMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -62,9 +44,7 @@ export class NewSupplierComponent implements OnInit {
    * Returns the control of the primary contact form
    */
   get contactFormControl(): { [key: string]: AbstractControl } {
-    const contactFormGroup = this.newForm.get(
-      'primaryContact'
-    ) as UntypedFormGroup;
+    const contactFormGroup = this.newForm.get('primaryContact') as UntypedFormGroup;
     return contactFormGroup.controls;
   }
 
@@ -74,19 +54,17 @@ export class NewSupplierComponent implements OnInit {
   next(): void {
     this.saveDataForm();
     const supplier = this.addSupplierService.getAddedSupplier();
-    this.router.navigate(
-      ['/responder-access/supplier-management/review-supplier'],
-      { state: { ...supplier }, queryParams: { action: 'add' } }
-    );
+    this.router.navigate(['/responder-access/supplier-management/review-supplier'], {
+      state: { ...supplier },
+      queryParams: { action: 'add' }
+    });
   }
 
   /**
    * Cancels the action to create a new supplier and goes back to the suppliers' list
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 
   /**
@@ -95,54 +73,24 @@ export class NewSupplierComponent implements OnInit {
   private createNewSupplierForm(): void {
     this.newForm = this.formBuilder.group({
       address: this.formBuilder.group({
-        addressLine1: [
-          this.addSupplierService.supplierAddress?.addressLine1 ?? '',
-          [this.customValidation.whitespaceValidator()]
-        ],
-        addressLine2: [
-          this.addSupplierService.supplierAddress?.addressLine2 ?? ''
-        ],
-        community: [
-          this.addSupplierService.supplierAddress?.community ?? '',
-          [Validators.required]
-        ],
-        stateProvince: [
-          this.addSupplierService.supplierAddress?.stateProvince ??
-            globalConst.defaultProvince,
-          [Validators.required]
-        ],
-        country: [
-          this.addSupplierService.supplierAddress?.country ??
-            globalConst.defaultCountry,
-          [Validators.required]
-        ],
+        addressLine1: [this.addSupplierService.supplierAddress?.addressLine1 ?? '', [this.customValidation.whitespaceValidator()]],
+        addressLine2: [this.addSupplierService.supplierAddress?.addressLine2 ?? ''],
+        community: [this.addSupplierService.supplierAddress?.community ?? '', [Validators.required]],
+        stateProvince: [this.addSupplierService.supplierAddress?.stateProvince ?? globalConst.defaultProvince, [Validators.required]],
+        country: [this.addSupplierService.supplierAddress?.country ?? globalConst.defaultCountry, [Validators.required]],
         postalCode: [
           this.addSupplierService.supplierAddress?.postalCode ?? '',
           [this.customValidation.postalValidation().bind(this.customValidation)]
         ]
       }),
       primaryContact: this.formBuilder.group({
-        lastName: [
-          this.addSupplierService.contact?.lastName ?? '',
-          [this.customValidation.whitespaceValidator()]
-        ],
-        firstName: [
-          this.addSupplierService.contact?.firstName ?? '',
-          [this.customValidation.whitespaceValidator()]
-        ],
+        lastName: [this.addSupplierService.contact?.lastName ?? '', [this.customValidation.whitespaceValidator()]],
+        firstName: [this.addSupplierService.contact?.firstName ?? '', [this.customValidation.whitespaceValidator()]],
         phone: [
           this.addSupplierService.contact?.phone ?? '',
-          [
-            Validators.required,
-            this.customValidation
-              .maskedNumberLengthValidator()
-              .bind(this.customValidation)
-          ]
+          [Validators.required, this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]
         ],
-        email: [
-          this.addSupplierService.contact?.email ?? '',
-          [Validators.email]
-        ]
+        email: [this.addSupplierService.contact?.email ?? '', [Validators.email]]
       })
     });
   }

@@ -14,24 +14,16 @@ const routes: Routes = [
       },
       {
         path: 'list-communities',
-        loadChildren: () =>
-          import(
-            '../assigned-community-list/assigned-community-list.module'
-          ).then((m) => m.AssignedCommunityListModule)
+        loadChildren: () => import('../assigned-community-list/assigned-community-list.module').then((m) => m.AssignedCommunityListModule)
       },
       {
         path: 'add-communities',
-        loadChildren: () =>
-          import('../add-community/add-community.module').then(
-            (m) => m.AddCommunityModule
-          )
+        loadChildren: () => import('../add-community/add-community.module').then((m) => m.AddCommunityModule)
       },
       {
         path: 'review',
         loadChildren: () =>
-          import(
-            '../assigned-community-review/assigned-community-review.module'
-          ).then((m) => m.AssignedCommunityReviewModule)
+          import('../assigned-community-review/assigned-community-review.module').then((m) => m.AssignedCommunityReviewModule)
       }
     ]
   }

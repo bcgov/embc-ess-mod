@@ -1,8 +1,7 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
-          class="back-link">Supports</span></a>
+      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
     </div>
   </div>
 
@@ -10,9 +9,8 @@
     <div class="col-md-12 bottom-padding">
       <p class="review-heading">Review & Process Supports</p>
       <p>
-        Please confirm that all details you entered are correct by reading
-        through the summary below and having your supervisor sign off on your
-        work.
+        Please confirm that all details you entered are correct by reading through the summary below and having your supervisor sign off on
+        your work.
       </p>
     </div>
   </div>
@@ -80,9 +78,7 @@
       </label>
 
       <div *ngIf="evacueeSessionService.isPaperBased" class="row">
-        <div class="col-md-12 paper-referral-number">
-          # {{ getReferral(support)?.manualReferralId }}
-        </div>
+        <div class="col-md-12 paper-referral-number"># {{ getReferral(support)?.manualReferralId }}</div>
       </div>
 
       <div class="row">
@@ -99,11 +95,12 @@
 
             <div class="row row-padding">
               <div class="col-md-4 box-text-color">Valid To:</div>
-              <div class="col-md-4 bold" [ngStyle]="{
-                  color: validReferralDate(support?.from, support?.to)
-                    ? 'black'
-                    : 'red'
-                }">
+              <div
+                class="col-md-4 bold"
+                [ngStyle]="{
+                  color: validReferralDate(support?.from, support?.to) ? 'black' : 'red'
+                }"
+              >
                 {{ support?.to | date: 'dd-MMM-yyyy' }} at
                 {{ support?.to | date: 'hh:mm a' }}
               </div>
@@ -129,23 +126,17 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{
-                  getGroceryReferral(support)?.totalAmount
-                  | number: '1.2-2':'en-CA'
-                  }}
+                  ${{ getGroceryReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkGroceryMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
-                    class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span>
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
+                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
-                    <strong>{{
-                      getGroceryReferral(support)?.approverName
-                      }}</strong></span>
+                    <strong>{{ getGroceryReferral(support)?.approverName }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -174,9 +165,7 @@
 
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
-                <div class="col-md-2 bold total-amount-number">
-                  ${{ getMealReferral(support)?.totalAmount }}
-                </div>
+                <div class="col-md-2 bold total-amount-number">${{ getMealReferral(support)?.totalAmount }}</div>
               </div>
             </ng-container>
             <!-- Lodging - Group -->
@@ -190,9 +179,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 box-text-color">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getShelterAllowanceReferral(support)?.totalAmount
-                  | number: '1.2-2':'en-CA'
-                  }}
+                  ${{ getShelterAllowanceReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
                 </div>
               </div>
             </ng-container>
@@ -259,19 +246,14 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{
-                  getOtherReferral(support)?.totalAmount
-                  | number: '1.2-2':'en-CA'
-                  }}
+                  ${{ getOtherReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
                 </div>
               </div>
             </ng-container>
             <!-- Clothing -->
             <ng-container *ngIf="support.category === 'Clothing'">
               <div class="row row-padding">
-                <div class="col-md-4 box-text-color">
-                  Extreme Winter Conditions:
-                </div>
+                <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
                 <div class="col-md-4 bold">
                   {{ getClothingReferral(support)?.extremeWinterConditions }}
                 </div>
@@ -280,32 +262,24 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{
-                  getClothingReferral(support)?.totalAmount
-                  | number: '1.2-2':'en-CA'
-                  }}
+                  ${{ getClothingReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkClothingMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
-                    class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span>
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
+                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
-                    <strong>{{
-                      getClothingReferral(support)?.approverName
-                      }}</strong></span>
+                    <strong>{{ getClothingReferral(support)?.approverName }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
             <!-- Incidentals -->
             <ng-container *ngIf="support.category === 'Incidentals'">
               <div class="row row-padding">
-                <div class="col-md-4 box-text-color">
-                  List of Approved Items:
-                </div>
+                <div class="col-md-4 box-text-color">List of Approved Items:</div>
                 <div class="col-md-4 bold">
                   {{ getIncidentalReferral(support)?.approvedItems }}
                 </div>
@@ -314,35 +288,32 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{
-                  getIncidentalReferral(support)?.totalAmount
-                  | number: '1.2-2':'en-CA'
-                  }}
+                  ${{ getIncidentalReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkIncidentalMaxRate(support)">
                 <div class="col warning">
-                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
-                    class="warning-icon" />
-                  <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span>
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="warning-icon" />
+                  <span *ngIf="evacueeSessionService.isPaperBased"> Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
-                    <strong>{{
-                      getIncidentalReferral(support)?.approverName
-                      }}</strong></span>
+                    <strong>{{ getIncidentalReferral(support)?.approverName }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
           </div>
         </div>
 
-        <div class="col-md-4" *ngIf="
+        <div
+          class="col-md-4"
+          *ngIf="
             support.subCategory !== 'Lodging_Group' &&
             support.subCategory !== 'Lodging_Billeting' &&
             support.subCategory !== 'Lodging_Allowance' &&
             support.method !== supportMethod.ETransfer
-          ">
+          "
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -355,10 +326,7 @@
           </mat-card>
         </div>
         <!-- Lodging-Billeting Support Delivery -->
-        <div class="col-md-4" *ngIf="
-            support.subCategory === 'Lodging_Billeting' &&
-            support.method !== supportMethod.ETransfer
-          ">
+        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -374,10 +342,7 @@
         </div>
 
         <!-- Shelter Allowance Support Delivery -->
-        <div class="col-md-4" *ngIf="
-                support.subCategory === 'Lodging_Allowance' &&
-                support.method !== supportMethod.ETransfer
-              ">
+        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -390,10 +355,7 @@
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
-        <div class="col-md-4" *ngIf="
-            support.subCategory === 'Lodging_Group' &&
-            support.method !== supportMethod.ETransfer
-          ">
+        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -416,13 +378,8 @@
 
             <p class="no-margin"><b>e-Transfer Recipient</b></p>
             <p>
-              {{
-              appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
-              }},
-              {{
-              appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext?.personalDetails?.firstName
-              }}
+              {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() }},
+              {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName }}
             </p>
 
             <p class="no-margin"><b>Notification Preference</b></p>
@@ -445,9 +402,8 @@
 
   <div *ngIf="!evacueeSessionService.isPaperBased" class="row">
     <div class="col-md-8 accept-box">
-      <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)">I certify that a supervisor or
-        ESSD has checked my work and approved
-        the above supports for distribution to the evacuee.
+      <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)"
+        >I certify that a supervisor or ESSD has checked my work and approved the above supports for distribution to the evacuee.
       </mat-checkbox>
     </div>
   </div>
@@ -461,9 +417,7 @@
 
   <div class="row buttons-section">
     <div class="col-md-12">
-      <button class="button-s button-width button-margin" (click)="back()">
-        Cancel
-      </button>
+      <button class="button-s button-width button-margin" (click)="back()">Cancel</button>
       <button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
         Process Support/s
         <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>

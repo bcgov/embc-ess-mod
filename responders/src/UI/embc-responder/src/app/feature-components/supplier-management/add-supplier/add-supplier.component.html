@@ -7,19 +7,8 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <mat-label>Supplier Legal Name</mat-label>
-              <input
-                formControlName="supplierLegalName"
-                maxlength="100"
-                matInput
-                placeholder="Supplier Legal Name"
-                required
-              />
-              <mat-error
-                *ngIf="
-                  addFormControl.supplierLegalName.invalid &&
-                  addFormControl.supplierLegalName.hasError('whitespaceError')
-                "
-              >
+              <input formControlName="supplierLegalName" maxlength="100" matInput placeholder="Supplier Legal Name" required />
+              <mat-error *ngIf="addFormControl.supplierLegalName.invalid && addFormControl.supplierLegalName.hasError('whitespaceError')">
                 Supplier Legal Name is required</mat-error
               >
             </mat-form-field>
@@ -30,19 +19,8 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <mat-label>Supplier Name</mat-label>
-              <input
-                formControlName="supplierName"
-                maxlength="100"
-                matInput
-                placeholder="Supplier Name"
-                required
-              />
-              <mat-error
-                *ngIf="
-                  addFormControl.supplierName.invalid &&
-                  addFormControl.supplierName.hasError('whitespaceError')
-                "
-              >
+              <input formControlName="supplierName" maxlength="100" matInput placeholder="Supplier Name" required />
+              <mat-error *ngIf="addFormControl.supplierName.invalid && addFormControl.supplierName.hasError('whitespaceError')">
                 Supplier Name is required</mat-error
               >
             </mat-form-field>
@@ -53,25 +31,12 @@
       </form>
       <div class="row">
         <div class="col-md-3">
-          <button class="button-s button-width" mat-button (click)="cancel()">
-            Cancel
-          </button>
+          <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
         </div>
         <div class="col-md-3">
-          <button
-            class="button-p button-width"
-            mat-button
-            [disabled]="!addForm.valid"
-            (click)="next()"
-          >
+          <button class="button-p button-width" mat-button [disabled]="!addForm.valid" (click)="next()">
             Next
-            <app-loader
-              [strokeWidth]="3"
-              [diameter]="25"
-              [showLoader]="showLoader"
-              [color]="color"
-            >
-            </app-loader>
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
           </button>
         </div>
       </div>
@@ -84,9 +49,8 @@
         <span class="tips-heading"><b>Tips: </b>Legal Name</span>
       </div>
       <p class="tips-info">
-        The business legal name is the official name of the person or entity
-        that owns the company and is used on government forms and business
-        paperwork.
+        The business legal name is the official name of the person or entity that owns the company and is used on government forms and
+        business paperwork.
       </p>
     </mat-card>
   </div>

@@ -11,20 +11,9 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
-            <input
-              formControlName="firstName"
-              maxlength="100"
-              matInput
-              placeholder="First Name"
-              required
-            />
+            <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
 
-            <mat-error
-              *ngIf="
-                editFormControl.firstName.invalid &&
-                editFormControl.firstName.hasError('whitespaceError')
-              "
-            >
+            <mat-error *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')">
               First Name is required
             </mat-error>
           </mat-form-field>
@@ -35,19 +24,8 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input
-              formControlName="lastName"
-              maxlength="100"
-              matInput
-              placeholder="Last Name"
-              required
-            />
-            <mat-error
-              *ngIf="
-                editFormControl.lastName.invalid &&
-                editFormControl.lastName.hasError('whitespaceError')
-              "
-            >
+            <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
+            <mat-error *ngIf="editFormControl.lastName.invalid && editFormControl.lastName.hasError('whitespaceError')">
               Last Name is required
             </mat-error>
           </mat-form-field>
@@ -58,12 +36,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>BCeID Username</mat-label>
-            <input
-              formControlName="userName"
-              matInput
-              placeholder="BCeID Username"
-              required
-            />
+            <input formControlName="userName" matInput placeholder="BCeID Username" required />
           </mat-form-field>
         </div>
       </div>
@@ -72,12 +45,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline">
             <mat-label>Role</mat-label>
-            <input
-              formControlName="role"
-              matInput
-              placeholder="Role"
-              required
-            />
+            <input formControlName="role" matInput placeholder="Role" required />
           </mat-form-field>
         </div>
       </div>
@@ -86,11 +54,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline">
             <mat-label>Optional Label</mat-label>
-            <input
-              formControlName="label"
-              matInput
-              placeholder="Optional Label"
-            />
+            <input formControlName="label" matInput placeholder="Optional Label" />
           </mat-form-field>
         </div>
       </div>
@@ -103,9 +67,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <p class="description">
-            Some content here about providing your contact details.
-          </p>
+          <p class="description">Some content here about providing your contact details.</p>
         </div>
       </div>
 
@@ -113,20 +75,8 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>Email Address</mat-label>
-            <input
-              formControlName="email"
-              maxlength="254"
-              matInput
-              placeholder="Email Address"
-            />
-            <mat-error
-              *ngIf="
-                editFormControl.email.invalid &&
-                editFormControl.email.hasError('email')
-              "
-            >
-              Invalid email
-            </mat-error>
+            <input formControlName="email" maxlength="254" matInput placeholder="Email Address" />
+            <mat-error *ngIf="editFormControl.email.invalid && editFormControl.email.hasError('email')"> Invalid email </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -141,12 +91,7 @@
               placeholder="Contact Number"
               [textMask]="{ mask: phoneMask, keepCharPositions: true }"
             />
-            <mat-error
-              *ngIf="
-                editFormControl.phone.invalid &&
-                editFormControl.phone.hasError('incorrectLength')
-              "
-            >
+            <mat-error *ngIf="editFormControl.phone.invalid && editFormControl.phone.hasError('incorrectLength')">
               Telephone number must have 10 digits
             </mat-error>
           </mat-form-field>
@@ -155,28 +100,10 @@
     </div>
   </form>
   <div>
-    <button
-      class="button-s button-margin width-button"
-      mat-button
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button
-      class="button-p width-button"
-      [disabled]="!editForm.valid || !isSubmitted"
-      mat-button
-      (click)="save()"
-    >
+    <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
+    <button class="button-p width-button" [disabled]="!editForm.valid || !isSubmitted" mat-button (click)="save()">
       Save
-      <app-loader
-        [showLoader]="showLoader"
-        class="spinner"
-        [strokeWidth]="10"
-        [diameter]="25"
-        [color]="color"
-      >
-      </app-loader>
+      <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color"> </app-loader>
     </button>
   </div>
   <br />

@@ -1,25 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
-import {
-  CommunityType,
-  EvacuationFileStatus,
-  HouseholdMemberType,
-  RegistrantStatus
-} from 'src/app/core/api/models';
+import { CommunityType, EvacuationFileStatus, HouseholdMemberType, RegistrantStatus } from 'src/app/core/api/models';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
@@ -116,13 +102,7 @@ describe('ProfileResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProfileResultsComponent],
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [
         ProfileResultsComponent,
         {
@@ -151,9 +131,7 @@ describe('ProfileResultsComponent', () => {
     component = fixture.componentInstance;
     evacueeSearchService = TestBed.inject(EvacueeSearchService);
     evacueeSessionService = TestBed.inject(EvacueeSessionService);
-    profileSecurityQuestionsService = TestBed.inject(
-      ProfileSecurityQuestionsService
-    );
+    profileSecurityQuestionsService = TestBed.inject(ProfileSecurityQuestionsService);
   });
 
   it('should create', () => {
@@ -175,9 +153,7 @@ describe('ProfileResultsComponent', () => {
     component.openProfile(mockProfileSearchResult);
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
       'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
@@ -200,38 +176,31 @@ describe('ProfileResultsComponent', () => {
     component.openProfile(mockProfileSearchResult);
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
       'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
     );
   });
 
-  it('should navigate to profile dashboard', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = false;
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: true,
-        evacueeSearchParameters: {
-          firstName: 'Anne',
-          lastName: 'Lee',
-          dateOfBirth: '09/09/1999'
-        }
-      };
+  it('should navigate to profile dashboard', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
+    evacueeSessionService.isPaperBased = false;
+    evacueeSearchService.evacueeSearchContext = {
+      hasShownIdentification: true,
+      evacueeSearchParameters: {
+        firstName: 'Anne',
+        lastName: 'Lee',
+        dateOfBirth: '09/09/1999'
+      }
+    };
 
-      fixture.detectChanges();
-      component.openProfile(mockProfileSearchResult);
-      fixture.detectChanges();
+    fixture.detectChanges();
+    component.openProfile(mockProfileSearchResult);
+    fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/evacuee-profile-dashboard'
-      ]);
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/evacuee-profile-dashboard']);
+  }));
 
   it('should navigate to security questions', fakeAsync(
     inject([Router], (router: Router) => {
@@ -261,8 +230,7 @@ describe('ProfileResultsComponent', () => {
           },
           {
             id: 2,
-            question:
-              'What was your first car’s make and model? (e.g. Ford Taurus)',
+            question: 'What was your first car’s make and model? (e.g. Ford Taurus)',
             answer: 't*****t',
             answerChanged: false
           }
@@ -279,9 +247,7 @@ describe('ProfileResultsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-questions'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-questions']);
     })
   ));
   afterAll(() => {

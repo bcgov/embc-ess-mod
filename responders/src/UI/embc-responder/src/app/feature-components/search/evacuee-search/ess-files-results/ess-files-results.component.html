@@ -10,54 +10,21 @@
       <div class="col-md-9">
         <div class="row">
           <div class="col-md-12">
-            <a
-              *ngIf="fileResult?.status === 'Active'"
-              class="file-active highlight"
-              (click)="openESSFile(fileResult)"
-            >
+            <a *ngIf="fileResult?.status === 'Active'" class="file-active highlight" (click)="openESSFile(fileResult)">
               ESS File:<b>{{ fileResult?.manualFileId || fileResult?.id }}</b>
-              <span class="status-align"
-                ><img
-                  src="/assets/images/active-flag.svg"
-                  height="40"
-                  width="33"
-              /></span>
+              <span class="status-align"><img src="/assets/images/active-flag.svg" height="40" width="33" /></span>
             </a>
-            <a
-              *ngIf="fileResult?.status === 'Pending'"
-              class="file-pending highlight"
-              (click)="openESSFile(fileResult)"
+            <a *ngIf="fileResult?.status === 'Pending'" class="file-pending highlight" (click)="openESSFile(fileResult)"
               >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-              ><span class="status-align"
-                ><img
-                  src="/assets/images/pending-flag.svg"
-                  height="40"
-                  width="33"
-              /></span>
+              ><span class="status-align"><img src="/assets/images/pending-flag.svg" height="40" width="33" /></span>
             </a>
-            <a
-              *ngIf="fileResult?.status === 'Completed'"
-              class="file-complete highlight"
-              (click)="openESSFile(fileResult)"
+            <a *ngIf="fileResult?.status === 'Completed'" class="file-complete highlight" (click)="openESSFile(fileResult)"
               >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-              ><span class="status-align"
-                ><img
-                  src="/assets/images/complete-flag.svg"
-                  height="40"
-                  width="33"
-              /></span>
+              ><span class="status-align"><img src="/assets/images/complete-flag.svg" height="40" width="33" /></span>
             </a>
-            <a
-              *ngIf="fileResult?.status === 'Expired'"
-              class="file-expired highlight"
-              (click)="openESSFile(fileResult)"
+            <a *ngIf="fileResult?.status === 'Expired'" class="file-expired highlight" (click)="openESSFile(fileResult)"
               >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-              ><span class="status-align"
-                ><img
-                  src="/assets/images/expired-flag.svg"
-                  height="40"
-                  width="33"
-              /></span>
+              ><span class="status-align"><img src="/assets/images/expired-flag.svg" height="40" width="33" /></span>
             </a>
           </div>
         </div>
@@ -66,9 +33,7 @@
             <p class="result-subHeading">
               Task #
               <b
-                ><span *ngIf="fileResult?.taskId !== null; else notAssigned">{{
-                  fileResult?.taskId
-                }}</span></b
+                ><span *ngIf="fileResult?.taskId !== null; else notAssigned">{{ fileResult?.taskId }}</span></b
               >
               <ng-template #notAssigned>Not yet assigned</ng-template>
             </p>
@@ -99,31 +64,20 @@
       <div class="col-md-5">
         <div class="row">
           <div class="col-md-1 image-col">
-            <img
-              src="/assets/images/location-pointer.svg"
-              height="34"
-              width="21"
-            />
+            <img src="/assets/images/location-pointer.svg" height="34" width="21" />
           </div>
           <div class="col-md-10">
             <p class="p-custom section-heading">Evacuated From Address:</p>
             <p class="p-custom">
               <b>{{ fileResult?.evacuatedFrom?.addressLine1 }}</b>
             </p>
-            <p
-              *ngIf="fileResult?.evacuatedFrom?.addressLine2 !== null"
-              class="p-custom"
-            >
+            <p *ngIf="fileResult?.evacuatedFrom?.addressLine2 !== null" class="p-custom">
               <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
             </p>
             <p class="p-custom">
               <b>
-                <span *ngIf="fileResult?.evacuatedFrom?.city !== null"
-                  >{{ fileResult?.evacuatedFrom?.city }},</span
-                >
-                <span *ngIf="fileResult?.evacuatedFrom?.communityCode !== null"
-                  >{{ communityName(fileResult?.evacuatedFrom) }},</span
-                >
+                <span *ngIf="fileResult?.evacuatedFrom?.city !== null">{{ fileResult?.evacuatedFrom?.city }},</span>
+                <span *ngIf="fileResult?.evacuatedFrom?.communityCode !== null">{{ communityName(fileResult?.evacuatedFrom) }},</span>
                 <span *ngIf="fileResult?.evacuatedFrom?.postalCode !== null">
                   {{ fileResult?.evacuatedFrom?.postalCode }}
                 </span>
@@ -144,9 +98,7 @@
             <img src="/assets/images/house.svg" height="35" width="36" />
           </div>
           <div class="col-md-10">
-            <p class="p-custom section-heading members-margin">
-              Household Members:
-            </p>
+            <p class="p-custom section-heading members-margin">Household Members:</p>
             <span *ngFor="let members of fileResult?.householdMembers">
               <p
                 [ngClass]="{
@@ -155,21 +107,14 @@
                 }"
               >
                 {{ members?.lastName | uppercase }}, {{ members?.firstName }}
-                <span class="member-type"
-                  >({{
-                    getMemberType(members?.type, members?.isMainApplicant)
-                  }})</span
-                >
+                <span class="member-type">({{ getMemberType(members?.type, members?.isMainApplicant) }})</span>
               </p>
             </span>
           </div>
         </div>
       </div>
     </div>
-    <div
-      *ngIf="fileResult?.isRestricted"
-      class="row restricted-div search-data"
-    >
+    <div *ngIf="fileResult?.isRestricted" class="row restricted-div search-data">
       <span class="restricted-text">RESTRICTED FILE</span>
     </div>
   </mat-card>

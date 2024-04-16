@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  SecurityQuestion,
-  VerifySecurityQuestionsRequest
-} from 'src/app/core/api/models';
+import { SecurityQuestion, VerifySecurityQuestionsRequest } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from './profile-security-questions.service';
@@ -47,15 +44,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.householdMemberRegistrantId !== undefined
-    ) {
-      this.evacueeProfileId =
-        this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
+    if (this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId !== undefined) {
+      this.evacueeProfileId = this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
     } else {
-      this.evacueeProfileId =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
+      this.evacueeProfileId = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     }
     this.createAnswersForm();
     this.securityAnswers = [];
@@ -63,31 +55,19 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     // this.securityQuestions =
     //   this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
-    if (
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.id === undefined &&
-      this.securityQuestions.length === 0
-    ) {
+    if (this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id === undefined && this.securityQuestions.length === 0) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else if (this.securityQuestions.length === 0) {
-      this.profileSecurityQuestionsService
-        .getSecurityQuestions(this.evacueeProfileId)
-        .subscribe({
-          next: (results) => {
-            this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-              results?.questions
-            );
-            this.securityQuestions =
-              this.profileSecurityQuestionsService.shuffledSecurityQuestions;
-          },
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.securityQuestionsError
-            );
-          }
-        });
+      this.profileSecurityQuestionsService.getSecurityQuestions(this.evacueeProfileId).subscribe({
+        next: (results) => {
+          this.profileSecurityQuestionsService.shuffleSecurityQuestions(results?.questions);
+          this.securityQuestions = this.profileSecurityQuestionsService.shuffledSecurityQuestions;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.securityQuestionsError);
+        }
+      });
     }
   }
 
@@ -121,76 +101,52 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     const body: VerifySecurityQuestionsRequest = {
       answers: this.securityAnswers
     };
-    this.profileSecurityQuestionsService
-      .verifySecurityQuestions(this.evacueeProfileId, body)
-      .subscribe({
-        next: (results) => {
-          this.securityQuestionResult = results.numberOfCorrectAnswers;
-          this.showLoader = !this.showLoader;
+    this.profileSecurityQuestionsService.verifySecurityQuestions(this.evacueeProfileId, body).subscribe({
+      next: (results) => {
+        this.securityQuestionResult = results.numberOfCorrectAnswers;
+        this.showLoader = !this.showLoader;
 
-          if (
-            this.securityQuestionResult === 0 ||
-            (this.securityQuestionResult === 1 && this.defaultScreen === false)
-          ) {
-            this.incorrectScreen = true;
-          } else if (
-            this.securityQuestionResult === 1 &&
-            this.defaultScreen === true
-          ) {
-            this.defaultScreen = false;
-          } else {
-            this.firstTryCorrect = true;
-          }
-
-          if (
-            this.securityQuestionResult === 3 ||
-            (this.securityQuestionResult === 2 && this.firstTryCorrect)
-          ) {
-            this.correctAnswerFlag = true;
-            this.showLoader = true;
-            if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-              this.evacueeProfileService
-                .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-                .subscribe({
-                  next: (value) => {
-                    this.evacueeSessionService.fileLinkStatus = 'S';
-                    this.router.navigate([
-                      'responder-access/search/essfile-dashboard'
-                    ]);
-                  },
-                  error: (error) => {
-                    this.evacueeSessionService.fileLinkStatus = 'E';
-                    this.router.navigate([
-                      'responder-access/search/essfile-dashboard'
-                    ]);
-                  }
-                });
-            } else {
-              setTimeout(() => {
-                this.router.navigate([
-                  'responder-access/search/evacuee-profile-dashboard'
-                ]);
-              }, 1000);
-            }
-          }
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.verifySecurityQuestionError
-          );
+        if (this.securityQuestionResult === 0 || (this.securityQuestionResult === 1 && this.defaultScreen === false)) {
+          this.incorrectScreen = true;
+        } else if (this.securityQuestionResult === 1 && this.defaultScreen === true) {
+          this.defaultScreen = false;
+        } else {
+          this.firstTryCorrect = true;
         }
-      });
+
+        if (this.securityQuestionResult === 3 || (this.securityQuestionResult === 2 && this.firstTryCorrect)) {
+          this.correctAnswerFlag = true;
+          this.showLoader = true;
+          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+            this.evacueeProfileService.linkMemberProfile(this.evacueeSessionService.fileLinkMetaData).subscribe({
+              next: (value) => {
+                this.evacueeSessionService.fileLinkStatus = 'S';
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
+              },
+              error: (error) => {
+                this.evacueeSessionService.fileLinkStatus = 'E';
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
+              }
+            });
+          } else {
+            setTimeout(() => {
+              this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+            }, 1000);
+          }
+        }
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.verifySecurityQuestionError);
+      }
+    });
   }
 
   /**
    * Function that redirects to Search Results page
    */
   back() {
-    this.router.navigate([
-      this.evacueeSessionService.securityQuestionsOpenedFrom
-    ]);
+    this.router.navigate([this.evacueeSessionService.securityQuestionsOpenedFrom]);
   }
 
   /**

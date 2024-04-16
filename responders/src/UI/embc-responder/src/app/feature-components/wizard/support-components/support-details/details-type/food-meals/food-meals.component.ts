@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
@@ -35,9 +27,7 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
@@ -75,18 +65,9 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
    * Calculates the total restaurant meals amount
    */
   updateTotalAmount() {
-    const breakfastAmount =
-      globalConst.mealRate.breakfast *
-      this.referralForm.get('noOfBreakfast').value *
-      this.noOfHouseholdMembers;
-    const lunchAmount =
-      globalConst.mealRate.lunch *
-      this.referralForm.get('noOfLunches').value *
-      this.noOfHouseholdMembers;
-    const dinnerAmount =
-      globalConst.mealRate.dinner *
-      this.referralForm.get('noOfDinners').value *
-      this.noOfHouseholdMembers;
+    const breakfastAmount = globalConst.mealRate.breakfast * this.referralForm.get('noOfBreakfast').value * this.noOfHouseholdMembers;
+    const lunchAmount = globalConst.mealRate.lunch * this.referralForm.get('noOfLunches').value * this.noOfHouseholdMembers;
+    const dinnerAmount = globalConst.mealRate.dinner * this.referralForm.get('noOfDinners').value * this.noOfHouseholdMembers;
     this.totalAmount = breakfastAmount + lunchAmount + dinnerAmount;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
     this.checkOverlimit(this.totalAmount);

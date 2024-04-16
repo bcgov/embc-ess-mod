@@ -1,12 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 
 import { NotesComponent } from './notes.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -29,11 +21,7 @@ describe('NotesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [
-        NotesComponent,
-        ListNotesStubComponent,
-        AddNotesStubComponent
-      ],
+      declarations: [NotesComponent, ListNotesStubComponent, AddNotesStubComponent],
       providers: [{ provide: StepNotesService, useClass: MockStepNotesService }]
     }).compileComponents();
   });

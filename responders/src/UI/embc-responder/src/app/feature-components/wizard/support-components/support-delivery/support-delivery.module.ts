@@ -23,14 +23,6 @@ import { SupportEtransferComponent } from './support-etransfer/support-etransfer
     SupportReferralComponent,
     SupportEtransferComponent
   ],
-  imports: [
-    CommonModule,
-    SupportDeliveryRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    CustomPipeModule,
-    SharedModule,
-    TextMaskModule
-  ]
+  imports: [CommonModule, SupportDeliveryRoutingModule, MaterialModule, ReactiveFormsModule, CustomPipeModule, SharedModule, TextMaskModule]
 })
 export class SupportDeliveryModule {}

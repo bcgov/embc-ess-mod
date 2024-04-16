@@ -12,24 +12,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ZeroFileResultComponent } from '../zero-file-result/zero-file-result.component';
 
 @NgModule({
-  declarations: [
-    EvacueeSearchResultsComponent,
-    EssFilesResultsComponent,
-    ProfileResultsComponent,
-    ZeroFileResultComponent
-  ],
-  imports: [
-    CommonModule,
-    EvacueeSearchResultsRoutingModule,
-    MaterialModule,
-    SharedModule,
-    CustomPipeModule,
-    ReactiveFormsModule
-  ],
-  exports: [
-    EssFilesResultsComponent,
-    ProfileResultsComponent,
-    ZeroFileResultComponent
-  ]
+  declarations: [EvacueeSearchResultsComponent, EssFilesResultsComponent, ProfileResultsComponent, ZeroFileResultComponent],
+  imports: [CommonModule, EvacueeSearchResultsRoutingModule, MaterialModule, SharedModule, CustomPipeModule, ReactiveFormsModule],
+  exports: [EssFilesResultsComponent, ProfileResultsComponent, ZeroFileResultComponent]
 })
 export class EvacueeSearchResultsModule {}

@@ -77,17 +77,12 @@ export class AppComponent implements OnInit {
         const location = await this.locationService.loadStaticLocationLists();
 
         //enum lists
-        const evacuee =
-          await this.loadEvacueeListService.loadStaticEvacueeLists();
+        const evacuee = await this.loadEvacueeListService.loadStaticEvacueeLists();
 
         //team member roles and labels
         const team = await this.loadTeamListService.loadStaticTeamLists();
 
-        const nextRoute = decodeURIComponent(
-          userProfile.requiredToSignAgreement
-            ? 'electronic-agreement'
-            : nextUrl || 'responder-access'
-        );
+        const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement ? 'electronic-agreement' : nextUrl || 'responder-access');
         await this.router.navigate([nextRoute]);
       } catch (error) {
         this.isLoading = false;

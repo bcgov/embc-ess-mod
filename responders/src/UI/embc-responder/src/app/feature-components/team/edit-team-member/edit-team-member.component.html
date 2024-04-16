@@ -14,19 +14,8 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
-                <input
-                  formControlName="firstName"
-                  maxlength="100"
-                  matInput
-                  placeholder="First Name"
-                  required
-                />
-                <mat-error
-                  *ngIf="
-                    editFormControl.firstName.invalid &&
-                    editFormControl.firstName.hasError('whitespaceError')
-                  "
-                >
+                <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
+                <mat-error *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')">
                   First Name is required</mat-error
                 >
               </mat-form-field>
@@ -37,19 +26,8 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Last Name</mat-label>
-                <input
-                  formControlName="lastName"
-                  maxlength="100"
-                  matInput
-                  placeholder="Last Name"
-                  required
-                />
-                <mat-error
-                  *ngIf="
-                    editFormControl.lastName.invalid &&
-                    editFormControl.lastName.hasError('whitespaceError')
-                  "
-                >
+                <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
+                <mat-error *ngIf="editFormControl.lastName.invalid && editFormControl.lastName.hasError('whitespaceError')">
                   Last Name is required</mat-error
                 >
               </mat-form-field>
@@ -68,40 +46,22 @@
                   (change)="checkUserName($event)"
                   required
                 />
-                <mat-error
-                  *ngIf="
-                    editFormControl.userName.invalid &&
-                    editFormControl.userName.hasError('whitespaceError')
-                  "
-                >
+                <mat-error *ngIf="editFormControl.userName.invalid && editFormControl.userName.hasError('whitespaceError')">
                   BCeID Username is required</mat-error
                 >
-                <mat-error
-                  *ngIf="
-                    editFormControl.userName.invalid &&
-                    editFormControl.userName.hasError('userNameExists')
-                  "
-                >
+                <mat-error *ngIf="editFormControl.userName.invalid && editFormControl.userName.hasError('userNameExists')">
                   BCeID Username Already in Use</mat-error
                 >
               </mat-form-field>
             </div>
             <div *ngIf="!isEditAllowed()" class="col-md-8">
               <p class="disabled">
-                Username cannot be edited as the user has already logged in with
-                this BCeID. If the username has been changed in the BCeID
-                application, it will be auto-updated the next time the user logs
-                in.
+                Username cannot be edited as the user has already logged in with this BCeID. If the username has been changed in the BCeID
+                application, it will be auto-updated the next time the user logs in.
               </p>
             </div>
             <div class="col-md-4">
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-                [color]="color"
-              >
-              </app-loader>
+              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
             </div>
           </div>
 
@@ -109,22 +69,13 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>User Role</mat-label>
-                <mat-select
-                  formControlName="role"
-                  (selectionChange)="roleSelectionChange($event)"
-                  required
-                >
+                <mat-select formControlName="role" (selectionChange)="roleSelectionChange($event)" required>
                   <mat-option>--Select Role</mat-option>
                   <mat-option *ngFor="let role of roles" [value]="role.code">
                     {{ role?.description }}
                   </mat-option>
                 </mat-select>
-                <mat-error
-                  *ngIf="
-                    editFormControl.role.invalid &&
-                    editFormControl.role.hasError('whitespaceError')
-                  "
-                >
+                <mat-error *ngIf="editFormControl.role.invalid && editFormControl.role.hasError('whitespaceError')">
                   Role is required</mat-error
                 >
               </mat-form-field>
@@ -164,10 +115,7 @@
 
           <div class="row">
             <div class="col-md-12">
-              <p class="contact-subheading">
-                Contact information can be provided at the discretion of the
-                user.
-              </p>
+              <p class="contact-subheading">Contact information can be provided at the discretion of the user.</p>
             </div>
           </div>
 
@@ -175,11 +123,7 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Email Address</mat-label>
-                <input
-                  formControlName="email"
-                  matInput
-                  placeholder="Email Address"
-                />
+                <input formControlName="email" matInput placeholder="Email Address" />
               </mat-form-field>
             </div>
           </div>
@@ -188,28 +132,15 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Contact Number</mat-label>
-                <input
-                  formControlName="phone"
-                  matInput
-                  placeholder="Contact Number"
-                />
+                <input formControlName="phone" matInput placeholder="Contact Number" />
               </mat-form-field>
             </div>
           </div>
         </div>
       </form>
       <div>
-        <button class="button-s button-margin" mat-button (click)="cancel()">
-          Cancel
-        </button>
-        <button
-          class="button-p"
-          [disabled]="!editForm.valid"
-          mat-button
-          (click)="next()"
-        >
-          Next
-        </button>
+        <button class="button-s button-margin" mat-button (click)="cancel()">Cancel</button>
+        <button class="button-p" [disabled]="!editForm.valid" mat-button (click)="next()">Next</button>
       </div>
     </mat-card>
   </div>
@@ -220,30 +151,21 @@
         <span class="tips-heading"><b>Tips: </b>User Roles</span>
       </div>
       <p class="tips-p">
-        Access is based on a user hierarchy where each level is based on roles
-        and responsibilities. This provides a way of granting different
-        permissions to users within your organization.
+        Access is based on a user hierarchy where each level is based on roles and responsibilities. This provides a way of granting
+        different permissions to users within your organization.
       </p>
       <p class="tips-p">
-        <span class="tips-gold">Tier 1: Responder</span> can register and
-        complete registrations, as well as add supports based on a evacuee
+        <span class="tips-gold">Tier 1: Responder</span> can register and complete registrations, as well as add supports based on a evacuee
         need’s assessment.
       </p>
       <p class="tips-p">
-        <span class="tips-gold">Tier 2: Supervisor</span> have the additional
-        ability to manage supplier and user lists. With access to restricted
-        files and basic reporting.
+        <span class="tips-gold">Tier 2: Supervisor</span> have the additional ability to manage supplier and user lists. With access to
+        restricted files and basic reporting.
       </p>
+      <p class="tips-p"><span class="tips-gold">Tier 3: Director/Manager</span> have the additional access to detailed reporting.</p>
       <p class="tips-p">
-        <span class="tips-gold">Tier 3: Director/Manager</span> have the
-        additional access to detailed reporting.
-      </p>
-      <p class="tips-p">
-        <span class="tips-gold"
-          >Tier 4: Local Emergency Program Administrator</span
-        >
-        is the primary contact for the organization and responsible for the
-        initial setup and delegation of roles.
+        <span class="tips-gold">Tier 4: Local Emergency Program Administrator</span>
+        is the primary contact for the organization and responsible for the initial setup and delegation of roles.
       </p>
     </mat-card>
   </div>

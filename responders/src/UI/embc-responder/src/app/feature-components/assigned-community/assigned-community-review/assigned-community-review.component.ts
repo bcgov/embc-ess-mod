@@ -43,17 +43,14 @@ export class AssignedCommunityReviewComponent implements OnInit {
       this.reviewAction = params.action;
     }
     this.addedCommunityList = this.addCommunityService.getAddedCommunities();
-    this.deleteCommunityList =
-      this.assignedCommunityDataService.getCommunitiesToDelete();
+    this.deleteCommunityList = this.assignedCommunityDataService.getCommunitiesToDelete();
   }
 
   /**
    * Navigates to add communities component
    */
   goBack(): void {
-    this.router.navigate([
-      '/responder-access/community-management/add-communities'
-    ]);
+    this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
   /**
@@ -62,33 +59,24 @@ export class AssignedCommunityReviewComponent implements OnInit {
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService
-      .addCommunities(this.addedCommunityList.map((comm) => comm.code))
-      .subscribe({
-        next: (response) => {
-          this.router.navigate([
-            '/responder-access/community-management/list-communities'
-          ]);
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.saveCommunityListError
-          );
-        }
-      });
+    this.assignedCommunityReviewService.addCommunities(this.addedCommunityList.map((comm) => comm.code)).subscribe({
+      next: (response) => {
+        this.router.navigate(['/responder-access/community-management/list-communities']);
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.saveCommunityListError);
+      }
+    });
   }
 
   /**
    * Navigates to cummity list page
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/community-management/list-communities'
-    ]);
+    this.router.navigate(['/responder-access/community-management/list-communities']);
   }
 
   /**
@@ -98,25 +86,16 @@ export class AssignedCommunityReviewComponent implements OnInit {
   remove(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService
-      .removeCommunities(
-        this.deleteCommunityList.map((comm) => comm.communityCode)
-      )
-      .subscribe({
-        next: (response) => {
-          this.router.navigate([
-            '/responder-access/community-management/list-communities'
-          ]);
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.removeCommunityListError
-          );
-        }
-      });
+    this.assignedCommunityReviewService.removeCommunities(this.deleteCommunityList.map((comm) => comm.communityCode)).subscribe({
+      next: (response) => {
+        this.router.navigate(['/responder-access/community-management/list-communities']);
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.removeCommunityListError);
+      }
+    });
   }
 }

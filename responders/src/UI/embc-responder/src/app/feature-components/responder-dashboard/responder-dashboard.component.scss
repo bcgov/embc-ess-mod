@@ -1,87 +1,87 @@
 .highlighted-word {
-    color: #169bd5;
-    font-weight: bold;
+  color: #169bd5;
+  font-weight: bold;
 }
 
 .card-heading-text {
-    font-size: 40px;
-    line-height: 55px;
+  font-size: 40px;
+  line-height: 55px;
 }
 
 .card-text {
-    font-size: 18px;
-    line-height: 29px;
+  font-size: 18px;
+  line-height: 29px;
 }
 
 .signin-button {
-    width: 70%;
-    min-width: fit-content;
+  width: 70%;
+  min-width: fit-content;
 }
 
 .img-align {
-    display: block;
-    margin: auto;
+  display: block;
+  margin: auto;
 }
 
 .info-card {
-    font-size: 21px;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px;
+  font-size: 21px;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
 }
 
 .info-card-text {
-    color: #ffffff;
-    text-align: center;
-    padding: 10px;
-    font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
 }
 
 .external-links {
-    text-align: center;
-    font-size: 16px;
+  text-align: center;
+  font-size: 16px;
 }
 
 a {
-    color: #169bd5;
-    text-decoration: none;
+  color: #169bd5;
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .signIn-link {
-    font-size: 16px;
-    padding-top: 8px;
+  font-size: 16px;
+  padding-top: 8px;
 }
 
 .signIn-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .logo-container {
-    min-width: fit-content;
+  min-width: fit-content;
 }
 
 .training-materials-card {
-    background-color: rgba(0, 51, 102, 1)
+  background-color: rgba(0, 51, 102, 1);
 }
 
 .latest-updates-card {
-    background-color: rgba(35, 64, 117, 1)
+  background-color: rgba(35, 64, 117, 1);
 }
 
 .useful-tips-card {
-    background-color: rgba(51, 51, 51, 1)
+  background-color: rgba(51, 51, 51, 1);
 }
 
 .view-info-card {
-    height: 100%;
+  height: 100%;
 }
 
 .img-fit-col {
-    max-width: inherit;
+  max-width: inherit;
 }
 
 .alert {
@@ -92,9 +92,9 @@ a:hover {
   width: 18px;
 }
 
-@media (min-width:769px) and (max-width:1199px) {
-    .button-yellow {
-        white-space: normal;
-        height: auto !important;
-    }
+@media (min-width: 769px) and (max-width: 1199px) {
+  .button-yellow {
+    white-space: normal;
+    height: auto !important;
+  }
 }

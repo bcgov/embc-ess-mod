@@ -54,8 +54,7 @@ export class AssignedCommunityListComponent implements OnInit {
     });
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
-    this.displayedColumns =
-      this.assignedCommunityListDataService.displayedColumns;
+    this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
   }
 
   /**
@@ -71,42 +70,24 @@ export class AssignedCommunityListComponent implements OnInit {
    * Navigates to add communities component
    */
   addCommunities(): void {
-    this.router.navigate([
-      '/responder-access/community-management/add-communities'
-    ]);
+    this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
   /**
    * Custom filter predicate for assigned community list
    */
   communitiesFilterPredicate(): void {
-    const filterPredicate = (
-      data: TeamCommunityModel,
-      filter: string
-    ): boolean => {
+    const filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.type === 'text') {
-        return (
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        );
+        return data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       } else if (searchString.type === 'array') {
         const terms = searchString.value.split(',');
         const districtTerm = terms[0];
         const typeTerm = terms[1];
         const matchFilter = [];
-        const districtBoolean =
-          data.districtName
-            .trim()
-            .toLowerCase()
-            .indexOf(districtTerm.trim().toLowerCase()) !== -1;
-        const typeBoolean =
-          data.type
-            .trim()
-            .toLowerCase()
-            .indexOf(typeTerm.trim().toLowerCase()) !== -1;
+        const districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
+        const typeBoolean = data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);
         return matchFilter.every(Boolean);

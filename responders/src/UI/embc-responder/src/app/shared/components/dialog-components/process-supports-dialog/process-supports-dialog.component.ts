@@ -33,8 +33,7 @@ export class ProcessSupportsDialogComponent implements OnInit {
     if (this.addEvacForm.get('addSummary').value === undefined) {
       this.reviewSupportService.includeEvacueeSummary = false;
     }
-    if (this.includesEtranfer)
-      this.reviewSupportService.includeEvacueeSummary = true;
+    if (this.includesEtranfer) this.reviewSupportService.includeEvacueeSummary = true;
     this.outputEvent.emit('confirm');
   }
 

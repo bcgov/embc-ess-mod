@@ -1,12 +1,7 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"
-        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
-          class="back-link"
-          >Supports</span
-        ></a
-      >
+      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
     </div>
   </div>
 
@@ -35,12 +30,7 @@
                     {{ type.description }}
                   </mat-option>
                 </mat-select>
-                <mat-error
-                  *ngIf="
-                    typeFormControl.type.invalid &&
-                    typeFormControl.type.hasError('required')
-                  "
-                >
+                <mat-error *ngIf="typeFormControl.type.invalid && typeFormControl.type.hasError('required')">
                   Support Type is required</mat-error
                 >
               </mat-form-field>
@@ -50,13 +40,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <button
-              class="button-p add-details"
-              mat-button
-              (click)="addDetails()"
-            >
-              Next - Support Details
-            </button>
+            <button class="button-p add-details" mat-button (click)="addDetails()">Next - Support Details</button>
           </div>
         </div>
       </div>
@@ -65,18 +49,11 @@
         <mat-card class="needs-box">
           <div class="row">
             <div class="col-md-12">
-              <p class="bold">
-                Support requirements based on current Needs Assessment
-              </p>
+              <p class="bold">Support requirements based on current Needs Assessment</p>
             </div>
           </div>
 
-          <div
-            class="row"
-            *ngFor="
-              let item of evacueeSessionService?.currentNeedsAssessment?.needs
-            "
-          >
+          <div class="row" *ngFor="let item of evacueeSessionService?.currentNeedsAssessment?.needs">
             <div class="col-4">{{ item }}</div>
           </div>
         </mat-card>

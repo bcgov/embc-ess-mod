@@ -5,10 +5,7 @@
     </div>
   </div>
   <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="primarySupplierFilter($event)"
-    ></app-search-filter>
+    <app-search-filter [filtersToLoad]="filtersToLoad" (filterEvent)="primarySupplierFilter($event)"></app-search-filter>
   </div>
   <div class="data-margin">
     <app-suppliers-table
@@ -32,10 +29,7 @@
     </div>
   </div>
   <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="mutualAidSupplierFilter($event)"
-    ></app-search-filter>
+    <app-search-filter [filtersToLoad]="filtersToLoad" (filterEvent)="mutualAidSupplierFilter($event)"></app-search-filter>
   </div>
   <div class="data-margin">
     <app-suppliers-table
@@ -51,8 +45,5 @@
     </app-suppliers-table>
   </div>
 
-  <app-overlay-loader
-    *ngIf="isLoading"
-    [showLoader]="isLoading"
-  ></app-overlay-loader>
+  <app-overlay-loader *ngIf="isLoading" [showLoader]="isLoading"></app-overlay-loader>
 </mat-card>

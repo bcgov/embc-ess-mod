@@ -1,13 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 
 import { RestrictionComponent } from './restriction.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -30,13 +21,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule
-      ],
+      imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule],
       declarations: [RestrictionComponent],
       providers: [
         UntypedFormBuilder,
@@ -64,8 +49,7 @@ describe('RestrictionComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem =
-      fixture.debugElement.nativeElement.querySelector('#restrictionForm');
+    const formElem = fixture.debugElement.nativeElement.querySelector('#restrictionForm');
     const totalElems = formElem.querySelectorAll('mat-radio-group');
     expect(totalElems.length).toEqual(1);
   });
@@ -107,8 +91,7 @@ describe('RestrictionComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      restrictionService.stepEvacueeProfileService.profileTabsValue =
-        restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
+      restrictionService.stepEvacueeProfileService.profileTabsValue = restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
       restrictionService.stepEvacueeProfileService.restrictedAccess = false;
       fixture.detectChanges();
       component.ngOnInit();
@@ -127,10 +110,7 @@ describe('RestrictionComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        restrictionService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'restriction'
-        );
+      const tabMetaData = restrictionService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'restriction');
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -142,8 +122,7 @@ describe('RestrictionComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      restrictionService.stepEvacueeProfileService.profileTabsValue =
-        restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
+      restrictionService.stepEvacueeProfileService.profileTabsValue = restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
       restrictionService.stepEvacueeProfileService.restrictedAccess = '';
       fixture.detectChanges();
       component.ngOnInit();
@@ -162,10 +141,7 @@ describe('RestrictionComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        restrictionService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'restriction'
-        );
+      const tabMetaData = restrictionService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'restriction');
 
       expect(tabMetaData.status).toEqual('not-started');
     })
@@ -177,8 +153,7 @@ describe('RestrictionComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      restrictionService.stepEvacueeProfileService.profileTabsValue =
-        restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
+      restrictionService.stepEvacueeProfileService.profileTabsValue = restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
       restrictionService.stepEvacueeProfileService.restrictedAccess = false;
       fixture.detectChanges();
       component.ngOnInit();
@@ -191,9 +166,7 @@ describe('RestrictionComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/collection-notice'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/collection-notice']);
     })
   ));
 
@@ -203,8 +176,7 @@ describe('RestrictionComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      restrictionService.stepEvacueeProfileService.profileTabsValue =
-        restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
+      restrictionService.stepEvacueeProfileService.profileTabsValue = restrictionService.stepEvacueeProfileService.evacueeProfileTabs;
       restrictionService.stepEvacueeProfileService.restrictedAccess = false;
       fixture.detectChanges();
       component.ngOnInit();
@@ -217,9 +189,7 @@ describe('RestrictionComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/evacuee-details'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/evacuee-details']);
     })
   ));
 });

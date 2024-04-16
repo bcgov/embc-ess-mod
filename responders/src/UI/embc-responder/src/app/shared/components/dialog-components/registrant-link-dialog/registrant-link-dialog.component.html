@@ -4,14 +4,11 @@
 <br />
 <div class="row">
   <div class="col-md-12">
-    <p class="bold">
-      There are multiple possible profile matches for this evacuee.
-    </p>
+    <p class="bold">There are multiple possible profile matches for this evacuee.</p>
     <p>
-      Please ask the evacuee to confirm their physical address to determine
-      which is a correct match. If multiple matches for physical address exist,
-      opt for profiles connected though BC Services Card Online Authentication.
-      Alternatively, select the profile with the most recent created on date.
+      Please ask the evacuee to confirm their physical address to determine which is a correct match. If multiple matches for physical
+      address exist, opt for profiles connected though BC Services Card Online Authentication. Alternatively, select the profile with the
+      most recent created on date.
     </p>
   </div>
 </div>
@@ -34,10 +31,7 @@
 </div>
 
 <div class="row">
-  <div
-    *ngFor="let profile of profileData?.profiles"
-    class="col-md-5 box-background mt-4"
-  >
+  <div *ngFor="let profile of profileData?.profiles" class="col-md-5 box-background mt-4">
     <div class="row">
       <div class="col-md-7">
         <p class="p-margin">BC Services Card Online Authenticated:</p>
@@ -75,21 +69,13 @@
 
     <div *ngIf="profile?.isProfileCompleted" class="row">
       <div class="col-md-6">
-        <button
-          class="button-p link-button"
-          mat-button
-          (click)="linkProfile(profile)"
-        >
-          Link to this Profile
-        </button>
+        <button class="button-p link-button" mat-button (click)="linkProfile(profile)">Link to this Profile</button>
       </div>
     </div>
 
     <div *ngIf="!profile?.isProfileCompleted" class="row">
       <div class="col-md-6">
-        <p class="cannot-link">
-          Cannot link to a profile without security questions
-        </p>
+        <p class="cannot-link">Cannot link to a profile without security questions</p>
       </div>
     </div>
   </div>
@@ -97,8 +83,6 @@
 
 <div class="row">
   <div class="col-md-12">
-    <button class="button-s cancel-button" mat-button (click)="cancel()">
-      Cancel
-    </button>
+    <button class="button-s cancel-button" mat-button (click)="cancel()">Cancel</button>
   </div>
 </div>

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SupportStatus } from 'src/app/core/api/models';
-import {
-  ObjectWrapper,
-  TableFilterModel
-} from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
@@ -26,9 +23,7 @@ export class EssFileSupportsService {
         {
           type: 'type',
           label: this.defaultType,
-          values: this.loadEvacueeListService
-            .getSupportCategories()
-            .filter((category) => category.description !== '')
+          values: this.loadEvacueeListService.getSupportCategories().filter((category) => category.description !== '')
         },
         {
           type: 'status',
@@ -39,8 +34,7 @@ export class EssFileSupportsService {
               (support, index, self) =>
                 support.description &&
                 support.description !== SupportStatus.Draft &&
-                self.findIndex((s) => s.description === support.description) ===
-                  index
+                self.findIndex((s) => s.description === support.description) === index
             )
         }
       ]

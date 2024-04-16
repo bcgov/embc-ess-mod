@@ -71,15 +71,7 @@ import { FileSearchFormComponent } from './forms/file-search-form/file-search-fo
     EssFileExistsComponent,
     FileSearchFormComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TextMaskModule,
-    CustomPipeModule
-  ],
+  imports: [CommonModule, RouterModule, MaterialModule, FormsModule, ReactiveFormsModule, TextMaskModule, CustomPipeModule],
   exports: [
     TopNavMenuComponent,
     ToggleSideNavComponent,

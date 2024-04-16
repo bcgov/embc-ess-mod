@@ -1,13 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NavigationStart, Router } from '@angular/router';
@@ -177,9 +169,7 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/suppliers-list']);
   }));
 
   it('should navigate to edit supplier', fakeAsync(() => {
@@ -193,8 +183,6 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/edit-supplier'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/edit-supplier']);
   }));
 });

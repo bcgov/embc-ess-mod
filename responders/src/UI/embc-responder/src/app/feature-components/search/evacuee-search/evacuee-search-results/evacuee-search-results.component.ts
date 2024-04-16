@@ -3,10 +3,7 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { EvacueeSearchResultsService } from './evacuee-search-results.service';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import {
   EvacuationFileSearchResultModel,
@@ -40,15 +37,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     if (
-      this.optionInjectionService?.instance?.optionType !==
-        SelectedPathType.remoteExtensions &&
-      this.optionInjectionService?.instance?.optionType !==
-        SelectedPathType.caseNotes
+      this.optionInjectionService?.instance?.optionType !== SelectedPathType.remoteExtensions &&
+      this.optionInjectionService?.instance?.optionType !== SelectedPathType.caseNotes
     ) {
-      this.searchForEvacuee(
-        (this.evacueeSearchContext =
-          this.evacueeSearchService.evacueeSearchContext)
-      );
+      this.searchForEvacuee((this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext));
     }
   }
 
@@ -59,10 +51,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 
   /**
@@ -82,12 +71,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
    */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.setloadingOverlay(true);
-    (
-      this.optionInjectionService?.instance?.search(
-        evacueeSearchContext,
-        SearchPages.searchResults
-      ) as Promise<EvacueeSearchResults>
-    )
+    (this.optionInjectionService?.instance?.search(evacueeSearchContext, SearchPages.searchResults) as Promise<EvacueeSearchResults>)
       ?.then((results: EvacueeSearchResults) => {
         this.evacueeSearchResultsService.setloadingOverlay(false);
         this.fileResults = results?.files;
@@ -99,15 +83,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    this.optionInjectionService?.instance
-      ?.openWizard(WizardType.NewRegistration)
-      ?.then((value) => {
-        if (!value) {
-          this.evacueeSearchResultsService.openEssFileExistsDialog(
-            this.evacueeSearchService?.evacueeSearchContext
-              ?.evacueeSearchParameters?.paperFileNumber
-          );
-        }
-      });
+    this.optionInjectionService?.instance?.openWizard(WizardType.NewRegistration)?.then((value) => {
+      if (!value) {
+        this.evacueeSearchResultsService.openEssFileExistsDialog(
+          this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
+        );
+      }
+    });
   }
 }

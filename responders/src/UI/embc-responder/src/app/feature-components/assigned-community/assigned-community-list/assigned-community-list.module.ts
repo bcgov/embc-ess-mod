@@ -9,12 +9,6 @@ import { AssignedCommunityTableModule } from '../assigned-community-table/assign
 
 @NgModule({
   declarations: [AssignedCommunityListComponent],
-  imports: [
-    CommonModule,
-    AssignedCommunityListRoutingModule,
-    SharedModule,
-    MaterialModule,
-    AssignedCommunityTableModule
-  ]
+  imports: [CommonModule, AssignedCommunityListRoutingModule, SharedModule, MaterialModule, AssignedCommunityTableModule]
 })
 export class AssignedCommunityListModule {}

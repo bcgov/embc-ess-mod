@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -76,8 +72,7 @@ export class EvacueeDetailsService {
   ) {}
 
   public init() {
-    this.tabMetaData =
-      this.stepEvacueeProfileService.getNavLinks('evacuee-details');
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('evacuee-details');
 
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
     this.verifiedProfile = this.stepEvacueeProfileService.verifiedProfile;
@@ -86,28 +81,16 @@ export class EvacueeDetailsService {
 
   public createForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      firstName: [
-        this.stepEvacueeProfileService.personalDetails?.firstName,
-        [this.customValidation.whitespaceValidator()]
-      ],
-      lastName: [
-        this.stepEvacueeProfileService.personalDetails?.lastName,
-        [this.customValidation.whitespaceValidator()]
-      ],
+      firstName: [this.stepEvacueeProfileService.personalDetails?.firstName, [this.customValidation.whitespaceValidator()]],
+      lastName: [this.stepEvacueeProfileService.personalDetails?.lastName, [this.customValidation.whitespaceValidator()]],
       preferredName: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.preferredName
-          : ''
+        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.preferredName : ''
       ],
       initials: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.initials
-          : ''
+        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.initials : ''
       ],
       gender: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.gender
-          : '',
+        this.stepEvacueeProfileService.personalDetails !== undefined ? this.stepEvacueeProfileService.personalDetails.gender : '',
         [this.customValidation.whitespaceValidator()]
       ],
       dateOfBirth: [
@@ -123,15 +106,9 @@ export class EvacueeDetailsService {
   public updateTabStatus(form: UntypedFormGroup): Subscription {
     return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
       if (form.valid) {
-        this.stepEvacueeProfileService.setTabStatus(
-          'evacuee-details',
-          'complete'
-        );
+        this.stepEvacueeProfileService.setTabStatus('evacuee-details', 'complete');
       } else {
-        this.stepEvacueeProfileService.setTabStatus(
-          'evacuee-details',
-          'incomplete'
-        );
+        this.stepEvacueeProfileService.setTabStatus('evacuee-details', 'incomplete');
       }
       this.stepEvacueeProfileService.personalDetails = form.getRawValue();
     });
@@ -139,10 +116,7 @@ export class EvacueeDetailsService {
 
   public cleanup(form: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        form.controls,
-        'personalDetails'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(form.controls, 'personalDetails');
 
       this.wizardService.setEditStatus({
         tabName: 'details',

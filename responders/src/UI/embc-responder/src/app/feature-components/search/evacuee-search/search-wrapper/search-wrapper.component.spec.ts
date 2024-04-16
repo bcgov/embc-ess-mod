@@ -19,11 +19,7 @@ describe('SearchWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        ReactiveFormsModule
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
       declarations: [SearchWrapperComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
@@ -51,59 +47,41 @@ describe('SearchWrapperComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to the digital path', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to the digital path', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.digital
-      };
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
 
-      fixture.detectChanges();
-      component.ngOnInit();
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/id-search'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/id-search'], Object({ skipLocationChange: true }));
+  }));
 
-  it('should navigate to paper based path', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to paper based path', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.paperBased
-      };
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.paperBased
+    };
 
-      fixture.detectChanges();
-      component.ngOnInit();
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/id-search'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/id-search'], Object({ skipLocationChange: true }));
+  }));
 
-  it('should navigate to remote extension path', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to remote extension path', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.remoteExtensions
-      };
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.remoteExtensions
+    };
 
-      fixture.detectChanges();
-      component.ngOnInit();
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/remote-search'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(router.navigate).toHaveBeenCalledWith(['/responder-access/search/evacuee/remote-search'], Object({ skipLocationChange: true }));
+  }));
 
   afterAll(() => {
     TestBed.resetTestingModule();

@@ -24,8 +24,7 @@ export class WizardComponent implements OnInit, OnDestroy {
     private wizardAdapterService: WizardAdapterService
   ) {
     this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
-    this.wizardService.menuItems =
-      this.appBaseService?.wizardProperties?.wizardMenu;
+    this.wizardService.menuItems = this.appBaseService?.wizardProperties?.wizardMenu;
   }
 
   ngOnInit(): void {
@@ -40,16 +39,8 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param lockedIndicator
    * @param $event
    */
-  goToStep(
-    lockedIndicator: boolean,
-    $event: MouseEvent,
-    targetRoute: string
-  ): void {
-    this.wizardService.manageStepNavigation(
-      lockedIndicator,
-      $event,
-      targetRoute
-    );
+  goToStep(lockedIndicator: boolean, $event: MouseEvent, targetRoute: string): void {
+    this.wizardService.manageStepNavigation(lockedIndicator, $event, targetRoute);
   }
 
   /**

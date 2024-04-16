@@ -26,9 +26,10 @@
   background-color: rgba(187, 187, 187, 1);
 }
 
-@media (max-width: 940px)
-{
-  .col-md-2, .col-md-3, .col-md-12 {
+@media (max-width: 940px) {
+  .col-md-2,
+  .col-md-3,
+  .col-md-12 {
     width: 100%;
   }
 }

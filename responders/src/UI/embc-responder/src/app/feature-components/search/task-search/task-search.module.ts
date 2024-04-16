@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [TaskSearchComponent],
-  imports: [
-    CommonModule,
-    TaskSearchRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, TaskSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class TaskSearchModule {}

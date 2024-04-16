@@ -44,10 +44,8 @@ export class MatchedEssfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
-    this.paperBasedEssFile =
-      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
-    this.registrantId =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
+    this.paperBasedEssFile = this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
+    this.registrantId = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     this.getProfileESSFiles(this.registrantId);
   }
 
@@ -138,21 +136,15 @@ export class MatchedEssfilesComponent implements OnInit {
               this.essFiles = essFilesArray;
             } else if (
               loggedInRole === MemberRole.Tier1 &&
-              this.evacueeSearchService?.evacueeSearchContext
-                ?.evacueeSearchParameters?.paperFileNumber
+              this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
             ) {
               this.essFiles = essFilesArray.filter(
-                (files) =>
-                  files.manualFileId ===
-                  this.evacueeSearchService?.evacueeSearchContext
-                    ?.evacueeSearchParameters?.paperFileNumber
+                (files) => files.manualFileId === this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
               );
             }
           } else {
             if (loggedInRole === MemberRole.Tier1) {
-              this.essFiles = essFilesArray.filter(
-                (files) => files.status !== EvacuationFileStatus.Completed
-              );
+              this.essFiles = essFilesArray.filter((files) => files.status !== EvacuationFileStatus.Completed);
             } else {
               this.essFiles = essFilesArray;
             }
@@ -166,10 +158,7 @@ export class MatchedEssfilesComponent implements OnInit {
       error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.getProfileEssFilesError
-        );
+        this.alertService.setAlert('danger', globalConst.getProfileEssFilesError);
       }
     });
   }

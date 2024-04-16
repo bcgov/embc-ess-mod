@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  GetSecurityPhraseResponse,
-  VerifySecurityPhraseRequest
-} from 'src/app/core/api/models';
+import { GetSecurityPhraseResponse, VerifySecurityPhraseRequest } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -51,26 +44,18 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     this.createSecurityPhraseForm();
 
     this.securityPhrase = this.essFileSecurityPhraseService.securityPhrase;
-    if (
-      this.appBaseService?.appModel?.selectedEssFile?.id === undefined &&
-      this.securityPhrase === undefined
-    ) {
+    if (this.appBaseService?.appModel?.selectedEssFile?.id === undefined && this.securityPhrase === undefined) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else {
-      this.essFileSecurityPhraseService
-        .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
-        .subscribe({
-          next: (results) => {
-            this.securityPhrase = results;
-          },
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.securityPhraseError
-            );
-          }
-        });
+      this.essFileSecurityPhraseService.getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
+        next: (results) => {
+          this.securityPhrase = results;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.securityPhraseError);
+        }
+      });
     }
   }
 
@@ -91,56 +76,40 @@ export class EssfileSecurityPhraseComponent implements OnInit {
       answer: this.securityPhraseForm.get('phraseAnswer').value
     };
 
-    this.essFileSecurityPhraseService
-      .verifySecurityPhrase(
-        this.appBaseService?.appModel?.selectedEssFile?.id,
-        body
-      )
-      .subscribe({
-        next: (results) => {
-          this.showLoader = !this.showLoader;
-          if (results.isCorrect) {
-            this.wrongAnswerFlag = false;
-            this.correctAnswerFlag = true;
-            this.essFileSecurityPhraseService.securityPhrase = undefined;
-            if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-              this.evacueeProfileService
-                .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-                .subscribe({
-                  next: (value) => {
-                    this.evacueeSessionService.fileLinkStatus = 'S';
-                    this.router.navigate([
-                      'responder-access/search/evacuee-profile-dashboard'
-                    ]);
-                  },
-                  error: (error) => {
-                    this.evacueeSessionService.fileLinkStatus = 'E';
-                    this.router.navigate([
-                      'responder-access/search/evacuee-profile-dashboard'
-                    ]);
-                  }
-                });
-            } else {
-              setTimeout(() => {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
-              }, 1000);
-            }
+    this.essFileSecurityPhraseService.verifySecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id, body).subscribe({
+      next: (results) => {
+        this.showLoader = !this.showLoader;
+        if (results.isCorrect) {
+          this.wrongAnswerFlag = false;
+          this.correctAnswerFlag = true;
+          this.essFileSecurityPhraseService.securityPhrase = undefined;
+          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+            this.evacueeProfileService.linkMemberProfile(this.evacueeSessionService.fileLinkMetaData).subscribe({
+              next: (value) => {
+                this.evacueeSessionService.fileLinkStatus = 'S';
+                this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+              },
+              error: (error) => {
+                this.evacueeSessionService.fileLinkStatus = 'E';
+                this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+              }
+            });
           } else {
-            this.securityPhraseForm.get('phraseAnswer').reset();
-            this.attemptsRemaning--;
-            this.wrongAnswerFlag = true;
+            setTimeout(() => {
+              this.router.navigate(['responder-access/search/essfile-dashboard']);
+            }, 1000);
           }
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.verifySecurityPhraseError
-          );
+        } else {
+          this.securityPhraseForm.get('phraseAnswer').reset();
+          this.attemptsRemaning--;
+          this.wrongAnswerFlag = true;
         }
-      });
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.verifySecurityPhraseError);
+      }
+    });
   }
 
   /**

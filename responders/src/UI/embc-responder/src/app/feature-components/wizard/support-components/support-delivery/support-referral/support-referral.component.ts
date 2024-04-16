@@ -35,24 +35,14 @@ export class SupportReferralComponent implements OnInit {
 
   ngOnInit(): void {
     this.supplierList = this.stepSupportsService.supplierList;
-    this.referralDeliveryForm
-      ?.get('issuedTo')
-      ?.valueChanges.subscribe((value) => {
-        this.referralDeliveryForm.get('name').updateValueAndValidity();
-      });
+    this.referralDeliveryForm?.get('issuedTo')?.valueChanges.subscribe((value) => {
+      this.referralDeliveryForm.get('name').updateValueAndValidity();
+    });
 
-    this.filteredOptions = this.referralDeliveryForm
-      ?.get('supplier')
-      ?.valueChanges.pipe(
-        startWith(''),
-        map((value) =>
-          value
-            ? this.filter(value)
-            : this.supplierList !== undefined
-            ? this.supplierList.slice()
-            : null
-        )
-      );
+    this.filteredOptions = this.referralDeliveryForm?.get('supplier')?.valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filter(value) : this.supplierList !== undefined ? this.supplierList.slice() : null))
+    );
 
     this.populateExistingIssuedTo();
 
@@ -61,8 +51,7 @@ export class SupportReferralComponent implements OnInit {
     }
 
     if (this.referralDeliveryForm?.get('supplier')?.value) {
-      this.selectedSupplierItem =
-        this.referralDeliveryForm?.get('supplier')?.value;
+      this.selectedSupplierItem = this.referralDeliveryForm?.get('supplier')?.value;
       this.showSupplierFlag = true;
     }
   }
@@ -98,23 +87,17 @@ export class SupportReferralComponent implements OnInit {
     let invalidSupplier = false;
     if (currentSupplier !== null && currentSupplier?.name === undefined) {
       invalidSupplier = !invalidSupplier;
-      this.referralDeliveryForm
-        ?.get('supplier')
-        .setErrors({ invalidSupplier: true });
+      this.referralDeliveryForm?.get('supplier').setErrors({ invalidSupplier: true });
     }
     return invalidSupplier;
   }
 
   populateExistingIssuedTo() {
-    const allMembers: EvacuationFileHouseholdMember[] =
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers;
+    const allMembers: EvacuationFileHouseholdMember[] = this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers;
 
     if (this.editFlag) {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id
-        );
+        const valueToSet = allMembers.find((mem) => mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id);
         this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
       } else {
         this.referralDeliveryForm?.get('issuedTo').setValue('Someone else');
@@ -122,10 +105,7 @@ export class SupportReferralComponent implements OnInit {
       }
     } else {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id
-        );
+        const valueToSet = allMembers.find((mem) => mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id);
         if (valueToSet !== undefined) {
           this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
         } else {
@@ -146,12 +126,10 @@ export class SupportReferralComponent implements OnInit {
         this.showLoader = !this.showLoader;
         this.stepSupportsService.supplierList = value;
         this.supplierList = value;
-        this.filteredOptions = this.referralDeliveryForm
-          .get('supplier')
-          .valueChanges.pipe(
-            startWith(''),
-            map((input) => this.filter(input))
-          );
+        this.filteredOptions = this.referralDeliveryForm.get('supplier').valueChanges.pipe(
+          startWith(''),
+          map((input) => this.filter(input))
+        );
       },
       error: (error) => {
         this.showLoader = !this.showLoader;
@@ -177,9 +155,7 @@ export class SupportReferralComponent implements OnInit {
   private filter(value?: string): SupplierListItemModel[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.supplierList.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.supplierList.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

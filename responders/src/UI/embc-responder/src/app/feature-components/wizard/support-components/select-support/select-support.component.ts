@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Code, SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -31,7 +26,10 @@ export class SelectSupportComponent implements OnInit {
   ngOnInit(): void {
     this.supportList = this.loadEvacueeListService
       .getSupportTypeList()
-      .filter((element) => element.description !== '' && element.value !== SupportSubCategory.Lodging_Billeting && element.value !== SupportCategory.Lodging);
+      .filter(
+        (element) =>
+          element.description !== '' && element.value !== SupportSubCategory.Lodging_Billeting && element.value !== SupportCategory.Lodging
+      );
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
@@ -58,8 +56,7 @@ export class SelectSupportComponent implements OnInit {
     if (!this.supportTypeForm.valid) {
       this.supportTypeForm.get('type').markAsTouched();
     } else {
-      this.stepSupportsService.supportTypeToAdd =
-        this.supportTypeForm.get('type').value;
+      this.stepSupportsService.supportTypeToAdd = this.supportTypeForm.get('type').value;
       this.router.navigate(['/ess-wizard/add-supports/details']);
     }
   }

@@ -13,8 +13,6 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 
-
-
 @Component({
   selector: 'app-needs',
   templateUrl: './needs.component.html',

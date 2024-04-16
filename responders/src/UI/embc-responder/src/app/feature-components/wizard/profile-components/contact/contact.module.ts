@@ -9,12 +9,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [ContactComponent],
-  imports: [
-    CommonModule,
-    ContactRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    TextMaskModule
-  ]
+  imports: [CommonModule, ContactRoutingModule, MaterialModule, ReactiveFormsModule, TextMaskModule]
 })
 export class ContactModule {}

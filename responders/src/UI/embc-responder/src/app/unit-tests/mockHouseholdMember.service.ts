@@ -95,8 +95,7 @@ export class MockHouseholdMemberService extends HouseholdMemberService {
           id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
           linkedRegistrantId: null,
           firstName: 'abcd',
-          lastName:
-            'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+          lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
           initials: null,
           gender: 'Female',
           dateOfBirth: '09/09/1999',
@@ -139,8 +138,7 @@ export class MockHouseholdMemberService extends HouseholdMemberService {
         id: 'c0350e7e-055b-45c9-b32d-1c81c14afdd5',
         linkedRegistrantId: null,
         firstName: 'abcd',
-        lastName:
-          'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
+        lastName: 'erfehrbfjherbfjhrebfjherhbfnceujkrsdhcnqeukasjdcnesjka,dnukasj,dmwehnfurgfyrgfgerhfjdvfdhjvbfdjhbvhd',
         initials: null,
         gender: 'Female',
         dateOfBirth: '09/09/1999',
@@ -432,10 +430,7 @@ export class MockHouseholdMemberService extends HouseholdMemberService {
     this.viewProfileDialogRef.close('answered', this.memberDetails);
   }
 
-  public multipleMatchedRegistrantLink(
-    multipleLinkRegistrants: MultipleLinkRegistrantModel,
-    essFile: EvacuationFileModel
-  ): void {
+  public multipleMatchedRegistrantLink(multipleLinkRegistrants: MultipleLinkRegistrantModel, essFile: EvacuationFileModel): void {
     this.multipleLinkingDialogRef = this.dialog.open(DialogComponent, {
       data: {
         component: RegistrantLinkDialogComponent,

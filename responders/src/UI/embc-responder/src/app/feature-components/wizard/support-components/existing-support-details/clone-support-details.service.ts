@@ -28,10 +28,7 @@ import {
   SupplierDetailsModel,
   Taxi
 } from 'src/app/core/models/support-details.model';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
@@ -53,52 +50,37 @@ export class CloneSupportDetailsService {
    * @param selectedSupport
    * @param needsAssessmentForSupport
    */
-  cloneSupport(
-    selectedSupport: Support,
-    needsAssessmentForSupport: EvacuationFileModel
-  ) {
+  cloneSupport(selectedSupport: Support, needsAssessmentForSupport: EvacuationFileModel) {
     const referralDelivery = selectedSupport.supportDelivery as Referral;
     const name = referralDelivery.issuedToPersonName?.split(',');
     const issuedToVal = name
       ? needsAssessmentForSupport.householdMembers.find((member) => {
-          if (
-            member.lastName === name[0].trim() &&
-            member.firstName === name[1].trim()
-          ) {
+          if (member.lastName === name[0].trim() && member.firstName === name[1].trim()) {
             return member;
           }
         })
       : null;
 
-    const supplierValue = this.stepSupportsService?.supplierList?.find(
-      (supplier) => supplier.id === referralDelivery.supplierId
-    );
+    const supplierValue = this.stepSupportsService?.supplierList?.find((supplier) => supplier.id === referralDelivery.supplierId);
 
     const category = this.loadEvacueeListService
       .getSupportCategories()
       .find((supportValue) => supportValue.value === selectedSupport.category);
     const subCategory = this.loadEvacueeListService
       .getSupportSubCategories()
-      .find(
-        (supportValue) => supportValue.value === selectedSupport.subCategory
-      );
+      .find((supportValue) => supportValue.value === selectedSupport.subCategory);
 
     this.stepSupportsService.supportTypeToAdd =
-      selectedSupport.category === SupportCategory.Clothing ||
-      selectedSupport.category === SupportCategory.Incidentals
+      selectedSupport.category === SupportCategory.Clothing || selectedSupport.category === SupportCategory.Incidentals
         ? category
         : subCategory;
 
     const fromDate = new Date();
-    const fromTime = this.dateConversionService.convertDateTimeToTime(
-      fromDate.toISOString()
-    );
+    const fromTime = this.dateConversionService.convertDateTimeToTime(fromDate.toISOString());
     fromDate.setHours(0, 0, 0, 0);
     const toDate = new Date();
     toDate.setDate(toDate.getDate() + 1);
-    const toTime = this.dateConversionService.convertDateTimeToTime(
-      toDate.toISOString()
-    );
+    const toTime = this.dateConversionService.convertDateTimeToTime(toDate.toISOString());
     toDate.setHours(0, 0, 0, 0);
 
     this.stepSupportsService.supportDetails = {
@@ -123,8 +105,7 @@ export class CloneSupportDetailsService {
 
     this.stepSupportsService.supportDelivery = {
       issuedTo: issuedToVal,
-      name:
-        issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
+      name: issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
       supplierNote: referralDelivery.supplierNotes,
       details: this.createDeliveryDetails(selectedSupport),
@@ -149,15 +130,11 @@ export class CloneSupportDetailsService {
         hostPhone: (selectedSupport as LodgingBilletingSupport).hostPhone,
         emailAddress: (selectedSupport as LodgingBilletingSupport).hostEmail
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Group
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
       return {
         hostName: (selectedSupport as LodgingGroupSupport).facilityName,
         hostAddress: (selectedSupport as LodgingGroupSupport).facilityAddress,
-        hostCity: this.parseCommunityString(
-          (selectedSupport as LodgingGroupSupport).facilityCommunityCode
-        ),
+        hostCity: this.parseCommunityString((selectedSupport as LodgingGroupSupport).facilityCommunityCode),
         hostPhone: (selectedSupport as LodgingGroupSupport).facilityContactPhone
       };
     }
@@ -189,55 +166,40 @@ export class CloneSupportDetailsService {
         noOfDinners: 1,
         totalAmount: null
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Food_Groceries
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Food_Groceries) {
       return {
         noOfMeals: 1,
         totalAmount: null,
         userTotalAmount: null,
         approverName: null
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi) {
       return {
         fromAddress: (selectedSupport as TransportationTaxiSupport).fromAddress,
         toAddress: (selectedSupport as TransportationTaxiSupport).toAddress
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Transportation_Other
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Other) {
       return {
-        transportMode: (selectedSupport as TransportationOtherSupport)
-          .transportMode,
+        transportMode: (selectedSupport as TransportationOtherSupport).transportMode,
         totalAmount: null
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
       return {
         noOfNights: 1
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Group
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
       return {
         noOfNights: 1
       };
-    } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance
-      ) {
-        return {
-          noOfNights: 1,
-          totalAmount: null,
-          contactEmail: null,
-          contactPhone: null,
-          fullName: null
-        };
-      } else if (
-      selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
-    ) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance) {
+      return {
+        noOfNights: 1,
+        totalAmount: null,
+        contactEmail: null,
+        contactPhone: null,
+        fullName: null
+      };
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel) {
       return {
         noOfNights: 1,
         noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms

@@ -180,7 +180,7 @@ a:not(.btn):focus {
   text-overflow: ellipsis;
 }
 
-@media(max-width: 1200px) {
+@media (max-width: 1200px) {
   mat-sidenav-content {
     width: 40% !important;
   }
@@ -190,7 +190,7 @@ a:not(.btn):focus {
   }
 }
 
-@media(max-width: 992px) {
+@media (max-width: 992px) {
   mat-sidenav {
     width: 20% !important;
     .col-md-9 {
@@ -204,11 +204,10 @@ a:not(.btn):focus {
   }
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   mat-sidenav {
     .col-md-3 {
       padding-left: 5%;
-      
     }
 
     .col-md-9 {

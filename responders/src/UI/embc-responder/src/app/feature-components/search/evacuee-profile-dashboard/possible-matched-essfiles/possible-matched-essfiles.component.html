@@ -1,28 +1,19 @@
 <mat-card class="overview-card data-card">
   <div class="row card-heading-outer info-box">
     <div class="col-md-12">
-      <p class="margins card-heading">
-        Possible ESS File Match ({{ essFiles?.length }})
-      </p>
+      <p class="margins card-heading">Possible ESS File Match ({{ essFiles?.length }})</p>
     </div>
   </div>
   <div class="row section-info info-box">
     <div class="col-md-12">
       <p>
-        <b>If there is a match</b> between a household member on an ESS File and
-        a profile, you will see matches below. IF you believe this is a correct
-        match, please link to this ESS File.
+        <b>If there is a match</b> between a household member on an ESS File and a profile, you will see matches below. IF you believe this
+        is a correct match, please link to this ESS File.
       </p>
     </div>
   </div>
   <div class="loader-align" *ngIf="isLoading">
-    <app-loader
-      class="spinner"
-      [showLoader]="isLoading"
-      [strokeWidth]="10"
-      [diameter]="30"
-      [color]="color"
-    ></app-loader>
+    <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="30" [color]="color"></app-loader>
   </div>
   <mat-accordion>
     <mat-expansion-panel
@@ -46,48 +37,20 @@
             >ESS File # {{ file.manualFileId || file.id }}</span
           >
           <div class="file-heading">
-            <img
-              *ngIf="file.status === 'Pending'"
-              src="/assets/images/pending-flag.svg"
-              height="30"
-              width="25"
-            />
-            <img
-              *ngIf="file?.status === 'Active'"
-              src="/assets/images/active-flag.svg"
-              height="30"
-              width="25"
-            />
-            <img
-              *ngIf="file?.status === 'Completed'"
-              src="/assets/images/complete-flag.svg"
-              height="30"
-              width="25"
-            />
-            <img
-              *ngIf="file?.status === 'Expired'"
-              src="/assets/images/expired-flag.svg"
-              height="30"
-              width="25"
-            />
+            <img *ngIf="file.status === 'Pending'" src="/assets/images/pending-flag.svg" height="30" width="25" />
+            <img *ngIf="file?.status === 'Active'" src="/assets/images/active-flag.svg" height="30" width="25" />
+            <img *ngIf="file?.status === 'Completed'" src="/assets/images/complete-flag.svg" height="30" width="25" />
+            <img *ngIf="file?.status === 'Expired'" src="/assets/images/expired-flag.svg" height="30" width="25" />
           </div>
         </mat-panel-title>
         <mat-panel-description class="description-align essFile-parent">
           <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex !== index">
             <img src="/assets/images/add-expand.svg" height="20" width="20" />
-            <img
-              src="/assets/images/add-expand-hover.svg"
-              height="20"
-              width="20"
-            />
+            <img src="/assets/images/add-expand-hover.svg" height="20" width="20" />
           </a>
           <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex === index">
             <img src="/assets/images/collapse.svg" height="20" width="20" />
-            <img
-              src="/assets/images/collapse-hover.svg"
-              height="20"
-              width="20"
-            />
+            <img src="/assets/images/collapse-hover.svg" height="20" width="20" />
           </a>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -127,24 +90,14 @@
       <div class="row">
         <div class="col-md-6">Evacuated From:</div>
         <div class="col-md-6 file-details">
-          <p
-            style="font-weight: 700"
-            [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"
-          ></p>
+          <p style="font-weight: 700" [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"></p>
         </div>
       </div>
       <div class="row button-div" *ngIf="file?.isFileCompleted">
-        <button
-          class="button-p proceed-button"
-          (click)="linkToESSFile(file?.id)"
-        >
-          Link to this ESS File
-        </button>
+        <button class="button-p proceed-button" (click)="linkToESSFile(file?.id)">Link to this ESS File</button>
       </div>
       <div class="row" *ngIf="!file?.isFileCompleted">
-        <p class="warning">
-          Cannot link to an ESS File without a security phrase.
-        </p>
+        <p class="warning">Cannot link to an ESS File without a security phrase.</p>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

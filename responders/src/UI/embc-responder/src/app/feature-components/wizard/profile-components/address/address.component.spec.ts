@@ -1,13 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 
 import { AddressComponent } from './address.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -97,9 +88,7 @@ describe('AddressComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#primaryAddressForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#primaryAddressForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(4);
   });
@@ -140,8 +129,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    const mailingAddressForm =
-      component.primaryAddressForm.get('mailingAddress');
+    const mailingAddressForm = component.primaryAddressForm.get('mailingAddress');
     const formValues = {
       addressLine1: '',
       addressLine2: '',
@@ -157,8 +145,7 @@ describe('AddressComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      addressService.stepEvacueeProfileService.profileTabsValue =
-        addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -170,9 +157,7 @@ describe('AddressComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/evacuee-details'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/evacuee-details']);
     })
   ));
 
@@ -180,8 +165,7 @@ describe('AddressComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      addressService.stepEvacueeProfileService.profileTabsValue =
-        addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -193,9 +177,7 @@ describe('AddressComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/contact'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/contact']);
     })
   ));
 
@@ -205,8 +187,7 @@ describe('AddressComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      addressService.stepEvacueeProfileService.profileTabsValue =
-        addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
       addressService.stepEvacueeProfileService.primaryAddressDetailsVal = {
         addressLine1: '',
         addressLine2: '',
@@ -232,10 +213,7 @@ describe('AddressComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        addressService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'address'
-        );
+      const tabMetaData = addressService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'address');
 
       expect(tabMetaData.status).toEqual('not-started');
     })
@@ -247,12 +225,10 @@ describe('AddressComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: true
       };
-      addressService.stepEvacueeProfileService.profileTabsValue =
-        addressService.stepEvacueeProfileService.evacueeProfileTabs;
+      addressService.stepEvacueeProfileService.profileTabsValue = addressService.stepEvacueeProfileService.evacueeProfileTabs;
 
       addressService.stepEvacueeProfileService.isBcAddressVal = 'Yes';
-      addressService.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddressVal =
-        'Yes';
+      addressService.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddressVal = 'Yes';
       addressService.stepEvacueeProfileService.isBcMailingAddressVal = 'Yes';
       addressService.stepEvacueeProfileService.mailingAddressDetailsVal = {
         addressLine1: '1',
@@ -296,10 +272,7 @@ describe('AddressComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        addressService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'address'
-        );
+      const tabMetaData = addressService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'address');
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -325,8 +298,7 @@ describe('AddressComponent', () => {
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
-    const mailingAddress =
-      component.primaryAddressForm.get('mailingAddress').value;
+    const mailingAddress = component.primaryAddressForm.get('mailingAddress').value;
     expect(primaryAddress).toEqual(mailingAddress);
   });
 
@@ -350,8 +322,7 @@ describe('AddressComponent', () => {
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
-    const mailingAddress =
-      component.primaryAddressForm.get('mailingAddress').value;
+    const mailingAddress = component.primaryAddressForm.get('mailingAddress').value;
     expect(primaryAddress).not.toEqual(mailingAddress);
   });
 
@@ -376,9 +347,7 @@ describe('AddressComponent', () => {
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
 
-    expect(primaryAddress).not.toEqual(
-      addressService.stepEvacueeProfileService.primaryAddressDetailsVal
-    );
+    expect(primaryAddress).not.toEqual(addressService.stepEvacueeProfileService.primaryAddressDetailsVal);
   });
 
   it('should display BC address form for primary address', () => {
@@ -394,9 +363,7 @@ describe('AddressComponent', () => {
     addressService.stepEvacueeProfileService.isBcAddressVal = 'No';
     fixture.detectChanges();
     component.ngOnInit();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#primaryAddressForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#primaryAddressForm');
     const totalElems = formElem.querySelectorAll('mat-autocomplete');
     expect(totalElems.length).toEqual(1);
   });
@@ -406,9 +373,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'CAN', name: 'Canada' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'CAN', name: 'Canada' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
@@ -421,9 +386,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'USA', name: 'United States of America' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'USA', name: 'United States of America' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
@@ -436,9 +399,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'AUS', name: 'Australia' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'AUS', name: 'Australia' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;

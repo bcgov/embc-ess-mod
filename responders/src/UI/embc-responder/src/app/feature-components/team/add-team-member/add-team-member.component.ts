@@ -1,17 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import {
-  MemberLabelDescription,
-  MemberRole,
-  MemberRoleDescription,
-  TeamMember
-} from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -80,9 +71,7 @@ export class AddTeamMemberComponent implements OnInit {
    * Navigates to the team members list
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/responder-management/details/member-list'
-    ]);
+    this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
   /**
@@ -91,40 +80,33 @@ export class AddTeamMemberComponent implements OnInit {
   next(): void {
     // Validate if username exists before sending the form
     this.showLoader = !this.showLoader;
-    this.addTeamMemberService
-      .checkUserNameExists(this.addForm.get('userName').value)
-      .subscribe({
-        next: (value) => {
-          this.addForm
-            .get('userName')
-            .setValidators([
-              this.customValidation.whitespaceValidator(),
-              this.customValidation
-                .userNameExistsValidator(value)
-                .bind(this.customValidation)
-            ]);
+    this.addTeamMemberService.checkUserNameExists(this.addForm.get('userName').value).subscribe({
+      next: (value) => {
+        this.addForm
+          .get('userName')
+          .setValidators([
+            this.customValidation.whitespaceValidator(),
+            this.customValidation.userNameExistsValidator(value).bind(this.customValidation)
+          ]);
+        this.addForm.get('userName').updateValueAndValidity();
+        this.showLoader = !this.showLoader;
+        if (value) {
           this.addForm.get('userName').updateValueAndValidity();
-          this.showLoader = !this.showLoader;
-          if (value) {
-            this.addForm.get('userName').updateValueAndValidity();
-          } else {
-            this.addForm.updateValueAndValidity();
+        } else {
+          this.addForm.updateValueAndValidity();
 
-            const newTeamMember: TeamMember = this.addForm.getRawValue();
-            newTeamMember.teamName = this.userService.currentProfile.teamName;
-            this.addTeamMemberService.setAddedTeamMember(newTeamMember);
-            this.router.navigate(
-              ['/responder-access/responder-management/details/review'],
-              { state: newTeamMember }
-            );
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+          const newTeamMember: TeamMember = this.addForm.getRawValue();
+          newTeamMember.teamName = this.userService.currentProfile.teamName;
+          this.addTeamMemberService.setAddedTeamMember(newTeamMember);
+          this.router.navigate(['/responder-access/responder-management/details/review'], { state: newTeamMember });
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+      }
+    });
   }
 
   /**
@@ -149,32 +131,28 @@ export class AddTeamMemberComponent implements OnInit {
    */
   checkUserName($event): void {
     this.showLoader = !this.showLoader;
-    this.addTeamMemberService
-      .checkUserNameExists($event.target.value)
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          this.addForm
-            .get('userName')
-            .setValidators([
-              this.customValidation.whitespaceValidator(),
-              this.customValidation
-                .userNameExistsValidator(value)
-                .bind(this.customValidation)
-            ]);
+    this.addTeamMemberService.checkUserNameExists($event.target.value).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        this.addForm
+          .get('userName')
+          .setValidators([
+            this.customValidation.whitespaceValidator(),
+            this.customValidation.userNameExistsValidator(value).bind(this.customValidation)
+          ]);
+        this.addForm.get('userName').updateValueAndValidity();
+        if (value) {
           this.addForm.get('userName').updateValueAndValidity();
-          if (value) {
-            this.addForm.get('userName').updateValueAndValidity();
-          } else {
-            this.addForm.updateValueAndValidity();
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+        } else {
+          this.addForm.updateValueAndValidity();
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+      }
+    });
   }
 
   /**
@@ -185,25 +163,13 @@ export class AddTeamMemberComponent implements OnInit {
   filteredRoleList(): MemberRoleDescription[] {
     const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
-      return this.listService
-        .getMemberRoles()
-        .filter((role) => role.code === MemberRole.Tier1);
+      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
-      return this.listService
-        .getMemberRoles()
-        .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
-        );
+      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
         .getMemberRoles()
-        .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 ||
-            role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3
-        );
+        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3);
     }
   }
 }

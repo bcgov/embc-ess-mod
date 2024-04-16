@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserProfile } from '../core/api/models';
-import {
-  ActionPermission,
-  ClaimType
-} from '../core/services/authorization.service';
-import {
-  LoggedInUserProfile,
-  UserService
-} from '../core/services/user.service';
+import { ActionPermission, ClaimType } from '../core/services/authorization.service';
+import { LoggedInUserProfile, UserService } from '../core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MockUserService extends UserService {
@@ -93,16 +87,16 @@ export class MockUserService extends UserService {
     taskEndDate: '2023-12-03T03:32:00Z'
   };
 
-  loadUserProfile(): Promise<UserProfile> {
-    return Promise.resolve(this.userProfile);
+  public get currentProfile(): LoggedInUserProfile {
+    return this.currentProfileValue;
   }
 
   public set currentProfile(profile: LoggedInUserProfile) {
     this.currentProfileValue = profile;
   }
 
-  public get currentProfile(): LoggedInUserProfile {
-    return this.currentProfileValue;
+  loadUserProfile(): Promise<UserProfile> {
+    return Promise.resolve(this.userProfile);
   }
 
   public hasClaim(claimType: ClaimType, value: string): boolean {

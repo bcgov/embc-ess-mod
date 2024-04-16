@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -30,9 +26,7 @@ export class ContactService {
     this.contactInfoForm = this.formBuilder.group(
       {
         email: [
-          this.stepEvacueeProfileService?.contactDetails?.email !== undefined
-            ? this.stepEvacueeProfileService?.contactDetails?.email
-            : '',
+          this.stepEvacueeProfileService?.contactDetails?.email !== undefined ? this.stepEvacueeProfileService?.contactDetails?.email : '',
           [
             Validators.email,
             this.customValidation.conditionalValidation(
@@ -46,13 +40,9 @@ export class ContactService {
           ]
         ],
         phone: [
-          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined
-            ? this.stepEvacueeProfileService?.contactDetails?.phone
-            : '',
+          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined ? this.stepEvacueeProfileService?.contactDetails?.phone : '',
           [
-            this.customValidation
-              .maskedNumberLengthValidator()
-              .bind(this.customValidation),
+            this.customValidation.maskedNumberLengthValidator().bind(this.customValidation),
             this.customValidation.conditionalValidation(
               () =>
                 (this.contactInfoForm.get('email').value === '' ||
@@ -64,9 +54,7 @@ export class ContactService {
           ]
         ],
         confirmEmail: [
-          this.stepEvacueeProfileService?.confirmEmail !== undefined
-            ? this.stepEvacueeProfileService?.confirmEmail
-            : '',
+          this.stepEvacueeProfileService?.confirmEmail !== undefined ? this.stepEvacueeProfileService?.confirmEmail : '',
           [
             Validators.email,
             this.customValidation.conditionalValidation(
@@ -80,9 +68,7 @@ export class ContactService {
           ]
         ],
         showContacts: [
-          this.stepEvacueeProfileService?.showContact !== undefined
-            ? this.stepEvacueeProfileService?.showContact
-            : '',
+          this.stepEvacueeProfileService?.showContact !== undefined ? this.stepEvacueeProfileService?.showContact : '',
           [Validators.required]
         ]
       },
@@ -107,10 +93,7 @@ export class ContactService {
 
   public cleanup(form: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        form.controls,
-        'contactDetails'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(form.controls, 'contactDetails');
 
       this.wizardService.setEditStatus({
         tabName: 'contact',
@@ -133,7 +116,6 @@ export class ContactService {
   private saveFormUpdates(form: UntypedFormGroup): void {
     this.stepEvacueeProfileService.contactDetails = form.value;
     this.stepEvacueeProfileService.showContact = form.get('showContacts').value;
-    this.stepEvacueeProfileService.confirmEmail =
-      form.get('confirmEmail').value;
+    this.stepEvacueeProfileService.confirmEmail = form.get('confirmEmail').value;
   }
 }

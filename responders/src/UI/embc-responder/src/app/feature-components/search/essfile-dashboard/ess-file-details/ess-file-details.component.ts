@@ -12,7 +12,6 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   styleUrls: ['./ess-file-details.component.scss']
 })
 export class EssFileDetailsComponent implements OnInit {
-
   memberListDisplay: EvacuationFileHouseholdMember[];
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
@@ -47,5 +46,4 @@ export class EssFileDetailsComponent implements OnInit {
   public getIdentifiedNeeds(): string[] {
     return this.essfileDashboardService.getIdentifiedNeeds();
   }
-
 }

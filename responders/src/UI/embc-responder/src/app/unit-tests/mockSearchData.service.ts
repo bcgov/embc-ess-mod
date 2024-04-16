@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
-import {
-  CommunityType,
-  EvacuationFileStatus,
-  HouseholdMemberType,
-  RegistrantStatus
-} from '../core/api/models';
+import { CommunityType, EvacuationFileStatus, HouseholdMemberType, RegistrantStatus } from '../core/api/models';
 import { EvacueeDetailsModel } from '../core/models/evacuee-search-context.model';
 import { EvacueeSearchResults } from '../core/models/evacuee-search-results';
 import { ComputeRulesService } from '../core/services/computeRules.service';
@@ -155,31 +150,16 @@ export class MockSearchDataService extends MockDashboardService {
     essFileService: EssFileService,
     evacueeSearchService: MockEvacueeSearchService
   ) {
-    super(
-      customValidation,
-      appBaseService,
-      computeState,
-      evacueeProfileService,
-      alertService,
-      essFileService,
-      evacueeSearchService
-    );
+    super(customValidation, appBaseService, computeState, evacueeProfileService, alertService, essFileService, evacueeSearchService);
   }
 
-  public evacueeSearch(
-    evacueeSearchContext: EvacueeDetailsModel
-  ): Promise<EvacueeSearchResults> {
-    const $result = new BehaviorSubject<EvacueeSearchResults>(
-      this.mockEvacueeSearchResult
-    );
+  public evacueeSearch(evacueeSearchContext: EvacueeDetailsModel): Promise<EvacueeSearchResults> {
+    const $result = new BehaviorSubject<EvacueeSearchResults>(this.mockEvacueeSearchResult);
     return lastValueFrom($result);
   }
 
   async checkForPaperFile(wizardType: string): Promise<string> {
-    if (
-      this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters
-        .paperFileNumber === 'T100'
-    ) {
+    if (this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters.paperFileNumber === 'T100') {
       return null;
     } else {
       return '/ess-wizard';

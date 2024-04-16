@@ -1,13 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 
 import { EvacueeDetailsComponent } from './evacuee-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -69,18 +60,14 @@ describe('EvacueeDetailsComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#evacueeDetailsForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#evacueeDetailsForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(5);
   });
 
   it('should display gender form control as a dropdown', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#evacueeDetailsForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#evacueeDetailsForm');
     const totalElems = formElem.querySelectorAll('mat-select');
     expect(totalElems.length).toEqual(1);
   });
@@ -241,8 +228,7 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue =
-        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -268,10 +254,7 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        detailsService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'evacuee-details'
-        );
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'evacuee-details');
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -283,8 +266,7 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue =
-        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -310,10 +292,7 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        detailsService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'evacuee-details'
-        );
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'evacuee-details');
 
       expect(tabMetaData.status).toEqual('incomplete');
     })
@@ -325,8 +304,7 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue =
-        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -346,9 +324,7 @@ describe('EvacueeDetailsComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/restriction'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/restriction']);
     })
   ));
 
@@ -358,8 +334,7 @@ describe('EvacueeDetailsComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      detailsService.stepEvacueeProfileService.profileTabsValue =
-        detailsService.stepEvacueeProfileService.evacueeProfileTabs;
+      detailsService.stepEvacueeProfileService.profileTabsValue = detailsService.stepEvacueeProfileService.evacueeProfileTabs;
       detailsService.stepEvacueeProfileService.personalDetails = {
         firstName: 'Unit',
         lastName: 'Test',
@@ -379,9 +354,7 @@ describe('EvacueeDetailsComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/address'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/address']);
     })
   ));
 });

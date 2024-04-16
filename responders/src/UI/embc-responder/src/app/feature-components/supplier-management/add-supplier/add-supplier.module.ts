@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [AddSupplierComponent],
-  imports: [
-    CommonModule,
-    AddSupplierRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, AddSupplierRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class AddSupplierModule {}

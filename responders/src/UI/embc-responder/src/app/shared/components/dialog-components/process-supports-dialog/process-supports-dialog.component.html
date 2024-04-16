@@ -2,38 +2,26 @@
   <div class="col-md-12">
     <h1>Process Supports</h1>
     <p>
-      By clicking "Proceed", the supports will be processed & no longer
-      editable. A PDF will be created for all
+      By clicking "Proceed", the supports will be processed & no longer editable. A PDF will be created for all
       <span *ngIf="includesEtranfer">supports,</span>
       <span *ngIf="!includesEtranfer">referrals,</span>
       which can then be printed or emailed.
-      <span *ngIf="includesEtranfer"
-        >All e-Transfer requests will be submitted for approval.</span
-      >
+      <span *ngIf="includesEtranfer">All e-Transfer requests will be submitted for approval.</span>
     </p>
-    <p *ngIf="!includesEtranfer">
-      Please select if you would like to include an evacuee summary with the
-      referrals.
-    </p>
+    <p *ngIf="!includesEtranfer">Please select if you would like to include an evacuee summary with the referrals.</p>
   </div>
 </div>
 <form [formGroup]="addEvacForm" *ngIf="!includesEtranfer">
   <div class="row checkbox-section">
     <div class="col-md-12">
-      <mat-checkbox
-        formControlName="addSummary"
-        (change)="evacueeSummChangeEvent($event)"
-        >Include evacuee summary.
-      </mat-checkbox>
+      <mat-checkbox formControlName="addSummary" (change)="evacueeSummChangeEvent($event)">Include evacuee summary. </mat-checkbox>
     </div>
   </div>
 </form>
 
 <div class="row buttons-section">
   <div class="col-md-12">
-    <button class="button-s button-width button-margin" (click)="cancel()">
-      Cancel
-    </button>
+    <button class="button-s button-width button-margin" (click)="cancel()">Cancel</button>
     <button class="button-p button-width" (click)="confirm()">Proceed</button>
   </div>
 </div>

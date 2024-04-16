@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  Referral,
-  ReferralPrintRequestResponse
-} from 'src/app/core/api/models';
+import { Referral, ReferralPrintRequestResponse } from 'src/app/core/api/models';
 import { Support } from 'src/app/core/api/models/support';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -57,10 +54,7 @@ export class ReviewSupportService {
       );
   }
 
-  savePaperSupports(
-    fileId: string,
-    supportsDraft: Support[]
-  ): Observable<void> {
+  savePaperSupports(fileId: string, supportsDraft: Support[]): Observable<void> {
     return this.registrationService.registrationsProcessPaperReferrals({
       fileId,
       body: {
@@ -70,43 +64,36 @@ export class ReviewSupportService {
   }
 
   updateExistingSupportsList(): void {
-    this.stepSupportsService
-      .getEvacFile(this.appBaseService?.appModel?.selectedEssFile?.id)
-      .subscribe({
-        next: (file) => {
-          this.evacueeSessionService.currentNeedsAssessment =
-            file.needsAssessment;
-          const supportModel = [];
+    this.stepSupportsService.getEvacFile(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
+      next: (file) => {
+        this.evacueeSessionService.currentNeedsAssessment = file.needsAssessment;
+        const supportModel = [];
 
-          file.supports.forEach((support) => {
-            if (
-              support.subCategory === 'Lodging_Group' ||
-              support.subCategory === 'Lodging_Billeting'||
-              support.subCategory === 'Lodging_Allowance'
-            ) {
-              supportModel.push(support);
-            } else {
-              const value = {
-                ...support,
-                hostAddress: this.locationsService.getAddressModelFromAddress(
-                  (support.supportDelivery as Referral).supplierAddress
-                )
-              };
-              supportModel.push(value);
-            }
-          });
+        file.supports.forEach((support) => {
+          if (
+            support.subCategory === 'Lodging_Group' ||
+            support.subCategory === 'Lodging_Billeting' ||
+            support.subCategory === 'Lodging_Allowance'
+          ) {
+            supportModel.push(support);
+          } else {
+            const value = {
+              ...support,
+              hostAddress: this.locationsService.getAddressModelFromAddress((support.supportDelivery as Referral).supplierAddress)
+            };
+            supportModel.push(value);
+          }
+        });
 
-          this.stepSupportsService.setExistingSupportList(
-            supportModel.sort(
-              (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-            )
-          );
-          // this.stepSupportsService.evacFile = file;
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.genericError);
-        }
-      });
+        this.stepSupportsService.setExistingSupportList(
+          supportModel.sort((a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf())
+        );
+        // this.stepSupportsService.evacFile = file;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.genericError);
+      }
+    });
   }
 }

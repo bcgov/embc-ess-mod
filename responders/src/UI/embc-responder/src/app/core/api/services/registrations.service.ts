@@ -33,13 +33,10 @@ import { VerifySecurityQuestionsRequest } from '../models/verify-security-questi
 import { VerifySecurityQuestionsResponse } from '../models/verify-security-questions-response';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegistrationsService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -59,27 +56,29 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetRegistrantProfile$Response(params: {
-
     /**
      * RegistrantId
      */
     registrantId: string;
   }): Observable<StrictHttpResponse<RegistrantProfile>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetRegistrantProfilePath, 'get');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrantProfile>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrantProfile>;
+        })
+      );
   }
 
   /**
@@ -93,13 +92,11 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetRegistrantProfile(params: {
-
     /**
      * RegistrantId
      */
     registrantId: string;
   }): Observable<RegistrantProfile> {
-
     return this.registrationsGetRegistrantProfile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrantProfile>) => r.body as RegistrantProfile)
     );
@@ -121,7 +118,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateRegistrantProfile$Response(params: {
-
     /**
      * RegistrantId
      */
@@ -130,24 +126,27 @@ export class RegistrationsService extends BaseService {
     /**
      * Registrant
      */
-    body: RegistrantProfile
+    body: RegistrantProfile;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateRegistrantProfilePath, 'post');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -161,7 +160,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateRegistrantProfile(params: {
-
     /**
      * RegistrantId
      */
@@ -170,9 +168,8 @@ export class RegistrationsService extends BaseService {
     /**
      * Registrant
      */
-    body: RegistrantProfile
+    body: RegistrantProfile;
   }): Observable<RegistrationResult> {
-
     return this.registrationsUpdateRegistrantProfile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -194,27 +191,29 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateRegistrantProfile$Response(params: {
-
     /**
      * Registrant
      */
-    body: RegistrantProfile
+    body: RegistrantProfile;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateRegistrantProfilePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -228,13 +227,11 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateRegistrantProfile(params: {
-
     /**
      * Registrant
      */
-    body: RegistrantProfile
+    body: RegistrantProfile;
   }): Observable<RegistrationResult> {
-
     return this.registrationsCreateRegistrantProfile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -256,7 +253,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSetRegistrantVerified$Response(params: {
-
     /**
      * RegistrantId
      */
@@ -267,22 +263,25 @@ export class RegistrationsService extends BaseService {
      */
     verified: boolean;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetRegistrantVerifiedPath, 'post');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
       rb.path('verified', params.verified, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -296,7 +295,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSetRegistrantVerified(params: {
-
     /**
      * RegistrantId
      */
@@ -307,7 +305,6 @@ export class RegistrationsService extends BaseService {
      */
     verified: boolean;
   }): Observable<RegistrationResult> {
-
     return this.registrationsSetRegistrantVerified$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -329,27 +326,29 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetSecurityQuestions$Response(params: {
-
     /**
      * registrant id
      */
     registrantId: string;
   }): Observable<StrictHttpResponse<GetSecurityQuestionsResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityQuestionsPath, 'get');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<GetSecurityQuestionsResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<GetSecurityQuestionsResponse>;
+        })
+      );
   }
 
   /**
@@ -363,13 +362,11 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetSecurityQuestions(params: {
-
     /**
      * registrant id
      */
     registrantId: string;
   }): Observable<GetSecurityQuestionsResponse> {
-
     return this.registrationsGetSecurityQuestions$Response(params).pipe(
       map((r: StrictHttpResponse<GetSecurityQuestionsResponse>) => r.body as GetSecurityQuestionsResponse)
     );
@@ -391,7 +388,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsVerifySecurityQuestions$Response(params: {
-
     /**
      * registrant id
      */
@@ -400,24 +396,27 @@ export class RegistrationsService extends BaseService {
     /**
      * array of questions and their answers
      */
-    body: VerifySecurityQuestionsRequest
+    body: VerifySecurityQuestionsRequest;
   }): Observable<StrictHttpResponse<VerifySecurityQuestionsResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityQuestionsPath, 'post');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifySecurityQuestionsResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<VerifySecurityQuestionsResponse>;
+        })
+      );
   }
 
   /**
@@ -431,7 +430,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsVerifySecurityQuestions(params: {
-
     /**
      * registrant id
      */
@@ -440,9 +438,8 @@ export class RegistrationsService extends BaseService {
     /**
      * array of questions and their answers
      */
-    body: VerifySecurityQuestionsRequest
+    body: VerifySecurityQuestionsRequest;
   }): Observable<VerifySecurityQuestionsResponse> {
-
     return this.registrationsVerifySecurityQuestions$Response(params).pipe(
       map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>) => r.body as VerifySecurityQuestionsResponse)
     );
@@ -461,24 +458,27 @@ export class RegistrationsService extends BaseService {
    */
   registrationsInviteToRegistrantPortal$Response(params: {
     registrantId: string;
-    body: InviteRequest
+    body: InviteRequest;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsInviteToRegistrantPortalPath, 'post');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -487,14 +487,8 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsInviteToRegistrantPortal(params: {
-    registrantId: string;
-    body: InviteRequest
-  }): Observable<void> {
-
-    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  registrationsInviteToRegistrantPortal(params: { registrantId: string; body: InviteRequest }): Observable<void> {
+    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -513,7 +507,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetFile$Response(params: {
-
     /**
      * fileId
      */
@@ -524,22 +517,25 @@ export class RegistrationsService extends BaseService {
      */
     needsAssessmentId?: string;
   }): Observable<StrictHttpResponse<EvacuationFile>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilePath, 'get');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.query('needsAssessmentId', params.needsAssessmentId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EvacuationFile>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<EvacuationFile>;
+        })
+      );
   }
 
   /**
@@ -553,7 +549,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetFile(params: {
-
     /**
      * fileId
      */
@@ -564,10 +559,7 @@ export class RegistrationsService extends BaseService {
      */
     needsAssessmentId?: string;
   }): Observable<EvacuationFile> {
-
-    return this.registrationsGetFile$Response(params).pipe(
-      map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile)
-    );
+    return this.registrationsGetFile$Response(params).pipe(map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile));
   }
 
   /**
@@ -586,7 +578,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateFile$Response(params: {
-
     /**
      * fileId
      */
@@ -595,24 +586,27 @@ export class RegistrationsService extends BaseService {
     /**
      * file
      */
-    body: EvacuationFile
+    body: EvacuationFile;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFilePath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -626,7 +620,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateFile(params: {
-
     /**
      * fileId
      */
@@ -635,9 +628,8 @@ export class RegistrationsService extends BaseService {
     /**
      * file
      */
-    body: EvacuationFile
+    body: EvacuationFile;
   }): Observable<RegistrationResult> {
-
     return this.registrationsUpdateFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -659,7 +651,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetFiles$Response(params?: {
-
     /**
      * fileId
      */
@@ -675,7 +666,6 @@ export class RegistrationsService extends BaseService {
      */
     id?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
     if (params) {
       rb.query('registrantId', params.registrantId, {});
@@ -683,15 +673,19 @@ export class RegistrationsService extends BaseService {
       rb.query('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<EvacuationFileSummary>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<EvacuationFileSummary>>;
+        })
+      );
   }
 
   /**
@@ -705,7 +699,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetFiles(params?: {
-
     /**
      * fileId
      */
@@ -721,7 +714,6 @@ export class RegistrationsService extends BaseService {
      */
     id?: string;
   }): Observable<Array<EvacuationFileSummary>> {
-
     return this.registrationsGetFiles$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFileSummary>>) => r.body as Array<EvacuationFileSummary>)
     );
@@ -743,27 +735,29 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateFile$Response(params: {
-
     /**
      * file
      */
-    body: EvacuationFile
+    body: EvacuationFile;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFilePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -777,13 +771,11 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateFile(params: {
-
     /**
      * file
      */
-    body: EvacuationFile
+    body: EvacuationFile;
   }): Observable<RegistrationResult> {
-
     return this.registrationsCreateFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -805,7 +797,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateFileNote$Response(params: {
-
     /**
      * fileId
      */
@@ -814,24 +805,27 @@ export class RegistrationsService extends BaseService {
     /**
      * note
      */
-    body: Note
+    body: Note;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFileNotePath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -845,7 +839,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsCreateFileNote(params: {
-
     /**
      * fileId
      */
@@ -854,9 +847,8 @@ export class RegistrationsService extends BaseService {
     /**
      * note
      */
-    body: Note
+    body: Note;
   }): Observable<RegistrationResult> {
-
     return this.registrationsCreateFileNote$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -878,7 +870,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateFileNoteContent$Response(params: {
-
     /**
      * fileId
      */
@@ -892,9 +883,8 @@ export class RegistrationsService extends BaseService {
     /**
      * note
      */
-    body: Note
+    body: Note;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFileNoteContentPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
@@ -902,15 +892,19 @@ export class RegistrationsService extends BaseService {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -924,7 +918,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsUpdateFileNoteContent(params: {
-
     /**
      * fileId
      */
@@ -938,9 +931,8 @@ export class RegistrationsService extends BaseService {
     /**
      * note
      */
-    body: Note
+    body: Note;
   }): Observable<RegistrationResult> {
-
     return this.registrationsUpdateFileNoteContent$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -962,7 +954,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSetFileNoteHiddenStatus$Response(params: {
-
     /**
      * fileId
      */
@@ -978,7 +969,6 @@ export class RegistrationsService extends BaseService {
      */
     isHidden?: boolean;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetFileNoteHiddenStatusPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
@@ -986,15 +976,19 @@ export class RegistrationsService extends BaseService {
       rb.query('isHidden', params.isHidden, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<RegistrationResult>;
+        })
+      );
   }
 
   /**
@@ -1008,7 +1002,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSetFileNoteHiddenStatus(params: {
-
     /**
      * fileId
      */
@@ -1024,7 +1017,6 @@ export class RegistrationsService extends BaseService {
      */
     isHidden?: boolean;
   }): Observable<RegistrationResult> {
-
     return this.registrationsSetFileNoteHiddenStatus$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -1046,27 +1038,29 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetSecurityPhrase$Response(params: {
-
     /**
      * file id
      */
     fileId: string;
   }): Observable<StrictHttpResponse<GetSecurityPhraseResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityPhrasePath, 'get');
     if (params) {
       rb.path('fileId', params.fileId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<GetSecurityPhraseResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<GetSecurityPhraseResponse>;
+        })
+      );
   }
 
   /**
@@ -1080,13 +1074,11 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetSecurityPhrase(params: {
-
     /**
      * file id
      */
     fileId: string;
   }): Observable<GetSecurityPhraseResponse> {
-
     return this.registrationsGetSecurityPhrase$Response(params).pipe(
       map((r: StrictHttpResponse<GetSecurityPhraseResponse>) => r.body as GetSecurityPhraseResponse)
     );
@@ -1108,7 +1100,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsVerifySecurityPhrase$Response(params: {
-
     /**
      * file id
      */
@@ -1117,24 +1108,27 @@ export class RegistrationsService extends BaseService {
     /**
      * security phrase to verify
      */
-    body: VerifySecurityPhraseRequest
+    body: VerifySecurityPhraseRequest;
   }): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityPhrasePath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifySecurityPhraseResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<VerifySecurityPhraseResponse>;
+        })
+      );
   }
 
   /**
@@ -1148,7 +1142,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsVerifySecurityPhrase(params: {
-
     /**
      * file id
      */
@@ -1157,9 +1150,8 @@ export class RegistrationsService extends BaseService {
     /**
      * security phrase to verify
      */
-    body: VerifySecurityPhraseRequest
+    body: VerifySecurityPhraseRequest;
   }): Observable<VerifySecurityPhraseResponse> {
-
     return this.registrationsVerifySecurityPhrase$Response(params).pipe(
       map((r: StrictHttpResponse<VerifySecurityPhraseResponse>) => r.body as VerifySecurityPhraseResponse)
     );
@@ -1178,24 +1170,27 @@ export class RegistrationsService extends BaseService {
    */
   registrationsLinkRegistrantToHouseholdMember$Response(params: {
     fileId: string;
-    body: RegistrantLinkRequest
+    body: RegistrantLinkRequest;
   }): Observable<StrictHttpResponse<string>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -1204,11 +1199,7 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsLinkRegistrantToHouseholdMember(params: {
-    fileId: string;
-    body: RegistrantLinkRequest
-  }): Observable<string> {
-
+  registrationsLinkRegistrantToHouseholdMember(params: { fileId: string; body: RegistrantLinkRequest }): Observable<string> {
     return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -1235,7 +1226,6 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<StrictHttpResponse<SearchResults>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchPath, 'get');
     if (params) {
       rb.query('firstName', params.firstName, {});
@@ -1244,15 +1234,19 @@ export class RegistrationsService extends BaseService {
       rb.query('ManualFileId', params.ManualFileId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SearchResults>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<SearchResults>;
+        })
+      );
   }
 
   /**
@@ -1271,10 +1265,7 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<SearchResults> {
-
-    return this.registrationsSearch$Response(params).pipe(
-      map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults)
-    );
+    return this.registrationsSearch$Response(params).pipe(map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults));
   }
 
   /**
@@ -1294,7 +1285,6 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<StrictHttpResponse<Array<RegistrantProfileSearchResult>>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
     if (params) {
       rb.query('firstName', params.firstName, {});
@@ -1303,15 +1293,19 @@ export class RegistrationsService extends BaseService {
       rb.query('ManualFileId', params.ManualFileId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<RegistrantProfileSearchResult>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<RegistrantProfileSearchResult>>;
+        })
+      );
   }
 
   /**
@@ -1326,7 +1320,6 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<Array<RegistrantProfileSearchResult>> {
-
     return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
       map((r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>) => r.body as Array<RegistrantProfileSearchResult>)
     );
@@ -1349,7 +1342,6 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath, 'get');
     if (params) {
       rb.query('firstName', params.firstName, {});
@@ -1358,15 +1350,19 @@ export class RegistrationsService extends BaseService {
       rb.query('ManualFileId', params.ManualFileId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<EvacuationFileSearchResult>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<EvacuationFileSearchResult>>;
+        })
+      );
   }
 
   /**
@@ -1381,7 +1377,6 @@ export class RegistrationsService extends BaseService {
     dateOfBirth?: string;
     ManualFileId?: string;
   }): Observable<Array<EvacuationFileSearchResult>> {
-
     return this.registrationsSearchMatchingEvacuationFiles$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFileSearchResult>>) => r.body as Array<EvacuationFileSearchResult>)
     );
@@ -1403,7 +1398,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessSupports$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1412,24 +1406,27 @@ export class RegistrationsService extends BaseService {
     /**
      * the request with draft supports to process
      */
-    body: ProcessDigitalSupportsRequest
+    body: ProcessDigitalSupportsRequest;
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessSupportsPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReferralPrintRequestResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<ReferralPrintRequestResponse>;
+        })
+      );
   }
 
   /**
@@ -1443,7 +1440,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessSupports(params: {
-
     /**
      * evacuation file number
      */
@@ -1452,9 +1448,8 @@ export class RegistrationsService extends BaseService {
     /**
      * the request with draft supports to process
      */
-    body: ProcessDigitalSupportsRequest
+    body: ProcessDigitalSupportsRequest;
   }): Observable<ReferralPrintRequestResponse> {
-
     return this.registrationsProcessSupports$Response(params).pipe(
       map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
     );
@@ -1476,7 +1471,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessPaperReferrals$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1485,24 +1479,27 @@ export class RegistrationsService extends BaseService {
     /**
      * the request with paper referrals to process
      */
-    body: ProcessPaperReferralsRequest
+    body: ProcessPaperReferralsRequest;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessPaperReferralsPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -1516,7 +1513,6 @@ export class RegistrationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessPaperReferrals(params: {
-
     /**
      * evacuation file number
      */
@@ -1525,12 +1521,9 @@ export class RegistrationsService extends BaseService {
     /**
      * the request with paper referrals to process
      */
-    body: ProcessPaperReferralsRequest
+    body: ProcessPaperReferralsRequest;
   }): Observable<void> {
-
-    return this.registrationsProcessPaperReferrals$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+    return this.registrationsProcessPaperReferrals$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -1549,7 +1542,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsVoidSupport$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1565,7 +1557,6 @@ export class RegistrationsService extends BaseService {
      */
     voidReason?: SupportVoidReason;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVoidSupportPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
@@ -1573,15 +1564,19 @@ export class RegistrationsService extends BaseService {
       rb.query('voidReason', params.voidReason, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -1595,7 +1590,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsVoidSupport(params: {
-
     /**
      * evacuation file number
      */
@@ -1611,10 +1605,7 @@ export class RegistrationsService extends BaseService {
      */
     voidReason?: SupportVoidReason;
   }): Observable<void> {
-
-    return this.registrationsVoidSupport$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+    return this.registrationsVoidSupport$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -1633,7 +1624,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsCancelSupport$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1644,22 +1634,25 @@ export class RegistrationsService extends BaseService {
      */
     supportId: string;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCancelSupportPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.path('supportId', params.supportId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -1673,7 +1666,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsCancelSupport(params: {
-
     /**
      * evacuation file number
      */
@@ -1684,10 +1676,7 @@ export class RegistrationsService extends BaseService {
      */
     supportId: string;
   }): Observable<void> {
-
-    return this.registrationsCancelSupport$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+    return this.registrationsCancelSupport$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -1706,7 +1695,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsReprintSupport$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1727,7 +1715,6 @@ export class RegistrationsService extends BaseService {
      */
     includeSummary?: boolean;
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsReprintSupportPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
@@ -1736,15 +1723,19 @@ export class RegistrationsService extends BaseService {
       rb.query('includeSummary', params.includeSummary, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReferralPrintRequestResponse>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<ReferralPrintRequestResponse>;
+        })
+      );
   }
 
   /**
@@ -1758,7 +1749,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsReprintSupport(params: {
-
     /**
      * evacuation file number
      */
@@ -1779,7 +1769,6 @@ export class RegistrationsService extends BaseService {
      */
     includeSummary?: boolean;
   }): Observable<ReferralPrintRequestResponse> {
-
     return this.registrationsReprintSupport$Response(params).pipe(
       map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
     );
@@ -1801,7 +1790,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetPrint$Response(params: {
-
     /**
      * evacuation file number
      */
@@ -1812,22 +1800,25 @@ export class RegistrationsService extends BaseService {
      */
     printRequestId: string;
   }): Observable<StrictHttpResponse<Blob>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetPrintPath, 'get');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.path('printRequestId', params.printRequestId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'blob',
+          accept: 'application/octet-stream'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Blob>;
+        })
+      );
   }
 
   /**
@@ -1841,7 +1832,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsGetPrint(params: {
-
     /**
      * evacuation file number
      */
@@ -1852,10 +1842,7 @@ export class RegistrationsService extends BaseService {
      */
     printRequestId: string;
   }): Observable<Blob> {
-
-    return this.registrationsGetPrint$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
-    );
+    return this.registrationsGetPrint$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
   }
 
   /**
@@ -1874,7 +1861,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSearchSupports$Response(params?: {
-
     /**
      * search for supports for an manual referral id
      */
@@ -1885,22 +1871,25 @@ export class RegistrationsService extends BaseService {
      */
     fileId?: string;
   }): Observable<StrictHttpResponse<Array<Support>>> {
-
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
     if (params) {
       rb.query('manualReferralId', params.manualReferralId, {});
       rb.query('fileId', params.fileId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Support>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<Support>>;
+        })
+      );
   }
 
   /**
@@ -1914,7 +1903,6 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSearchSupports(params?: {
-
     /**
      * search for supports for an manual referral id
      */
@@ -1925,10 +1913,6 @@ export class RegistrationsService extends BaseService {
      */
     fileId?: string;
   }): Observable<Array<Support>> {
-
-    return this.registrationsSearchSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>)
-    );
+    return this.registrationsSearchSupports$Response(params).pipe(map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>));
   }
-
 }

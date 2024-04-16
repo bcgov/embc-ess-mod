@@ -27,12 +27,8 @@ export class SupplierManagementService {
   getSupplierModelFromSupplier(supplier: Supplier): SupplierModel {
     return {
       ...supplier,
-      supplierGstNumber: this.convertSupplierGSTNumberToFormModel(
-        supplier.gstNumber
-      ),
-      address: this.locationServices.getAddressModelFromAddress(
-        supplier.address
-      )
+      supplierGstNumber: this.convertSupplierGSTNumberToFormModel(supplier.gstNumber),
+      address: this.locationServices.getAddressModelFromAddress(supplier.address)
     };
   }
 }

@@ -54,20 +54,8 @@
 
     <div class="row buttons-section" *ngIf="detailsType === 'supplier'">
       <div class="col-md-6">
-        <button
-          class="button-s button-width button-margin"
-          mat-button
-          (click)="deleteSupplier()"
-        >
-          Remove Supplier
-        </button>
-        <button
-          class="button-p button-width"
-          mat-button
-          (click)="editSupplier()"
-        >
-          Edit Supplier Details
-        </button>
+        <button class="button-s button-width button-margin" mat-button (click)="deleteSupplier()">Remove Supplier</button>
+        <button class="button-p button-width" mat-button (click)="editSupplier()">Edit Supplier Details</button>
       </div>
     </div>
   </div>
@@ -81,9 +69,8 @@
           <div class="col-md-12">
             <p class="aid-heading">Mutual Aid</p>
             <p>
-              Add ESS Team below to activate a <b>mutual aid agreement</b> to
-              share suppliers with another LEP. Search by ESS Team Name, or, if
-              you do not know the name of the ESS Team, search by the community.
+              Add ESS Team below to activate a <b>mutual aid agreement</b> to share suppliers with another LEP. Search by ESS Team Name, or,
+              if you do not know the name of the ESS Team, search by the community.
             </p>
           </div>
         </div>
@@ -99,15 +86,8 @@
                   placeholder="Search by ESS Team Name"
                   [matAutocomplete]="essTeamAuto"
                 />
-                <mat-autocomplete
-                  #essTeamAuto="matAutocomplete"
-                  [displayWith]="essTeamDisplayFn"
-                >
-                  <mat-option
-                    *ngFor="let option of essTeamFilteredOptions | async"
-                    [value]="option"
-                    (click)="searchEssTeamByName(option)"
-                  >
+                <mat-autocomplete #essTeamAuto="matAutocomplete" [displayWith]="essTeamDisplayFn">
+                  <mat-option *ngFor="let option of essTeamFilteredOptions | async" [value]="option" (click)="searchEssTeamByName(option)">
                     {{ option.name }}
                   </mat-option>
                 </mat-autocomplete>
@@ -118,17 +98,8 @@
             <div class="col-md-5">
               <mat-form-field appearance="outline">
                 <mat-label>Community</mat-label>
-                <input
-                  formControlName="community"
-                  maxlength="100"
-                  matInput
-                  placeholder="Community"
-                  [matAutocomplete]="commAuto"
-                />
-                <mat-autocomplete
-                  #commAuto="matAutocomplete"
-                  [displayWith]="cityDisplayFn"
-                >
+                <input formControlName="community" maxlength="100" matInput placeholder="Community" [matAutocomplete]="commAuto" />
+                <mat-autocomplete #commAuto="matAutocomplete" [displayWith]="cityDisplayFn">
                   <mat-option
                     *ngFor="let option of communityFilteredOptions | async"
                     [value]="option"
@@ -140,26 +111,13 @@
               </mat-form-field>
             </div>
             <div class="col-md-1 loader-col">
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="searchESSTeamLoader"
-                [color]="blueColor"
-              >
-              </app-loader>
+              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="searchESSTeamLoader" [color]="blueColor"> </app-loader>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12" *ngIf="essTeamsListResult?.length > 0">
-              <mat-radio-group
-                formControlName="selectedEssTeam"
-                class="options-group"
-                required
-              >
-                <mat-radio-button
-                  *ngFor="let option of essTeamsListResult"
-                  [value]="option"
-                >
+              <mat-radio-group formControlName="selectedEssTeam" class="options-group" required>
+                <mat-radio-button *ngFor="let option of essTeamsListResult" [value]="option">
                   {{ option.name }}
                 </mat-radio-button>
                 <mat-error
@@ -167,9 +125,7 @@
                   *ngIf="
                     searchMutualAidFormControl?.selectedEssTeam.touched &&
                     searchMutualAidFormControl?.selectedEssTeam.invalid &&
-                    searchMutualAidFormControl?.selectedEssTeam.hasError(
-                      'required'
-                    )
+                    searchMutualAidFormControl?.selectedEssTeam.hasError('required')
                   "
                 >
                   An Ess Team is required</mat-error
@@ -179,21 +135,10 @@
             <div class="col-md-12" *ngIf="noneResults">
               <p class="no-results"><b>None ESS Team were found</b></p>
             </div>
-            <div
-              class="col-md-12 btn-section"
-              *ngIf="essTeamsListResult?.length > 0"
-            >
-              <button
-                class="button-p secondary-btn-width"
-                [disabled]="!searchMutualAidForm.valid"
-                (click)="addMutualAidEssTeam()"
-              >
+            <div class="col-md-12 btn-section" *ngIf="essTeamsListResult?.length > 0">
+              <button class="button-p secondary-btn-width" [disabled]="!searchMutualAidForm.valid" (click)="addMutualAidEssTeam()">
                 Add this ESS Team
-                <app-loader
-                  [strokeWidth]="3"
-                  [diameter]="25"
-                  [showLoader]="addESSTeamLoader"
-                ></app-loader>
+                <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="addESSTeamLoader"></app-loader>
               </button>
             </div>
           </div>
@@ -203,11 +148,7 @@
             <div class="col-md-6">
               <p>
                 <b>Mutual Aid Recipient</b>
-                <app-loader
-                  [strokeWidth]="3"
-                  [diameter]="25"
-                  [showLoader]="showLoader"
-                ></app-loader>
+                <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
               </p>
             </div>
 
@@ -229,20 +170,12 @@
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Action</th>
                 <td mat-cell *matCellDef="let element">
-                  <a class="supplier-link" (click)="rescindSupplier(element)"
-                    >Rescind Supplier</a
-                  >
+                  <a class="supplier-link" (click)="rescindSupplier(element)">Rescind Supplier</a>
                 </td>
               </ng-container>
 
-              <tr
-                mat-header-row
-                *matHeaderRowDef="mutualAidDisplayedColumns"
-              ></tr>
-              <tr
-                mat-row
-                *matRowDef="let row; columns: mutualAidDisplayedColumns"
-              ></tr>
+              <tr mat-header-row *matHeaderRowDef="mutualAidDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: mutualAidDisplayedColumns"></tr>
             </table>
           </div>
         </div>
@@ -252,18 +185,10 @@
   <div class="col-md-4">
     <mat-card class="tips-card">
       <div>
-        <img
-          class="img-align"
-          src="/assets/images/tips-lightbulb.svg"
-          height="63"
-          width="62"
-        />
+        <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
         <span class="tips-heading"><b>Tips: </b>Mutual Aid</span>
       </div>
-      <p class="tips-info">
-        Only add ESS Teams with whom your LEP has an active mutual aid
-        agreement.
-      </p>
+      <p class="tips-info">Only add ESS Teams with whom your LEP has an active mutual aid agreement.</p>
       <p class="tips-info">You can revoke access at any time.</p>
     </mat-card>
   </div>

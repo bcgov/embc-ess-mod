@@ -1,13 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  inject,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 import { ExistingSupportDetailsComponent } from './existing-support-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -88,8 +79,7 @@ describe('ExistingSupportDetailsComponent', () => {
 
   it('should get selected Support', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
     component.ngOnInit();
     expect(component.selectedSupport).toBeDefined();
@@ -97,8 +87,7 @@ describe('ExistingSupportDetailsComponent', () => {
 
   it('should get selected ESSFile', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
     component.ngOnInit();
     expect(component.needsAssessmentForSupport).toBeDefined();
@@ -106,19 +95,15 @@ describe('ExistingSupportDetailsComponent', () => {
 
   it('should get support Type', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
-    const supportType = component.generateSupportType(
-      component.selectedSupport
-    );
+    const supportType = component.generateSupportType(component.selectedSupport);
     expect(supportType).toEqual('Food - Groceries');
   });
 
   it('should get need assessment Dialog', fakeAsync(() => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     stepSupportsService.evacuationFileValue = stepEssFileService.essFile;
 
     fixture.detectChanges();
@@ -131,17 +116,14 @@ describe('ExistingSupportDetailsComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const viewNeedsAssessDialog = document.getElementsByTagName(
-      'app-view-assessment-dialog'
-    )[0] as HTMLElement;
+    const viewNeedsAssessDialog = document.getElementsByTagName('app-view-assessment-dialog')[0] as HTMLElement;
 
     expect(viewNeedsAssessDialog).toBeDefined();
   }));
 
   it('should navigate to view support after delete referral', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     stepSupportsService.evacuationFileValue = stepEssFileService.essFile;
 
     fixture.detectChanges();
@@ -149,9 +131,7 @@ describe('ExistingSupportDetailsComponent', () => {
     component.voidReferral();
     fixture.detectChanges();
 
-    const voidReferralDialog = document.getElementsByTagName(
-      'app-void-referral-dialog'
-    )[0] as HTMLElement;
+    const voidReferralDialog = document.getElementsByTagName('app-void-referral-dialog')[0] as HTMLElement;
 
     // const reasonSelector = voidReferralDialog.querySelector(
     //   'mat-select'
@@ -168,47 +148,34 @@ describe('ExistingSupportDetailsComponent', () => {
     expect(voidReferralDialog).toBeDefined();
   });
 
-  it('should navigate to supports details', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to supports details', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-      stepSupportsService.selectedSupportDetail =
-        stepSupportsService.selectedSupport;
+    stepEssFileService.selectedEssFile = stepEssFileService.essFile;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
 
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.editDraft();
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.editDraft();
 
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/ess-wizard/add-supports/details'],
-        {
-          state: { action: 'edit' }
-        }
-      );
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/add-supports/details'], {
+      state: { action: 'edit' }
+    });
+  }));
 
   it('should get status description', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
-    const statusDescription = component.getStatusTextToDisplay(
-      component.selectedSupport.status
-    );
+    const statusDescription = component.getStatusTextToDisplay(component.selectedSupport.status);
     expect(statusDescription).toEqual('Active');
   });
 
   it('should get method description', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
-    stepSupportsService.selectedSupportDetail =
-      stepSupportsService.selectedSupport;
+    stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
-    const methodDescription = component.getMethodTextToDisplay(
-      component.selectedSupport.method
-    );
+    const methodDescription = component.getMethodTextToDisplay(component.selectedSupport.method);
     expect(methodDescription).toEqual('Referral');
   });
 });

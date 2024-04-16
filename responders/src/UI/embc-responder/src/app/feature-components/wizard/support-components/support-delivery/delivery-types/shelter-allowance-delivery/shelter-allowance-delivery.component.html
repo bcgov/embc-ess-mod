@@ -18,32 +18,21 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Full Name</mat-label>
-        <input
-          formControlName="hostName"
-          maxlength="255"
-          matInput
-          placeholder="Enter Name"
-        />
+        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" />
         <mat-error
           class="custom-mat-error"
-          *ngIf="
-            supportDeliveryFormControl?.hostName.invalid &&
-            supportDeliveryFormControl?.hostName.hasError('whitespaceError')
-          "
+          *ngIf="supportDeliveryFormControl?.hostName.invalid && supportDeliveryFormControl?.hostName.hasError('whitespaceError')"
         >
           Full Name is required</mat-error
         >
       </mat-form-field>
     </div>
   </div>
- 
 
   <div class="row">
     <div class="col-md-12">
       <p class="bold">Contact Information</p>
-      <p class="requiredField">
-        Please provide at least 1 point of contact for the individual to whom reimbursement should be issued. 
-      </p>
+      <p class="requiredField">Please provide at least 1 point of contact for the individual to whom reimbursement should be issued.</p>
     </div>
   </div>
 
@@ -51,26 +40,11 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Telephone</mat-label>
-        <input
-          formControlName="hostPhone"
-          matInput
-          placeholder="Telephone"
-          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
-        />
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl.hostPhone.invalid &&
-            supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
-          "
-        >
+        <input formControlName="hostPhone" matInput placeholder="Telephone" [textMask]="{ mask: phoneMask, keepCharPositions: true }" />
+        <mat-error *ngIf="supportDeliveryFormControl.hostPhone.invalid && supportDeliveryFormControl.hostPhone.hasError('whitespaceError')">
           Telephone is required</mat-error
         >
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl.hostPhone.invalid &&
-            supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
-          "
-        >
+        <mat-error *ngIf="supportDeliveryFormControl.hostPhone.invalid && supportDeliveryFormControl.hostPhone.hasError('incorrectLength')">
           Telephone must have 10 digits</mat-error
         >
       </mat-form-field>
@@ -81,25 +55,13 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Email Address</mat-label>
-        <input
-          formControlName="emailAddress"
-          maxlength="100"
-          matInput
-          placeholder="Email Address"
-        />
+        <input formControlName="emailAddress" maxlength="100" matInput placeholder="Email Address" />
         <mat-error
-          *ngIf="
-            supportDeliveryFormControl.emailAddress.invalid &&
-            supportDeliveryFormControl.emailAddress.hasError('whitespaceError')
-          "
+          *ngIf="supportDeliveryFormControl.emailAddress.invalid && supportDeliveryFormControl.emailAddress.hasError('whitespaceError')"
         >
           Email is required</mat-error
         >
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl.emailAddress.invalid &&
-            supportDeliveryFormControl.emailAddress.hasError('email')
-          "
+        <mat-error *ngIf="supportDeliveryFormControl.emailAddress.invalid && supportDeliveryFormControl.emailAddress.hasError('email')"
           >Invalid email</mat-error
         >
       </mat-form-field>

@@ -15,11 +15,9 @@ import * as globalConst from '../../../../core/services/global-constants';
   providedIn: 'root'
 })
 export class EssFilesResultsService {
-  public isLoadingOverlay: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  public isLoadingOverlay: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public isLoadingOverlay$: Observable<boolean> =
-    this.isLoadingOverlay.asObservable();
+  public isLoadingOverlay$: Observable<boolean> = this.isLoadingOverlay.asObservable();
   constructor(
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
@@ -36,17 +34,9 @@ export class EssFilesResultsService {
     return this.isLoadingOverlay$;
   }
 
-  public async getSearchedUserProfile(
-    selectedFile: EvacuationFileSearchResultModel
-  ) {
-    const searchedMember = selectedFile.householdMembers.find(
-      (member) => member.isSearchMatch
-    );
-    if (
-      searchedMember &&
-      searchedMember.id !== null &&
-      searchedMember.id !== undefined
-    ) {
+  public async getSearchedUserProfile(selectedFile: EvacuationFileSearchResultModel) {
+    const searchedMember = selectedFile.householdMembers.find((member) => member.isSearchMatch);
+    if (searchedMember && searchedMember.id !== null && searchedMember.id !== undefined) {
       const profile$ = await this.getEvacueeProfile(searchedMember.id);
     } else {
       this.appBaseService.appModel = {
@@ -56,20 +46,16 @@ export class EssFilesResultsService {
     }
   }
 
-  public getEvacueeProfile(
-    evacueeProfileId: string
-  ): Promise<RegistrantProfileModel> {
-    const profile$ = this.evacueeProfileService
-      .getProfileFromId(evacueeProfileId)
-      .pipe(
-        tap({
-          next: (profile: RegistrantProfileModel) => {},
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.getProfileError);
-          }
-        })
-      );
+  public getEvacueeProfile(evacueeProfileId: string): Promise<RegistrantProfileModel> {
+    const profile$ = this.evacueeProfileService.getProfileFromId(evacueeProfileId).pipe(
+      tap({
+        next: (profile: RegistrantProfileModel) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
+        }
+      })
+    );
     return lastValueFrom(profile$);
   }
 

@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [AddressComponent],
-  imports: [
-    CommonModule,
-    AddressRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, AddressRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class AddressModule {}

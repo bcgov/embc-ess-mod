@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
@@ -14,9 +6,7 @@ import { AbstractControl, UntypedFormGroup } from '@angular/forms';
   templateUrl: './taxi-transportation.component.html',
   styleUrls: ['./taxi-transportation.component.scss']
 })
-export class TaxiTransportationComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class TaxiTransportationComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   referralForm: UntypedFormGroup;
 
@@ -28,9 +18,7 @@ export class TaxiTransportationComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
   }
 

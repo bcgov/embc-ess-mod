@@ -18,7 +18,7 @@ import { ClothingComponent } from './details-type/clothing/clothing.component';
 import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
 import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import {ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
+import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
 
 @NgModule({
   declarations: [

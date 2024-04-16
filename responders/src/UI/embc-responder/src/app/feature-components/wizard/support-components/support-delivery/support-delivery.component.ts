@@ -86,14 +86,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       {
         issuedTo: [
           this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
-          [this.customValidation.conditionalValidation(() => this.selectedSupportMethod === SupportMethod.Referral, Validators.required).bind(this.customValidation)]
+          [
+            this.customValidation
+              .conditionalValidation(() => this.selectedSupportMethod === SupportMethod.Referral, Validators.required)
+              .bind(this.customValidation)
+          ]
         ],
         name: [
           this.stepSupportsService?.supportDelivery?.name ?? '',
           [
             this.customValidation
               .conditionalValidation(
-                () => this.selectedSupportMethod === SupportMethod.Referral && this.supportDeliveryForm.get('issuedTo').value === 'Someone else',
+                () =>
+                  this.selectedSupportMethod === SupportMethod.Referral &&
+                  this.supportDeliveryForm.get('issuedTo').value === 'Someone else',
                 this.customValidation.whitespaceValidator()
               )
               .bind(this.customValidation)
@@ -126,11 +132,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() || ''
         ],
         receivingRegistrantId: [
-          this.cloneFlag ? this.cloneSupportDetailsService.receivingRegistrantId : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id || ''
+          this.cloneFlag
+            ? this.cloneSupportDetailsService.receivingRegistrantId
+            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id || ''
         ],
         notificationPreference: [
           this.getExistingPreference(),
-          this.customValidation.conditionalValidation(() => this.selectedSupportMethod === SupportMethod.ETransfer, Validators.required).bind(this.customValidation)
+          this.customValidation
+            .conditionalValidation(() => this.selectedSupportMethod === SupportMethod.ETransfer, Validators.required)
+            .bind(this.customValidation)
         ],
         notificationEmail: [
           this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
@@ -139,7 +149,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             this.customValidation.conditionalValidation(
               () =>
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -152,7 +163,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -164,7 +176,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             this.customValidation.conditionalValidation(
               () =>
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -177,7 +190,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -343,7 +357,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       hostAddress: [this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '', [this.customValidation.whitespaceValidator()]],
       hostCity: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '', [Validators.required]],
       hostCommunityCode: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? ''],
-      hostPhone: [this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '', [this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]]
+      hostPhone: [
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
+        [this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]
+      ]
     });
   }
 

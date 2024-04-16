@@ -88,9 +88,7 @@ export class ReviewSupportComponent implements OnInit {
       globalConst.groceriesRate.rate *
       (support as FoodGroceriesSupport).numberOfDays *
       (support as FoodGroceriesSupport).includedHouseholdMembers.length;
-    return maxRate < (support as FoodGroceriesSupport).totalAmount
-      ? false
-      : true;
+    return maxRate < (support as FoodGroceriesSupport).totalAmount ? false : true;
   }
 
   /**
@@ -100,9 +98,7 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the current support surpasses the max rate allow or not
    */
   checkIncidentalMaxRate(support: Support): boolean {
-    const maxRate =
-      globalConst.incidentals.rate *
-      (support as IncidentalsSupport).includedHouseholdMembers.length;
+    const maxRate = globalConst.incidentals.rate * (support as IncidentalsSupport).includedHouseholdMembers.length;
     return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
@@ -116,8 +112,7 @@ export class ReviewSupportComponent implements OnInit {
     const rate = (support as ClothingSupport).extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
-    const maxRate =
-      rate * (support as ClothingSupport).includedHouseholdMembers.length;
+    const maxRate = rate * (support as ClothingSupport).includedHouseholdMembers.length;
     return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
@@ -131,15 +126,15 @@ export class ReviewSupportComponent implements OnInit {
     return support as FoodGroceriesSupport;
   }
 
-   /**
+  /**
    * Returns the current support as a ShelterAllowanceReferral
    *
    * @param support the support to cast as ShelterAllowanceReferral
    * @returns a ShelterAllowanceReferral object
    */
-    getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
-      return support as LodgingAllowanceSupport;
-    }
+  getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
+    return support as LodgingAllowanceSupport;
+  }
 
   /**
    * Returns the current support as a FoodRestaurantReferral
@@ -243,10 +238,7 @@ export class ReviewSupportComponent implements OnInit {
   }
 
   includesEtranfer() {
-    return (
-      this.draftSupports.filter((s) => s.method === SupportMethod.ETransfer)
-        .length > 0
-    );
+    return this.draftSupports.filter((s) => s.method === SupportMethod.ETransfer).length > 0;
   }
 
   /**
@@ -257,9 +249,7 @@ export class ReviewSupportComponent implements OnInit {
    */
   getSupplierAddress(support: Support): AddressModel {
     const referral = support?.supportDelivery as Referral;
-    return this.locationService.getAddressModelFromAddress(
-      referral?.supplierAddress
-    );
+    return this.locationService.getAddressModelFromAddress(referral?.supplierAddress);
     // return referral?.supplierAddress as AddressModel;
   }
 
@@ -270,14 +260,10 @@ export class ReviewSupportComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
-    const lastName =
-      this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
-        (member) => member.id === memberId
-      ).lastName;
-    const firstName =
-      this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
-        (member) => member.id === memberId
-      ).firstName;
+    const lastName = this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find((member) => member.id === memberId).lastName;
+    const firstName = this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
+      (member) => member.id === memberId
+    ).firstName;
 
     return lastName.toUpperCase() + ', ' + firstName;
   }
@@ -342,24 +328,19 @@ export class ReviewSupportComponent implements OnInit {
     this.showLoader = !this.showLoader;
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.evacueeSessionService.evacFile.id;
-    this.reviewSupportService
-      .savePaperSupports(fileId, supportsDraft)
-      .subscribe({
-        next: (response) => {
-          this.referralService.clearDraftSupport();
-          this.reviewSupportService.updateExistingSupportsList();
-          this.showLoader = !this.showLoader;
-          this.router.navigate(['/ess-wizard/add-supports']);
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.processSupportDraftsError
-          );
-        }
-      });
+    this.reviewSupportService.savePaperSupports(fileId, supportsDraft).subscribe({
+      next: (response) => {
+        this.referralService.clearDraftSupport();
+        this.reviewSupportService.updateExistingSupportsList();
+        this.showLoader = !this.showLoader;
+        this.router.navigate(['/ess-wizard/add-supports']);
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.processSupportDraftsError);
+      }
+    });
   }
 
   private processDraftSupports(): void {
@@ -369,13 +350,7 @@ export class ReviewSupportComponent implements OnInit {
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: async (response) => {
         const blob = new Blob([response], { type: response.type });
-        await this.downloadService.downloadFile(
-          window,
-          blob,
-          `support-${fileId}-${new FlatDateFormatPipe().transform(
-            new Date()
-          )}.pdf`
-        );
+        await this.downloadService.downloadFile(window, blob, `support-${fileId}-${new FlatDateFormatPipe().transform(new Date())}.pdf`);
 
         //Clearing Draft supports array and updating the supports list for the selected ESS File
         this.referralService.clearDraftSupport();
@@ -387,10 +362,7 @@ export class ReviewSupportComponent implements OnInit {
         console.error('error when processing supports: ', error);
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.processSupportDraftsError
-        );
+        this.alertService.setAlert('danger', globalConst.processSupportDraftsError);
       }
     });
   }

@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -28,10 +24,7 @@ export class SecurityQuestionsService {
 
     return this.formBuilder.group(
       {
-        question1: [
-          this.stepEvacueeProfileService.securityQuestions[0].question ?? '',
-          [Validators.required]
-        ],
+        question1: [this.stepEvacueeProfileService.securityQuestions[0].question ?? '', [Validators.required]],
         answer1: [
           this.stepEvacueeProfileService.securityQuestions[0].answer ?? '',
           [
@@ -41,10 +34,7 @@ export class SecurityQuestionsService {
             this.customValidationService.whitespaceValidator()
           ]
         ],
-        question2: [
-          this.stepEvacueeProfileService.securityQuestions[1].question ?? '',
-          [Validators.required]
-        ],
+        question2: [this.stepEvacueeProfileService.securityQuestions[1].question ?? '', [Validators.required]],
         answer2: [
           this.stepEvacueeProfileService.securityQuestions[1].answer ?? '',
           [
@@ -54,10 +44,7 @@ export class SecurityQuestionsService {
             this.customValidationService.whitespaceValidator()
           ]
         ],
-        question3: [
-          this.stepEvacueeProfileService.securityQuestions[2].question ?? '',
-          [Validators.required]
-        ],
+        question3: [this.stepEvacueeProfileService.securityQuestions[2].question ?? '', [Validators.required]],
         answer3: [
           this.stepEvacueeProfileService.securityQuestions[2].answer ?? '',
           [
@@ -69,13 +56,7 @@ export class SecurityQuestionsService {
         ]
       },
       {
-        validators: [
-          this.customValidationService.uniqueValueValidator([
-            'question1',
-            'question2',
-            'question3'
-          ])
-        ]
+        validators: [this.customValidationService.uniqueValueValidator(['question1', 'question2', 'question3'])]
       }
     );
   }
@@ -91,25 +72,12 @@ export class SecurityQuestionsService {
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   public updateTabStatus(form: UntypedFormGroup) {
-    if (
-      form.valid ||
-      (!this.stepEvacueeProfileService.editQuestions &&
-        this.stepEvacueeProfileService.savedQuestions?.length > 0)
-    ) {
-      this.stepEvacueeProfileService.setTabStatus(
-        'security-questions',
-        'complete'
-      );
+    if (form.valid || (!this.stepEvacueeProfileService.editQuestions && this.stepEvacueeProfileService.savedQuestions?.length > 0)) {
+      this.stepEvacueeProfileService.setTabStatus('security-questions', 'complete');
     } else if (this.stepEvacueeProfileService.checkForPartialUpdates(form)) {
-      this.stepEvacueeProfileService.setTabStatus(
-        'security-questions',
-        'incomplete'
-      );
+      this.stepEvacueeProfileService.setTabStatus('security-questions', 'incomplete');
     } else {
-      this.stepEvacueeProfileService.setTabStatus(
-        'security-questions',
-        'not-started'
-      );
+      this.stepEvacueeProfileService.setTabStatus('security-questions', 'not-started');
     }
     this.saveFormData(form);
   }
@@ -137,8 +105,7 @@ export class SecurityQuestionsService {
    * @param clear If true, reset securityQuestions to empty/default values
    */
   setQuestionArray(clear) {
-    if (!this.stepEvacueeProfileService.securityQuestions || clear)
-      this.stepEvacueeProfileService.securityQuestions = [];
+    if (!this.stepEvacueeProfileService.securityQuestions || clear) this.stepEvacueeProfileService.securityQuestions = [];
 
     // Set up 3 blank security question values if not already there
     while (this.stepEvacueeProfileService.securityQuestions.length < 3) {
@@ -171,10 +138,7 @@ export class SecurityQuestionsService {
 
   cleanup(questionForm: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit() && questionForm.dirty) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        questionForm.controls,
-        'securityQuestions'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(questionForm.controls, 'securityQuestions');
 
       this.wizardService.setEditStatus({
         tabName: 'securityQuestions',

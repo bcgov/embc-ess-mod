@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -89,29 +80,17 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
         const isAsc = sort.direction === 'asc';
         switch (sort.active) {
           case 'legalName':
-            return compare(
-              a.legalName.toLowerCase(),
-              b.legalName.toLowerCase(),
-              isAsc
-            );
+            return compare(a.legalName.toLowerCase(), b.legalName.toLowerCase(), isAsc);
           case 'name':
             return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
           case 'mutualAid':
-            return compare(
-              a.mutualAid?.givenToTeam?.name.toLowerCase(),
-              b.mutualAid?.givenToTeam?.name.toLowerCase(),
-              isAsc
-            );
+            return compare(a.mutualAid?.givenToTeam?.name.toLowerCase(), b.mutualAid?.givenToTeam?.name.toLowerCase(), isAsc);
           case 'status':
             return compare(a.status, b.status, isAsc);
           case 'providesMutualAid':
             return compare(+a.providesMutualAid, +b.providesMutualAid, isAsc);
           case 'address':
-            return compare(
-              a.address?.addressLine1.toLowerCase(),
-              b.address?.addressLine1.toLowerCase(),
-              isAsc
-            );
+            return compare(a.address?.addressLine1.toLowerCase(), b.address?.addressLine1.toLowerCase(), isAsc);
           default:
             return 0;
         }
@@ -145,16 +124,8 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
-        (data.legalName !== null &&
-          data.legalName
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
-        (data.name !== null &&
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1)
+        (data.legalName !== null && data.legalName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
+        (data.name !== null && data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1)
       ) {
         return true;
       }

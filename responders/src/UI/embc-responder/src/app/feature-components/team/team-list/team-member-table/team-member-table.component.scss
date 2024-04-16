@@ -1,24 +1,24 @@
 table {
-    width: 100%;
-  }
+  width: 100%;
+}
 
-  th {
-    font-size: 16px;
-    background-color: rgba(113, 113, 113, 1);
-    color: white
-  }
+th {
+  font-size: 16px;
+  background-color: rgba(113, 113, 113, 1);
+  color: white;
+}
 
-  tr:nth-child(even){
-    background-color: #f2f2f2;
-  }
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-  tr:hover {
-    background-color: #E1E1E1;
-    cursor: pointer;
-  }
+tr:hover {
+  background-color: #e1e1e1;
+  cursor: pointer;
+}
 
-  ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
-    background-color: rgba(37, 168, 0, 1) !important;
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: rgba(37, 168, 0, 1) !important;
 }
 
 ::ng-deep .mat-slide-toggle-bar {

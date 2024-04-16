@@ -18,9 +18,7 @@ export class CaseNoteSearchComponent implements OnInit {
   constructor(private optionInjectionService: OptionInjectionService) {}
 
   ngOnInit(): void {
-    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(
-      SearchFormRegistery.caseNoteSearchForm
-    );
+    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(SearchFormRegistery.caseNoteSearchForm);
   }
 
   search() {
@@ -28,9 +26,7 @@ export class CaseNoteSearchComponent implements OnInit {
       this.isLoading = !this.isLoading;
       this.isSubmitted = !this.isSubmitted;
       const searchParams: EvacueeDetailsModel = {
-        essFileNumber: padFileIdForSearch(
-          this.fileSearchForm.get('essFileNumber').value
-        )
+        essFileNumber: padFileIdForSearch(this.fileSearchForm.get('essFileNumber').value)
       };
 
       (

@@ -18,18 +18,10 @@ export class MockEssFilesResultsService extends EssFilesResultsService {
     alertService: AlertService,
     dialog: MatDialog
   ) {
-    super(
-      appBaseService,
-      computeState,
-      evacueeProfileService,
-      alertService,
-      dialog
-    );
+    super(appBaseService, computeState, evacueeProfileService, alertService, dialog);
   }
 
-  public async getSearchedUserProfile(
-    selectedFile: EvacuationFileSearchResultModel
-  ) {
+  public async getSearchedUserProfile(selectedFile: EvacuationFileSearchResultModel) {
     return null;
   }
 }

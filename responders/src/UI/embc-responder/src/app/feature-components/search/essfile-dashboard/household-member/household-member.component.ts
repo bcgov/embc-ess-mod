@@ -1,10 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
-import {
-  EvacuationFileHouseholdMember,
-  HouseholdMemberType,
-  RegistrantProfileSearchResult
-} from 'src/app/core/api/models';
+import { EvacuationFileHouseholdMember, HouseholdMemberType, RegistrantProfileSearchResult } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -50,10 +46,7 @@ export class HouseholdMemberComponent implements OnInit {
    *
    * @param itemIndex selected file index
    */
-  setOpened(
-    itemIndex: number,
-    houseHoldMember: EvacuationFileHouseholdMember
-  ): void {
+  setOpened(itemIndex: number, houseHoldMember: EvacuationFileHouseholdMember): void {
     this.currentlyOpenedItemIndex = itemIndex;
     this.essfileDashboardService.matchedProfiles = undefined;
     this.essfileDashboardService.displayMemberButton = undefined;
@@ -63,17 +56,12 @@ export class HouseholdMemberComponent implements OnInit {
 
     if (
       houseHoldMember.type === HouseholdMemberType.HouseholdMember &&
-      this.appBaseService.appModel.selectedUserPathway ===
-        SelectedPathType.digital &&
+      this.appBaseService.appModel.selectedUserPathway === SelectedPathType.digital &&
       !houseHoldMember.isMinor &&
       houseHoldMember.linkedRegistrantId === null
     ) {
       this.essfileDashboardService
-        .getPossibleProfileMatches(
-          houseHoldMember.firstName,
-          houseHoldMember.lastName,
-          houseHoldMember.dateOfBirth
-        )
+        .getPossibleProfileMatches(houseHoldMember.firstName, houseHoldMember.lastName, houseHoldMember.dateOfBirth)
         .subscribe({
           next: (value: RegistrantProfileSearchResult[]) => {
             this.essfileDashboardService.matchedProfiles = value;

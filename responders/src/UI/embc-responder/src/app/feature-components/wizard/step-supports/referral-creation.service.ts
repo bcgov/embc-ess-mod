@@ -29,10 +29,7 @@ import {
   ShelterAllowance
 } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReferralCreationService {
@@ -71,9 +68,7 @@ export class ReferralCreationService {
   }
 
   get groceriesReferral(): FoodGroceriesSupport {
-    return this.groceriesReferralVal
-      ? this.groceriesReferralVal
-      : JSON.parse(this.cacheService.get('groceriesReferral'));
+    return this.groceriesReferralVal ? this.groceriesReferralVal : JSON.parse(this.cacheService.get('groceriesReferral'));
   }
 
   set mealReferral(mealReferralVal: FoodRestaurantSupport) {
@@ -83,9 +78,7 @@ export class ReferralCreationService {
   }
 
   get mealReferral(): FoodRestaurantSupport {
-    return this.mealReferralVal
-      ? this.mealReferralVal
-      : JSON.parse(this.cacheService.get('mealReferral'));
+    return this.mealReferralVal ? this.mealReferralVal : JSON.parse(this.cacheService.get('mealReferral'));
   }
 
   set taxiReferral(taxiReferralVal: TransportationTaxiSupport) {
@@ -95,9 +88,7 @@ export class ReferralCreationService {
   }
 
   get taxiReferral(): TransportationTaxiSupport {
-    return this.taxiReferralVal
-      ? this.taxiReferralVal
-      : JSON.parse(this.cacheService.get('taxiReferral'));
+    return this.taxiReferralVal ? this.taxiReferralVal : JSON.parse(this.cacheService.get('taxiReferral'));
   }
 
   set otherReferral(otherReferralVal: TransportationOtherSupport) {
@@ -107,9 +98,7 @@ export class ReferralCreationService {
   }
 
   get otherReferral(): TransportationOtherSupport {
-    return this.otherReferralVal
-      ? this.otherReferralVal
-      : JSON.parse(this.cacheService.get('otherReferral'));
+    return this.otherReferralVal ? this.otherReferralVal : JSON.parse(this.cacheService.get('otherReferral'));
   }
 
   set hotelReferral(hotelReferralVal: LodgingHotelSupport) {
@@ -119,9 +108,7 @@ export class ReferralCreationService {
   }
 
   get hotelReferral(): LodgingHotelSupport {
-    return this.hotelReferralVal
-      ? this.hotelReferralVal
-      : JSON.parse(this.cacheService.get('hotelMotelReferral'));
+    return this.hotelReferralVal ? this.hotelReferralVal : JSON.parse(this.cacheService.get('hotelMotelReferral'));
   }
 
   set billetingReferral(billetingReferralVal: LodgingBilletingSupport) {
@@ -131,9 +118,7 @@ export class ReferralCreationService {
   }
 
   get billetingReferral(): LodgingBilletingSupport {
-    return this.billetingReferralVal
-      ? this.billetingReferralVal
-      : JSON.parse(this.cacheService.get('billetingReferral'));
+    return this.billetingReferralVal ? this.billetingReferralVal : JSON.parse(this.cacheService.get('billetingReferral'));
   }
 
   set groupReferral(groupReferralVal: LodgingGroupSupport) {
@@ -143,9 +128,7 @@ export class ReferralCreationService {
   }
 
   get groupReferral(): LodgingGroupSupport {
-    return this.groupReferralVal
-      ? this.groupReferralVal
-      : JSON.parse(this.cacheService.get('groupReferral'));
+    return this.groupReferralVal ? this.groupReferralVal : JSON.parse(this.cacheService.get('groupReferral'));
   }
 
   set clothingReferral(clothingReferralVal: ClothingSupport) {
@@ -154,22 +137,20 @@ export class ReferralCreationService {
   }
 
   get clothingReferral(): ClothingSupport {
-    return this.clothingReferralVal
-      ? this.clothingReferralVal
-      : JSON.parse(this.cacheService.get('clothingReferralVal'));
+    return this.clothingReferralVal ? this.clothingReferralVal : JSON.parse(this.cacheService.get('clothingReferralVal'));
   }
 
   set lodgingAllowanceReferral(lodgingAllowanceReferralVal: LodgingAllowanceSupport) {
     this.lodgingAllowanceReferralVal = lodgingAllowanceReferralVal;
     this.cacheService.set('lodgingAllowanceReferralVal', lodgingAllowanceReferralVal);
     this.setDraftSupport(lodgingAllowanceReferralVal);
-   }
- 
-   get lodgingAllowanceReferral(): LodgingAllowanceSupport {
-     return this.lodgingAllowanceReferralVal
-       ? this.lodgingAllowanceReferralVal
-       : JSON.parse(this.cacheService.get('lodgingAllowanceReferral'));
-   }
+  }
+
+  get lodgingAllowanceReferral(): LodgingAllowanceSupport {
+    return this.lodgingAllowanceReferralVal
+      ? this.lodgingAllowanceReferralVal
+      : JSON.parse(this.cacheService.get('lodgingAllowanceReferral'));
+  }
 
   set incidentalsReferral(incidentalsReferralVal: IncidentalsSupport) {
     this.incidentalsReferralVal = incidentalsReferralVal;
@@ -177,31 +158,23 @@ export class ReferralCreationService {
   }
 
   get incidentalsReferral(): IncidentalsSupport {
-    return this.incidentalsReferralVal
-      ? this.incidentalsReferralVal
-      : JSON.parse(this.cacheService.get('incidentalsReferral'));
+    return this.incidentalsReferralVal ? this.incidentalsReferralVal : JSON.parse(this.cacheService.get('incidentalsReferral'));
   }
 
   createMealReferral(referral: Support, supportDetails: SupportDetailsModel) {
     const mealReferral: FoodRestaurantSupport = {
       ...referral,
       category: SupportCategory.Food,
-      numberOfBreakfastsPerPerson: (supportDetails.referral as RestaurantMeal)
-        .noOfBreakfast,
-      numberOfDinnersPerPerson: (supportDetails.referral as RestaurantMeal)
-        .noOfDinners,
-      numberOfLunchesPerPerson: (supportDetails.referral as RestaurantMeal)
-        .noOfLunches,
+      numberOfBreakfastsPerPerson: (supportDetails.referral as RestaurantMeal).noOfBreakfast,
+      numberOfDinnersPerPerson: (supportDetails.referral as RestaurantMeal).noOfDinners,
+      numberOfLunchesPerPerson: (supportDetails.referral as RestaurantMeal).noOfLunches,
       subCategory: SupportSubCategory.Food_Restaurant,
       totalAmount: (supportDetails.referral as RestaurantMeal).totalAmount
     };
     this.mealReferral = mealReferral;
   }
 
-  createGroceriesReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel
-  ) {
+  createGroceriesReferral(referral: Support, supportDetails: SupportDetailsModel) {
     const groceriesReferral: FoodGroceriesSupport = {
       ...referral,
       category: SupportCategory.Food,
@@ -233,18 +206,13 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Transportation,
       transportMode: (supportDetails.referral as OtherTransport).transportMode,
-      totalAmount: this.parseTextNumber(
-        (supportDetails.referral as OtherTransport).totalAmount
-      ),
+      totalAmount: this.parseTextNumber((supportDetails.referral as OtherTransport).totalAmount),
       subCategory: SupportSubCategory.Transportation_Other
     };
     this.otherReferral = otherReferral;
   }
 
-  createHotelMotelReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel
-  ) {
+  createHotelMotelReferral(referral: Support, supportDetails: SupportDetailsModel) {
     const hotelMotelReferral: LodgingHotelSupport = {
       ...referral,
       category: SupportCategory.Lodging,
@@ -255,11 +223,7 @@ export class ReferralCreationService {
     this.hotelReferral = hotelMotelReferral;
   }
 
-  createBilletingReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel,
-    supportDelivery: SupportDeliveryModel
-  ) {
+  createBilletingReferral(referral: Support, supportDetails: SupportDetailsModel, supportDelivery: SupportDeliveryModel) {
     const billetingReferral: LodgingBilletingSupport = {
       ...referral,
       category: SupportCategory.Lodging,
@@ -274,59 +238,41 @@ export class ReferralCreationService {
     this.billetingReferral = billetingReferral;
   }
 
-  createGroupLodgingReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel,
-    supportDelivery: SupportDeliveryModel
-  ) {
+  createGroupLodgingReferral(referral: Support, supportDetails: SupportDetailsModel, supportDelivery: SupportDeliveryModel) {
     const groupReferral: LodgingGroupSupport = {
       ...referral,
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
       subCategory: SupportSubCategory.Lodging_Group,
       facilityAddress: supportDelivery.details.hostAddress,
-      facilityCity: this.parseCommunityName(
-        supportDelivery.details.hostCity as Community
-      ),
-      facilityCommunityCode: this.parseCommunityCode(
-        supportDelivery.details.hostCommunityCode as Community
-      ),
+      facilityCity: this.parseCommunityName(supportDelivery.details.hostCity as Community),
+      facilityCommunityCode: this.parseCommunityCode(supportDelivery.details.hostCommunityCode as Community),
       facilityContactPhone: supportDelivery.details.hostPhone,
       facilityName: supportDelivery.details.hostName
     };
     this.groupReferral = groupReferral;
   }
 
-  createShelterAllowanceReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel,
-    supportDelivery: SupportDeliveryModel
-  ) {
+  createShelterAllowanceReferral(referral: Support, supportDetails: SupportDetailsModel, supportDelivery: SupportDeliveryModel) {
     const lodgingAllowanceReferral: LodgingAllowanceSupport = {
       ...referral,
-     category: SupportCategory.Lodging,
-     contactEmail:supportDelivery.details.emailAddress,
-     contactPhone: supportDelivery.details.hostPhone,
-     numberOfNights: (supportDetails.referral as ShelterAllowance).noOfNights,
+      category: SupportCategory.Lodging,
+      contactEmail: supportDelivery.details.emailAddress,
+      contactPhone: supportDelivery.details.hostPhone,
+      numberOfNights: (supportDetails.referral as ShelterAllowance).noOfNights,
       totalAmount: this.parseTextNumber(
-        (supportDetails.referral as ShelterAllowance).totalAmount
-          ? (supportDetails.referral as ShelterAllowance).totalAmount
-          : 0
+        (supportDetails.referral as ShelterAllowance).totalAmount ? (supportDetails.referral as ShelterAllowance).totalAmount : 0
       ),
       subCategory: SupportSubCategory.Lodging_Allowance
     };
     this.lodgingAllowanceReferral = lodgingAllowanceReferral;
   }
 
-  createClothingReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel
-  ) {
+  createClothingReferral(referral: Support, supportDetails: SupportDetailsModel) {
     const clothingReferral: ClothingSupport = {
       ...referral,
       category: SupportCategory.Clothing,
-      extremeWinterConditions: (supportDetails.referral as Clothing)
-        .extremeWinterConditions,
+      extremeWinterConditions: (supportDetails.referral as Clothing).extremeWinterConditions,
       totalAmount: this.parseTextNumber(
         (supportDetails.referral as Clothing).userTotalAmount
           ? (supportDetails.referral as Clothing).userTotalAmount
@@ -338,10 +284,7 @@ export class ReferralCreationService {
     this.clothingReferral = clothingReferral;
   }
 
-  createIncidentalsReferral(
-    referral: Support,
-    supportDetails: SupportDetailsModel
-  ) {
+  createIncidentalsReferral(referral: Support, supportDetails: SupportDetailsModel) {
     const incidentalsReferral: IncidentalsSupport = {
       ...referral,
       category: SupportCategory.Incidentals,

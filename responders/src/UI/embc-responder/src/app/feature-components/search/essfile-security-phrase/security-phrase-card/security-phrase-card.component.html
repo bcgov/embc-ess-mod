@@ -19,10 +19,7 @@
         <mat-form-field appearance="outline">
           <input [formControlName]="'phraseAnswer'" matInput type="text" />
           <mat-error
-            *ngIf="
-              securityPhraseFormControl.phraseAnswer.invalid &&
-              securityPhraseFormControl.phraseAnswer.hasError('whitespaceError')
-            "
+            *ngIf="securityPhraseFormControl.phraseAnswer.invalid && securityPhraseFormControl.phraseAnswer.hasError('whitespaceError')"
           >
             Security Phrase cannot be blank</mat-error
           >

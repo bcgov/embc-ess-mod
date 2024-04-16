@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [EssFileReviewComponent],
-  imports: [
-    CommonModule,
-    CustomPipeModule,
-    MaterialModule,
-    SharedModule,
-    EssFileReviewRoutingModule
-  ]
+  imports: [CommonModule, CustomPipeModule, MaterialModule, SharedModule, EssFileReviewRoutingModule]
 })
 export class EssFileReviewModule {}

@@ -66,37 +66,28 @@ export class DashboardService {
   }
 
   async getEssFile(): Promise<EvacuationFileModel> {
-    const file$ = this.essFileService
-      .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
-      .pipe(
-        tap({
-          next: (result: EvacuationFileModel) => {},
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.fileDashboardError
-            );
-          }
-        })
-      );
+    const file$ = this.essFileService.getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id).pipe(
+      tap({
+        next: (result: EvacuationFileModel) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.fileDashboardError);
+        }
+      })
+    );
     return lastValueFrom(file$);
   }
 
-  public getEvacueeProfile(
-    evacueeProfileId: string
-  ): Promise<RegistrantProfileModel> {
-    const profile$ = this.evacueeProfileService
-      .getProfileFromId(evacueeProfileId)
-      .pipe(
-        tap({
-          next: (profile: RegistrantProfileModel) => {},
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.getProfileError);
-          }
-        })
-      );
+  public getEvacueeProfile(evacueeProfileId: string): Promise<RegistrantProfileModel> {
+    const profile$ = this.evacueeProfileService.getProfileFromId(evacueeProfileId).pipe(
+      tap({
+        next: (profile: RegistrantProfileModel) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
+        }
+      })
+    );
     return lastValueFrom(profile$);
   }
 }

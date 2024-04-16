@@ -14,17 +14,11 @@ const routes: Routes = [
       },
       {
         path: 'details',
-        loadChildren: () =>
-          import('../team-list-wrapper/team-list-wrapper.module').then(
-            (m) => m.TeamListWrapperModule
-          )
+        loadChildren: () => import('../team-list-wrapper/team-list-wrapper.module').then((m) => m.TeamListWrapperModule)
       },
       {
         path: 'add-member',
-        loadChildren: () =>
-          import('../add-team-member/add-team-member.module').then(
-            (m) => m.AddTeamMemberModule
-          )
+        loadChildren: () => import('../add-team-member/add-team-member.module').then((m) => m.AddTeamMemberModule)
       }
     ]
   }

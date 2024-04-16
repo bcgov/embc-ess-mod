@@ -1,9 +1,7 @@
 <div class="row">
   <div class="col-12 content-container">
     <form [formGroup]="animalsForm">
-      <p id="hasPets-radio-group-label" class="no-margin requiredField">
-        Do you have any pets that live in the same household with you?
-      </p>
+      <p id="hasPets-radio-group-label" class="no-margin requiredField">Do you have any pets that live in the same household with you?</p>
 
       <mat-radio-group
         aria-labelledby="hasPets-radio-group-label"
@@ -12,19 +10,13 @@
         required
         (change)="hasPetsChange($event)"
       >
-        <mat-radio-button
-          class="primary-radio-button"
-          *ngFor="let option of radioOption"
-          [value]="option.value"
-        >
+        <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option.value">
           {{ option.name }}
         </mat-radio-button>
         <mat-error
           class="custom-mat-error"
           *ngIf="
-            animalsFormControl?.hasPets.touched &&
-            animalsFormControl?.hasPets.invalid &&
-            animalsFormControl?.hasPets.hasError('required')
+            animalsFormControl?.hasPets.touched && animalsFormControl?.hasPets.invalid && animalsFormControl?.hasPets.hasError('required')
           "
         >
           Confirm to have pets is required
@@ -34,23 +26,13 @@
       <div class="row" *ngIf="petSource.getValue().length > 0">
         <div class="col-8">
           <div class="col-4">
-            <button
-              class="animal-button"
-              mat-button
-              type="button"
-              (click)="addPets()"
-            >
-              + Add More Pets
-            </button>
+            <button class="animal-button" mat-button type="button" (click)="addPets()">+ Add More Pets</button>
           </div>
 
           <mat-table class="bottom-space-large" [dataSource]="petSource">
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
-              <mat-cell
-                [ngClass]="element.type.length >= 40 ? 'wrapText' : ''"
-                *matCellDef="let element"
-              >
+              <mat-cell [ngClass]="element.type.length >= 40 ? 'wrapText' : ''" *matCellDef="let element">
                 <span class="mobile-label">Pet Type:</span>
                 {{ element.type }}
               </mat-cell>
@@ -67,41 +49,19 @@
             <ng-container matColumnDef="buttons">
               <mat-header-cell *matHeaderCellDef></mat-header-cell>
               <mat-cell *matCellDef="let element; let index = index">
-                <button
-                  class="edit-image"
-                  mat-icon-button
-                  aria-label="Edit"
-                  (click)="editRow(element, index)"
-                  *ngIf="!showPetsForm"
-                >
+                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)" *ngIf="!showPetsForm">
                   <img src="/assets/images/edit.svg" height="35" width="35" />
-                  <img
-                    src="/assets/images/edit_onhover.svg"
-                    height="35"
-                    width="35"
-                  />
+                  <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
                 </button>
 
-                <button
-                  class="delete-image"
-                  mat-icon-button
-                  aria-label="Remove"
-                  (click)="deleteRow(index)"
-                  *ngIf="!showPetsForm"
-                >
+                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)" *ngIf="!showPetsForm">
                   <img src="/assets/images/delete.svg" height="35" width="35" />
-                  <img
-                    src="/assets/images/delete_onhover.svg"
-                    height="35"
-                    width="35"
-                  />
+                  <img src="/assets/images/delete_onhover.svg" height="35" width="35" />
                 </button>
               </mat-cell>
             </ng-container>
 
-            <mat-header-row
-              *matHeaderRowDef="displayedColumns"
-            ></mat-header-row>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
         </div>
@@ -112,25 +72,11 @@
 
         <div class="row bottom-space-large">
           <div class="col-md-3">
-            <button
-              class="button-s details-button"
-              mat-button
-              type="button"
-              (click)="cancel()"
-            >
-              Cancel
-            </button>
+            <button class="button-s details-button" mat-button type="button" (click)="cancel()">Cancel</button>
           </div>
 
           <div class="col-md-3 form-btns">
-            <button
-              class="animal-button details-button save-button"
-              mat-button
-              type="button"
-              (click)="save()"
-            >
-              Save
-            </button>
+            <button class="animal-button details-button save-button" mat-button type="button" (click)="save()">Save</button>
           </div>
         </div>
       </div>
@@ -139,40 +85,25 @@
     <div class="animal-notes">
       <div class="row">
         <div class="col-md-1 image-col">
-          <img
-            class="img-align"
-            src="/assets/images/wizard/livestock.svg"
-            width="52"
-            height="55"
-          />
+          <img class="img-align" src="/assets/images/wizard/livestock.svg" width="52" height="55" />
         </div>
         <div class="col-md-11">
           <p class="primary-paragraph">
-            <b>Livestock:</b> Relocation planning should be considered to help
-            ensure producers are as prepared as possible for a range of
-            emergencies that may require the relocation of their livestock.
-            Further information and support may be available through the
+            <b>Livestock:</b> Relocation planning should be considered to help ensure producers are as prepared as possible for a range of
+            emergencies that may require the relocation of their livestock. Further information and support may be available through the
             Ministry of Agriculture.
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-1 image-col">
-          <img
-            class="img-align"
-            src="/assets/images/wizard/farm.svg"
-            width="50"
-            height="58"
-          />
+          <img class="img-align" src="/assets/images/wizard/farm.svg" width="50" height="58" />
         </div>
         <div class="col-md-11">
           <p>
-            <b>Hobby Farms:</b> If you are a non-farm business owner of
-            livestock or pets, ensure you have the appropriate evacuation plan
-            in place to care for your hobby farm animals during an emergency
-            event. Further information and support may be available from your
-            Local Authority or First Nation and through the Canadian Disaster
-            Animal Response Team (CDART).
+            <b>Hobby Farms:</b> If you are a non-farm business owner of livestock or pets, ensure you have the appropriate evacuation plan
+            in place to care for your hobby farm animals during an emergency event. Further information and support may be available from
+            your Local Authority or First Nation and through the Canadian Disaster Animal Response Team (CDART).
           </p>
         </div>
       </div>

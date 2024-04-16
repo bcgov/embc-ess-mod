@@ -23,7 +23,6 @@
   padding: 10px;
 }
 
-
 .mainBody {
   display: block;
   font-weight: 400;
@@ -32,15 +31,17 @@
 }
 
 .red-alert {
-  color: #D20000;
+  color: #d20000;
 }
 
 .green-info {
-  color: #25A800;
+  color: #25a800;
 }
 
 .cancel-button {
   width: 30%;
 }
 
-::-webkit-scrollbar { display: none; }
+::-webkit-scrollbar {
+  display: none;
+}

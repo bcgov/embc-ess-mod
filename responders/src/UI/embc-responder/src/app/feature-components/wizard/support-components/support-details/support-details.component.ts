@@ -1,13 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -105,12 +98,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   paperCompletedDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
-    return moment(date).isBetween(
-      moment(this.evacueeSessionService?.evacFile?.task?.from),
-      moment(new Date()),
-      'D',
-      '[]'
-    );
+    return moment(date).isBetween(moment(this.evacueeSessionService?.evacFile?.task?.from), moment(new Date()), 'D', '[]');
   };
 
   ngOnInit(): void {
@@ -139,17 +127,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
     this.calculateNoOfDays();
 
-    this.supportListSubscription = this.stepSupportsService
-      .getExistingSupportList()
-      .subscribe({
-        next: (supports) => {
-          this.existingSupports = supports;
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.supportListerror);
-        }
-      });
+    this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
+      next: (supports) => {
+        this.existingSupports = supports;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -157,28 +143,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   checkDateRange(): boolean {
-    const selectedFromDate = new Date(
-      this.supportDetailsForm.get('fromDate').value
-    );
-    const updateFromDate = new Date(
-      selectedFromDate.setDate(selectedFromDate.getDate() + 30)
-    );
-    return moment(this.supportDetailsForm.get('toDate').value).isSameOrBefore(
-      moment(updateFromDate)
-    );
+    const selectedFromDate = new Date(this.supportDetailsForm.get('fromDate').value);
+    const updateFromDate = new Date(selectedFromDate.setDate(selectedFromDate.getDate() + 30));
+    return moment(this.supportDetailsForm.get('toDate').value).isSameOrBefore(moment(updateFromDate));
   }
 
   calculateNoOfDays() {
-    const taskStartDate = this.datePipe.transform(
-      this.evacueeSessionService?.evacFile?.task?.from,
-      'MMM d, y'
-    );
-    const taskEndDate = this.datePipe.transform(
-      this.evacueeSessionService?.evacFile?.task?.to,
-      'MMM d, y'
-    );
-    const dateDiff =
-      new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();
+    const taskStartDate = this.datePipe.transform(this.evacueeSessionService?.evacFile?.task?.from, 'MMM d, y');
+    const taskEndDate = this.datePipe.transform(this.evacueeSessionService?.evacFile?.task?.to, 'MMM d, y');
+    const dateDiff = new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();
     const noOfDaysCalc = dateDiff / (1000 * 60 * 60 * 24);
 
     const counter = noOfDaysCalc > 30 ? 30 : noOfDaysCalc;
@@ -211,9 +184,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   addExistingMembers() {
     if (this.stepSupportsService?.supportDetails?.members) {
-      const members = this.supportDetailsForm.get(
-        'members'
-      ) as UntypedFormArray;
+      const members = this.supportDetailsForm.get('members') as UntypedFormArray;
       this.stepSupportsService?.supportDetails?.members.forEach((member) => {
         members.push(new UntypedFormControl(member));
       });
@@ -269,11 +240,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const members = this.supportDetailsForm.get('members') as UntypedFormArray;
     if ($event.checked) {
       members.clear();
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach(
-        (member) => {
-          members.push(new UntypedFormControl(member));
-        }
-      );
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach((member) => {
+        members.push(new UntypedFormControl(member));
+      });
     } else {
       members.clear();
     }
@@ -286,31 +255,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @returns true/false
    */
   exists(member: EvacuationFileHouseholdMember) {
-    const existingList: EvacuationFileHouseholdMember[] =
-      this.supportDetailsForm.get('members').value;
+    const existingList: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get('members').value;
     return existingList.findIndex((value) => value.id === member.id) > -1;
   }
 
   isIndeterminate() {
-    return (
-      this.supportDetailsForm.get('members').value.length > 0 &&
-      !this.isChecked()
-    );
+    return this.supportDetailsForm.get('members').value.length > 0 && !this.isChecked();
   }
 
   isChecked() {
     return (
-      this.supportDetailsForm.get('members').value.length ===
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers
-        .length
+      this.supportDetailsForm.get('members').value.length === this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.length
     );
   }
 
   hideRateSheet(): boolean {
-    return (
-      this.stepSupportsService?.supportTypeToAdd?.value !==
-      SupportSubCategory.Lodging_Group
-    );
+    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.Lodging_Group;
   }
 
   /**
@@ -320,10 +280,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
-      const finalValue = this.datePipe.transform(
-        date.setDate(date.getDate() + days),
-        'MM/dd/yyyy'
-      );
+      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
   }
@@ -337,10 +294,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     const date = new Date(currentVal);
-    const finalValue = this.datePipe.transform(
-      date.setDate(date.getDate() + days),
-      'MM/dd/yyyy'
-    );
+    const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
     this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
   }
 
@@ -350,10 +304,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   updateNoOfDays(event: MatDatepickerInputEvent<Date>) {
-    const fromDate = this.datePipe.transform(
-      this.supportDetailsForm.get('fromDate').value,
-      'dd-MMM-yyyy'
-    );
+    const fromDate = this.datePipe.transform(this.supportDetailsForm.get('fromDate').value, 'dd-MMM-yyyy');
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
     const days = dateDiff / (1000 * 60 * 60 * 24);
@@ -367,28 +318,20 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService
-        .getSupportCategories()
-        .find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.loadEvacueeListService
-        .getSupportSubCategories()
-        .find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
 
   generateSupportTypeValue(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService
-        .getSupportCategories()
-        .find((value) => value.value === element?.category);
+      const category = this.loadEvacueeListService.getSupportCategories().find((value) => value.value === element?.category);
       return category?.value;
     } else {
-      const subCategory = this.loadEvacueeListService
-        .getSupportSubCategories()
-        .find((value) => value.value === element?.subCategory);
+      const subCategory = this.loadEvacueeListService.getSupportSubCategories().find((value) => value.value === element?.subCategory);
       return subCategory?.value;
     }
   }
@@ -399,40 +342,32 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       this.supportDetailsForm.markAllAsTouched();
       return;
     }
-    
+
     let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
-    
+
     if (this.editFlag) {
-      existingSupports = existingSupports.filter(
-        (s) => s !== this.stepSupportsService.selectedSupportDetail
-      );
+      existingSupports = existingSupports.filter((s) => s !== this.stepSupportsService.selectedSupportDetail);
     }
 
     const thisSupport = this.supportDetailsForm.getRawValue();
-    const from = this.dateConversionService.createDateTimeString(
-      thisSupport.fromDate,
-      thisSupport.fromTime
-    );
-    const to = this.dateConversionService.createDateTimeString(
-      thisSupport.toDate,
-      thisSupport.toTime
-    );
+    const from = this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime);
+    const to = this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime);
     const overlappingSupports = existingSupports.filter(
       (s) =>
-        this.generateSupportType(s) ===
-          this.stepSupportsService.supportTypeToAdd.description &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))
+        this.generateSupportType(s) === this.stepSupportsService.supportTypeToAdd.description &&
+        moment(to).isSameOrAfter(moment(s.from)) &&
+        moment(from).isSameOrBefore(moment(s.to))
     );
     const overlappingSupportsFood = existingSupports.filter(
       (s) =>
-        (((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Groceries.toString()) &&
+        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Groceries.toString() &&
           moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))) || ((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Restaurant.toString()) &&
-            moment(to).isSameOrAfter(moment(s.from)) &&
-            moment(from).isSameOrBefore(moment(s.to))))
+          moment(from).isSameOrBefore(moment(s.to))) ||
+        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Restaurant.toString() &&
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to)))
     );
-    
+
     hasConflict = overlappingSupports.length > 0 || overlappingSupportsFood.length > 0;
 
     if (hasConflict) {
@@ -459,8 +394,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * Navigates to support delivery page
    */
   addDelivery() {
-    this.stepSupportsService.supportDetails =
-      this.supportDetailsForm.getRawValue();
+    this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
     this.computeState.triggerEvent();
     if (this.evacueeSessionService.isPaperBased) {
       this.mapPaperFields();
@@ -476,14 +410,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   mapPaperFields() {
-    this.stepSupportsService.supportDetails.externalReferenceId =
-      this.supportDetailsForm.get('paperSupportNumber').value;
+    this.stepSupportsService.supportDetails.externalReferenceId = this.supportDetailsForm.get('paperSupportNumber').value;
     this.stepSupportsService.supportDetails.issuedBy =
       this.supportDetailsForm.get('paperIssuedBy.firstName').value +
       ' ' +
       this.supportDetailsForm.get('paperIssuedBy.lastNameInitial').value;
-    this.stepSupportsService.supportDetails.issuedOn =
-      this.supportDetailsForm.get('paperCompletedOn').value;
+    this.stepSupportsService.supportDetails.issuedOn = this.supportDetailsForm.get('paperCompletedOn').value;
   }
 
   /**
@@ -508,74 +440,54 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   checkReferralNumber($event): void {
     this.showLoader = !this.showLoader;
-    this.supportDetailsService
-      .checkUniqueReferralNumber('R' + $event.target.value)
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          const draftList = this.referralCreationService.getDraftSupport();
-          const duplicateReferralList: Support[] = [...value, ...draftList];
-          const filteredReferrals = duplicateReferralList.filter(
-            (referrals) =>
-              referrals.category ===
-                this.stepSupportsService?.supportTypeToAdd?.value ||
-              referrals.subCategory ===
-                this.stepSupportsService?.supportTypeToAdd?.value
-          );
-          this.updateFormValidations(filteredReferrals);
-          if (value) {
-            this.supportDetailsForm
-              .get('paperSupportNumber')
-              .updateValueAndValidity();
-          } else {
-            this.supportDetailsForm.updateValueAndValidity();
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.referralCheckerror);
+    this.supportDetailsService.checkUniqueReferralNumber('R' + $event.target.value).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        const draftList = this.referralCreationService.getDraftSupport();
+        const duplicateReferralList: Support[] = [...value, ...draftList];
+        const filteredReferrals = duplicateReferralList.filter(
+          (referrals) =>
+            referrals.category === this.stepSupportsService?.supportTypeToAdd?.value ||
+            referrals.subCategory === this.stepSupportsService?.supportTypeToAdd?.value
+        );
+        this.updateFormValidations(filteredReferrals);
+        if (value) {
+          this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();
+        } else {
+          this.supportDetailsForm.updateValueAndValidity();
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.referralCheckerror);
+      }
+    });
   }
 
   private setFromDate() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.fromDate
-        ? this.stepSupportsService?.supportDetails?.fromDate
-        : '';
+      return this.stepSupportsService?.supportDetails?.fromDate ? this.stepSupportsService?.supportDetails?.fromDate : '';
     } else {
       return this.stepSupportsService?.supportDetails?.fromDate
         ? this.stepSupportsService?.supportDetails?.fromDate
-        : new Date(
-            this.dateConversionService.convertStringToDate(
-              this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
-            )
-          );
+        : new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')));
     }
   }
 
   private setFromTime() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.fromTime
-        ? this.stepSupportsService?.supportDetails?.fromTime
-        : '';
+      return this.stepSupportsService?.supportDetails?.fromTime ? this.stepSupportsService?.supportDetails?.fromTime : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.fromTime
-        ? this.stepSupportsService?.supportDetails?.fromTime
-        : this.currentTime;
+      return this.stepSupportsService?.supportDetails?.fromTime ? this.stepSupportsService?.supportDetails?.fromTime : this.currentTime;
     }
   }
 
   private setToTime() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.toTime
-        ? this.stepSupportsService?.supportDetails?.toTime
-        : '';
+      return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.toTime
-        ? this.stepSupportsService?.supportDetails?.toTime
-        : this.currentTime;
+      return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : this.currentTime;
     }
   }
 
@@ -584,54 +496,31 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
-      fromDate: [
-        this.setFromDate(),
-        [this.customValidation.validDateValidator(), Validators.required]
-      ],
+      fromDate: [this.setFromDate(), [this.customValidation.validDateValidator(), Validators.required]],
       fromTime: [this.setFromTime(), [Validators.required]],
       noOfDays: [
-        this.stepSupportsService?.supportDetails?.noOfDays
-          ? this.stepSupportsService?.supportDetails?.noOfDays
-          : '',
+        this.stepSupportsService?.supportDetails?.noOfDays ? this.stepSupportsService?.supportDetails?.noOfDays : '',
         [Validators.required]
       ],
       toDate: [
-        this.stepSupportsService?.supportDetails?.toDate
-          ? this.stepSupportsService?.supportDetails?.toDate
-          : '',
+        this.stepSupportsService?.supportDetails?.toDate ? this.stepSupportsService?.supportDetails?.toDate : '',
         [this.customValidation.validDateValidator(), Validators.required]
       ],
       toTime: [this.setToTime(), [Validators.required]],
-      members: this.formBuilder.array(
-        [],
-        [this.customValidation.memberCheckboxValidator()]
-      ),
-      referral: this.supportDetailsService.generateDynamicForm(
-        this.stepSupportsService?.supportTypeToAdd?.value
-      ),
+      members: this.formBuilder.array([], [this.customValidation.memberCheckboxValidator()]),
+      referral: this.supportDetailsService.generateDynamicForm(this.stepSupportsService?.supportTypeToAdd?.value),
       paperSupportNumber: [
-        this.stepSupportsService?.supportDetails?.externalReferenceId
-          ? this.stepSupportsService?.supportDetails?.externalReferenceId
-          : '',
+        this.stepSupportsService?.supportDetails?.externalReferenceId ? this.stepSupportsService?.supportDetails?.externalReferenceId : '',
         [
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              this.customValidation.whitespaceValidator()
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
             .bind(this.customValidation),
 
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              Validators.minLength(6)
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              Validators.pattern(globalConst.supportNumberPattern)
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.pattern(globalConst.supportNumberPattern))
             .bind(this.customValidation)
         ]
       ],
@@ -642,10 +531,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             : '',
           [
             this.customValidation
-              .conditionalValidation(
-                () => this.evacueeSessionService.isPaperBased,
-                this.customValidation.whitespaceValidator()
-              )
+              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
               .bind(this.customValidation)
           ]
         ],
@@ -655,30 +541,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             : '',
           [
             this.customValidation
-              .conditionalValidation(
-                () => this.evacueeSessionService.isPaperBased,
-                this.customValidation.whitespaceValidator()
-              )
+              .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
               .bind(this.customValidation)
           ]
         ]
       }),
       paperCompletedOn: [
-        this.stepSupportsService?.supportDetails?.issuedOn
-          ? this.stepSupportsService?.supportDetails?.issuedOn
-          : '',
+        this.stepSupportsService?.supportDetails?.issuedOn ? this.stepSupportsService?.supportDetails?.issuedOn : '',
         [
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              Validators.required
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.required)
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              this.customValidation.validDateValidator()
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.validDateValidator())
             .bind(this.customValidation)
         ]
       ]
@@ -689,27 +564,16 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     this.supportDetailsForm
       .get('paperSupportNumber')
       .setValidators([
+        this.customValidation.userNameExistsValidator(filteredReferrals.length > 0).bind(this.customValidation),
         this.customValidation
-          .userNameExistsValidator(filteredReferrals.length > 0)
-          .bind(this.customValidation),
-        this.customValidation
-          .conditionalValidation(
-            () => this.evacueeSessionService.isPaperBased,
-            this.customValidation.whitespaceValidator()
-          )
+          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, this.customValidation.whitespaceValidator())
           .bind(this.customValidation),
 
         this.customValidation
-          .conditionalValidation(
-            () => this.evacueeSessionService.isPaperBased,
-            Validators.minLength(6)
-          )
+          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
           .bind(this.customValidation),
         this.customValidation
-          .conditionalValidation(
-            () => this.evacueeSessionService.isPaperBased,
-            Validators.pattern(globalConst.supportNumberPattern)
-          )
+          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.pattern(globalConst.supportNumberPattern))
           .bind(this.customValidation)
       ]);
     this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();

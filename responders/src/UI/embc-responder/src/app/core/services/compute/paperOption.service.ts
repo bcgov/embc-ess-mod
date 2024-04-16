@@ -46,26 +46,18 @@ export class PaperOptionService implements SearchOptionsService {
     });
   }
 
-  search(
-    value: string | EvacueeSearchContextModel,
-    type?: string
-  ): void | Promise<EvacueeSearchResults> {
+  search(value: string | EvacueeSearchContextModel, type?: string): void | Promise<EvacueeSearchResults> {
     this.dataService.saveSearchParams(value);
     if (type === SearchPages.idVerifySearch) {
       this.router.navigate(['/responder-access/search/evacuee/name-search'], {
         skipLocationChange: true
       });
     } else if (type === SearchPages.digitalNameSearch) {
-      this.router.navigate(
-        ['/responder-access/search/evacuee/search-results'],
-        {
-          skipLocationChange: true
-        }
-      );
+      this.router.navigate(['/responder-access/search/evacuee/search-results'], {
+        skipLocationChange: true
+      });
     } else if (type === SearchPages.searchResults) {
-      return this.dataService.evacueeSearch(
-        (value as EvacueeSearchContextModel).evacueeSearchParameters
-      );
+      return this.dataService.evacueeSearch((value as EvacueeSearchContextModel).evacueeSearchParameters);
     }
   }
 
@@ -73,14 +65,10 @@ export class PaperOptionService implements SearchOptionsService {
     let route = '';
     switch (wizardType) {
       case WizardType.NewRegistration:
-        await this.dataService
-          .checkForPaperFile(wizardType)
-          .then((value) => (route = value));
+        await this.dataService.checkForPaperFile(wizardType).then((value) => (route = value));
         break;
       case WizardType.NewEssFile:
-        await this.dataService
-          .checkForPaperFile(wizardType)
-          .then((value) => (route = value));
+        await this.dataService.checkForPaperFile(wizardType).then((value) => (route = value));
         break;
       case WizardType.EditRegistration:
         this.dataService.updateEditRegistrationWizard();

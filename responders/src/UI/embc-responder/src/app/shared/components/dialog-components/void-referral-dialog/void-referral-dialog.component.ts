@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
@@ -71,8 +66,6 @@ export class VoidReferralDialogComponent implements OnInit {
    * @returns the same reason for reprinting with spaces between words.
    */
   getReasonDescription(reasonOption: string): string {
-    return this.loadEvacueeListService
-      .getVoidReasons()
-      .find((reason) => reason?.value === reasonOption)?.description;
+    return this.loadEvacueeListService.getVoidReasons().find((reason) => reason?.value === reasonOption)?.description;
   }
 }

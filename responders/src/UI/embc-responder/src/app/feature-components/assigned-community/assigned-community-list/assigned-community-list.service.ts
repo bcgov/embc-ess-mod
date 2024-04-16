@@ -13,43 +13,35 @@ export class AssignedCommunityListService {
   ) {}
 
   public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
-    return this.teamCommunitiesAssignmentsService
-      .teamCommunitiesAssignmentsGetAssignedCommunities()
-      .pipe(
-        map((assignedCommunities: TeamCommunityModel[]) => {
-          const allCommunities = this.locationsService.getCommunityList();
-          return assignedCommunities.map((list) => {
-            const found = allCommunities.find(
-              (x) => x.code === list.communityCode
-            );
-            if (found) {
-              list.allowSelect = false;
-              list.conflict = false;
-            }
-            return this.mergeData(list, found);
-          });
-        })
-      );
+    return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(
+      map((assignedCommunities: TeamCommunityModel[]) => {
+        const allCommunities = this.locationsService.getCommunityList();
+        return assignedCommunities.map((list) => {
+          const found = allCommunities.find((x) => x.code === list.communityCode);
+          if (found) {
+            list.allowSelect = false;
+            list.conflict = false;
+          }
+          return this.mergeData(list, found);
+        });
+      })
+    );
   }
 
   public getAllAssignedCommunityList(): Observable<TeamCommunityModel[]> {
-    return this.teamCommunitiesAssignmentsService
-      .teamCommunitiesAssignmentsGetAssignedCommunities({ forAllTeams: true })
-      .pipe(
-        map((assignedCommunities: TeamCommunityModel[]) => {
-          const allCommunities = this.locationsService.getCommunityList();
-          return assignedCommunities.map((list) => {
-            const found = allCommunities.find(
-              (x) => x.code === list.communityCode
-            );
-            if (found) {
-              list.allowSelect = false;
-              list.conflict = true;
-            }
-            return this.mergeData(list, found);
-          });
-        })
-      );
+    return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities({ forAllTeams: true }).pipe(
+      map((assignedCommunities: TeamCommunityModel[]) => {
+        const allCommunities = this.locationsService.getCommunityList();
+        return assignedCommunities.map((list) => {
+          const found = allCommunities.find((x) => x.code === list.communityCode);
+          if (found) {
+            list.allowSelect = false;
+            list.conflict = true;
+          }
+          return this.mergeData(list, found);
+        });
+      })
+    );
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {

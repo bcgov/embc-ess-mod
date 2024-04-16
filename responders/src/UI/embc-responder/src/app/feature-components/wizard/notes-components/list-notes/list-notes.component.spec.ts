@@ -1,12 +1,4 @@
-import {
-  ComponentFixture,
-  discardPeriodicTasks,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  TestBed,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 
 import { ListNotesComponent } from './list-notes.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -26,12 +18,7 @@ describe('ListNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule
-      ],
+      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, BrowserAnimationsModule],
       declarations: [ListNotesComponent],
       providers: [
         { provide: StepNotesService, useClass: MockStepNotesService },
@@ -64,9 +51,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));
@@ -82,9 +67,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));

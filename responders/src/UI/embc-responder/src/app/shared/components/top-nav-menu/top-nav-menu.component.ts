@@ -1,8 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {
-  ClaimType,
-  ModulePermission
-} from 'src/app/core/services/authorization.service';
+import { ClaimType, ModulePermission } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -22,9 +19,6 @@ export class TopNavMenuComponent implements OnInit {
   }
 
   public hasPermission(module: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.module,
-      ModulePermission[module]
-    );
+    return this.userService.hasClaim(ClaimType.module, ModulePermission[module]);
   }
 }

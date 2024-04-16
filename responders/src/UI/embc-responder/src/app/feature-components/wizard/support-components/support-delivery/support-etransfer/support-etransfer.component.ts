@@ -4,10 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 import { MatSelectChange } from '@angular/material/select';
-import {
-  CustomErrorMailMatcher,
-  CustomErrorMobileMatcher
-} from '../../../profile-components/contact/contact.component';
+import { CustomErrorMailMatcher, CustomErrorMobileMatcher } from '../../../profile-components/contact/contact.component';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
 import { CacheService } from '../../../../../core/services/cache.service';
@@ -24,20 +21,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() cloneFlag: boolean;
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
   @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
-  readonly phoneMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   supplierList: SupplierListItemModel[];
   filteredOptions: Observable<SupplierListItemModel[]>;
@@ -66,54 +50,32 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (
-      this.editFlag &&
-      this.appBaseService.wizardProperties.wizardType ===
-        WizardType.ExtendSupports
-    ) {
+    if (this.editFlag && this.appBaseService.wizardProperties.wizardType === WizardType.ExtendSupports) {
       this.cloneFlag = true;
     }
-    this.emailOnFile =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.email;
+    this.emailOnFile = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.email;
     //this.previousEmail = this.cacheService.get('previousEmail');
-    if (!this.cloneFlag && (this.emailOnFile || this.previousEmail))
-      this.showEmailCheckBox = true;
+    if (!this.cloneFlag && (this.emailOnFile || this.previousEmail)) this.showEmailCheckBox = true;
 
-    this.mobileOnFile =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.phone;
+    this.mobileOnFile = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.phone;
     //this.previousMobile = this.cacheService.get('previousMobile');
 
-    if (!this.cloneFlag && (this.mobileOnFile || this.previousMobile))
-      this.showMobileCheckBox = true;
+    if (!this.cloneFlag && (this.mobileOnFile || this.previousMobile)) this.showMobileCheckBox = true;
 
-    this.preferenceSubscription = this.supportDeliveryForm
-      ?.get('notificationPreference')
-      .valueChanges.subscribe((pref) => {
-        if (!pref.includes('Email')) {
-          this.supportDeliveryForm?.get('notificationEmail').patchValue('');
-          this.supportDeliveryForm
-            ?.get('notificationConfirmEmail')
-            .patchValue('');
-        }
-        if (!pref.includes('Mobile')) {
-          this.supportDeliveryForm?.get('notificationMobile').patchValue('');
-          this.supportDeliveryForm
-            ?.get('notificationConfirmMobile')
-            .patchValue('');
-        }
-        this.supportDeliveryForm
-          ?.get('notificationEmail')
-          .updateValueAndValidity();
-        this.supportDeliveryForm
-          ?.get('notificationConfirmEmail')
-          .updateValueAndValidity();
-        this.supportDeliveryForm
-          ?.get('notificationMobile')
-          .updateValueAndValidity();
-        this.supportDeliveryForm
-          ?.get('notificationConfirmMobile')
-          .updateValueAndValidity();
-      });
+    this.preferenceSubscription = this.supportDeliveryForm?.get('notificationPreference').valueChanges.subscribe((pref) => {
+      if (!pref.includes('Email')) {
+        this.supportDeliveryForm?.get('notificationEmail').patchValue('');
+        this.supportDeliveryForm?.get('notificationConfirmEmail').patchValue('');
+      }
+      if (!pref.includes('Mobile')) {
+        this.supportDeliveryForm?.get('notificationMobile').patchValue('');
+        this.supportDeliveryForm?.get('notificationConfirmMobile').patchValue('');
+      }
+      this.supportDeliveryForm?.get('notificationEmail').updateValueAndValidity();
+      this.supportDeliveryForm?.get('notificationConfirmEmail').updateValueAndValidity();
+      this.supportDeliveryForm?.get('notificationMobile').updateValueAndValidity();
+      this.supportDeliveryForm?.get('notificationConfirmMobile').updateValueAndValidity();
+    });
 
     if (this.cloneFlag) {
       this.supportDeliveryForm.get('notificationPreference').disable();
@@ -147,47 +109,31 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   }
 
   showEmail(): boolean {
-    const notificationPreference =
-      this.supportDeliveryForm?.get('notificationPreference')?.value || '';
-    return (
-      notificationPreference === 'Email' ||
-      notificationPreference === 'Email & Mobile'
-    );
+    const notificationPreference = this.supportDeliveryForm?.get('notificationPreference')?.value || '';
+    return notificationPreference === 'Email' || notificationPreference === 'Email & Mobile';
   }
 
   showMobile(): boolean {
-    const notificationPreference =
-      this.supportDeliveryForm?.get('notificationPreference')?.value || '';
-    return (
-      notificationPreference === 'Mobile' ||
-      notificationPreference === 'Email & Mobile'
-    );
+    const notificationPreference = this.supportDeliveryForm?.get('notificationPreference')?.value || '';
+    return notificationPreference === 'Mobile' || notificationPreference === 'Email & Mobile';
   }
 
   setEmail(event: MatCheckboxChange) {
     const email = this.previousEmail || this.emailOnFile;
     if (event.checked) {
       this.supportDeliveryForm?.get('notificationEmail').patchValue(email);
-      this.supportDeliveryForm
-        ?.get('notificationConfirmEmail')
-        .patchValue(email);
+      this.supportDeliveryForm?.get('notificationConfirmEmail').patchValue(email);
     } else {
       this.supportDeliveryForm?.get('notificationEmail').patchValue('');
       this.supportDeliveryForm?.get('notificationConfirmEmail').patchValue('');
     }
     this.supportDeliveryForm?.get('notificationEmail').updateValueAndValidity();
-    this.supportDeliveryForm
-      ?.get('notificationConfirmEmail')
-      .updateValueAndValidity();
+    this.supportDeliveryForm?.get('notificationConfirmEmail').updateValueAndValidity();
   }
 
   showConfirmEmail() {
     if (this.cloneFlag) return false;
-    if (this.showEmailCheckBox)
-      return (
-        this.supportDeliveryForm?.get('notificationEmail').value &&
-        !this.setEmailCheckbox.checked
-      );
+    if (this.showEmailCheckBox) return this.supportDeliveryForm?.get('notificationEmail').value && !this.setEmailCheckbox.checked;
     else return this.supportDeliveryForm?.get('notificationEmail').value;
   }
 
@@ -202,28 +148,18 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
     const mobile = this.previousMobile || this.mobileOnFile;
     if (event.checked) {
       this.supportDeliveryForm?.get('notificationMobile').patchValue(mobile);
-      this.supportDeliveryForm
-        ?.get('notificationConfirmMobile')
-        .patchValue(mobile);
+      this.supportDeliveryForm?.get('notificationConfirmMobile').patchValue(mobile);
     } else {
       this.supportDeliveryForm?.get('notificationMobile').patchValue('');
       this.supportDeliveryForm?.get('notificationConfirmMobile').patchValue('');
     }
-    this.supportDeliveryForm
-      ?.get('notificationMobile')
-      .updateValueAndValidity();
-    this.supportDeliveryForm
-      ?.get('notificationConfirmMobile')
-      .updateValueAndValidity();
+    this.supportDeliveryForm?.get('notificationMobile').updateValueAndValidity();
+    this.supportDeliveryForm?.get('notificationConfirmMobile').updateValueAndValidity();
   }
 
   showConfirmMobile() {
     if (this.cloneFlag) return false;
-    if (this.showMobileCheckBox)
-      return (
-        this.supportDeliveryForm?.get('notificationMobile').value &&
-        !this.setMobileCheckbox.checked
-      );
+    if (this.showMobileCheckBox) return this.supportDeliveryForm?.get('notificationMobile').value && !this.setMobileCheckbox.checked;
     else return this.supportDeliveryForm?.get('notificationMobile').value;
   }
 

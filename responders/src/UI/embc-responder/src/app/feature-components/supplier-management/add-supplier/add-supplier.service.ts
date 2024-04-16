@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  SupplierContact,
-  SupplierStatus,
-  Team,
-  SupplierListItem,
-  Supplier,
-  MutualAid
-} from 'src/app/core/api/models';
+import { SupplierContact, SupplierStatus, Team, SupplierListItem, Supplier, MutualAid } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
@@ -123,14 +116,9 @@ export class AddSupplierService {
    */
   getCreateSupplierDTO(): Supplier {
     return {
-      address: this.locationService.setAddressObjectForDTO(
-        this.supplierAddress
-      ),
+      address: this.locationService.setAddressObjectForDTO(this.supplierAddress),
       contact: this.contact,
-      gstNumber:
-        this.supplierManagementService.convertSupplierGSTNumbertoString(
-          this.supplierGstNumber
-        ),
+      gstNumber: this.supplierManagementService.convertSupplierGSTNumbertoString(this.supplierGstNumber),
       legalName: this.supplierLegalName,
       name: this.supplierName,
       status: SupplierStatus.Active

@@ -15,12 +15,7 @@
           matInput
           required
         ></textarea>
-        <mat-error
-          *ngIf="
-            referralFormControl?.approvedItems.invalid &&
-            referralFormControl?.approvedItems.hasError('whitespaceError')
-          "
-        >
+        <mat-error *ngIf="referralFormControl?.approvedItems.invalid && referralFormControl?.approvedItems.hasError('whitespaceError')">
           Required
         </mat-error>
       </mat-form-field>
@@ -30,10 +25,7 @@
   <div class="row">
     <div class="col-md-12">
       <p class="time-heading requiredField">Total Amount</p>
-      <p class="hint">
-        Note: Transactions that exceed $10,000 cannot be processed as an
-        e-Transfer.
-      </p>
+      <p class="hint">Note: Transactions that exceed $10,000 cannot be processed as an e-Transfer.</p>
     </div>
   </div>
 
@@ -59,20 +51,13 @@
           required
         />
         <span matPrefix>$&nbsp;</span>
-        <mat-error
-          *ngIf="
-            referralFormControl?.userTotalAmount.invalid &&
-            referralFormControl?.userTotalAmount.hasError('required')
-          "
-        >
+        <mat-error *ngIf="referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('required')">
           Total Amount is required</mat-error
         >
         <mat-error
           *ngIf="
-            (referralFormControl?.userTotalAmount.invalid &&
-              referralFormControl?.userTotalAmount.hasError('pattern')) ||
-            (referralFormControl?.userTotalAmount.invalid &&
-              referralFormControl?.userTotalAmount.hasError('totalZeroError'))
+            (referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('pattern')) ||
+            (referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('totalZeroError'))
           "
         >
           Invalid amount</mat-error
@@ -83,12 +68,7 @@
 
   <div class="row" *ngIf="validateUserTotalAmount()">
     <span class="total-amount-error">
-      <img
-        src="../../../../../assets/images/warning-red.svg"
-        width="25px"
-        height="27px"
-        class="amount-warning-icon"
-      />
+      <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" class="amount-warning-icon" />
       Total monetary value exceeds the recommended ESS rate.
     </span>
   </div>
@@ -96,14 +76,8 @@
   <div *ngIf="validateUserTotalAmount()" class="approver-time-box">
     <div class="row">
       <div class="col">
-        <div class="requiredField">
-          Authorization to exceed ESS rates given by (name of EMBC Expense
-          Authority)
-        </div>
-        <div>
-          (If you are unsure who this is, please ask your supervisor of EMBC
-          Regional Manager)
-        </div>
+        <div class="requiredField">Authorization to exceed ESS rates given by (name of EMBC Expense Authority)</div>
+        <div>(If you are unsure who this is, please ask your supervisor of EMBC Regional Manager)</div>
       </div>
     </div>
     <div class="row">
@@ -111,12 +85,7 @@
         <mat-form-field appearance="outline">
           <input formControlName="approverName" maxlength="100" matInput />
 
-          <mat-error
-            *ngIf="
-              referralFormControl?.approverName.invalid &&
-              referralFormControl?.approverName.hasError('whitespaceError')
-            "
-          >
+          <mat-error *ngIf="referralFormControl?.approverName.invalid && referralFormControl?.approverName.hasError('whitespaceError')">
             Approver name is required</mat-error
           >
         </mat-form-field>
