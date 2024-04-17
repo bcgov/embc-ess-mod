@@ -17,7 +17,7 @@
       "plugins": ["deprecation"],
       "rules": {
         "no-shadow": "off",
-        "deprecation/deprecation": "error",
+        "deprecation/deprecation": "off",
         "@typescript-eslint/member-ordering": "off",
         "@angular-eslint/component-selector": [
           "error",

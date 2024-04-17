@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Idle } from '@ng-idle/core';
 import { TimeoutConfiguration } from '../core/api/models';
 import { CacheService } from '../core/services/cache.service';

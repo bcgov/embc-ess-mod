@@ -1,9 +1,9 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';

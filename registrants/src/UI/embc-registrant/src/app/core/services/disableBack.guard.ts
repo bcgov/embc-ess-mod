@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CanDeactivate } from '@angular/router';
 import { FileSubmissionComponent } from '../../feature-components/file-submission/file-submission.component';
 import { DialogComponent } from '../components/dialog/dialog.component';

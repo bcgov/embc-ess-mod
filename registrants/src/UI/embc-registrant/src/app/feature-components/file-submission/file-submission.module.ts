@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { FileSubmissionRoutingModule } from './file-submission-routing.module';
 import { FileSubmissionComponent } from './file-submission.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({

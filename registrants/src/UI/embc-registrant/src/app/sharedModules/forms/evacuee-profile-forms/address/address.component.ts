@@ -1,17 +1,23 @@
 import { Component, OnInit, NgModule, Inject, ChangeDetectorRef, AfterViewChecked, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
+import {
+  MatLegacyRadioModule as MatRadioModule,
+  MatLegacyRadioChange as MatRadioChange
+} from '@angular/material/legacy-radio';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatLegacyAutocompleteModule as MatAutocompleteModule,
+  MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent
+} from '@angular/material/legacy-autocomplete';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { Country, LocationService } from 'src/app/core/services/location.service';
 

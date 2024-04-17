@@ -2,8 +2,11 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 
 import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import {
+  MatLegacyCheckboxModule as MatCheckboxModule,
+  MatLegacyCheckbox as MatCheckbox
+} from '@angular/material/legacy-checkbox';
 import { CoreModule } from '../../core/core.module';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

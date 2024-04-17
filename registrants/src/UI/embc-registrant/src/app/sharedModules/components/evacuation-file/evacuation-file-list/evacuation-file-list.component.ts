@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Router } from '@angular/router';
 import { EssFileDialogComponent } from 'src/app/core/components/dialog-components/ess-file-dialog/ess-file-dialog.component';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
