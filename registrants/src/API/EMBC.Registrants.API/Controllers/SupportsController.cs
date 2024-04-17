@@ -37,6 +37,16 @@ public class SupportsController : ControllerBase
         };
     }
 
+    [HttpPost("draft/totals")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> CalculateAmounts(string fileReferenceNumber, IEnumerable<SelfServeSupport> supports, CancellationToken ct)
+    {
+        await Task.CompletedTask;
+        return Ok(supports.Select(s => { s.TotalAmount = 100.00; return s; }));
+    }
+
     [HttpPost("optout")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,6 +56,31 @@ public class SupportsController : ControllerBase
         await Task.CompletedTask;
         return Ok();
     }
+
+    [HttpPost("")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> SubmitSupports(string fileReferenceNumber, SubmitSupportsRequest request, CancellationToken ct)
+    {
+        await Task.CompletedTask;
+        return Ok();
+    }
+}
+
+public record SubmitSupportsRequest
+{
+    public string FileReferenceNumber { get; set; }
+    public IEnumerable<SelfServeSupport> Supports { get; set; }
+    public ETransferDetails ETransferDetails { get; set; }
+}
+
+public record ETransferDetails
+{
+    public string? ContactEmail { get; set; }
+    public string? ETransferEmail { get; set; }
+    public string? ETransferMobile { get; set; }
+    public string RecipientName { get; set; }
 }
 
 [JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
@@ -55,6 +90,7 @@ public class SupportsController : ControllerBase
 [JsonDerivedType(typeof(SelfServeClothingSupport), typeDiscriminator: nameof(SelfServeClothingSupport))]
 public abstract record SelfServeSupport
 {
+    public double? TotalAmount { get; set; }
 }
 
 public record SelfServeShelterAllowanceSupport : SelfServeSupport
