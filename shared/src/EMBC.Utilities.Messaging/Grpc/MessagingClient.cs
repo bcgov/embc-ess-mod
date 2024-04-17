@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Telemetry;
 
@@ -15,27 +16,25 @@ namespace EMBC.Utilities.Messaging.Grpc
             this.telemetryProvider = telemetryProvider;
         }
 
-        public async Task Publish(Event evt)
+        public async Task Publish(Event evt, CancellationToken cancellationToken = default)
         {
             var logger = telemetryProvider.Get<MessagingClient>();
             logger.LogDebug("Publishing event {0}", evt.GetType().FullName);
-            await dispatcherClient.DispatchAsync<string>(evt);
+            await dispatcherClient.DispatchAsync<string>(evt, cancellationToken);
         }
 
-        public async Task<string?> Send(Command command)
+        public async Task<string?> Send(Command command, CancellationToken cancellationToken = default)
         {
             var logger = telemetryProvider.Get<MessagingClient>();
             logger.LogDebug("Sending command {0}", command.GetType().FullName);
-            var response = await dispatcherClient.DispatchAsync<string>(command);
-            return response;
+            return await dispatcherClient.DispatchAsync<string>(command, cancellationToken);
         }
 
-        public async Task<TResponse?> Send<TResponse>(Query<TResponse> command)
+        public async Task<TResponse?> Send<TResponse>(Query<TResponse> command, CancellationToken cancellationToken = default)
         {
             var logger = telemetryProvider.Get<MessagingClient>();
             logger.LogDebug("Sending query {0}", command.GetType().FullName);
-            var response = await dispatcherClient.DispatchAsync<TResponse>(command);
-            return response;
+            return await dispatcherClient.DispatchAsync<TResponse>(command, cancellationToken);
         }
     }
 }
