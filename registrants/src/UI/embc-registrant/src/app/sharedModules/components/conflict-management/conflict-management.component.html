@@ -8,7 +8,7 @@
   <mat-vertical-stepper class="stepper-style" [linear]="false" #conflictStepper>
     <mat-step *ngIf="conflicts | arrayContains: 'NameDataConflict'">
       <ng-template matStepLabel><span class="custom-label">Name Mismatch</span></ng-template>
-      <mat-card class="card-border">
+      <mat-card appearance="outlined" class="card-border">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
@@ -68,7 +68,7 @@
 
     <mat-step *ngIf="conflicts | arrayContains: 'DateOfBirthDataConflict'">
       <ng-template matStepLabel><span class="custom-label">DOB Mismatch</span></ng-template>
-      <mat-card class="card-border">
+      <mat-card appearance="outlined" class="card-border">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
@@ -126,7 +126,7 @@
 
     <mat-step *ngIf="conflicts | arrayContains: 'AddressDataConflict'">
       <ng-template matStepLabel><span class="custom-label">Address Mismatch</span></ng-template>
-      <mat-card class="card-border">
+      <mat-card appearance="outlined" class="card-border">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">

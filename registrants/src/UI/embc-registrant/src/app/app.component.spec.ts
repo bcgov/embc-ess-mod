@@ -8,7 +8,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { APP_BASE_HREF } from '@angular/common';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
 import { ConfigService } from './core/services/config.service';
 

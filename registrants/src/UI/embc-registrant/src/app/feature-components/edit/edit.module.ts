@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { EditRoutingModule } from './edit-routing.module';
 import { ComponentWrapperModule } from '../../sharedModules/components/component-wrapper/component-wrapper.module';
 import { EditComponent } from './edit.component';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RestrictionFormModule } from '../../sharedModules/forms/restriction-form/restriction-form.module';
 import { CoreModule } from '../../core/core.module';
 

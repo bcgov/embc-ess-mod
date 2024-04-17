@@ -9,28 +9,19 @@ import {
   FormGroupDirective
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import {
-  MatLegacyFormField as MatFormField,
-  MatLegacyFormFieldModule as MatFormFieldModule
-} from '@angular/material/legacy-form-field';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatLegacyCheckboxModule as MatCheckboxModule,
-  MatLegacyCheckboxChange as MatCheckboxChange
-} from '@angular/material/legacy-checkbox';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
 import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
-import {
-  MatLegacyRadioChange as MatRadioChange,
-  MatLegacyRadioModule as MatRadioModule
-} from '@angular/material/legacy-radio';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {

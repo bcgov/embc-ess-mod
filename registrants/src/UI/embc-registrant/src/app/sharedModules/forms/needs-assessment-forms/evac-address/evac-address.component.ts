@@ -1,15 +1,12 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatLegacyRadioChange as MatRadioChange,
-  MatLegacyRadioModule as MatRadioModule
-} from '@angular/material/legacy-radio';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { CustomPipeModule } from '../../../../core/pipe/customPipe.module';

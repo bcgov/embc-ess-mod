@@ -7,7 +7,7 @@ import { TimeoutService } from 'src/app/core/services/timeout.service';
 import { MockTimeoutService } from 'src/app/unit-tests/mockTimeout.service';
 import { MockExpiry } from 'src/app/unit-tests/mockExpiry.service';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { OAuthModule } from 'angular-oauth2-oidc';
 
 describe('VerifiedRegistrationComponent', () => {

@@ -4,7 +4,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { TabModel } from 'src/app/core/model/tab.model';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { EssFileDialogComponent } from 'src/app/core/components/dialog-components/ess-file-dialog/ess-file-dialog.component';
 import * as globalConst from '../../../core/services/globalConstants';

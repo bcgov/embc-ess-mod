@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { EvacuationDetailsComponent } from './evacuation-details.component';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatCardModule } from '@angular/material/card';
 import { EvacuationDetailsRoutingModule } from './evacuation-details-routing.module';
 import { ReviewModule } from '../../../../feature-components/review/review.module';
 import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatTableModule } from '@angular/material/table';
 import { CustomPipeModule } from 'src/app/core/pipe/customPipe.module';
 
 @NgModule({

@@ -7,7 +7,7 @@
 
   <div class="row">
     <div class="col-12 content-container">
-      <mat-card class="card-align">
+      <mat-card appearance="outlined" class="card-align">
         <mat-card-content>
           <p class="sub-heading">
             Your Emergency Support Services (ESS) File Number is: &nbsp;<span class="ref-number">{{
@@ -60,7 +60,11 @@
           </button>
         </div>
       </div>
-      <mat-card *ngIf="currentFlow === 'non-verified-registration'" class="card-align services-info">
+      <mat-card
+        appearance="outlined"
+        *ngIf="currentFlow === 'non-verified-registration'"
+        class="card-align services-info"
+      >
         <mat-card-content>
           <div class="row">
             <div class="col-md-12 open-panel-heading">

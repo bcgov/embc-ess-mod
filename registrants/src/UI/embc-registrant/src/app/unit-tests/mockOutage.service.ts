@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { OutageInformation } from '../core/api/models';
 import { CacheService } from '../core/services/cache.service';

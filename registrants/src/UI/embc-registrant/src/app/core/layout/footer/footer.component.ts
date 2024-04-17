@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { InformationDialogComponent } from '../../components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { DialogContent } from '../../model/dialog-content.model';

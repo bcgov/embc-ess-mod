@@ -1,5 +1,5 @@
 <form [formGroup]="evacuatedForm">
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <div *ngIf="(formCreationService.addressForm$ | async).value.address.stateProvince !== null; else otherAddress">
         <div
@@ -80,7 +80,7 @@
     </div>
   </ng-template>
 
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
