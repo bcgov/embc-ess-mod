@@ -171,7 +171,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Resets the household Member form and goes back to the main Form
    */
   cancel(): void {
-    this.householdService.cancel(this.householdForm);
+    this.householdForm.get('addMemberFormIndicator').setValue(false);
+    this.householdForm.get('addMemberIndicator').setValue(false);
+    this.householdForm.get('houseHoldMember').reset();
+
     this.showMemberForm = false;
     this.editFlag = false;
     this.duplicateFlag = false;
@@ -356,9 +359,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   private runValidation() {
-    // Remove Edit form if displayed while tabbing out
-    if (this.editFlag) this.cancel();
-
     if (!this.essFileNumber) {
       if (
         this.householdForm.valid &&
