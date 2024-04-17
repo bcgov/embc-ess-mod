@@ -48,10 +48,7 @@ export class AddCommunityComponent implements OnInit {
         },
         error: (error) => {
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.addCommunityListError
-          );
+          this.alertService.setAlert('danger', globalConst.addCommunityListError);
         }
       });
 
@@ -60,8 +57,7 @@ export class AddCommunityComponent implements OnInit {
       this.addCommunityService.getAddedCommunities().length > 0
     ) {
       this.existingSelection = this.addCommunityService.getAddedCommunities();
-      this.selectedCommunitiesList =
-        this.addCommunityService.getAddedCommunities();
+      this.selectedCommunitiesList = this.addCommunityService.getAddedCommunities();
     }
 
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
@@ -78,19 +74,9 @@ export class AddCommunityComponent implements OnInit {
         return true;
       }
       if (searchString.type === 'text') {
-        return (
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        );
+        return data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       } else {
-        return (
-          data.districtName
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        );
+        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       }
     };
     this.filterPredicate = filterPredicate;
@@ -128,8 +114,6 @@ export class AddCommunityComponent implements OnInit {
    * Navigates to assigned community list
    */
   goToList(): void {
-    this.router.navigate([
-      '/responder-access/community-management/list-communities'
-    ]);
+    this.router.navigate(['/responder-access/community-management/list-communities']);
   }
 }

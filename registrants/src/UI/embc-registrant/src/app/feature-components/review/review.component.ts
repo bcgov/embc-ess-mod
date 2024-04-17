@@ -25,7 +25,10 @@ export class ReviewComponent implements OnInit {
   hideCard = false;
   navigationExtras: NavigationExtras;
 
-  constructor(private router: Router, public formCreationService: FormCreationService) {}
+  constructor(
+    private router: Router,
+    public formCreationService: FormCreationService
+  ) {}
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };

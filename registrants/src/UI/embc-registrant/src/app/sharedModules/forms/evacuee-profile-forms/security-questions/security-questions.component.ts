@@ -1,10 +1,5 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -39,8 +34,7 @@ export default class SecurityQuestionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createQuestionForm();
-    this.securityQuestionOptions =
-      this.securityQuesService.securityQuestionOptions;
+    this.securityQuestionOptions = this.securityQuesService.securityQuestionOptions;
   }
 
   /**
@@ -59,8 +53,7 @@ export default class SecurityQuestionsComponent implements OnInit {
   }
 
   get questionsFormControl(): { [key: string]: AbstractControl } {
-    return (this.securityQuestionsForm.get('questions') as UntypedFormGroup)
-      .controls;
+    return (this.securityQuestionsForm.get('questions') as UntypedFormGroup).controls;
   }
 }
 

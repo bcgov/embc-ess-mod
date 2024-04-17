@@ -19,7 +19,14 @@ describe('NeedsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule, BrowserAnimationsModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MaterialModule,
+        BrowserAnimationsModule
+      ],
       declarations: [NeedsComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },

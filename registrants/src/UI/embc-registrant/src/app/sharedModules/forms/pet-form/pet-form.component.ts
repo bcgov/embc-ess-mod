@@ -13,19 +13,7 @@ export class PetFormComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.howMany = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      'More than 10'
-    ];
+    this.howMany = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'More than 10'];
   }
 
   /**

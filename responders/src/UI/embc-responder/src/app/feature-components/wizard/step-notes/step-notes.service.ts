@@ -4,10 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Note, RegistrationResult } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { TabModel } from 'src/app/core/models/tab.model';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { UserService } from 'src/app/core/services/user.service';
 
@@ -91,10 +88,7 @@ export class StepNotesService {
    * @param isHidden flag if the note is visible or not
    * @returns array of updated notes
    */
-  public hideUnhideNotes(
-    noteId: string,
-    isHidden: boolean
-  ): Observable<Array<Note>> {
+  public hideUnhideNotes(noteId: string, isHidden: boolean): Observable<Array<Note>> {
     return this.registrationsService
       .registrationsSetFileNoteHiddenStatus({
         fileId: this.appBaseService?.appModel?.selectedEssFile?.id,
@@ -129,9 +123,6 @@ export class StepNotesService {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 }

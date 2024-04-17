@@ -4,18 +4,11 @@
       <div class="row">
         <div class="col-md-12">
           <label class="card-heading requiredField">
-            If you have any <strong>household members</strong> (including
-            dependents) who live in the same household with you, please add them
-            below.
+            If you have any <strong>household members</strong> (including dependents) who live in the same household
+            with you, please add them below.
           </label>
-          <p>
-            <em>Please note:</em> Roommates & tenants need to register
-            separately.
-          </p>
-          <mat-table
-            *ngIf="dataSource.getValue().length > 0"
-            [dataSource]="dataSource"
-          >
+          <p><em>Please note:</em> Roommates & tenants need to register separately.</p>
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource">
             <!--&& showTable-->
 
             <ng-container matColumnDef="firstName">
@@ -51,9 +44,7 @@
             </ng-container>
 
             <ng-container matColumnDef="dateOfBirth">
-              <mat-header-cell *matHeaderCellDef>
-                Date of Birth
-              </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span class="mobile-label">Date of Birth:</span>
                 {{ element.dateOfBirth }}
@@ -72,11 +63,7 @@
                   (click)="editRow(element, index)"
                 >
                   <img src="/assets/images/edit.svg" height="35" width="35" />
-                  <img
-                    src="/assets/images/edit_onhover.svg"
-                    height="35"
-                    width="35"
-                  />
+                  <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
                 </button>
 
                 <button
@@ -87,60 +74,31 @@
                   (click)="deleteRow(index)"
                 >
                   <img src="/assets/images/delete.svg" height="35" width="35" />
-                  <img
-                    src="/assets/images/delete_onhover.svg"
-                    height="35"
-                    width="35"
-                  />
+                  <img src="/assets/images/delete_onhover.svg" height="35" width="35" />
                 </button>
               </mat-cell>
             </ng-container>
 
-            <mat-header-row
-              *matHeaderRowDef="displayedColumns"
-            ></mat-header-row>
-            <mat-row
-              *matRowDef="let row; columns: displayedColumns"
-              [hidden]="row.isPrimaryRegistrant === true"
-            >
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns" [hidden]="row.isPrimaryRegistrant === true">
             </mat-row>
           </mat-table>
 
           <br />
 
-          <button
-            *ngIf="!showFamilyForm"
-            class="family-button"
-            mat-button
-            type="button"
-            (click)="addMembers()"
-          >
+          <button *ngIf="!showFamilyForm" class="family-button" mat-button type="button" (click)="addMembers()">
             + Add Household Member
           </button>
           <div *ngIf="showFamilyForm">
             <p class="card-heading">Household Members</p>
-            <app-person-detail-form
-              [personalDetailsForm]="householdFormControl?.householdMember"
-            >
+            <app-person-detail-form [personalDetailsForm]="householdFormControl?.householdMember">
             </app-person-detail-form>
             <div class="row">
               <div class="col-md-3">
-                <button
-                  class="button-s details-button"
-                  mat-button
-                  type="button"
-                  (click)="cancel()"
-                >
-                  Cancel
-                </button>
+                <button class="button-s details-button" mat-button type="button" (click)="cancel()">Cancel</button>
               </div>
               <div class="col-md-3">
-                <button
-                  class="family-button details-button save-button"
-                  mat-button
-                  type="button"
-                  (click)="save()"
-                >
+                <button class="family-button details-button save-button" mat-button type="button" (click)="save()">
                   Save
                 </button>
               </div>
@@ -152,5 +110,4 @@
   </mat-card>
   <br />
   <br />
-
 </form>

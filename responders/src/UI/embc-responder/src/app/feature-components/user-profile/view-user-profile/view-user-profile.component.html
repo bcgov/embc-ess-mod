@@ -33,15 +33,9 @@
     </div>
 
     <div class="row row-align">
-      <div class="col-md-4 detail-label">
-        Electronic Access Agreement Signed
-      </div>
+      <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
       <div class="col-md-8">
-        {{
-          this.dateConversionService.convertDateTimeToDateUTC(
-            userProfile?.agreementSignDate
-          )
-        }}
+        {{ this.dateConversionService.convertDateTimeToDateUTC(userProfile?.agreementSignDate) }}
       </div>
     </div>
 
@@ -74,9 +68,7 @@
 
     <div class="row">
       <div class="col-md-5">
-        <button class="button-p edit-button" mat-button (click)="editProfile()">
-          Edit Profile
-        </button>
+        <button class="button-p edit-button" mat-button (click)="editProfile()">Edit Profile</button>
       </div>
     </div>
   </div>

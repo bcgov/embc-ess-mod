@@ -82,8 +82,7 @@ describe('ContactComponent', () => {
 
   it('should display only radio button on page load', () => {
     fixture.detectChanges();
-    const formElem =
-      fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
+    const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('mat-radio-group');
     expect(totalElems.length).toEqual(1);
   });
@@ -95,8 +94,7 @@ describe('ContactComponent', () => {
 
     component.hideContact({ source: {} as _MatRadioButtonBase, value: false });
     fixture.detectChanges();
-    const formElem =
-      fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
+    const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(2);
   });
@@ -108,8 +106,7 @@ describe('ContactComponent', () => {
 
     component.hideContact({ source: {} as _MatRadioButtonBase, value: true });
     fixture.detectChanges();
-    const formElem =
-      fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
+    const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(5);
   });
@@ -118,8 +115,7 @@ describe('ContactComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      stepProfileService.profileTabsValue =
-        stepProfileService.evacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -131,9 +127,7 @@ describe('ContactComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/address'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/address']);
     })
   ));
 
@@ -141,8 +135,7 @@ describe('ContactComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      stepProfileService.profileTabsValue =
-        stepProfileService.evacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.evacueeProfileTabs;
       fixture.detectChanges();
       component.ngOnInit();
       fixture.detectChanges();
@@ -154,9 +147,7 @@ describe('ContactComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/security-questions'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/security-questions']);
     })
   ));
 
@@ -164,8 +155,7 @@ describe('ContactComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      stepProfileService.profileTabsValue =
-        stepProfileService.completedPaperEvacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.completedPaperEvacueeProfileTabs;
       evacueeSessionService.isPaperBased = true;
       stepProfileService.contactDetails = {
         email: 'a@a.gmail.com',
@@ -184,9 +174,7 @@ describe('ContactComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/review'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/review']);
     })
   ));
 
@@ -194,8 +182,7 @@ describe('ContactComponent', () => {
     inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
 
-      stepProfileService.profileTabsValue =
-        stepProfileService.paperEvacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.paperEvacueeProfileTabs;
       evacueeSessionService.isPaperBased = true;
       stepProfileService.contactDetails = {
         email: 'a@a.gmail.com',
@@ -214,9 +201,7 @@ describe('ContactComponent', () => {
 
       tick();
       fixture.detectChanges();
-      const dialogContent = document.getElementsByTagName(
-        'app-information-dialog'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
       expect(dialogContent.textContent).toEqual(
         'Please complete all sections of the Evacuee Profile prior to submitting. Close '
@@ -230,8 +215,7 @@ describe('ContactComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: false
       };
-      stepProfileService.profileTabsValue =
-        stepProfileService.evacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.evacueeProfileTabs;
       evacueeSessionService.isPaperBased = true;
       stepProfileService.contactDetails = {
         email: 'a@a.gmail.com',
@@ -256,10 +240,7 @@ describe('ContactComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        contactService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'contact'
-        );
+      const tabMetaData = contactService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'contact');
 
       expect(tabMetaData.status).toEqual('incomplete');
     })
@@ -271,8 +252,7 @@ describe('ContactComponent', () => {
       appBaseService.wizardProperties = {
         editFlag: true
       };
-      stepProfileService.profileTabsValue =
-        stepProfileService.evacueeProfileTabs;
+      stepProfileService.profileTabsValue = stepProfileService.evacueeProfileTabs;
       evacueeSessionService.isPaperBased = true;
       stepProfileService.contactDetails = {
         email: 'a@a.gmail.com',
@@ -296,10 +276,7 @@ describe('ContactComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        contactService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'contact'
-        );
+      const tabMetaData = contactService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'contact');
 
       expect(tabMetaData.status).toEqual('complete');
     })

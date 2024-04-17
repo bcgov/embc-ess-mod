@@ -24,11 +24,9 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    * Initializes and loads the confirm-restriction form
    */
   ngOnInit(): void {
-    this.restrictionForm$ = this.formCreationService
-      .getRestrictionForm()
-      .subscribe((restrictionForm) => {
-        this.restrictionForm = restrictionForm;
-      });
+    this.restrictionForm$ = this.formCreationService.getRestrictionForm().subscribe((restrictionForm) => {
+      this.restrictionForm = restrictionForm;
+    });
   }
 
   /**
@@ -43,8 +41,7 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    */
   needsAssessment(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.restrictionService.restrictedAccess =
-        this.restrictionForm.get('restrictedAccess').value;
+      this.restrictionService.restrictedAccess = this.restrictionForm.get('restrictedAccess').value;
       this.router.navigate(['/verified-registration/needs-assessment']);
     } else {
       this.restrictionForm.markAllAsTouched();

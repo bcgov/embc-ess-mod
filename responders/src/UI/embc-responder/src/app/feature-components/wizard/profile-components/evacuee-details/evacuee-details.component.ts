@@ -30,9 +30,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.evacueeDetailsForm = this.evacueeDetailsService.createForm();
     this.evacueeDetailsService.initDisabledFields(this.evacueeDetailsForm);
 
-    this.tabUpdateSubscription = this.evacueeDetailsService.updateTabStatus(
-      this.evacueeDetailsForm
-    );
+    this.tabUpdateSubscription = this.evacueeDetailsService.updateTabStatus(this.evacueeDetailsForm);
   }
 
   /**

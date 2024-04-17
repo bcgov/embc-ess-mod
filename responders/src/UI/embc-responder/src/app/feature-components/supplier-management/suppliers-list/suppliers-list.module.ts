@@ -9,11 +9,6 @@ import { SuppliersTableComponent } from './suppliers-table/suppliers-table.compo
 
 @NgModule({
   declarations: [SuppliersListComponent, SuppliersTableComponent],
-  imports: [
-    CommonModule,
-    ListSuppliersRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, ListSuppliersRoutingModule, MaterialModule, SharedModule]
 })
 export class SuppliersListModule {}

@@ -9,10 +9,8 @@
   <div class="row">
     <div
       *ngIf="
-        optionInjectionService?.instance?.optionType ===
-          selectedPathType.remoteExtensions ||
-        optionInjectionService?.instance?.optionType ===
-          selectedPathType.caseNotes
+        optionInjectionService?.instance?.optionType === selectedPathType.remoteExtensions ||
+        optionInjectionService?.instance?.optionType === selectedPathType.caseNotes
       "
       class="col-md-8"
     >
@@ -27,77 +25,40 @@
     </div>
     <div
       *ngIf="
-        optionInjectionService?.instance?.optionType !==
-          selectedPathType.remoteExtensions &&
-        optionInjectionService?.instance?.optionType !==
-          selectedPathType.caseNotes
+        optionInjectionService?.instance?.optionType !== selectedPathType.remoteExtensions &&
+        optionInjectionService?.instance?.optionType !== selectedPathType.caseNotes
       "
       class="col-md-8"
     >
       <app-alert></app-alert>
       <ng-container
-        *ngIf="
-          optionInjectionService?.instance?.optionType ===
-            selectedPathType.digital;
-          else paperBasedResults
-        "
+        *ngIf="optionInjectionService?.instance?.optionType === selectedPathType.digital; else paperBasedResults"
       >
         <p class="result-text">
           Results for "<b
-            >{{
-              evacueeSearchContext?.evacueeSearchParameters?.lastName
-                | uppercase
-            }},
-            {{
-              evacueeSearchContext?.evacueeSearchParameters?.firstName
-                | titlecase
-            }}</b
+            >{{ evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase }},
+            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase }}</b
           >" with a date of birth
-          <b
-            >"{{
-              evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth
-                | date: 'dd-MMM-yyyy'
-            }}".</b
-          >
+          <b>"{{ evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth | date: 'dd-MMM-yyyy' }}".</b>
         </p>
         <p>
-          If the evacuee provided ID and there is a profile result, go to the
-          profile. Otherwise, go to the ESS File.
+          If the evacuee provided ID and there is a profile result, go to the profile. Otherwise, go to the ESS File.
         </p>
       </ng-container>
       <ng-template #paperBasedResults>
         <p class="result-text">
           Results for "<b
-            >{{
-              evacueeSearchContext?.evacueeSearchParameters?.lastName
-                | uppercase
-            }},
-            {{
-              evacueeSearchContext?.evacueeSearchParameters?.firstName
-                | titlecase
-            }}</b
+            >{{ evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase }},
+            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase }}</b
           >" with a date of birth
-          <b
-            >"{{
-              evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth
-                | date: 'dd-MMM-yyyy'
-            }}"</b
-          >
+          <b>"{{ evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth | date: 'dd-MMM-yyyy' }}"</b>
           and a paper ESS File #
-          <b
-            >{{
-              evacueeSearchService?.evacueeSearchContext
-                ?.evacueeSearchParameters?.paperFileNumber
-            }}.</b
-          >
+          <b>{{ evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber }}.</b>
         </p>
         <p>
-          For data entry of paper ESS Files, you will only be able to access the
-          paper ESS File that you searched for.
+          For data entry of paper ESS Files, you will only be able to access the paper ESS File that you searched for.
         </p>
-        <p>
-          If there are no matching ESS Files you may start a new registration.
-        </p>
+        <p>If there are no matching ESS Files you may start a new registration.</p>
       </ng-template>
       <br />
       <hr class="solid-hr" />
@@ -109,22 +70,15 @@
         <ng-container *ngTemplateOutlet="noIdentification"></ng-container>
       </div>
       <br />
-      <div
-        id="new-registration-box"
-        class="row"
-        *ngIf="registrantResults?.length === 0 && fileResults?.length === 0"
-      >
+      <div id="new-registration-box" class="row" *ngIf="registrantResults?.length === 0 && fileResults?.length === 0">
         <div class="col-md-12">
           <p class="p-custom">
-            IF the evacuee does <b>NOT</b> have either a profile or ESS File
-            result, please
-            <a class="highlight" (click)="openWizard()"
-              >Start a New Evacuee Registration.</a
-            >
+            IF the evacuee does <b>NOT</b> have either a profile or ESS File result, please
+            <a class="highlight" (click)="openWizard()">Start a New Evacuee Registration.</a>
           </p>
           <p class="p-custom">
-            <b>Restricted File?</b> If the evacuee has indicated they have
-            restricted their file request help from your ESS Supervisor.
+            <b>Restricted File?</b> If the evacuee has indicated they have restricted their file request help from your
+            ESS Supervisor.
           </p>
           <p class="p-custom">Evacuee might be under the legal age.</p>
         </div>
@@ -133,22 +87,17 @@
     <div class="col-md-4">
       <mat-card
         *ngIf="
-          optionInjectionService?.instance?.optionType !==
-            selectedPathType.remoteExtensions &&
-          optionInjectionService?.instance?.optionType !==
-            selectedPathType.caseNotes
+          optionInjectionService?.instance?.optionType !== selectedPathType.remoteExtensions &&
+          optionInjectionService?.instance?.optionType !== selectedPathType.caseNotes
         "
         class="registration"
       >
         <p class="card-heading">Start a <b>New</b> Evacuee Registration</p>
         <p>
-          <b>Start a New Evacuee Registration</b> if the evacuee is currently
-          evacuated and does <b>not</b> have an ESS file or Profile for that
-          evacuation.
+          <b>Start a New Evacuee Registration</b> if the evacuee is currently evacuated and does <b>not</b> have an ESS
+          file or Profile for that evacuation.
         </p>
-        <button class="button-p new-search" mat-button (click)="openWizard()">
-          New Evacuee Registration
-        </button>
+        <button class="button-p new-search" mat-button (click)="openWizard()">New Evacuee Registration</button>
       </mat-card>
       <br />
       <mat-card class="ess-status">
@@ -156,54 +105,40 @@
         <div>
           <hr />
           <p class="pending-status">
-            <img
-              src="/assets/images/pending-flag.svg"
-              height="40"
-              width="33"
-            /><span class="status-heading">Pending ESS File</span>
+            <img src="/assets/images/pending-flag.svg" height="40" width="33" /><span class="status-heading"
+              >Pending ESS File</span
+            >
           </p>
-          <p>
-            An ESS File <b>NOT</b> associated with a task number and created
-            within the last 1 month.
-          </p>
+          <p>An ESS File <b>NOT</b> associated with a task number and created within the last 1 month.</p>
         </div>
         <div>
           <hr class="dotted-hr" />
           <p class="active-status">
-            <img
-              src="/assets/images/active-flag.svg"
-              height="40"
-              width="33"
-            /><span class="status-heading">Active ESS File</span>
+            <img src="/assets/images/active-flag.svg" height="40" width="33" /><span class="status-heading"
+              >Active ESS File</span
+            >
           </p>
           <p>An ESS File associated with an active task number.</p>
         </div>
         <div *ngIf="hasPermission('canViewCompletedESSFiles')">
           <hr class="dotted-hr" />
           <p class="complete-status">
-            <img
-              src="/assets/images/complete-flag.svg"
-              height="40"
-              width="33"
-            /><span class="status-heading">Completed ESS File</span>
+            <img src="/assets/images/complete-flag.svg" height="40" width="33" /><span class="status-heading"
+              >Completed ESS File</span
+            >
           </p>
-          <p>
-            An ESS File where the Task number associated with the file has
-            expired.
-          </p>
+          <p>An ESS File where the Task number associated with the file has expired.</p>
         </div>
         <div>
           <hr class="dotted-hr" />
           <p class="expired-status">
-            <img
-              src="/assets/images/expired-flag.svg"
-              height="40"
-              width="33"
-            /><span class="status-heading">Expired ESS File</span>
+            <img src="/assets/images/expired-flag.svg" height="40" width="33" /><span class="status-heading"
+              >Expired ESS File</span
+            >
           </p>
           <p>
-            An ESS File <b>NOT</b> associated with a task number and created
-            more than 1 month ago, but less than 6 months ago.
+            An ESS File <b>NOT</b> associated with a task number and created more than 1 month ago, but less than 6
+            months ago.
           </p>
         </div>
       </mat-card>
@@ -216,8 +151,7 @@
       <div class="back-info">
         <img src="/assets/images/exclaimation.svg" height="32" width="32" />
         <span class="sub-text"
-          >Not what you are looking for? Go back &
-          <a class="highlight" (click)="searchAgain()">Search again</a></span
+          >Not what you are looking for? Go back & <a class="highlight" (click)="searchAgain()">Search again</a></span
         >
       </div>
     </div>
@@ -228,37 +162,26 @@
   <div class="row">
     <div class="col-md-12">
       <img src="/assets/images/profile-user.svg" height="36" width="36" />
-      <span class="result-heading"
-        ><b>Profile Results </b>({{ registrantResults?.length }})</span
-      >
+      <span class="result-heading"><b>Profile Results </b>({{ registrantResults?.length }})</span>
     </div>
   </div>
   <br />
-  <div
-    *ngIf="registrantResults?.length > 0; else noMatchingProfiles"
-    class="row"
-  >
+  <div *ngIf="registrantResults?.length > 0; else noMatchingProfiles" class="row">
     <div class="col-md-12">
-      <app-profile-results
-        [registrantResults]="registrantResults"
-      ></app-profile-results>
+      <app-profile-results [registrantResults]="registrantResults"></app-profile-results>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
       <img src="/assets/images/file.svg" height="36" width="36" />
-      <span class="result-heading"
-        ><b>ESS File Results </b>({{ fileResults?.length }})</span
-      >
+      <span class="result-heading"><b>ESS File Results </b>({{ fileResults?.length }})</span>
     </div>
   </div>
   <br />
   <div *ngIf="fileResults?.length > 0; else noMatchingFiles" class="row">
     <div class="col-md-12">
-      <app-ess-files-results
-        [fileResults]="fileResults"
-      ></app-ess-files-results>
+      <app-ess-files-results [fileResults]="fileResults"></app-ess-files-results>
     </div>
   </div>
 </ng-template>
@@ -267,37 +190,26 @@
   <div class="row">
     <div class="col-md-12">
       <img src="/assets/images/file.svg" height="36" width="36" />
-      <span class="result-heading"
-        ><b>ESS File Results </b>({{ fileResults?.length }})</span
-      >
+      <span class="result-heading"><b>ESS File Results </b>({{ fileResults?.length }})</span>
     </div>
   </div>
   <br />
   <div class="row" *ngIf="fileResults?.length > 0; else noMatchingFiles">
     <div class="col-md-12">
-      <app-ess-files-results
-        [fileResults]="fileResults"
-      ></app-ess-files-results>
+      <app-ess-files-results [fileResults]="fileResults"></app-ess-files-results>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
       <img src="/assets/images/profile-user.svg" height="36" width="36" />
-      <span class="result-heading"
-        ><b>Profile Results </b>({{ registrantResults?.length }})</span
-      >
+      <span class="result-heading"><b>Profile Results </b>({{ registrantResults?.length }})</span>
     </div>
   </div>
   <br />
-  <div
-    *ngIf="registrantResults?.length > 0; else noMatchingProfiles"
-    class="row"
-  >
+  <div *ngIf="registrantResults?.length > 0; else noMatchingProfiles" class="row">
     <div class="col-md-12">
-      <app-profile-results
-        [registrantResults]="registrantResults"
-      ></app-profile-results>
+      <app-profile-results [registrantResults]="registrantResults"></app-profile-results>
     </div>
   </div>
 </ng-template>
@@ -307,12 +219,8 @@
     <div class="col-md-12">
       <div class="no-results">
         <p>
-          {{
-            evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase
-          }},
-          {{
-            evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase
-          }}
+          {{ evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase }},
+          {{ evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase }}
           does not have a Profile in the ERA Tool.
         </p>
       </div>
@@ -325,12 +233,8 @@
     <div class="col-md-12">
       <div class="no-results">
         <p>
-          {{
-            evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase
-          }},
-          {{
-            evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase
-          }}
+          {{ evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase }},
+          {{ evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase }}
           does not have any ESS Files in the ERA Tool.
         </p>
       </div>
@@ -338,6 +242,4 @@
   </div>
 </ng-template>
 
-<app-overlay-loader
-  [showLoader]="evacueeSearchResultsService.getloadingOverlay() | async"
-></app-overlay-loader>
+<app-overlay-loader [showLoader]="evacueeSearchResultsService.getloadingOverlay() | async"></app-overlay-loader>

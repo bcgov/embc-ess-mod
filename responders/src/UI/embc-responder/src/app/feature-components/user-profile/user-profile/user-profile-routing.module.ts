@@ -9,17 +9,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () =>
-          import('../view-user-profile/view-user-profile.module').then(
-            (m) => m.ViewUserProfileModule
-          )
+        loadChildren: () => import('../view-user-profile/view-user-profile.module').then((m) => m.ViewUserProfileModule)
       },
       {
         path: 'edit',
-        loadChildren: () =>
-          import('../edit-user-profile/edit-user-profile.module').then(
-            (m) => m.EditUserProfileModule
-          )
+        loadChildren: () => import('../edit-user-profile/edit-user-profile.module').then((m) => m.EditUserProfileModule)
       }
     ]
   }

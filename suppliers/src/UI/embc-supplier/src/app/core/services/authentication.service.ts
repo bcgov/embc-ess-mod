@@ -42,21 +42,13 @@ export class AuthenticationService {
 
     if (!this.isConfigSet) {
       return this.configureOAuthService().then(() => {
-        return this.oauthService
-          .loadDiscoveryDocumentAndTryLogin()
-          .then((_) => {
-            return (
-              this.oauthService.hasValidIdToken() &&
-              this.oauthService.hasValidAccessToken()
-            );
-          });
+        return this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
+          return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+        });
       });
     } else {
       return this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
-        return (
-          this.oauthService.hasValidIdToken() &&
-          this.oauthService.hasValidAccessToken()
-        );
+        return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
       });
     }
   }

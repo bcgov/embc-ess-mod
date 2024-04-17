@@ -12,11 +12,7 @@ describe('ReportingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatAutocompleteModule
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule, MatAutocompleteModule],
       declarations: [ReportingComponent],
       providers: [UntypedFormBuilder]
     }).compileComponents();

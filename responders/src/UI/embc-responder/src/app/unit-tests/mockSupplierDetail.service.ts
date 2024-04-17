@@ -6,23 +6,15 @@ import { AlertService } from '../shared/components/alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class MockSupplierDetailService extends SupplierDetailService {
-  constructor(
-    supplierService: SupplierService,
-    router: Router,
-    alertService: AlertService
-  ) {
+  constructor(supplierService: SupplierService, router: Router, alertService: AlertService) {
     super(supplierService, router, alertService);
   }
 
   rescindMutualAid(supplierId: string, teamId: string): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 
   addMutualAid(supplierId: string, teamId: string): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 }

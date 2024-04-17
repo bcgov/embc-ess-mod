@@ -19,38 +19,19 @@
             class="option-card"
             (click)="setSelection('digital')"
           >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.digital"
-            >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
+            <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.digital">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
             </div>
             <div class="row">
-              <img
-                src="/assets/images/evacuee-regis.svg"
-                height="89"
-                width="89"
-              />
+              <img src="/assets/images/evacuee-regis.svg" height="89" width="89" />
             </div>
 
             <div class="row">
               <div class="col-md-12">
                 <p class="text-subheading">
                   I am doing
-                  <span class="highlight"
-                    >evacuee registration & extensions</span
-                  >
+                  <span class="highlight">evacuee registration & extensions</span>
                 </p>
               </div>
             </div>
@@ -66,22 +47,9 @@
             class="option-card"
             (click)="setSelection('paperBased')"
           >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.paperBased"
-            >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
+            <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.paperBased">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
             </div>
 
             <div class="row">
@@ -89,10 +57,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <p class="text-subheading">
-                  I am doing <span class="highlight">data entry</span> for a
-                  Paper ESS File
-                </p>
+                <p class="text-subheading">I am doing <span class="highlight">data entry</span> for a Paper ESS File</p>
               </div>
             </div>
           </mat-card>
@@ -101,29 +66,15 @@
         <div class="col-md-3">
           <mat-card
             [ngClass]="{
-              'selected-card':
-                selectedPathway === selectedPathType.remoteExtensions,
+              'selected-card': selectedPathway === selectedPathType.remoteExtensions,
               disabled: isEnabled('remote-extensions')
             }"
             class="option-card"
             (click)="setSelection('remoteExtensions')"
           >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.remoteExtensions"
-            >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
+            <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.remoteExtensions">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
             </div>
 
             <div class="row">
@@ -134,8 +85,7 @@
               <div class="col-md-12">
                 <p class="text-subheading">
                   I am doing
-                  <span class="highlight">remote extensions</span> (evacuee/s
-                  not present)
+                  <span class="highlight">remote extensions</span> (evacuee/s not present)
                 </p>
               </div>
             </div>
@@ -151,38 +101,20 @@
             class="option-card"
             (click)="setSelection('caseNotes')"
           >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.caseNotes"
-            >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
+            <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.caseNotes">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
             </div>
 
             <div class="row">
-              <img
-                src="/assets/images/add-case-notes.svg"
-                height="90"
-                width="90"
-              />
+              <img src="/assets/images/add-case-notes.svg" height="90" width="90" />
             </div>
 
             <div class="row">
               <div class="col-md-12">
                 <p class="text-subheading">
                   I am
-                  <span class="highlight">adding case notes</span> to an ESS
-                  File
+                  <span class="highlight">adding case notes</span> to an ESS File
                 </p>
               </div>
             </div>
@@ -190,20 +122,11 @@
         </div>
       </div>
 
-      <div class="field-error" *ngIf="noSelectionFlag">
-        Please make a selection
-      </div>
+      <div class="field-error" *ngIf="noSelectionFlag">Please make a selection</div>
 
       <div class="row">
         <div class="col-md-6">
-          <button
-            class="button-p submit"
-            type="button"
-            mat-button
-            (click)="next()"
-          >
-            Next
-          </button>
+          <button class="button-p submit" type="button" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </mat-card>

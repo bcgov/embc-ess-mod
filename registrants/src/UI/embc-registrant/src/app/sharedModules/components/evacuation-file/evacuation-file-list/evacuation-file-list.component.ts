@@ -44,13 +44,9 @@ export class EvacuationFileListComponent implements OnInit {
         next: (files) => {
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
-            (a, b) =>
-              new Date(b.evacuationFileDate).valueOf() -
-              new Date(a.evacuationFileDate).valueOf()
+            (a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf()
           );
-          this.evacuationFileDataService.setCurrentEvacuationFileCount(
-            files.length
-          );
+          this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
           this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
@@ -66,9 +62,7 @@ export class EvacuationFileListComponent implements OnInit {
         next: (files) => {
           this.dataSourceInactive = files;
           this.dataSourceInactive.sort(
-            (a, b) =>
-              new Date(b.evacuationFileDate).valueOf() -
-              new Date(a.evacuationFileDate).valueOf()
+            (a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf()
           );
           this.showLoading = false;
         },

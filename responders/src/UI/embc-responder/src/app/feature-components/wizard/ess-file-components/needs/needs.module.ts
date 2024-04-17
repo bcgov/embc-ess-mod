@@ -9,12 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [NeedsComponent],
-  imports: [
-    CommonModule,
-    NeedsRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, NeedsRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class NeedsModule {}

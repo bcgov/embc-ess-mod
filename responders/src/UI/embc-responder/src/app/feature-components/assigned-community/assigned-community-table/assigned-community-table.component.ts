@@ -23,9 +23,7 @@ import { LoadEvacueeListService } from '../../../core/services/load-evacuee-list
   templateUrl: './assigned-community-table.component.html',
   styleUrls: ['./assigned-community-table.component.scss']
 })
-export class AssignedCommunityTableComponent
-  implements AfterViewInit, OnChanges
-{
+export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
@@ -57,10 +55,7 @@ export class AssignedCommunityTableComponent
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      if (
-        this.existingSelection !== undefined &&
-        this.existingSelection.length > 0
-      ) {
+      if (this.existingSelection !== undefined && this.existingSelection.length > 0) {
         this.dataSource.filteredData.forEach((row) => {
           const r: TeamCommunityModel = row;
           for (const sel of this.existingSelection) {
@@ -158,9 +153,7 @@ export class AssignedCommunityTableComponent
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
-      row.position + 1
-    }`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
   /**
@@ -174,8 +167,6 @@ export class AssignedCommunityTableComponent
   }
 
   getCommunitTypeDescription(communityOption: string): string {
-    return this.loadEvacueeListService
-      .getCommunityTypes()
-      .find((type) => type.value === communityOption).description;
+    return this.loadEvacueeListService.getCommunityTypes().find((type) => type.value === communityOption).description;
   }
 }

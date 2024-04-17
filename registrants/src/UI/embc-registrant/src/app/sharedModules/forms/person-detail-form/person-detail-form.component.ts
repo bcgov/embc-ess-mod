@@ -14,28 +14,15 @@ export class PersonDetailFormComponent implements OnInit {
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   sameLastNameOption: any;
-  readonly dateMask = [
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   readOnlyInput = false;
 
   constructor(private formCreationService: FormCreationService) {}
 
   ngOnInit(): void {
-    this.formCreationService
-      .getPersonalDetailsForm()
-      .subscribe((personalDetails) => {
-        this.primaryApplicantLastName = personalDetails.get('lastName').value;
-      });
+    this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {
+      this.primaryApplicantLastName = personalDetails.get('lastName').value;
+    });
     this.sameLastNameEditForm();
   }
 
@@ -48,9 +35,7 @@ export class PersonDetailFormComponent implements OnInit {
 
   sameLastNameEvent(event: MatCheckboxChange): void {
     if (event.checked) {
-      this.personalDetailsForm
-        .get('lastName')
-        .setValue(this.primaryApplicantLastName);
+      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
       this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');

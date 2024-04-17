@@ -6,12 +6,7 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -53,12 +48,11 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     this.formValidation();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe({
-        next: () => {
-          this.updateTabStatus();
-        }
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe({
+      next: () => {
+        this.updateTabStatus();
+      }
+    });
     this.tabMetaData = this.stepEssFileService.getNavLinks('security-phrase');
   }
 
@@ -128,11 +122,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Cancels the change of security phrase and goes back to the previous view
    */
   cancel(): void {
-    this.stepEssFileService.securityPhrase =
-      this.stepEssFileService.originalSecurityPhrase;
-    this.securityForm
-      .get('securityPhrase')
-      .setValue(this.stepEssFileService.securityPhrase);
+    this.stepEssFileService.securityPhrase = this.stepEssFileService.originalSecurityPhrase;
+    this.securityForm.get('securityPhrase').setValue(this.stepEssFileService.securityPhrase);
     this.editedSecurityPhrase = false;
     this.stepEssFileService.editedSecurityPhrase = false;
     this.securityFormControl.securityPhrase.disable();
@@ -202,10 +193,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
       this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
       this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     ) {
-      if (
-        this.stepEssFileService.securityPhrase ===
-        this.stepEssFileService.originalSecurityPhrase
-      ) {
+      if (this.stepEssFileService.securityPhrase === this.stepEssFileService.originalSecurityPhrase) {
         this.securityFormControl.securityPhrase.disable();
         this.editedSecurityPhrase = false;
       } else {
@@ -216,10 +204,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private editedPhraseFlag() {
-    if (
-      this.wizardType === 'review-file' ||
-      this.wizardType === 'complete-file'
-    ) {
+    if (this.wizardType === 'review-file' || this.wizardType === 'complete-file') {
       // If the editedSecurityFlag is not defined, set its default as false
       if (this.stepEssFileService.editedSecurityPhrase === undefined)
         this.stepEssFileService.editedSecurityPhrase = false;

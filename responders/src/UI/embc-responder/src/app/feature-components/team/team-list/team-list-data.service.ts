@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  MemberLabelDescription,
-  MemberRoleDescription,
-  TeamMember
-} from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import {
-  ObjectWrapper,
-  TableFilterModel
-} from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 
@@ -74,9 +67,7 @@ export class TeamListDataService {
   ) {}
 
   public getSelectedTeamMember(): TeamMember {
-    return this.selectedTeamMember
-      ? this.selectedTeamMember
-      : JSON.parse(this.cacheService.get('selectedTeamMember'));
+    return this.selectedTeamMember ? this.selectedTeamMember : JSON.parse(this.cacheService.get('selectedTeamMember'));
   }
 
   public setSelectedTeamMember(selectedTeamMember: TeamMember): void {

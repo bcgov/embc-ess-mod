@@ -11,10 +11,7 @@
     <div class="col-md-12">
       <p>
         <span class="bold p-margin"
-          >{{ supportList?.length }} support<span
-            *ngIf="supportList?.length !== 1"
-            >s</span
-          >&nbsp;</span
+          >{{ supportList?.length }} support<span *ngIf="supportList?.length !== 1">s</span>&nbsp;</span
         >
         <span *ngIf="supportList?.length !== 1">have</span>
         <span *ngIf="supportList?.length === 1">has</span>
@@ -68,17 +65,10 @@
         </button>
       </div>
 
-      <div
-        *ngFor="let filter of filtersToLoad?.loadDropdownFilters"
-        class="col-md-3"
-      >
+      <div *ngFor="let filter of filtersToLoad?.loadDropdownFilters" class="col-md-3">
         <mat-form-field appearance="outline">
           <mat-label>{{ filter?.label.description }}</mat-label>
-          <mat-select
-            #matRef
-            id="{{ filter?.type }}"
-            (selectionChange)="selected($event, filter?.type)"
-          >
+          <mat-select #matRef id="{{ filter?.type }}" (selectionChange)="selected($event, filter?.type)">
             <mat-option value="">{{ filter?.label.description }}</mat-option>
             <mat-option *ngFor="let val of filter?.values" [value]="val">
               <div *ngIf="val?.description !== undefined; else value">

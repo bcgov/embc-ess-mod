@@ -164,13 +164,7 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        CustomPipeModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule
-      ],
+      imports: [RouterTestingModule, CustomPipeModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule],
       declarations: [EssFileDetailsComponent],
       providers: [
         EssFileDetailsComponent,
@@ -206,10 +200,7 @@ describe('EssFileDetailsComponent', () => {
   it('should get essFile from router', () => {
     mockEssfileState = { file: mockEssfile };
     const routingTest = TestBed.inject(Router);
-    const testMockComponent = new EssFileDetailsComponent(
-      routingTest,
-      essfileDashboardService
-    );
+    const testMockComponent = new EssFileDetailsComponent(routingTest, essfileDashboardService);
     fixture.detectChanges();
     expect(testMockComponent.essFile).toBeDefined();
   });

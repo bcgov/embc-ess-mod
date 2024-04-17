@@ -1,16 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
@@ -68,15 +57,10 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     });
 
     // Updates the validations for the PetFormGroup
-    this.animalsForm
-      .get('addPetIndicator')
-      .valueChanges.subscribe(() => this.updateOnVisibility());
+    this.animalsForm.get('addPetIndicator').valueChanges.subscribe(() => this.updateOnVisibility());
 
     // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
-    if (
-      this.stepEssFileService.havePets === 'Yes' &&
-      this.stepEssFileService.petsList.length === 0
-    ) {
+    if (this.stepEssFileService.havePets === 'Yes' && this.stepEssFileService.petsList.length === 0) {
       this.addPets();
       this.showPetsForm = true;
     }
@@ -205,10 +189,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     if (this.stepEssFileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.animalsForm.controls,
-        'animals'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(this.animalsForm.controls, 'animals');
 
       const hasPetsUpdated = this.wizardService.hasPetsChanged(this.pets);
 
@@ -233,10 +214,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       pets: [
         this.stepEssFileService.petsList,
         this.customValidation
-          .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === 'Yes',
-            Validators.required
-          )
+          .conditionalValidation(() => this.animalsForm.get('hasPets').value === 'Yes', Validators.required)
           .bind(this.customValidation)
       ],
       pet: this.createPetForm(),
@@ -272,10 +250,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
             )
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(
-              () => this.animalsForm.get('addPetIndicator').value === true,
-              Validators.required
-            )
+            .conditionalValidation(() => this.animalsForm.get('addPetIndicator').value === true, Validators.required)
             .bind(this.customValidation)
         ]
       ]
@@ -296,9 +271,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private runValidation() {
     if (this.animalsForm.valid) {
       this.validPetsIndicator.emit(true);
-    } else if (
-      this.stepEssFileService.checkForPartialUpdates(this.animalsForm)
-    ) {
+    } else if (this.stepEssFileService.checkForPartialUpdates(this.animalsForm)) {
       this.validPetsIndicator.emit(false);
     } else {
       this.validPetsIndicator.emit(false);
@@ -312,7 +285,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private saveFormData() {
     this.stepEssFileService.havePets = this.animalsForm.get('hasPets').value;
     this.stepEssFileService.petsList = this.animalsForm.get('pets').value;
-    this.stepEssFileService.addPetIndicator =
-      this.animalsForm.get('addPetIndicator').value;
+    this.stepEssFileService.addPetIndicator = this.animalsForm.get('addPetIndicator').value;
   }
 }

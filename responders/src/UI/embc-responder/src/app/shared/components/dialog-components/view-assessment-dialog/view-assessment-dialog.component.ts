@@ -32,8 +32,6 @@ export class ViewAssessmentDialogComponent implements OnInit {
    * @returns
    */
   mapInsuranceValues(incomingValue: string | null): string {
-    return globalConst.insuranceOptions.find(
-      (ins) => ins.value === incomingValue
-    )?.name;
+    return globalConst.insuranceOptions.find((ins) => ins.value === incomingValue)?.name;
   }
 }

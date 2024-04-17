@@ -8,10 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    ProfileSecurityQuestionsComponent,
-    SecurityQuestionCardComponent
-  ],
+  declarations: [ProfileSecurityQuestionsComponent, SecurityQuestionCardComponent],
   imports: [
     CommonModule,
     ProfileSecurityQuestionsComponentRoutingModule,

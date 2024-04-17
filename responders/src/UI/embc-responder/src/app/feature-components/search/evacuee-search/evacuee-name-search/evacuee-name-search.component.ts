@@ -2,14 +2,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
-import {
-  EvacueeDetailsModel,
-  EvacueeSearchContextModel
-} from 'src/app/core/models/evacuee-search-context.model';
-import {
-  SearchFormRegistery,
-  SearchPages
-} from 'src/app/core/services/helper/search-data.service';
+import { EvacueeDetailsModel, EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { SearchFormRegistery, SearchPages } from 'src/app/core/services/helper/search-data.service';
 
 @Component({
   selector: 'app-evacuee-name-search',
@@ -21,18 +15,7 @@ export class EvacueeNameSearchComponent implements OnInit {
 
   panel1OpenState = false;
   panel2OpenState = false;
-  readonly dateMask = [
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   nameSearchForm: UntypedFormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
   readonly selectedPathType = SelectedPathType;
@@ -43,20 +26,10 @@ export class EvacueeNameSearchComponent implements OnInit {
    * On component init, constructs the form
    */
   ngOnInit(): void {
-    if (
-      this.optionInjectionService?.instance?.optionType ===
-      SelectedPathType.digital
-    ) {
-      this.nameSearchForm = this.optionInjectionService.instance.createForm(
-        SearchFormRegistery.nameSearchForm
-      );
-    } else if (
-      this.optionInjectionService?.instance?.optionType ===
-      SelectedPathType.paperBased
-    ) {
-      this.nameSearchForm = this.optionInjectionService.instance.createForm(
-        SearchFormRegistery.paperSearchForm
-      );
+    if (this.optionInjectionService?.instance?.optionType === SelectedPathType.digital) {
+      this.nameSearchForm = this.optionInjectionService.instance.createForm(SearchFormRegistery.nameSearchForm);
+    } else if (this.optionInjectionService?.instance?.optionType === SelectedPathType.paperBased) {
+      this.nameSearchForm = this.optionInjectionService.instance.createForm(SearchFormRegistery.paperSearchForm);
     }
   }
 
@@ -76,8 +49,7 @@ export class EvacueeNameSearchComponent implements OnInit {
       lastName: this.nameSearchForm.get('lastName').value,
       dateOfBirth: this.nameSearchForm.get('dateOfBirth').value,
       paperFileNumber:
-        this.optionInjectionService?.instance?.optionType ===
-        SelectedPathType.paperBased
+        this.optionInjectionService?.instance?.optionType === SelectedPathType.paperBased
           ? 'T' + this.nameSearchForm.get('paperBasedEssFile').value
           : null
     };

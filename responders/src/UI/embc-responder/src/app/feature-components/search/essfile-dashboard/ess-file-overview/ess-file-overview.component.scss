@@ -78,14 +78,15 @@
   padding-right: 0px;
 }
 
-@media(max-width: 1260px) {
+@media (max-width: 1260px) {
   .section-padding {
     display: block;
   }
 }
 
-@media(max-width:1200px) {
-  .col-md-9, .col-md-3 {
+@media (max-width: 1200px) {
+  .col-md-9,
+  .col-md-3 {
     width: 100%;
   }
 }

@@ -11,11 +11,7 @@
       ><!--fullscreen [fixedInViewport]="true"  [fixedTopGap]="0"-->
       <div class="row logo">
         <div class="col-md-12">
-          <img
-            src="/assets/images/bc-logo-wizard.png"
-            width="168"
-            height="62"
-          />
+          <img src="/assets/images/bc-logo-wizard.png" width="168" height="62" />
         </div>
       </div>
       <div *ngFor="let menu of sideNavMenu">
@@ -26,10 +22,7 @@
           [routerLink]="menu?.route"
           [state]="{ step: menu?.step, title: menu?.title }"
         >
-          <div
-            (click)="goToStep(menu?.isLocked, $event, menu?.route)"
-            class="row outer-div"
-          >
+          <div (click)="goToStep(menu?.isLocked, $event, menu?.route)" class="row outer-div">
             <div class="col-md-3 img-align-col">
               <img
                 class="img-align"
@@ -51,21 +44,14 @@
               <p class="menu-p">{{ menu?.title }}</p>
             </div>
             <div class="col-md-3 img-lock-col" *ngIf="menu?.isLocked">
-              <img
-                class="img-lock"
-                src="/assets/images/lock.svg"
-                width="10"
-                height="12"
-              />
+              <img class="img-lock" src="/assets/images/lock.svg" width="10" height="12" />
             </div>
           </div>
         </a>
       </div>
       <div class="row button-container">
         <div class="col-md-12">
-          <button class="exit-button" mat-stroked-button (click)="exit()">
-            Exit Wizard
-          </button>
+          <button class="exit-button" mat-stroked-button (click)="exit()">Exit Wizard</button>
         </div>
       </div>
     </mat-sidenav>

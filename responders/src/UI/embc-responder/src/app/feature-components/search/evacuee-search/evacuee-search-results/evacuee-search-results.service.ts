@@ -8,11 +8,9 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
   providedIn: 'root'
 })
 export class EvacueeSearchResultsService {
-  public isLoadingOverlay: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  public isLoadingOverlay: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public isLoadingOverlay$: Observable<boolean> =
-    this.isLoadingOverlay.asObservable();
+  public isLoadingOverlay$: Observable<boolean> = this.isLoadingOverlay.asObservable();
 
   constructor(private dialog: MatDialog) {}
 

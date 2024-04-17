@@ -34,7 +34,6 @@
   width: 30%;
 }
 
-
 .family-button {
   float: left;
   border: 2px solid rgba(35, 64, 117, 1) !important;
@@ -105,7 +104,7 @@ mat-row:nth-child(even) {
 .cell-member-details {
   flex: 0 0 80%;
   display: block;
-  padding-top:20px;
+  padding-top: 20px;
 }
 
 .cell-button {
@@ -240,7 +239,6 @@ mat-row:nth-child(even) {
       overflow-wrap: anywhere;
       word-break: break-all;
     }
-    
   }
 
   .member-name {
@@ -258,14 +256,12 @@ mat-row:nth-child(even) {
   padding-bottom: 20px;
 }
 
-
 @media (max-width: 920px) {
-
   .cancel-button {
     width: 100%;
     margin-bottom: 10px;
   }
-  
+
   .save-button {
     width: 100% !important;
   }

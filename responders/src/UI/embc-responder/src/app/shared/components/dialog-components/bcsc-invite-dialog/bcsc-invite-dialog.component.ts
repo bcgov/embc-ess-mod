@@ -12,17 +12,11 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return (
-      !!(
-        control &&
-        control.invalid &&
-        (control.dirty || control.touched || isSubmitted)
-      ) || control.parent.hasError('emailMatch')
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
     );
   }
 }

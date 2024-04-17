@@ -25,16 +25,13 @@ mat-form-field {
   width: 100%;
 }
 
-@media(max-width: 1160px) {
-
+@media (max-width: 1160px) {
   .add-details {
     width: 50%;
   }
-  
 }
 
-@media(max-width: 1024px) {
-
+@media (max-width: 1024px) {
   ::ng-deep .mat-form-field-subscript-wrapper {
     position: relative !important;
     top: auto !important;
@@ -43,6 +40,4 @@ mat-form-field {
   .add-details {
     width: 70%;
   }
-  
 }
-

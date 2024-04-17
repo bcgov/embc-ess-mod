@@ -50,15 +50,9 @@ export class EvacuationCardComponent implements OnInit {
     this.evacuationFileMapping.mapEvacuationFile(this.evacuationFileCard);
 
     if (this.pathName === '/verified-registration/dashboard/current') {
-      this.router.navigate([
-        '/verified-registration/dashboard/current/' +
-          this.evacuationFileCard.fileId
-      ]);
+      this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileCard.fileId]);
     } else {
-      this.router.navigate([
-        '/verified-registration/dashboard/past/' +
-          this.evacuationFileCard.fileId
-      ]);
+      this.router.navigate(['/verified-registration/dashboard/past/' + this.evacuationFileCard.fileId]);
     }
   }
 }

@@ -9,31 +9,19 @@ const routes: Routes = [
     children: [
       {
         path: 'overview',
-        loadChildren: () =>
-          import('./ess-file-overview/ess-file-overview.module').then(
-            (m) => m.EssFileOverviewModule
-          )
+        loadChildren: () => import('./ess-file-overview/ess-file-overview.module').then((m) => m.EssFileOverviewModule)
       },
       {
         path: 'details',
-        loadChildren: () =>
-          import('./ess-file-details/ess-file-details.module').then(
-            (m) => m.EssFileDetailsModule
-          )
+        loadChildren: () => import('./ess-file-details/ess-file-details.module').then((m) => m.EssFileDetailsModule)
       },
       {
         path: 'supports',
-        loadChildren: () =>
-          import('./ess-file-supports/ess-file-supports.module').then(
-            (m) => m.EssFileSupportsModule
-          )
+        loadChildren: () => import('./ess-file-supports/ess-file-supports.module').then((m) => m.EssFileSupportsModule)
       },
       {
         path: 'notes',
-        loadChildren: () =>
-          import('./ess-file-notes/ess-file-notes.module').then(
-            (m) => m.EssFileNotesModule
-          )
+        loadChildren: () => import('./ess-file-notes/ess-file-notes.module').then((m) => m.EssFileNotesModule)
       }
     ]
   }

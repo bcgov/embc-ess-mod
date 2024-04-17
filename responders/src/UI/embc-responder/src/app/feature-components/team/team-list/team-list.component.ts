@@ -84,10 +84,7 @@ export class TeamListComponent implements OnInit {
    */
   openMemberDetails($event: TeamMember): void {
     this.teamDataService.setSelectedTeamMember($event);
-    this.router.navigate(
-      ['/responder-access/responder-management/details/member-details'],
-      { state: $event }
-    );
+    this.router.navigate(['/responder-access/responder-management/details/member-details'], { state: $event });
   }
 
   /**
@@ -105,10 +102,7 @@ export class TeamListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.activateTeamMemberError
-        );
+        this.alertService.setAlert('danger', globalConst.activateTeamMemberError);
       }
     });
   }
@@ -128,10 +122,7 @@ export class TeamListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.deActivateTeamMemberError
-        );
+        this.alertService.setAlert('danger', globalConst.deActivateTeamMemberError);
       }
     });
   }

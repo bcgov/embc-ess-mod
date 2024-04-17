@@ -11,7 +11,10 @@ import { DialogContent } from '../../model/dialog-content.model';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  constructor(private httpClient: HttpClient, private dialog: MatDialog) {}
+  constructor(
+    private httpClient: HttpClient,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {}
 
@@ -29,15 +32,8 @@ export class FooterComponent implements OnInit {
     });
   }
 
-  private versionDialog(
-    versions: { name: string; version: string }[]
-  ): DialogContent {
-    const rows = versions
-      .map(
-        (version) =>
-          `<tr><td>${version.name}</td><td>${version.version}</td></tr>`
-      )
-      .join('');
+  private versionDialog(versions: { name: string; version: string }[]): DialogContent {
+    const rows = versions.map((version) => `<tr><td>${version.name}</td><td>${version.version}</td></tr>`).join('');
     return {
       text: `<table class="versions-table">${rows}</table>`,
       cancelButton: 'Close',

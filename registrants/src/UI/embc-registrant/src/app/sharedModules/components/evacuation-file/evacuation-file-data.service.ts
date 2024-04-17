@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  EvacuationFile,
-  EvacuationFileStatus,
-  NeedsAssessment,
-  Support
-} from 'src/app/core/api/models';
+import { EvacuationFile, EvacuationFileStatus, NeedsAssessment, Support } from 'src/app/core/api/models';
 import { EvacuationsService, ProfileService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
@@ -17,21 +12,14 @@ import { NeedsAssessmentService } from '../../../feature-components/needs-assess
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
-  currentEvacuationFileCount: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
-  public currentEvacuationFileCount$: Observable<number> =
-    this.currentEvacuationFileCount.asObservable();
+  currentEvacuationFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public currentEvacuationFileCount$: Observable<number> = this.currentEvacuationFileCount.asObservable();
 
-  pastEvacuationFileCount: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
-  public pastEvacuationFileCount$: Observable<number> =
-    this.pastEvacuationFileCount.asObservable();
+  pastEvacuationFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public pastEvacuationFileCount$: Observable<number> = this.pastEvacuationFileCount.asObservable();
 
-  hasPendingEssFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  public hasPendingEssFiles$: Observable<boolean> =
-    this.hasPendingEssFiles.asObservable();
+  hasPendingEssFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public hasPendingEssFiles$: Observable<boolean> = this.hasPendingEssFiles.asObservable();
 
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
@@ -137,9 +125,7 @@ export class EvacuationFileDataService {
     return this.hasPendingEssFiles$;
   }
 
-  public setHasPendingEssFiles(
-    evacuationFiles: Array<EvacuationFileModel>
-  ): void {
+  public setHasPendingEssFiles(evacuationFiles: Array<EvacuationFileModel>): void {
     let totalPendingFiles = 0;
     evacuationFiles.forEach((item) => {
       if (item.status === EvacuationFileStatus.Pending) {
@@ -156,9 +142,7 @@ export class EvacuationFileDataService {
 
   public createEvacuationFileDTO(): EvacuationFile {
     return {
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacuatedAddress
-      ),
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(this.evacuatedAddress),
       evacuationFileDate: this.evacuationFileDate,
       fileId: this.essFileId,
       isRestricted: this.restrictionService.restrictedAccess,
@@ -196,8 +180,7 @@ export class EvacuationFileDataService {
   }
 
   private getNeedsAssessment(): NeedsAssessment {
-    const needsAssessment: NeedsAssessment =
-      this.needsAssessmentService.createNeedsAssessmentDTO();
+    const needsAssessment: NeedsAssessment = this.needsAssessmentService.createNeedsAssessmentDTO();
     return needsAssessment;
   }
 }

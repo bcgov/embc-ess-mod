@@ -9,15 +9,11 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ErrorService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -32,22 +28,24 @@ export class ErrorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  errorErrorLocalDevelopment$Response(params?: {
-  }): Observable<StrictHttpResponse<Blob>> {
-
+  errorErrorLocalDevelopment$Response(params?: {}): Observable<StrictHttpResponse<Blob>> {
     const rb = new RequestBuilder(this.rootUrl, ErrorService.ErrorErrorLocalDevelopmentPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'blob',
+          accept: 'application/octet-stream'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Blob>;
+        })
+      );
   }
 
   /**
@@ -56,12 +54,8 @@ export class ErrorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  errorErrorLocalDevelopment(params?: {
-  }): Observable<Blob> {
-
-    return this.errorErrorLocalDevelopment$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
-    );
+  errorErrorLocalDevelopment(params?: {}): Observable<Blob> {
+    return this.errorErrorLocalDevelopment$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
   }
 
   /**
@@ -75,22 +69,24 @@ export class ErrorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  errorError$Response(params?: {
-  }): Observable<StrictHttpResponse<Blob>> {
-
+  errorError$Response(params?: {}): Observable<StrictHttpResponse<Blob>> {
     const rb = new RequestBuilder(this.rootUrl, ErrorService.ErrorErrorPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'blob',
+          accept: 'application/octet-stream'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Blob>;
+        })
+      );
   }
 
   /**
@@ -99,12 +95,7 @@ export class ErrorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  errorError(params?: {
-  }): Observable<Blob> {
-
-    return this.errorError$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
-    );
+  errorError(params?: {}): Observable<Blob> {
+    return this.errorError$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
   }
-
 }

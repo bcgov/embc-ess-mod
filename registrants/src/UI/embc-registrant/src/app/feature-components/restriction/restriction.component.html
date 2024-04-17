@@ -8,19 +8,12 @@
   </div>
   <div class="row">
     <div class="col-md-12 content-container">
-      <app-restriction-form
-        [restrictionForm]="restrictionForm"
-      ></app-restriction-form>
+      <app-restriction-form [restrictionForm]="restrictionForm"></app-restriction-form>
       <br />
       <br />
       <div class="row">
         <div class="col-md-12">
-          <button
-            class="button-p notice-button"
-            mat-button
-            type="button"
-            (click)="submitRestriction()"
-          >
+          <button class="button-p notice-button" mat-button type="button" (click)="submitRestriction()">
             Next - Create Account
           </button>
         </div>

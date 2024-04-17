@@ -15,11 +15,7 @@ export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
     private evacueeSessionService: EvacueeSessionService
   ) {}
 
-  public canDeactivate():
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
+  public canDeactivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     //this.wizardAdapterService.clearWizard();
     //this.clearCachedServices();
     return true;

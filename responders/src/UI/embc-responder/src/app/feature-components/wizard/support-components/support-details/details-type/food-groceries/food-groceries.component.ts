@@ -19,9 +19,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './food-groceries.component.html',
   styleUrls: ['./food-groceries.component.scss']
 })
-export class FoodGroceriesComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+export class FoodGroceriesComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
   @Input() noOfHouseholdMembers: number;
@@ -42,9 +40,7 @@ export class FoodGroceriesComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
@@ -61,11 +57,9 @@ export class FoodGroceriesComponent
     });
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
 
-    this.userTotalAmountSubscription = this.referralForm
-      .get('userTotalAmount')
-      .valueChanges.subscribe((value) => {
-        this.referralForm.get('approverName').updateValueAndValidity();
-      });
+    this.userTotalAmountSubscription = this.referralForm.get('userTotalAmount').valueChanges.subscribe((value) => {
+      this.referralForm.get('approverName').updateValueAndValidity();
+    });
   }
 
   checkOverlimit($event) {
@@ -99,21 +93,14 @@ export class FoodGroceriesComponent
    */
   updateTotalAmount() {
     this.totalAmount =
-      globalConst.groceriesRate.rate *
-      this.referralForm.get('noOfMeals').value *
-      this.noOfHouseholdMembers;
+      globalConst.groceriesRate.rate * this.referralForm.get('noOfMeals').value * this.noOfHouseholdMembers;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
   }
 
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      Number(
-        this.referralForm
-          .get('userTotalAmount')
-          .value.toString()
-          .replace(/,/g, '')
-      ) > this.totalAmount;
+      Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
 
     if (!exceedsTotal && this.referralForm.get('approverName').value) {
       this.referralForm.get('approverName').patchValue('');

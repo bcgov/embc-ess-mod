@@ -11,12 +11,6 @@ import { AddNotesComponent } from '../add-notes/add-notes.component';
 
 @NgModule({
   declarations: [NotesComponent, ListNotesComponent, AddNotesComponent],
-  imports: [
-    CommonModule,
-    NotesRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ]
+  imports: [CommonModule, NotesRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
 })
 export class NotesModule {}

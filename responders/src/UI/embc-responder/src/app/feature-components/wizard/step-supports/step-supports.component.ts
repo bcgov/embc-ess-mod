@@ -37,10 +37,7 @@ export class StepSupportsComponent implements OnInit {
       },
       error: (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }

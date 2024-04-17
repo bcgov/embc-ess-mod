@@ -1,18 +1,9 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectorRef,
-  AfterViewChecked
-} from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
-import {
-  Community,
-  LocationService
-} from 'src/app/core/services/location.service';
+import { Community, LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-bc-address',
@@ -89,9 +80,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.city.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.city.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

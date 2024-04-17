@@ -29,15 +29,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.questionForm = this.securityQuesService.createForm();
-    this.parentForm = this.securityQuesService.createParentForm(
-      this.questionForm
-    );
+    this.parentForm = this.securityQuesService.createParentForm(this.questionForm);
     this.questionForm = this.parentForm.get('questionForm') as UntypedFormGroup;
 
-    this.securityQuesService.setFormDisabled(
-      this.stepEvacueeProfileService.bypassSecurityQuestions,
-      this.questionForm
-    );
+    this.securityQuesService.setFormDisabled(this.stepEvacueeProfileService.bypassSecurityQuestions, this.questionForm);
 
     //Update value and validity for each security question dropdown when any of the questions change
     this.questionForm
@@ -49,10 +44,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
       });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-        this.securityQuesService.updateTabStatus(this.questionForm);
-      });
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
+      this.securityQuesService.updateTabStatus(this.questionForm);
+    });
 
     this.questionForm
       .get('question2')
@@ -70,8 +64,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         this.questionForm.get('question2').updateValueAndValidity();
       });
 
-    this.tabMetaData =
-      this.stepEvacueeProfileService.getNavLinks('security-questions');
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('security-questions');
   }
 
   get parentFormControl(): { [key: string]: AbstractControl } {
@@ -107,9 +100,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.stepEvacueeProfileService.nextTabUpdate.next();
 
     if (this.stepEvacueeProfileService.checkTabsStatus()) {
-      this.stepEvacueeProfileService.openModal(
-        globalConst.wizardProfileMessage
-      );
+      this.stepEvacueeProfileService.openModal(globalConst.wizardProfileMessage);
     } else {
       this.router.navigate([this.tabMetaData?.next]);
     }

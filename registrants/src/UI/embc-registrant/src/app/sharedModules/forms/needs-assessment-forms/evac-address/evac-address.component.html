@@ -1,28 +1,17 @@
 <form [formGroup]="evacuatedForm">
   <mat-card class="card-align">
     <mat-card-content>
-      <div
-        *ngIf="
-          (formCreationService.addressForm$ | async).value.address
-            .stateProvince !== null;
-          else otherAddress
-        "
-      >
+      <div *ngIf="(formCreationService.addressForm$ | async).value.address.stateProvince !== null; else otherAddress">
         <div
           *ngIf="
-            (formCreationService.addressForm$ | async).value.address
-              .stateProvince.name === 'British Columbia';
+            (formCreationService.addressForm$ | async).value.address.stateProvince.name === 'British Columbia';
             else otherAddress
           "
         >
           <div class="row">
             <div class="col-md-12">
-              <label
-                id="evacuatedFromPrimary-radio-group-label"
-                class="card-heading requiredField"
-              >
-                Are you being evacuated from your primary address that you
-                listed when you created your profile?
+              <label id="evacuatedFromPrimary-radio-group-label" class="card-heading requiredField">
+                Are you being evacuated from your primary address that you listed when you created your profile?
               </label>
               <br />
               <mat-radio-group
@@ -32,46 +21,25 @@
                 (change)="evacPrimaryAddressChange($event)"
                 required
               >
-                <mat-radio-button id="yesOption" value="Yes"
-                  >Yes
-                </mat-radio-button>
+                <mat-radio-button id="yesOption" value="Yes">Yes </mat-radio-button>
                 <div class="prim-address">
                   <p>
-                    {{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine1
-                    }}
+                    {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine1 }}
                   </p>
                   <p></p>
-                  <p
-                    *ngIf="
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine2 !== null
-                    "
-                  >
-                    {{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine2
-                    }}
+                  <p *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.addressLine2 !== null">
+                    {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine2 }}
                   </p>
                   <p>
-                    <span>{{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.community?.name
-                    }}</span>
+                    <span>{{ (formCreationService.addressForm$ | async)?.value?.address?.community?.name }}</span>
                     <span
                       *ngIf="
                         !(
-                          (formCreationService.addressForm$ | async)?.value
-                            ?.address?.postalCode === '' ||
-                          (formCreationService.addressForm$ | async)?.value
-                            ?.address?.postalCode === null
+                          (formCreationService.addressForm$ | async)?.value?.address?.postalCode === '' ||
+                          (formCreationService.addressForm$ | async)?.value?.address?.postalCode === null
                         )
                       "
-                      >,&nbsp;{{
-                        (formCreationService.addressForm$ | async)?.value
-                          ?.address?.postalCode
-                      }}</span
+                      >,&nbsp;{{ (formCreationService.addressForm$ | async)?.value?.address?.postalCode }}</span
                     >
                   </p>
                 </div>
@@ -81,9 +49,7 @@
                   *ngIf="
                     evacuatedFormControl?.evacuatedFromPrimary.touched &&
                     evacuatedFormControl?.evacuatedFromPrimary.invalid &&
-                    evacuatedFormControl?.evacuatedFromPrimary.hasError(
-                      'required'
-                    )
+                    evacuatedFormControl?.evacuatedFromPrimary.hasError('required')
                   "
                 >
                   Evacuation Address is required</mat-error
@@ -92,19 +58,10 @@
             </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value === 'No'"
-          >
+          <div class="row" *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value === 'No'">
             <div class="col-md-12">
-              <p>
-                Please identify where in <b>BC</b> you have been
-                <b>evacuated from</b>?
-              </p>
-              <app-bc-address
-                [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
-              >
-              </app-bc-address>
+              <p>Please identify where in <b>BC</b> you have been <b>evacuated from</b>?</p>
+              <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress"> </app-bc-address>
             </div>
           </div>
         </div>
@@ -116,17 +73,9 @@
   <ng-template #otherAddress>
     <div class="row">
       <div class="col-md-12">
-        <label class="card-heading requiredField">
-          Where are you being evacuated from?
-        </label>
-        <p>
-          Please identify where in <strong>BC</strong> you have been
-          <strong>evacuated from</strong>?
-        </p>
-        <app-bc-address
-          [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
-        >
-        </app-bc-address>
+        <label class="card-heading requiredField"> Where are you being evacuated from? </label>
+        <p>Please identify where in <strong>BC</strong> you have been <strong>evacuated from</strong>?</p>
+        <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress"> </app-bc-address>
       </div>
     </div>
   </ng-template>
@@ -135,12 +84,7 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
-          <label
-            id="insurance-radio-group-label"
-            class="card-heading requiredField"
-          >
-            Do you have insurance?
-          </label>
+          <label id="insurance-radio-group-label" class="card-heading requiredField"> Do you have insurance? </label>
           <br />
           <mat-radio-group
             formControlName="insurance"
@@ -148,11 +92,7 @@
             class="primary-radio-group"
             required
           >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of insuranceOption"
-              [value]="option.name"
-            >
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of insuranceOption" [value]="option.name">
               {{ option.value }}
             </mat-radio-button>
             <mat-error
@@ -170,13 +110,10 @@
         <div class="col-md-4">
           <div class="note-box">
             <p><b>Notes:</b></p>
+            <p>If you have insurance, it is best to contact your insurance provider as soon as possible.</p>
             <p>
-              If you have insurance, it is best to contact your insurance
-              provider as soon as possible.
-            </p>
-            <p>
-              If you are having difficulty contacting your insurance provider,
-              please contact the Insurance Bureau of Canada at 1-844-227-5422.
+              If you are having difficulty contacting your insurance provider, please contact the Insurance Bureau of
+              Canada at 1-844-227-5422.
             </p>
           </div>
         </div>

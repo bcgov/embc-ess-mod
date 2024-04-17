@@ -29,9 +29,7 @@ export class ProfileSecurityQuestionsService {
    * @param securityQuestions array with security questions and hints
    * @returns the same array with its elements in different order
    */
-  public shuffleSecurityQuestions(
-    securityQuestions: Array<SecurityQuestion>
-  ): void {
+  public shuffleSecurityQuestions(securityQuestions: Array<SecurityQuestion>): void {
     let currentIndex: number = securityQuestions.length;
     let temporaryValue: SecurityQuestion;
     let randomIndex: number;
@@ -52,9 +50,7 @@ export class ProfileSecurityQuestionsService {
    * @param registrantId the ID used to look for the registrant
    * @returns an Array of questions selected previously by the registrant during the creation of the profile
    */
-  public getSecurityQuestions(
-    registrantId: string
-  ): Observable<GetSecurityQuestionsResponse> {
+  public getSecurityQuestions(registrantId: string): Observable<GetSecurityQuestionsResponse> {
     return this.registrationService.registrationsGetSecurityQuestions({
       registrantId
     });

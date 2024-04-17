@@ -15,51 +15,39 @@ const routes: Routes = [
       {
         path: 'collection-notice',
         loadChildren: () =>
-          import(
-            '../profile-components/collection-notice/collection-notice.module'
-          ).then((m) => m.CollectionNoticeModule)
+          import('../profile-components/collection-notice/collection-notice.module').then(
+            (m) => m.CollectionNoticeModule
+          )
       },
       {
         path: 'restriction',
         loadChildren: () =>
-          import('../profile-components/restriction/restriction.module').then(
-            (m) => m.RestrictionModule
-          )
+          import('../profile-components/restriction/restriction.module').then((m) => m.RestrictionModule)
       },
       {
         path: 'evacuee-details',
         loadChildren: () =>
-          import(
-            '../profile-components/evacuee-details/evacuee-details.module'
-          ).then((m) => m.EvacueeDetailsModule)
+          import('../profile-components/evacuee-details/evacuee-details.module').then((m) => m.EvacueeDetailsModule)
       },
       {
         path: 'address',
-        loadChildren: () =>
-          import('../profile-components/address/address.module').then(
-            (m) => m.AddressModule
-          )
+        loadChildren: () => import('../profile-components/address/address.module').then((m) => m.AddressModule)
       },
       {
         path: 'contact',
-        loadChildren: () =>
-          import('../profile-components/contact/contact.module').then(
-            (m) => m.ContactModule
-          )
+        loadChildren: () => import('../profile-components/contact/contact.module').then((m) => m.ContactModule)
       },
       {
         path: 'security-questions',
         loadChildren: () =>
-          import(
-            '../profile-components/security-questions/security-questions.module'
-          ).then((m) => m.SecurityQuestionsModule)
+          import('../profile-components/security-questions/security-questions.module').then(
+            (m) => m.SecurityQuestionsModule
+          )
       },
       {
         path: 'review',
         loadChildren: () =>
-          import(
-            '../profile-components/profile-review/profile-review.module'
-          ).then((m) => m.ProfileReviewModule)
+          import('../profile-components/profile-review/profile-review.module').then((m) => m.ProfileReviewModule)
       }
     ]
   }

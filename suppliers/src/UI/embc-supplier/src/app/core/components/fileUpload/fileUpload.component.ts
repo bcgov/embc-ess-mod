@@ -57,10 +57,7 @@ export class FileUploadComponent implements OnInit {
         this.warningService.warningModal(constant.invalidFileNameMessage);
         // this.showToast = !this.showToast;
         // this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
-      } else if (
-        this.invoiceAttachments !== undefined &&
-        this.invoiceAttachments.length >= this.noOfAttachments
-      ) {
+      } else if (this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
         this.attachSizeError = true;
         setTimeout(
           function () {

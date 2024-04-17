@@ -58,8 +58,7 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
-    const registrationResult =
-      this.needsAssessmentService.getVerifiedEvacuationFileNo();
+    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
       this.dialog
@@ -75,9 +74,7 @@ export class DashboardComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(() => {
-          this.needsAssessmentService.setVerifiedEvacuationFileNo(
-            this.emptyRegistrationResult
-          );
+          this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
         });
     }
   }

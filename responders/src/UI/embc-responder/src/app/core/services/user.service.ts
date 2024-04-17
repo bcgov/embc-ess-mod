@@ -4,11 +4,7 @@ import { tap } from 'rxjs/operators';
 import { MemberRole } from '../api/models';
 import { UserProfile } from '../api/models/user-profile';
 import { ProfileService } from '../api/services';
-import {
-  AuthorizationService,
-  ClaimModel,
-  ClaimType
-} from './authorization.service';
+import { AuthorizationService, ClaimModel, ClaimType } from './authorization.service';
 import { CacheService } from './cache.service';
 import { AppBaseService } from './helper/appBase.service';
 
@@ -26,41 +22,33 @@ export class UserService {
   ) {}
 
   public async loadUserProfile(): Promise<UserProfile> {
-    const profile$ = await this.profileService
-      .profileGetCurrentUserProfile()
-      .pipe(
-        tap((response) => {
-          const userClaims = this.authorizationService.getClaimsForRole(
-            MemberRole[response.role]
-          );
-          const taskNumber =
-            this.cacheService.get('loggedInTaskNumber') === null || undefined
-              ? null
-              : this.cacheService.get('loggedInTaskNumber');
-          const taskCommunity =
-            this.cacheService.get('loggedInTaskCommunity') === null || undefined
-              ? null
-              : this.cacheService.get('loggedInTaskCommunity');
-          const taskStartDate =
-            this.cacheService.get('taskStartDate') === null || undefined
-              ? null
-              : this.cacheService.get('taskStartDate');
+    const profile$ = await this.profileService.profileGetCurrentUserProfile().pipe(
+      tap((response) => {
+        const userClaims = this.authorizationService.getClaimsForRole(MemberRole[response.role]);
+        const taskNumber =
+          this.cacheService.get('loggedInTaskNumber') === null || undefined
+            ? null
+            : this.cacheService.get('loggedInTaskNumber');
+        const taskCommunity =
+          this.cacheService.get('loggedInTaskCommunity') === null || undefined
+            ? null
+            : this.cacheService.get('loggedInTaskCommunity');
+        const taskStartDate =
+          this.cacheService.get('taskStartDate') === null || undefined ? null : this.cacheService.get('taskStartDate');
 
-          const taskEndDate =
-            this.cacheService.get('taskEndDate') === null || undefined
-              ? null
-              : this.cacheService.get('taskEndDate');
-          this.currentProfileVal = {
-            ...response,
-            taskNumber,
-            taskCommunity,
-            taskStartDate,
-            taskEndDate,
-            claims: [...userClaims]
-          };
-          return this.currentProfileVal;
-        })
-      );
+        const taskEndDate =
+          this.cacheService.get('taskEndDate') === null || undefined ? null : this.cacheService.get('taskEndDate');
+        this.currentProfileVal = {
+          ...response,
+          taskNumber,
+          taskCommunity,
+          taskStartDate,
+          taskEndDate,
+          claims: [...userClaims]
+        };
+        return this.currentProfileVal;
+      })
+    );
 
     return lastValueFrom(profile$);
   }
@@ -72,9 +60,7 @@ export class UserService {
   public hasClaim(claimType: ClaimType, value: string): boolean {
     return (
       this.currentProfileVal &&
-      this.currentProfileVal.claims.findIndex(
-        (c) => c.claimType === claimType && c.claimValue === value
-      ) >= 0
+      this.currentProfileVal.claims.findIndex((c) => c.claimType === claimType && c.claimValue === value) >= 0
     );
   }
 

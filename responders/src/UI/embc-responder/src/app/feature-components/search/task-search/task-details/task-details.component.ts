@@ -29,8 +29,7 @@ export class TaskDetailsComponent implements OnInit {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras.state
-          .essTask as EssTaskModel;
+        const state = this.router.getCurrentNavigation().extras.state.essTask as EssTaskModel;
         this.essTask = state;
         this.taskNumber = state.id;
       }

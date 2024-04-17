@@ -10,30 +10,19 @@ const routes: Routes = [
       {
         path: 'evacuee-profile',
         loadChildren: () =>
-          import('./step-evacuee-profile/step-evacuee-profile.module').then(
-            (m) => m.StepEvacueeProfileModule
-          )
+          import('./step-evacuee-profile/step-evacuee-profile.module').then((m) => m.StepEvacueeProfileModule)
       },
       {
         path: 'ess-file',
-        loadChildren: () =>
-          import('./step-ess-file/step-ess-file.module').then(
-            (m) => m.StepEssFileModule
-          )
+        loadChildren: () => import('./step-ess-file/step-ess-file.module').then((m) => m.StepEssFileModule)
       },
       {
         path: 'add-supports',
-        loadChildren: () =>
-          import('./step-supports/step-supports.module').then(
-            (m) => m.StepSupportsModule
-          )
+        loadChildren: () => import('./step-supports/step-supports.module').then((m) => m.StepSupportsModule)
       },
       {
         path: 'add-notes',
-        loadChildren: () =>
-          import('./step-notes/step-notes.module').then(
-            (m) => m.StepNotesModule
-          )
+        loadChildren: () => import('./step-notes/step-notes.module').then((m) => m.StepNotesModule)
       }
     ]
   }

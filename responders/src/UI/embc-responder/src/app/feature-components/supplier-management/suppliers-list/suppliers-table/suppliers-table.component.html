@@ -1,23 +1,8 @@
 <div class="mat-elevation-z8 table-responsive">
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    matSort
-    (matSortChange)="sortData($event)"
-  >
-    <ng-container
-      *ngFor="let column of displayedColumns"
-      [matColumnDef]="column?.ref"
-    >
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        [mat-sort-header]="column?.ref"
-        class="arrow-color"
-      >
-        <span *ngIf="column?.label !== 'Status'; else statusLabel">{{
-          column?.label
-        }}</span>
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+    <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column?.ref">
+      <th mat-header-cell *matHeaderCellDef [mat-sort-header]="column?.ref" class="arrow-color">
+        <span *ngIf="column?.label !== 'Status'; else statusLabel">{{ column?.label }}</span>
       </th>
       <ng-template #statusLabel>
         <span>Status</span>
@@ -27,11 +12,7 @@
         /></a>
       </ng-template>
 
-      <td
-        mat-cell
-        *matCellDef="let row; let index = index"
-        (click)="disableRowInteraction($event, column?.ref)"
-      >
+      <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
         <span *ngIf="column?.ref === 'legalName'">
           <span>{{ row[column?.ref] }}</span>
         </span>
@@ -49,10 +30,7 @@
         </span>
         <span *ngIf="column?.ref === 'status'">
           <span *ngIf="showToggle; else status">
-            <mat-slide-toggle
-              [checked]="row[column?.ref] === 'Active'"
-              (change)="slideToggle($event, row, index)"
-            >
+            <mat-slide-toggle [checked]="row[column?.ref] === 'Active'" (change)="slideToggle($event, row, index)">
               <span
                 [ngClass]="{
                   'active-style': row[column?.ref] === 'Active',
@@ -63,11 +41,7 @@
               <span>
                 <app-loader
                   *ngIf="index === selectedIndex"
-                  style="
-                    display: inline;
-                    justify-content: center;
-                    align-items: center;
-                  "
+                  style="display: inline; justify-content: center; align-items: center"
                   class="mat-progress"
                   [showLoader]="!statusLoading"
                   [strokeWidth]="3"
@@ -92,11 +66,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: columns"
-      (click)="rowClicked(row)"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: columns" (click)="rowClicked(row)"></tr>
   </table>
 
   <app-loader
@@ -108,10 +78,6 @@
     [color]="color"
   ></app-loader>
 
-  <mat-paginator
-    [pageSize]="20"
-    [pageSizeOptions]="[10, 20, 30, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
+  <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br />

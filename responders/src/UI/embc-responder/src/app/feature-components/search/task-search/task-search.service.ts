@@ -24,9 +24,7 @@ export class TaskSearchService {
     return this.taskService.tasksGetTask({ taskId: taskNumber }).pipe(
       map((essTask: EssTaskModel) => {
         const communities = this.locationsService.getCommunityList();
-        const community = communities.find(
-          (comm) => comm.code === essTask.communityCode
-        );
+        const community = communities.find((comm) => comm.code === essTask.communityCode);
         essTask.communityName = community.name;
         return essTask;
       })

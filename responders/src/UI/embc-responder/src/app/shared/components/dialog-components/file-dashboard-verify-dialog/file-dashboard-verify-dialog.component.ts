@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
@@ -90,9 +85,7 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
   isVerified($event: MatRadioChange): void {
     if (
       ($event.value === 'No' && this.evacueeSessionService.isPaperBased) ||
-      ($event.value === 'No' &&
-        !this.evacueeSessionService.isPaperBased &&
-        !this.hasSecurityQues)
+      ($event.value === 'No' && !this.evacueeSessionService.isPaperBased && !this.hasSecurityQues)
     ) {
       this.noIdFlag = false;
     } else {
