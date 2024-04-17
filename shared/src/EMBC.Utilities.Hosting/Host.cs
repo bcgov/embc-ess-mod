@@ -116,9 +116,6 @@ namespace EMBC.Utilities.Hosting
                     .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
                     {
                         Configure(app, ctx.Configuration, ctx.HostingEnvironment, assemblies);
-                    }).ConfigureLogging(logging =>
-                    {
-                        //logging.AddOpenTelemetry(opts => opts.AddConsoleExporter());
                     });
                 });
 
