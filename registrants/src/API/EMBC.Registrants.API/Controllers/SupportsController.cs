@@ -5,17 +5,21 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/Evacuations/{fileReferenceNumber}/[controller]")]
 [ApiController]
 [Authorize]
 public class SupportsController : ControllerBase
 {
-    [HttpGet("{evacuationFileId}/supports/draft")]
-    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
+    [HttpGet("draft")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string fileReferenceNumber, CancellationToken ct)
     {
         await Task.CompletedTask;
         var fromDate = DateTime.UtcNow;
@@ -31,6 +35,16 @@ public class SupportsController : ControllerBase
             new SelfServeClothingSupport { IncludedHouseholdMembers = householdMembers  },
             new SelfServeIncidentalsSupport { IncludedHouseholdMembers = householdMembers }
         };
+    }
+
+    [HttpPost("optout")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> OptOut(string fileReferenceNumber, CancellationToken ct)
+    {
+        await Task.CompletedTask;
+        return Ok();
     }
 }
 
