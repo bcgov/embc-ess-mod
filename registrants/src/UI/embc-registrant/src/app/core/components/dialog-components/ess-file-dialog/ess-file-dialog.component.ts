@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 
@@ -7,15 +7,11 @@ import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
   templateUrl: './ess-file-dialog.component.html',
   styleUrls: ['./ess-file-dialog.component.scss']
 })
-export class EssFileDialogComponent implements OnInit {
+export class EssFileDialogComponent {
   @Input() essFileData: EvacuationFileModel | string;
   @Input() content: DialogContent;
   @Input() initDialog: boolean;
   @Output() outputEvent = new EventEmitter<string>();
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');

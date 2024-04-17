@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -6,12 +6,10 @@ import { UntypedFormGroup, AbstractControl } from '@angular/forms';
   templateUrl: './other-address.component.html',
   styleUrls: ['./other-address.component.scss']
 })
-export class OtherAddressComponent implements OnInit {
+export class OtherAddressComponent {
   @Input() addressForm: UntypedFormGroup;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;

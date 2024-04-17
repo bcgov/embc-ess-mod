@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
@@ -6,12 +6,10 @@ import { AbstractControl, UntypedFormGroup } from '@angular/forms';
   templateUrl: './restriction-form.component.html',
   styleUrls: ['./restriction-form.component.scss']
 })
-export class RestrictionFormComponent implements OnInit {
+export class RestrictionFormComponent {
   @Input() restrictionForm: UntypedFormGroup;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

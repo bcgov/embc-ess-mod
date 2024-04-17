@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InformationDialogComponent } from '../../components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from '../../components/dialog/dialog.component';
@@ -10,13 +10,11 @@ import { DialogContent } from '../../model/dialog-content.model';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   constructor(
     private httpClient: HttpClient,
     private dialog: MatDialog
   ) {}
-
-  ngOnInit(): void {}
 
   openVersionsModal(): void {
     this.httpClient.get('version').subscribe((response) => {

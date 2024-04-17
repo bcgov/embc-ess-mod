@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,10 +6,8 @@ import { Router } from '@angular/router';
   templateUrl: './error-screen.component.html',
   styleUrls: ['./error-screen.component.scss']
 })
-export class ErrorScreenComponent implements OnInit {
+export class ErrorScreenComponent {
   constructor(private router: Router) {}
-
-  ngOnInit(): void {}
 
   nonVerifiedUser(): void {
     this.router.navigate(['/non-verified-registration/collection-notice']);

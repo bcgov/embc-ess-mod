@@ -18,7 +18,7 @@ import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
-import { TextMaskModule } from 'angular2-text-mask';
+// import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
@@ -138,7 +138,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     ReactiveFormsModule,
     MatCheckboxModule,
     DirectivesModule,
-    TextMaskModule,
+    // TextMaskModule,
     MatRadioModule
   ],
   declarations: [ContactInfoComponent]

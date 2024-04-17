@@ -71,10 +71,10 @@
               formControlName="dateOfBirth"
               matInput
               placeholder="mm/dd/yyyy"
-              [textMask]="{ mask: dateMask, keepCharPositions: true }"
               required
               [readonly]="disableFields"
             />
+            <!-- [textMask]="{ mask: dateMask, keepCharPositions: true }" -->
             <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
             <mat-error
               *ngIf="personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('required')"
