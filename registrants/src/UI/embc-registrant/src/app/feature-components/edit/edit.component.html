@@ -11,10 +11,7 @@
         <app-restriction-form [restrictionForm]="form"> </app-restriction-form>
       }
       @if (componentToLoad !== 'restriction') {
-        <app-component-wrapper
-          [componentName]="componentToLoad"
-          [folderPath]="profileFolderPath"
-          >
+        <app-component-wrapper [componentName]="componentToLoad" [folderPath]="profileFolderPath">
         </app-component-wrapper>
       }
       <br />
@@ -30,7 +27,7 @@
             type="button"
             [disabled]="!form.valid"
             (click)="save()"
-            >
+          >
             Save
             <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>

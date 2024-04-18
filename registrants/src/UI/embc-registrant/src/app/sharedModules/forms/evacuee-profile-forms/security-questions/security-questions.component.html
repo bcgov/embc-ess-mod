@@ -38,14 +38,10 @@
             </mat-select>
 
             @if (questionsFormControl?.question1?.hasError('required')) {
-              <mat-error>
-                Security Question is required.
-              </mat-error>
+              <mat-error> Security Question is required. </mat-error>
             }
             @if (questionsFormControl?.question1?.hasError('notUnique')) {
-              <mat-error>
-                Security Questions must all be different.
-              </mat-error>
+              <mat-error> Security Questions must all be different. </mat-error>
             }
           </mat-form-field>
 
@@ -57,25 +53,17 @@
             @if (
               questionsFormControl?.answer1?.hasError('required') ||
               questionsFormControl?.answer1?.hasError('whitespaceError')
-              ) {
-              <mat-error
-                >
-                Answer is required.
-              </mat-error>
+            ) {
+              <mat-error> Answer is required. </mat-error>
             }
             @if (
               questionsFormControl?.answer1?.hasError('minlength') ||
               questionsFormControl?.answer1?.hasError('maxlength')
-              ) {
-              <mat-error
-                >
-                Answer must be between 3 and 50 characters long.
-              </mat-error>
+            ) {
+              <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
             }
             @if (questionsFormControl?.answer1?.hasError('pattern')) {
-              <mat-error>
-                Answer cannot contain special characters.
-              </mat-error>
+              <mat-error> Answer cannot contain special characters. </mat-error>
             }
           </mat-form-field>
         </div>
@@ -93,14 +81,10 @@
             </mat-select>
 
             @if (questionsFormControl?.question2?.hasError('required')) {
-              <mat-error>
-                Security Question is required.
-              </mat-error>
+              <mat-error> Security Question is required. </mat-error>
             }
             @if (questionsFormControl?.question2?.hasError('notUnique')) {
-              <mat-error>
-                Security Questions must all be different.
-              </mat-error>
+              <mat-error> Security Questions must all be different. </mat-error>
             }
           </mat-form-field>
 
@@ -112,25 +96,17 @@
             @if (
               questionsFormControl?.answer2?.hasError('required') ||
               questionsFormControl?.answer2?.hasError('whitespaceError')
-              ) {
-              <mat-error
-                >
-                Answer is required.
-              </mat-error>
+            ) {
+              <mat-error> Answer is required. </mat-error>
             }
             @if (
               questionsFormControl?.answer2?.hasError('minlength') ||
               questionsFormControl?.answer2?.hasError('maxlength')
-              ) {
-              <mat-error
-                >
-                Answer must be between 3 and 50 characters long.
-              </mat-error>
+            ) {
+              <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
             }
             @if (questionsFormControl?.answer2?.hasError('pattern')) {
-              <mat-error>
-                Answer cannot contain special characters.
-              </mat-error>
+              <mat-error> Answer cannot contain special characters. </mat-error>
             }
           </mat-form-field>
         </div>
@@ -148,14 +124,10 @@
             </mat-select>
 
             @if (questionsFormControl?.question3?.hasError('required')) {
-              <mat-error>
-                Security Question is required.
-              </mat-error>
+              <mat-error> Security Question is required. </mat-error>
             }
             @if (questionsFormControl?.question3?.hasError('notUnique')) {
-              <mat-error>
-                Security Questions must all be different.
-              </mat-error>
+              <mat-error> Security Questions must all be different. </mat-error>
             }
           </mat-form-field>
 
@@ -167,25 +139,17 @@
             @if (
               questionsFormControl?.answer3?.hasError('required') ||
               questionsFormControl?.answer3?.hasError('whitespaceError')
-              ) {
-              <mat-error
-                >
-                Answer is required.
-              </mat-error>
+            ) {
+              <mat-error> Answer is required. </mat-error>
             }
             @if (
               questionsFormControl?.answer3?.hasError('minlength') ||
               questionsFormControl?.answer3?.hasError('maxlength')
-              ) {
-              <mat-error
-                >
-                Answer must be between 3 and 50 characters long.
-              </mat-error>
+            ) {
+              <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
             }
             @if (questionsFormControl?.answer3?.hasError('pattern')) {
-              <mat-error>
-                Answer cannot contain special characters.
-              </mat-error>
+              <mat-error> Answer cannot contain special characters. </mat-error>
             }
           </mat-form-field>
         </div>

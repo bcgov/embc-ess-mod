@@ -21,7 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatCheckboxModule,
     MatSelectModule,
     MatOptionModule
-]
+  ]
 })
 export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: UntypedFormGroup;

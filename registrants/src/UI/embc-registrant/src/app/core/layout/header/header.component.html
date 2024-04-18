@@ -10,53 +10,53 @@
               width="181"
               height="45"
               alt="B.C. Government Logo"
-              />
-              <img
-                class="img-fluid d-md-none"
-                src="/assets/images/bcid-symbol-rev.svg"
-                width="64"
-                height="45"
-                alt="B.C. Government Logo"
-                />
-              </a>
-            </div>
+            />
+            <img
+              class="img-fluid d-md-none"
+              src="/assets/images/bcid-symbol-rev.svg"
+              width="64"
+              height="45"
+              alt="B.C. Government Logo"
+            />
+          </a>
+        </div>
 
-            <div class="col-md-1 divider-col">
-              <div class="divider"></div>
-            </div>
+        <div class="col-md-1 divider-col">
+          <div class="divider"></div>
+        </div>
 
-            <div class="col-md-5 app-heading">
-              <span class="heading-text1">Evacuee Registration & Assistance</span>
-              <span class="heading-text2">(ERA)</span>
-            </div>
+        <div class="col-md-5 app-heading">
+          <span class="heading-text1">Evacuee Registration & Assistance</span>
+          <span class="heading-text2">(ERA)</span>
+        </div>
 
-            <div class="col-md-4 menu-responsive">
-              @if (
-                showLoginMatMenu &&
-                (formCreationService.personalDetailsForm$ | async)?.value?.lastName &&
-                (formCreationService.personalDetailsForm$ | async)?.value?.firstName
-                ) {
-                <button mat-button class="button-align" [matMenuTriggerFor]="menu">
-                  <div class="row">
-                    <div class="col-md-8">
-                      <span style="color: white"
-                        ><b>{{ (formCreationService.personalDetailsForm$ | async)?.value?.lastName | uppercase }}</b
-                        >, {{ (formCreationService.personalDetailsForm$ | async)?.value?.firstName }}</span
-                        >
-                      </div>
-                      <div class="col-md-4">
-                        <img class="img-align" src="../../../../assets/images/down_arrow.svg" height="10" width="16" />
-                      </div>
-                    </div>
-                  </button>
-                  <mat-menu #menu="matMenu">
-                    <span>
-                      <button class="signOut-button" mat-menu-item (click)="signOut()">Sign out</button>
-                    </span>
-                  </mat-menu>
-                }
+        <div class="col-md-4 menu-responsive">
+          @if (
+            showLoginMatMenu &&
+            (formCreationService.personalDetailsForm$ | async)?.value?.lastName &&
+            (formCreationService.personalDetailsForm$ | async)?.value?.firstName
+          ) {
+            <button mat-button class="button-align" [matMenuTriggerFor]="menu">
+              <div class="row">
+                <div class="col-md-8">
+                  <span style="color: white"
+                    ><b>{{ (formCreationService.personalDetailsForm$ | async)?.value?.lastName | uppercase }}</b
+                    >, {{ (formCreationService.personalDetailsForm$ | async)?.value?.firstName }}</span
+                  >
+                </div>
+                <div class="col-md-4">
+                  <img class="img-align" src="../../../../assets/images/down_arrow.svg" height="10" width="16" />
+                </div>
               </div>
-            </div>
-          </mat-toolbar-row>
-        </mat-toolbar>
-      </header>
+            </button>
+            <mat-menu #menu="matMenu">
+              <span>
+                <button class="signOut-button" mat-menu-item (click)="signOut()">Sign out</button>
+              </span>
+            </mat-menu>
+          }
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>

@@ -12,15 +12,15 @@
     (selectionChange)="stepChanged($event, profileStepper)"
     #profileStepper
     linear
-    >
+  >
     @for (step of steps; track step) {
       <mat-step [stepControl]="form">
         <ng-template matStepLabel>{{ step.stepName }}</ng-template>
         @if (step.stepName === 'Personal Details' && currentFlow === 'verified-registration') {
           <div>
             <p>
-              Please review and complete the form below. As this account is linked to your BC Services Card, certain fields
-              are not editable.
+              Please review and complete the form below. As this account is linked to your BC Services Card, certain
+              fields are not editable.
             </p>
             <p>Required fields are marked with a red asterisk.</p>
           </div>
@@ -28,7 +28,10 @@
           <p>Please review and complete the form below. Required fields are marked with a red asterisk.</p>
         }
         <br />
-        <app-component-wrapper [componentName]="step.component" [folderPath]="profileFolderPath"></app-component-wrapper>
+        <app-component-wrapper
+          [componentName]="step.component"
+          [folderPath]="profileFolderPath"
+        ></app-component-wrapper>
         <br />
         <div class="row justify-content-between resp-style">
           <div class="col-md-6">
@@ -43,7 +46,7 @@
                 mat-stroked-button
                 type="button"
                 (click)="goForward(profileStepper, step.isLast, step.component)"
-                >
+              >
                 Review Submission
               </button>
             } @else {
@@ -52,7 +55,7 @@
                 mat-stroked-button
                 type="button"
                 (click)="goForward(profileStepper, step.isLast, step.component)"
-                >
+              >
                 {{ step.nextButtonLabel }}
               </button>
             }
@@ -73,7 +76,7 @@
           mat-stroked-button
           type="button"
           (click)="goForward(profileStepper, true, 'review')"
-          >
+        >
           Save & Submit
           <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
         </button>

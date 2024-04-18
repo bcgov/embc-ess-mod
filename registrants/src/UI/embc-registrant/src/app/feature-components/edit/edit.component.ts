@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 import { RestrictionFormComponent } from '../../sharedModules/forms/restriction-form/restriction-form.component';
 
-
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',

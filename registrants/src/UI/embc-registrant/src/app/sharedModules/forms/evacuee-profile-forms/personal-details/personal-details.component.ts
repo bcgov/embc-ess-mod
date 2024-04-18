@@ -21,14 +21,7 @@ import { MatOptionModule } from '@angular/material/core';
   templateUrl: './personal-details.component.html',
   styleUrls: ['./personal-details.component.scss'],
   standalone: true,
-  imports: [
-    MatCardModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatOptionModule
-]
+  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule]
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: UntypedFormGroup;

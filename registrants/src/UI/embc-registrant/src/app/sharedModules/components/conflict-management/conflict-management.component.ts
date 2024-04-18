@@ -17,7 +17,6 @@ import { AppLoaderComponent } from '../../../core/components/app-loader/app-load
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-
 @Component({
   selector: 'app-conflict-management',
   templateUrl: './conflict-management.component.html',
@@ -31,7 +30,7 @@ import { MatCardModule } from '@angular/material/card';
     ComponentWrapperComponent,
     CustomDate,
     ArrayContains
-]
+  ]
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
   @ViewChild('conflictStepper') conflictStepper: MatStepper;

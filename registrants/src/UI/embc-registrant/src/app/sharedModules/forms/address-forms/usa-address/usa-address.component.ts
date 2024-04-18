@@ -14,14 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './usa-address.component.html',
   styleUrls: ['./usa-address.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatOptionModule,
-    AsyncPipe
-]
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, AsyncPipe]
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

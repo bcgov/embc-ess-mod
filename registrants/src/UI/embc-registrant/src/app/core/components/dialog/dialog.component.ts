@@ -5,7 +5,6 @@ import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angula
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',

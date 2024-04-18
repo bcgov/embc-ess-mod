@@ -6,83 +6,73 @@
         <mat-label>Address Line 1</mat-label>
         <input [formControlName]="'addressLine1'" maxlength="100" matInput placeholder="Address Line 1" required />
         @if (addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')) {
-          <mat-error
-            >
-            Address Line 1 is required</mat-error
-            >
-          }
-        </mat-form-field>
-      </div>
+          <mat-error> Address Line 1 is required</mat-error>
+        }
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-5">
-        <mat-form-field appearance="outline">
-          <mat-label>Address Line 2</mat-label>
-          <input [formControlName]="'addressLine2'" maxlength="100" matInput placeholder="Address Line 2" />
-        </mat-form-field>
-      </div>
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Address Line 2</mat-label>
+        <input [formControlName]="'addressLine2'" maxlength="100" matInput placeholder="Address Line 2" />
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-label>City</mat-label>
-          <input maxlength="100" [formControlName]="'community'" matInput placeholder="City" required />
-          @if (addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')) {
-            <mat-error>
-              City is required</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input maxlength="100" [formControlName]="'community'" matInput placeholder="City" required />
+        @if (addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')) {
+          <mat-error> City is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-3">
-          <mat-form-field appearance="outline">
-            <mat-label>Postal Code</mat-label>
-            <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" />
-            <!-- <mat-error
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Postal Code</mat-label>
+        <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" />
+        <!-- <mat-error
             *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
           Postal Code is required</mat-error>-->
-          @if (addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')) {
-            <mat-error>
-              Postal Code is invalid</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
+        @if (addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')) {
+          <mat-error> Postal Code is invalid</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-3">
-          <mat-form-field appearance="outline">
-            <mat-label class="requiredField">Province</mat-label>
-            <input
-              type="text"
-              [formControlName]="'stateProvince'"
-              matInput
-              placeholder="Province"
-              [matAutocomplete]="auto"
-              />
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
-                @for (option of filteredOptions | async; track option) {
-                  <mat-option [value]="option">
-                    {{ option.name }}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-              @if (addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')) {
-                <mat-error
-                  >
-                  Province is required</mat-error
-                  >
-              }
-              @if (validateProvince()) {
-                <mat-error> Province is invalid</mat-error>
-              }
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="outline">
+        <mat-label class="requiredField">Province</mat-label>
+        <input
+          type="text"
+          [formControlName]="'stateProvince'"
+          matInput
+          placeholder="Province"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
+          @for (option of filteredOptions | async; track option) {
+            <mat-option [value]="option">
+              {{ option.name }}
+            </mat-option>
+          }
+        </mat-autocomplete>
+        @if (addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')) {
+          <mat-error> Province is required</mat-error>
+        }
+        @if (validateProvince()) {
+          <mat-error> Province is invalid</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+</form>

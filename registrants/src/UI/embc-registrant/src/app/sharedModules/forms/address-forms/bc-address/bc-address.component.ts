@@ -15,14 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './bc-address.component.html',
   styleUrls: ['./bc-address.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatOptionModule,
-    AsyncPipe
-]
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, AsyncPipe]
 })
 export class BcAddressComponent implements OnInit, AfterViewChecked {
   @Input() addressForm: UntypedFormGroup;

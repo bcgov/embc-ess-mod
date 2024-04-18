@@ -1,14 +1,10 @@
 <div class="main-border">
   @if (outageService.getShowOutageBanner() | async) {
-    <app-outage-banner
-      (closeEvent)="closeOutageBanner($event)"
-    ></app-outage-banner>
+    <app-outage-banner (closeEvent)="closeOutageBanner($event)"></app-outage-banner>
   }
 
   @if (environment !== null && environment !== undefined) {
-    <app-environment-banner
-      [environment]="environment"
-    ></app-environment-banner>
+    <app-environment-banner [environment]="environment"></app-environment-banner>
   }
 
   <app-header
@@ -19,10 +15,10 @@
           }
         : { padding: '0px' }
     "
-  [class.body-border]="environment !== null && environment !== undefined"
-></app-header>
-<main
-  class="fill-body background main-container"
+    [class.body-border]="environment !== null && environment !== undefined"
+  ></app-header>
+  <main
+    class="fill-body background main-container"
     [ngStyle]="
       environment !== null && environment !== undefined
         ? {
@@ -30,20 +26,20 @@
           }
         : { padding: '0px' }
     "
-[class.body-border]="environment !== null && environment !== undefined"
->
-<div class="app-error">
-  <app-alert></app-alert>
-</div>
+    [class.body-border]="environment !== null && environment !== undefined"
+  >
+    <div class="app-error">
+      <app-alert></app-alert>
+    </div>
 
-<div>
-  @if (!isLoading) {
-    <router-outlet></router-outlet>
-  }
-</div>
-</main>
-<div
-  class="footer mt-auto"
+    <div>
+      @if (!isLoading) {
+        <router-outlet></router-outlet>
+      }
+    </div>
+  </main>
+  <div
+    class="footer mt-auto"
     [ngStyle]="
       environment !== null && environment !== undefined
         ? {
@@ -51,9 +47,9 @@
           }
         : { padding: '0px' }
     "
-[class.footer-border]="environment !== null && environment !== undefined"
->
-<app-footer></app-footer>
-</div>
-<app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"> </app-loader>
+    [class.footer-border]="environment !== null && environment !== undefined"
+  >
+    <app-footer></app-footer>
+  </div>
+  <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"> </app-loader>
 </div>

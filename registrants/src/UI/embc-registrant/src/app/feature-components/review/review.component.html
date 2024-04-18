@@ -144,22 +144,14 @@
           @if (
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN' ||
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              City:
-            </div>
+          ) {
+            <div class="col-md-3">City:</div>
           }
           @if (
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'CAN' &&
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              City/ Jurisdiction:
-            </div>
+          ) {
+            <div class="col-md-3">City/ Jurisdiction:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.isBcAddress === 'Yes') {
             <div class="col-md-3">
@@ -174,28 +166,16 @@
         </div>
         <div class="row info-detail">
           @if ((formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN') {
-            <div
-              class="col-md-3"
-              >
-              Postal Code:
-            </div>
+            <div class="col-md-3">Postal Code:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA') {
-            <div
-              class="col-md-3"
-              >
-              Zip Code:
-            </div>
+            <div class="col-md-3">Zip Code:</div>
           }
           @if (
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'CAN' &&
             (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              Postal/ Zip Code:
-            </div>
+          ) {
+            <div class="col-md-3">Postal/ Zip Code:</div>
           }
           <div class="col-md-3">
             {{ (formCreationService.addressForm$ | async)?.value?.address?.postalCode }}
@@ -203,18 +183,10 @@
         </div>
         <div class="row info-detail">
           @if ((formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN') {
-            <div
-              class="col-md-3"
-              >
-              Province:
-            </div>
+            <div class="col-md-3">Province:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA') {
-            <div
-              class="col-md-3"
-              >
-              State:
-            </div>
+            <div class="col-md-3">State:</div>
           }
 
           <div class="col-md-3">
@@ -256,62 +228,38 @@
           @if (
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN' ||
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              City:
-            </div>
+          ) {
+            <div class="col-md-3">City:</div>
           }
           @if (
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'CAN' &&
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              City/ Jurisdiction:
-            </div>
+          ) {
+            <div class="col-md-3">City/ Jurisdiction:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name !== undefined) {
-            <div
-              class="col-md-3"
-              >
+            <div class="col-md-3">
               {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name }}
             </div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name === undefined) {
-            <div
-              class="col-md-3"
-              >
+            <div class="col-md-3">
               {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community }}
             </div>
           }
         </div>
         <div class="row info-detail">
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN') {
-            <div
-              class="col-md-3"
-              >
-              Postal Code:
-            </div>
+            <div class="col-md-3">Postal Code:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA') {
-            <div
-              class="col-md-3"
-              >
-              Zip Code:
-            </div>
+            <div class="col-md-3">Zip Code:</div>
           }
           @if (
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'CAN' &&
             (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'USA'
-            ) {
-            <div
-              class="col-md-3"
-              >
-              Postal/ Zip Code:
-            </div>
+          ) {
+            <div class="col-md-3">Postal/ Zip Code:</div>
           }
           <div class="col-md-3">
             {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.postalCode }}
@@ -319,18 +267,10 @@
         </div>
         <div class="row info-detail">
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN') {
-            <div
-              class="col-md-3"
-              >
-              Province:
-            </div>
+            <div class="col-md-3">Province:</div>
           }
           @if ((formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA') {
-            <div
-              class="col-md-3"
-              >
-              State:
-            </div>
+            <div class="col-md-3">State:</div>
           }
           <div class="col-md-3">
             {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.stateProvince?.name }}
@@ -467,8 +407,8 @@
             </div>
             <div class="col-md-9">
               <p>
-                You have given your consent to have your location and contact information shared with concerned family or
-                friends who enquire about your wellbeing.
+                You have given your consent to have your location and contact information shared with concerned family
+                or friends who enquire about your wellbeing.
               </p>
             </div>
           </div>
@@ -494,175 +434,173 @@
             <p class="no-bottom-margin">
               <span
                 >{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine1 }},</span
-                >
-                <span
-                  >&nbsp;{{
+              >
+              <span
+                >&nbsp;{{
                   (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2
-                  }}</span
-                  >
-                </p>
-                <p>
-                  <span
-                    >{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.community?.name }},
-                  </span>
-                  <span>{{
-                    (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.stateProvince?.name
-                  }}</span>
-                  <span
+                }}</span
+              >
+            </p>
+            <p>
+              <span
+                >{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.community?.name }},
+              </span>
+              <span>{{
+                (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.stateProvince?.name
+              }}</span>
+              <span
                 [hidden]="
                   (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode === '' ||
                   (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode === null
                 "
-                    >,&nbsp;</span
-                    >
-                    <span>{{ (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode }}</span>
-                  </p>
-                </div>
-              </div>
-            </mat-card-content>
+                >,&nbsp;</span
+              >
+              <span>{{ (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode }}</span>
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
 
-            <mat-card-content>
-              <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">Insurance</div>
-                @if (allowEdit) {
-                  <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
-                      <img src="/assets/images/edit.svg" height="35" width="35" />
-                      <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                    </button>
-                  </div>
-                }
-              </div>
-              <hr />
-              <div class="row info-detail">
-                <div class="col-md-3">Insurance:</div>
-                <div class="col-md-3">
-                  {{
-                  (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unknown'
-                  ? "I don't know"
-                  : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unsure'
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Insurance</div>
+          @if (allowEdit) {
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
+          }
+        </div>
+        <hr />
+        <div class="row info-detail">
+          <div class="col-md-3">Insurance:</div>
+          <div class="col-md-3">
+            {{
+              (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unknown'
+                ? "I don't know"
+                : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unsure'
                   ? 'Yes, but I am unsure if I have coverage for this event.'
                   : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Yes'
-                  ? 'Yes'
-                  : 'No'
-                  }}
-                </div>
-              </div>
-            </mat-card-content>
-
-            <mat-card-content>
-              <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">Household Members</div>
-                @if (allowEdit) {
-                  <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
-                      <img src="/assets/images/edit.svg" height="35" width="35" />
-                      <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                    </button>
-                  </div>
-                }
-              </div>
-              <hr />
-              @for (member of (formCreationService.householdMembersForm$ | async)?.value.householdMembers; track member) {
-                <div>
-                  @if (member.isPrimaryRegistrant !== true) {
-                    <div class="row info-detail">
-                      <div class="col-md-3">First Name:</div>
-                      <div class="col-md-3">{{ member.firstName }}</div>
-                    </div>
-                    <div class="row info-detail">
-                      <div class="col-md-3">Last Name:</div>
-                      <div class="col-md-3">{{ member.lastName }}</div>
-                    </div>
-                    <div class="row info-detail">
-                      <div class="col-md-3">Initials:</div>
-                      <div class="col-md-3">{{ member.initials }}</div>
-                    </div>
-                    <div class="row info-detail">
-                      <div class="col-md-3">Gender:</div>
-                      <div class="col-md-3">{{ member.gender }}</div>
-                    </div>
-                    <div class="row info-detail">
-                      <div class="col-md-3">Date of Birth:</div>
-                      <div class="col-md-3">{{ member.dateOfBirth | customDate }}</div>
-                    </div>
-                    <br />
-                  }
-                </div>
-              }
-            </mat-card-content>
-
-            <mat-card-content>
-              <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">Pets</div>
-                @if (allowEdit) {
-                  <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
-                      <img src="/assets/images/edit.svg" height="35" width="35" />
-                      <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                    </button>
-                  </div>
-                }
-              </div>
-              <hr />
-              @for (pet of (formCreationService.petsForm$ | async)?.value.pets; track pet) {
-                <div>
-                  <div class="row info-detail">
-                    <div class="col-md-3">Pet Type:</div>
-                    <div class="col-md-3">{{ pet.type }}</div>
-                  </div>
-                  <div class="row info-detail">
-                    <div class="col-md-3">Quantity:</div>
-                    <div class="col-md-3">{{ pet.quantity }}</div>
-                  </div>
-                  <br />
-                </div>
-              }
-            </mat-card-content>
-
-            <mat-card-content>
-              <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">Needs</div>
-                @if (allowEdit) {
-                  <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
-                      <img src="/assets/images/edit.svg" height="35" width="35" />
-                      <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                    </button>
-                  </div>
-                }
-              </div>
-              <hr />
-              @for (item of getNeedsIdentifiedCaptions(formCreationService.identifyNeedsForm$ | async); track item) {
-                <div
-                  class="row info-detail"
-                  >
-                  <div class="col-md-3">{{ item }}</div>
-                </div>
-              }
-            </mat-card-content>
-
-            <mat-card-content>
-              <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">Security Phrase</div>
-                @if (allowEdit) {
-                  <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
-                      <img src="/assets/images/edit.svg" height="35" width="35" />
-                      <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                    </button>
-                  </div>
-                }
-              </div>
-              <hr />
-
-              <div class="row info-detail">
-                <div class="col-md-3">Security Phrase</div>
-                <div class="col-md-3">
-                  {{ (formCreationService.secretForm$ | async)?.value?.secretPhrase }}
-                </div>
-              </div>
-            </mat-card-content>
+                    ? 'Yes'
+                    : 'No'
+            }}
           </div>
-        </ng-template>
-      </mat-card>
+        </div>
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Household Members</div>
+          @if (allowEdit) {
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
+          }
+        </div>
+        <hr />
+        @for (member of (formCreationService.householdMembersForm$ | async)?.value.householdMembers; track member) {
+          <div>
+            @if (member.isPrimaryRegistrant !== true) {
+              <div class="row info-detail">
+                <div class="col-md-3">First Name:</div>
+                <div class="col-md-3">{{ member.firstName }}</div>
+              </div>
+              <div class="row info-detail">
+                <div class="col-md-3">Last Name:</div>
+                <div class="col-md-3">{{ member.lastName }}</div>
+              </div>
+              <div class="row info-detail">
+                <div class="col-md-3">Initials:</div>
+                <div class="col-md-3">{{ member.initials }}</div>
+              </div>
+              <div class="row info-detail">
+                <div class="col-md-3">Gender:</div>
+                <div class="col-md-3">{{ member.gender }}</div>
+              </div>
+              <div class="row info-detail">
+                <div class="col-md-3">Date of Birth:</div>
+                <div class="col-md-3">{{ member.dateOfBirth | customDate }}</div>
+              </div>
+              <br />
+            }
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Pets</div>
+          @if (allowEdit) {
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
+          }
+        </div>
+        <hr />
+        @for (pet of (formCreationService.petsForm$ | async)?.value.pets; track pet) {
+          <div>
+            <div class="row info-detail">
+              <div class="col-md-3">Pet Type:</div>
+              <div class="col-md-3">{{ pet.type }}</div>
+            </div>
+            <div class="row info-detail">
+              <div class="col-md-3">Quantity:</div>
+              <div class="col-md-3">{{ pet.quantity }}</div>
+            </div>
+            <br />
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Needs</div>
+          @if (allowEdit) {
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
+          }
+        </div>
+        <hr />
+        @for (item of getNeedsIdentifiedCaptions(formCreationService.identifyNeedsForm$ | async); track item) {
+          <div class="row info-detail">
+            <div class="col-md-3">{{ item }}</div>
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Security Phrase</div>
+          @if (allowEdit) {
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
+          }
+        </div>
+        <hr />
+
+        <div class="row info-detail">
+          <div class="col-md-3">Security Phrase</div>
+          <div class="col-md-3">
+            {{ (formCreationService.secretForm$ | async)?.value?.secretPhrase }}
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </ng-template>
+</mat-card>

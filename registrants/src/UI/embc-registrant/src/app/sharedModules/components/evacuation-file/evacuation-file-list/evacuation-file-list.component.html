@@ -25,15 +25,14 @@
                 mat-stroked-button
                 type="button"
                 (click)="startAdditionalAssessment()"
-                >
+              >
                 Add Another Event
               </button>
             </div>
           </div>
           <div class="card-container">
             @for (card of dataSourceActive; track card) {
-              <app-evacuation-card [evacuationFileCard]="card">
-              </app-evacuation-card>
+              <app-evacuation-card [evacuationFileCard]="card"> </app-evacuation-card>
             }
           </div>
         }
@@ -64,8 +63,7 @@
           </div>
           <div class="card-container">
             @for (card of dataSourceInactive; track card) {
-              <app-evacuation-card [evacuationFileCard]="card">
-              </app-evacuation-card>
+              <app-evacuation-card [evacuationFileCard]="card"> </app-evacuation-card>
             }
           </div>
         }

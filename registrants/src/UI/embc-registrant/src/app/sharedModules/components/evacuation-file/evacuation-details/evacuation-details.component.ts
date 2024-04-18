@@ -25,7 +25,7 @@ import { MatCardModule } from '@angular/material/card';
     AsyncPipe,
     DatePipe,
     MaskEvacuatedAddressPipe
-]
+  ]
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   @Input() allExpandState = false;

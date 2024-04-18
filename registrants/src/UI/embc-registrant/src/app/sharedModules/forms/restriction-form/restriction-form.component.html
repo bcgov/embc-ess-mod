@@ -17,45 +17,41 @@
               <mat-radio-button [value]="false" id="yesOption"
                 ><span class="radio-text"><b>Yes</b></span> - you may share the status of my ESS registration
                 status:</mat-radio-button
-                >
-                <p>
-                  I acknowledge that an ESS Responder may ONLY share the status of my ESS registration (pending, active or
-                  complete) with concerned family and friends. For reunification purposes, concerned family and friends
-                  may opt to leave their contact details (telephone number and/ or email address) where they can be
-                  reached. These contact details can be added under the Notes section of the active ESS File, by trained
-                  ESS Responder.
-                </p>
-                <mat-radio-button [value]="true" id="noOption"
-                  ><span class="radio-text"><b>No</b></span> - please <b>RESTRICT</b> access to my ESS registration
-                  status:</mat-radio-button
-                  >
-                  <p>I acknowledge that by RESTRICTING access to my registration status I am:</p>
-                  <ul>
-                    <li>
-                      restricting access to my ERA Profile and ESS File, including ALL household members listed on ESS
-                      file(s) and past ESS Files and Profile.
-                    </li>
-                    <li>
-                      limiting access to ERA users with permission to view/locate RESTRICTED status files (ERA
-                      Manager/Director and above), which may increase wait times for service delivery (in-person or
-                      virtually).
-                    </li>
-                  </ul>
-                  @if (
-                    restrFormControl?.restrictedAccess.touched &&
-                    restrFormControl?.restrictedAccess.invalid &&
-                    restrFormControl?.restrictedAccess.hasError('required')
-                    ) {
-                    <mat-error
-                      class="custom-mat-error field-error"
-                      >
-                      Restriction is required</mat-error
-                      >
-                    }
-                  </mat-radio-group>
-                </div>
-              </div>
-            </mat-card>
+              >
+              <p>
+                I acknowledge that an ESS Responder may ONLY share the status of my ESS registration (pending, active or
+                complete) with concerned family and friends. For reunification purposes, concerned family and friends
+                may opt to leave their contact details (telephone number and/ or email address) where they can be
+                reached. These contact details can be added under the Notes section of the active ESS File, by trained
+                ESS Responder.
+              </p>
+              <mat-radio-button [value]="true" id="noOption"
+                ><span class="radio-text"><b>No</b></span> - please <b>RESTRICT</b> access to my ESS registration
+                status:</mat-radio-button
+              >
+              <p>I acknowledge that by RESTRICTING access to my registration status I am:</p>
+              <ul>
+                <li>
+                  restricting access to my ERA Profile and ESS File, including ALL household members listed on ESS
+                  file(s) and past ESS Files and Profile.
+                </li>
+                <li>
+                  limiting access to ERA users with permission to view/locate RESTRICTED status files (ERA
+                  Manager/Director and above), which may increase wait times for service delivery (in-person or
+                  virtually).
+                </li>
+              </ul>
+              @if (
+                restrFormControl?.restrictedAccess.touched &&
+                restrFormControl?.restrictedAccess.invalid &&
+                restrFormControl?.restrictedAccess.hasError('required')
+              ) {
+                <mat-error class="custom-mat-error field-error"> Restriction is required</mat-error>
+              }
+            </mat-radio-group>
           </div>
         </div>
-      </form>
+      </mat-card>
+    </div>
+  </div>
+</form>

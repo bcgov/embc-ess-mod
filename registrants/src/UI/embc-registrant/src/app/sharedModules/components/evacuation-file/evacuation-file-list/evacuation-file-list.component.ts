@@ -13,7 +13,6 @@ import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.comp
 import { MatButtonModule } from '@angular/material/button';
 import { AppLoaderComponent } from '../../../../core/components/app-loader/app-loader.component';
 
-
 @Component({
   selector: 'app-evacuation-file-list',
   templateUrl: './evacuation-file-list.component.html',

@@ -20,7 +20,6 @@ import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 
-
 @Component({
   selector: 'app-needs-assessment',
   templateUrl: './needs-assessment.component.html',
@@ -33,7 +32,7 @@ import { ComponentWrapperComponent } from '../../sharedModules/components/compon
     ReviewComponent,
     AlertComponent,
     AppLoaderComponent
-]
+  ]
 })
 export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('needsStepper') private needsStepper: MatStepper;

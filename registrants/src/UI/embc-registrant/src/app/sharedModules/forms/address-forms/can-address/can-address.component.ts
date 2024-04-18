@@ -14,14 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './can-address.component.html',
   styleUrls: ['./can-address.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatOptionModule,
-    AsyncPipe
-]
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, AsyncPipe]
 })
 export class CanAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

@@ -31,7 +31,7 @@ import { NgStyle, AsyncPipe } from '@angular/common';
     FooterComponent,
     AppLoaderComponent,
     AsyncPipe
-]
+  ]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

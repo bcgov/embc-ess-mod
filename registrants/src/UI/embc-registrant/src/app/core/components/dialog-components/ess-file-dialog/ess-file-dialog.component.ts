@@ -3,7 +3,6 @@ import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @Component({
   selector: 'app-ess-file-dialog',
   templateUrl: './ess-file-dialog.component.html',

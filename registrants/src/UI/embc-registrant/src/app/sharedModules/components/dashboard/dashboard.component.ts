@@ -28,7 +28,7 @@ import { MatCardModule } from '@angular/material/card';
     RouterLink,
     RouterOutlet,
     AsyncPipe
-]
+  ]
 })
 export class DashboardComponent implements OnInit {
   currentFlow: string;

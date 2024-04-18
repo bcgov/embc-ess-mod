@@ -16,19 +16,12 @@ import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   standalone: true,
-  imports: [
-    MatStepperModule,
-    ComponentWrapperComponent,
-    MatButtonModule,
-    ReviewComponent,
-    AppLoaderComponent
-]
+  imports: [MatStepperModule, ComponentWrapperComponent, MatButtonModule, ReviewComponent, AppLoaderComponent]
 })
 export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('profileStepper') profileStepper: MatStepper;

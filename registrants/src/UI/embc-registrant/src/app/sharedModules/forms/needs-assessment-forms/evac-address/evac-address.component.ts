@@ -19,14 +19,7 @@ import { BcAddressComponent } from '../../address-forms/bc-address/bc-address.co
   templateUrl: './evac-address.component.html',
   styleUrls: ['./evac-address.component.scss'],
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    MatRadioModule,
-    MatFormFieldModule,
-    BcAddressComponent,
-    AsyncPipe
-]
+  imports: [ReactiveFormsModule, MatCardModule, MatRadioModule, MatFormFieldModule, BcAddressComponent, AsyncPipe]
 })
 export default class EvacAddressComponent implements OnInit {
   primaryAddressForm: UntypedFormGroup;

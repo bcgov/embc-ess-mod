@@ -12,7 +12,7 @@
     (selectionChange)="stepChanged($event, needsStepper)"
     #needsStepper
     linear
-    >
+  >
     @for (step of needsSteps; track step) {
       <mat-step [stepControl]="form">
         <ng-template matStepLabel>{{ step.stepName }}</ng-template>
@@ -28,20 +28,19 @@
             }
             @if (currentFlow === 'verified-registration') {
               <p>
-                The purpose of creating an <b>Evacuation File</b> is to help determine how the event has impacted you and
-                your household members in order for an Emergency Support Services (ESS) Responder to provide you with
-                assistance and offer emergency goods and services if eligible.
+                The purpose of creating an <b>Evacuation File</b> is to help determine how the event has impacted you
+                and your household members in order for an Emergency Support Services (ESS) Responder to provide you
+                with assistance and offer emergency goods and services if eligible.
               </p>
               <p>
-                Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
+                Please answer all questions to the best of your knowledge. Required fields are marked with a red
+                asterisk.
               </p>
             }
           </div>
         } @else {
           @if (currentFlow === 'non-verified-registration') {
-            <p>
-              Please review and complete the form below. Required fields are marked with a red asterisk.
-            </p>
+            <p>Please review and complete the form below. Required fields are marked with a red asterisk.</p>
           }
           @if (currentFlow === 'verified-registration') {
             <p>
@@ -64,7 +63,7 @@
               mat-stroked-button
               type="button"
               (click)="goForward(needsStepper, step.isLast, step.component)"
-              >
+            >
               {{ step.nextButtonLabel }}
             </button>
           </div>
@@ -97,7 +96,7 @@
         type="button"
         [disabled]="!captchaPassed || isSubmitted"
         (click)="goForward(needsStepper, true, '')"
-        >
+      >
         Save & Submit
         <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
       </button>
