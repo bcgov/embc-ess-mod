@@ -58,7 +58,7 @@ namespace EMBC.Utilities.Messaging.Grpc
             try
             {
                 var handlerInstance = serviceProvider.GetRequiredService(handler.DeclaringType ?? null!);
-                var replyMessage = await handler.InvokeAsync(handlerInstance, new object[] { message });
+                var replyMessage = await handler.InvokeAsync(handlerInstance, ct, message);
 
                 var reply = CreateReply(request, replyMessage);
 
@@ -97,10 +97,10 @@ namespace EMBC.Utilities.Messaging.Grpc
 
     internal static class DispatcherServiceEx
     {
-        public static async Task<object?> InvokeAsync(this MethodInfo method, object obj, params object[] parameters)
+        public static async Task<object?> InvokeAsync(this MethodInfo method, object obj, CancellationToken ct, params object[] parameters)
         {
             var task = (Task)(method.Invoke(obj, parameters) ?? null!);
-            await task.ConfigureAwait(false);
+            await task.WaitAsync(ct);
             return method.ReturnType.IsGenericType
                 ? task.GetType().GetProperty("Result")?.GetValue(task)
                 : null;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Events;
@@ -172,7 +173,7 @@ namespace EMBC.Tests.Unit.Responders.API
             messagingClient = A.Fake<IMessagingClient>();
 
             //Handle RegistrantsQuery
-            A.CallTo(() => messagingClient.Send(A<RegistrantsQuery>.That.IsNotNull()))
+            A.CallTo(() => messagingClient.Send(A<RegistrantsQuery>.That.IsNotNull(), A<CancellationToken>.Ignored))
                 .ReturnsLazily(o =>
                 {
                     var query = o.GetArgument<RegistrantsQuery>(0);

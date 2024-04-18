@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using Grpc.Core;
@@ -10,7 +11,7 @@ namespace EMBC.Utilities.Messaging.Grpc
 {
     internal static class DispatcherClientEx
     {
-        public static async Task<TReply?> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content)
+        public static async Task<TReply?> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content, CancellationToken ct)
         {
             try
             {
@@ -20,7 +21,7 @@ namespace EMBC.Utilities.Messaging.Grpc
                     Type = content.GetType().AssemblyQualifiedName,
                     Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(content))
                 };
-                var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118), headers: new Metadata()));
+                var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118), headers: new Metadata(), cancellationToken: ct));
 
                 if (response.Error) throw new ServerException(response.ErrorType, response.ErrorMessage);
 
