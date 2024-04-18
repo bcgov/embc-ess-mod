@@ -48,10 +48,10 @@ describe('AppComponent', () => {
         NgIdleKeepaliveModule.forRoot(),
         MatDialogModule,
         HeaderStubComponent,
-        FooterStubComponent
+        FooterStubComponent,
         // EnvironmentBannerStubComponent
+        AppComponent
       ],
-      declarations: [AppComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         AppComponent,
