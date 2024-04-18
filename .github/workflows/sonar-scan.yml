@@ -1,11 +1,14 @@
 name: Sonar scan
 on:
-  push:
-    branches:
-      - master
-      - 'release/**'
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * Mon'
+  #push:
+  #  branches:
+  #    - master
+  #    - 'release/**'
+  #pull_request:
+  #  types: [opened, synchronize, reopened]
     
 jobs:
   sonar-scan-net:
