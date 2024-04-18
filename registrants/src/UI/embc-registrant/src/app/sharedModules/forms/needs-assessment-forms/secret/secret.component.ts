@@ -46,16 +46,3 @@ export default class SecretComponent implements OnInit, OnDestroy {
     this.secretForm$.unsubscribe();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    SecretComponent
-  ]
-})
-class SecretModule {}

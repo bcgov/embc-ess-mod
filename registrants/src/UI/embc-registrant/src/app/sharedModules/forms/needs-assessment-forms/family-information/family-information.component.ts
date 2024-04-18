@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
@@ -137,21 +137,3 @@ export default class FamilyInformationComponent implements OnInit {
     this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    PersonDetailFormModule,
-    MatTableModule,
-    MatIconModule,
-    FamilyInformationComponent
-  ],
-  exports: [FamilyInformationComponent]
-})
-export class FamilyInformationModule {}

@@ -7,7 +7,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { ComponentWrapperModule } from '../../sharedModules/components/component-wrapper/component-wrapper.module';
+
 import { ReviewModule } from '../review/review.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -24,7 +24,6 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    ComponentWrapperModule,
     ReviewModule,
     MatSelectModule,
     MatAutocompleteModule,

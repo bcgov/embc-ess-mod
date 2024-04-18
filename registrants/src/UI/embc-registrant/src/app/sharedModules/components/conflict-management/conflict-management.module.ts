@@ -6,10 +6,10 @@ import { ConflictManagementComponent } from './conflict-management.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { ComponentWrapperModule } from '../../components/component-wrapper/component-wrapper.module';
+
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
+
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
@@ -19,10 +19,8 @@ import { CoreModule } from '../../../core/core.module';
     MatStepperModule,
     MatCardModule,
     MatButtonModule,
-    ComponentWrapperModule,
     MatSelectModule,
     MatAutocompleteModule,
-    CustomPipeModule,
     CoreModule,
     ConflictManagementComponent
   ]

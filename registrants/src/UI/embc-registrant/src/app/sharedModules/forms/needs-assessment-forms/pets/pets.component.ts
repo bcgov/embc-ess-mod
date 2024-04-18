@@ -11,7 +11,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { PetFormModule } from '../../pet-form/pet-form.module';
+
 import * as globalConst from '../../../../core/services/globalConstants';
 import { PetFormComponent } from '../../pet-form/pet-form.component';
 
@@ -119,21 +119,3 @@ export default class PetsComponent implements OnInit {
     this.petsForm.get('pet.quantity').updateValueAndValidity();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    MatTableModule,
-    MatIconModule,
-    PetFormModule,
-    PetsComponent
-  ],
-  exports: [PetsComponent]
-})
-export class PetsModule {}

@@ -17,7 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DirectivesModule } from '../../../../core/directives/directives.module';
+
 // import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -129,20 +129,3 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     this.contactInfoForm$.unsubscribe();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    DirectivesModule,
-    // TextMaskModule,
-    MatRadioModule,
-    ContactInfoComponent
-  ]
-})
-class ContactInfoModule {}

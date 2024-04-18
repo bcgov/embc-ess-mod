@@ -9,7 +9,7 @@ import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DirectivesModule } from '../../../../core/directives/directives.module';
+
 // @TODO: ngx-mask
 // import { TextMaskModule } from 'angular2-text-mask';
 import * as globalConst from '../../../../core/services/globalConstants';
@@ -75,19 +75,3 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     this.personalDetailsForm$.unsubscribe();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    DirectivesModule,
-    // TextMaskModule
-    PersonalDetailsComponent
-  ]
-})
-class PersonalDetailsModule {}

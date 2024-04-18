@@ -9,9 +9,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
-import { CustomPipeModule } from '../../../../core/pipe/customPipe.module';
+
 import * as globalConst from '../../../../core/services/globalConstants';
-import { AddressFormsModule } from '../../address-forms/address-forms.module';
+
 import { BcAddressComponent } from '../../address-forms/bc-address/bc-address.component';
 
 @Component({
@@ -86,19 +86,3 @@ export default class EvacAddressComponent implements OnInit {
     return this.evacuatedForm.controls;
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    CustomPipeModule,
-    AddressFormsModule,
-    EvacAddressComponent
-  ]
-})
-class EvacAddressModule {}

@@ -6,7 +6,6 @@ import { RestrictionRoutingModule } from './restriction-routing.module';
 import { RestrictionComponent } from './restriction.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RestrictionFormModule } from '../../sharedModules/forms/restriction-form/restriction-form.module';
 
 @NgModule({
   imports: [
@@ -16,7 +15,6 @@ import { RestrictionFormModule } from '../../sharedModules/forms/restriction-for
     MatButtonModule,
     MatRadioModule,
     ReactiveFormsModule,
-    RestrictionFormModule,
     RestrictionComponent
   ]
 })

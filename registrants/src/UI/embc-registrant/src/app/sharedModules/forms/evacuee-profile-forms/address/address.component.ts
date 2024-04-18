@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
-import { AddressFormsModule } from '../../address-forms/address-forms.module';
+
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -198,19 +198,3 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
     }
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    AddressFormsModule,
-    MatAutocompleteModule,
-    AddressComponent
-  ]
-})
-class AddressModule {}

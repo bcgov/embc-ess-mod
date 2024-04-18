@@ -64,18 +64,3 @@ export default class IdentifyNeedsComponent implements OnInit {
     return this.identifyNeedsForm.controls;
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    MatCheckboxModule,
-    IdentifyNeedsComponent
-  ]
-})
-class IdentifyNeedsModule {}

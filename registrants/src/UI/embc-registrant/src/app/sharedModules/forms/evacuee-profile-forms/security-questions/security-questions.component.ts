@@ -68,17 +68,3 @@ export default class SecurityQuestionsComponent implements OnInit {
     return (this.securityQuestionsForm.get('questions') as UntypedFormGroup).controls;
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    SecurityQuestionsComponent
-  ]
-})
-class SecurityQuestionsModule {}
