@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoginService } from './core/services/login.service';
@@ -12,12 +11,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
 import { ConfigService } from './core/services/config.service';
 import { provideMarkdown } from 'ngx-markdown';
+import { provideRouter } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   template: '',
   standalone: true,
-  imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule]
+  imports: [HttpClientTestingModule, MatDialogModule],
+  providers: []
 })
 class HeaderStubComponent {}
 
@@ -25,7 +26,7 @@ class HeaderStubComponent {}
   selector: 'app-footer',
   template: '',
   standalone: true,
-  imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule]
+  imports: [HttpClientTestingModule, MatDialogModule]
 })
 class FooterStubComponent {}
 
@@ -44,7 +45,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         OAuthModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
         MatDialogModule,
@@ -63,7 +63,8 @@ describe('AppComponent', () => {
           provide: ConfigService,
           useClass: MockEnvironmentBannerService
         },
-        provideMarkdown()
+        provideMarkdown(),
+        provideRouter([])
       ]
     }).compileComponents();
   }));

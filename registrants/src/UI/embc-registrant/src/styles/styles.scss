@@ -277,12 +277,12 @@ mat-card {
 
 .mat-mdc-checkbox.mat-accent {
   --mdc-checkbox-selected-focus-icon-color: #169bd5;
-    --mdc-checkbox-selected-hover-icon-color: #169bd5;
-    --mdc-checkbox-selected-icon-color: #169bd5;
-    --mdc-checkbox-selected-pressed-icon-color: #169bd5;
-    --mdc-checkbox-selected-focus-state-layer-color: #169bd5;
-    --mdc-checkbox-selected-hover-state-layer-color: #169bd5;
-    --mdc-checkbox-selected-pressed-state-layer-color: #169bd5;
+  --mdc-checkbox-selected-hover-icon-color: #169bd5;
+  --mdc-checkbox-selected-icon-color: #169bd5;
+  --mdc-checkbox-selected-pressed-icon-color: #169bd5;
+  --mdc-checkbox-selected-focus-state-layer-color: #169bd5;
+  --mdc-checkbox-selected-hover-state-layer-color: #169bd5;
+  --mdc-checkbox-selected-pressed-state-layer-color: #169bd5;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */

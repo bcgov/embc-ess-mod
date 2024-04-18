@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('NonVerifiedRegistrationComponent', () => {
   let component: NonVerifiedRegistrationComponent;
@@ -11,8 +11,8 @@ describe('NonVerifiedRegistrationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, NonVerifiedRegistrationComponent],
-      providers: [UntypedFormBuilder]
+      imports: [ReactiveFormsModule, HttpClientTestingModule, NonVerifiedRegistrationComponent],
+      providers: [UntypedFormBuilder, provideRouter([])]
     }).compileComponents();
   }));
 
