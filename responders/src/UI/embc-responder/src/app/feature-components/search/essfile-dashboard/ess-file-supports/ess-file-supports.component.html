@@ -60,7 +60,7 @@
                   getReferral(support)?.method === supportMethod.Referral
                     ? getReferral(support)?.supplierName
                     : getReferral(support)?.method === supportMethod.ETransfer
-                      ? !support?.isSelfServe 
+                      ? support?.isSelfServe 
                              ? 'e-Transfer(Self-serve)' : 'e-Transfer'
                       : ''
                 }}
