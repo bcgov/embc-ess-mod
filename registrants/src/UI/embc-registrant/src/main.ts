@@ -10,9 +10,10 @@ import { CoreModule } from './app/core/core.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app/app-routing.module';
-import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { withInterceptorsFromDi, provideHttpClient, HttpClient } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
+import { provideMarkdown } from 'ngx-markdown';
 
 if (environment.production) {
   enableProdMode();
@@ -47,6 +48,7 @@ bootstrapApplication(AppComponent, {
       deps: [PlatformLocation]
     },
     provideHttpClient(withInterceptorsFromDi()),
-    provideAnimations()
+    provideAnimations(),
+    provideMarkdown({ loader: HttpClient })
   ]
 }).catch((err) => console.error(err));

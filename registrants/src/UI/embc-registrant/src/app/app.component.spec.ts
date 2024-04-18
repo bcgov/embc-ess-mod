@@ -11,6 +11,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
 import { ConfigService } from './core/services/config.service';
+import { provideMarkdown } from 'ngx-markdown';
 
 @Component({
   selector: 'app-header',
@@ -61,7 +62,8 @@ describe('AppComponent', () => {
         {
           provide: ConfigService,
           useClass: MockEnvironmentBannerService
-        }
+        },
+        provideMarkdown()
       ]
     }).compileComponents();
   }));
