@@ -16,7 +16,6 @@ import { CoreModule } from '../../core/core.module';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
-  declarations: [NeedsAssessmentComponent],
   imports: [
     CommonModule,
     NeedsAssessmentRoutingModule,
@@ -32,7 +31,8 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
     MatDialogModule,
     CoreModule,
     RecaptchaFormsModule,
-    RecaptchaModule
+    RecaptchaModule,
+    NeedsAssessmentComponent
   ]
 })
 export class NeedsAssessmentModule {}

@@ -9,7 +9,8 @@ import { MaskEvacuatedAddressPipe } from './maskEvacuatedAddress.pipe';
 import { MaskSupplierAddressPipe } from './maskSupplierAddress.pipe';
 
 @NgModule({
-  declarations: [
+  imports: [
+    CommonModule,
     EnumToArrayPipe,
     MaskTextPipe,
     CustomDate,
@@ -18,7 +19,6 @@ import { MaskSupplierAddressPipe } from './maskSupplierAddress.pipe';
     MaskEvacuatedAddressPipe,
     MaskSupplierAddressPipe
   ],
-  imports: [CommonModule],
   exports: [
     EnumToArrayPipe,
     MaskTextPipe,

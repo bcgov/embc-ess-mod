@@ -15,8 +15,7 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
-      declarations: [OutageComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot(), OutageComponent],
       providers: [
         OutageComponent,
         {

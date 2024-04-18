@@ -4,11 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { InformationDialogComponent } from '../../components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { DialogContent } from '../../model/dialog-content.model';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.scss'],
+  standalone: true,
+  imports: [MatToolbarModule]
 })
 export class FooterComponent {
   constructor(

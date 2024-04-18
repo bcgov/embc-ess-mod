@@ -11,8 +11,7 @@ describe('SecurityQuestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, ReactiveFormsModule],
-      declarations: [SecurityQuestionsComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule, SecurityQuestionsComponent],
       providers: [UntypedFormBuilder, FormCreationService]
     }).compileComponents();
   });

@@ -11,8 +11,7 @@ describe('ReviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ReviewComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, ReviewComponent],
       providers: [UntypedFormBuilder, FormCreationService]
     }).compileComponents();
   }));

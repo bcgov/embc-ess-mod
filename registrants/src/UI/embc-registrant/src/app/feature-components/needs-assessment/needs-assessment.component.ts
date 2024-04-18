@@ -3,7 +3,7 @@ import { FormGroup, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { combineLatest, forkJoin, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { RegistrationResult } from '../../core/api/models/registration-result';
@@ -14,11 +14,28 @@ import { EvacuationFileDataService } from '../../sharedModules/components/evacua
 import * as globalConst from '../../core/services/globalConstants';
 import { map, mergeMap } from 'rxjs/operators';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { AlertComponent } from '../../core/components/alert/alert.component';
+import { ReviewComponent } from '../review/review.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-needs-assessment',
   templateUrl: './needs-assessment.component.html',
-  styleUrls: ['./needs-assessment.component.scss']
+  styleUrls: ['./needs-assessment.component.scss'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    NgFor,
+    NgIf,
+    ComponentWrapperComponent,
+    MatButtonModule,
+    ReviewComponent,
+    AlertComponent,
+    AppLoaderComponent
+  ]
 })
 export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('needsStepper') private needsStepper: MatStepper;

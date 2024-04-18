@@ -10,8 +10,7 @@ describe('ReferralDetailsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ReferralDetailsComponent],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, ReferralDetailsComponent],
       providers: [HttpClient, HttpHandler]
     }).compileComponents();
   }));

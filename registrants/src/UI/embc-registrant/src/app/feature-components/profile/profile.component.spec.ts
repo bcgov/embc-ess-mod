@@ -12,8 +12,7 @@ describe('ProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProfileComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, ProfileComponent],
       providers: [ComponentCreationService, FormCreationService]
     }).compileComponents();
   }));

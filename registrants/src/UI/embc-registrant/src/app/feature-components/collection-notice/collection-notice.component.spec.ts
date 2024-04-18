@@ -16,14 +16,14 @@ describe('CollectionNoticeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CollectionNoticeComponent],
       imports: [
         RouterTestingModule.withRoutes([]),
         ReactiveFormsModule,
         MatDialogModule,
         MatCheckboxModule,
         BrowserAnimationsModule,
-        CoreModule
+        CoreModule,
+        CollectionNoticeComponent
       ],
       providers: [UntypedFormBuilder]
     }).compileComponents();

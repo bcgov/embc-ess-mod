@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +11,9 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-secret',
   templateUrl: './secret.component.html',
-  styleUrls: ['./secret.component.scss']
+  styleUrls: ['./secret.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, NgIf]
 })
 export default class SecretComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
@@ -46,7 +48,14 @@ export default class SecretComponent implements OnInit, OnDestroy {
 }
 
 @NgModule({
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
-  declarations: [SecretComponent]
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    SecretComponent
+  ]
 })
 class SecretModule {}

@@ -36,9 +36,7 @@ import { CaptchaV2Component } from './components/captcha-v2/captcha-v2.component
     MatButtonModule,
     MatInputModule,
     MatToolbarModule,
-    MarkdownModule.forRoot({ loader: HttpClient })
-  ],
-  declarations: [
+    MarkdownModule.forRoot({ loader: HttpClient }),
     AppLoaderComponent,
     AlertComponent,
     HeaderComponent,

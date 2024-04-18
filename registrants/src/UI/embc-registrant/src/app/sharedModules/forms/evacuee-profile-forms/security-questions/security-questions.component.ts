@@ -1,7 +1,7 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,11 +10,23 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { MatSelectModule } from '@angular/material/select';
 import { SecurityQuestionsService } from '../../../../core/services/security-questions.service';
 import { Subscription } from 'rxjs';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-security-questions',
   templateUrl: './security-questions.component.html',
-  styleUrls: ['./security-questions.component.scss']
+  styleUrls: ['./security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
+    MatOptionModule,
+    NgIf,
+    MatInputModule
+  ]
 })
 export default class SecurityQuestionsComponent implements OnInit {
   formBuilder: UntypedFormBuilder;
@@ -65,8 +77,8 @@ export default class SecurityQuestionsComponent implements OnInit {
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatSelectModule
-  ],
-  declarations: [SecurityQuestionsComponent]
+    MatSelectModule,
+    SecurityQuestionsComponent
+  ]
 })
 class SecurityQuestionsModule {}

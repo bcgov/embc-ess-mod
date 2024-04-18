@@ -14,7 +14,7 @@ import { OutageBannerComponent } from './sharedModules/outage-components/outage-
 import { OutageDialogComponent } from './sharedModules/outage-components/outage-dialog/outage-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, OutageBannerComponent, OutageDialogComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -30,7 +30,9 @@ import { OutageDialogComponent } from './sharedModules/outage-components/outage-
         customUrlValidation: (url) =>
           url.toLowerCase().includes('/api/') && !url.toLowerCase().endsWith('/configuration')
       }
-    })
+    }),
+    OutageBannerComponent,
+    OutageDialogComponent
   ],
   providers: [
     {

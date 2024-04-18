@@ -11,8 +11,7 @@ describe('ConfirmRestrictionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfirmRestrictionComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, ConfirmRestrictionComponent],
       providers: [UntypedFormBuilder, FormCreationService]
     }).compileComponents();
   }));

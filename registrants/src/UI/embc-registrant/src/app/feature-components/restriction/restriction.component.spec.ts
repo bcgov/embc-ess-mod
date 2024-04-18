@@ -9,8 +9,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [RestrictionComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, RestrictionComponent],
       providers: [UntypedFormBuilder]
     }).compileComponents();
   }));

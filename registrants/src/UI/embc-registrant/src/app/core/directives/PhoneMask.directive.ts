@@ -13,7 +13,8 @@ import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[formControlName][appPhoneMask]'
+  selector: '[formControlName][appPhoneMask]',
+  standalone: true
 })
 export class PhoneMaskDirective {
   constructor(

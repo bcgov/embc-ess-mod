@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,11 +12,16 @@ import { FileSubmissionService } from './file-submission.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-file-submission',
   templateUrl: './file-submission.component.html',
-  styleUrls: ['./file-submission.component.scss']
+  styleUrls: ['./file-submission.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, NgIf, MatButtonModule, AppLoaderComponent]
 })
 export class FileSubmissionComponent implements OnInit {
   referenceNumber: string;

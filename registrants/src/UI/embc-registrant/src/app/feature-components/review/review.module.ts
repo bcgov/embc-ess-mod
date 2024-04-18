@@ -12,7 +12,6 @@ import { CaptchaV2Component } from 'src/app/core/components/captcha-v2/captcha-v
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ReviewComponent, CaptchaV2Component],
   imports: [
     CommonModule,
     MatCardModule,
@@ -22,7 +21,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CoreModule,
     RecaptchaFormsModule,
     RecaptchaModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ReviewComponent,
+    CaptchaV2Component
   ],
   exports: [ReviewComponent]
 })

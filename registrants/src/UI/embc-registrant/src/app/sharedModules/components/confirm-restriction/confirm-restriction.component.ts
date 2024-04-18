@@ -4,11 +4,15 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { RestrictionService } from '../../../feature-components/restriction/restriction.service';
+import { MatButtonModule } from '@angular/material/button';
+import { RestrictionFormComponent } from '../../forms/restriction-form/restriction-form.component';
 
 @Component({
   selector: 'app-confirm-restriction',
   templateUrl: './confirm-restriction.component.html',
-  styleUrls: ['./confirm-restriction.component.scss']
+  styleUrls: ['./confirm-restriction.component.scss'],
+  standalone: true,
+  imports: [RestrictionFormComponent, MatButtonModule]
 })
 export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;

@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RestrictionFormModule } from '../../sharedModules/forms/restriction-form/restriction-form.module';
 
 @NgModule({
-  declarations: [RestrictionComponent],
   imports: [
     CommonModule,
     RestrictionRoutingModule,
@@ -17,7 +16,8 @@ import { RestrictionFormModule } from '../../sharedModules/forms/restriction-for
     MatButtonModule,
     MatRadioModule,
     ReactiveFormsModule,
-    RestrictionFormModule
+    RestrictionFormModule,
+    RestrictionComponent
   ]
 })
 export class RestrictionModule {}

@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,11 +12,23 @@ import { FormCreationService } from '../../../../core/services/formCreation.serv
 import { CustomPipeModule } from '../../../../core/pipe/customPipe.module';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
+import { BcAddressComponent } from '../../address-forms/bc-address/bc-address.component';
 
 @Component({
   selector: 'app-evac-address',
   templateUrl: './evac-address.component.html',
-  styleUrls: ['./evac-address.component.scss']
+  styleUrls: ['./evac-address.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCardModule,
+    NgIf,
+    MatRadioModule,
+    MatFormFieldModule,
+    BcAddressComponent,
+    NgFor,
+    AsyncPipe
+  ]
 })
 export default class EvacAddressComponent implements OnInit {
   primaryAddressForm: UntypedFormGroup;
@@ -85,8 +97,8 @@ export default class EvacAddressComponent implements OnInit {
     ReactiveFormsModule,
     MatRadioModule,
     CustomPipeModule,
-    AddressFormsModule
-  ],
-  declarations: [EvacAddressComponent]
+    AddressFormsModule,
+    EvacAddressComponent
+  ]
 })
 class EvacAddressModule {}

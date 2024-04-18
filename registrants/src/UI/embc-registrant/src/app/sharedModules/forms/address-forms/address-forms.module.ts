@@ -11,14 +11,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [BcAddressComponent, CanAddressComponent, UsaAddressComponent, OtherAddressComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatSelectModule
+    MatSelectModule,
+    BcAddressComponent,
+    CanAddressComponent,
+    UsaAddressComponent,
+    OtherAddressComponent
   ],
   exports: [BcAddressComponent, CanAddressComponent, UsaAddressComponent, OtherAddressComponent]
 })

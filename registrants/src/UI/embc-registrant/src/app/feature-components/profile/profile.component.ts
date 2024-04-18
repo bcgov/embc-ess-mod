@@ -3,7 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -11,11 +11,26 @@ import { ProfileDataService } from './profile-data.service';
 import { ProfileService } from './profile.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { SecurityQuestion } from 'src/app/core/api/models';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { ReviewComponent } from '../review/review.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    NgFor,
+    NgIf,
+    ComponentWrapperComponent,
+    MatButtonModule,
+    ReviewComponent,
+    AppLoaderComponent
+  ]
 })
 export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('profileStepper') profileStepper: MatStepper;

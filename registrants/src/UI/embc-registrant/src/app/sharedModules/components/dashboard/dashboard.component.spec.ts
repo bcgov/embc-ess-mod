@@ -10,8 +10,7 @@ describe('ViewAuthProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, DashboardComponent],
       providers: [FormCreationService]
     }).compileComponents();
   }));

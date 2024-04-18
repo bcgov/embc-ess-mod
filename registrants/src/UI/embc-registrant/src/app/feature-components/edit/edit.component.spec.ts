@@ -9,8 +9,7 @@ describe('EditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EditComponent],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, EditComponent]
     }).compileComponents();
   }));
 

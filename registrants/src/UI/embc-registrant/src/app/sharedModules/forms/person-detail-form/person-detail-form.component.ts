@@ -1,13 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AbstractControl, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import * as globalConst from '../../../core/services/globalConstants';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-person-detail-form',
   templateUrl: './person-detail-form.component.html',
-  styleUrls: ['./person-detail-form.component.scss']
+  styleUrls: ['./person-detail-form.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatOptionModule,
+    NgFor
+  ]
 })
 export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: UntypedFormGroup;

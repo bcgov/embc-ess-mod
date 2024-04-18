@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, Inject, ChangeDetectorRef, AfterViewChecked, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,11 +14,33 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { Country, LocationService } from 'src/app/core/services/location.service';
+import { OtherAddressComponent } from '../../address-forms/other-address/other-address.component';
+import { UsaAddressComponent } from '../../address-forms/usa-address/usa-address.component';
+import { CanAddressComponent } from '../../address-forms/can-address/can-address.component';
+import { MatOptionModule } from '@angular/material/core';
+import { BcAddressComponent } from '../../address-forms/bc-address/bc-address.component';
 
 @Component({
   selector: 'app-address',
   templateUrl: './address.component.html',
-  styleUrls: ['./address.component.scss']
+  styleUrls: ['./address.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatRadioModule,
+    NgFor,
+    NgIf,
+    BcAddressComponent,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    CanAddressComponent,
+    UsaAddressComponent,
+    OtherAddressComponent,
+    AsyncPipe
+  ]
 })
 export default class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   primaryAddressForm: UntypedFormGroup;
@@ -187,8 +209,8 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
     ReactiveFormsModule,
     MatRadioModule,
     AddressFormsModule,
-    MatAutocompleteModule
-  ],
-  declarations: [AddressComponent]
+    MatAutocompleteModule,
+    AddressComponent
+  ]
 })
 class AddressModule {}

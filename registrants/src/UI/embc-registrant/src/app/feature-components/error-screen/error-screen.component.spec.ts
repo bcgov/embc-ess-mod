@@ -9,8 +9,7 @@ describe('ErrorScreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [ErrorScreenComponent]
+      imports: [RouterTestingModule, ErrorScreenComponent]
     }).compileComponents();
   });
 

@@ -8,14 +8,15 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-family-information-pets',
   templateUrl: './family-information-pets.component.html',
-  styleUrls: ['./family-information-pets.component.scss']
+  styleUrls: ['./family-information-pets.component.scss'],
+  standalone: true,
+  imports: [FamilyInformationComponent, PetsComponent]
 })
 export default class FamilyInformationPetsComponent {
   public formGroup = new FormGroup({});
 }
 
 @NgModule({
-  imports: [FamilyInformationModule, PetsModule],
-  declarations: [FamilyInformationPetsComponent]
+  imports: [FamilyInformationModule, PetsModule, FamilyInformationPetsComponent]
 })
 class FamilyInformationPetsModule {}

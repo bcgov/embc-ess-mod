@@ -11,8 +11,7 @@ describe('NonVerifiedRegistrationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NonVerifiedRegistrationComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, NonVerifiedRegistrationComponent],
       providers: [UntypedFormBuilder]
     }).compileComponents();
   }));

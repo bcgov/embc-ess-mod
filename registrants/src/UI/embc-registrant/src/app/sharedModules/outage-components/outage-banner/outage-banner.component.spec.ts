@@ -17,8 +17,13 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
-      declarations: [OutageBannerComponent],
+      imports: [
+        MatDialogModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        OAuthModule.forRoot(),
+        OutageBannerComponent
+      ],
       providers: [
         OutageComponent,
         {

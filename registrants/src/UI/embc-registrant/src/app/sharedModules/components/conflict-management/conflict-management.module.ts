@@ -13,7 +13,6 @@ import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
-  declarations: [ConflictManagementComponent],
   imports: [
     CommonModule,
     ConflictManagementRoutingModule,
@@ -24,7 +23,8 @@ import { CoreModule } from '../../../core/core.module';
     MatSelectModule,
     MatAutocompleteModule,
     CustomPipeModule,
-    CoreModule
+    CoreModule,
+    ConflictManagementComponent
   ]
 })
 export class ConflictManagementModule {}

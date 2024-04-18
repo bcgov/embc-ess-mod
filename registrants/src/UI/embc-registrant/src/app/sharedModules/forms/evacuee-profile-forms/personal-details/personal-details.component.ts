@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf, NgFor } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,11 +14,23 @@ import { DirectivesModule } from '../../../../core/directives/directives.module'
 // import { TextMaskModule } from 'angular2-text-mask';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { Router } from '@angular/router';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-personal-details',
   templateUrl: './personal-details.component.html',
-  styleUrls: ['./personal-details.component.scss']
+  styleUrls: ['./personal-details.component.scss'],
+  standalone: true,
+  imports: [
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatSelectModule,
+    MatOptionModule,
+    NgFor
+  ]
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: UntypedFormGroup;
@@ -73,9 +85,9 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
-    DirectivesModule
+    DirectivesModule,
     // TextMaskModule
-  ],
-  declarations: [PersonalDetailsComponent]
+    PersonalDetailsComponent
+  ]
 })
 class PersonalDetailsModule {}

@@ -11,8 +11,7 @@ describe('FileSubmissionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [FileSubmissionComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule]
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, FileSubmissionComponent]
     }).compileComponents();
   }));
 

@@ -11,8 +11,7 @@ describe('SecretComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SecretComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, SecretComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

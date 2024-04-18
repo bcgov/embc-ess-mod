@@ -18,14 +18,14 @@ describe('VerifiedRegistrationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [VerifiedRegistrationComponent],
       imports: [
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         NgIdleKeepaliveModule.forRoot(),
         MatDialogModule,
-        OAuthModule.forRoot()
+        OAuthModule.forRoot(),
+        VerifiedRegistrationComponent
       ],
       providers: [
         UntypedFormBuilder,

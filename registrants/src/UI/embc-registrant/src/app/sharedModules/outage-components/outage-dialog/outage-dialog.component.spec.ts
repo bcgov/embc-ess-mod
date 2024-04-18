@@ -8,8 +8,7 @@ describe('OutageDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule],
-      declarations: [OutageDialogComponent],
+      imports: [MatDialogModule, OutageDialogComponent],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: MatDialogRef, useValue: {} }

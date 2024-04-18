@@ -11,7 +11,6 @@ import { ReviewModule } from '../review/review.module';
 import { CoreModule } from '../../core/core.module';
 
 @NgModule({
-  declarations: [ProfileComponent],
   imports: [
     CommonModule,
     ProfileRoutingModule,
@@ -21,7 +20,8 @@ import { CoreModule } from '../../core/core.module';
     MatAutocompleteModule,
     ComponentWrapperModule,
     ReviewModule,
-    CoreModule
+    CoreModule,
+    ProfileComponent
   ]
 })
 export class ProfileModule {}

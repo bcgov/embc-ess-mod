@@ -12,10 +12,20 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
 import { ConfigService } from './core/services/config.service';
 
-@Component({ selector: 'app-header', template: '' })
+@Component({
+  selector: 'app-header',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule]
+})
 class HeaderStubComponent {}
 
-@Component({ selector: 'app-footer', template: '' })
+@Component({
+  selector: 'app-footer',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule]
+})
 class FooterStubComponent {}
 
 @Component({ selector: 'app-environment-banner', template: '' })
@@ -36,14 +46,12 @@ describe('AppComponent', () => {
         RouterTestingModule,
         OAuthModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
-        MatDialogModule
-      ],
-      declarations: [
-        AppComponent,
+        MatDialogModule,
         HeaderStubComponent,
         FooterStubComponent
         // EnvironmentBannerStubComponent
       ],
+      declarations: [AppComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         AppComponent,

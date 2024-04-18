@@ -10,8 +10,7 @@ describe('NeedsAssessmentComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NeedsAssessmentComponent],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, NeedsAssessmentComponent],
       providers: [ComponentCreationService, FormCreationService]
     }).compileComponents();
   }));

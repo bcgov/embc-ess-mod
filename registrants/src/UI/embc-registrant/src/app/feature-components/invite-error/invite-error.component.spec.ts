@@ -9,8 +9,7 @@ describe('InviteErrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InviteErrorComponent],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, InviteErrorComponent]
     }).compileComponents();
   });
 

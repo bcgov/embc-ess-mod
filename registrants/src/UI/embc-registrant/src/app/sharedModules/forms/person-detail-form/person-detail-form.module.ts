@@ -12,7 +12,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
-  declarations: [PersonDetailFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -21,8 +20,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatInputModule,
     MatSelectModule,
     DirectivesModule,
-    MatCheckboxModule
+    MatCheckboxModule,
     // TextMaskModule
+    PersonDetailFormComponent
   ],
   exports: [PersonDetailFormComponent]
 })

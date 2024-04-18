@@ -9,7 +9,6 @@ import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing
 import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
-  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
@@ -17,7 +16,8 @@ import { CoreModule } from 'src/app/core/core.module';
     ProfileRoutingModule,
     MatCardModule,
     MatTabsModule,
-    CoreModule
+    CoreModule,
+    DashboardComponent
   ]
 })
 export class DashboardModule {}

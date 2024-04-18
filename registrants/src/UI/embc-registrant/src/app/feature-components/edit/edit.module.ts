@@ -11,7 +11,6 @@ import { RestrictionFormModule } from '../../sharedModules/forms/restriction-for
 import { CoreModule } from '../../core/core.module';
 
 @NgModule({
-  declarations: [EditComponent],
   imports: [
     CommonModule,
     EditRoutingModule,
@@ -21,7 +20,8 @@ import { CoreModule } from '../../core/core.module';
     MatAutocompleteModule,
     MatButtonModule,
     RestrictionFormModule,
-    CoreModule
+    CoreModule,
+    EditComponent
   ]
 })
 export class EditModule {}
