@@ -67,12 +67,14 @@
 </div>
 <div class="container" style="padding-bottom: 50px">
   <app-alert></app-alert>
-  <nav mat-tab-nav-bar dynamicHeight>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" dynamicHeight>
     <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
       <img class="inactive-curr" [src]="tabItem.inactiveImage" height="15" width="15" />
       <img class="active-curr" [src]="tabItem.activeImage" height="15" width="15" />
       &nbsp;&nbsp; {{ tabItem.label }}
     </a>
   </nav>
-  <router-outlet></router-outlet>
+  <mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </div>
