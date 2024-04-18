@@ -111,6 +111,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
         public SupportDelivery SupportDelivery { get; set; }
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
+        public bool IsSelfServe { get; set; }
     }
 
     public enum SupportType
