@@ -10,7 +10,7 @@
     <div class="col-md-12">
       <p class="p-margin">
         We have you as currently evacuated from
-        <span class="community-name">{{ essFileData?.evacuatedAddress?.community?.name }}</span
+        <span class="community-name">{{ essFileDataAsModel?.evacuatedAddress?.community?.name }}</span
         >, has your situation changed?
       </p>
     </div>
@@ -37,7 +37,7 @@
     <div class="col-md-12">
       <p class="highlighted-subtitle">
         Your Emergency Support Services (ESS) File Number is:
-        <b>{{ essFileData }}</b>
+        <b>{{ essFileDataAsString }}</b>
       </p>
       <p>Thank you for submitting your online self-registration.</p>
       <p class="highlighted-paragraph">Next Steps</p>

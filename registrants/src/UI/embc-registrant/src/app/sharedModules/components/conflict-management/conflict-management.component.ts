@@ -41,9 +41,9 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   showLoader = false;
   isSubmitted = false;
   form: UntypedFormGroup;
-  nameConflict: ProfileDataConflict;
-  dobConflict: ProfileDataConflict;
-  addressConflict: ProfileDataConflict;
+  nameConflict: any;
+  dobConflict: any;
+  addressConflict: any;
   profile: Profile;
 
   constructor(

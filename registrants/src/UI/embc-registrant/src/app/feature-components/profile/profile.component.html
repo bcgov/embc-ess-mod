@@ -40,7 +40,7 @@
             </button>
           </div>
           <div class="col-md-6">
-            @if (currentFlow === 'verified-registration' && step.component === 'secret') {
+            @if (currentFlow === 'verified-registration' && getAsString(step.component) === 'secret') {
               <button
                 class="button-p"
                 mat-stroked-button

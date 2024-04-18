@@ -9,7 +9,8 @@ import { NgComponentOutlet } from '@angular/common';
   templateUrl: './component-wrapper.component.html',
   styleUrls: ['./component-wrapper.component.scss'],
   standalone: true,
-  imports: [NgComponentOutlet]
+  imports: [NgComponentOutlet],
+  providers: [UntypedFormBuilder]
 })
 export class ComponentWrapperComponent implements OnInit {
   @Input() componentName: string;

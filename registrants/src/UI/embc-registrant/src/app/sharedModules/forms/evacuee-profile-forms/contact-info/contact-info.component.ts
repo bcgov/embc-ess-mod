@@ -23,6 +23,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -39,14 +40,15 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule]
+  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule, NgxMaskDirective]
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
   formBuilder: UntypedFormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  // readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = '000-000-0000';
   emailMatcher = new CustomErrorMailMatcher();
 
   constructor(

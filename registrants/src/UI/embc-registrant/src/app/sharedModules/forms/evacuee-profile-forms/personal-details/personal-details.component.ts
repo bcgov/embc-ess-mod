@@ -15,13 +15,22 @@ import { Subscription } from 'rxjs';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { Router } from '@angular/router';
 import { MatOptionModule } from '@angular/material/core';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-personal-details',
   templateUrl: './personal-details.component.html',
   styleUrls: ['./personal-details.component.scss'],
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule]
+  imports: [
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    NgxMaskDirective
+  ]
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: UntypedFormGroup;
@@ -29,7 +38,8 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  // readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  readonly dateMask = 'M0/d0/0000';
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
   createVerifiedProfile = '/verified-registration/create-profile';
   disableFields = false;

@@ -16,6 +16,14 @@ export class EssFileDialogComponent {
   @Input() initDialog: boolean;
   @Output() outputEvent = new EventEmitter<string>();
 
+  get essFileDataAsString() {
+    return this.essFileData as string;
+  }
+
+  get essFileDataAsModel() {
+    return this.essFileData as EvacuationFileModel;
+  }
+
   cancel() {
     this.outputEvent.emit('close');
   }
