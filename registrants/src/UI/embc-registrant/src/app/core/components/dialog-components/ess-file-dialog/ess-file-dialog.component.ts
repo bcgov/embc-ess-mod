@@ -1,21 +1,28 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-ess-file-dialog',
   templateUrl: './ess-file-dialog.component.html',
-  styleUrls: ['./ess-file-dialog.component.scss']
+  styleUrls: ['./ess-file-dialog.component.scss'],
+  standalone: true,
+  imports: [MatButtonModule]
 })
-export class EssFileDialogComponent implements OnInit {
+export class EssFileDialogComponent {
   @Input() essFileData: EvacuationFileModel | string;
   @Input() content: DialogContent;
   @Input() initDialog: boolean;
   @Output() outputEvent = new EventEmitter<string>();
 
-  constructor() {}
+  get essFileDataAsString() {
+    return this.essFileData as string;
+  }
 
-  ngOnInit(): void {}
+  get essFileDataAsModel() {
+    return this.essFileData as EvacuationFileModel;
+  }
 
   cancel() {
     this.outputEvent.emit('close');

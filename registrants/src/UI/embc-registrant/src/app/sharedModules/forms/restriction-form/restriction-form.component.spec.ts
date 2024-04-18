@@ -8,7 +8,7 @@ describe('RestrictionFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [RestrictionFormComponent]
+      imports: [RestrictionFormComponent]
     }).compileComponents();
   }));
 

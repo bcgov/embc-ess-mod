@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConfirmRestrictionComponent } from './confirm-restriction.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from '../../../core/services/formCreation.service';
+import { provideRouter } from '@angular/router';
 
 describe('ConfirmRestrictionComponent', () => {
   let component: ConfirmRestrictionComponent;
@@ -11,9 +11,8 @@ describe('ConfirmRestrictionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfirmRestrictionComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
-      providers: [UntypedFormBuilder, FormCreationService]
+      imports: [ReactiveFormsModule, ConfirmRestrictionComponent],
+      providers: [UntypedFormBuilder, FormCreationService, provideRouter([])]
     }).compileComponents();
   }));
 

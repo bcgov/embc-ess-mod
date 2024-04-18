@@ -2,13 +2,16 @@ import { ViewChild } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule]
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @ViewChild('target', { read: ViewContainerRef, static: true })

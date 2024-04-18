@@ -5,13 +5,27 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileStatus, Support } from 'src/app/core/api/models';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass, AsyncPipe } from '@angular/common';
+import { MaskEvacuatedAddressPipe } from '../../../../core/pipe/maskEvacuatedAddress.pipe';
+import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
+import { ReviewComponent } from '../../../../feature-components/review/review.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCardModule,
+    NgClass,
+    ReviewComponent,
+    ReferralDetailsComponent,
+    AsyncPipe,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   @Input() allExpandState = false;

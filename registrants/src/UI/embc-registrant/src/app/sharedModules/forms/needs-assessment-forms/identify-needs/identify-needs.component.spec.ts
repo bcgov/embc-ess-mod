@@ -9,8 +9,7 @@ describe('IdentifyNeedsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [IdentifyNeedsComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, IdentifyNeedsComponent],
       providers: [UntypedFormBuilder]
     }).compileComponents();
   }));

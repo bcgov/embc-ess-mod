@@ -9,6 +9,10 @@ import {
 import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
 import { LocationService } from 'src/app/core/services/location.service';
 import { SupportsService } from 'src/app/core/services/supports.service';
+import { MaskSupplierAddressPipe } from '../../../../core/pipe/maskSupplierAddress.pipe';
+import { NgClass, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-referral-details',
@@ -21,7 +25,9 @@ import { SupportsService } from 'src/app/core/services/supports.service';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatExpansionModule, MatTableModule, NgClass, TitleCasePipe, DatePipe, MaskSupplierAddressPipe]
 })
 export class ReferralDetailsComponent implements OnInit {
   @Input() referralDataSource: Support[];

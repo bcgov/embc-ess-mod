@@ -8,7 +8,7 @@ describe('PetFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PetFormComponent]
+      imports: [PetFormComponent]
     }).compileComponents();
   }));
 

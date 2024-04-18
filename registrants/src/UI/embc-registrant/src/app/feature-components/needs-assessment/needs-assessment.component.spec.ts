@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NeedsAssessmentComponent } from './needs-assessment.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { FormCreationService } from '../../core/services/formCreation.service';
+import { provideRouter } from '@angular/router';
 
 describe('NeedsAssessmentComponent', () => {
   let component: NeedsAssessmentComponent;
@@ -10,9 +10,8 @@ describe('NeedsAssessmentComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NeedsAssessmentComponent],
-      imports: [RouterTestingModule],
-      providers: [ComponentCreationService, FormCreationService]
+      imports: [NeedsAssessmentComponent],
+      providers: [ComponentCreationService, FormCreationService, provideRouter([])]
     }).compileComponents();
   }));
 

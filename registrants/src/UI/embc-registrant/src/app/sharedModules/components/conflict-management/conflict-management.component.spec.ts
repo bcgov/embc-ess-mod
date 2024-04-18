@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConflictManagementComponent } from './conflict-management.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('ConflictManagementComponent', () => {
   let component: ConflictManagementComponent;
@@ -9,8 +9,8 @@ describe('ConflictManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConflictManagementComponent],
-      imports: [RouterTestingModule.withRoutes([])]
+      imports: [ConflictManagementComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

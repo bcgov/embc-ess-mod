@@ -13,7 +13,7 @@
     >
   </div>
 </div>
-<mat-card class="detailsCard">
+<mat-card appearance="outlined" class="detailsCard">
   <div class="row evacFileHeader">
     <div class="col-md-9 titleDetailHeader">
       <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
@@ -44,30 +44,30 @@
       </div>
     </div>
   </div>
-  <div *ngIf="referralData?.size === 0; else referrals">
-    <app-review
-      [type]="type"
-      [showHeading]="false"
-      [currentFlow]="currentFlow"
-      [parentPageName]="parentPageName"
-      [allowEdit]="allowEdition()"
-    >
-    </app-review>
-    <div class="supportReceived">
-      <p class="titleDetailHeader">Supports Received</p>
-      <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-      <p class="supportReceivedRegSpan">
-        Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.
-      </p>
+  @if (referralData?.size === 0) {
+    <div>
+      <app-review
+        [type]="type"
+        [showHeading]="false"
+        [currentFlow]="currentFlow"
+        [parentPageName]="parentPageName"
+        [allowEdit]="allowEdition()"
+      >
+      </app-review>
+      <div class="supportReceived">
+        <p class="titleDetailHeader">Supports Received</p>
+        <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
+        <p class="supportReceivedRegSpan">
+          Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.
+        </p>
+      </div>
     </div>
-  </div>
-  <ng-template #referrals>
+  } @else {
     <mat-card-content class="contentCard">
       <div class="row justify-content-between">
         <div class="col-md-6 card-heading">Event Details</div>
       </div>
       <hr />
-
       <div class="row info-detail">
         <div class="col-md-3">Evacuated From:</div>
         <div class="col-md-3 evacuatedAddress">
@@ -108,14 +108,15 @@
         </div>
       </div>
       <br />
-      <app-referral-details
-        *ngFor="let key of referralData.keys()"
-        [referralDataSource]="referralData.get(key)"
-        [referralsDate]="key"
-        [allExpandState]="allExpandState"
-        (allExpandStateUpdate)="allExpandState = $event"
-      >
-      </app-referral-details>
+      @for (key of referralData.keys(); track key) {
+        <app-referral-details
+          [referralDataSource]="referralData.get(key)"
+          [referralsDate]="key"
+          [allExpandState]="allExpandState"
+          (allExpandStateUpdate)="allExpandState = $event"
+        >
+        </app-referral-details>
+      }
     </mat-card-content>
-  </ng-template>
+  }
 </mat-card>

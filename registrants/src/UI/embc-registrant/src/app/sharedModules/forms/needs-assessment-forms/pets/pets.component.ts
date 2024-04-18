@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,13 +11,16 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { PetFormModule } from '../../pet-form/pet-form.module';
+
 import * as globalConst from '../../../../core/services/globalConstants';
+import { PetFormComponent } from '../../pet-form/pet-form.component';
 
 @Component({
   selector: 'app-pets',
   templateUrl: './pets.component.html',
-  styleUrls: ['./pets.component.scss']
+  styleUrls: ['./pets.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatCardModule, MatTableModule, NgClass, MatButtonModule, PetFormComponent]
 })
 export default class PetsComponent implements OnInit {
   petsForm: UntypedFormGroup;
@@ -116,21 +119,3 @@ export default class PetsComponent implements OnInit {
     this.petsForm.get('pet.quantity').updateValueAndValidity();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    MatTableModule,
-    MatIconModule,
-    PetFormModule
-  ],
-  declarations: [PetsComponent],
-  exports: [PetsComponent]
-})
-export class PetsModule {}

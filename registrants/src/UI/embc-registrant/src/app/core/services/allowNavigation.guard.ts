@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, RoutesRecognized, UrlTree } from '@angular/router';
+import { Router, RoutesRecognized, UrlTree } from '@angular/router';
 import { ProfileMappingService } from '../../feature-components/profile/profile-mapping.service';
 import { filter, pairwise } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AllowNavigationGuard implements CanActivate {
+export class AllowNavigationGuard {
   private fromUrl: string;
 
   constructor(

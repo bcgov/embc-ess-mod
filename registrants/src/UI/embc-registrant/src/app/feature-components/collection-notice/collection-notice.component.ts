@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-collection-notice',
   templateUrl: './collection-notice.component.html',
-  styleUrls: ['./collection-notice.component.scss']
+  styleUrls: ['./collection-notice.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, MatButtonModule]
 })
 export class CollectionNoticeComponent implements OnInit {
   currentFlow: string;
