@@ -4,11 +4,15 @@ import { UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { RestrictionService } from './restriction.service';
+import { MatButtonModule } from '@angular/material/button';
+import { RestrictionFormComponent } from '../../sharedModules/forms/restriction-form/restriction-form.component';
 
 @Component({
   selector: 'app-restriction',
   templateUrl: './restriction.component.html',
-  styleUrls: ['./restriction.component.scss']
+  styleUrls: ['./restriction.component.scss'],
+  standalone: true,
+  imports: [RestrictionFormComponent, MatButtonModule]
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;

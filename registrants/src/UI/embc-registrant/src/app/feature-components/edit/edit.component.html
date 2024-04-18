@@ -7,13 +7,13 @@
   <div class="row">
     <div class="col-12 content-container">
       <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
-      <app-restriction-form *ngIf="componentToLoad === 'restriction'" [restrictionForm]="form"> </app-restriction-form>
-      <app-component-wrapper
-        *ngIf="componentToLoad !== 'restriction'"
-        [componentName]="componentToLoad"
-        [folderPath]="profileFolderPath"
-      >
-      </app-component-wrapper>
+      @if (componentToLoad === 'restriction') {
+        <app-restriction-form [restrictionForm]="form"> </app-restriction-form>
+      }
+      @if (componentToLoad !== 'restriction') {
+        <app-component-wrapper [componentName]="componentToLoad" [folderPath]="profileFolderPath">
+        </app-component-wrapper>
+      }
       <br />
       <br />
       <div class="row justify-content-between resp-style">

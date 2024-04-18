@@ -10,8 +10,7 @@ describe('PetsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PetsComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, PetsComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,18 +9,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
+import { PersonDetailFormComponent } from '../../person-detail-form/person-detail-form.component';
 
 @Component({
   selector: 'app-family-information',
   templateUrl: './family-information.component.html',
-  styleUrls: ['./family-information.component.scss']
+  styleUrls: ['./family-information.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatCardModule, MatTableModule, MatButtonModule, PersonDetailFormComponent]
 })
 export default class FamilyInformationComponent implements OnInit {
   householdMemberForm: UntypedFormGroup;
@@ -134,21 +137,3 @@ export default class FamilyInformationComponent implements OnInit {
     this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    PersonDetailFormModule,
-    MatTableModule,
-    MatIconModule
-  ],
-  declarations: [FamilyInformationComponent],
-  exports: [FamilyInformationComponent]
-})
-export class FamilyInformationModule {}

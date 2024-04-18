@@ -11,11 +11,17 @@ import { ProfileService } from '../profile/profile.service';
 import { EditService } from './edit.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { AppSessionService } from 'src/app/core/services/appSession.service';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
+import { RestrictionFormComponent } from '../../sharedModules/forms/restriction-form/restriction-form.component';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  styleUrls: ['./edit.component.scss'],
+  standalone: true,
+  imports: [RestrictionFormComponent, ComponentWrapperComponent, MatButtonModule, AppLoaderComponent]
 })
 export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;

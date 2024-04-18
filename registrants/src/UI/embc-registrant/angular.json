@@ -66,26 +66,26 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "embc-registrant:build"
+            "buildTarget": "embc-registrant:build"
           },
           "configurations": {
             "local": {
-              "browserTarget": "embc-registrant:build:local",
-              "proxyConfig": "proxy.conf.json"
+              "proxyConfig": "proxy.conf.json",
+              "buildTarget": "embc-registrant:build:local"
             },
             "dev": {
-              "browserTarget": "embc-registrant:build:local",
-              "proxyConfig": "proxy.dev.conf.json"
+              "proxyConfig": "proxy.dev.conf.json",
+              "buildTarget": "embc-registrant:build:local"
             },
             "production": {
-              "browserTarget": "embc-registrant:build:production"
+              "buildTarget": "embc-registrant:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "embc-registrant:build"
+            "buildTarget": "embc-registrant:build"
           }
         },
         "test": {
@@ -121,8 +121,15 @@
       }
     }
   },
-  "defaultProject": "embc-registrant",
   "cli": {
     "analytics": false
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
   }
 }

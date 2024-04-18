@@ -2,11 +2,15 @@ import { Component, OnInit, Input, Injector } from '@angular/core';
 import { from } from 'rxjs';
 import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../core/services/formCreation.service';
+import { NgComponentOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-component-wrapper',
   templateUrl: './component-wrapper.component.html',
-  styleUrls: ['./component-wrapper.component.scss']
+  styleUrls: ['./component-wrapper.component.scss'],
+  standalone: true,
+  imports: [NgComponentOutlet],
+  providers: [UntypedFormBuilder]
 })
 export class ComponentWrapperComponent implements OnInit {
   @Input() componentName: string;

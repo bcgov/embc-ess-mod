@@ -10,8 +10,7 @@ describe('PersonalDetailsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PersonalDetailsComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, PersonalDetailsComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

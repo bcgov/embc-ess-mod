@@ -8,7 +8,7 @@ describe('PersonDetailFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PersonDetailFormComponent]
+      imports: [PersonDetailFormComponent]
     }).compileComponents();
   }));
 

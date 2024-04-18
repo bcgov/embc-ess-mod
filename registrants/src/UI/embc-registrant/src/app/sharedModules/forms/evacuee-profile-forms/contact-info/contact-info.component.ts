@@ -8,7 +8,7 @@ import {
   NgForm,
   FormGroupDirective
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -17,12 +17,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DirectivesModule } from '../../../../core/directives/directives.module';
-import { TextMaskModule } from 'angular2-text-mask';
+
+// import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -37,14 +38,17 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.scss']
+  styleUrls: ['./contact-info.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule, NgxMaskDirective]
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
   formBuilder: UntypedFormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  // readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = '000-000-0000';
   emailMatcher = new CustomErrorMailMatcher();
 
   constructor(
@@ -127,20 +131,3 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     this.contactInfoForm$.unsubscribe();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    DirectivesModule,
-    TextMaskModule,
-    MatRadioModule
-  ],
-  declarations: [ContactInfoComponent]
-})
-class ContactInfoModule {}

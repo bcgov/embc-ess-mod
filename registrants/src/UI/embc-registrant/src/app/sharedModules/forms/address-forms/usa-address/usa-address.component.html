@@ -4,11 +4,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
         <input [formControlName]="'addressLine1'" matInput maxlength="100" placeholder="Address Line 1" required />
-        <mat-error
-          *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')"
-        >
-          Address Line 1 is required</mat-error
-        >
+        @if (addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')) {
+          <mat-error> Address Line 1 is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -27,9 +25,9 @@
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
         <input maxlength="100" [formControlName]="'community'" matInput placeholder="City" required />
-        <mat-error *ngIf="addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')">
-          City is required</mat-error
-        >
+        @if (addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')) {
+          <mat-error> City is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -40,11 +38,11 @@
         <mat-label>Zip Code</mat-label>
         <input [formControlName]="'postalCode'" matInput placeholder="Zip Code" />
         <!-- <mat-error
-                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
-                        Zip Code is required</mat-error> -->
-        <mat-error *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
-          Zip Code is invalid</mat-error
-        >
+            *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
+          Zip Code is required</mat-error> -->
+        @if (addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')) {
+          <mat-error> Zip Code is invalid</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -55,16 +53,18 @@
         <mat-label class="requiredField">State</mat-label>
         <input type="text" [formControlName]="'stateProvince'" matInput placeholder="State" [matAutocomplete]="auto" />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="stateDisplayFn">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{ option.name }}
-          </mat-option>
+          @for (option of filteredOptions | async; track option) {
+            <mat-option [value]="option">
+              {{ option.name }}
+            </mat-option>
+          }
         </mat-autocomplete>
-        <mat-error
-          *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')"
-        >
-          State is required</mat-error
-        >
-        <mat-error *ngIf="validateState()"> State is invalid</mat-error>
+        @if (addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')) {
+          <mat-error> State is required</mat-error>
+        }
+        @if (validateState()) {
+          <mat-error> State is invalid</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>

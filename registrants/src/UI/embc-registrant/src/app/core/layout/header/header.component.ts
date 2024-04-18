@@ -2,11 +2,17 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormCreationService } from '../../services/formCreation.service';
 import { LoginService } from '../../services/login.service';
 import { CacheService } from '../../services/cache.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [MatToolbarModule, MatButtonModule, MatMenuModule, AsyncPipe, UpperCasePipe]
 })
 export class HeaderComponent implements OnInit {
   showLoginMatMenu: boolean;

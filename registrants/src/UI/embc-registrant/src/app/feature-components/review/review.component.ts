@@ -5,11 +5,18 @@ import { FormCreationService } from '../../core/services/formCreation.service';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { UntypedFormGroup } from '@angular/forms';
 import { ShelterType } from 'src/app/core/services/globalConstants';
+import { CustomDate } from '../../core/pipe/customDate.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { CaptchaV2Component } from '../../core/components/captcha-v2/captcha-v2.component';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss']
+  styleUrls: ['./review.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, AsyncPipe, CustomDate]
 })
 export class ReviewComponent implements OnInit {
   @Output() captchaPassed = new EventEmitter<CaptchaResponse>();

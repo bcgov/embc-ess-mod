@@ -1,5 +1,5 @@
 import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { DateOfBirthDataConflict, NameDataConflict, Profile, ProfileDataConflict } from 'src/app/core/api/models';
 import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
@@ -10,11 +10,27 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
 import { LocationService } from 'src/app/core/services/location.service';
 import * as globalConst from '../../../core/services/globalConstants';
+import { ArrayContains } from '../../../core/pipe/arrayContains.pipe';
+import { CustomDate } from '../../../core/pipe/customDate.pipe';
+import { ComponentWrapperComponent } from '../component-wrapper/component-wrapper.component';
+import { AppLoaderComponent } from '../../../core/components/app-loader/app-loader.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-conflict-management',
   templateUrl: './conflict-management.component.html',
-  styleUrls: ['./conflict-management.component.scss']
+  styleUrls: ['./conflict-management.component.scss'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    MatCardModule,
+    MatButtonModule,
+    AppLoaderComponent,
+    ComponentWrapperComponent,
+    CustomDate,
+    ArrayContains
+  ]
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
   @ViewChild('conflictStepper') conflictStepper: MatStepper;
@@ -25,9 +41,9 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   showLoader = false;
   isSubmitted = false;
   form: UntypedFormGroup;
-  nameConflict: ProfileDataConflict;
-  dobConflict: ProfileDataConflict;
-  addressConflict: ProfileDataConflict;
+  nameConflict: any;
+  dobConflict: any;
+  addressConflict: any;
   profile: Profile;
 
   constructor(

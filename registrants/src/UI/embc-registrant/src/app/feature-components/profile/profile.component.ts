@@ -3,19 +3,25 @@ import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
-import { MatStepper } from '@angular/material/stepper';
-import { Subscription } from 'rxjs';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { Observable, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { ProfileDataService } from './profile-data.service';
 import { ProfileService } from './profile.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { SecurityQuestion } from 'src/app/core/api/models';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { ReviewComponent } from '../review/review.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  standalone: true,
+  imports: [MatStepperModule, ComponentWrapperComponent, MatButtonModule, ReviewComponent, AppLoaderComponent]
 })
 export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('profileStepper') profileStepper: MatStepper;
@@ -124,7 +130,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
    * @param isLast stepperIndex
    * @param component current component name
    */
-  goForward(stepper: MatStepper, isLast: boolean, component: string): void {
+  goForward(stepper: MatStepper, isLast: boolean, component: string | Observable<any>): void {
     if (isLast && component === 'review') {
       this.submitFile();
     } else if (this.form.status === 'VALID') {
@@ -134,13 +140,17 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
           this.router.navigate([navigationPath]);
         }
       }
-      this.setFormData(component);
+      this.setFormData(component as string);
       this.form$.unsubscribe();
       stepper.selected.completed = true;
       stepper.next();
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  getAsString(component: string | Observable<any>) {
+    return component as string;
   }
 
   /**
