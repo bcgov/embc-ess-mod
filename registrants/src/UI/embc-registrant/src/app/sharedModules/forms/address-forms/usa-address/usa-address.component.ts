@@ -5,7 +5,7 @@ import { startWith, map } from 'rxjs/operators';
 import { LocationService, StateProvince } from 'src/app/core/services/location.service';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -18,12 +18,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatAutocompleteModule,
-    NgFor,
     MatOptionModule,
     AsyncPipe
-  ]
+]
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

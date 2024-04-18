@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, Output } from '@angular/core';
-import { CommonModule, NgIf, NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +20,7 @@ import { PetFormComponent } from '../../pet-form/pet-form.component';
   templateUrl: './pets.component.html',
   styleUrls: ['./pets.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, NgIf, MatTableModule, NgClass, MatButtonModule, PetFormComponent]
+  imports: [ReactiveFormsModule, MatCardModule, MatTableModule, NgClass, MatButtonModule, PetFormComponent]
 })
 export default class PetsComponent implements OnInit {
   petsForm: UntypedFormGroup;

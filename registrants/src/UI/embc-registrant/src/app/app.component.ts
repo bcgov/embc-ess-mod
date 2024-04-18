@@ -14,7 +14,7 @@ import { AlertComponent } from './core/components/alert/alert.component';
 import { HeaderComponent } from './core/layout/header/header.component';
 import { EnvironmentBannerComponent } from './core/layout/environment-banner/environment-banner.component';
 import { OutageBannerComponent } from './sharedModules/outage-components/outage-banner/outage-banner.component';
-import { NgIf, NgStyle, AsyncPipe } from '@angular/common';
+import { NgStyle, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,6 @@ import { NgIf, NgStyle, AsyncPipe } from '@angular/common';
   styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [
-    NgIf,
     OutageBannerComponent,
     EnvironmentBannerComponent,
     HeaderComponent,
@@ -32,7 +31,7 @@ import { NgIf, NgStyle, AsyncPipe } from '@angular/common';
     FooterComponent,
     AppLoaderComponent,
     AsyncPipe
-  ]
+]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

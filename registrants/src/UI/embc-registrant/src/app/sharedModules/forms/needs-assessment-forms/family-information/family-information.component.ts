@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { PersonDetailFormComponent } from '../../person-detail-form/person-detai
   templateUrl: './family-information.component.html',
   styleUrls: ['./family-information.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, NgIf, MatTableModule, MatButtonModule, PersonDetailFormComponent]
+  imports: [ReactiveFormsModule, MatCardModule, MatTableModule, MatButtonModule, PersonDetailFormComponent]
 })
 export default class FamilyInformationComponent implements OnInit {
   householdMemberForm: UntypedFormGroup;

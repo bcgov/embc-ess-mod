@@ -15,14 +15,14 @@ import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 import { RestrictionFormComponent } from '../../sharedModules/forms/restriction-form/restriction-form.component';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
   standalone: true,
-  imports: [NgIf, RestrictionFormComponent, ComponentWrapperComponent, MatButtonModule, AppLoaderComponent]
+  imports: [RestrictionFormComponent, ComponentWrapperComponent, MatButtonModule, AppLoaderComponent]
 })
 export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;

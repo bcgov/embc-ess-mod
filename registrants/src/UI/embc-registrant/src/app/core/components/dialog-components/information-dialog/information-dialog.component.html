@@ -3,11 +3,15 @@
 </div>
 
 <div class="row button-row justify-content-between">
-  <button class="button-s button-width" mat-button (click)="cancel()" *ngIf="content?.cancelButton">
-    {{ content?.cancelButton }}
-  </button>
+  @if (content?.cancelButton) {
+    <button class="button-s button-width" mat-button (click)="cancel()">
+      {{ content?.cancelButton }}
+    </button>
+  }
 
-  <button class="button-p button-width confirm-button" mat-button (click)="confirm()" *ngIf="content?.confirmButton">
-    {{ content?.confirmButton }}
-  </button>
+  @if (content?.confirmButton) {
+    <button class="button-p button-width confirm-button" mat-button (click)="confirm()">
+      {{ content?.confirmButton }}
+    </button>
+  }
 </div>

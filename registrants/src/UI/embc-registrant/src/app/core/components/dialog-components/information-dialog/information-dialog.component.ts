@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-information-dialog',
   templateUrl: './information-dialog.component.html',
   styleUrls: ['./information-dialog.component.scss'],
   standalone: true,
-  imports: [NgIf, MatButtonModule]
+  imports: [MatButtonModule]
 })
 export class InformationDialogComponent {
   @Input() content: DialogContent;

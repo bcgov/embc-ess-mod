@@ -1,7 +1,7 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,11 +22,9 @@ import { MatOptionModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    NgFor,
     MatOptionModule,
-    NgIf,
     MatInputModule
-  ]
+]
 })
 export default class SecurityQuestionsComponent implements OnInit {
   formBuilder: UntypedFormBuilder;

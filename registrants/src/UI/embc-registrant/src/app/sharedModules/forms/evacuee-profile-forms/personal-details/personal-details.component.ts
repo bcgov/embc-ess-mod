@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { CommonModule, NgIf, NgFor } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,11 +26,9 @@ import { MatOptionModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatSelectModule,
-    MatOptionModule,
-    NgFor
-  ]
+    MatOptionModule
+]
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: UntypedFormGroup;

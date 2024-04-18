@@ -8,7 +8,7 @@ import { ShelterType } from 'src/app/core/services/globalConstants';
 import { CustomDate } from '../../core/pipe/customDate.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { CaptchaV2Component } from '../../core/components/captcha-v2/captcha-v2.component';
-import { NgIf, NgTemplateOutlet, NgFor, AsyncPipe } from '@angular/common';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -16,7 +16,7 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss'],
   standalone: true,
-  imports: [MatCardModule, NgIf, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, NgFor, AsyncPipe, CustomDate]
+  imports: [MatCardModule, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, AsyncPipe, CustomDate]
 })
 export class ReviewComponent implements OnInit {
   @Output() captchaPassed = new EventEmitter<CaptchaResponse>();

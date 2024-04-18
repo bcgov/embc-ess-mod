@@ -15,7 +15,7 @@ import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.
 import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
-import { NgFor, NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-profile',
@@ -24,13 +24,11 @@ import { NgFor, NgIf } from '@angular/common';
   standalone: true,
   imports: [
     MatStepperModule,
-    NgFor,
-    NgIf,
     ComponentWrapperComponent,
     MatButtonModule,
     ReviewComponent,
     AppLoaderComponent
-  ]
+]
 })
 export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('profileStepper') profileStepper: MatStepper;

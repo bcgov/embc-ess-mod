@@ -16,7 +16,7 @@ import { ComponentWrapperComponent } from '../component-wrapper/component-wrappe
 import { AppLoaderComponent } from '../../../core/components/app-loader/app-loader.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-conflict-management',
@@ -25,14 +25,13 @@ import { NgIf } from '@angular/common';
   standalone: true,
   imports: [
     MatStepperModule,
-    NgIf,
     MatCardModule,
     MatButtonModule,
     AppLoaderComponent,
     ComponentWrapperComponent,
     CustomDate,
     ArrayContains
-  ]
+]
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
   @ViewChild('conflictStepper') conflictStepper: MatStepper;

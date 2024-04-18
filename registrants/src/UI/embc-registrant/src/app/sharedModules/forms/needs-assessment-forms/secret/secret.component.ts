@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './secret.component.html',
   styleUrls: ['./secret.component.scss'],
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, NgIf]
+  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule]
 })
 export default class SecretComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;

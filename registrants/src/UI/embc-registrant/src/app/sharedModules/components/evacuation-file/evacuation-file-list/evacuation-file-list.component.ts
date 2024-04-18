@@ -12,14 +12,14 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
 import { MatButtonModule } from '@angular/material/button';
 import { AppLoaderComponent } from '../../../../core/components/app-loader/app-loader.component';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
   selector: 'app-evacuation-file-list',
   templateUrl: './evacuation-file-list.component.html',
   styleUrls: ['./evacuation-file-list.component.scss'],
   standalone: true,
-  imports: [NgIf, AppLoaderComponent, MatButtonModule, NgFor, EvacuationCardComponent]
+  imports: [AppLoaderComponent, MatButtonModule, EvacuationCardComponent]
 })
 export class EvacuationFileListComponent implements OnInit {
   currentPath: string;

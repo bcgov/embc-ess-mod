@@ -2,14 +2,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-ess-file-dialog',
   templateUrl: './ess-file-dialog.component.html',
   styleUrls: ['./ess-file-dialog.component.scss'],
   standalone: true,
-  imports: [NgIf, MatButtonModule]
+  imports: [MatButtonModule]
 })
 export class EssFileDialogComponent {
   @Input() essFileData: EvacuationFileModel | string;

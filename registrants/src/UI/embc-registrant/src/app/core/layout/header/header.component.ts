@@ -4,7 +4,7 @@ import { LoginService } from '../../services/login.service';
 import { CacheService } from '../../services/cache.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf, AsyncPipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
@@ -12,7 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [MatToolbarModule, NgIf, MatButtonModule, MatMenuModule, AsyncPipe, UpperCasePipe]
+  imports: [MatToolbarModule, MatButtonModule, MatMenuModule, AsyncPipe, UpperCasePipe]
 })
 export class HeaderComponent implements OnInit {
   showLoginMatMenu: boolean;

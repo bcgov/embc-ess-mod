@@ -12,58 +12,65 @@
     (selectionChange)="stepChanged($event, needsStepper)"
     #needsStepper
     linear
-  >
-    <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
-      <ng-template matStepLabel>{{ step.stepName }}</ng-template>
-      <div *ngIf="step.stepName === 'Location'; else altText">
-        <ng-container *ngIf="currentFlow === 'non-verified-registration'">
-          <p>
-            The purpose of creating an Emergency Support Services (ESS) File is to help determine how the event has
-            impacted you and your household members in order for an Emergency Support Services (ESS) Responder to
-            provide you with assistance and offer emergency goods and services if eligible.
-          </p>
-          <p>Please review and complete the form below. Required fields are marked with a red asterisk.</p>
-        </ng-container>
-        <ng-container *ngIf="currentFlow === 'verified-registration'">
-          <p>
-            The purpose of creating an <b>Evacuation File</b> is to help determine how the event has impacted you and
-            your household members in order for an Emergency Support Services (ESS) Responder to provide you with
-            assistance and offer emergency goods and services if eligible.
-          </p>
-          <p>
-            Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
-          </p>
-        </ng-container>
-      </div>
-      <ng-template #altText>
-        <p *ngIf="currentFlow === 'non-verified-registration'">
-          Please review and complete the form below. Required fields are marked with a red asterisk.
-        </p>
-        <p *ngIf="currentFlow === 'verified-registration'">
-          Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
-        </p>
-      </ng-template>
-      <br />
-      <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
-      <br />
-      <div class="row justify-content-between resp-style">
-        <div class="col-md-6">
-          <button class="button-s" mat-button type="button" (click)="goBack(needsStepper, step.lastStep)">
-            {{ step.backButtonLabel }}
-          </button>
+    >
+    @for (step of needsSteps; track step) {
+      <mat-step [stepControl]="form">
+        <ng-template matStepLabel>{{ step.stepName }}</ng-template>
+        @if (step.stepName === 'Location') {
+          <div>
+            @if (currentFlow === 'non-verified-registration') {
+              <p>
+                The purpose of creating an Emergency Support Services (ESS) File is to help determine how the event has
+                impacted you and your household members in order for an Emergency Support Services (ESS) Responder to
+                provide you with assistance and offer emergency goods and services if eligible.
+              </p>
+              <p>Please review and complete the form below. Required fields are marked with a red asterisk.</p>
+            }
+            @if (currentFlow === 'verified-registration') {
+              <p>
+                The purpose of creating an <b>Evacuation File</b> is to help determine how the event has impacted you and
+                your household members in order for an Emergency Support Services (ESS) Responder to provide you with
+                assistance and offer emergency goods and services if eligible.
+              </p>
+              <p>
+                Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
+              </p>
+            }
+          </div>
+        } @else {
+          @if (currentFlow === 'non-verified-registration') {
+            <p>
+              Please review and complete the form below. Required fields are marked with a red asterisk.
+            </p>
+          }
+          @if (currentFlow === 'verified-registration') {
+            <p>
+              Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
+            </p>
+          }
+        }
+        <br />
+        <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
+        <br />
+        <div class="row justify-content-between resp-style">
+          <div class="col-md-6">
+            <button class="button-s" mat-button type="button" (click)="goBack(needsStepper, step.lastStep)">
+              {{ step.backButtonLabel }}
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button
+              class="button-p"
+              mat-stroked-button
+              type="button"
+              (click)="goForward(needsStepper, step.isLast, step.component)"
+              >
+              {{ step.nextButtonLabel }}
+            </button>
+          </div>
         </div>
-        <div class="col-md-6">
-          <button
-            class="button-p"
-            mat-stroked-button
-            type="button"
-            (click)="goForward(needsStepper, step.isLast, step.component)"
-          >
-            {{ step.nextButtonLabel }}
-          </button>
-        </div>
-      </div>
-    </mat-step>
+      </mat-step>
+    }
 
     <mat-step>
       <p>Please read through and confirm that your details are all correct before submitting.</p>
@@ -90,7 +97,7 @@
         type="button"
         [disabled]="!captchaPassed || isSubmitted"
         (click)="goForward(needsStepper, true, '')"
-      >
+        >
         Save & Submit
         <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
       </button>

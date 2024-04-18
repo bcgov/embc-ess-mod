@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './pet-form.component.html',
   styleUrls: ['./pet-form.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, NgIf]
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule]
 })
 export class PetFormComponent implements OnInit {
   @Input() petForm: UntypedFormGroup;

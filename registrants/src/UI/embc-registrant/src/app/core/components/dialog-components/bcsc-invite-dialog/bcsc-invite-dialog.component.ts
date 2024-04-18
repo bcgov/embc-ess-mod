@@ -14,7 +14,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -31,7 +31,7 @@ export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './bcsc-invite-dialog.component.html',
   styleUrls: ['./bcsc-invite-dialog.component.scss'],
   standalone: true,
-  imports: [NgIf, NgTemplateOutlet, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule]
+  imports: [NgTemplateOutlet, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule]
 })
 export class BcscInviteDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();

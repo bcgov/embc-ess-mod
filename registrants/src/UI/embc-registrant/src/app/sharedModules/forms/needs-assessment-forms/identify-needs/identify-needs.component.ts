@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,7 @@ import { DialogContent } from 'src/app/core/model/dialog-content.model';
   templateUrl: './identify-needs.component.html',
   styleUrls: ['./identify-needs.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, NgIf, MatFormFieldModule, MatCheckboxModule, MatRadioModule]
+  imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatCheckboxModule, MatRadioModule]
 })
 export default class IdentifyNeedsComponent implements OnInit {
   identifyNeedsForm: UntypedFormGroup;

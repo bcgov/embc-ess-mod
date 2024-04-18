@@ -4,7 +4,7 @@ import { ComponentRef } from '@angular/core';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-dialog',
@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
   styleUrls: ['./dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [NgIf, MatDialogModule, MatButtonModule]
+  imports: [MatDialogModule, MatButtonModule]
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @ViewChild('target', { read: ViewContainerRef, static: true })

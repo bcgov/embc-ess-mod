@@ -11,7 +11,7 @@ import * as globalConst from '../../../core/services/globalConstants';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AlertComponent } from '../../../core/components/alert/alert.component';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -21,16 +21,14 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [
     MatCardModule,
-    NgIf,
     MatButtonModule,
     AlertComponent,
     MatTabsModule,
-    NgFor,
     RouterLinkActive,
     RouterLink,
     RouterOutlet,
     AsyncPipe
-  ]
+]
 })
 export class DashboardComponent implements OnInit {
   currentFlow: string;

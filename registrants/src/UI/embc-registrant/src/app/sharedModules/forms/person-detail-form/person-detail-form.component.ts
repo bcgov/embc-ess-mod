@@ -5,7 +5,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import * as globalConst from '../../../core/services/globalConstants';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -18,12 +18,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     MatCheckboxModule,
     MatSelectModule,
-    MatOptionModule,
-    NgFor
-  ]
+    MatOptionModule
+]
 })
 export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: UntypedFormGroup;

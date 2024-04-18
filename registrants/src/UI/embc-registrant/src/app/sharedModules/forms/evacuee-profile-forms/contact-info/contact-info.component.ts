@@ -8,7 +8,7 @@ import {
   NgForm,
   FormGroupDirective
 } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -39,7 +39,7 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, NgIf, MatFormFieldModule, MatInputModule]
+  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule]
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;

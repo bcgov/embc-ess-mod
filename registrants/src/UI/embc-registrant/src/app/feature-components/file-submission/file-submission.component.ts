@@ -1,4 +1,4 @@
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './file-submission.component.html',
   styleUrls: ['./file-submission.component.scss'],
   standalone: true,
-  imports: [MatCardModule, NgIf, MatButtonModule, AppLoaderComponent]
+  imports: [MatCardModule, MatButtonModule, AppLoaderComponent]
 })
 export class FileSubmissionComponent implements OnInit {
   referenceNumber: string;

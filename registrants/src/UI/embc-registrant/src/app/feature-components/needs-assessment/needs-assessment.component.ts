@@ -19,7 +19,7 @@ import { AlertComponent } from '../../core/components/alert/alert.component';
 import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
-import { NgFor, NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-needs-assessment',
@@ -28,14 +28,12 @@ import { NgFor, NgIf } from '@angular/common';
   standalone: true,
   imports: [
     MatStepperModule,
-    NgFor,
-    NgIf,
     ComponentWrapperComponent,
     MatButtonModule,
     ReviewComponent,
     AlertComponent,
     AppLoaderComponent
-  ]
+]
 })
 export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('needsStepper') private needsStepper: MatStepper;

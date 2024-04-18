@@ -1,6 +1,6 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CommonModule, NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,13 +22,11 @@ import { BcAddressComponent } from '../../address-forms/bc-address/bc-address.co
   imports: [
     ReactiveFormsModule,
     MatCardModule,
-    NgIf,
     MatRadioModule,
     MatFormFieldModule,
     BcAddressComponent,
-    NgFor,
     AsyncPipe
-  ]
+]
 })
 export default class EvacAddressComponent implements OnInit {
   primaryAddressForm: UntypedFormGroup;
