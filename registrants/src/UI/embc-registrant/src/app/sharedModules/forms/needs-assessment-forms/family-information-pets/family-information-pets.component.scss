@@ -43,27 +43,27 @@ table {
   display: none;
 }
 
-.edit-image img:last-child {
+.edit-image img:last-of-type {
   display: none;
 }
 
-.edit-image:hover img:last-child {
+.edit-image:hover img:last-of-type {
   display: block;
 }
 
-.edit-image:hover img:first-child {
+.edit-image:hover img:first-of-type {
   display: none;
 }
 
-.delete-image img:last-child {
+.delete-image img:last-of-type {
   display: none;
 }
 
-.delete-image:hover img:last-child {
+.delete-image:hover img:last-of-type {
   display: block;
 }
 
-.delete-image:hover img:first-child {
+.delete-image:hover img:first-of-type {
   display: none;
 }
 
