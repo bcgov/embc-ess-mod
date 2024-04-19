@@ -208,7 +208,7 @@
                 <div class="col-12 bold">{{ item }}</div>
               </div>
               <div class="row" *ngIf="stepEssFileService?.needsIdentified.length == 0">
-                <div class="col-12 bold">Household currently does not require assistance.</div>
+                <div class="col-12 bold">{{noAssistanceRequiredMessage}}</div>
               </div>
             </div>
           </div>

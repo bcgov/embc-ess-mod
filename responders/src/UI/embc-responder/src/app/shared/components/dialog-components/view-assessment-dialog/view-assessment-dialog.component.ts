@@ -3,6 +3,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-view-assessment-dialog',
@@ -16,10 +17,12 @@ export class ViewAssessmentDialogComponent implements OnInit {
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired; 
+  constructor(public evacueeSessionService: EvacueeSessionService,
+    private loadEvacueeListService: LoadEvacueeListService) {}
 
-  constructor(public evacueeSessionService: EvacueeSessionService) {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   cancel() {
     this.outputEvent.emit('close');
@@ -35,5 +38,14 @@ export class ViewAssessmentDialogComponent implements OnInit {
     return globalConst.insuranceOptions.find(
       (ins) => ins.value === incomingValue
     )?.name;
+  }
+
+  public getIdentifiedNeeds(): string[] {
+    return Array.from(this.evacueeSessionService?.currentNeedsAssessment?.needs ?? []).map(
+      (need) =>
+        this.loadEvacueeListService
+          ?.getIdentifiedNeeds()
+          ?.find((value) => value.value === need)?.description
+    );
   }
 }
