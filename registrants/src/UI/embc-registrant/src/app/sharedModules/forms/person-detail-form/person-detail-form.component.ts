@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgxMaskDirective } from 'ngx-mask';
+import { IMaskDirective } from 'angular-imask';
 
 @Component({
   selector: 'app-person-detail-form',
@@ -22,7 +22,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatCheckboxModule,
     MatSelectModule,
     MatOptionModule,
-    NgxMaskDirective
+    IMaskDirective
   ]
 })
 export class PersonDetailFormComponent implements OnInit {
@@ -30,8 +30,7 @@ export class PersonDetailFormComponent implements OnInit {
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   sameLastNameOption: any;
-  // readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
-  readonly dateMask = 'M0/d0/0000';
+  readonly dateMask = globalConst.DateMask;
   readOnlyInput = false;
 
   constructor(private formCreationService: FormCreationService) {}

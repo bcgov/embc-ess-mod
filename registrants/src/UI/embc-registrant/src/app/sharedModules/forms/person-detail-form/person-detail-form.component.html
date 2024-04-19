@@ -60,9 +60,7 @@
     <div class="col-md-3">
       <mat-form-field type="date" appearance="outline">
         <mat-label class="requiredField">Date of Birth</mat-label>
-        <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy" />
-        <!-- @TODO: ngx-mask -->
-        <!-- [textMask]="{ mask: dateMask, keepCharPositions: true }" -->
+        <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy" [imask]="dateMask" />
         <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
         @if (personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('required')) {
           <mat-error>Date of Birth is required</mat-error>

@@ -18,12 +18,11 @@ import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 
-// import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { NgxMaskDirective } from 'ngx-mask';
+import { IMaskDirective } from 'angular-imask';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -40,15 +39,15 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule, NgxMaskDirective]
+  imports: [MatCardModule, ReactiveFormsModule, MatRadioModule, MatFormFieldModule, MatInputModule, IMaskDirective]
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
   formBuilder: UntypedFormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
-  // readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  readonly phoneMask = '000-000-0000';
+
+  readonly phoneMask = { mask: '000-000-0000' };
   emailMatcher = new CustomErrorMailMatcher();
 
   constructor(

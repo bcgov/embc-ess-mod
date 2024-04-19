@@ -39,14 +39,7 @@
             <mat-form-field appearance="outline">
               <!--[hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value" [errorStateMatcher]="requiredFieldsMatcher" -->
               <mat-label>Telephone Number</mat-label>
-              <input
-                formControlName="phone"
-                matInput
-                placeholder="Telephone Number"
-                [mask]="phoneMask"
-                [showMaskTyped]="true"
-              />
-              <!-- [textMask]="{ mask: phoneMask, keepCharPositions: true }" -->
+              <input formControlName="phone" matInput placeholder="Telephone Number" [imask]="phoneMask" />
               @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')) {
                 <mat-error> Telephone Number is required</mat-error>
               }
