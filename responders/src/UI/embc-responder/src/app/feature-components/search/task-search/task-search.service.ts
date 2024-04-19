@@ -8,10 +8,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class TaskSearchService {
-  constructor(
-    private taskService: TasksService,
-    private locationsService: LocationsService
-  ) {}
+  constructor(private taskService: TasksService, private locationsService: LocationsService) {}
 
   /**
    * Gets the task details from server and maps the incoming

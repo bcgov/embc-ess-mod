@@ -128,7 +128,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{ getGroceryReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  ${{ getGroceryReferral(support)?.totalAmount | number: '1.2-2':'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkGroceryMaxRate(support)">
@@ -188,7 +188,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 box-text-color">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getShelterAllowanceReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  ${{ getShelterAllowanceReferral(support)?.totalAmount | number: '1.2-2':'en-CA' }}
                 </div>
               </div>
             </ng-container>
@@ -255,7 +255,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{ getOtherReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  ${{ getOtherReferral(support)?.totalAmount | number: '1.2-2':'en-CA' }}
                 </div>
               </div>
             </ng-container>
@@ -271,7 +271,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getClothingReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  ${{ getClothingReferral(support)?.totalAmount | number: '1.2-2':'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkClothingMaxRate(support)">
@@ -304,7 +304,7 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getIncidentalReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  ${{ getIncidentalReferral(support)?.totalAmount | number: '1.2-2':'en-CA' }}
                 </div>
               </div>
               <div class="row row-padding" *ngIf="!checkIncidentalMaxRate(support)">

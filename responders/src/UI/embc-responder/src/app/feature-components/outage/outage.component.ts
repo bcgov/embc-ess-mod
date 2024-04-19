@@ -12,10 +12,7 @@ export class OutageComponent implements OnInit {
   public outageType: string;
   public outageInfo: OutageInformation;
 
-  constructor(
-    private outageService: OutageService,
-    private router: Router
-  ) {
+  constructor(private outageService: OutageService, private router: Router) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;

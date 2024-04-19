@@ -13,10 +13,7 @@ export class StepEssFileComponent implements OnInit {
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
 
-  constructor(
-    private router: Router,
-    private stepEssFileService: StepEssFileService
-  ) {
+  constructor(private router: Router, private stepEssFileService: StepEssFileService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

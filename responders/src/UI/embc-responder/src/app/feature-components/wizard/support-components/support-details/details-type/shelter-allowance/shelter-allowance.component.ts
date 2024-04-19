@@ -14,10 +14,7 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
   referralForm: UntypedFormGroup;
   days: number;
   totalAmount = 0;
-  constructor(
-    private cd: ChangeDetectorRef,
-    private appBaseService: AppBaseService
-  ) {}
+  constructor(private cd: ChangeDetectorRef, private appBaseService: AppBaseService) {}
   @Input() selectedHouseholdMembers: any[];
   nofNight = 0;
   members: any[];

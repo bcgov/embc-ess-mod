@@ -15,10 +15,7 @@ export class HouseholdMembersPetsComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
-  constructor(
-    private router: Router,
-    private stepEssFileService: StepEssFileService
-  ) {}
+  constructor(private router: Router, private stepEssFileService: StepEssFileService) {}
 
   ngOnInit(): void {
     this.tabMetaData = this.stepEssFileService.getNavLinks('household-members-pets');

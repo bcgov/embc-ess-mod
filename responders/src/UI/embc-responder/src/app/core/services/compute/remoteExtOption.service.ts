@@ -17,11 +17,7 @@ export class RemoteExtOptionService implements SearchOptionsService {
   optionType: SelectedPathType = SelectedPathType.remoteExtensions;
   idSearchQuestion = '';
 
-  constructor(
-    private router: Router,
-    private dataService: DataService,
-    private builder: UntypedFormBuilder
-  ) {}
+  constructor(private router: Router, private dataService: DataService, private builder: UntypedFormBuilder) {}
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
     return this.dataService.getEvacueeProfile(registrantId);

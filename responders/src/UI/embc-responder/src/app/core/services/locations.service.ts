@@ -49,8 +49,8 @@ export class LocationsService {
     return this.communityList
       ? this.communityList
       : JSON.parse(this.cacheService.get('communityList'))
-        ? JSON.parse(this.cacheService.get('communityList'))
-        : this.getCommunities();
+      ? JSON.parse(this.cacheService.get('communityList'))
+      : this.getCommunities();
   }
 
   public getActiveCommunityList(): Community[] {
@@ -61,8 +61,8 @@ export class LocationsService {
     return this.stateProvinceList
       ? this.stateProvinceList
       : JSON.parse(this.cacheService.get('stateProvinceList'))
-        ? JSON.parse(this.cacheService.get('stateProvinceList'))
-        : this.getStateProvinces();
+      ? JSON.parse(this.cacheService.get('stateProvinceList'))
+      : this.getStateProvinces();
   }
 
   public getActiveStateProvinceList(): Community[] {
@@ -73,8 +73,8 @@ export class LocationsService {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
-        ? JSON.parse(this.cacheService.get('countriesList'))
-        : this.getCountries();
+      ? JSON.parse(this.cacheService.get('countriesList'))
+      : this.getCountries();
   }
 
   public getActiveCountriesList(): Community[] {

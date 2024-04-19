@@ -16,10 +16,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   city: Community[] = [];
   province = [globalConst.defaultProvince];
 
-  constructor(
-    private locationService: LocationsService,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private locationService: LocationsService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.city = this.locationService.getActiveCommunityList();

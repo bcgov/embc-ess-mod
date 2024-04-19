@@ -31,11 +31,7 @@ export class HeaderComponent implements OnInit {
     return [this.profile.firstName, this.profile.lastName?.charAt(0).toUpperCase()].join(' ');
   }
 
-  constructor(
-    private router: Router,
-    private authService: AuthenticationService,
-    private userService: UserService
-  ) {}
+  constructor(private router: Router, private authService: AuthenticationService, private userService: UserService) {}
 
   public ngOnInit(): void {}
 

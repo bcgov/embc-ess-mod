@@ -293,8 +293,8 @@ export class SupplierService {
       this.mutualAidEssTeams
         ? resolve(this.mutualAidEssTeams)
         : JSON.parse(this.cacheService.get('mutualAidEssTeams'))
-          ? resolve(JSON.parse(this.cacheService.get('mutualAidEssTeams')))
-          : resolve(this.getMutualAidEssTeams());
+        ? resolve(JSON.parse(this.cacheService.get('mutualAidEssTeams')))
+        : resolve(this.getMutualAidEssTeams());
     });
   }
 

@@ -13,11 +13,7 @@ export class EnvironmentBannerService {
   public environmentBanner: EnvironmentInformation;
   private configurationGetEnvironmentInfoPath = '/env/info.json';
 
-  constructor(
-    private http: HttpClient,
-    private cacheService: CacheService,
-    private alertService: AlertService
-  ) {}
+  constructor(private http: HttpClient, private cacheService: CacheService, private alertService: AlertService) {}
 
   public loadEnvironmentBanner(): Promise<EnvironmentInformation> {
     return new Promise<EnvironmentInformation>((resolve, reject) => {
@@ -46,8 +42,8 @@ export class EnvironmentBannerService {
     return this.environmentBanner
       ? this.environmentBanner
       : JSON.parse(this.cacheService.get('environment'))
-        ? JSON.parse(this.cacheService.get('environment'))
-        : this.getEnvironmentInfo();
+      ? JSON.parse(this.cacheService.get('environment'))
+      : this.getEnvironmentInfo();
   }
 
   public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {

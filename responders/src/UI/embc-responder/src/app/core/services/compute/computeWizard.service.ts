@@ -7,10 +7,7 @@ import { WizardDataService } from 'src/app/feature-components/wizard/wizard-data
 
 @Injectable()
 export class ComputeWizardService implements Compute {
-  constructor(
-    private appBaseService: AppBaseService,
-    private wizardDataService: WizardDataService
-  ) {}
+  constructor(private appBaseService: AppBaseService, private wizardDataService: WizardDataService) {}
 
   execute() {
     this.calculateExitLink();

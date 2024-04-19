@@ -8,10 +8,7 @@ import { LoadTeamListService } from 'src/app/core/services/load-team-list.servic
 
 @Injectable({ providedIn: 'root' })
 export class TeamListService {
-  constructor(
-    private teamMembersService: TeamsService,
-    private listService: LoadTeamListService
-  ) {}
+  constructor(private teamMembersService: TeamsService, private listService: LoadTeamListService) {}
 
   public getTeamMembers(): Observable<TeamMemberModel[]> {
     return this.teamMembersService.teamsGetTeamMembers().pipe(

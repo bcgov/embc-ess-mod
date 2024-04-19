@@ -51,10 +51,7 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
   data: any;
   supportStatus: Code[] = [];
 
-  constructor(
-    private cd: ChangeDetectorRef,
-    private loadEvacueeListService: LoadEvacueeListService
-  ) { }
+  constructor(private cd: ChangeDetectorRef, private loadEvacueeListService: LoadEvacueeListService) {}
 
   /**
    * Listens to input events and popluate values
@@ -168,7 +165,7 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
 
   displaySupplierName(element: Support): string {
     let isSelfServe = '';
-    if (element.isSelfServe){
+    if (element.isSelfServe) {
       isSelfServe = '(Self-serve)';
     }
     if (element.method === SupportMethod.ETransfer) {

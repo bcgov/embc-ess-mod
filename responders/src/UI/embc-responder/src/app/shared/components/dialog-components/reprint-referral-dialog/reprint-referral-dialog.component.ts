@@ -21,10 +21,7 @@ export class ReprintReferralDialogComponent implements OnInit {
   reasons = SupportReprintReason;
   includeSummary = false;
 
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private loadEvacueeListService: LoadEvacueeListService
-  ) {}
+  constructor(private formBuilder: UntypedFormBuilder, private loadEvacueeListService: LoadEvacueeListService) {}
 
   ngOnInit(): void {
     this.reprintReasonForm();

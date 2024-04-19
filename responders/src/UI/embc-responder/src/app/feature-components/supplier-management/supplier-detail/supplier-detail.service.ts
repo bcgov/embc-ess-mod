@@ -8,11 +8,7 @@ import * as globalConst from '../../../core/services/global-constants';
   providedIn: 'root'
 })
 export class SupplierDetailService {
-  constructor(
-    private supplierService: SupplierService,
-    protected router: Router,
-    private alertService: AlertService
-  ) {}
+  constructor(private supplierService: SupplierService, protected router: Router, private alertService: AlertService) {}
 
   /**
    * Rescinds the relationship as mutual Aid between the given supplier and given ESS Team

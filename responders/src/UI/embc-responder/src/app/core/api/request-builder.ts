@@ -221,11 +221,7 @@ export class RequestBuilder {
   _bodyContent: any | null;
   _bodyContentType?: string;
 
-  constructor(
-    public rootUrl: string,
-    public operationPath: string,
-    public method: string
-  ) {}
+  constructor(public rootUrl: string, public operationPath: string, public method: string) {}
 
   /**
    * Sets a path parameter

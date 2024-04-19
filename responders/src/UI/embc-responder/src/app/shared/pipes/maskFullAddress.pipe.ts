@@ -6,10 +6,7 @@ import * as _ from 'lodash';
 
 @Pipe({ name: 'maskFullAddress' })
 export class MaskFullAddressPipe implements PipeTransform {
-  constructor(
-    private locationService: LocationsService,
-    private sanitizer: DomSanitizer
-  ) {}
+  constructor(private locationService: LocationsService, private sanitizer: DomSanitizer) {}
 
   /**
    * Converts Address object into sanitized 4-lines format for display on pages.

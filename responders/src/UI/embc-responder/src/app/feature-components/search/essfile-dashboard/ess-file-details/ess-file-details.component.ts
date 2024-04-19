@@ -17,10 +17,7 @@ export class EssFileDetailsComponent implements OnInit {
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
 
-  constructor(
-    private router: Router,
-    private essfileDashboardService: EssfileDashboardService
-  ) {
+  constructor(private router: Router, private essfileDashboardService: EssfileDashboardService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

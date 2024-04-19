@@ -15,10 +15,7 @@ export class VoidReferralDialogComponent implements OnInit {
   voidForm: UntypedFormGroup;
   reasons = SupportVoidReason;
 
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private loadEvacueeListService: LoadEvacueeListService
-  ) {}
+  constructor(private formBuilder: UntypedFormBuilder, private loadEvacueeListService: LoadEvacueeListService) {}
 
   ngOnInit(): void {
     this.voidReasonForm();
