@@ -9,6 +9,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "format:write": "prettier . --write",
     "e2e": "ng e2e",
     "gen-api": "ng-openapi-gen -i https://dev-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
     "gen-api-local": "ng-openapi-gen -i http://localhost:6020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
