@@ -31,52 +31,30 @@
         </div>
 
         <div class="col-md-4 menu-responsive">
-          <ng-container
-            *ngIf="
-              showLoginMatMenu &&
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.lastName &&
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.firstName
-            "
-          >
+          @if (
+            showLoginMatMenu &&
+            (formCreationService.personalDetailsForm$ | async)?.value?.lastName &&
+            (formCreationService.personalDetailsForm$ | async)?.value?.firstName
+          ) {
             <button mat-button class="button-align" [matMenuTriggerFor]="menu">
               <div class="row">
                 <div class="col-md-8">
                   <span style="color: white"
-                    ><b>{{
-                      (formCreationService.personalDetailsForm$ | async)?.value
-                        ?.lastName | uppercase
-                    }}</b
-                    >,
-                    {{
-                      (formCreationService.personalDetailsForm$ | async)?.value
-                        ?.firstName
-                    }}</span
+                    ><b>{{ (formCreationService.personalDetailsForm$ | async)?.value?.lastName | uppercase }}</b
+                    >, {{ (formCreationService.personalDetailsForm$ | async)?.value?.firstName }}</span
                   >
                 </div>
                 <div class="col-md-4">
-                  <img
-                    class="img-align"
-                    src="../../../../assets/images/down_arrow.svg"
-                    height="10"
-                    width="16"
-                  />
+                  <img class="img-align" src="../../../../assets/images/down_arrow.svg" height="10" width="16" />
                 </div>
               </div>
             </button>
             <mat-menu #menu="matMenu">
               <span>
-                <button
-                  class="signOut-button"
-                  mat-menu-item
-                  (click)="signOut()"
-                >
-                  Sign out
-                </button>
+                <button class="signOut-button" mat-menu-item (click)="signOut()">Sign out</button>
               </span>
             </mat-menu>
-          </ng-container>
+          }
         </div>
       </div>
     </mat-toolbar-row>

@@ -49,8 +49,8 @@ export class LocationsService {
     return this.communityList
       ? this.communityList
       : JSON.parse(this.cacheService.get('communityList'))
-      ? JSON.parse(this.cacheService.get('communityList'))
-      : this.getCommunities();
+        ? JSON.parse(this.cacheService.get('communityList'))
+        : this.getCommunities();
   }
 
   public getActiveCommunityList(): Community[] {
@@ -61,8 +61,8 @@ export class LocationsService {
     return this.stateProvinceList
       ? this.stateProvinceList
       : JSON.parse(this.cacheService.get('stateProvinceList'))
-      ? JSON.parse(this.cacheService.get('stateProvinceList'))
-      : this.getStateProvinces();
+        ? JSON.parse(this.cacheService.get('stateProvinceList'))
+        : this.getStateProvinces();
   }
 
   public getActiveStateProvinceList(): Community[] {
@@ -73,8 +73,8 @@ export class LocationsService {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
-      ? JSON.parse(this.cacheService.get('countriesList'))
-      : this.getCountries();
+        ? JSON.parse(this.cacheService.get('countriesList'))
+        : this.getCountries();
   }
 
   public getActiveCountriesList(): Community[] {
@@ -82,9 +82,7 @@ export class LocationsService {
   }
 
   public getRegionalDistricts(): string[] {
-    return this.regionalDistricts
-      ? this.regionalDistricts
-      : JSON.parse(this.cacheService.get('regionalDistrictsList'));
+    return this.regionalDistricts ? this.regionalDistricts : JSON.parse(this.cacheService.get('regionalDistrictsList'));
   }
 
   /**
@@ -98,15 +96,9 @@ export class LocationsService {
     const countries = this.getCountriesList();
     const stateProvinces = this.getStateProvinceList();
 
-    const addressCommunity = communities.find(
-      (comm) => comm.code === addressObject?.communityCode
-    );
-    const addressCountry = countries.find(
-      (coun) => coun.code === addressObject?.countryCode
-    );
-    const addressStateProvince = stateProvinces.find(
-      (sp) => sp.code === addressObject?.stateProvinceCode
-    );
+    const addressCommunity = communities.find((comm) => comm.code === addressObject?.communityCode);
+    const addressCountry = countries.find((coun) => coun.code === addressObject?.countryCode);
+    const addressStateProvince = stateProvinces.find((sp) => sp.code === addressObject?.stateProvinceCode);
 
     return {
       community: addressCommunity,
@@ -128,18 +120,14 @@ export class LocationsService {
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
       communityCode:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
+        (addressObject.community as Community).code === undefined ? null : (addressObject.community as Community).code,
       city:
-        (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
+        (addressObject.community as Community).code === undefined && typeof addressObject.community === 'string'
           ? addressObject.community
           : null,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
-        addressObject.stateProvince === null ||
-        addressObject.stateProvince === undefined
+        addressObject.stateProvince === null || addressObject.stateProvince === undefined
           ? null
           : addressObject.stateProvince?.code
     };
@@ -161,12 +149,9 @@ export class LocationsService {
   }
 
   public loadStaticLocationLists(): Promise<void> {
-    const community: Observable<Array<CommunityCode>> =
-      this.configService.configurationGetCommunities();
-    const province: Observable<Array<CommunityCode>> =
-      this.configService.configurationGetStateProvinces();
-    const country: Observable<Array<CommunityCode>> =
-      this.configService.configurationGetCountries();
+    const community: Observable<Array<CommunityCode>> = this.configService.configurationGetCommunities();
+    const province: Observable<Array<CommunityCode>> = this.configService.configurationGetStateProvinces();
+    const country: Observable<Array<CommunityCode>> = this.configService.configurationGetCountries();
 
     const list$ = forkJoin([community, province, country]).pipe(
       map((results) => {
@@ -190,13 +175,7 @@ export class LocationsService {
           }))
         );
         this.setRegionalDistricts(
-          Array.from(
-            new Set(
-              results[0]
-                .filter((comm) => comm.districtName)
-                .map((comm) => comm.districtName)
-            )
-          )
+          Array.from(new Set(results[0].filter((comm) => comm.districtName).map((comm) => comm.districtName)))
         );
 
         this.setStateProvinceList(
@@ -247,13 +226,7 @@ export class LocationsService {
           }))
         );
         this.setRegionalDistricts(
-          Array.from(
-            new Set(
-              communities
-                .filter((comm) => comm.districtName)
-                .map((comm) => comm.districtName)
-            )
-          )
+          Array.from(new Set(communities.filter((comm) => comm.districtName).map((comm) => comm.districtName)))
         );
       },
       error: (error) => {

@@ -1,9 +1,7 @@
-<mat-card>
+<mat-card appearance="outlined">
   <mat-card-content>
     <span class="evacuatedSecondary">Evacuated From</span>
-    <mat-card-title class="evacuatedTitle"
-      >{{ evacuationFileCard?.evacuatedAddress?.community?.name }}
-    </mat-card-title>
+    <mat-card-title class="evacuatedTitle">{{ evacuationFileCard?.evacuatedAddress?.community?.name }} </mat-card-title>
     <div class="row">
       <div class="col-md-9">
         <table style="width: 100%">
@@ -18,16 +16,10 @@
           <tbody>
             <tr>
               <td class="dataSpan">
-                {{
-                  evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy'
-                }}
+                {{ evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy' }}
               </td>
               <td class="dataSpan">
-                {{
-                  evacuationFileCard?.isPaper
-                    ? evacuationFileCard?.manualFileId
-                    : evacuationFileCard?.fileId
-                }}
+                {{ evacuationFileCard?.isPaper ? evacuationFileCard?.manualFileId : evacuationFileCard?.fileId }}
               </td>
               <td class="dataSpan">
                 {{ evacuationFileCard?.supports.length === 0 ? 'No' : 'Yes' }}
@@ -41,12 +33,7 @@
         </table>
       </div>
       <div class="col-md-3 button-align">
-        <button
-          class="button-p view-details"
-          mat-stroked-button
-          type="button"
-          (click)="goToDetails()"
-        >
+        <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">
           View Details
         </button>
       </div>

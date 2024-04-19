@@ -9,12 +9,6 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [EssFileDetailsComponent],
-  imports: [
-    CommonModule,
-    EssFileDetailsRoutingModule,
-    MaterialModule,
-    SharedModule,
-    CustomPipeModule
-  ]
+  imports: [CommonModule, EssFileDetailsRoutingModule, MaterialModule, SharedModule, CustomPipeModule]
 })
 export class EssFileDetailsModule {}

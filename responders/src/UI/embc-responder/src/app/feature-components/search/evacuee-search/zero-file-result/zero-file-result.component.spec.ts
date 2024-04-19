@@ -14,11 +14,7 @@ describe('ZeroFileResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule],
       declarations: [ZeroFileResultComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },

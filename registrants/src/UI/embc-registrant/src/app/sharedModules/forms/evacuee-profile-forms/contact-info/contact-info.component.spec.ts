@@ -11,8 +11,7 @@ describe('ContactInfoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ContactInfoComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, ContactInfoComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

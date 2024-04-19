@@ -15,18 +15,9 @@ describe('SupportDeliveryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        MatAutocompleteModule,
-        MatDialogModule
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatAutocompleteModule, MatDialogModule],
       declarations: [SupportDeliveryComponent],
-      providers: [
-        UntypedFormBuilder,
-        DatePipe,
-        { provide: computeInterfaceToken, useValue: {} }
-      ]
+      providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 

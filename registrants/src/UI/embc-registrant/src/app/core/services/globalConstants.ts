@@ -1,3 +1,4 @@
+import { IMask, IMaskFactory } from 'angular-imask';
 import { DialogContent } from '../model/dialog-content.model';
 
 export const datePattern = '^(0[1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])/[0-9]{4}$';
@@ -89,3 +90,28 @@ export const pastEvacError = 'Unable to retrieve past evacuations at this time. 
 export const bcscInviteError = 'Unable to send BC Services Card invitation at this time. Please try again later';
 export const supportCategoryListError = 'Unable to retrieve support categories at this time. Please try again later';
 export const supportStatusListError = 'Unable to retrieve support status at this time. Please try again later';
+
+export const DateMask: Parameters<IMaskFactory['create']>[1] = {
+  mask: 'mm/dd/yyyy',
+  lazy: false,
+  blocks: {
+    yyyy: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'y',
+      from: 1900,
+      to: 2999
+    },
+    mm: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'm',
+      from: 1,
+      to: 12
+    },
+    dd: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'd',
+      from: 1,
+      to: 31
+    }
+  }
+};

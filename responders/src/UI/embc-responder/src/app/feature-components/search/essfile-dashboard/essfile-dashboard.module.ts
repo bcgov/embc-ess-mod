@@ -9,11 +9,6 @@ import { HouseholdMemberComponent } from './household-member/household-member.co
 
 @NgModule({
   declarations: [EssfileDashboardComponent, HouseholdMemberComponent],
-  imports: [
-    CommonModule,
-    EssfileDashboardRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, EssfileDashboardRoutingModule, MaterialModule, SharedModule]
 })
 export class EssfileDashboardModule {}

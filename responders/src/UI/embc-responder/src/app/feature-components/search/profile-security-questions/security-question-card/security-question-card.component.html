@@ -34,17 +34,11 @@
           <mat-error
             *ngIf="
               (securityQuestionsFormControl.answer1.invalid &&
-                securityQuestionsFormControl.answer1.hasError(
-                  'whitespaceError'
-                )) ||
+                securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer2.invalid &&
-                securityQuestionsFormControl.answer2.hasError(
-                  'whitespaceError'
-                )) ||
+                securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer3.invalid &&
-                securityQuestionsFormControl.answer3.hasError(
-                  'whitespaceError'
-                ))
+                securityQuestionsFormControl.answer3.hasError('whitespaceError'))
             "
           >
             Security Question cannot be blank</mat-error

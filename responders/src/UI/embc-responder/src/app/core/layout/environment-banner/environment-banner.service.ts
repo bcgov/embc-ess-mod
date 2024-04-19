@@ -46,8 +46,8 @@ export class EnvironmentBannerService {
     return this.environmentBanner
       ? this.environmentBanner
       : JSON.parse(this.cacheService.get('environment'))
-      ? JSON.parse(this.cacheService.get('environment'))
-      : this.getEnvironmentInfo();
+        ? JSON.parse(this.cacheService.get('environment'))
+        : this.getEnvironmentInfo();
   }
 
   public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {

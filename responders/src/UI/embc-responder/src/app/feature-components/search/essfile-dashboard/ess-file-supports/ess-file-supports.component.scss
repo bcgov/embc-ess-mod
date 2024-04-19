@@ -101,8 +101,10 @@
   width: 37.5%;
 }
 
-@media(max-width: 1200px) {
-  .col-md-4, .col-match-header, .col {
+@media (max-width: 1200px) {
+  .col-md-4,
+  .col-match-header,
+  .col {
     width: 100%;
   }
 }

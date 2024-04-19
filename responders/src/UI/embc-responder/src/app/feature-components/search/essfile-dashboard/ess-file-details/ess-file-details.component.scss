@@ -82,8 +82,11 @@
   padding-right: 0px;
 }
 
-@media(max-width: 1200px) {
-  .col-md-4, .col-md-8, .col-4, .col-8 {
+@media (max-width: 1200px) {
+  .col-md-4,
+  .col-md-8,
+  .col-4,
+  .col-8 {
     width: 100%;
   }
 }

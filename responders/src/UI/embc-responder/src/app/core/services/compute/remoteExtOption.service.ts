@@ -41,10 +41,7 @@ export class RemoteExtOptionService implements SearchOptionsService {
     });
   }
 
-  search(
-    value: string | EvacueeSearchContextModel,
-    id: string
-  ): Promise<boolean> {
+  search(value: string | EvacueeSearchContextModel, id: string): Promise<boolean> {
     this.dataService.saveSearchParams(value);
 
     return this.dataService
@@ -74,22 +71,15 @@ export class RemoteExtOptionService implements SearchOptionsService {
   private navigate(fileResult: EvacuationFileSummaryModel[], value) {
     if (this.allowDashboardNavigation(fileResult)) {
       this.dataService.setSelectedFile(fileResult[0].id);
-      return this.router.navigate([
-        'responder-access/search/essfile-dashboard'
-      ]);
+      return this.router.navigate(['responder-access/search/essfile-dashboard']);
     } else {
-      return this.router.navigate(
-        ['/responder-access/search/evacuee/search-results'],
-        {
-          skipLocationChange: true
-        }
-      );
+      return this.router.navigate(['/responder-access/search/evacuee/search-results'], {
+        skipLocationChange: true
+      });
     }
   }
 
-  private allowDashboardNavigation(
-    fileSummary: EvacuationFileSummaryModel[]
-  ): boolean {
+  private allowDashboardNavigation(fileSummary: EvacuationFileSummaryModel[]): boolean {
     if (
       fileSummary.length !== 0 &&
       fileSummary[0].status === EvacuationFileStatus.Active &&

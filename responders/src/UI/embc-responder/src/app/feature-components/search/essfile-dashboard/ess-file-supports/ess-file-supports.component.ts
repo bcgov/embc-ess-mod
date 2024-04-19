@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
@@ -64,8 +56,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
         };
         this.essFile = state.file;
         this.supportList = state.file?.supports?.sort(
-          (a, b) =>
-            new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
+          (a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
         );
 
         this.supportList.forEach((support) => {
@@ -94,10 +85,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
 
   selected(event: MatSelectChange, filterType: string): void {
     this.resetFilter(filterType);
-    const selectedValue =
-      event.value === undefined || event.value === ''
-        ? ''
-        : event.value.value;
+    const selectedValue = event.value === undefined || event.value === '' ? '' : event.value.value;
     const filterTerm = { type: filterType, value: selectedValue };
     this.filter(filterTerm);
   }
@@ -141,19 +129,11 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
       const possibleValues = this.supportStatus
         ?.filter((s) => s.description === searchString.value)
         .map((a) => a.value.trim().toLowerCase());
-      if (
-        possibleValues.length === 0 ||
-        possibleValues.includes(data.status.trim().toLowerCase())
-      ) {
+      if (possibleValues.length === 0 || possibleValues.includes(data.status.trim().toLowerCase())) {
         return true;
       }
     } else if (searchString.type === 'type') {
-      if (
-        data.category
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
-      ) {
+      if (data.category.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
         return true;
       }
     }

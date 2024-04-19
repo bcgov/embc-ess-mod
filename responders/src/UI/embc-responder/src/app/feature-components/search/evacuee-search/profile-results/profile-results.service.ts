@@ -13,11 +13,9 @@ import * as globalConst from '../../../../core/services/global-constants';
   providedIn: 'root'
 })
 export class ProfileResultsService {
-  public isLoadingOverlay: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  public isLoadingOverlay: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public isLoadingOverlay$: Observable<boolean> =
-    this.isLoadingOverlay.asObservable();
+  public isLoadingOverlay$: Observable<boolean> = this.isLoadingOverlay.asObservable();
 
   constructor(
     private dialog: MatDialog,
@@ -43,9 +41,7 @@ export class ProfileResultsService {
     });
   }
 
-  public updateProfile(
-    selectedRegistrant: RegistrantProfileSearchResultModel
-  ): void {
+  public updateProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     const profileIdObject: RegistrantProfileModel = {
       id: selectedRegistrant.id,
       primaryAddress: null,

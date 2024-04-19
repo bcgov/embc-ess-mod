@@ -3,10 +3,7 @@ import { Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import {
-  ObjectWrapper,
-  TableFilterModel
-} from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -30,9 +27,7 @@ export class AssignedCommunityListDataService {
       {
         type: 'type',
         label: this.defaultTypes,
-        values: this.sort(
-          Object.keys(CommunityType).filter((e) => (e === 'Undefined' ? '' : e))
-        )
+        values: this.sort(Object.keys(CommunityType).filter((e) => (e === 'Undefined' ? '' : e)))
       }
     ],
     loadInputFilter: {
@@ -59,9 +54,7 @@ export class AssignedCommunityListDataService {
     private assignedCommunityListService: AssignedCommunityListService
   ) {}
 
-  public setCommunitiesToDelete(
-    communitiesToDelete: TeamCommunityModel[]
-  ): void {
+  public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
     this.communitiesToDelete = communitiesToDelete;
   }
 
@@ -76,16 +69,13 @@ export class AssignedCommunityListDataService {
   public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
     return this.assignedCommunityListService.getAllAssignedCommunityList().pipe(
       map((allList: TeamCommunityModel[]) => {
-        const conflictMap: TeamCommunityModel[] =
-          this.mergedCommunityList().map((values) => {
-            const conflicts = allList.find((x) => x.code === values.code);
-            return this.mergeData(values, conflicts);
-          });
+        const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map((values) => {
+          const conflicts = allList.find((x) => x.code === values.code);
+          return this.mergeData(values, conflicts);
+        });
 
         const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
-          const existing = this.getTeamCommunityList().find(
-            (x) => x.code === values.code
-          );
+          const existing = this.getTeamCommunityList().find((x) => x.code === values.code);
           return this.mergeData(values, existing);
         });
 
@@ -99,9 +89,7 @@ export class AssignedCommunityListDataService {
   }
 
   private getTeamCommunityList(): TeamCommunityModel[] {
-    return this.teamCommunityList
-      ? this.teamCommunityList
-      : JSON.parse(this.cacheService.get('teamCommunityList'));
+    return this.teamCommunityList ? this.teamCommunityList : JSON.parse(this.cacheService.get('teamCommunityList'));
   }
 
   private mergedCommunityList(): TeamCommunityModel[] {
@@ -109,9 +97,7 @@ export class AssignedCommunityListDataService {
       allowSelect: true,
       conflict: false
     };
-    return this.locationsService
-      .getCommunityList()
-      .map((community) => this.mergeData(teamModel, community));
+    return this.locationsService.getCommunityList().map((community) => this.mergeData(teamModel, community));
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {

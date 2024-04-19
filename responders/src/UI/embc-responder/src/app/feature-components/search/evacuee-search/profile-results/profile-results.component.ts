@@ -28,9 +28,7 @@ import { ProfileResultsService } from './profile-results.service';
   templateUrl: './profile-results.component.html',
   styleUrls: ['./profile-results.component.scss']
 })
-export class ProfileResultsComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResultModel>;
   matchedRegistrants = new MatTableDataSource();
@@ -76,44 +74,29 @@ export class ProfileResultsComponent
       this.profileResultsService.openUnableAccessDialog();
     } else {
       this.profileResultsService.updateProfile(selectedRegistrant);
-      if (
-        this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
-      ) {
-        this.router.navigate([
-          'responder-access/search/evacuee-profile-dashboard'
-        ]);
+      if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
+        this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
       } else {
         this.profileResultsService.setloadingOverlay(true);
         this.profileSecurityQuestionsService
-          .getSecurityQuestions(
-            this.appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext?.id
-          )
+          .getSecurityQuestions(this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id)
           .subscribe({
             next: (results) => {
               this.profileResultsService.setloadingOverlay(false);
               if (results.questions.length === 0) {
                 this.profileResultsService.openUnableAccessDialog();
               } else {
-                this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-                  results?.questions
-                );
-                this.evacueeSessionService.securityQuestionsOpenedFrom =
-                  'responder-access/search/evacuee';
+                this.profileSecurityQuestionsService.shuffleSecurityQuestions(results?.questions);
+                this.evacueeSessionService.securityQuestionsOpenedFrom = 'responder-access/search/evacuee';
                 setTimeout(() => {
-                  this.router.navigate([
-                    'responder-access/search/security-questions'
-                  ]);
+                  this.router.navigate(['responder-access/search/security-questions']);
                 }, 200);
               }
             },
             error: (error) => {
               this.profileResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.securityQuestionsError
-              );
+              this.alertService.setAlert('danger', globalConst.securityQuestionsError);
             }
           });
       }

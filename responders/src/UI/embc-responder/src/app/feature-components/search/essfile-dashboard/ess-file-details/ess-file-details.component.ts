@@ -48,5 +48,4 @@ export class EssFileDetailsComponent implements OnInit {
   public getIdentifiedNeeds(): string[] {
     return this.essfileDashboardService.getIdentifiedNeeds();
   }
-
 }

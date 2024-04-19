@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { InsuranceOption, NeedsAssessment, PersonDetails, Pet, RegistrationResult, NeedsAssessmentType, HouseholdMember, IdentifiedNeed } from 'src/app/core/api/models';
+import {
+  InsuranceOption,
+  NeedsAssessment,
+  PersonDetails,
+  Pet,
+  RegistrationResult,
+  NeedsAssessmentType,
+  HouseholdMember,
+  IdentifiedNeed
+} from 'src/app/core/api/models';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ShelterType } from 'src/app/core/services/globalConstants';
 
@@ -18,7 +27,7 @@ export class NeedsAssessmentService {
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
 
-  constructor(private profileDataService: ProfileDataService) { }
+  constructor(private profileDataService: ProfileDataService) {}
 
   public get id(): string {
     return this.needsAssessmentID;

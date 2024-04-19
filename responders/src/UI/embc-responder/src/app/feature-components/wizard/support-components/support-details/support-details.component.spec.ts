@@ -17,11 +17,7 @@ describe('SupportDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
       declarations: [SupportDetailsComponent],
-      providers: [
-        DatePipe,
-        UntypedFormBuilder,
-        { provide: computeInterfaceToken, useValue: {} }
-      ]
+      providers: [DatePipe, UntypedFormBuilder, { provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 

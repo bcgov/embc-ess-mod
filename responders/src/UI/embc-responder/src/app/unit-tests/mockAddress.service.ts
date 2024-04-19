@@ -15,11 +15,6 @@ export class MockAddressService extends AddressService {
     stepEvacueeProfileService: MockStepEvacueeProfileService,
     wizardService: WizardService
   ) {
-    super(
-      formBuilder,
-      customValidation,
-      stepEvacueeProfileService,
-      wizardService
-    );
+    super(formBuilder, customValidation, stepEvacueeProfileService, wizardService);
   }
 }

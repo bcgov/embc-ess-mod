@@ -1,19 +1,8 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -21,9 +10,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './group-lodging-delivery.component.html',
   styleUrls: ['./group-lodging-delivery.component.scss']
 })
-export class GroupLodgingDeliveryComponent
-  implements OnInit, OnChanges, AfterViewChecked
-{
+export class GroupLodgingDeliveryComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() supportDeliveryForm: UntypedFormGroup;
   filteredOptions: Observable<Community[]>;
   detailsForm: UntypedFormGroup;
@@ -51,9 +38,7 @@ export class GroupLodgingDeliveryComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDeliveryForm) {
-      this.detailsForm = this.supportDeliveryForm.get(
-        'details'
-      ) as UntypedFormGroup;
+      this.detailsForm = this.supportDeliveryForm.get('details') as UntypedFormGroup;
     }
   }
 
@@ -99,9 +84,7 @@ export class GroupLodgingDeliveryComponent
   private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.city.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.city.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

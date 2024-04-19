@@ -3,7 +3,7 @@
 .receipt-template {
   margin-top: 10px;
 }
-  
+
 .box {
   padding: 10px;
   margin: 20px;
@@ -11,14 +11,14 @@
 }
 
 .requiredField::after {
-  content: "*";
+  content: '*';
   color: red;
 }
 
 .add-referral-button {
   font-weight: bold;
-  color: #2F6699 !important;
-  border: 1px #2F6699 solid;
+  color: #2f6699 !important;
+  border: 1px #2f6699 solid;
   background-color: white;
   margin-top: 1rem;
 
@@ -26,7 +26,7 @@
   &:focus {
     color: white;
   }
-  
+
   &:active {
     border: 2px solid rgba(white, 0.8);
   }

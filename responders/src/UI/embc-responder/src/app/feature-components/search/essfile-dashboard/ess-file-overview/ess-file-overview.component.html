@@ -17,14 +17,7 @@
           <table class="table-details">
             <tr>
               <th>ESS File Last Reviewed:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
+              <td class="bold" *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed">
                 {{ essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy' }}
               </td>
               <ng-template #notReviewed>
@@ -33,14 +26,7 @@
             </tr>
             <tr>
               <th>ESS File Last Reviewed by:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
+              <td class="bold" *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed">
                 {{ essFile?.needsAssessment?.reviewingTeamMemberDisplayName }}
               </td>
               <ng-template #notReviewed>
@@ -49,14 +35,7 @@
             </tr>
             <tr>
               <th>Supports Issued:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
+              <td class="bold" *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed">
                 {{ essFile?.supports?.length === 0 ? 'No' : 'Yes' }}
               </td>
               <ng-template #notReviewed>
@@ -83,9 +62,7 @@
           {{ essFile?.needsAssessment?.householdMembers?.length }}
         </div>
         <div class="col-md-7 count-align">
-          <div
-            *ngFor="let member of essFile?.needsAssessment?.householdMembers"
-          >
+          <div *ngFor="let member of essFile?.needsAssessment?.householdMembers">
             {{ member.lastName | uppercase }},
             {{ member.firstName }}
           </div>
@@ -101,19 +78,13 @@
           {{ animalCount }}
         </div>
         <div class="col-md-7 count-align">
-          <div *ngFor="let pet of essFile?.needsAssessment?.pets">
-            {{ pet?.quantity }} {{ pet?.type }}
-          </div>
+          <div *ngFor="let pet of essFile?.needsAssessment?.pets">{{ pet?.quantity }} {{ pet?.type }}</div>
         </div>
       </div>
       <hr class="dotted-hr" />
       <div class="row section-padding">
         <div class="col-md-3 subtitle-name">
-          <img
-            src="/assets/images/needs-identified.svg"
-            height="67"
-            width="44"
-          />
+          <img src="/assets/images/needs-identified.svg" height="67" width="44" />
           <p>Needs</p>
           <p>Identified</p>
         </div>

@@ -9,15 +9,11 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ReportsService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -32,24 +28,25 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetEvacueeReport$Response(params?: {
-    reportRequestId?: string;
-  }): Observable<StrictHttpResponse<Blob>> {
-
+  reportsGetEvacueeReport$Response(params?: { reportRequestId?: string }): Observable<StrictHttpResponse<Blob>> {
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetEvacueeReportPath, 'get');
     if (params) {
       rb.query('reportRequestId', params.reportRequestId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'blob',
+          accept: 'application/octet-stream'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Blob>;
+        })
+      );
   }
 
   /**
@@ -58,13 +55,8 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetEvacueeReport(params?: {
-    reportRequestId?: string;
-  }): Observable<Blob> {
-
-    return this.reportsGetEvacueeReport$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
-    );
+  reportsGetEvacueeReport(params?: { reportRequestId?: string }): Observable<Blob> {
+    return this.reportsGetEvacueeReport$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
   }
 
   /**
@@ -86,7 +78,6 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<StrictHttpResponse<string>> {
-
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsCreateEvacueeReportPath, 'post');
     if (params) {
       rb.query('taskNumber', params.taskNumber, {});
@@ -97,15 +88,19 @@ export class ReportsService extends BaseService {
       rb.query('to', params.to, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -122,7 +117,6 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<string> {
-
     return this.reportsCreateEvacueeReport$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -139,24 +133,25 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetSupportReport$Response(params?: {
-    reportRequestId?: string;
-  }): Observable<StrictHttpResponse<Blob>> {
-
+  reportsGetSupportReport$Response(params?: { reportRequestId?: string }): Observable<StrictHttpResponse<Blob>> {
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetSupportReportPath, 'get');
     if (params) {
       rb.query('reportRequestId', params.reportRequestId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'blob',
+          accept: 'application/octet-stream'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Blob>;
+        })
+      );
   }
 
   /**
@@ -165,13 +160,8 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetSupportReport(params?: {
-    reportRequestId?: string;
-  }): Observable<Blob> {
-
-    return this.reportsGetSupportReport$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
-    );
+  reportsGetSupportReport(params?: { reportRequestId?: string }): Observable<Blob> {
+    return this.reportsGetSupportReport$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
   }
 
   /**
@@ -193,7 +183,6 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<StrictHttpResponse<string>> {
-
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsCreateSupportReportPath, 'post');
     if (params) {
       rb.query('taskNumber', params.taskNumber, {});
@@ -204,15 +193,19 @@ export class ReportsService extends BaseService {
       rb.query('to', params.to, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -229,10 +222,8 @@ export class ReportsService extends BaseService {
     from?: string;
     to?: string;
   }): Observable<string> {
-
     return this.reportsCreateSupportReport$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
-
 }

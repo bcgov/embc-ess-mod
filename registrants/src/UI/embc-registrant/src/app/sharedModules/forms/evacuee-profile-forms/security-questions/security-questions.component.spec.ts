@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import SecurityQuestionsComponent from './security-questions.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { provideRouter } from '@angular/router';
 
 describe('SecurityQuestionsComponent', () => {
   let component: SecurityQuestionsComponent;
@@ -11,9 +11,8 @@ describe('SecurityQuestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, ReactiveFormsModule],
-      declarations: [SecurityQuestionsComponent],
-      providers: [UntypedFormBuilder, FormCreationService]
+      imports: [ReactiveFormsModule, SecurityQuestionsComponent],
+      providers: [UntypedFormBuilder, FormCreationService, provideRouter([])]
     }).compileComponents();
   });
 

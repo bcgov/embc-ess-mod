@@ -9,12 +9,6 @@ import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [WizardComponent],
-  imports: [
-    CommonModule,
-    CoreModule,
-    WizardRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, CoreModule, WizardRoutingModule, MaterialModule, SharedModule]
 })
 export class WizardModule {}

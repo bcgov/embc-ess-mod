@@ -1,13 +1,11 @@
 <div class="main-border">
-  <app-outage-banner
-    *ngIf="outageService.getShowOutageBanner() | async"
-    (closeEvent)="closeOutageBanner($event)"
-  ></app-outage-banner>
+  @if (outageService.getShowOutageBanner() | async) {
+    <app-outage-banner (closeEvent)="closeOutageBanner($event)"></app-outage-banner>
+  }
 
-  <app-environment-banner
-    [environment]="environment"
-    *ngIf="environment !== null && environment !== undefined"
-  ></app-environment-banner>
+  @if (environment !== null && environment !== undefined) {
+    <app-environment-banner [environment]="environment"></app-environment-banner>
+  }
 
   <app-header
     [ngStyle]="
@@ -35,7 +33,9 @@
     </div>
 
     <div>
-      <router-outlet *ngIf="!isLoading"></router-outlet>
+      @if (!isLoading) {
+        <router-outlet></router-outlet>
+      }
     </div>
   </main>
   <div
@@ -51,12 +51,5 @@
   >
     <app-footer></app-footer>
   </div>
-  <app-loader
-    class="spinner"
-    [showLoader]="isLoading"
-    [strokeWidth]="10"
-    [diameter]="50"
-    [color]="color"
-  >
-  </app-loader>
+  <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"> </app-loader>
 </div>

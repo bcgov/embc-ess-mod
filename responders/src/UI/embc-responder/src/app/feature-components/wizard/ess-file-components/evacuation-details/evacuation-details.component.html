@@ -12,13 +12,7 @@
       <form [formGroup]="evacDetailsForm">
         <div class="row">
           <div class="col-8">
-            <div
-              *ngIf="
-                stepEssFileService?.paperESSFile ||
-                evacueeSessionService?.isPaperBased
-              "
-              class="row"
-            >
+            <div *ngIf="stepEssFileService?.paperESSFile || evacueeSessionService?.isPaperBased" class="row">
               <div class="col-12 paper-box">
                 <div class="row">
                   <div class="col-md-12">
@@ -28,17 +22,15 @@
                     </p>
 
                     <p>
-                      If you need to update the Paper ESS File Number, please
-                      start a new search using the correct information.
+                      If you need to update the Paper ESS File Number, please start a new search using the correct
+                      information.
                     </p>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="col-md-12">
-                    <label class="tab-subtitle requiredField"
-                      >Paper ESS File Created by</label
-                    >
+                    <label class="tab-subtitle requiredField">Paper ESS File Created by</label>
                   </div>
                 </div>
 
@@ -46,21 +38,11 @@
                   <div class="col-md-4">
                     <mat-form-field appearance="outline">
                       <mat-label>Interviewer first name</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        maxlength="100"
-                        formControlName="firstName"
-                        required
-                      />
+                      <input matInput type="text" maxlength="100" formControlName="firstName" required />
                       <mat-error
                         *ngIf="
-                          evacDetailsFormControl?.paperIssuedBy?.get(
-                            'firstName'
-                          ).invalid &&
-                          evacDetailsFormControl?.paperIssuedBy
-                            ?.get('firstName')
-                            .hasError('whitespaceError')
+                          evacDetailsFormControl?.paperIssuedBy?.get('firstName').invalid &&
+                          evacDetailsFormControl?.paperIssuedBy?.get('firstName').hasError('whitespaceError')
                         "
                       >
                         Interviewer first name is required</mat-error
@@ -71,21 +53,11 @@
                   <div class="col-md-4">
                     <mat-form-field appearance="outline">
                       <mat-label>Initial of their last name</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        formControlName="lastNameInitial"
-                        maxlength="1"
-                        required
-                      />
+                      <input matInput type="text" formControlName="lastNameInitial" maxlength="1" required />
                       <mat-error
                         *ngIf="
-                          evacDetailsFormControl?.paperIssuedBy?.get(
-                            'lastNameInitial'
-                          ).invalid &&
-                          evacDetailsFormControl?.paperIssuedBy
-                            ?.get('lastNameInitial')
-                            .hasError('whitespaceError')
+                          evacDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').invalid &&
+                          evacDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').hasError('whitespaceError')
                         "
                       >
                         Initial is required</mat-error
@@ -96,9 +68,7 @@
 
                 <div class="row">
                   <div class="col-md-12">
-                    <label class="tab-subtitle requiredField"
-                      >Paper ESS File Completed On</label
-                    >
+                    <label class="tab-subtitle requiredField">Paper ESS File Completed On</label>
                   </div>
                 </div>
 
@@ -113,18 +83,13 @@
                         placeholder="File Completed On"
                         required
                       />
-                      <mat-datepicker-toggle
-                        matSuffix
-                        [for]="paperPicker"
-                      ></mat-datepicker-toggle>
+                      <mat-datepicker-toggle matSuffix [for]="paperPicker"></mat-datepicker-toggle>
                       <mat-datepicker #paperPicker></mat-datepicker>
 
                       <mat-error
                         *ngIf="
                           evacDetailsFormControl?.paperCompletedOn?.invalid &&
-                          evacDetailsFormControl?.paperCompletedOn?.hasError(
-                            'invalidDate'
-                          )
+                          evacDetailsFormControl?.paperCompletedOn?.hasError('invalidDate')
                         "
                       >
                         Please enter a valid date</mat-error
@@ -133,9 +98,7 @@
                       <mat-error
                         *ngIf="
                           evacDetailsFormControl?.paperCompletedOn?.invalid &&
-                          evacDetailsFormControl?.paperCompletedOn?.hasError(
-                            'required'
-                          )
+                          evacDetailsFormControl?.paperCompletedOn?.hasError('required')
                         "
                       >
                         Completed on date is required</mat-error
@@ -145,19 +108,11 @@
                   <div class="col-md-4">
                     <mat-form-field appearance="outline">
                       <mat-label>Time</mat-label>
-                      <input
-                        type="time"
-                        formControlName="paperCompletedTime"
-                        matInput
-                        placeholder="Time"
-                        required
-                      />
+                      <input type="time" formControlName="paperCompletedTime" matInput placeholder="Time" required />
                       <mat-error
                         *ngIf="
                           evacDetailsFormControl.paperCompletedTime.invalid &&
-                          evacDetailsFormControl.paperCompletedTime.hasError(
-                            'required'
-                          )
+                          evacDetailsFormControl.paperCompletedTime.hasError('required')
                         "
                       >
                         Time is required</mat-error
@@ -177,10 +132,7 @@
                   >
                     Are you being evacuated from your primary address?
                   </label>
-                  <label
-                    class="tab-subtitle requiredField"
-                    *ngIf="!isBCAddress"
-                  >
+                  <label class="tab-subtitle requiredField" *ngIf="!isBCAddress">
                     Where are you being evacuated from?
                   </label>
 
@@ -192,30 +144,17 @@
                       (change)="evacPrimaryAddressChange($event)"
                       required
                     >
-                      <mat-radio-button id="addressYesOption" [value]="'Yes'"
-                        >Yes</mat-radio-button
-                      >
+                      <mat-radio-button id="addressYesOption" [value]="'Yes'">Yes</mat-radio-button>
                       <div class="prim-address">
-                        <p
-                          [innerHTML]="
-                            stepEssFileService?.primaryAddress
-                              | maskEvacuatedaddress
-                          "
-                        ></p>
+                        <p [innerHTML]="stepEssFileService?.primaryAddress | maskEvacuatedaddress"></p>
                       </div>
-                      <mat-radio-button id="addressNoOption" [value]="'No'"
-                        >No</mat-radio-button
-                      >
+                      <mat-radio-button id="addressNoOption" [value]="'No'">No</mat-radio-button>
                       <mat-error
                         class="custom-mat-error"
                         *ngIf="
-                          evacDetailsFormControl?.evacuatedFromPrimary
-                            .touched &&
-                          evacDetailsFormControl?.evacuatedFromPrimary
-                            .invalid &&
-                          evacDetailsFormControl?.evacuatedFromPrimary.hasError(
-                            'required'
-                          )
+                          evacDetailsFormControl?.evacuatedFromPrimary.touched &&
+                          evacDetailsFormControl?.evacuatedFromPrimary.invalid &&
+                          evacDetailsFormControl?.evacuatedFromPrimary.hasError('required')
                         "
                       >
                         Evacuation Address is required
@@ -225,29 +164,21 @@
                 </div>
 
                 <div class="col-12" *ngIf="!isBCAddress">
-                  <app-bc-address
-                    [addressForm]="evacAddressFormGroup"
-                  ></app-bc-address>
+                  <app-bc-address [addressForm]="evacAddressFormGroup"></app-bc-address>
                 </div>
                 <div class="col-12" *ngIf="showBCAddressForm">
                   <p class="bold">Where are you being evacuated from?</p>
-                  <app-bc-address
-                    [addressForm]="evacAddressFormGroup"
-                  ></app-bc-address>
+                  <app-bc-address [addressForm]="evacAddressFormGroup"></app-bc-address>
                 </div>
               </ng-container>
 
               <ng-template #editEssFile>
                 <div class="col-12">
-                  <p class="tab-subtitle requiredField">
-                    Where are you being evacuated from?
-                  </p>
+                  <p class="tab-subtitle requiredField">Where are you being evacuated from?</p>
                   <p
                     *ngIf="wizardType !== 'complete-file'"
                     class="evac-address"
-                    [innerHTML]="
-                      stepEssFileService?.evacAddress | maskEvacuatedaddress
-                    "
+                    [innerHTML]="stepEssFileService?.evacAddress | maskEvacuatedaddress"
                   ></p>
                   <app-bc-address
                     *ngIf="wizardType === 'complete-file'"
@@ -259,41 +190,29 @@
               <hr class="break-margin" />
 
               <div class="col-12">
-                <label class="tab-subtitle requiredField">
-                  Registration Location / Facility Name
-                </label>
+                <label class="tab-subtitle requiredField"> Registration Location / Facility Name </label>
 
                 <p>
                   A facility name is the location of the
-                  <strong>Reception Centre</strong>. If there is no Reception
-                  Centre, use the address or physical location of the emergency
-                  event (e.g. use the street name for a level one house fire).
+                  <strong>Reception Centre</strong>. If there is no Reception Centre, use the address or physical
+                  location of the emergency event (e.g. use the street name for a level one house fire).
                 </p>
 
                 <div class="row">
                   <div class="col-6">
                     <mat-form-field appearance="outline">
-                      <mat-label>
-                        Registration Location / Facility Name
-                      </mat-label>
+                      <mat-label> Registration Location / Facility Name </mat-label>
 
-                      <input
-                        formControlName="facilityName"
-                        maxlength="100"
-                        matInput
-                      />
+                      <input formControlName="facilityName" maxlength="100" matInput />
                       <mat-error
                         class="custom-mat-error"
                         *ngIf="
                           evacDetailsFormControl?.facilityName.touched &&
                           evacDetailsFormControl?.facilityName.invalid &&
-                          evacDetailsFormControl?.facilityName.hasError(
-                            'whitespaceError'
-                          )
+                          evacDetailsFormControl?.facilityName.hasError('whitespaceError')
                         "
                       >
-                        Registration Location / Facility Name is
-                        required</mat-error
+                        Registration Location / Facility Name is required</mat-error
                       >
                     </mat-form-field>
                   </div>
@@ -303,18 +222,13 @@
               <hr class="break-margin" />
 
               <div class="col-12">
-                <label class="tab-subtitle requiredField">
-                  Do you have insurance to cover your immediate needs?
-                </label>
+                <label class="tab-subtitle requiredField"> Do you have insurance to cover your immediate needs? </label>
 
                 <p>
-                  If you have insurance (e.g. home, tenant, or travel) please
-                  contact your insurance provider as soon as possible. If you
-                  are having difficulty contacting your insurance provider,
-                  please contact the Insurance Bureau of Canada at
-                  1-844-227-5422. It is strongly recommended to keep a record of
-                  all receipts and invoices if immediate needs can be covered by
-                  your insurance provider.
+                  If you have insurance (e.g. home, tenant, or travel) please contact your insurance provider as soon as
+                  possible. If you are having difficulty contacting your insurance provider, please contact the
+                  Insurance Bureau of Canada at 1-844-227-5422. It is strongly recommended to keep a record of all
+                  receipts and invoices if immediate needs can be covered by your insurance provider.
                 </p>
 
                 <mat-radio-group
@@ -323,11 +237,7 @@
                   (change)="insuranceChange($event)"
                   required
                 >
-                  <mat-radio-button
-                    *ngFor="let option of insuranceOption"
-                    [id]="option.value"
-                    [value]="option.value"
-                  >
+                  <mat-radio-button *ngFor="let option of insuranceOption" [id]="option.value" [value]="option.value">
                     {{ option.name }}
                   </mat-radio-button>
                   <mat-error
@@ -343,8 +253,7 @@
                 </mat-radio-group>
 
                 <p class="responder-instruction bold" *ngIf="showInsuranceMsg">
-                  Assist the evacuee in contacting their insurance agent to
-                  confirm coverage for this event.
+                  Assist the evacuee in contacting their insurance agent to confirm coverage for this event.
                 </p>
               </div>
             </div>
@@ -353,25 +262,16 @@
           <div class="col-md-4">
             <mat-card class="tips-card">
               <div>
-                <img
-                  class="img-align"
-                  src="/assets/images/tips-lightbulb.svg"
-                  height="63"
-                  width="62"
-                />
-                <span class="tips-heading">
-                  <span class="bold">Tip:</span> Task Number
-                </span>
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+                <span class="tips-heading"> <span class="bold">Tip:</span> Task Number </span>
               </div>
 
               <p class="tips-info">
-                This ESS File will be associated with the Task Number that you
-                are signed in under.
+                This ESS File will be associated with the Task Number that you are signed in under.
               </p>
 
               <p class="tips-info">
-                If this is not the correct task number, please sign in under the
-                correct task number.
+                If this is not the correct task number, please sign in under the correct task number.
               </p>
             </mat-card>
           </div>
@@ -380,9 +280,7 @@
 
       <div class="row">
         <div class="col-12">
-          <button class="button-p next" mat-button (click)="next()">
-            Next
-          </button>
+          <button class="button-p next" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </div>

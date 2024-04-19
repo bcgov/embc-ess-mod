@@ -9,8 +9,7 @@ describe('FamilyInformationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [FamilyInformationComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, FamilyInformationComponent],
       providers: [UntypedFormBuilder]
     }).compileComponents();
   }));

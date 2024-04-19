@@ -51,8 +51,5 @@
     </app-suppliers-table>
   </div>
 
-  <app-overlay-loader
-    *ngIf="isLoading"
-    [showLoader]="isLoading"
-  ></app-overlay-loader>
+  <app-overlay-loader *ngIf="isLoading" [showLoader]="isLoading"></app-overlay-loader>
 </mat-card>

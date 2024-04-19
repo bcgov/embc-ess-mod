@@ -10,13 +10,9 @@
       <mat-card>
         <p class="report-heading">Generate Report</p>
         <p>
-          When exporting a report, enter <b>at least 1</b> of the fields below
-          to narrow your report results.
+          When exporting a report, enter <b>at least 1</b> of the fields below to narrow your report results.
           <br />
-          <em
-            >Please note: The more fields entered below, the quicker the report
-            will generate.</em
-          >
+          <em>Please note: The more fields entered below, the quicker the report will generate.</em>
         </p>
         <br />
         <form [formGroup]="reportForm">
@@ -24,12 +20,7 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Task #</mat-label>
-                <input
-                  formControlName="taskNumber"
-                  maxlength="100"
-                  matInput
-                  placeholder="Task #"
-                />
+                <input formControlName="taskNumber" maxlength="100" matInput placeholder="Task #" />
               </mat-form-field>
             </div>
           </div>
@@ -38,12 +29,7 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>ESS File #</mat-label>
-                <input
-                  formControlName="fileId"
-                  maxlength="100"
-                  matInput
-                  placeholder="ESS File #"
-                />
+                <input formControlName="fileId" maxlength="100" matInput placeholder="ESS File #" />
               </mat-form-field>
             </div>
           </div>
@@ -66,16 +52,11 @@
                   [displayWith]="cityDisplayFrom"
                   (optionSelected)="getEvacuatedFrom($event.option.value)"
                 >
-                  <mat-option
-                    *ngFor="let option of filteredOptionsEvacFrom | async"
-                    [value]="option"
-                  >
+                  <mat-option *ngFor="let option of filteredOptionsEvacFrom | async" [value]="option">
                     {{ option.name }}
                   </mat-option>
                 </mat-autocomplete>
-                <mat-error *ngIf="validateEvacuatedFrom()">
-                  City is invalid</mat-error
-                >
+                <mat-error *ngIf="validateEvacuatedFrom()"> City is invalid</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -98,16 +79,11 @@
                   [displayWith]="cityDisplayTo"
                   (optionSelected)="getEvacuatedTo($event.option.value)"
                 >
-                  <mat-option
-                    *ngFor="let option of filteredOptionsEvacTo | async"
-                    [value]="option"
-                  >
+                  <mat-option *ngFor="let option of filteredOptionsEvacTo | async" [value]="option">
                     {{ option.name }}
                   </mat-option>
                 </mat-autocomplete>
-                <mat-error *ngIf="validateEvacuatedTo()">
-                  City is invalid</mat-error
-                >
+                <mat-error *ngIf="validateEvacuatedTo()"> City is invalid</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -128,38 +104,18 @@
             </div>
           </div>
 
-          <div class="error" *ngIf="showErrorMessage">
-            A minimum of one field is required to generate a report.
-          </div>
+          <div class="error" *ngIf="showErrorMessage">A minimum of one field is required to generate a report.</div>
         </form>
         <div class="row">
           <div class="col-md-3">
-            <button
-              class="button-p button-width"
-              mat-button
-              (click)="evacueeReport()"
-            >
-              <img
-                class="img-align"
-                src="/assets/images/cvs-icon.svg"
-                height="22"
-                width="17"
-              />
+            <button class="button-p button-width" mat-button (click)="evacueeReport()">
+              <img class="img-align" src="/assets/images/cvs-icon.svg" height="22" width="17" />
               Evacuee Report
             </button>
           </div>
           <div class="col-md-3">
-            <button
-              class="button-p button-width"
-              mat-button
-              (click)="supportReport()"
-            >
-              <img
-                class="img-align"
-                src="/assets/images/cvs-icon.svg"
-                height="22"
-                width="17"
-              />
+            <button class="button-p button-width" mat-button (click)="supportReport()">
+              <img class="img-align" src="/assets/images/cvs-icon.svg" height="22" width="17" />
               Support Report
             </button>
           </div>

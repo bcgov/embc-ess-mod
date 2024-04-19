@@ -1,11 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormControl,
-  UntypedFormGroup,
-  FormGroupDirective,
-  NgForm
-} from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
@@ -17,33 +11,21 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { ContactService } from './contact.service';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return (
-      !!(
-        control &&
-        control.invalid &&
-        (control.dirty || control.touched || isSubmitted)
-      ) || control.parent.hasError('emailMatch')
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
     );
   }
 }
 
 export class CustomErrorMobileMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return (
-      !!(
-        control &&
-        control.invalid &&
-        (control.dirty || control.touched || isSubmitted)
-      ) || control.parent.hasError('mobileMatch')
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('mobileMatch')
     );
   }
 }
@@ -55,20 +37,7 @@ export class CustomErrorMobileMatcher implements ErrorStateMatcher {
 })
 export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
-  readonly phoneMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   emailMatcher = new CustomErrorMailMatcher();
   tabUpdateSubscription: Subscription;
 
@@ -120,9 +89,7 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.contactInfoForm.get('phone').updateValueAndValidity();
       });
 
-    this.tabUpdateSubscription = this.contactService.updateTabStatus(
-      this.contactInfoForm
-    );
+    this.tabUpdateSubscription = this.contactService.updateTabStatus(this.contactInfoForm);
   }
 
   /**
@@ -148,9 +115,7 @@ export class ContactComponent implements OnInit, OnDestroy {
     if (this.evacueeSessionService.isPaperBased) {
       this.stepEvacueeProfileService.nextTabUpdate.next();
       if (this.stepEvacueeProfileService.checkTabsStatus()) {
-        this.stepEvacueeProfileService.openModal(
-          globalConst.wizardProfileMessage
-        );
+        this.stepEvacueeProfileService.openModal(globalConst.wizardProfileMessage);
       } else {
         this.router.navigate([this.contactService?.tabMetaData?.next]);
       }

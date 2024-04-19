@@ -24,8 +24,7 @@ export class TeamMemberReviewComponent {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras
-          .state as TeamMember;
+        const state = this.router.getCurrentNavigation().extras.state as TeamMember;
         this.teamMember = state;
       }
     } else {
@@ -40,14 +39,9 @@ export class TeamMemberReviewComponent {
    */
   goBack(): void {
     if (this.teamMember.id) {
-      this.router.navigate(
-        ['/responder-access/responder-management/details/edit'],
-        { state: this.teamMember }
-      );
+      this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
     } else {
-      this.router.navigate([
-        '/responder-access/responder-management/add-member'
-      ]);
+      this.router.navigate(['/responder-access/responder-management/add-member']);
     }
   }
 
@@ -68,26 +62,18 @@ export class TeamMemberReviewComponent {
    * Updates the team member and navigates to team list
    */
   updateTeamMember(): void {
-    this.teamMemberReviewService
-      .updateTeamMember(this.teamMember.id, this.teamMember)
-      .subscribe({
-        next: (value) => {
-          const stateIndicator = { action: 'edit' };
-          this.router.navigate(
-            ['/responder-access/responder-management/details/member-list'],
-            { state: stateIndicator }
-          );
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.updateTeamMemberError
-          );
-        }
-      });
+    this.teamMemberReviewService.updateTeamMember(this.teamMember.id, this.teamMember).subscribe({
+      next: (value) => {
+        const stateIndicator = { action: 'edit' };
+        this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.updateTeamMemberError);
+      }
+    });
   }
 
   /**
@@ -97,10 +83,7 @@ export class TeamMemberReviewComponent {
     this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe({
       next: (value) => {
         const stateIndicator = { action: 'add' };
-        this.router.navigate(
-          ['/responder-access/responder-management/details/member-list'],
-          { state: stateIndicator }
-        );
+        this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
       },
       error: (error) => {
         this.showLoader = !this.showLoader;

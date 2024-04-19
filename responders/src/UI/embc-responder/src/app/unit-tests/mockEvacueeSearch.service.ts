@@ -11,9 +11,7 @@ import { EvacueeSearchService } from '../feature-components/search/evacuee-searc
 export class MockEvacueeSearchService extends EvacueeSearchService {
   public evacueeSearchResults: EvacueeSearchResults;
 
-  public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel
-  ): Observable<EvacueeSearchResults> {
+  public searchForEvacuee(evacueeSearchParameters: EvacueeDetailsModel): Observable<EvacueeSearchResults> {
     return new BehaviorSubject<EvacueeSearchResults>(this.evacueeSearchResults);
   }
 }

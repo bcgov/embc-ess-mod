@@ -1,9 +1,13 @@
 <!-- eslint-disable prettier/prettier -->
 <form [formGroup]="identifyNeedsForm">
-  <mat-card class="card-align" style="padding-bottom: 0px">
+  <mat-card appearance="outlined" class="card-align" style="padding-bottom: 0px">
     <mat-card-content>
-      <p class="card-heading">If you require supports while evacuated, please let us know about your household’s needs. *</p>
-      <mat-error *ngIf="identifyNeedsForm.touched && identifyNeedsForm.hasError('invalid')"> Please select at least one option before proceeding. </mat-error>
+      <p class="card-heading">
+        If you require supports while evacuated, please let us know about your household’s needs. *
+      </p>
+      @if (identifyNeedsForm.touched && identifyNeedsForm.hasError('invalid')) {
+        <mat-error> Please select at least one option before proceeding. </mat-error>
+      }
       <div class="row row-tile">
         <div class="col-md-12">
           <label class="tab-subtitle" for="shelter">
@@ -14,29 +18,37 @@
           <div class="shelter">
             <p>
               There are several ways to meet your shelter needs.<br />
-              You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
+              You can receive a shelter allowance and use that money to find your own shelter or be provided with a
+              referral to shelter (like a cot in a gym or a hotel/motel).
             </p>
-            <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option" *ngIf="needsFormControl['requiresShelter'].value">
-              <label for="shelterAllowance">
-                <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>
-                I need the shelter allowance and can find my own shelter.
-                <span>
-                  <a class="status-info" (click)="openShelterAllowanceDialog()">
-                    <img src="../../../../../assets/images/info.svg" height="28" width="28" />
-                  </a>
-                </span>
-              </label>
-              <label for="shelterReferral">
-                <mat-radio-button id="shelterReferral" value="Referral"></mat-radio-button>
-                I need a referral to shelter.
-                <span>
-                  <a class="status-info" (click)="openShelterReferralDialog()">
-                    <img src="../../../../../assets/images/info.svg" height="28" width="28" />
-                  </a>
-                </span>
-              </label>
-            </mat-radio-group>
-            <mat-error *ngIf="identifyNeedsForm.controls.requiresShelterType.touched && identifyNeedsForm.controls.requiresShelterType.hasError('required')"> Required </mat-error>
+            @if (needsFormControl['requiresShelter'].value) {
+              <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option">
+                <label for="shelterAllowance">
+                  <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>
+                  I need the shelter allowance and can find my own shelter.
+                  <span>
+                    <a class="status-info" (click)="openShelterAllowanceDialog()">
+                      <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                    </a>
+                  </span>
+                </label>
+                <label for="shelterReferral">
+                  <mat-radio-button id="shelterReferral" value="Referral"></mat-radio-button>
+                  I need a referral to shelter.
+                  <span>
+                    <a class="status-info" (click)="openShelterReferralDialog()">
+                      <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                    </a>
+                  </span>
+                </label>
+              </mat-radio-group>
+            }
+            @if (
+              identifyNeedsForm.controls.requiresShelterType.touched &&
+              identifyNeedsForm.controls.requiresShelterType.hasError('required')
+            ) {
+              <mat-error> Required </mat-error>
+            }
           </div>
         </div>
 
@@ -66,7 +78,9 @@
             <img src="../../../../../assets/images/needs-incidentals.svg" width="40px" height="40px" />
             Incidentals
             <span>
-              <a class="status-info" (click)="openIncidentalsDialog()"> <img src="../../../../../assets/images/info.svg" height="28" width="28" /></a>
+              <a class="status-info" (click)="openIncidentalsDialog()">
+                <img src="../../../../../assets/images/info.svg" height="28" width="28"
+              /></a>
             </span>
           </label>
         </div>

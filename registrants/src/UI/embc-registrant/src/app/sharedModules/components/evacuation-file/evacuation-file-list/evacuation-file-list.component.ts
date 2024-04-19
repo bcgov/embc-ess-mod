@@ -9,11 +9,16 @@ import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
+import { MatButtonModule } from '@angular/material/button';
+import { AppLoaderComponent } from '../../../../core/components/app-loader/app-loader.component';
 
 @Component({
   selector: 'app-evacuation-file-list',
   templateUrl: './evacuation-file-list.component.html',
-  styleUrls: ['./evacuation-file-list.component.scss']
+  styleUrls: ['./evacuation-file-list.component.scss'],
+  standalone: true,
+  imports: [AppLoaderComponent, MatButtonModule, EvacuationCardComponent]
 })
 export class EvacuationFileListComponent implements OnInit {
   currentPath: string;
@@ -44,13 +49,9 @@ export class EvacuationFileListComponent implements OnInit {
         next: (files) => {
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
-            (a, b) =>
-              new Date(b.evacuationFileDate).valueOf() -
-              new Date(a.evacuationFileDate).valueOf()
+            (a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf()
           );
-          this.evacuationFileDataService.setCurrentEvacuationFileCount(
-            files.length
-          );
+          this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
           this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
@@ -66,9 +67,7 @@ export class EvacuationFileListComponent implements OnInit {
         next: (files) => {
           this.dataSourceInactive = files;
           this.dataSourceInactive.sort(
-            (a, b) =>
-              new Date(b.evacuationFileDate).valueOf() -
-              new Date(a.evacuationFileDate).valueOf()
+            (a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf()
           );
           this.showLoading = false;
         },

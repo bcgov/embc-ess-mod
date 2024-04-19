@@ -19,9 +19,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './incidentals.component.html',
   styleUrls: ['./incidentals.component.scss']
 })
-export class IncidentalsComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfHouseholdMembers: number;
   referralForm: UntypedFormGroup;
@@ -37,11 +35,9 @@ export class IncidentalsComponent
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
 
-    this.userTotalAmountSubscription = this.referralForm
-      .get('userTotalAmount')
-      .valueChanges.subscribe((value) => {
-        this.referralForm.get('approverName').updateValueAndValidity();
-      });
+    this.userTotalAmountSubscription = this.referralForm.get('userTotalAmount').valueChanges.subscribe((value) => {
+      this.referralForm.get('approverName').updateValueAndValidity();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,9 +46,7 @@ export class IncidentalsComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
@@ -96,12 +90,7 @@ export class IncidentalsComponent
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      Number(
-        this.referralForm
-          .get('userTotalAmount')
-          .value.toString()
-          .replace(/,/g, '')
-      ) > this.totalAmount;
+      Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
 
     if (!exceedsTotal && this.referralForm.get('approverName').value) {
       this.referralForm.get('approverName').patchValue('');

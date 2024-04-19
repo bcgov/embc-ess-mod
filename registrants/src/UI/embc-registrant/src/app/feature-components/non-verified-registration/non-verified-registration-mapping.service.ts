@@ -11,17 +11,11 @@ export class NonVerifiedRegistrationMappingService {
     private evacuationFileDataService: EvacuationFileDataService
   ) {}
 
-  mapAnonymousRegistration(
-    captchaResponse: CaptchaResponse
-  ): AnonymousRegistration {
+  mapAnonymousRegistration(captchaResponse: CaptchaResponse): AnonymousRegistration {
     return {
       informationCollectionConsent: true,
-      preliminaryNeedsAssessment:
-        this.evacuationFileDataService.createEvacuationFileDTO(),
-      registrationDetails: this.mergeData(
-        this.createRegistration(),
-        this.profileDataService.createProfileDTO()
-      ),
+      preliminaryNeedsAssessment: this.evacuationFileDataService.createEvacuationFileDTO(),
+      registrationDetails: this.mergeData(this.createRegistration(), this.profileDataService.createProfileDTO()),
       captcha: captchaResponse.resolved
     };
   }

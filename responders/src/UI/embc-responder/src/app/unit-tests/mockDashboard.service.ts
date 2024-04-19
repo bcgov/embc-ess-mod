@@ -101,8 +101,7 @@ export class MockDashboardService extends SearchDataService {
       },
       {
         id: 2,
-        question:
-          'What was your first car’s make and model? (e.g. Ford Taurus)',
+        question: 'What was your first car’s make and model? (e.g. Ford Taurus)',
         answer: 't*****t',
         answerChanged: false
       },
@@ -340,11 +339,8 @@ export class MockDashboardService extends SearchDataService {
     );
   }
 
-  async getEvacueeProfile(
-    evacueeProfileId: string
-  ): Promise<RegistrantProfileModel> {
-    const profile$ =
-      evacueeProfileId === 'abc' ? this.mockProfile : this.mockPaperProfile;
+  async getEvacueeProfile(evacueeProfileId: string): Promise<RegistrantProfileModel> {
+    const profile$ = evacueeProfileId === 'abc' ? this.mockProfile : this.mockPaperProfile;
     return profile$;
   }
 

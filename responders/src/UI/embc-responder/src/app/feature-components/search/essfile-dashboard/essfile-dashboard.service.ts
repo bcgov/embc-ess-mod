@@ -10,17 +10,11 @@ import {
 } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
-import {
-  HouseholdMemberButtons,
-  SelectedPathType
-} from 'src/app/core/models/appBase.model';
+import { HouseholdMemberButtons, SelectedPathType } from 'src/app/core/models/appBase.model';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -54,7 +48,7 @@ export class EssfileDashboardService {
     private optionInjectionService: OptionInjectionService,
     private evacueeSearchService: EvacueeSearchService,
     private loadEvacueeListService: LoadEvacueeListService
-  ) { }
+  ) {}
 
   get essFile(): EvacuationFileModel {
     return this.essFileVal === null || this.essFileVal === undefined
@@ -111,8 +105,7 @@ export class EssfileDashboardService {
     if (this.selectedMember?.type === HouseholdMemberType.HouseholdMember) {
       if (
         this.selectedMember.linkedRegistrantId !== null &&
-        this.appBaseService?.appModel?.selectedUserPathway ===
-        SelectedPathType.digital
+        this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.digital
       ) {
         this.displayMemberButton = HouseholdMemberButtons.viewProfile;
       } else if (this.matchedProfiles?.length === 0) {
@@ -121,47 +114,31 @@ export class EssfileDashboardService {
 
         // Member has 1 match and has security questions OR Member has more than 1 match
       } else if (
-        (this.matchedProfiles?.length === 1 &&
-          this.matchedProfiles[0]?.isProfileCompleted) ||
+        (this.matchedProfiles?.length === 1 && this.matchedProfiles[0]?.isProfileCompleted) ||
         this.matchedProfiles?.length > 1
       ) {
         this.displayMemberButton = HouseholdMemberButtons.linkProfile;
 
         // Member has 1 match and doesn't have security questions
-      } else if (
-        this.matchedProfiles?.length === 1 &&
-        !this.matchedProfiles[0]?.isProfileCompleted
-      ) {
+      } else if (this.matchedProfiles?.length === 1 && !this.matchedProfiles[0]?.isProfileCompleted) {
         this.displayMemberButton = HouseholdMemberButtons.cannotLinkProfile;
       }
     } else {
       if (
-        this.appBaseService?.appModel?.selectedUserPathway ===
-        SelectedPathType.digital ||
-        (this.appBaseService?.appModel?.selectedUserPathway ===
-          SelectedPathType.paperBased &&
-          this.appBaseService?.appModel.selectedProfile.selectedEvacueeInContext
-            .id ===
-          this.appBaseService?.appModel.selectedEssFile.primaryRegistrantId)
+        this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.digital ||
+        (this.appBaseService?.appModel?.selectedUserPathway === SelectedPathType.paperBased &&
+          this.appBaseService?.appModel.selectedProfile.selectedEvacueeInContext.id ===
+            this.appBaseService?.appModel.selectedEssFile.primaryRegistrantId)
       ) {
         this.displayMemberButton = HouseholdMemberButtons.viewProfile;
       }
     }
   }
 
-  public getWizardType(
-    optionType: string,
-    essFile: EvacuationFileModel
-  ): string {
-    if (
-      essFile?.status === EvacuationFileStatus.Pending ||
-      essFile?.status === EvacuationFileStatus.Expired
-    ) {
+  public getWizardType(optionType: string, essFile: EvacuationFileModel): string {
+    if (essFile?.status === EvacuationFileStatus.Pending || essFile?.status === EvacuationFileStatus.Expired) {
       return WizardType.CompleteFile;
-    } else if (
-      essFile?.status === EvacuationFileStatus.Active &&
-      optionType === SelectedPathType.remoteExtensions
-    ) {
+    } else if (essFile?.status === EvacuationFileStatus.Active && optionType === SelectedPathType.remoteExtensions) {
       return WizardType.ExtendSupports;
     } else if (optionType === SelectedPathType.caseNotes) {
       return WizardType.CaseNotes;
@@ -178,9 +155,7 @@ export class EssfileDashboardService {
       validNotes = notes.filter((note) => !note.isHidden);
     }
 
-    return validNotes.sort(
-      (a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
-    );
+    return validNotes.sort((a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf());
   }
 
   /**
@@ -219,22 +194,17 @@ export class EssfileDashboardService {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 
   public hasPostalCode(): boolean {
     return (
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== null &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== '' &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== undefined &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress?.stateProvince?.code === 'BC'
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !== null &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !== '' &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress.postalCode !==
+        undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.primaryAddress?.stateProvince?.code ===
+        'BC'
     );
   }
 
@@ -263,22 +233,15 @@ export class EssfileDashboardService {
   }
 
   public async updateMember() {
-    if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.householdMemberRegistrantId !== undefined
-    ) {
+    if (this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId !== undefined) {
       if (this.appBaseService?.appModel?.selectedProfile.profileReloadFlag) {
-        const profile$ =
-          await this.optionInjectionService.instance.loadEvcaueeProfile(
-            this.appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext?.id
-          );
+        const profile$ = await this.optionInjectionService.instance.loadEvcaueeProfile(
+          this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id
+        );
       }
       this.appBaseService.appModel = {
         selectedProfile: {
-          selectedEvacueeInContext:
-            this.appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext,
+          selectedEvacueeInContext: this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext,
           householdMemberRegistrantId: undefined,
           profileReloadFlag: null
         }
@@ -289,40 +252,29 @@ export class EssfileDashboardService {
 
   public eligibilityFirstName(): string {
     if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== null &&
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== undefined
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext !== null &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext !== undefined
     ) {
-      return this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext?.personalDetails?.firstName;
+      return this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
     } else {
-      return this.evacueeSearchService?.evacueeSearchContext
-        ?.evacueeSearchParameters?.firstName;
+      return this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.firstName;
     }
   }
 
   public eligibilityLastName(): string {
     if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== null &&
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== undefined
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext !== null &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext !== undefined
     ) {
-      return this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext?.personalDetails?.lastName;
+      return this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
     } else {
-      return this.evacueeSearchService?.evacueeSearchContext
-        ?.evacueeSearchParameters?.lastName;
+      return this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.lastName;
     }
   }
 
   public getIdentifiedNeeds(): string[] {
     return Array.from(this.essFile?.needsAssessment?.needs ?? []).map(
-      (need) =>
-        this.loadEvacueeListService
-          ?.getIdentifiedNeeds()
-          ?.find((value) => value.value === need)?.description
+      (need) => this.loadEvacueeListService?.getIdentifiedNeeds()?.find((value) => value.value === need)?.description
     );
   }
 }

@@ -31,25 +31,25 @@ const routes: Routes = [
       {
         path: 'profile',
         loadChildren: () =>
-          import(
-            'src/app/sharedModules/components/evacuation-file/profile/profile.module'
-          ).then((m) => m.ProfileModule),
+          import('src/app/sharedModules/components/evacuation-file/profile/profile.module').then(
+            (m) => m.ProfileModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'current/:essFile',
         loadChildren: () =>
-          import(
-            'src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module'
-          ).then((m) => m.EvacuationDetailsModule),
+          import('src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module').then(
+            (m) => m.EvacuationDetailsModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'past/:essFile',
         loadChildren: () =>
-          import(
-            'src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module'
-          ).then((m) => m.EvacuationDetailsModule),
+          import('src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module').then(
+            (m) => m.EvacuationDetailsModule
+          ),
         data: { flow: 'verified-registration' }
       }
     ]

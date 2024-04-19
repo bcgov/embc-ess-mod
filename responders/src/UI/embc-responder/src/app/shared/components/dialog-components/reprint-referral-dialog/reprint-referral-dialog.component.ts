@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SupportReprintReason } from 'src/app/core/api/models';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
@@ -75,9 +70,7 @@ export class ReprintReferralDialogComponent implements OnInit {
    * @returns the same reason for reprinting with spaces between words.
    */
   getReasonDescription(reasonOption: string): string {
-    return this.loadEvacueeListService
-      .getReprintReasons()
-      .find((reason) => reason.value === reasonOption).description;
+    return this.loadEvacueeListService.getReprintReasons().find((reason) => reason.value === reasonOption).description;
   }
 
   evacueeSummChangeEvent(event: MatCheckboxChange): void {

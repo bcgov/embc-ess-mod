@@ -4,7 +4,7 @@ import { TimeoutService } from 'src/app/core/services/timeout.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileService } from '../profile/profile.service';
 import * as globalConst from '../../core/services/globalConstants';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { ConflictManagementService } from 'src/app/sharedModules/components/conflict-management/conflict-management.service';
 import { ProfileDataConflict } from 'src/app/core/api/models';
 import { ProfileMappingService } from '../profile/profile-mapping.service';
@@ -13,7 +13,9 @@ import { EmailInviteService } from '../../core/services/emailInvite.service';
 @Component({
   selector: 'app-verified-registration',
   templateUrl: './verified-registration.component.html',
-  styleUrls: ['./verified-registration.component.scss']
+  styleUrls: ['./verified-registration.component.scss'],
+  standalone: true,
+  imports: [RouterOutlet]
 })
 export class VerifiedRegistrationComponent implements OnInit {
   constructor(

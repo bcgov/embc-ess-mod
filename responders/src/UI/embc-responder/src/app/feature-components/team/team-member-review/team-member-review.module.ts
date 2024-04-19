@@ -8,11 +8,6 @@ import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
   declarations: [TeamMemberReviewComponent],
-  imports: [
-    CommonModule,
-    TeamMemberReviewRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, TeamMemberReviewRoutingModule, MaterialModule, SharedModule]
 })
 export class TeamMemberReviewModule {}

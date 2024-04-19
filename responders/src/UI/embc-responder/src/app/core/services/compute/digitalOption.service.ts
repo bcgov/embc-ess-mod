@@ -46,26 +46,18 @@ export class DigitalOptionService implements SearchOptionsService {
     });
   }
 
-  search(
-    value: string | EvacueeSearchContextModel,
-    type?: string
-  ): void | Promise<EvacueeSearchResults> {
+  search(value: string | EvacueeSearchContextModel, type?: string): void | Promise<EvacueeSearchResults> {
     this.dataService.saveSearchParams(value);
     if (type === SearchPages.idVerifySearch) {
       this.router.navigate(['/responder-access/search/evacuee/name-search'], {
         skipLocationChange: true
       });
     } else if (type === SearchPages.digitalNameSearch) {
-      this.router.navigate(
-        ['/responder-access/search/evacuee/search-results'],
-        {
-          skipLocationChange: true
-        }
-      );
+      this.router.navigate(['/responder-access/search/evacuee/search-results'], {
+        skipLocationChange: true
+      });
     } else if (type === SearchPages.searchResults) {
-      return this.dataService.evacueeSearch(
-        (value as EvacueeSearchContextModel).evacueeSearchParameters
-      );
+      return this.dataService.evacueeSearch((value as EvacueeSearchContextModel).evacueeSearchParameters);
     }
   }
 

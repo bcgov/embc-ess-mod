@@ -1,12 +1,7 @@
 import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import {
-  DateOfBirthDataConflict,
-  NameDataConflict,
-  Profile,
-  ProfileDataConflict
-} from 'src/app/core/api/models';
+import { DateOfBirthDataConflict, NameDataConflict, Profile, ProfileDataConflict } from 'src/app/core/api/models';
 import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
 import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -15,11 +10,27 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
 import { LocationService } from 'src/app/core/services/location.service';
 import * as globalConst from '../../../core/services/globalConstants';
+import { ArrayContains } from '../../../core/pipe/arrayContains.pipe';
+import { CustomDate } from '../../../core/pipe/customDate.pipe';
+import { ComponentWrapperComponent } from '../component-wrapper/component-wrapper.component';
+import { AppLoaderComponent } from '../../../core/components/app-loader/app-loader.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-conflict-management',
   templateUrl: './conflict-management.component.html',
-  styleUrls: ['./conflict-management.component.scss']
+  styleUrls: ['./conflict-management.component.scss'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    MatCardModule,
+    MatButtonModule,
+    AppLoaderComponent,
+    ComponentWrapperComponent,
+    CustomDate,
+    ArrayContains
+  ]
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
   @ViewChild('conflictStepper') conflictStepper: MatStepper;
@@ -30,9 +41,9 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   showLoader = false;
   isSubmitted = false;
   form: UntypedFormGroup;
-  nameConflict: ProfileDataConflict;
-  dobConflict: ProfileDataConflict;
-  addressConflict: ProfileDataConflict;
+  nameConflict: any;
+  dobConflict: any;
+  addressConflict: any;
   profile: Profile;
 
   constructor(
@@ -55,15 +66,9 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     this.conflictService.getConflicts().subscribe({
       next: (bcscConflicts) => {
         this.conflicts = bcscConflicts;
-        this.nameConflict = bcscConflicts.find(
-          (element) => element.dataElementName === 'NameDataConflict'
-        );
-        this.dobConflict = bcscConflicts.find(
-          (element) => element.dataElementName === 'DateOfBirthDataConflict'
-        );
-        this.addressConflict = bcscConflicts.find(
-          (element) => element.dataElementName === 'AddressDataConflict'
-        );
+        this.nameConflict = bcscConflicts.find((element) => element.dataElementName === 'NameDataConflict');
+        this.dobConflict = bcscConflicts.find((element) => element.dataElementName === 'DateOfBirthDataConflict');
+        this.addressConflict = bcscConflicts.find((element) => element.dataElementName === 'AddressDataConflict');
         if (this.conflicts) {
           this.loadAddressForm();
         }
@@ -76,11 +81,7 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   }
 
   loadAddressForm(): void {
-    if (
-      this.conflicts.some(
-        (val) => val.dataElementName === 'AddressDataConflict'
-      )
-    ) {
+    if (this.conflicts.some((val) => val.dataElementName === 'AddressDataConflict')) {
       this.formCreationService.getAddressForm().subscribe((updatedAddress) => {
         this.form = updatedAddress;
       });
@@ -100,10 +101,7 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     } else if (stepName === 'dob') {
       this.resolveDOBConflict();
     }
-    if (
-      this.conflictStepper.selectedIndex ===
-      this.conflictStepper.steps.length - 1
-    ) {
+    if (this.conflictStepper.selectedIndex === this.conflictStepper.steps.length - 1) {
       this.updateProfileAndNavigate();
     } else {
       this.conflictStepper.next();
@@ -125,31 +123,21 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   resolveNameConflict(): void {
     if (this.nameConflict) {
-      this.profile.personalDetails.firstName = (
-        this.nameConflict as NameDataConflict
-      ).conflictingValue.firstName;
-      this.profile.personalDetails.lastName = (
-        this.nameConflict as NameDataConflict
-      ).conflictingValue.lastName;
+      this.profile.personalDetails.firstName = (this.nameConflict as NameDataConflict).conflictingValue.firstName;
+      this.profile.personalDetails.lastName = (this.nameConflict as NameDataConflict).conflictingValue.lastName;
     }
   }
 
   resolveDOBConflict(): void {
     if (this.dobConflict) {
-      this.profile.personalDetails.dateOfBirth = (
-        this.dobConflict as DateOfBirthDataConflict
-      ).conflictingValue;
+      this.profile.personalDetails.dateOfBirth = (this.dobConflict as DateOfBirthDataConflict).conflictingValue;
     }
   }
 
   resolveAddressConflict(): void {
     if (this.addressConflict) {
-      this.profile.primaryAddress = this.locationService.setAddressObjectForDTO(
-        this.form.get('address').value
-      );
-      this.profile.mailingAddress = this.locationService.setAddressObjectForDTO(
-        this.form.get('mailingAddress').value
-      );
+      this.profile.primaryAddress = this.locationService.setAddressObjectForDTO(this.form.get('address').value);
+      this.profile.mailingAddress = this.locationService.setAddressObjectForDTO(this.form.get('mailingAddress').value);
     }
   }
 

@@ -30,13 +30,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule
-      ],
+      imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule],
       declarations: [RestrictionComponent],
       providers: [
         UntypedFormBuilder,
@@ -64,8 +58,7 @@ describe('RestrictionComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem =
-      fixture.debugElement.nativeElement.querySelector('#restrictionForm');
+    const formElem = fixture.debugElement.nativeElement.querySelector('#restrictionForm');
     const totalElems = formElem.querySelectorAll('mat-radio-group');
     expect(totalElems.length).toEqual(1);
   });
@@ -127,10 +120,9 @@ describe('RestrictionComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        restrictionService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'restriction'
-        );
+      const tabMetaData = restrictionService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'restriction'
+      );
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -162,10 +154,9 @@ describe('RestrictionComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        restrictionService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'restriction'
-        );
+      const tabMetaData = restrictionService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'restriction'
+      );
 
       expect(tabMetaData.status).toEqual('not-started');
     })
@@ -191,9 +182,7 @@ describe('RestrictionComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/collection-notice'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/collection-notice']);
     })
   ));
 
@@ -217,9 +206,7 @@ describe('RestrictionComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/evacuee-details'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/evacuee-details']);
     })
   ));
 });

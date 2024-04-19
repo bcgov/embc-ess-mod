@@ -7,7 +7,8 @@ button.next {
   width: 20%;
 }
 
-p, .tips-card {
+p,
+.tips-card {
   margin: 1.8em 0;
 }
 
@@ -44,12 +45,12 @@ p, .tips-card {
 }
 
 ::ng-deep .mat-form-field-wrapper {
-	padding-bottom: 0.25em;
+  padding-bottom: 0.25em;
 }
 
 .edit-phrase {
   padding: 0;
-  color: #169BD5;
+  color: #169bd5;
 }
 
 .edit-phrase:hover {

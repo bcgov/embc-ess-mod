@@ -18,9 +18,7 @@ export class MaintenanceComponent implements OnInit {
     const configResult = this.configGuard.configResult;
 
     if (configResult.maintMsg && configResult.maintMsg !== 'Default') {
-      this.bannerMsg = this.sanitizer.bypassSecurityTrustHtml(
-        configResult.maintMsg
-      );
+      this.bannerMsg = this.sanitizer.bypassSecurityTrustHtml(configResult.maintMsg);
     }
   }
 

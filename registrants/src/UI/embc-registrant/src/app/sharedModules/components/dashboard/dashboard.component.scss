@@ -1,50 +1,50 @@
 .view-banner {
-    background-color: #fcba19;
-    border-color: #ffdf25;
-    box-shadow: none;
+  background-color: #fcba19;
+  border-color: #ffdf25;
+  box-shadow: none;
 }
 
 .align-banner {
-    padding-top: 10px;
-    padding-bottom: 40px;
+  padding-top: 10px;
+  padding-bottom: 40px;
 }
 
 .top-detail {
-    font-size: 21px;
+  font-size: 21px;
 }
 
 .button-align {
-    padding-top: 20px;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .button-tab-align {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
-.mat-tab-link {
-    background-color: rgba(204, 204, 204, 1);
-    opacity: 1;
+.mat-mdc-tab-link {
+  background-color: rgba(204, 204, 204, 1);
+  opacity: 1;
 }
 
 .active-tab {
-    color: #169bd5 !important;
-    background: white;
+  color: #169bd5 !important;
+  background: white;
 
-    .inactive-curr {
-        display: none !important;
-    }
-    .active-curr {
-        display: block !important;
-    }
+  .inactive-curr {
+    display: none !important;
+  }
+  .active-curr {
+    display: block !important;
+  }
 }
 
 .active-curr {
-    display: none;
+  display: none;
 }
 
 .start-button {
-    width: 100%;
-    white-space: normal;
-    line-height: inherit;
+  width: 100%;
+  white-space: normal;
+  line-height: inherit;
 }

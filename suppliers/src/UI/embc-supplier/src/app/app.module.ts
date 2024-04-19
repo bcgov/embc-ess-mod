@@ -23,8 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     OAuthModule.forRoot({
       resourceServer: {
-        customUrlValidation: (url) =>
-          url.startsWith('/api') && !url.endsWith('/Config'),
+        customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/Config'),
         sendAccessToken: true
       }
     })

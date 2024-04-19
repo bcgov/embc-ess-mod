@@ -63,32 +63,27 @@ describe('SearchOptionsComponent', () => {
     expect(component.selectedPathway).toEqual(SelectedPathType.paperBased);
   });
 
-  it('should navigate to the wrapper component', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to the wrapper component', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      component.setSelection('digital');
+    component.setSelection('digital');
 
-      fixture.detectChanges();
-      component.next();
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/wrapper'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    fixture.detectChanges();
+    component.next();
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/wrapper'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
   it('should display a warning message to select search option', () => {
     component.noSelectionFlag = true;
     fixture.detectChanges();
     component.next();
 
-    const warningMessage = document.getElementsByClassName(
-      'field-error'
-    )[0] as HTMLElement;
+    const warningMessage = document.getElementsByClassName('field-error')[0] as HTMLElement;
     fixture.detectChanges();
-    expect(warningMessage.textContent).toEqual(' Please make a selection ');
+    expect(warningMessage.textContent).toEqual('Please make a selection');
   });
 
   it('should display Remote Extensions as disable if not enabled', () => {

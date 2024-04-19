@@ -1,19 +1,19 @@
 .primary-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-  }
-  
-  .primary-radio-button {
-    margin: 5px;
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.primary-radio-button {
+  margin: 5px;
+}
 
 .field-error {
- color: red;
+  color: red;
 }
 
 .notice-button {
-    width: 100%;
+  width: 100%;
 }
 
 .content-container {
@@ -23,10 +23,10 @@
   padding-left: 24px;
 }
 
-.mat-card {
+.mat-mdc-card {
   padding: 20px !important;
 }
 
 .radio-text {
-  color: #169BD5
+  color: #169bd5;
 }

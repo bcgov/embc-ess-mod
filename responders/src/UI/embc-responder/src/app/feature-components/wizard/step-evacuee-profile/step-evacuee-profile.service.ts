@@ -4,17 +4,8 @@ import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import {
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup
-} from '@angular/forms';
-import {
-  ContactDetails,
-  RegistrantProfile,
-  PersonDetails,
-  SecurityQuestion
-} from 'src/app/core/api/models';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ContactDetails, RegistrantProfile, PersonDetails, SecurityQuestion } from 'src/app/core/api/models';
 import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
@@ -134,11 +125,8 @@ export class StepEvacueeProfileService {
   public get isMailingAddressSameAsPrimaryAddress(): string {
     return this.isMailingAddressSameAsPrimaryAddressVal;
   }
-  public set isMailingAddressSameAsPrimaryAddress(
-    isMailingAddressSameAsPrimaryAddressVal: string
-  ) {
-    this.isMailingAddressSameAsPrimaryAddressVal =
-      isMailingAddressSameAsPrimaryAddressVal;
+  public set isMailingAddressSameAsPrimaryAddress(isMailingAddressSameAsPrimaryAddressVal: string) {
+    this.isMailingAddressSameAsPrimaryAddressVal = isMailingAddressSameAsPrimaryAddressVal;
   }
 
   public get mailingAddressDetails(): AddressModel {
@@ -316,9 +304,7 @@ export class StepEvacueeProfileService {
    */
   checkTabsStatus(): boolean {
     return this.profileTabs?.some(
-      (tab) =>
-        (tab.status === 'not-started' || tab.status === 'incomplete') &&
-        tab.name !== 'review'
+      (tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review'
     );
   }
 
@@ -349,18 +335,13 @@ export class StepEvacueeProfileService {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
       contactDetails: this.contactDetails,
-      primaryAddress: this.locationService.setAddressObjectForDTO(
-        this.primaryAddressDetails
-      ),
-      mailingAddress: this.locationService.setAddressObjectForDTO(
-        this.mailingAddressDetails
-      ),
+      primaryAddress: this.locationService.setAddressObjectForDTO(this.primaryAddressDetails),
+      mailingAddress: this.locationService.setAddressObjectForDTO(this.mailingAddressDetails),
       verifiedUser: this.verifiedProfile
     };
 
     // Only set security questions if they've been changed
-    if (this.editQuestions || !(this.savedQuestions?.length > 0))
-      profile.securityQuestions = this.securityQuestions;
+    if (this.editQuestions || !(this.savedQuestions?.length > 0)) profile.securityQuestions = this.securityQuestions;
 
     return profile;
   }
@@ -457,19 +438,11 @@ export class StepEvacueeProfileService {
     this.personalDetails = profile.personalDetails;
 
     // Address tab
-    this.primaryAddressDetails = this.wizardService.setAddressObjectForForm(
-      profile.primaryAddress
-    );
-    this.isBcAddress = this.checkForBCAddress(
-      profile.primaryAddress.stateProvinceCode
-    );
+    this.primaryAddressDetails = this.wizardService.setAddressObjectForForm(profile.primaryAddress);
+    this.isBcAddress = this.checkForBCAddress(profile.primaryAddress.stateProvinceCode);
 
-    this.isBcMailingAddress = this.checkForBCAddress(
-      profile.mailingAddress.stateProvinceCode
-    );
-    this.mailingAddressDetails = this.wizardService.setAddressObjectForForm(
-      profile.mailingAddress
-    );
+    this.isBcMailingAddress = this.checkForBCAddress(profile.mailingAddress.stateProvinceCode);
+    this.mailingAddressDetails = this.wizardService.setAddressObjectForForm(profile.mailingAddress);
     this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(
       profile.isMailingAddressSameAsPrimaryAddress
     );
@@ -478,9 +451,7 @@ export class StepEvacueeProfileService {
     this.contactDetails = profile.contactDetails;
     this.confirmEmail = profile.contactDetails?.email;
 
-    this.showContact =
-      this.contactDetails.email?.length > 0 ||
-      this.contactDetails.phone?.length > 0;
+    this.showContact = this.contactDetails.email?.length > 0 || this.contactDetails.phone?.length > 0;
 
     // Security Questions tab
     this.securityQuestions = [];
@@ -501,16 +472,10 @@ export class StepEvacueeProfileService {
   checkForPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
-      const control = form.controls[field] as
-        | UntypedFormControl
-        | UntypedFormGroup
-        | UntypedFormArray;
+      const control = form.controls[field] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
       if (control instanceof UntypedFormControl) {
         fields.push(control.value);
-      } else if (
-        control instanceof UntypedFormGroup ||
-        control instanceof UntypedFormArray
-      ) {
+      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);
@@ -524,10 +489,7 @@ export class StepEvacueeProfileService {
   }
 
   checkForEdit(): boolean {
-    return (
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.id !== null
-    );
+    return this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id !== null;
   }
 
   updateEditedFormStatus() {
@@ -553,9 +515,7 @@ export class StepEvacueeProfileService {
     return this.profileTabs?.find((tab) => tab.name === name);
   }
 
-  private checkForSameMailingAddress(
-    isMailingAddressSameAsPrimaryAddress: boolean
-  ): string {
+  private checkForSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
     return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
   }
 

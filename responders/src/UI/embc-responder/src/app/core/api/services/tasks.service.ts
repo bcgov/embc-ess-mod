@@ -14,13 +14,10 @@ import { SuppliersListItem } from '../models/suppliers-list-item';
 import { TaskSignin } from '../models/task-signin';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TasksService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -40,27 +37,29 @@ export class TasksService extends BaseService {
    * This method doesn't expect any request body.
    */
   tasksGetTask$Response(params: {
-
     /**
      * task number
      */
     taskId: string;
   }): Observable<StrictHttpResponse<EssTask>> {
-
     const rb = new RequestBuilder(this.rootUrl, TasksService.TasksGetTaskPath, 'get');
     if (params) {
       rb.path('taskId', params.taskId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EssTask>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<EssTask>;
+        })
+      );
   }
 
   /**
@@ -74,16 +73,12 @@ export class TasksService extends BaseService {
    * This method doesn't expect any request body.
    */
   tasksGetTask(params: {
-
     /**
      * task number
      */
     taskId: string;
   }): Observable<EssTask> {
-
-    return this.tasksGetTask$Response(params).pipe(
-      map((r: StrictHttpResponse<EssTask>) => r.body as EssTask)
-    );
+    return this.tasksGetTask$Response(params).pipe(map((r: StrictHttpResponse<EssTask>) => r.body as EssTask));
   }
 
   /**
@@ -97,24 +92,25 @@ export class TasksService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  tasksGetSuppliersList$Response(params: {
-    taskId: string;
-  }): Observable<StrictHttpResponse<Array<SuppliersListItem>>> {
-
+  tasksGetSuppliersList$Response(params: { taskId: string }): Observable<StrictHttpResponse<Array<SuppliersListItem>>> {
     const rb = new RequestBuilder(this.rootUrl, TasksService.TasksGetSuppliersListPath, 'get');
     if (params) {
       rb.path('taskId', params.taskId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<SuppliersListItem>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<SuppliersListItem>>;
+        })
+      );
   }
 
   /**
@@ -123,10 +119,7 @@ export class TasksService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  tasksGetSuppliersList(params: {
-    taskId: string;
-  }): Observable<Array<SuppliersListItem>> {
-
+  tasksGetSuppliersList(params: { taskId: string }): Observable<Array<SuppliersListItem>> {
     return this.tasksGetSuppliersList$Response(params).pipe(
       map((r: StrictHttpResponse<Array<SuppliersListItem>>) => r.body as Array<SuppliersListItem>)
     );
@@ -143,24 +136,25 @@ export class TasksService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  tasksSignIn$Response(params: {
-    body: TaskSignin
-  }): Observable<StrictHttpResponse<void>> {
-
+  tasksSignIn$Response(params: { body: TaskSignin }): Observable<StrictHttpResponse<void>> {
     const rb = new RequestBuilder(this.rootUrl, TasksService.TasksSignInPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -169,13 +163,7 @@ export class TasksService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  tasksSignIn(params: {
-    body: TaskSignin
-  }): Observable<void> {
-
-    return this.tasksSignIn$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  tasksSignIn(params: { body: TaskSignin }): Observable<void> {
+    return this.tasksSignIn$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
-
 }

@@ -3,11 +3,14 @@ import { Router } from '@angular/router';
 import { FormCreationService } from '../core/services/formCreation.service';
 import { LoginService } from '../core/services/login.service';
 import { NeedsAssessmentService } from '../feature-components/needs-assessment/needs-assessment.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
+  standalone: true,
+  imports: [MatButtonModule]
 })
 export class LoginPageComponent implements OnInit {
   constructor(

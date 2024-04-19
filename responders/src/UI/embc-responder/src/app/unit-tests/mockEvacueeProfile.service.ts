@@ -12,29 +12,18 @@ export class MockEvacueeProfileService extends EvacueeProfileService {
   public evacuationFileSummaryValue: EvacuationFileSummaryModel[];
   public registrantProfileValue: RegistrantProfileModel;
 
-  public getProfileFromId(
-    profileId: string
-  ): Observable<RegistrantProfileModel> {
-    return new BehaviorSubject<RegistrantProfileModel>(
-      this.registrantProfileValue
-    );
+  public getProfileFromId(profileId: string): Observable<RegistrantProfileModel> {
+    return new BehaviorSubject<RegistrantProfileModel>(this.registrantProfileValue);
   }
 
   public getProfileFiles(
     registrantId?: string,
     externalReferenceId?: string
   ): Observable<Array<EvacuationFileSummaryModel>> {
-    return new BehaviorSubject<EvacuationFileSummaryModel[]>(
-      this.evacuationFileSummaryValue
-    );
+    return new BehaviorSubject<EvacuationFileSummaryModel[]>(this.evacuationFileSummaryValue);
   }
 
-  public setVerifiedStatus(
-    registrantId: string,
-    verified: boolean
-  ): Observable<RegistrantProfileModel> {
-    return new BehaviorSubject<RegistrantProfileModel>(
-      this.registrantProfileValue
-    );
+  public setVerifiedStatus(registrantId: string, verified: boolean): Observable<RegistrantProfileModel> {
+    return new BehaviorSubject<RegistrantProfileModel>(this.registrantProfileValue);
   }
 }

@@ -1,24 +1,31 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  AfterViewInit
-} from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileStatus, Support } from 'src/app/core/api/models';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass, AsyncPipe } from '@angular/common';
+import { MaskEvacuatedAddressPipe } from '../../../../core/pipe/maskEvacuatedAddress.pipe';
+import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
+import { ReviewComponent } from '../../../../feature-components/review/review.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCardModule,
+    NgClass,
+    ReviewComponent,
+    ReferralDetailsComponent,
+    AsyncPipe,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   @Input() allExpandState = false;
@@ -42,11 +49,9 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private cd: ChangeDetectorRef
   ) {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.previousUrl = event.url;
-      });
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.previousUrl = event.url;
+    });
   }
 
   ngOnInit(): void {
@@ -57,9 +62,7 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     }
 
     if (this.evacuationFileDataService?.supports?.length > 0) {
-      this.referralData = this.splitReferralsByDate(
-        this.evacuationFileDataService?.supports
-      );
+      this.referralData = this.splitReferralsByDate(this.evacuationFileDataService?.supports);
     }
   }
 
@@ -69,10 +72,8 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   changeStatusColor(): string {
     if (
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Active ||
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Pending
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active ||
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending
     ) {
       return '#26B378';
     } else {
@@ -90,10 +91,8 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   allowEdition(): boolean {
     if (
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Expired ||
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Pending
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Expired ||
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending
     ) {
       return true;
     } else {
@@ -115,15 +114,10 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   private splitReferralsByDate(referrals: Support[]): Map<string, Support[]> {
     //Sorting referrals by Issued On Asc
-    referrals.sort(
-      (a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
-    );
+    referrals.sort((a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf());
 
     //Grouping based on Issued on date
-    const groupedReferrals: Map<string, Support[]> = new Map<
-      string,
-      Support[]
-    >();
+    const groupedReferrals: Map<string, Support[]> = new Map<string, Support[]>();
     referrals.forEach((item) => {
       const date: Date = new Date(item.issuedOn);
       const displayedDate = this.datePipe.transform(date, 'dd-MMM-yyyy');

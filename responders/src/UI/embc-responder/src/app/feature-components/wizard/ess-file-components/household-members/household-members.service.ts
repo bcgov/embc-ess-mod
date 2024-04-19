@@ -47,17 +47,21 @@ export class HouseholdMembersService {
     return householdForm;
   }
 
-  householdMemberExists(
-    newMember: HouseholdMemberModel,
-    household: HouseholdMemberModel[]
-  ): HouseholdMemberModel {
+  /**
+   * Resets the househol Member form and goes back to the main Form
+   */
+  cancel(householdForm: UntypedFormGroup): UntypedFormGroup {
+    householdForm.get('addMemberFormIndicator').setValue(false);
+    householdForm.get('addMemberIndicator').setValue(false);
+    householdForm.get('houseHoldMember').reset();
+    return householdForm;
+  }
+
+  householdMemberExists(newMember: HouseholdMemberModel, household: HouseholdMemberModel[]): HouseholdMemberModel {
     return household.find((member) => this.householdEquals(newMember, member));
   }
 
-  private householdEquals(
-    newMember: HouseholdMemberModel,
-    oldMember: HouseholdMemberModel
-  ): boolean {
+  private householdEquals(newMember: HouseholdMemberModel, oldMember: HouseholdMemberModel): boolean {
     return (
       newMember.dateOfBirth === oldMember.dateOfBirth &&
       newMember.firstName.toLowerCase() === oldMember.firstName.toLowerCase() &&

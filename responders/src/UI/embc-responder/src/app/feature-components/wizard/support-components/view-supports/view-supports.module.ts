@@ -9,11 +9,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ViewSupportsComponent, SupportsTableComponent],
-  imports: [
-    CommonModule,
-    ViewSupportsRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, ViewSupportsRoutingModule, MaterialModule, SharedModule]
 })
 export class ViewSupportsModule {}

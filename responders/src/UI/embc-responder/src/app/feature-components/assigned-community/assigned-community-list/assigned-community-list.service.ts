@@ -13,23 +13,19 @@ export class AssignedCommunityListService {
   ) {}
 
   public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
-    return this.teamCommunitiesAssignmentsService
-      .teamCommunitiesAssignmentsGetAssignedCommunities()
-      .pipe(
-        map((assignedCommunities: TeamCommunityModel[]) => {
-          const allCommunities = this.locationsService.getCommunityList();
-          return assignedCommunities.map((list) => {
-            const found = allCommunities.find(
-              (x) => x.code === list.communityCode
-            );
-            if (found) {
-              list.allowSelect = false;
-              list.conflict = false;
-            }
-            return this.mergeData(list, found);
-          });
-        })
-      );
+    return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(
+      map((assignedCommunities: TeamCommunityModel[]) => {
+        const allCommunities = this.locationsService.getCommunityList();
+        return assignedCommunities.map((list) => {
+          const found = allCommunities.find((x) => x.code === list.communityCode);
+          if (found) {
+            list.allowSelect = false;
+            list.conflict = false;
+          }
+          return this.mergeData(list, found);
+        });
+      })
+    );
   }
 
   public getAllAssignedCommunityList(): Observable<TeamCommunityModel[]> {
@@ -39,9 +35,7 @@ export class AssignedCommunityListService {
         map((assignedCommunities: TeamCommunityModel[]) => {
           const allCommunities = this.locationsService.getCommunityList();
           return assignedCommunities.map((list) => {
-            const found = allCommunities.find(
-              (x) => x.code === list.communityCode
-            );
+            const found = allCommunities.find((x) => x.code === list.communityCode);
             if (found) {
               list.allowSelect = false;
               list.conflict = true;

@@ -8,11 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [EssFileNotesComponent],
-  imports: [
-    CommonModule,
-    EssFileNotesRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, EssFileNotesRoutingModule, MaterialModule, SharedModule]
 })
 export class EssFileNotesModule {}
