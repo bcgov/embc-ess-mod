@@ -72,10 +72,10 @@
               formControlName="dateOfBirth"
               matInput
               placeholder="mm/dd/yyyy"
+              [imask]="dateMask"
               required
               [readonly]="disableFields"
             />
-            <!-- [textMask]="{ mask: dateMask, keepCharPositions: true }" -->
             <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
             @if (personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('required')) {
               <mat-error> Date of Birth is required</mat-error>

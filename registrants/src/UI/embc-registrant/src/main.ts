@@ -14,7 +14,6 @@ import { withInterceptorsFromDi, provideHttpClient, HttpClient } from '@angular/
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideMarkdown } from 'ngx-markdown';
-import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 if (environment.production) {
   enableProdMode();
@@ -50,7 +49,6 @@ bootstrapApplication(AppComponent, {
     },
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
-    provideMarkdown({ loader: HttpClient }),
-    provideEnvironmentNgxMask()
+    provideMarkdown({ loader: HttpClient })
   ]
 }).catch((err) => console.error(err));

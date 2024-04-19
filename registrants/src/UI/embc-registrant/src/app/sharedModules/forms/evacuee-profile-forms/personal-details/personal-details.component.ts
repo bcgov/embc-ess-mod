@@ -1,7 +1,6 @@
-import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -10,12 +9,9 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 
-// @TODO: ngx-mask
-// import { TextMaskModule } from 'angular2-text-mask';
 import * as globalConst from '../../../../core/services/globalConstants';
-import { Router } from '@angular/router';
 import { MatOptionModule } from '@angular/material/core';
-import { NgxMaskDirective } from 'ngx-mask';
+import { IMaskDirective } from 'angular-imask';
 
 @Component({
   selector: 'app-personal-details',
@@ -29,7 +25,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
-    NgxMaskDirective
+    IMaskDirective
   ]
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
@@ -38,8 +34,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
-  // readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
-  readonly dateMask = 'M0/d0/0000';
+  readonly dateMask = globalConst.DateMask;
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
   createVerifiedProfile = '/verified-registration/create-profile';
   disableFields = false;
