@@ -310,14 +310,14 @@ export class StepEssFileService {
     }
 
     public get requiresTransportation(): boolean {
-        return this.needs.has(IdentifiedNeed.Tranportation);
+        return this.needs.has(IdentifiedNeed.Transportation);
     }
 
     public set requiresTransportation(checked: boolean) {
-        if (checked && !this.needs.has(IdentifiedNeed.Tranportation)) {
-            this.needs.add(IdentifiedNeed.Tranportation);
-        } else if (!checked && this.needs.has(IdentifiedNeed.Tranportation)) {
-            this.needs.delete(IdentifiedNeed.Tranportation);
+        if (checked && !this.needs.has(IdentifiedNeed.Transportation)) {
+            this.needs.add(IdentifiedNeed.Transportation);
+        } else if (!checked && this.needs.has(IdentifiedNeed.Transportation)) {
+            this.needs.delete(IdentifiedNeed.Transportation);
         }
     }
     public get requiresShelterReferral(): boolean {
