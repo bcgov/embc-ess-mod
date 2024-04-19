@@ -23,6 +23,7 @@ export class NeedsAssessmentMappingService {
     this.setNeedsAssessmentId(needsAssessment.id);
     this.setInsurance(evacuatedAddress, needsAssessment.insurance);
     this.setFamilyMedicationDiet(needsAssessment.householdMembers);
+    this.setPets(needsAssessment.pets);
     this.setIdentifiedNeeds(needsAssessment.needs);
   }
 

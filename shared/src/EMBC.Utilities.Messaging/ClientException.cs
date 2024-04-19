@@ -10,7 +10,7 @@ namespace EMBC.Utilities.Messaging
             Type = type;
         }
 
-        public string Type { get; } = string.Empty;
+        public string Type { get; }
 
         public override string ToString()
         {
