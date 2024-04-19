@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/profiles")]
 [ApiController]
 [Authorize]
 public class ProfileController : ControllerBase
