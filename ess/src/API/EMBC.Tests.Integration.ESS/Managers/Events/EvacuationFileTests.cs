@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
@@ -29,10 +28,33 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task CanSubmitAnonymousRegistration()
         {
             var testContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
-            var securityQuestions = new List<SecurityQuestion>();
-            securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
-            securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
-            securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
+            var securityQuestions = new[]
+            {
+                new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" },
+                new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" },
+                new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" }
+            };
+            var primaryAddress = new Address
+            {
+                Type = AddressType.Primary,
+                AddressLine1 = $"paddr1",
+                AddressLine2 = "paddr2",
+                Country = "CAN",
+                StateProvince = "BC",
+                PostalCode = "v1v 1v1",
+                Community = TestData.RandomCommunity
+            };
+            var mailingAddress = new Address
+            {
+                Type = AddressType.Mailing,
+                AddressLine1 = $"maddr1",
+                AddressLine2 = "maddr2",
+                Country = "USA",
+                StateProvince = "WA",
+                PostalCode = "12345",
+                Community = "Seattle"
+            };
+
             var profile = new RegistrantProfile
             {
                 UserId = null,
@@ -49,24 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 PreferredName = "preferred1",
                 Email = "email@org.com",
                 Phone = "999-999-9999",
-                PrimaryAddress = new Address
-                {
-                    AddressLine1 = $"paddr1",
-                    AddressLine2 = "paddr2",
-                    Country = "CAN",
-                    StateProvince = "BC",
-                    PostalCode = "v1v 1v1",
-                    Community = TestData.RandomCommunity
-                },
-                MailingAddress = new Address
-                {
-                    AddressLine1 = $"maddr1",
-                    AddressLine2 = "maddr2",
-                    Country = "USA",
-                    StateProvince = "WA",
-                    PostalCode = "12345",
-                    Community = "Seattle"
-                }
+                Addresses = [primaryAddress, mailingAddress]
             };
             var needsAssessment = new NeedsAssessment
             {
@@ -92,11 +97,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     }
                 },
                 Insurance = InsuranceOption.Yes,
-                Needs = new[] { IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals },
-                Pets = new[]
-                {
-                    new Pet{ Type = $"dog{testContextIdentifier}", Quantity = "4" }
-                }
+                Needs = [IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals],
+                Pets = [new Pet { Type = $"dog{testContextIdentifier}", Quantity = "4" }]
             };
             var cmd = new SubmitAnonymousEvacuationFileCommand
             {

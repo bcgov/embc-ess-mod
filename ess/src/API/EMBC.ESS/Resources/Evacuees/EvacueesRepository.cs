@@ -69,13 +69,15 @@ namespace EMBC.ESS.Resources.Evacuees
                 essContext.UpdateObject(contact);
             }
 
-            essContext.SetLink(contact, nameof(contact.era_Country), essContext.LookupCountryByCode(cmd.Evacuee.PrimaryAddress.Country));
-            essContext.SetLink(contact, nameof(contact.era_ProvinceState), essContext.LookupStateProvinceByCode(cmd.Evacuee.PrimaryAddress.StateProvince));
-            essContext.SetLink(contact, nameof(contact.era_City), essContext.LookupJurisdictionByCode(cmd.Evacuee.PrimaryAddress.Community));
+            var primaryAddress = cmd.Evacuee.Addresses.FirstOrDefault(a => a.Type == AddressType.Primary);
+            essContext.SetLink(contact, nameof(contact.era_Country), essContext.LookupCountryByCode(primaryAddress?.Country));
+            essContext.SetLink(contact, nameof(contact.era_ProvinceState), essContext.LookupStateProvinceByCode(primaryAddress?.StateProvince));
+            essContext.SetLink(contact, nameof(contact.era_City), essContext.LookupJurisdictionByCode(primaryAddress?.Community));
 
-            essContext.SetLink(contact, nameof(contact.era_MailingCountry), essContext.LookupCountryByCode(cmd.Evacuee.MailingAddress.Country));
-            essContext.SetLink(contact, nameof(contact.era_MailingProvinceState), essContext.LookupStateProvinceByCode(cmd.Evacuee.MailingAddress.StateProvince));
-            essContext.SetLink(contact, nameof(contact.era_MailingCity), essContext.LookupJurisdictionByCode(cmd.Evacuee.MailingAddress.Community));
+            var mailingAddress = cmd.Evacuee.Addresses.FirstOrDefault(a => a.Type == AddressType.Mailing);
+            essContext.SetLink(contact, nameof(contact.era_MailingCountry), essContext.LookupCountryByCode(mailingAddress?.Country));
+            essContext.SetLink(contact, nameof(contact.era_MailingProvinceState), essContext.LookupStateProvinceByCode(mailingAddress?.StateProvince));
+            essContext.SetLink(contact, nameof(contact.era_MailingCity), essContext.LookupJurisdictionByCode(mailingAddress?.Community));
 
             await essContext.SaveChangesAsync(ct);
 

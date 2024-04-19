@@ -172,7 +172,7 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
-    public class RegistrationResult
+    public record RegistrationResult
     {
         public string Id { get; set; }
     }
@@ -187,7 +187,7 @@ namespace EMBC.Responders.API.Controllers
         NotVerified
     }
 
-    public class SecurityQuestion
+    public record SecurityQuestion
     {
         public int Id { get; set; }
 
@@ -200,18 +200,18 @@ namespace EMBC.Responders.API.Controllers
         public bool AnswerChanged { get; set; }
     }
 
-    public class GetSecurityQuestionsResponse
+    public record GetSecurityQuestionsResponse
     {
         public IEnumerable<SecurityQuestion> Questions { get; set; }
     }
 
-    public class VerifySecurityQuestionsRequest
+    public record VerifySecurityQuestionsRequest
     {
         [Required]
         public IEnumerable<SecurityQuestion> Answers { get; set; } = Array.Empty<SecurityQuestion>();
     }
 
-    public class VerifySecurityQuestionsResponse
+    public record VerifySecurityQuestionsResponse
     {
         public int NumberOfCorrectAnswers { get; set; }
     }
@@ -219,7 +219,7 @@ namespace EMBC.Responders.API.Controllers
     /// <summary>
     /// Registrant profile
     /// </summary>
-    public class RegistrantProfile
+    public record RegistrantProfile
     {
         public string? Id { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -250,7 +250,7 @@ namespace EMBC.Responders.API.Controllers
         public bool IsMinor { get; set; }
     }
 
-    public class InviteRequest
+    public record InviteRequest
     {
         [Required]
         [EmailAddress]
@@ -270,16 +270,15 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Events.Address>()
-               .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
-               .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
-               .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
-               ;
-
-            CreateMap<ESS.Shared.Contracts.Events.Address, Address>()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ForMember(d => d.Type, opts => opts.Ignore())
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
                 .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
-                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
-                ;
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country));
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
@@ -299,6 +298,30 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.ModifiedOn))
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.Addresses, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    var addresses = new List<ESS.Shared.Contracts.Events.Address>();
+                    if (s.PrimaryAddress != null)
+                    {
+                        var primaryAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.PrimaryAddress);
+                        primaryAddress.Type = ESS.Shared.Contracts.Events.AddressType.Primary;
+                        addresses.Add(primaryAddress);
+                    }
+                    if (s.IsMailingAddressSameAsPrimaryAddress)
+                    {
+                        var mailingAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.PrimaryAddress);
+                        mailingAddress.Type = ESS.Shared.Contracts.Events.AddressType.Mailing;
+                        addresses.Add(mailingAddress);
+                    }
+                    else if (s.MailingAddress != null)
+                    {
+                        var mailingAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.MailingAddress);
+                        mailingAddress.Type = ESS.Shared.Contracts.Events.AddressType.Mailing;
+                        addresses.Add(mailingAddress);
+                    }
+                    d.Addresses = addresses;
+                })
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.RegistrantProfile, RegistrantProfile>()
@@ -318,14 +341,13 @@ namespace EMBC.Responders.API.Controllers
                     Email = s.Email,
                     Phone = s.Phone
                 }))
-                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
-                    string.Equals(s.MailingAddress.Country, s.PrimaryAddress.Country, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.StateProvince, s.PrimaryAddress.StateProvince, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.Community, s.PrimaryAddress.Community, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.City, s.PrimaryAddress.City, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine1, s.PrimaryAddress.AddressLine1, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.InvariantCultureIgnoreCase)))
+                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s.Addresses.FirstOrDefault(a => a.Type == AddressType.Primary)))
+                .ForMember(d => d.MailingAddress, opts => opts.MapFrom(s => s.Addresses.FirstOrDefault(a => a.Type == AddressType.Mailing)))
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
+                .AfterMap((s, d) =>
+                {
+                    d.IsMailingAddressSameAsPrimaryAddress = d.PrimaryAddress == d.MailingAddress;
+                })
                 ;
         }
     }

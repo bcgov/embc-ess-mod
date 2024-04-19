@@ -19,15 +19,15 @@ namespace EMBC.ESS.Resources.Evacuees
         Task<InvitationQueryResult> Query(InvitationQuery query);
     }
 
-    public abstract class ManageEvacueeCommand
+    public abstract record ManageEvacueeCommand
     { }
 
-    public class ManageEvacueeCommandResult
+    public record ManageEvacueeCommandResult
     {
         public string EvacueeId { get; set; }
     }
 
-    public class EvacueeQuery
+    public record EvacueeQuery
     {
         public string EvacueeId { get; set; }
         public string UserId { get; set; }
@@ -35,40 +35,40 @@ namespace EMBC.ESS.Resources.Evacuees
         public bool BCSCWithNoSupplierId { get; set; } = false;
     }
 
-    public class EvacueeQueryResult
+    public record EvacueeQueryResult
     {
         public IEnumerable<Evacuee> Items { get; set; }
     }
 
-    public class SaveEvacuee : ManageEvacueeCommand
+    public record SaveEvacuee : ManageEvacueeCommand
     {
         [Required]
         public Evacuee Evacuee { get; set; }
     }
 
-    public class DeleteEvacuee : ManageEvacueeCommand
+    public record DeleteEvacuee : ManageEvacueeCommand
     {
         [Required]
         public string Id { get; set; }
     }
 
-    public abstract class ManageInvitationCommand
+    public abstract record ManageInvitationCommand
     { }
 
-    public class ManageInvitationCommandResult
+    public record ManageInvitationCommandResult
     {
         public string InviteId { get; set; }
     }
 
-    public abstract class InvitationQuery
+    public abstract record InvitationQuery
     { }
 
-    public class InvitationQueryResult
+    public record InvitationQueryResult
     {
         public IEnumerable<Invitation> Items { get; set; }
     }
 
-    public class CreateNewEmailInvitation : ManageInvitationCommand
+    public record CreateNewEmailInvitation : ManageInvitationCommand
     {
         [Required]
         public string EvacueeId { get; set; } = null!;
@@ -82,7 +82,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public DateTime InviteDate { get; set; }
     }
 
-    public class CompleteInvitation : ManageInvitationCommand
+    public record CompleteInvitation : ManageInvitationCommand
     {
         [Required]
         public string EvacueeId { get; set; }
@@ -91,12 +91,12 @@ namespace EMBC.ESS.Resources.Evacuees
         public string InviteId { get; set; }
     }
 
-    public class EmailInvitationQuery : InvitationQuery
+    public record EmailInvitationQuery : InvitationQuery
     {
         public string InviteId { get; set; }
     }
 
-    public class Evacuee
+    public record Evacuee
     {
         public string? Id { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -116,15 +116,15 @@ namespace EMBC.ESS.Resources.Evacuees
         public string DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Address PrimaryAddress { get; set; }
-        public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
         public string? UserId { get; set; }
+        public IEnumerable<Address> Addresses { get; set; } = Array.Empty<Address>();
     }
 
-    public class Address
+    public record Address
     {
+        public AddressType Type { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
@@ -134,7 +134,14 @@ namespace EMBC.ESS.Resources.Evacuees
         public string PostalCode { get; set; }
     }
 
-    public class SecurityQuestion
+    public enum AddressType
+    {
+        Primary,
+        Mailing,
+        Official
+    }
+
+    public record SecurityQuestion
     {
         public int Id { get; set; }
         public string Question { get; set; }
@@ -142,7 +149,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public bool AnswerIsMasked { get; set; } = true;
     }
 
-    public class Invitation
+    public record Invitation
     {
         public string InviteId { get; set; }
         public string EvacueeId { get; set; }

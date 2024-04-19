@@ -67,17 +67,25 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Address PrimaryAddress { get; set; }
-        public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
         public bool? AuthenticatedUser { get; set; }
         public bool? VerifiedUser { get; set; }
         public bool IsMinor { get; set; }
+        public IEnumerable<Address> Addresses { get; set; } = Array.Empty<Address>();
+    }
+
+    public enum AddressType
+    {
+        Primary,
+        Mailing,
+        Official,
+        SupplierLocation
     }
 
     public class Address
     {
+        public AddressType Type { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }

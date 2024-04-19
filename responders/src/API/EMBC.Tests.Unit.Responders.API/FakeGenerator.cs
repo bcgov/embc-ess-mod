@@ -22,8 +22,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 .RuleFor(o => o.Gender, f => f.PickRandom("Male", "Female", "X"))
                 .RuleFor(o => o.Email, f => f.Internet.Email())
                 .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
-                .RuleFor(o => o.PrimaryAddress, f => FakeAddress())
-                .RuleFor(o => o.MailingAddress, f => FakeAddress())
+                .RuleFor(o => o.Addresses, f => [FakeAddress(), FakeAddress()])
                 .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())
                 .RuleFor(o => o.VerifiedUser, f => f.Random.Bool())
                 .Generate();
@@ -157,7 +156,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 LastName = p.profile.LastName,
                 RegistrationDate = p.profile.CreatedOn,
                 IsVerified = p.profile.VerifiedUser.Value,
-                PrimaryAddress = p.profile.PrimaryAddress,
+                PrimaryAddress = p.profile.Addresses.FirstOrDefault(a => a.Type == AddressType.Primary),
                 RestrictedAccess = p.profile.RestrictedAccess,
                 RecentEvacuationFiles = p.files.MapToSearchResults()
             });

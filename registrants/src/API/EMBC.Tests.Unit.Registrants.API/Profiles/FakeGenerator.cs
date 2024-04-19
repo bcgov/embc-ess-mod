@@ -11,7 +11,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
     {
         public static RegistrantProfile CreateServerRegistrantProfile()
         {
-            return new Faker<RegistrantProfile>()
+            return new Faker<RegistrantProfile>("en_CA")
                 .RuleFor(o => o.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(o => o.UserId, f => f.Random.String(10))
                 .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())
@@ -27,9 +27,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
                 .RuleFor(o => o.Email, f => f.Internet.Email())
 
-                .RuleFor(o => o.PrimaryAddress, f => FakeAddress())
-                .RuleFor(o => o.MailingAddress, f => FakeAddress())
-
+                .RuleFor(o => o.Addresses, f => [FakeAddress(AddressType.Primary), FakeAddress(AddressType.Mailing)])
                 .Generate();
         }
 
@@ -46,7 +44,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         private static EMBC.ESS.Shared.Contracts.Events.SecurityQuestion FakeSecurityQuestion(int id)
         {
-            return new Faker<EMBC.ESS.Shared.Contracts.Events.SecurityQuestion>()
+            return new Faker<EMBC.ESS.Shared.Contracts.Events.SecurityQuestion>("en_CA")
                 .RuleFor(o => o.Id, id)
                 .RuleFor(o => o.Question, f => f.Random.Word())
                 .RuleFor(o => o.Answer, f => f.Random.Word())
@@ -54,20 +52,21 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
-        private static EMBC.ESS.Shared.Contracts.Events.Address FakeAddress()
+        private static EMBC.ESS.Shared.Contracts.Events.Address FakeAddress(AddressType addressType)
         {
-            return new Faker<EMBC.ESS.Shared.Contracts.Events.Address>()
+            return new Faker<EMBC.ESS.Shared.Contracts.Events.Address>("en_CA")
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.Community, f => f.Address.City())
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
                 .RuleFor(o => o.StateProvince, f => f.Address.State())
                 .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
+                .RuleFor(o => o.Type, _ => addressType)
                 .Generate();
         }
 
         public static Profile CreateClientRegistrantProfile()
         {
-            return new Faker<Profile>()
+            return new Faker<Profile>("en_CA")
                 .RuleFor(o => o.Id, f => f.Random.String(10))
                 .RuleFor(o => o.SecurityQuestions, f => FakeClientEnteredSecurityQuestions())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
@@ -89,14 +88,14 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
                 .RuleFor(o => o.PrimaryAddress, f => FakeClientEnteredAddress())
                 .RuleFor(o => o.MailingAddress, f => FakeClientEnteredAddress())
-                .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, f => f.Random.Bool())
+                .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, (f, o) => o.MailingAddress == o.PrimaryAddress)
 
                 .Generate();
         }
 
         private static IEnumerable<EMBC.Registrants.API.Controllers.SecurityQuestion> FakeClientEnteredSecurityQuestions()
         {
-            List<EMBC.Registrants.API.Controllers.SecurityQuestion> ret = new List<EMBC.Registrants.API.Controllers.SecurityQuestion>
+            var ret = new List<EMBC.Registrants.API.Controllers.SecurityQuestion>
             {
                 FakeClientEnteredSecurityQuestion(1),
                 FakeClientEnteredSecurityQuestion(2),
@@ -107,7 +106,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         private static EMBC.Registrants.API.Controllers.SecurityQuestion FakeClientEnteredSecurityQuestion(int id)
         {
-            return new Faker<EMBC.Registrants.API.Controllers.SecurityQuestion>()
+            return new Faker<EMBC.Registrants.API.Controllers.SecurityQuestion>("en_CA")
                 .RuleFor(o => o.Id, id)
                 .RuleFor(o => o.Question, f => f.Random.Word())
                 .RuleFor(o => o.Answer, f => f.Random.Word())
@@ -117,7 +116,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         private static EMBC.Registrants.API.Controllers.Address FakeClientEnteredAddress()
         {
-            return new Faker<EMBC.Registrants.API.Controllers.Address>()
+            return new Faker<EMBC.Registrants.API.Controllers.Address>("en_CA")
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.Community, f => f.Address.City())
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
@@ -128,7 +127,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         public static Profile CreateUser(string stateProvince, string country)
         {
-            return new Faker<Profile>()
+            return new Faker<Profile>("en_CA")
                 .RuleFor(u => u.Id, f => f.Random.String(10))
                 //.RuleFor(u => u.DisplayName, f => f.Name.FullName())
                 .RuleFor(u => u.ContactDetails, f => new Faker<ContactDetails>()

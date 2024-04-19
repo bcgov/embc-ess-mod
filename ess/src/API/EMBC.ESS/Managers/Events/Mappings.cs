@@ -36,6 +36,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.City, opts => opts.Ignore())
                 .ForMember(d => d.StateProvince, opts => opts.Ignore())
                 .ForMember(d => d.Country, opts => opts.Ignore())
+                .ForMember(d => d.Type, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Events.HouseholdMember, HouseholdMember>()
@@ -118,6 +119,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.IsAuthenticated, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.Minor))
                 .ForMember(d => d.IsProfileCompleted, opts => opts.MapFrom(s => s.SecurityQuestions.Any()))
+                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s.Addresses.FirstOrDefault(a => a.Type == AddressType.Primary)))
                 ;
 
             CreateMap<HouseholdMember, Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember>()
@@ -258,6 +260,7 @@ namespace EMBC.ESS.Managers.Events
                 .ValidateMemberList(MemberList.Destination);
 
             CreateMap<Resources.Suppliers.Address, Shared.Contracts.Events.Address>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(_ => Shared.Contracts.Events.AddressType.SupplierLocation))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
 

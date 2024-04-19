@@ -32,6 +32,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         public void CanMapProfileFromServerRegistrantProfile()
         {
             var registrantProfile = FakeGenerator.CreateServerRegistrantProfile();
+            var primaryAddress = registrantProfile.Addresses.Single(a => a.Type == AddressType.Primary);
+            var mailingAddress = registrantProfile.Addresses.Single(a => a.Type == AddressType.Mailing);
             var profile = mapper.Map<Profile>(registrantProfile);
 
             profile.ShouldNotBeNull();
@@ -57,19 +59,19 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.ContactDetails.Phone.ShouldBe(registrantProfile.Phone);
             profile.ContactDetails.HidePhoneRequired.ShouldBe(string.IsNullOrEmpty(registrantProfile.Phone));
 
-            profile.PrimaryAddress.AddressLine1.ShouldBe(registrantProfile.PrimaryAddress.AddressLine1);
-            profile.PrimaryAddress.AddressLine2.ShouldBe(registrantProfile.PrimaryAddress.AddressLine2);
-            profile.PrimaryAddress.Community.ShouldBe(registrantProfile.PrimaryAddress.Community);
-            profile.PrimaryAddress.StateProvince.ShouldBe(registrantProfile.PrimaryAddress.StateProvince);
-            profile.PrimaryAddress.Country.ShouldBe(registrantProfile.PrimaryAddress.Country);
-            profile.PrimaryAddress.PostalCode.ShouldBe(registrantProfile.PrimaryAddress.PostalCode);
+            profile.PrimaryAddress.AddressLine1.ShouldBe(primaryAddress.AddressLine1);
+            profile.PrimaryAddress.AddressLine2.ShouldBe(primaryAddress.AddressLine2);
+            profile.PrimaryAddress.Community.ShouldBe(primaryAddress.Community);
+            profile.PrimaryAddress.StateProvince.ShouldBe(primaryAddress.StateProvince);
+            profile.PrimaryAddress.Country.ShouldBe(primaryAddress.Country);
+            profile.PrimaryAddress.PostalCode.ShouldBe(primaryAddress.PostalCode);
 
-            profile.MailingAddress.AddressLine1.ShouldBe(registrantProfile.MailingAddress.AddressLine1);
-            profile.MailingAddress.AddressLine2.ShouldBe(registrantProfile.MailingAddress.AddressLine2);
-            profile.MailingAddress.Community.ShouldBe(registrantProfile.MailingAddress.Community);
-            profile.MailingAddress.StateProvince.ShouldBe(registrantProfile.MailingAddress.StateProvince);
-            profile.MailingAddress.Country.ShouldBe(registrantProfile.MailingAddress.Country);
-            profile.MailingAddress.PostalCode.ShouldBe(registrantProfile.MailingAddress.PostalCode);
+            profile.MailingAddress.AddressLine1.ShouldBe(mailingAddress.AddressLine1);
+            profile.MailingAddress.AddressLine2.ShouldBe(mailingAddress.AddressLine2);
+            profile.MailingAddress.Community.ShouldBe(mailingAddress.Community);
+            profile.MailingAddress.StateProvince.ShouldBe(mailingAddress.StateProvince);
+            profile.MailingAddress.Country.ShouldBe(mailingAddress.Country);
+            profile.MailingAddress.PostalCode.ShouldBe(mailingAddress.PostalCode);
         }
 
         [Fact]
@@ -77,6 +79,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         {
             var profile = FakeGenerator.CreateClientRegistrantProfile();
             var registrantProfile = mapper.Map<RegistrantProfile>(profile);
+            var primaryAddress = registrantProfile.Addresses.Single(a => a.Type == AddressType.Primary);
+            var mailingAddress = registrantProfile.Addresses.Single(a => a.Type == AddressType.Mailing);
 
             registrantProfile.ShouldNotBeNull();
 
@@ -100,19 +104,19 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.Email.ShouldBe(profile.ContactDetails.Email);
             registrantProfile.Phone.ShouldBe(profile.ContactDetails.Phone);
 
-            registrantProfile.PrimaryAddress.AddressLine1.ShouldBe(profile.PrimaryAddress.AddressLine1);
-            registrantProfile.PrimaryAddress.AddressLine2.ShouldBe(profile.PrimaryAddress.AddressLine2);
-            registrantProfile.PrimaryAddress.Community.ShouldBe(profile.PrimaryAddress.Community);
-            registrantProfile.PrimaryAddress.StateProvince.ShouldBe(profile.PrimaryAddress.StateProvince);
-            registrantProfile.PrimaryAddress.Country.ShouldBe(profile.PrimaryAddress.Country);
-            registrantProfile.PrimaryAddress.PostalCode.ShouldBe(profile.PrimaryAddress.PostalCode);
+            primaryAddress.AddressLine1.ShouldBe(profile.PrimaryAddress.AddressLine1);
+            primaryAddress.AddressLine2.ShouldBe(profile.PrimaryAddress.AddressLine2);
+            primaryAddress.Community.ShouldBe(profile.PrimaryAddress.Community);
+            primaryAddress.StateProvince.ShouldBe(profile.PrimaryAddress.StateProvince);
+            primaryAddress.Country.ShouldBe(profile.PrimaryAddress.Country);
+            primaryAddress.PostalCode.ShouldBe(profile.PrimaryAddress.PostalCode);
 
-            registrantProfile.MailingAddress.AddressLine1.ShouldBe(profile.MailingAddress.AddressLine1);
-            registrantProfile.MailingAddress.AddressLine2.ShouldBe(profile.MailingAddress.AddressLine2);
-            registrantProfile.MailingAddress.Community.ShouldBe(profile.MailingAddress.Community);
-            registrantProfile.MailingAddress.StateProvince.ShouldBe(profile.MailingAddress.StateProvince);
-            registrantProfile.MailingAddress.Country.ShouldBe(profile.MailingAddress.Country);
-            registrantProfile.MailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode);
+            mailingAddress.AddressLine1.ShouldBe(profile.MailingAddress.AddressLine1);
+            mailingAddress.AddressLine2.ShouldBe(profile.MailingAddress.AddressLine2);
+            mailingAddress.Community.ShouldBe(profile.MailingAddress.Community);
+            mailingAddress.StateProvince.ShouldBe(profile.MailingAddress.StateProvince);
+            mailingAddress.Country.ShouldBe(profile.MailingAddress.Country);
+            mailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode);
         }
 
         [Fact]

@@ -2,7 +2,7 @@
 
 namespace EMBC.Responders.API.Controllers
 {
-    public class Address
+    public record Address
     {
         public string AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
@@ -16,7 +16,7 @@ namespace EMBC.Responders.API.Controllers
     /// <summary>
     /// Profile personal details
     /// </summary>
-    public class PersonDetails
+    public record PersonDetails
     {
         [Required]
         public string FirstName { get; set; }
@@ -37,7 +37,7 @@ namespace EMBC.Responders.API.Controllers
     /// <summary>
     /// Profile contact information
     /// </summary>
-    public class ContactDetails
+    public record ContactDetails
     {
         [EmailAddress]
         public string? Email { get; set; }

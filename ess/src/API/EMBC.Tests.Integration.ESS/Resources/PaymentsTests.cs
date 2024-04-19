@@ -172,13 +172,13 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
             registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
-
+            var postalCode = postalCodeMatches ? registrant.Addresses.Single(a => a.Type == EMBC.ESS.Shared.Contracts.Events.AddressType.Primary).PostalCode : "V2V2V2";
             mockedCas.AddSupplier(new GetSupplierResponse
             {
                 Suppliernumber = "12345",
                 Suppliername = Formatters.ToCasSupplierName(registrant.FirstName, registrant.LastName),
                 Businessnumber = "123",
-                SupplierAddress = new[] { new Supplieraddress { AddressLine1 = "123 test st", PostalCode = postalCodeMatches ? registrant.PrimaryAddress.PostalCode : "V2V2V2", Suppliersitecode = "001" } }
+                SupplierAddress = new[] { new Supplieraddress { AddressLine1 = "123 test st", PostalCode = postalCode, Suppliersitecode = "001" } }
             });
 
             var payments = new[]

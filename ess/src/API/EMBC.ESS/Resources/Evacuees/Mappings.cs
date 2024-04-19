@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Extensions;
@@ -14,35 +15,13 @@ namespace EMBC.ESS.Resources.Evacuees
             Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
 
             CreateMap<Evacuee, contact>(MemberList.None)
+                .ForSourceMember(s => s.Addresses, opts => opts.DoNotValidate())
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? (Guid?)null : Guid.Parse(s.Id)))
                 .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.UserId))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.era_authenticated, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.era_verified, opts => opts.MapFrom(s => s.Verified))
-
-                .ForMember(d => d.address1_line1, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine1))
-                .ForMember(d => d.address1_line2, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine2))
-                .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
-                .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.PrimaryAddress.StateProvince) ? string.Empty : s.PrimaryAddress.StateProvince))
-                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.PrimaryAddress.City) ? string.Empty : s.PrimaryAddress.City))
-                .ForMember(d => d.address1_postalcode, opts => opts.MapFrom(s => s.PrimaryAddress.PostalCode))
-                .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
-
-                .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
-                .ForMember(d => d.address2_line2, opts => opts.MapFrom(s => s.MailingAddress.AddressLine2))
-                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
-                .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.MailingAddress.StateProvince) ? string.Empty : s.MailingAddress.StateProvince))
-                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.MailingAddress.City) ? string.Empty : s.MailingAddress.City))
-                .ForMember(d => d.address2_postalcode, opts => opts.MapFrom(s => s.MailingAddress.PostalCode))
-                .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
-                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
-                    s.MailingAddress.Country.Equals(s.PrimaryAddress.Country, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.StateProvince.Equals(s.PrimaryAddress.StateProvince, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.Community.Equals(s.PrimaryAddress.Community, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.PostalCode.Equals(s.PrimaryAddress.PostalCode, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.AddressLine1.Equals(s.PrimaryAddress.AddressLine1, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.AddressLine2.Equals(s.PrimaryAddress.AddressLine2, StringComparison.OrdinalIgnoreCase)))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
@@ -57,9 +36,38 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
+                .AfterMap((s, d) =>
+                {
+                    var primaryAddress = s.Addresses.FirstOrDefault(a => a.Type == AddressType.Primary);
+                    var mailingAddress = s.Addresses.FirstOrDefault(a => a.Type == AddressType.Mailing);
+
+                    d.era_issamemailingaddress = primaryAddress == mailingAddress;
+                    if (primaryAddress != null)
+                    {
+                        d.address1_line1 = primaryAddress.AddressLine1;
+                        d.address1_line2 = primaryAddress.AddressLine2;
+                        d.address1_country = primaryAddress.Country;
+                        d.address1_stateorprovince = string.IsNullOrEmpty(primaryAddress.StateProvince) ? string.Empty : primaryAddress.StateProvince;
+                        d.address1_city = string.IsNullOrEmpty(primaryAddress.City) ? string.Empty : primaryAddress.City;
+                        d.address1_postalcode = primaryAddress.PostalCode;
+                        d.era_primarybcresident = primaryAddress.StateProvince == "BC";
+                    }
+
+                    if (mailingAddress != null)
+                    {
+                        d.address2_line1 = mailingAddress.AddressLine1;
+                        d.address2_line2 = mailingAddress.AddressLine2;
+                        d.address2_country = mailingAddress.Country;
+                        d.address2_stateorprovince = string.IsNullOrEmpty(mailingAddress.StateProvince) ? string.Empty : mailingAddress.StateProvince;
+                        d.address2_city = string.IsNullOrEmpty(mailingAddress.City) ? string.Empty : mailingAddress.City;
+                        d.address2_postalcode = mailingAddress.PostalCode;
+                        d.era_isbcmailingaddress = mailingAddress.StateProvince == "BC";
+                    }
+                })
                 ;
 
             CreateMap<contact, Evacuee>()
+
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid.ToString()))
                 .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.era_bcservicescardid))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
@@ -78,25 +86,38 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.emailaddress1))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.address1_telephone1))
-                .ForPath(d => d.PrimaryAddress.AddressLine1, opts => opts.MapFrom(s => s.address1_line1))
-                .ForPath(d => d.PrimaryAddress.AddressLine2, opts => opts.MapFrom(s => s.address1_line2))
-                .ForPath(d => d.PrimaryAddress.City, opts => opts.MapFrom(s => isGuid(s.address1_city) ? null : s.address1_city))
-                .ForPath(d => d.PrimaryAddress.PostalCode, opts => opts.MapFrom(s => s.address1_postalcode))
-                .ForPath(d => d.PrimaryAddress.Country, opts => opts.MapFrom(s => s.era_Country != null ? s.era_Country.era_countrycode : s.address1_country))
-                .ForPath(d => d.PrimaryAddress.StateProvince, opts => opts.MapFrom(s => s.era_ProvinceState != null ? s.era_ProvinceState.era_code : s.address1_stateorprovince))
-                .ForPath(d => d.PrimaryAddress.Community, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : null))
-
-                .ForPath(d => d.MailingAddress.AddressLine1, opts => opts.MapFrom(s => s.address2_line1))
-                .ForPath(d => d.MailingAddress.AddressLine2, opts => opts.MapFrom(s => s.address2_line2))
-                .ForPath(d => d.MailingAddress.City, opts => opts.MapFrom(s => isGuid(s.address2_city) ? null : s.address2_city))
-                .ForPath(d => d.MailingAddress.PostalCode, opts => opts.MapFrom(s => s.address2_postalcode))
-                .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry != null ? s.era_MailingCountry.era_countrycode : s.address2_country))
-                .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState != null ? s.era_MailingProvinceState.era_code : s.address2_stateorprovince))
-                .ForPath(d => d.MailingAddress.Community, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : null))
-
+                .ForMember(d => d.Addresses, opts => opts.Ignore())
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
                     : null))
+
+                .AfterMap((s, d) =>
+                {
+                    var primaryAddress = new Address
+                    {
+                        Type = AddressType.Primary,
+                        AddressLine1 = s.address1_line1,
+                        AddressLine2 = s.address1_line2,
+                        City = isGuid(s.address1_city) ? null : s.address1_city,
+                        Country = s.era_Country != null ? s.era_Country.era_countrycode : s.address1_country,
+                        StateProvince = s.era_ProvinceState != null ? s.era_ProvinceState.era_code : s.address1_stateorprovince,
+                        PostalCode = s.address1_postalcode,
+                        Community = s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : null
+                    };
+                    var mailingAddress = new Address
+                    {
+                        Type = AddressType.Mailing,
+                        AddressLine1 = s.address2_line1,
+                        AddressLine2 = s.address2_line2,
+                        City = isGuid(s.address2_city) ? null : s.address2_city,
+                        Country = s.era_MailingCountry != null ? s.era_MailingCountry.era_countrycode : s.address2_country,
+                        StateProvince = s.era_MailingProvinceState != null ? s.era_MailingProvinceState.era_code : s.address2_stateorprovince,
+                        PostalCode = s.address2_postalcode,
+                        Community = s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : null
+                    };
+                    d.Addresses = [primaryAddress, mailingAddress];
+                })
+
               ;
 
             CreateMap<era_evacueeemailinvite, Invitation>()

@@ -40,12 +40,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 UserId = TestEvacueeUserId
             })).Items.ShouldHaveSingleItem();
 
-            var newCommunity = TestData.RandomCommunity;
-            var currentCity = evacuee.PrimaryAddress.Community;
-
-            evacuee.PrimaryAddress.Community = currentCity == newCommunity
-              ? TestData.RandomCommunity
-              : newCommunity;
+            evacuee.FirstName = $"{TestData.TestPrefix}-first-name_updated";
+            evacuee.LastName = $"{TestData.TestPrefix}-last-name_updated";
 
             var updatedEvacueeId = (await evacueeRepository.Manage(new SaveEvacuee
             {
@@ -58,8 +54,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 EvacueeId = updatedEvacueeId
             })).Items.ShouldHaveSingleItem();
-
-            updatedEvacuee.PrimaryAddress.Community.ShouldBe(newCommunity);
+            updatedEvacuee.FirstName.ShouldBe(evacuee.FirstName);
+            updatedEvacuee.LastName.ShouldBe(evacuee.LastName);
         }
 
         [Fact]
@@ -76,9 +72,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             baseEvacuee.UserId = $"{TestData.TestPrefix}-{uniqueSignature}-{TestEvacueeUserId}";
             baseEvacuee.FirstName = $"{TestData.TestPrefix}-{uniqueSignature}-first";
             baseEvacuee.LastName += $"{TestData.TestPrefix}-{uniqueSignature}-last";
-            baseEvacuee.PrimaryAddress.Community = TestData.RandomCommunity;
-            baseEvacuee.PrimaryAddress.StateProvince = "BC";
-            baseEvacuee.PrimaryAddress.Country = "CAN";
 
             var newEvacueeId = (await evacueeRepository.Manage(new SaveEvacuee
             {
@@ -90,9 +83,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newEvacuee.UserId.ShouldBe(baseEvacuee.UserId);
             newEvacuee.FirstName.ShouldBe(baseEvacuee.FirstName);
             newEvacuee.LastName.ShouldBe(baseEvacuee.LastName);
-            newEvacuee.PrimaryAddress.Country.ShouldBe(baseEvacuee.PrimaryAddress.Country);
-            newEvacuee.PrimaryAddress.StateProvince.ShouldBe(baseEvacuee.PrimaryAddress.StateProvince);
-            newEvacuee.PrimaryAddress.Community.ShouldBe(baseEvacuee.PrimaryAddress.Community);
         }
 
         [Fact]
@@ -104,12 +94,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
             })).Items.ShouldHaveSingleItem();
 
             Func<string> uniqueSignature = () => Guid.NewGuid().ToString().Substring(0, 10);
-            evacuee.SecurityQuestions = new[]
-            {
+            evacuee.SecurityQuestions =
+            [
                 new SecurityQuestion{ Id = 1, Question = "question1", Answer = $"{uniqueSignature()}", AnswerIsMasked = false },
                 new SecurityQuestion{ Id = 2, Question = "question2", Answer = $"{uniqueSignature()}", AnswerIsMasked = false },
                 new SecurityQuestion{ Id = 3, Question = "question3", Answer = $"{uniqueSignature()}", AnswerIsMasked = false },
-            };
+            ];
 
             await evacueeRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
 

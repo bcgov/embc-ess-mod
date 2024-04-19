@@ -46,7 +46,7 @@ namespace EMBC.Tests.Unit.Responders.API
         [Fact]
         public void CanDeserializeSupport()
         {
-            var supports = JsonSerializer.Deserialize<IEnumerable<Support>>(File.ReadAllText("./supports.json"));            
+            var supports = JsonSerializer.Deserialize<IEnumerable<Support>>(File.ReadAllText("./supports.json"));
             supports.Count().ShouldBe(9);
         }
     }

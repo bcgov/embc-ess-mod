@@ -81,14 +81,7 @@ namespace EMBC.Tests.Integration.ESS
         public static RegistrantProfile CreateRegistrantProfile(string prefix)
         {
             var uniqueIdentifier = GenerateNewUniqueId(prefix);
-            var address = new Address
-            {
-                AddressLine1 = $"{uniqueIdentifier} st.",
-                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
-                StateProvince = "BC",
-                Country = "CAN",
-                PostalCode = "V1V1V1"
-            };
+
             return new RegistrantProfile
             {
                 FirstName = $"autotest-dev-{uniqueIdentifier}_first",
@@ -96,22 +89,36 @@ namespace EMBC.Tests.Integration.ESS
                 Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
                 DateOfBirth = "12/13/2000",
                 Gender = "M",
-                PrimaryAddress = address,
-                MailingAddress = address
+                Addresses = CreateProfileAddresses(uniqueIdentifier)
             };
         }
 
-        public static RegistrantProfile CreateRegistrantProfileWithBCSC(string prefix)
+        public static IEnumerable<Address> CreateProfileAddresses(string uniqueIdentifier)
         {
-            var uniqueIdentifier = GenerateNewUniqueId(prefix);
-            var address = new Address
+            var primaryAddress = new Address
             {
+                Type = AddressType.Primary,
                 AddressLine1 = $"{uniqueIdentifier} st.",
                 Community = "9e6adfaf-9f97-ea11-b813-005056830319",
                 StateProvince = "BC",
                 Country = "CAN",
                 PostalCode = "V1V1V1"
             };
+            var mailingAddress = new Address
+            {
+                Type = AddressType.Mailing,
+                AddressLine1 = $"{uniqueIdentifier} st.",
+                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
+                StateProvince = "BC",
+                Country = "CAN",
+                PostalCode = "V1V1V1"
+            };
+            return [primaryAddress, mailingAddress];
+        }
+
+        public static RegistrantProfile CreateRegistrantProfileWithBCSC(string prefix)
+        {
+            var uniqueIdentifier = GenerateNewUniqueId(prefix);
             return new RegistrantProfile
             {
                 FirstName = $"autotest-dev-{uniqueIdentifier}_first",
@@ -120,8 +127,7 @@ namespace EMBC.Tests.Integration.ESS
                 DateOfBirth = "12/13/2000",
                 Gender = "M",
                 UserId = uniqueIdentifier,
-                PrimaryAddress = address,
-                MailingAddress = address
+                Addresses = CreateProfileAddresses(uniqueIdentifier)
             };
         }
 

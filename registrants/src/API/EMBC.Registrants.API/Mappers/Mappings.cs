@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
@@ -7,7 +9,7 @@ namespace EMBC.Registrants.API.Mappers
     {
         public Mappings()
         {
-            CreateMap<Controllers.Profile, ESS.Shared.Contracts.Events.RegistrantProfile>()
+            CreateMap<Profile, ESS.Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
@@ -28,16 +30,39 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.Addresses, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    var addresses = new List<ESS.Shared.Contracts.Events.Address>();
+                    if (s.PrimaryAddress != null)
+                    {
+                        var primaryAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.PrimaryAddress);
+                        primaryAddress.Type = ESS.Shared.Contracts.Events.AddressType.Primary;
+                        addresses.Add(primaryAddress);
+                    }
+                    if (s.IsMailingAddressSameAsPrimaryAddress)
+                    {
+                        var mailingAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.PrimaryAddress);
+                        mailingAddress.Type = ESS.Shared.Contracts.Events.AddressType.Mailing;
+                        addresses.Add(mailingAddress);
+                    }
+                    else if (s.MailingAddress != null)
+                    {
+                        var mailingAddress = ctx.Mapper.Map<ESS.Shared.Contracts.Events.Address>(s.MailingAddress);
+                        mailingAddress.Type = ESS.Shared.Contracts.Events.AddressType.Mailing;
+                        addresses.Add(mailingAddress);
+                    }
+                    d.Addresses = addresses;
+                })
                 .ReverseMap()
-
-                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
-                    string.Equals(s.MailingAddress.Country, s.PrimaryAddress.Country, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.StateProvince, s.PrimaryAddress.StateProvince, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.Community, s.PrimaryAddress.Community, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.City, s.PrimaryAddress.City, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine1, s.PrimaryAddress.AddressLine1, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.InvariantCultureIgnoreCase)))
+                .ValidateMemberList(AutoMapper.MemberList.Destination)
+                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s.Addresses.FirstOrDefault(a => a.Type == ESS.Shared.Contracts.Events.AddressType.Primary)))
+                .ForMember(d => d.MailingAddress, opts => opts.MapFrom(s => s.Addresses.FirstOrDefault(a => a.Type == ESS.Shared.Contracts.Events.AddressType.Mailing)))
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
+                .AfterMap((_, d) =>
+                {
+                    d.IsMailingAddressSameAsPrimaryAddress = d.PrimaryAddress == d.MailingAddress;
+                })
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Events.SecurityQuestion>()
@@ -45,6 +70,7 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Events.Address>()
+                .ForMember(d => d.Type, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 

@@ -41,6 +41,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.emailaddress1, f => f.Internet.Email())
 
                 .RuleFor(o => o.address1_line1, f => f.Address.StreetAddress())
+                .RuleFor(o => o.address1_line2, f => f.Address.SecondaryAddress())
                 .RuleFor(o => o.address1_city, f => f.Address.City())
                 .RuleFor(o => o.address1_country, f => f.Address.CountryCode())
                 .RuleFor(o => o.address1_stateorprovince, f => f.Address.State())
@@ -49,6 +50,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 //.RuleFor(o => o.era_Country, f => null)
 
                 .RuleFor(o => o.address2_line1, f => f.Address.StreetAddress())
+                .RuleFor(o => o.address2_line2, f => f.Address.SecondaryAddress())
                 .RuleFor(o => o.address2_city, f => f.Address.City())
                 .RuleFor(o => o.address2_country, f => f.Address.CountryCode())
                 .RuleFor(o => o.address2_stateorprovince, f => f.Address.State())
@@ -56,7 +58,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 //.RuleFor(o => o.era_MailingProvinceState, f => null)
                 //.RuleFor(o => o.era_MailingCountry, f => null)
 
-                .RuleFor(o => o.era_issamemailingaddress, f => f.Random.Bool())
+                .RuleFor(o => o.era_issamemailingaddress, _ => false)
 
                 .RuleFor(o => o.era_securityquestiontext1, f => f.Random.Words())
                 .RuleFor(o => o.era_securityquestiontext2, f => f.Random.Words())
@@ -82,12 +84,11 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.Gender, f => f.PickRandom("Male", "Female", "X"))
                 .RuleFor(o => o.Email, f => f.Internet.Email())
                 .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
-                .RuleFor(o => o.PrimaryAddress, f => FakeAddress())
-                .RuleFor(o => o.MailingAddress, f => FakeAddress())
+                .RuleFor(o => o.Addresses, f => [FakeAddress(AddressType.Primary), FakeAddress(AddressType.Mailing)])
                 .Generate();
         }
 
-        private static Address FakeAddress()
+        private static Address FakeAddress(AddressType type)
         {
             return new Faker<Address>()
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
@@ -96,6 +97,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
                 .RuleFor(o => o.StateProvince, f => f.Address.State())
                 .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
+                .RuleFor(o => o.Type, _ => type)
                 .Generate();
         }
 

@@ -87,10 +87,17 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             profile.Id = currentUserId;
+            var loggedInUserProfile = GetUserFromPrincipal();
+            var loggedInUserOfficialAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(loggedInUserProfile.PrimaryAddress);
+            loggedInUserOfficialAddress.Type = AddressType.Official;
+
             var mappedProfile = mapper.Map<RegistrantProfile>(profile);
+
             //BCSC profiles are authenticated and verified
             mappedProfile.AuthenticatedUser = true;
             mappedProfile.VerifiedUser = true;
+            //add bcsc address to profile addresses
+            mappedProfile.Addresses = mappedProfile.Addresses.Append(loggedInUserOfficialAddress);
             var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile });
             return Ok(profileId);
         }
@@ -117,8 +124,7 @@ namespace EMBC.Registrants.API.Controllers
         private Profile GetUserFromPrincipal()
         {
             if (!User.HasClaim(c => c.Type.Equals("userInfo", System.StringComparison.OrdinalIgnoreCase))) return null;
-            var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity?.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
-            return userProfile;
+            return BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity?.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
         }
 
         [HttpPost("invite-anonymous")]
@@ -145,7 +151,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// User's profile
     /// </summary>
-    public class Profile
+    public record Profile
     {
         public string? Id { get; set; }
 
@@ -171,7 +177,7 @@ namespace EMBC.Registrants.API.Controllers
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
-    public abstract class ProfileDataConflict
+    public abstract record ProfileDataConflict
     {
         [Required]
         public abstract string DataElementName { get; }
@@ -180,7 +186,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Date of birth data conflict
     /// </summary>
-    public class DateOfBirthDataConflict : ProfileDataConflict
+    public record DateOfBirthDataConflict : ProfileDataConflict
     {
         [Required]
         public override string DataElementName => nameof(DateOfBirthDataConflict);
@@ -193,7 +199,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Name data conflict
     /// </summary>
-    public class NameDataConflict : ProfileDataConflict
+    public record NameDataConflict : ProfileDataConflict
     {
         [Required]
         public override string DataElementName => nameof(NameDataConflict);
@@ -205,7 +211,7 @@ namespace EMBC.Registrants.API.Controllers
         { get; set; }
     }
 
-    public class ProfileName
+    public record ProfileName
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -214,7 +220,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Address data conflict
     /// </summary>
-    public class AddressDataConflict : ProfileDataConflict
+    public record AddressDataConflict : ProfileDataConflict
     {
         [Required]
         public override string DataElementName => nameof(AddressDataConflict);
@@ -224,7 +230,7 @@ namespace EMBC.Registrants.API.Controllers
         public Address OriginalValue { get; set; }
     }
 
-    public class InviteRequest
+    public record InviteRequest
     {
         [Required]
         public string FileId { get; set; }
@@ -234,7 +240,7 @@ namespace EMBC.Registrants.API.Controllers
         public string Email { get; set; }
     }
 
-    public class InviteToken
+    public record InviteToken
     {
         [Required]
         public string Token { get; set; }

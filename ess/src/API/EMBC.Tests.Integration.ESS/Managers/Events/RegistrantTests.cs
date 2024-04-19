@@ -38,20 +38,21 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualRegistrant.FirstName.ShouldStartWith(TestData.TestPrefix);
             actualRegistrant.LastName.ShouldStartWith(TestData.TestPrefix);
             actualRegistrant.Email.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.PrimaryAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.Addresses.Single(a => a.Type == AddressType.Primary).AddressLine1.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.Addresses.Single(a => a.Type == AddressType.Mailing).AddressLine1.ShouldStartWith(TestData.TestPrefix);
         }
 
         [Fact]
         public async Task CanUpdateProfile()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var currentCommunity = registrant.PrimaryAddress.Community;
+            var primaryAddress = registrant.Addresses.Single(a => a.Type == AddressType.Primary);
+            var currentCommunity = primaryAddress.Community;
             var newCommunity = currentCommunity == TestData.Team1CommunityId
                 ? TestData.OtherCommunityId
                 : TestData.Team1CommunityId;
 
-            var currentCountry = registrant.PrimaryAddress.Country;
+            var currentCountry = primaryAddress.Country;
             string newCountry;
             string newProvince;
             string newCity;
@@ -71,11 +72,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 newPostalCode = "v1v 1v1";
             }
 
-            registrant.PrimaryAddress.Country = newCountry;
-            registrant.PrimaryAddress.StateProvince = newProvince;
-            registrant.PrimaryAddress.Community = newCommunity;
-            registrant.PrimaryAddress.City = newCity;
-            registrant.PrimaryAddress.PostalCode = newPostalCode;
+            primaryAddress.Country = newCountry;
+            primaryAddress.StateProvince = newProvince;
+            primaryAddress.Community = newCommunity;
+            primaryAddress.City = newCity;
+            primaryAddress.PostalCode = newPostalCode;
 
             var newEmail = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
             registrant.Email = newEmail;
@@ -87,15 +88,16 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var updatedRegistrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var updatedPrimaryAddress = updatedRegistrant.Addresses.Single(a => a.Type == AddressType.Primary);
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(newEmail);
             updatedRegistrant.Phone.ShouldBe(newPhone);
-            updatedRegistrant.PrimaryAddress.Country.ShouldBe(newCountry);
-            updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
-            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
-            updatedRegistrant.PrimaryAddress.City.ShouldBe(newCity);
-            updatedRegistrant.PrimaryAddress.PostalCode.ShouldBe(newPostalCode);
+            updatedPrimaryAddress.Country.ShouldBe(newCountry);
+            updatedPrimaryAddress.StateProvince.ShouldBe(newProvince);
+            updatedPrimaryAddress.Community.ShouldBe(newCommunity);
+            updatedPrimaryAddress.City.ShouldBe(newCity);
+            updatedPrimaryAddress.PostalCode.ShouldBe(newPostalCode);
         }
 
         [Fact]
@@ -123,24 +125,25 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            if (string.IsNullOrEmpty(registrant.PrimaryAddress.StateProvince))
+            var primaryAddress = registrant.Addresses.Single(a => a.Type == AddressType.Primary);
+            if (string.IsNullOrEmpty(primaryAddress.StateProvince))
             {
                 await CanUpdateProfile(); //populates the community and state/province fields
                 registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             }
 
-            string? newProvince = null;
-            string? newCommunity = null;
-            registrant.PrimaryAddress.StateProvince = newProvince;
-            registrant.PrimaryAddress.Community = newCommunity;
+            primaryAddress.StateProvince = null;
+            primaryAddress.Community = null;
+            registrant.Addresses = [primaryAddress, registrant.Addresses.Single(a => a.Type == AddressType.Mailing)];
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var updatedRegistrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var updatedPrimaryAddress = updatedRegistrant.Addresses.Single(a => a.Type == AddressType.Primary);
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
-            updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
-            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
+            updatedPrimaryAddress.StateProvince.ShouldBeNull();
+            updatedPrimaryAddress.Community.ShouldBeNull();
         }
 
         [Fact]
