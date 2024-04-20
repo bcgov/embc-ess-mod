@@ -339,7 +339,8 @@ export class WizardService {
       form.requiresClothing.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Clothing) &&
       form.requiresIncidentals.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Incidentals) &&
       form.requiresTransportation.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Transportation) &&
-      form.requiresShelterAllowance.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
+      form.requiresShelterAllowance.value ===
+        initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
       form.requiresShelterReferral.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterReferral)
     );
   }

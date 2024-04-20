@@ -12,8 +12,7 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   styleUrls: ['./ess-file-details.component.scss']
 })
 export class EssFileDetailsComponent implements OnInit {
-
-  noAssistanceRequiredMessage = globalConst.noAssistanceRequired; 
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
   memberListDisplay: EvacuationFileHouseholdMember[];
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];

@@ -644,7 +644,6 @@ export class StepEssFileService {
       (ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress)
     )?.value;
 
-
     this.insurance = essNeeds.insurance;
 
     // Household Members tab

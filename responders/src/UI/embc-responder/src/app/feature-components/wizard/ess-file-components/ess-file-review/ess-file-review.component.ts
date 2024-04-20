@@ -31,7 +31,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   petColumns: string[] = ['type', 'quantity'];
   tabMetaData: TabModel;
-  noAssistanceRequiredMessage = globalConst.noAssistanceRequired; 
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     public stepEssFileService: StepEssFileService,

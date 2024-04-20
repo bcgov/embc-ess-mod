@@ -90,9 +90,11 @@
         </div>
         <div class="col-md-9 table-parent">
           <table class="table-details">
-          <tr *ngIf="getIdentifiedNeeds().length === 0">
-            <td><b>{{noAssistanceRequiredMessage}}</b></td>
-          </tr>
+            <tr *ngIf="getIdentifiedNeeds().length === 0">
+              <td>
+                <b>{{ noAssistanceRequiredMessage }}</b>
+              </td>
+            </tr>
             <tr *ngFor="let item of getIdentifiedNeeds()">
               <th>{{ item }}</th>
             </tr>

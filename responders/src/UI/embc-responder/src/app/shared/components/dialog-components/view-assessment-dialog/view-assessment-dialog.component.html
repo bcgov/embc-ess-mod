@@ -147,21 +147,14 @@
   </div>
 </div>
 
-
-<div
-  class="row row-padding"
-  *ngFor="let item of getIdentifiedNeeds()"
->
+<div class="row row-padding" *ngFor="let item of getIdentifiedNeeds()">
   <div class="col-12 bold">
     {{ item }}
   </div>
 </div>
 
-<div
-  class="row row-padding"
-  *ngIf="getIdentifiedNeeds().length == 0"
->
+<div class="row row-padding" *ngIf="getIdentifiedNeeds().length === 0">
   <div class="col-12 bold">
-    {{noAssistanceRequiredMessage}}
+    {{ noAssistanceRequiredMessage }}
   </div>
 </div>

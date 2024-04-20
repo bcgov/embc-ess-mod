@@ -17,12 +17,13 @@ export class ViewAssessmentDialogComponent implements OnInit {
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
-  noAssistanceRequiredMessage = globalConst.noAssistanceRequired; 
-  constructor(public evacueeSessionService: EvacueeSessionService,
-    private loadEvacueeListService: LoadEvacueeListService) {}
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
+  constructor(
+    public evacueeSessionService: EvacueeSessionService,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');
@@ -40,10 +41,7 @@ export class ViewAssessmentDialogComponent implements OnInit {
 
   public getIdentifiedNeeds(): string[] {
     return Array.from(this.evacueeSessionService?.currentNeedsAssessment?.needs ?? []).map(
-      (need) =>
-        this.loadEvacueeListService
-          ?.getIdentifiedNeeds()
-          ?.find((value) => value.value === need)?.description
+      (need) => this.loadEvacueeListService?.getIdentifiedNeeds()?.find((value) => value.value === need)?.description
     );
   }
 }

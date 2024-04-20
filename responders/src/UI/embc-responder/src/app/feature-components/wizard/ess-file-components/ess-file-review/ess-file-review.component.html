@@ -221,8 +221,8 @@
               <div class="row" *ngFor="let item of stepEssFileService.needsIdentified">
                 <div class="col-12 bold">{{ item }}</div>
               </div>
-              <div class="row" *ngIf="stepEssFileService?.needsIdentified.length == 0">
-                <div class="col-12 bold">{{noAssistanceRequiredMessage}}</div>
+              <div class="row" *ngIf="stepEssFileService?.needsIdentified.length === 0">
+                <div class="col-12 bold">{{ noAssistanceRequiredMessage }}</div>
               </div>
             </div>
           </div>

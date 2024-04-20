@@ -15,7 +15,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];
   supportTypeForm: UntypedFormGroup;
-  noAssistanceRequiredMessage = globalConst.noAssistanceRequired
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -26,7 +26,6 @@ export class SelectSupportComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.supportList = this.loadEvacueeListService
       .getSupportTypeList()
       .filter(
@@ -42,10 +41,7 @@ export class SelectSupportComponent implements OnInit {
 
   public getIdentifiedNeeds(): string[] {
     return Array.from(this.evacueeSessionService?.currentNeedsAssessment?.needs ?? []).map(
-      (need) =>
-        this.loadEvacueeListService
-          ?.getIdentifiedNeeds()
-          ?.find((value) => value.value === need)?.description
+      (need) => this.loadEvacueeListService?.getIdentifiedNeeds()?.find((value) => value.value === need)?.description
     );
   }
 
