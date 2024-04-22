@@ -62,7 +62,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private loadEvacueeListService: LoadEvacueeListService,
     private downloadService: DownloadService,
     private appBaseService: AppBaseService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
@@ -371,7 +371,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
     if (isSelfServe) {
       isSelfServeValue = '(Self-serve)';
     }
-    return this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description + isSelfServeValue;
+    return (
+      this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description +
+      isSelfServeValue
+    );
   }
 
   getNotificationPref(): string {

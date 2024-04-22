@@ -35,7 +35,8 @@
               </p>
             </div>
             <div class="col-md-4">
-              <p [ngClass]="{
+              <p
+                [ngClass]="{
                   'support-draft': support?.status === 'Draft',
                   'support-active': support?.status === 'Active',
                   'support-expired': support?.status === 'Expired',
@@ -45,20 +46,24 @@
                   'support-approved': support?.status === 'Approved',
                   'support-paid': support?.status === 'Paid',
                   'support-cancelled': support?.status === 'Cancelled'
-                }">
+                }"
+              >
                 {{ getStatusDescription(support?.status) }}
               </p>
             </div>
             <div class="col">
-              <p *ngIf="support?.subCategory !== 'Lodging_Billeting' && support?.subCategory !== 'Lodging_Group'"
-                class="bold supplier-align">
+              <p
+                *ngIf="support?.subCategory !== 'Lodging_Billeting' && support?.subCategory !== 'Lodging_Group'"
+                class="bold supplier-align"
+              >
                 {{
-                getReferral(support)?.method === supportMethod.Referral
-                ? getReferral(support)?.supplierName
-                : getReferral(support)?.method === supportMethod.ETransfer
-                ? support?.isSelfServe
-                ? 'e-Transfer(Self-serve)' : 'e-Transfer'
-                : ''
+                  getReferral(support)?.method === supportMethod.Referral
+                    ? getReferral(support)?.supplierName
+                    : getReferral(support)?.method === supportMethod.ETransfer
+                      ? support?.isSelfServe
+                        ? 'e-Transfer(Self-serve)'
+                        : 'e-Transfer'
+                      : ''
                 }}
               </p>
 

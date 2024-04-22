@@ -184,7 +184,10 @@ describe('ExistingSupportDetailsComponent', () => {
     stepEssFileService.selectedEssFile = stepEssFileService.essFile;
     stepSupportsService.selectedSupportDetail = stepSupportsService.selectedSupport;
     fixture.detectChanges();
-    const methodDescription = component.getMethodTextToDisplay(component.selectedSupport.method, component.selectedSupport.isSelfServe);
+    const methodDescription = component.getMethodTextToDisplay(
+      component.selectedSupport.method,
+      component.selectedSupport.isSelfServe
+    );
     expect(methodDescription).toEqual('Referral');
   });
 });
