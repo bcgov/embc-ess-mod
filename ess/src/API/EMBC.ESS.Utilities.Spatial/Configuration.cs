@@ -22,7 +22,7 @@ namespace EMBC.ESS.Utilities.Spatial
             configurationServices.Services.AddSingleton(new Anywhere.ArcGIS.PortalGateway(settings.ArcGISUrl!.ToString()));
             configurationServices.Services.AddTransient<IGeocoderAdapter, GeocoderAdapter>();
             configurationServices.Services.AddTransient<IArcGISAdapter, ArcGISAdapter>();
-            configurationServices.Services.AddTransient<IAddressLocator, AddressLocator>();
+            configurationServices.Services.AddTransient<ILocationService, LocationService>();
         }
     }
 
