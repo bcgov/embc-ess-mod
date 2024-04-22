@@ -619,3 +619,5 @@ export const incidentalsNeedDialog: DialogContent = {
   title: 'Incidentals',
   text: 'Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.'
 };
+
+export const noAssistanceRequired = 'Household currently does not require assistance.';

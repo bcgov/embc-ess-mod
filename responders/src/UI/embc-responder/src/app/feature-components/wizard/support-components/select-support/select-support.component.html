@@ -54,9 +54,11 @@
               <p class="bold">Support requirements based on current Needs Assessment</p>
             </div>
           </div>
-
-          <div class="row" *ngFor="let item of evacueeSessionService?.currentNeedsAssessment?.needs">
+          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
             <div class="col-4">{{ item }}</div>
+          </div>
+          <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
+            <div class="col-8">{{ noAssistanceRequiredMessage }}</div>
           </div>
         </mat-card>
       </div>

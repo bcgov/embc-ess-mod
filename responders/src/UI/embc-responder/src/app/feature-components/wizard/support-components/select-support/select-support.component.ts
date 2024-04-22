@@ -5,6 +5,7 @@ import { Code, SupportCategory, SupportSubCategory } from 'src/app/core/api/mode
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-select-support',
@@ -14,6 +15,7 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];
   supportTypeForm: UntypedFormGroup;
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -35,6 +37,12 @@ export class SelectSupportComponent implements OnInit {
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
+  }
+
+  public getIdentifiedNeeds(): string[] {
+    return Array.from(this.evacueeSessionService?.currentNeedsAssessment?.needs ?? []).map(
+      (need) => this.loadEvacueeListService?.getIdentifiedNeeds()?.find((value) => value.value === need)?.description
+    );
   }
 
   createVerificationForm(): void {

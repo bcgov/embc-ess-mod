@@ -3,7 +3,7 @@
 export enum IdentifiedNeed {
   ShelterReferral = 'ShelterReferral',
   ShelterAllowance = 'ShelterAllowance',
-  Tranportation = 'Tranportation',
+  Transportation = 'Transportation',
   Food = 'Food',
   Incidentals = 'Incidentals',
   Clothing = 'Clothing'
