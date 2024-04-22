@@ -169,7 +169,7 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
   displaySupplierName(element: Support): string {
     let isSelfServe = '';
     if (element.isSelfServe) {
-      isSelfServe = '(Self-serve)';
+      isSelfServe = ' (Self-serve)';
     }
     if (element.method === SupportMethod.ETransfer) {
       return 'e-Transfer' + isSelfServe;

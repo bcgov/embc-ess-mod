@@ -369,7 +369,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   getMethodTextToDisplay(enumToText: string, isSelfServe: boolean): string {
     let isSelfServeValue = '';
     if (isSelfServe) {
-      isSelfServeValue = '(Self-serve)';
+      isSelfServeValue = ' (Self-serve)';
     }
     return (
       this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description +
