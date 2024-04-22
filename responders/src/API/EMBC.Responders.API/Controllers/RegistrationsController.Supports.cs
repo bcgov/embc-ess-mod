@@ -291,6 +291,7 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+        public bool IsSelfServe { get; set; }
     }
 
     public class ClothingSupport : Support
@@ -829,9 +830,10 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom((s, d, m, ctx) => new SupportDeliveryTypeConverter().Convert(s.SupportDelivery, m, ctx)))
                 .ForMember(d => d.Flags, opts => opts.Ignore())
+                .ForMember(d => d.IsSelfServe, opts => opts.Ignore())
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.Referral, Referral>()
+        CreateMap<EMBC.ESS.Shared.Contracts.Events.Referral, Referral>()
                 .IncludeAllDerived()
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
