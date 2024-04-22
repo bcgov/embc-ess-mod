@@ -27,64 +27,64 @@ export class LoadEvacueeListService {
     return this.supportCategoryVal.length > 0
       ? this.supportCategoryVal
       : JSON.parse(this.cacheService.get('supportCategory'))
-      ? JSON.parse(this.cacheService.get('supportCategory'))
-      : this.getCategoryList();
+        ? JSON.parse(this.cacheService.get('supportCategory'))
+        : this.getCategoryList();
   }
 
   public getSupportSubCategories() {
     return this.supportSubCategoryVal.length > 0
       ? this.supportSubCategoryVal
       : JSON.parse(this.cacheService.get('supportSubCategory'))
-      ? JSON.parse(this.cacheService.get('supportSubCategory'))
-      : this.getSubCategoryList();
+        ? JSON.parse(this.cacheService.get('supportSubCategory'))
+        : this.getSubCategoryList();
   }
 
   public getSupportStatus() {
     return this.supportStatusVal.length > 0
       ? this.supportStatusVal
       : JSON.parse(this.cacheService.get('supportStatus'))
-      ? JSON.parse(this.cacheService.get('supportStatus'))
-      : this.getSupportStatusList();
+        ? JSON.parse(this.cacheService.get('supportStatus'))
+        : this.getSupportStatusList();
   }
 
   public getSupportMethods() {
     return this.supportMethodVal.length > 0
       ? this.supportMethodVal
       : JSON.parse(this.cacheService.get('supportMethod'))
-      ? JSON.parse(this.cacheService.get('supportMethod'))
-      : this.getSupportMethodList();
+        ? JSON.parse(this.cacheService.get('supportMethod'))
+        : this.getSupportMethodList();
   }
 
   public getVoidReasons() {
     return this.voidReasonVal.length > 0
       ? this.voidReasonVal
       : JSON.parse(this.cacheService.get('voidReason'))
-      ? JSON.parse(this.cacheService.get('voidReason'))
-      : this.getVoidReasonsList();
+        ? JSON.parse(this.cacheService.get('voidReason'))
+        : this.getVoidReasonsList();
   }
 
   public getReprintReasons() {
     return this.reprintReasonVal.length > 0
       ? this.reprintReasonVal
       : JSON.parse(this.cacheService.get('reprintReason'))
-      ? JSON.parse(this.cacheService.get('reprintReason'))
-      : this.getReprintReasonsList();
+        ? JSON.parse(this.cacheService.get('reprintReason'))
+        : this.getReprintReasonsList();
   }
 
   public getCommunityTypes() {
     return this.communityTypeVal.length > 0
       ? this.communityTypeVal
       : JSON.parse(this.cacheService.get('communityType'))
-      ? JSON.parse(this.cacheService.get('communityType'))
-      : this.getCommunityTypesList();
+        ? JSON.parse(this.cacheService.get('communityType'))
+        : this.getCommunityTypesList();
   }
 
   public getIdentifiedNeeds() {
     return this.communityTypeVal.length > 0
       ? this.identifiedNeedVal
       : JSON.parse(this.cacheService.get('identifiedNeeds'))
-      ? JSON.parse(this.cacheService.get('identifiedNeeds'))
-      : this.getIdentifiedNeedsList();
+        ? JSON.parse(this.cacheService.get('identifiedNeeds'))
+        : this.getIdentifiedNeedsList();
   }
 
   public loadStaticEvacueeLists(): Promise<void> {

@@ -13,7 +13,10 @@ export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
   public loaderRef: TemplateRef<any>;
   public color = '#169BD5';
   private overlayRef: OverlayRef;
-  constructor(private overlay: Overlay, private vcRef: ViewContainerRef) {}
+  constructor(
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef
+  ) {}
 
   ngOnInit(): void {
     this.overlayRef = this.createOverlay();

@@ -35,7 +35,10 @@ export class BcscInviteDialogComponent implements OnInit {
   hideForm = true;
   showError = false;
 
-  constructor(private formBuilder: UntypedFormBuilder, private customValidation: CustomValidationService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private customValidation: CustomValidationService
+  ) {}
 
   ngOnInit(): void {
     this.bcscEmailForm();

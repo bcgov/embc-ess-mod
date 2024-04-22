@@ -61,7 +61,10 @@ export class TeamListDataService {
 
   private selectedTeamMember: TeamMember;
 
-  constructor(private cacheService: CacheService, private listService: LoadTeamListService) {}
+  constructor(
+    private cacheService: CacheService,
+    private listService: LoadTeamListService
+  ) {}
 
   public getSelectedTeamMember(): TeamMember {
     return this.selectedTeamMember ? this.selectedTeamMember : JSON.parse(this.cacheService.get('selectedTeamMember'));

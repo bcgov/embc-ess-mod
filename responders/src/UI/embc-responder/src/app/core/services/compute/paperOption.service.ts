@@ -18,7 +18,11 @@ export class PaperOptionService implements SearchOptionsService {
   optionType: SelectedPathType = SelectedPathType.paperBased;
   idSearchQuestion: string = globalConst.paperIdQuestion;
 
-  constructor(protected router: Router, protected dataService: DataService, protected builder: UntypedFormBuilder) {}
+  constructor(
+    protected router: Router,
+    protected dataService: DataService,
+    protected builder: UntypedFormBuilder
+  ) {}
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
     return this.dataService.getEvacueeProfile(registrantId);

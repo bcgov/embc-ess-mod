@@ -4,7 +4,10 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  constructor(private oauthService: OAuthService, private configService: ConfigService) {}
+  constructor(
+    private oauthService: OAuthService,
+    private configService: ConfigService
+  ) {}
 
   public async login(): Promise<string> {
     await this.configureOAuthService();

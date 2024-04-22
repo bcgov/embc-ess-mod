@@ -13,7 +13,10 @@ export class EssFileOverviewComponent implements OnInit {
   essFile: EvacuationFileModel;
   animalCount = 0;
 
-  constructor(private router: Router, private essfileDashboardService: EssfileDashboardService) {
+  constructor(
+    private router: Router,
+    private essfileDashboardService: EssfileDashboardService
+  ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

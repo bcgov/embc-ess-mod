@@ -40,7 +40,10 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   selection = new SelectionModel<any>(true, []);
   color = '#169BD5';
 
-  constructor(private cd: ChangeDetectorRef, private loadEvacueeListService: LoadEvacueeListService) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
   /**
    * Listens to input events and popluate values

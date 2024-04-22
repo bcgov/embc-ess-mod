@@ -23,16 +23,16 @@ export class LoadTeamListService {
     return this.memberLabels
       ? this.memberLabels
       : JSON.parse(this.cacheService.get('memberLabels'))
-      ? JSON.parse(this.cacheService.get('memberLabels'))
-      : this.getMemberLabel();
+        ? JSON.parse(this.cacheService.get('memberLabels'))
+        : this.getMemberLabel();
   }
 
   public getMemberRoles(): MemberRoleDescription[] {
     return this.memberRoles
       ? this.memberRoles
       : JSON.parse(this.cacheService.get('memberRoles'))
-      ? JSON.parse(this.cacheService.get('memberRoles'))
-      : this.getMemberRole();
+        ? JSON.parse(this.cacheService.get('memberRoles'))
+        : this.getMemberRole();
   }
 
   public loadStaticTeamLists(): Promise<void> {

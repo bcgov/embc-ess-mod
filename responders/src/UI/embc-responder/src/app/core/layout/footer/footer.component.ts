@@ -11,7 +11,10 @@ import { DialogContent } from '../../models/dialog-content.model';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  constructor(private httpClient: HttpClient, private dialog: MatDialog) {}
+  constructor(
+    private httpClient: HttpClient,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     // this.appVersion = environment.version;

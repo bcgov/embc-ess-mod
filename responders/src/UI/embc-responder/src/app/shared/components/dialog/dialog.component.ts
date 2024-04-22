@@ -13,7 +13,10 @@ export class DialogComponent implements OnInit, OnDestroy {
   componentRef: ComponentRef<any>;
   showCloseButton = false;
 
-  constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    public dialogRef: MatDialogRef<DialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
     this.componentRef = this.vcRef.createComponent(this.data.component);

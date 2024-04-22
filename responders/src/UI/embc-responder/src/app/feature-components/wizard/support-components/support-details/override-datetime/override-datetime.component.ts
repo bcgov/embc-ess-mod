@@ -18,7 +18,10 @@ export class OverrideDatetimeComponent implements OnInit {
   noDate = false;
   noTime = false;
 
-  constructor(private formBuilder: UntypedFormBuilder, private customValidation: CustomValidationService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private customValidation: CustomValidationService
+  ) {}
 
   ngOnInit(): void {
     this.createDateTimeForm();

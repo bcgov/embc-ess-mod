@@ -10,7 +10,10 @@ import { map } from 'rxjs/operators';
 export class NumberCommaDirective implements OnInit, OnDestroy {
   private subscription: Subscription;
 
-  constructor(private ngControl: NgControl, private decimal: DecimalPipe) {}
+  constructor(
+    private ngControl: NgControl,
+    private decimal: DecimalPipe
+  ) {}
   ngOnInit(): void {
     const control = this.ngControl.control;
     this.subscription = control.valueChanges

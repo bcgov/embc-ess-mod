@@ -8,7 +8,10 @@ import { CacheService } from 'src/app/core/services/cache.service';
 export class AddTeamMemberService {
   private addedTeamMember: TeamMember;
 
-  constructor(private teamMembersService: TeamsService, private cacheService: CacheService) {}
+  constructor(
+    private teamMembersService: TeamsService,
+    private cacheService: CacheService
+  ) {}
 
   checkUserNameExists(userName: string): Observable<boolean> {
     return this.teamMembersService.teamsIsUserNameExists({ userName });

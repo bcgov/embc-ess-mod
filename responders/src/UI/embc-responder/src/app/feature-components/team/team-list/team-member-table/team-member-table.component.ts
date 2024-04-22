@@ -113,9 +113,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
         labelTerm === ''
           ? true
           : data.labelDescription === null || data.labelDescription === undefined
-          ? false
-          : data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
-            data.labelDescription.trim().length === labelTerm.trim().length;
+            ? false
+            : data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
+              data.labelDescription.trim().length === labelTerm.trim().length;
 
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);

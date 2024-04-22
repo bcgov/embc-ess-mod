@@ -16,7 +16,10 @@ export class StepEvacueeProfileComponent {
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
 
-  constructor(private router: Router, private stepEvacueeProfileService: StepEvacueeProfileService) {
+  constructor(
+    private router: Router,
+    private stepEvacueeProfileService: StepEvacueeProfileService
+  ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

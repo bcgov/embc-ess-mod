@@ -13,7 +13,10 @@ import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacu
 })
 export class CollectionNoticeComponent implements OnInit, OnDestroy {
   tabMetaData: TabModel;
-  constructor(private router: Router, private stepEvacueeProfileService: StepEvacueeProfileService) {}
+  constructor(
+    private router: Router,
+    private stepEvacueeProfileService: StepEvacueeProfileService
+  ) {}
 
   ngOnInit(): void {
     this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('collection-notice');

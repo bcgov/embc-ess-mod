@@ -410,8 +410,8 @@ export class StepEssFileService {
         this.requiresShelterReferral
           ? ShelterType.referral
           : this.requiresShelterAllowance
-          ? ShelterType.allowance
-          : undefined,
+            ? ShelterType.allowance
+            : undefined,
         this.customValidationService.conditionalValidation(
           () => this.needsForm.controls.requiresShelter.value === true,
           Validators.required

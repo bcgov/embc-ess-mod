@@ -18,7 +18,11 @@ export class EssFileNotesComponent implements OnInit, AfterViewInit {
   notes = new MatTableDataSource<Note>();
   notes$: Observable<Array<Note>>;
 
-  constructor(private router: Router, private cd: ChangeDetectorRef, private userService: UserService) {
+  constructor(
+    private router: Router,
+    private cd: ChangeDetectorRef,
+    private userService: UserService
+  ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

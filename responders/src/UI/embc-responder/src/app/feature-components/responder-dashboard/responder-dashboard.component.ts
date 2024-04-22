@@ -12,7 +12,10 @@ export class ResponderDashboardComponent implements OnInit {
     return this.userService.currentProfile;
   }
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 

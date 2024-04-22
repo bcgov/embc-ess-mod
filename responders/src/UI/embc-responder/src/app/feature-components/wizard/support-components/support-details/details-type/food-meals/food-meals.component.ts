@@ -16,7 +16,10 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   days: number;
   totalAmount = 0;
 
-  constructor(private cd: ChangeDetectorRef, public appBaseService: AppBaseService) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    public appBaseService: AppBaseService
+  ) {}
 
   ngAfterViewInit(): void {
     this.cd.detectChanges();

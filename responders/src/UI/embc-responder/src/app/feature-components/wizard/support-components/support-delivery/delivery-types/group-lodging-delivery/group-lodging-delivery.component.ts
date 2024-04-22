@@ -18,7 +18,10 @@ export class GroupLodgingDeliveryComponent implements OnInit, OnChanges, AfterVi
 
   readonly phoneMask = globalConst.phoneMask;
 
-  constructor(private locationService: LocationsService, private cd: ChangeDetectorRef) {}
+  constructor(
+    private locationService: LocationsService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.city = this.locationService.getActiveCommunityList();
