@@ -64,6 +64,17 @@ export class ReviewComponent implements OnInit {
     this.captchaPassed.emit($event);
   }
 
+  isNoNeedSelected(form: UntypedFormGroup) {
+    const needsFormValue = form.value as any;
+
+    return [
+      needsFormValue.requiresClothing,
+      needsFormValue.requiresFood,
+      needsFormValue.requiresIncidentals,
+      needsFormValue.requiresShelter
+    ].every((need) => !need);
+  }
+
   public getNeedsIdentifiedCaptions(form: UntypedFormGroup): string[] {
     const needs: string[] = [];
     if (form.controls.requiresClothing?.value) {
@@ -81,7 +92,7 @@ export class ReviewComponent implements OnInit {
       needs.push('Shelter allowance');
     }
 
-    if (form.controls.requiresNothing?.value) {
+    if (form.controls.requiresNothing?.value || this.isNoNeedSelected(form)) {
       needs.push('Household currently does not require assistance.');
     }
 
