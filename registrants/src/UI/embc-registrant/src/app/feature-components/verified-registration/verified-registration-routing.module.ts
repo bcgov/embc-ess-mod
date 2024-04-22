@@ -58,6 +58,10 @@ const routes: Routes = [
         data: { flow: 'verified-registration' }
       },
       {
+        path: 'eligible-self-serve',
+        loadChildren: () => import('../eligible-self-serve/eligible-self-serve.routes').then((m) => m.routes)
+      },
+      {
         path: 'fileSubmission',
         loadChildren: () => import('../file-submission/file-submission.module').then((m) => m.FileSubmissionModule),
         data: { flow: 'verified-registration' }

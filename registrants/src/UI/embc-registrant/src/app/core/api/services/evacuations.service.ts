@@ -10,14 +10,18 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { AnonymousRegistration } from '../models/anonymous-registration';
+import { EligibilityCheck } from '../models/eligibility-check';
 import { EvacuationFile } from '../models/evacuation-file';
 import { RegistrationResult } from '../models/registration-result';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EvacuationsService extends BaseService {
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  constructor(
+    config: ApiConfiguration,
+    http: HttpClient
+  ) {
     super(config, http);
   }
 
@@ -37,29 +41,27 @@ export class EvacuationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   evacuationsCreate$Response(params: {
+
     /**
      * Anonymous registration form
      */
-    body: AnonymousRegistration;
+    body: AnonymousRegistration
   }): Observable<StrictHttpResponse<RegistrationResult>> {
+
     const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCreatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
   }
 
   /**
@@ -73,11 +75,13 @@ export class EvacuationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   evacuationsCreate(params: {
+
     /**
      * Anonymous registration form
      */
-    body: AnonymousRegistration;
+    body: AnonymousRegistration
   }): Observable<RegistrationResult> {
+
     return this.evacuationsCreate$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
@@ -98,24 +102,22 @@ export class EvacuationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  evacuationsGetCurrentEvacuations$Response(params?: {}): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
+  evacuationsGetCurrentEvacuations$Response(params?: {
+  }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
+
     const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsGetCurrentEvacuationsPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<EvacuationFile>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<EvacuationFile>>;
+      })
+    );
   }
 
   /**
@@ -128,7 +130,9 @@ export class EvacuationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  evacuationsGetCurrentEvacuations(params?: {}): Observable<Array<EvacuationFile>> {
+  evacuationsGetCurrentEvacuations(params?: {
+  }): Observable<Array<EvacuationFile>> {
+
     return this.evacuationsGetCurrentEvacuations$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
@@ -149,24 +153,22 @@ export class EvacuationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  evacuationsGetPastEvacuations$Response(params?: {}): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
+  evacuationsGetPastEvacuations$Response(params?: {
+  }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
+
     const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsGetPastEvacuationsPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<EvacuationFile>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<EvacuationFile>>;
+      })
+    );
   }
 
   /**
@@ -179,7 +181,9 @@ export class EvacuationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  evacuationsGetPastEvacuations(params?: {}): Observable<Array<EvacuationFile>> {
+  evacuationsGetPastEvacuations(params?: {
+  }): Observable<Array<EvacuationFile>> {
+
     return this.evacuationsGetPastEvacuations$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
@@ -201,29 +205,27 @@ export class EvacuationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   evacuationsUpsertEvacuationFile$Response(params: {
+
     /**
      * Evacuation data
      */
-    body: EvacuationFile;
+    body: EvacuationFile
   }): Observable<StrictHttpResponse<RegistrationResult>> {
+
     const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsUpsertEvacuationFilePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
   }
 
   /**
@@ -237,13 +239,78 @@ export class EvacuationsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   evacuationsUpsertEvacuationFile(params: {
+
     /**
      * Evacuation data
      */
-    body: EvacuationFile;
+    body: EvacuationFile
   }): Observable<RegistrationResult> {
+
     return this.evacuationsUpsertEvacuationFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
+
+  /**
+   * Path part for operation evacuationsCheckSelfServeEligibility
+   */
+  static readonly EvacuationsCheckSelfServeEligibilityPath = '/api/Evacuations/{evacuationFileId}/eligible';
+
+  /**
+   * Checks if a file is eligible for self-serve supports.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `evacuationsCheckSelfServeEligibility()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  evacuationsCheckSelfServeEligibility$Response(params: {
+
+    /**
+     * The file id to check
+     */
+    evacuationFileId: string;
+  }): Observable<StrictHttpResponse<EligibilityCheck>> {
+
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCheckSelfServeEligibilityPath, 'get');
+    if (params) {
+      rb.path('evacuationFileId', params.evacuationFileId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<EligibilityCheck>;
+      })
+    );
+  }
+
+  /**
+   * Checks if a file is eligible for self-serve supports.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `evacuationsCheckSelfServeEligibility$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  evacuationsCheckSelfServeEligibility(params: {
+
+    /**
+     * The file id to check
+     */
+    evacuationFileId: string;
+  }): Observable<EligibilityCheck> {
+
+    return this.evacuationsCheckSelfServeEligibility$Response(params).pipe(
+      map((r: StrictHttpResponse<EligibilityCheck>) => r.body as EligibilityCheck)
+    );
+  }
+
 }

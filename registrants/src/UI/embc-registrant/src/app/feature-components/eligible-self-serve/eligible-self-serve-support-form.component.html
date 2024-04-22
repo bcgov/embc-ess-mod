@@ -1,0 +1,128 @@
+<h2>Eligible Self Serve Support Form</h2>
+<mat-horizontal-stepper class="stepper-style" [linear]="isLinear" #stepper labelPosition="bottom">
+  <mat-step [stepControl]="supportDraftForm">
+    <form>
+      <ng-template matStepLabel>Support Details</ng-template>
+      <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
+
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <p class="card-heading">Shelter Allowance</p>
+          <div>
+            <p>Which people in your household require Shelter Allowance and for which days?</p>
+          </div>
+
+          <div stlye="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <table>
+              <tr>
+                <th>Name</th>
+                @for (date of supportRequiredDates; track $index) {
+                  <th>{{ date.format('MMM DD, yyy') }}</th>
+                }
+              </tr>
+              @for (person of persons; track person.id) {
+                <tr>
+                  <td>{{ person.name }}</td>
+                  @for (date of supportRequiredDates; track $index) {
+                    <td>
+                      <mat-checkbox
+                        [formControl]="getDateControl(supportDraftForm.controls.shelterAllowance, person, date)"
+                      ></mat-checkbox>
+                    </td>
+                  }
+                </tr>
+              }
+            </table>
+            <div>TEst</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <p class="card-heading">Food *</p>
+          <div>
+            <p>Would you like to be provided funds for Restaurant Meals or Groceries?</p>
+          </div>
+          <div>
+            <mat-radio-group
+              class="primary-radio-group"
+              [formControl]="supportDraftForm.controls.food.controls.fundsFor"
+            >
+              <mat-radio-button value="SupportSubCategory.Food_Groceries"> Groceries </mat-radio-button>
+              <mat-radio-button value="SupportSubCategory.Food_Restaurant"> Restaurant </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <!-- Groceries -->
+          <div>
+            <table>
+              <tr>
+                <th>Name</th>
+                @for (date of supportRequiredDates; track $index) {
+                  <th>{{ date.format('MMM DD, yyy') }}</th>
+                }
+              </tr>
+              @for (person of persons; track person.id) {
+                <tr>
+                  <td>{{ person.name }}</td>
+                  @for (date of supportRequiredDates; track $index) {
+                    <td>
+                      <mat-checkbox
+                        [formControl]="getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)"
+                      ></mat-checkbox>
+                    </td>
+                  }
+                </tr>
+              }
+            </table>
+          </div>
+          <div>
+            
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <p class="card-heading">Clothing</p>
+          <div>
+            <p>Which people in your household require Clothing?</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <p class="card-heading">Incidentals</p>
+          <div>
+            <p>Which people in your household require Incidentals?</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="eTransferForm">
+    <form [formGroup]="eTransferForm">
+      <ng-template matStepLabel>e-Transfer Details</ng-template>
+      <mat-form-field>
+        <input matInput placeholder="Address" formControlName="secondCtrl" required />
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    Review and Submit
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

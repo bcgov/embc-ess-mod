@@ -228,11 +228,16 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     });
   }
 
+  checkEligibleForSelfServe() {
+    return true;
+  }
+
   mapAndNavigate() {
     this.evacuationFileDataService.createEvacuationFile().subscribe({
       next: (value) => {
         this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
-        this.router.navigate(['/verified-registration/dashboard']);
+        if (this.checkEligibleForSelfServe()) this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
+        else this.router.navigate(['/verified-registration/dashboard']);
       },
       error: (error: any) => {
         this.showLoader = !this.showLoader;

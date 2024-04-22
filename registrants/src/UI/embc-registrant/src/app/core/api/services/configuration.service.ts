@@ -16,10 +16,13 @@ import { Configuration } from '../models/configuration';
 import { OutageInformation } from '../models/outage-information';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigurationService extends BaseService {
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  constructor(
+    config: ApiConfiguration,
+    http: HttpClient
+  ) {
     super(config, http);
   }
 
@@ -38,24 +41,22 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetConfiguration$Response(params?: {}): Observable<StrictHttpResponse<Configuration>> {
+  configurationGetConfiguration$Response(params?: {
+  }): Observable<StrictHttpResponse<Configuration>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetConfigurationPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Configuration>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Configuration>;
+      })
+    );
   }
 
   /**
@@ -68,7 +69,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetConfiguration(params?: {}): Observable<Configuration> {
+  configurationGetConfiguration(params?: {
+  }): Observable<Configuration> {
+
     return this.configurationGetConfiguration$Response(params).pipe(
       map((r: StrictHttpResponse<Configuration>) => r.body as Configuration)
     );
@@ -90,29 +93,27 @@ export class ConfigurationService extends BaseService {
    * This method doesn't expect any request body.
    */
   configurationGetCodes$Response(params?: {
+
     /**
      * enum type name
      */
     forEnumType?: string;
   }): Observable<StrictHttpResponse<Array<Code>>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCodesPath, 'get');
     if (params) {
       rb.query('forEnumType', params.forEnumType, {});
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<Code>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<Code>>;
+      })
+    );
   }
 
   /**
@@ -126,11 +127,13 @@ export class ConfigurationService extends BaseService {
    * This method doesn't expect any request body.
    */
   configurationGetCodes(params?: {
+
     /**
      * enum type name
      */
     forEnumType?: string;
   }): Observable<Array<Code>> {
+
     return this.configurationGetCodes$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>)
     );
@@ -152,26 +155,23 @@ export class ConfigurationService extends BaseService {
     countryId?: string;
     types?: Array<CommunityType>;
   }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCommunitiesPath, 'get');
     if (params) {
       rb.query('stateProvinceId', params.stateProvinceId, {});
       rb.query('countryId', params.countryId, {});
-      rb.query('types', params.types, { style: 'form', explode: true });
+      rb.query('types', params.types, {"style":"form","explode":true});
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<CommunityCode>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<CommunityCode>>;
+      })
+    );
   }
 
   /**
@@ -185,6 +185,7 @@ export class ConfigurationService extends BaseService {
     countryId?: string;
     types?: Array<CommunityType>;
   }): Observable<Array<CommunityCode>> {
+
     return this.configurationGetCommunities$Response(params).pipe(
       map((r: StrictHttpResponse<Array<CommunityCode>>) => r.body as Array<CommunityCode>)
     );
@@ -204,24 +205,21 @@ export class ConfigurationService extends BaseService {
   configurationGetStateProvinces$Response(params?: {
     countryId?: string;
   }): Observable<StrictHttpResponse<Array<Code>>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetStateProvincesPath, 'get');
     if (params) {
       rb.query('countryId', params.countryId, {});
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<Code>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<Code>>;
+      })
+    );
   }
 
   /**
@@ -230,7 +228,10 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetStateProvinces(params?: { countryId?: string }): Observable<Array<Code>> {
+  configurationGetStateProvinces(params?: {
+    countryId?: string;
+  }): Observable<Array<Code>> {
+
     return this.configurationGetStateProvinces$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>)
     );
@@ -247,24 +248,22 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCountries$Response(params?: {}): Observable<StrictHttpResponse<Array<Code>>> {
+  configurationGetCountries$Response(params?: {
+  }): Observable<StrictHttpResponse<Array<Code>>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCountriesPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<Code>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<Code>>;
+      })
+    );
   }
 
   /**
@@ -273,7 +272,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCountries(params?: {}): Observable<Array<Code>> {
+  configurationGetCountries(params?: {
+  }): Observable<Array<Code>> {
+
     return this.configurationGetCountries$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>)
     );
@@ -290,24 +291,22 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetSecurityQuestions$Response(params?: {}): Observable<StrictHttpResponse<Array<string>>> {
+  configurationGetSecurityQuestions$Response(params?: {
+  }): Observable<StrictHttpResponse<Array<string>>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<string>>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<string>>;
+      })
+    );
   }
 
   /**
@@ -316,7 +315,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetSecurityQuestions(params?: {}): Observable<Array<string>> {
+  configurationGetSecurityQuestions(params?: {
+  }): Observable<Array<string>> {
+
     return this.configurationGetSecurityQuestions$Response(params).pipe(
       map((r: StrictHttpResponse<Array<string>>) => r.body as Array<string>)
     );
@@ -333,24 +334,22 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetOutageInfo$Response(params?: {}): Observable<StrictHttpResponse<OutageInformation>> {
+  configurationGetOutageInfo$Response(params?: {
+  }): Observable<StrictHttpResponse<OutageInformation>> {
+
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetOutageInfoPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<OutageInformation>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<OutageInformation>;
+      })
+    );
   }
 
   /**
@@ -359,9 +358,12 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetOutageInfo(params?: {}): Observable<OutageInformation> {
+  configurationGetOutageInfo(params?: {
+  }): Observable<OutageInformation> {
+
     return this.configurationGetOutageInfo$Response(params).pipe(
       map((r: StrictHttpResponse<OutageInformation>) => r.body as OutageInformation)
     );
   }
+
 }
