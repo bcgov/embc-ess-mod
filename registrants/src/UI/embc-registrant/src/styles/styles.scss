@@ -249,6 +249,10 @@ mat-card {
   border-top-width: 1px;
 }
 
+mat-form-field {
+  margin-bottom: 16px;
+}
+
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-outline-start {
   border-radius: 0px !important;
@@ -270,9 +274,8 @@ mat-card {
   border-width: 1px !important;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-.mat-form-field-required-marker {
-  color: red !important;
+.mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+  color: red;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
