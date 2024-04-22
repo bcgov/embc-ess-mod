@@ -22,8 +22,8 @@ namespace EMBC.ESS.Utilities.Spatial.ArcGISApi
             {
                 Geometry = new Point
                 {
-                    X = query.Point.Longitude,
-                    Y = query.Point.Latitude,
+                    X = query.Coordinates.Longitude,
+                    Y = query.Coordinates.Latitude,
                     SpatialReference = SpatialReference.WGS84
                 },
                 SpatialRelationship = SpatialRelationshipTypes.Intersects,

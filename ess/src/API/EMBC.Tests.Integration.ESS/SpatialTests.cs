@@ -6,36 +6,50 @@ namespace EMBC.Tests.Integration.ESS;
 
 public class SpatialTests : WebAppTestBase
 {
-    private readonly IAddressLocator addressLocator;
+    private readonly ILocationService locationService;
 
     public SpatialTests(ITestOutputHelper output, WebAppTestFixture fixture) : base(output, fixture)
     {
-        addressLocator = Services.GetRequiredService<IAddressLocator>();
+        locationService = Services.GetRequiredService<ILocationService>();
     }
 
     [Theory]
-    [InlineData("1949 ROSEALEE LANE WEST KELOWNA BC", "1234", 100)]
-    [InlineData("1950 ROSEALEE LANE WEST KELOWNA BC", null, 100)]
-    [InlineData("2750 SMITH CREEK RD WEST KELOWNA BC", null, 100)]
-    [InlineData("2755 SMITH CREEK RD WEST KELOWNA BC", "5678", 100)]
-    [InlineData("3363 MCCONACHIE CRK RD FORT NELSON BC", "NBC", 100)]
-    [InlineData("101 MCCONACHIE CRK RD FORT NELSON BC", null, 100)]
-    [InlineData("1432 ROSE HILL PL WEST KELOWNA BC", "1111", 100)]
-    [InlineData("1423 ROSE HILL PL WEST KELOWNA BC", null, 100)]
-    public async Task CanResolveAddressToTask(string address, string? expectedTaskNumber, double score)
+    [InlineData("1949 ROSEALEE LANE WEST KELOWNA BC", 100)]
+    [InlineData("1950 ROSEALEE LANE WEST KELOWNA BC", 100)]
+    [InlineData("2750 SMITH CREEK RD WEST KELOWNA BC", 100)]
+    [InlineData("2755 SMITH CREEK RD WEST KELOWNA BC", 100)]
+    [InlineData("3363 MCCONACHIE CRK RD FORT NELSON BC", 100)]
+    [InlineData("101 MCCONACHIE CRK RD FORT NELSON BC", 100)]
+    [InlineData("1432 ROSE HILL PL WEST KELOWNA BC", 100)]
+    [InlineData("1423 ROSE HILL PL WEST KELOWNA BC", 100)]
+    public async Task CanResolveGeocode(string address, int score)
     {
         score.ShouldBeGreaterThan(60);
-        var info = (await addressLocator.LocateAsync(new Location(address), CancellationToken.None)).ShouldNotBeNull();
-        var attributes = info.Attributes;
+        var geocode = (await locationService.ResolveGeocode(new Location(address), CancellationToken.None)).ShouldNotBeNull();
+        geocode.Precision.ShouldBe(score);
+    }
+
+     [Theory]
+    [InlineData("1949 ROSEALEE LANE WEST KELOWNA BC", "1234")]
+    [InlineData("1950 ROSEALEE LANE WEST KELOWNA BC", null)]
+    [InlineData("2750 SMITH CREEK RD WEST KELOWNA BC", null)]
+    [InlineData("2755 SMITH CREEK RD WEST KELOWNA BC", "5678")]
+    [InlineData("3363 MCCONACHIE CRK RD FORT NELSON BC", "NBC")]
+    [InlineData("101 MCCONACHIE CRK RD FORT NELSON BC", null)]
+    [InlineData("1432 ROSE HILL PL WEST KELOWNA BC", "1111")]
+    [InlineData("1423 ROSE HILL PL WEST KELOWNA BC", null)]
+    public async Task CanGetGeocodeLocationProperties(string address, string? expectedTaskNumber)
+    {
+        var geocode = (await locationService.ResolveGeocode(new Location(address), CancellationToken.None)).ShouldNotBeNull();
+        var attributes = (await locationService.GetGeocodeAttributes(geocode.Coordinates, CancellationToken.None)).ShouldNotBeNull();
         if (expectedTaskNumber == null)
         {
-            attributes.ShouldBeNull();
+            attributes.ShouldBeEmpty();
         }
         else
         {
             attributes.ShouldNotBeNull();
             attributes.ShouldContain(a => a.Name == "ESS_TASK_NUMBER" && a.Value == expectedTaskNumber);
-            //attributes.ShouldNotBeNull().ShouldContain(a => a.Name == "ESS_STATUS" && a.Value == "Active");
         }
     }
 }
