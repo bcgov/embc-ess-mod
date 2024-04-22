@@ -7,8 +7,7 @@ export const referralList: any = [
 ];
 
 export const captchaErr = 'Please complete the captcha above.';
-export const appSubmitErr =
-  'The service is temporarily unavailable. Please try again later.';
+export const appSubmitErr = 'The service is temporarily unavailable. Please try again later.';
 export const showInvoiceMsg =
   '<p>You are about to <b>clear all receipt information</b>.</p><p>Are you sure you want to do this?</p>';
 export const showInvoiceButton = 'Yes, Clear receipt information';
@@ -32,16 +31,10 @@ export const usDefaultObject = {
   code: 'USA',
   name: 'United States of America'
 };
-export const allowedFileTypes = [
-  'application/pdf',
-  'image/jpg',
-  'image/jpeg',
-  'image/png'
-];
+export const allowedFileTypes = ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'];
 export const zeroFileMessage = 'Attachment file size must be greater than 0Kb';
 export const fileTypeMessage = 'File type pdf, jpg, jpeg, png allowed';
-export const datePattern =
-  '^([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])/[0-9]{4}$';
+export const datePattern = '^([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])/[0-9]{4}$';
 export const fileNameFormat = /^[\w,\s-_()]+\.[A-Za-z]{3,4}$/;
 export const invalidFileNameMessage =
   'File name must not contain the following characters: ~ " . # % & * : < > ? /  { | }. Leading and trailing spaces are not allowed.';

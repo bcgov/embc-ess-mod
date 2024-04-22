@@ -2,7 +2,8 @@ import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[formControlName][appDateMask]'
+  selector: '[formControlName][appDateMask]',
+  standalone: true
 })
 export class DateMaskDirective {
   constructor(
@@ -44,9 +45,7 @@ export class DateMaskDirective {
     }
     this.ngControl.valueAccessor.writeValue(newVal);
     if (current.length > start) {
-      this.renderer
-        .selectRootElement(this.el)
-        .nativeElement.setSelectionRange(start, end);
+      this.renderer.selectRootElement(this.el).nativeElement.setSelectionRange(start, end);
     }
   }
 }

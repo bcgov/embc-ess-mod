@@ -56,9 +56,7 @@ export class SupplierListDataService {
    * @returns the selected supplier
    */
   public getSelectedSupplier(): SupplierModel {
-    return this.selectedSupplier
-      ? this.selectedSupplier
-      : JSON.parse(this.cacheService.get('selectedSupplier'));
+    return this.selectedSupplier ? this.selectedSupplier : JSON.parse(this.cacheService.get('selectedSupplier'));
   }
 
   /**
@@ -123,15 +121,13 @@ export class SupplierListDataService {
       this.supplierServices.getSupplierById(supplierId).subscribe({
         next: async (supplier) => {
           this.setSelectedSupplier(supplier);
-          const essTeamsList: Team[] =
-            await this.supplierServices.getMutualAidEssTeamsList();
+          const essTeamsList: Team[] = await this.supplierServices.getMutualAidEssTeamsList();
           const filteredEssTeams = this.filterEssTeams(essTeamsList);
           this.setNonMutualAidTeams(filteredEssTeams);
 
-          this.router.navigate(
-            ['/responder-access/supplier-management/supplier-detail'],
-            { queryParams: { type: viewType } }
-          );
+          this.router.navigate(['/responder-access/supplier-management/supplier-detail'], {
+            queryParams: { type: viewType }
+          });
           resolve();
         },
         error: (error) => {
@@ -161,9 +157,7 @@ export class SupplierListDataService {
 
     // Filtering the main ESS Team from the list
     filteredEssTeams = filteredEssTeams.filter((e) => {
-      return this.selectedSupplier?.primaryTeams?.find(
-        (team) => e.id !== team?.id
-      );
+      return this.selectedSupplier?.primaryTeams?.find((team) => e.id !== team?.id);
     });
     return filteredEssTeams;
   }

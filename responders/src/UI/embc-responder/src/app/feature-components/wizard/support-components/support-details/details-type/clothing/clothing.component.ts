@@ -19,9 +19,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './clothing.component.html',
   styleUrls: ['./clothing.component.scss']
 })
-export class ClothingComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfHouseholdMembers: number;
   referralForm: UntypedFormGroup;
@@ -35,18 +33,14 @@ export class ClothingComponent
   ) {}
 
   ngOnInit(): void {
-    this.referralForm
-      .get('extremeWinterConditions')
-      .valueChanges.subscribe((value) => {
-        this.updateTotalAmount();
-      });
+    this.referralForm.get('extremeWinterConditions').valueChanges.subscribe((value) => {
+      this.updateTotalAmount();
+    });
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
 
-    this.userTotalAmountSubscription = this.referralForm
-      .get('userTotalAmount')
-      .valueChanges.subscribe((value) => {
-        this.referralForm.get('approverName').updateValueAndValidity();
-      });
+    this.userTotalAmountSubscription = this.referralForm.get('userTotalAmount').valueChanges.subscribe((value) => {
+      this.referralForm.get('approverName').updateValueAndValidity();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -55,9 +49,7 @@ export class ClothingComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
@@ -81,11 +73,9 @@ export class ClothingComponent
   updateTotalAmount() {
     const condition = this.referralForm.get('extremeWinterConditions').value;
     if (condition) {
-      this.totalAmount =
-        globalConst.extremeConditions.rate * this.noOfHouseholdMembers;
+      this.totalAmount = globalConst.extremeConditions.rate * this.noOfHouseholdMembers;
     } else {
-      this.totalAmount =
-        globalConst.normalConditions.rate * this.noOfHouseholdMembers;
+      this.totalAmount = globalConst.normalConditions.rate * this.noOfHouseholdMembers;
     }
 
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
@@ -109,12 +99,7 @@ export class ClothingComponent
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      Number(
-        this.referralForm
-          .get('userTotalAmount')
-          .value.toString()
-          .replace(/,/g, '')
-      ) > this.totalAmount;
+      Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
 
     if (!exceedsTotal && this.referralForm.get('approverName').value) {
       this.referralForm.get('approverName').patchValue('');

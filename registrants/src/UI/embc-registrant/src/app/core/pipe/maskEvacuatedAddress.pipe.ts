@@ -4,7 +4,10 @@ import { RegAddress } from '../model/address';
 import { Community, LocationService } from '../services/location.service';
 import * as _ from 'lodash';
 
-@Pipe({ name: 'maskEvacuatedaddress' })
+@Pipe({
+  name: 'maskEvacuatedaddress',
+  standalone: true
+})
 export class MaskEvacuatedAddressPipe implements PipeTransform {
   constructor(
     private locationService: LocationService,
@@ -25,8 +28,7 @@ export class MaskEvacuatedAddressPipe implements PipeTransform {
       let line1 = address.addressLine1;
       let line2 = '';
 
-      if (address.addressLine2?.length > 0)
-        line1 += ', ' + address.addressLine2;
+      if (address.addressLine2?.length > 0) line1 += ', ' + address.addressLine2;
 
       const communityName = (address.community as Community)?.name ?? '';
 

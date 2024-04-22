@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { TabModel } from 'src/app/core/model/tab.model';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
@@ -8,11 +8,27 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { EssFileDialogComponent } from 'src/app/core/components/dialog-components/ess-file-dialog/ess-file-dialog.component';
 import * as globalConst from '../../../core/services/globalConstants';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AlertComponent } from '../../../core/components/alert/alert.component';
+import { MatButtonModule } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    AlertComponent,
+    MatTabsModule,
+    RouterLinkActive,
+    RouterLink,
+    RouterOutlet,
+    AsyncPipe
+  ]
 })
 export class DashboardComponent implements OnInit {
   currentFlow: string;
@@ -58,8 +74,7 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
-    const registrationResult =
-      this.needsAssessmentService.getVerifiedEvacuationFileNo();
+    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
       this.dialog
@@ -75,9 +90,7 @@ export class DashboardComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(() => {
-          this.needsAssessmentService.setVerifiedEvacuationFileNo(
-            this.emptyRegistrationResult
-          );
+          this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
         });
     }
   }

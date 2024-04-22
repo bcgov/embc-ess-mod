@@ -27,9 +27,7 @@ export class EssFileSecurityPhraseService {
    * @param fileId selected ESSFile from the Search Results and needed to be validated
    * @returns the answer hint from the saved security phrase
    */
-  public getSecurityPhrase(
-    fileId: string
-  ): Observable<GetSecurityPhraseResponse> {
+  public getSecurityPhrase(fileId: string): Observable<GetSecurityPhraseResponse> {
     return this.registrationService.registrationsGetSecurityPhrase({ fileId });
   }
 

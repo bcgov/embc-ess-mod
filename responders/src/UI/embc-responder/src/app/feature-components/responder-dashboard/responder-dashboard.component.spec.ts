@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  waitForAsync,
-  inject
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync, inject } from '@angular/core/testing';
 
 import { ResponderDashboardComponent } from './responder-dashboard.component';
 import { RouterTestingModule } from '@angular/router/testing';

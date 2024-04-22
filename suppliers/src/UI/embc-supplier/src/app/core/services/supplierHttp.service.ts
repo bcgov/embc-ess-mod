@@ -26,7 +26,7 @@ export class ServerPayload {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SupplierHttpService {
   constructor(
@@ -39,45 +39,37 @@ export class SupplierHttpService {
   }
 
   getServerConfig() {
-    return this.http
-      .get<ServerConfig>(`/api/Config`, { headers: this.headers })
-      .pipe(
-        publishReplay(1),
-        refCount(),
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
+    return this.http.get<ServerConfig>(`/api/Config`, { headers: this.headers }).pipe(
+      publishReplay(1),
+      refCount(),
+      catchError((error) => {
+        return this.handleError(error);
+      })
+    );
   }
 
   getListOfCities() {
-    return this.http
-      .get<Community[]>(`/api/Lists/jurisdictions`, { headers: this.headers })
-      .pipe(
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
+    return this.http.get<Community[]>(`/api/Lists/jurisdictions`, { headers: this.headers }).pipe(
+      catchError((error) => {
+        return this.handleError(error);
+      })
+    );
   }
 
   getListOfProvinces() {
-    return this.http
-      .get<Community[]>(`/api/Lists/stateprovinces`, { headers: this.headers })
-      .pipe(
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
+    return this.http.get<Community[]>(`/api/Lists/stateprovinces`, { headers: this.headers }).pipe(
+      catchError((error) => {
+        return this.handleError(error);
+      })
+    );
   }
 
   getListOfCountries() {
-    return this.http
-      .get<Country[]>(`/api/Lists/countries`, { headers: this.headers })
-      .pipe(
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
+    return this.http.get<Country[]>(`/api/Lists/countries`, { headers: this.headers }).pipe(
+      catchError((error) => {
+        return this.handleError(error);
+      })
+    );
   }
 
   getListOfStates() {
@@ -85,7 +77,7 @@ export class SupplierHttpService {
     return this.http
       .get<Community[]>(`/api/Lists/stateprovinces`, {
         headers: this.headers,
-        params,
+        params
       })
       .pipe(
         catchError((error) => {
@@ -95,38 +87,26 @@ export class SupplierHttpService {
   }
 
   getListOfSupportItems() {
-    return this.http
-      .get<SupportItems[]>(`/api/Lists/supports`, { headers: this.headers })
-      .pipe(
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
-  }
-
-  submitForm(suppliers: Suppliers) {
-    return this.http
-      .post(`/api/Submission`, suppliers, { headers: this.headers })
-      .pipe(
-        catchError((error) => {
-          return this.handleError(error);
-        })
-      );
-  }
-
-  fetchData(nonce: string): Observable<HttpResponse<ServerPayload>> {
-    return this.http.post<ServerPayload>(
-      baseUrl + '/captcha',
-      { nonce },
-      { observe: 'response' }
+    return this.http.get<SupportItems[]>(`/api/Lists/supports`, { headers: this.headers }).pipe(
+      catchError((error) => {
+        return this.handleError(error);
+      })
     );
   }
 
-  verifyCaptcha(
-    nonce: string,
-    answer: string,
-    encryptedAnswer: string
-  ): Observable<HttpResponse<ServerPayload>> {
+  submitForm(suppliers: Suppliers) {
+    return this.http.post(`/api/Submission`, suppliers, { headers: this.headers }).pipe(
+      catchError((error) => {
+        return this.handleError(error);
+      })
+    );
+  }
+
+  fetchData(nonce: string): Observable<HttpResponse<ServerPayload>> {
+    return this.http.post<ServerPayload>(baseUrl + '/captcha', { nonce }, { observe: 'response' });
+  }
+
+  verifyCaptcha(nonce: string, answer: string, encryptedAnswer: string): Observable<HttpResponse<ServerPayload>> {
     return this.http.post<ServerPayload>(
       baseUrl + '/verify/captcha',
       { nonce, answer, validation: encryptedAnswer },
@@ -134,16 +114,13 @@ export class SupplierHttpService {
     );
   }
 
-  fetchAudio(
-    validation: string,
-    translation?: string
-  ): Observable<HttpResponse<string>> {
+  fetchAudio(validation: string, translation?: string): Observable<HttpResponse<string>> {
     const payload: any = { validation };
     if (translation) {
       payload.translation = translation;
     }
     return this.http.post<string>(baseUrl + '/captcha/audio', payload, {
-      observe: 'response',
+      observe: 'response'
     });
   }
 

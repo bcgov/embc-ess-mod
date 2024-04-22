@@ -1,146 +1,97 @@
 <form [formGroup]="evacuatedForm">
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
-      <div
-        *ngIf="
-          (formCreationService.addressForm$ | async).value.address
-            .stateProvince !== null;
-          else otherAddress
-        "
-      >
-        <div
-          *ngIf="
-            (formCreationService.addressForm$ | async).value.address
-              .stateProvince.name === 'British Columbia';
-            else otherAddress
-          "
-        >
-          <div class="row">
-            <div class="col-md-12">
-              <label
-                id="evacuatedFromPrimary-radio-group-label"
-                class="card-heading requiredField"
-              >
-                Are you being evacuated from your primary address that you
-                listed when you created your profile?
-              </label>
-              <br />
-              <mat-radio-group
-                formControlName="evacuatedFromPrimary"
-                aria-labelledby="evacuatedFromPrimary-radio-group-label"
-                class="primary-radio-group"
-                (change)="evacPrimaryAddressChange($event)"
-                required
-              >
-                <mat-radio-button id="yesOption" value="Yes"
-                  >Yes
-                </mat-radio-button>
-                <div class="prim-address">
-                  <p>
-                    {{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine1
-                    }}
-                  </p>
-                  <p></p>
-                  <p
-                    *ngIf="
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine2 !== null
-                    "
+      @if ((formCreationService.addressForm$ | async).value.address.stateProvince !== null) {
+        <div>
+          @if ((formCreationService.addressForm$ | async).value.address.stateProvince.name === 'British Columbia') {
+            <div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label id="evacuatedFromPrimary-radio-group-label" class="card-heading requiredField">
+                    Are you being evacuated from your primary address that you listed when you created your profile?
+                  </label>
+                  <br />
+                  <mat-radio-group
+                    formControlName="evacuatedFromPrimary"
+                    aria-labelledby="evacuatedFromPrimary-radio-group-label"
+                    class="primary-radio-group"
+                    (change)="evacPrimaryAddressChange($event)"
+                    required
                   >
-                    {{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.addressLine2
-                    }}
-                  </p>
-                  <p>
-                    <span>{{
-                      (formCreationService.addressForm$ | async)?.value?.address
-                        ?.community?.name
-                    }}</span>
-                    <span
-                      *ngIf="
-                        !(
-                          (formCreationService.addressForm$ | async)?.value
-                            ?.address?.postalCode === '' ||
-                          (formCreationService.addressForm$ | async)?.value
-                            ?.address?.postalCode === null
-                        )
-                      "
-                      >,&nbsp;{{
-                        (formCreationService.addressForm$ | async)?.value
-                          ?.address?.postalCode
-                      }}</span
-                    >
-                  </p>
+                    <mat-radio-button id="yesOption" value="Yes">Yes </mat-radio-button>
+                    <div class="prim-address">
+                      <p>
+                        {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine1 }}
+                      </p>
+                      <p></p>
+                      @if ((formCreationService.addressForm$ | async)?.value?.address?.addressLine2 !== null) {
+                        <p>
+                          {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine2 }}
+                        </p>
+                      }
+                      <p>
+                        <span>{{ (formCreationService.addressForm$ | async)?.value?.address?.community?.name }}</span>
+                        @if (
+                          !(
+                            (formCreationService.addressForm$ | async)?.value?.address?.postalCode === '' ||
+                            (formCreationService.addressForm$ | async)?.value?.address?.postalCode === null
+                          )
+                        ) {
+                          <span
+                            >,&nbsp;{{ (formCreationService.addressForm$ | async)?.value?.address?.postalCode }}</span
+                          >
+                        }
+                      </p>
+                    </div>
+                    <mat-radio-button id="noOption" value="No">No</mat-radio-button>
+                    @if (
+                      evacuatedFormControl?.evacuatedFromPrimary.touched &&
+                      evacuatedFormControl?.evacuatedFromPrimary.invalid &&
+                      evacuatedFormControl?.evacuatedFromPrimary.hasError('required')
+                    ) {
+                      <mat-error class="custom-mat-error"> Evacuation Address is required</mat-error>
+                    }
+                  </mat-radio-group>
                 </div>
-                <mat-radio-button id="noOption" value="No">No</mat-radio-button>
-                <mat-error
-                  class="custom-mat-error"
-                  *ngIf="
-                    evacuatedFormControl?.evacuatedFromPrimary.touched &&
-                    evacuatedFormControl?.evacuatedFromPrimary.invalid &&
-                    evacuatedFormControl?.evacuatedFromPrimary.hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Evacuation Address is required</mat-error
-                >
-              </mat-radio-group>
+              </div>
+              @if (evacuatedFormControl?.evacuatedFromPrimary.value === 'No') {
+                <div class="row">
+                  <div class="col-md-12">
+                    <p>Please identify where in <b>BC</b> you have been <b>evacuated from</b>?</p>
+                    <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress"> </app-bc-address>
+                  </div>
+                </div>
+              }
             </div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value === 'No'"
-          >
-            <div class="col-md-12">
-              <p>
-                Please identify where in <b>BC</b> you have been
-                <b>evacuated from</b>?
-              </p>
-              <app-bc-address
-                [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
-              >
-              </app-bc-address>
+          } @else {
+            <div class="row">
+              <div class="col-md-12">
+                <label class="card-heading requiredField"> Where are you being evacuated from? </label>
+                <p>Please identify where in <strong>BC</strong> you have been <strong>evacuated from</strong>?</p>
+                <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress"> </app-bc-address>
+              </div>
             </div>
+          }
+        </div>
+      } @else {
+        <div class="row">
+          <div class="col-md-12">
+            <label class="card-heading requiredField"> Where are you being evacuated from? </label>
+            <p>Please identify where in <strong>BC</strong> you have been <strong>evacuated from</strong>?</p>
+            <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress"> </app-bc-address>
           </div>
         </div>
-      </div>
+      }
     </mat-card-content>
   </mat-card>
   <br />
   <br />
-  <ng-template #otherAddress>
-    <div class="row">
-      <div class="col-md-12">
-        <label class="card-heading requiredField">
-          Where are you being evacuated from?
-        </label>
-        <p>
-          Please identify where in <strong>BC</strong> you have been
-          <strong>evacuated from</strong>?
-        </p>
-        <app-bc-address
-          [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
-        >
-        </app-bc-address>
-      </div>
-    </div>
-  </ng-template>
 
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <div class="row">
         <div class="col-md-8">
-          <label
-            id="insurance-radio-group-label"
-            class="card-heading requiredField"
-          >
-            Do you have insurance?
-          </label>
+          <label id="insurance-radio-group-label" class="card-heading requiredField"> Do you have insurance? </label>
           <br />
           <mat-radio-group
             formControlName="insurance"
@@ -148,35 +99,27 @@
             class="primary-radio-group"
             required
           >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of insuranceOption"
-              [value]="option.name"
-            >
-              {{ option.value }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                evacuatedFormControl?.insurance.touched &&
-                evacuatedFormControl?.insurance.invalid &&
-                evacuatedFormControl?.insurance.hasError('required')
-              "
-            >
-              Insurance is required</mat-error
-            >
+            @for (option of insuranceOption; track option) {
+              <mat-radio-button class="primary-radio-button" [value]="option.name">
+                {{ option.value }}
+              </mat-radio-button>
+            }
+            @if (
+              evacuatedFormControl?.insurance.touched &&
+              evacuatedFormControl?.insurance.invalid &&
+              evacuatedFormControl?.insurance.hasError('required')
+            ) {
+              <mat-error class="custom-mat-error"> Insurance is required</mat-error>
+            }
           </mat-radio-group>
         </div>
         <div class="col-md-4">
           <div class="note-box">
             <p><b>Notes:</b></p>
+            <p>If you have insurance, it is best to contact your insurance provider as soon as possible.</p>
             <p>
-              If you have insurance, it is best to contact your insurance
-              provider as soon as possible.
-            </p>
-            <p>
-              If you are having difficulty contacting your insurance provider,
-              please contact the Insurance Bureau of Canada at 1-844-227-5422.
+              If you are having difficulty contacting your insurance provider, please contact the Insurance Bureau of
+              Canada at 1-844-227-5422.
             </p>
           </div>
         </div>

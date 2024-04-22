@@ -8,8 +8,7 @@
   <div class="row section-padding">
     <div class="col-md-12">
       <p>
-        <span class="bold">{{ supportList?.length }} support(s)</span> have been
-        added for this ESS File.
+        <span class="bold">{{ supportList?.length }} support(s)</span> have been added for this ESS File.
       </p>
       <div class="row">
         <div *ngFor="let filter of filtersToLoad?.loadDropdownFilters" class="col-md-4">
@@ -36,32 +35,35 @@
               </p>
             </div>
             <div class="col-md-4">
-              <p [ngClass]="{
+              <p
+                [ngClass]="{
                   'support-draft': support?.status === 'Draft',
                   'support-active': support?.status === 'Active',
                   'support-expired': support?.status === 'Expired',
                   'support-void': support?.status === 'Void',
-                  'support-pending-approval':
-                    support?.status === 'PendingApproval',
+                  'support-pending-approval': support?.status === 'PendingApproval',
                   'support-under-review': support?.status === 'UnderReview',
                   'support-approved': support?.status === 'Approved',
                   'support-paid': support?.status === 'Paid',
                   'support-cancelled': support?.status === 'Cancelled'
-                }">
+                }"
+              >
                 {{ getStatusDescription(support?.status) }}
               </p>
             </div>
             <div class="col">
-              <p *ngIf="
-                  support?.subCategory !== 'Lodging_Billeting' &&
-                  support?.subCategory !== 'Lodging_Group'
-                " class="bold supplier-align">
+              <p
+                *ngIf="support?.subCategory !== 'Lodging_Billeting' && support?.subCategory !== 'Lodging_Group'"
+                class="bold supplier-align"
+              >
                 {{
-                getReferral(support)?.method === supportMethod.Referral
-                ? getReferral(support)?.supplierName
-                : getReferral(support)?.method === supportMethod.ETransfer
-                ? 'e-Transfer'
-                : ''
+                  getReferral(support)?.method === supportMethod.Referral
+                    ? getReferral(support)?.supplierName
+                    : getReferral(support)?.method === supportMethod.ETransfer
+                      ? support?.isSelfServe
+                        ? 'e-Transfer (Self-serve)'
+                        : 'e-Transfer'
+                      : ''
                 }}
               </p>
 
@@ -114,9 +116,7 @@
                   <div class="col-match-header">
                     <p>Up to a Total of:</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getGroceryReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getGroceryReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
               <!--Restaurant Meals-->
@@ -152,9 +152,7 @@
                   <div class="col-match-header">
                     <p>Up to a Total of:</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getMealReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getMealReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
               <!--Lodging-->
@@ -213,9 +211,7 @@
                   <div class="col-match-header">
                     <p>Total Amount</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getShelterAllowanceReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getShelterAllowanceReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
               <!--Taxi-->
@@ -253,9 +249,7 @@
                   <div class="col-match-header">
                     <p>Up to a total of:</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getOtherReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getOtherReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
 
@@ -274,9 +268,7 @@
                   <div class="col-match-header">
                     <p>Up to a total of:</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getIncidentalReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getIncidentalReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
 
@@ -295,9 +287,7 @@
                   <div class="col-match-header">
                     <p>Up to a total of:</p>
                   </div>
-                  <div class="col bold">
-                    ${{ getClothingReferral(support)?.totalAmount }}
-                  </div>
+                  <div class="col bold">${{ getClothingReferral(support)?.totalAmount }}</div>
                 </div>
               </div>
             </div>

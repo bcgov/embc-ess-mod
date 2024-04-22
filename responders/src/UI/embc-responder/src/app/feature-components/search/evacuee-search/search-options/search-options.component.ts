@@ -5,10 +5,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { UserService } from 'src/app/core/services/user.service';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,11 +30,7 @@ export class SearchOptionsComponent implements OnInit {
   ngOnInit(): void {
     this.workflows = this.appBaseService?.appModel?.selectedEssTask?.workflows;
     const enabledWorkflows = this.workflows?.filter((w) => w.enabled);
-    if (
-      enabledWorkflows &&
-      enabledWorkflows.length === 1 &&
-      enabledWorkflows[0].name === 'paper-data-entry'
-    ) {
+    if (enabledWorkflows && enabledWorkflows.length === 1 && enabledWorkflows[0].name === 'paper-data-entry') {
       this.setSelection(SelectedPathType.paperBased);
     }
   }
@@ -84,9 +77,6 @@ export class SearchOptionsComponent implements OnInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 }

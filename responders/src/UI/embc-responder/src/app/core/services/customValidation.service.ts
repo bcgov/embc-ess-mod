@@ -24,12 +24,7 @@ export class CustomValidationService {
 
   userNameExistsValidator(existsIndicator: boolean): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (
-        existsIndicator &&
-        control.value !== null &&
-        control.value !== undefined &&
-        control.value !== ''
-      ) {
+      if (existsIndicator && control.value !== null && control.value !== undefined && control.value !== '') {
         return { userNameExists: true };
       }
     };
@@ -68,11 +63,7 @@ export class CustomValidationService {
    * @param validator : validator to test again
    * @param errorName : custom error name
    */
-  conditionalValidation(
-    predicate: () => boolean,
-    validator: ValidatorFn,
-    errorName?: string
-  ): ValidatorFn {
+  conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.parent) {
         let validationError = null;
@@ -98,10 +89,7 @@ export class CustomValidationService {
   postalValidation(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.parent) {
-        if (
-          control.parent.get('country').value !== undefined &&
-          control.parent.get('country').value !== null
-        ) {
+        if (control.parent.get('country').value !== undefined && control.parent.get('country').value !== null) {
           if (control.parent.get('country').value.code === 'CAN') {
             return Validators.pattern(globalConst.postalPattern)(control);
           } else if (control.parent.get('country').value.code === 'USA') {
@@ -183,10 +171,7 @@ export class CustomValidationService {
       if (control.value !== undefined) {
         const value1 = control.get('part1').value;
         const value2 = control.get('part2').value;
-        if (
-          (value1 || '').trim().length === 0 ||
-          (value2 || '').trim().length === 0
-        ) {
+        if ((value1 || '').trim().length === 0 || (value2 || '').trim().length === 0) {
           return { groupRequiredError: true };
         }
       }
@@ -273,11 +258,7 @@ export class CustomValidationService {
         const email = control.get('email').value;
         const confirmEmail = control.get('confirmEmail').value;
         if (email !== undefined && email !== null && email !== '') {
-          if (
-            confirmEmail === undefined ||
-            confirmEmail === null ||
-            confirmEmail === ''
-          ) {
+          if (confirmEmail === undefined || confirmEmail === null || confirmEmail === '') {
             return { emailMatch: true };
           }
           if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
@@ -299,10 +280,7 @@ export class CustomValidationService {
         const value1 = control.get('part1').value;
         const value2 = control.get('part2').value;
         if (value1 !== '' && value2 !== '') {
-          if (
-            (value1 || '').trim().length < 9 ||
-            (value2 || '').trim().length < 4
-          ) {
+          if ((value1 || '').trim().length < 9 || (value2 || '').trim().length < 4) {
             return { groupMinLengthError: true };
           }
         }
@@ -349,9 +327,7 @@ export class CustomValidationService {
     return (control: UntypedFormGroup): { [key: string]: boolean } | null => {
       const controls = control.controls;
       if (controls) {
-        const theOne = Object.keys(controls).findIndex(
-          (key) => controls[key].value
-        );
+        const theOne = Object.keys(controls).findIndex((key) => controls[key].value);
         if (theOne === -1) {
           return {
             atLeastOneRequired: true
@@ -393,17 +369,18 @@ export class CustomValidationService {
 
   public needsValidator(): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {
-      const anyNeedsIdentified = group.controls['requiresShelterType'].value ||
-        group.controls['requiresFood'].value ||
-        group.controls['requiresClothing'].value ||
-        group.controls['requiresIncidentals'].value ||
-        group.controls['requiresTransportation'].value;
+      const anyNeedsIdentified =
+        group.controls.requiresShelterType.value ||
+        group.controls.requiresFood.value ||
+        group.controls.requiresClothing.value ||
+        group.controls.requiresIncidentals.value ||
+        group.controls.requiresTransportation.value;
 
-      const noNeedsIdentified = group.controls['requiresNothing'].value;
+      const noNeedsIdentified = group.controls.requiresNothing.value;
       if (!anyNeedsIdentified && !noNeedsIdentified) {
         return { invalid: true };
-      };
+      }
       return null;
-    }
+    };
   }
 }

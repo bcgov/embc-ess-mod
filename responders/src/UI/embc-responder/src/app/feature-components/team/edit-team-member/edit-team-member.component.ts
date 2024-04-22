@@ -1,16 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  MemberLabelDescription,
-  MemberRole,
-  MemberRoleDescription,
-  TeamMember
-} from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -46,8 +37,7 @@ export class EditTeamMemberComponent implements OnInit {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras
-          .state as TeamMember;
+        const state = this.router.getCurrentNavigation().extras.state as TeamMember;
         this.teamMember = state;
       }
     } else {
@@ -86,14 +76,8 @@ export class EditTeamMemberComponent implements OnInit {
    */
   constructEditForm(): void {
     this.editForm = this.builder.group({
-      firstName: [
-        this.teamMember?.firstName,
-        [this.customValidation.whitespaceValidator()]
-      ],
-      lastName: [
-        this.teamMember?.lastName,
-        [this.customValidation.whitespaceValidator()]
-      ],
+      firstName: [this.teamMember?.firstName, [this.customValidation.whitespaceValidator()]],
+      lastName: [this.teamMember?.lastName, [this.customValidation.whitespaceValidator()]],
       userName: [
         { value: this.teamMember?.userName, disabled: !this.isEditAllowed() },
         [this.customValidation.whitespaceValidator()]
@@ -112,10 +96,7 @@ export class EditTeamMemberComponent implements OnInit {
    * Navigates to the details page
    */
   cancel(): void {
-    this.router.navigate(
-      ['/responder-access/responder-management/details/member-details'],
-      { state: this.teamMember }
-    );
+    this.router.navigate(['/responder-access/responder-management/details/member-details'], { state: this.teamMember });
   }
 
   /**
@@ -147,10 +128,9 @@ export class EditTeamMemberComponent implements OnInit {
    */
   next(): void {
     const updatedTeamMember: TeamMember = this.editForm.getRawValue();
-    this.router.navigate(
-      ['/responder-access/responder-management/details/review'],
-      { state: { ...this.teamMember, ...updatedTeamMember } }
-    );
+    this.router.navigate(['/responder-access/responder-management/details/review'], {
+      state: { ...this.teamMember, ...updatedTeamMember }
+    });
   }
 
   /**
@@ -160,32 +140,28 @@ export class EditTeamMemberComponent implements OnInit {
    */
   checkUserName($event): void {
     this.showLoader = !this.showLoader;
-    this.editTeamMemberService
-      .checkUserNameExists($event.target.value)
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          this.editForm
-            .get('userName')
-            .setValidators([
-              this.customValidation.whitespaceValidator(),
-              this.customValidation
-                .userNameExistsValidator(value)
-                .bind(this.customValidation)
-            ]);
+    this.editTeamMemberService.checkUserNameExists($event.target.value).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        this.editForm
+          .get('userName')
+          .setValidators([
+            this.customValidation.whitespaceValidator(),
+            this.customValidation.userNameExistsValidator(value).bind(this.customValidation)
+          ]);
+        this.editForm.get('userName').updateValueAndValidity();
+        if (value) {
           this.editForm.get('userName').updateValueAndValidity();
-          if (value) {
-            this.editForm.get('userName').updateValueAndValidity();
-          } else {
-            this.editForm.updateValueAndValidity();
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+        } else {
+          this.editForm.updateValueAndValidity();
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+      }
+    });
   }
 
   /**
@@ -196,24 +172,16 @@ export class EditTeamMemberComponent implements OnInit {
   filteredRoleList(): MemberRoleDescription[] {
     const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
-      return this.listService
-        .getMemberRoles()
-        .filter((role) => role.code === MemberRole.Tier1);
+      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
       return this.listService
         .getMemberRoles()
-        .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
-        );
+        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
         .getMemberRoles()
         .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 ||
-            role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3
+          (role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3
         );
     }
   }

@@ -8,11 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [StepEvacueeProfileComponent],
-  imports: [
-    CommonModule,
-    StepEvacueeProfileRoutingModule,
-    MaterialModule,
-    SharedModule
-  ]
+  imports: [CommonModule, StepEvacueeProfileRoutingModule, MaterialModule, SharedModule]
 })
 export class StepEvacueeProfileModule {}

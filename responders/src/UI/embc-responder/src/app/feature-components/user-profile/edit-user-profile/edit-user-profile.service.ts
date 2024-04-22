@@ -16,12 +16,7 @@ export class EditUserProfileService {
    * @param email user profile email address
    * @returns an void observable
    */
-  public editUserProfile(
-    firstName: string,
-    lastName: string,
-    phone: string,
-    email: string
-  ): Observable<void> {
+  public editUserProfile(firstName: string, lastName: string, phone: string, email: string): Observable<void> {
     return this.profileService.profileUpdate({
       body: {
         firstName,

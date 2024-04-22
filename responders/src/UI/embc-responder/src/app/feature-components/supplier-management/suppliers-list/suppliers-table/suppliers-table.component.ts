@@ -89,11 +89,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
         const isAsc = sort.direction === 'asc';
         switch (sort.active) {
           case 'legalName':
-            return compare(
-              a.legalName.toLowerCase(),
-              b.legalName.toLowerCase(),
-              isAsc
-            );
+            return compare(a.legalName.toLowerCase(), b.legalName.toLowerCase(), isAsc);
           case 'name':
             return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
           case 'mutualAid':
@@ -107,11 +103,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
           case 'providesMutualAid':
             return compare(+a.providesMutualAid, +b.providesMutualAid, isAsc);
           case 'address':
-            return compare(
-              a.address?.addressLine1.toLowerCase(),
-              b.address?.addressLine1.toLowerCase(),
-              isAsc
-            );
+            return compare(a.address?.addressLine1.toLowerCase(), b.address?.addressLine1.toLowerCase(), isAsc);
           default:
             return 0;
         }
@@ -146,15 +138,8 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     if (searchString.type === 'text') {
       if (
         (data.legalName !== null &&
-          data.legalName
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
-        (data.name !== null &&
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1)
+          data.legalName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
+        (data.name !== null && data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1)
       ) {
         return true;
       }

@@ -11,18 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../../core/components/modal/modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SupplierRoutingModule,
-    ReactiveFormsModule,
-    CoreModule,
-    NgbModule
-  ],
-  declarations: [
-    SubmissionComponent,
-    InvoiceComponent,
-    ReferralComponent,
-    ReceiptComponent
-  ]
+  imports: [CommonModule, SupplierRoutingModule, ReactiveFormsModule, CoreModule, NgbModule],
+  declarations: [SubmissionComponent, InvoiceComponent, ReferralComponent, ReceiptComponent]
 })
 export class SubmissionModule {}

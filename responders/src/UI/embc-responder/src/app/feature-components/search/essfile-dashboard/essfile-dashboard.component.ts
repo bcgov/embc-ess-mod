@@ -39,40 +39,29 @@ export class EssfileDashboardComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (
-      this.optionInjectionService.instance.optionType ===
-        SelectedPathType.remoteExtensions ||
-      this.optionInjectionService.instance.optionType ===
-        SelectedPathType.caseNotes
+      this.optionInjectionService.instance.optionType === SelectedPathType.remoteExtensions ||
+      this.optionInjectionService.instance.optionType === SelectedPathType.caseNotes
     ) {
       this.isLoading = !this.isLoading;
-      const $p = await this.optionInjectionService.instance
-        .loadEssFile()
-        .then(async (file) => {
-          const $pp = await this.optionInjectionService.instance
-            .loadEvcaueeProfile(file.primaryRegistrantId)
-            .then((profile) => {
-              this.notesList = this.essfileDashboardService.loadNotes(
-                file.notes
-              );
-              this.essFile = file;
-              this.loadDefaultOverviewSection(file);
-              this.displayBanner =
-                this.optionInjectionService.instance.getDashboardBanner(
-                  file?.status
-                );
-              this.isLoading = !this.isLoading;
-            });
-        });
+      const $p = await this.optionInjectionService.instance.loadEssFile().then(async (file) => {
+        const $pp = await this.optionInjectionService.instance
+          .loadEvcaueeProfile(file.primaryRegistrantId)
+          .then((profile) => {
+            this.notesList = this.essfileDashboardService.loadNotes(file.notes);
+            this.essFile = file;
+            this.loadDefaultOverviewSection(file);
+            this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
+            this.isLoading = !this.isLoading;
+          });
+      });
     } else {
       this.getEssFile();
     }
 
     const profile$ = await this.essfileDashboardService.updateMember();
 
-    this.isMinor =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
-    this.isLinkedToBcsc =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.authenticatedUser;
+    this.isMinor = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
+    this.isLinkedToBcsc = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.authenticatedUser;
     this.hasPostal = this.essfileDashboardService.hasPostalCode();
 
     this.essfileDashboardService.showFileLinkingPopups();
@@ -120,12 +109,9 @@ export class EssfileDashboardComponent implements OnInit {
    * @param essFile retrieved evacuation file
    */
   loadDefaultOverviewSection(essFile: EvacuationFileModel) {
-    this.router.navigate(
-      ['/responder-access/search/essfile-dashboard/overview'],
-      {
-        state: { file: essFile }
-      }
-    );
+    this.router.navigate(['/responder-access/search/essfile-dashboard/overview'], {
+      state: { file: essFile }
+    });
   }
 
   /**
@@ -141,8 +127,7 @@ export class EssfileDashboardComponent implements OnInit {
         this.essFile = file;
         this.essfileDashboardService.essFile = file;
         this.loadDefaultOverviewSection(file);
-        this.displayBanner =
-          this.optionInjectionService.instance.getDashboardBanner(file?.status);
+        this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
         this.isLoading = !this.isLoading;
       })
       .catch((error) => {
@@ -153,10 +138,8 @@ export class EssfileDashboardComponent implements OnInit {
   }
 
   private eligiblityDisplayName() {
-    this.eligibilityFirstName =
-      this.essfileDashboardService.eligibilityFirstName();
+    this.eligibilityFirstName = this.essfileDashboardService.eligibilityFirstName();
 
-    this.eligibilityLastName =
-      this.essfileDashboardService.eligibilityLastName();
+    this.eligibilityLastName = this.essfileDashboardService.eligibilityLastName();
   }
 }

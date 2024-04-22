@@ -1,17 +1,10 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
-import { MatStepper } from '@angular/material/stepper';
-import { combineLatest, forkJoin, Subscription } from 'rxjs';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { combineLatest, forkJoin, Observable, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { RegistrationResult } from '../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -20,22 +13,30 @@ import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { map, mergeMap } from 'rxjs/operators';
-import {
-  CaptchaResponse,
-  CaptchaResponseType
-} from 'src/app/core/components/captcha-v2/captcha-v2.component';
+import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { AlertComponent } from '../../core/components/alert/alert.component';
+import { ReviewComponent } from '../review/review.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 
 @Component({
   selector: 'app-needs-assessment',
   templateUrl: './needs-assessment.component.html',
-  styleUrls: ['./needs-assessment.component.scss']
+  styleUrls: ['./needs-assessment.component.scss'],
+  standalone: true,
+  imports: [
+    MatStepperModule,
+    ComponentWrapperComponent,
+    MatButtonModule,
+    ReviewComponent,
+    AlertComponent,
+    AppLoaderComponent
+  ]
 })
-export class NeedsAssessmentComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
-{
+export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('needsStepper') private needsStepper: MatStepper;
-  needsSteps: Array<ComponentMetaDataModel> =
-    new Array<ComponentMetaDataModel>();
+  needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
   form$: Subscription;
@@ -110,30 +111,27 @@ export class NeedsAssessmentComponent
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
-        this.form$ = this.formCreationService
-          .getEvacuatedForm()
-          .subscribe((evacuatedForm) => {
-            this.form = evacuatedForm;
-          });
+        this.form$ = this.formCreationService.getEvacuatedForm().subscribe((evacuatedForm) => {
+          this.form = evacuatedForm;
+        });
         break;
       case 1:
-        this.form$ = combineLatest(this.formCreationService.getHouseholdMembersForm(), this.formCreationService.getPetsForm()).subscribe(([householdMemberForm, petsForm]) => {
-          this.form = new FormGroup({householdMemberForm, petsForm});
+        this.form$ = combineLatest([
+          this.formCreationService.getHouseholdMembersForm(),
+          this.formCreationService.getPetsForm()
+        ]).subscribe(([householdMemberForm, petsForm]) => {
+          this.form = new FormGroup({ householdMemberForm, petsForm });
         });
         break;
       case 2:
-        this.form$ = this.formCreationService
-          .getIndentifyNeedsForm()
-          .subscribe((identifyNeedsForm) => {
-            this.form = identifyNeedsForm;
-          });
+        this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
+          this.form = identifyNeedsForm;
+        });
         break;
       case 3:
-        this.form$ = this.formCreationService
-          .getSecretForm()
-          .subscribe((secret) => {
-            this.form = secret;
-          });
+        this.form$ = this.formCreationService.getSecretForm().subscribe((secret) => {
+          this.form = secret;
+        });
         break;
     }
   }
@@ -143,22 +141,19 @@ export class NeedsAssessmentComponent
       stepper.previous();
     } else if (lastStep === -1) {
       if (this.currentFlow === 'non-verified-registration') {
-        this.router.navigate(
-          ['/non-verified-registration/create-profile'],
-          this.navigationExtras
-        );
+        this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
       } else {
         this.router.navigate(['/verified-registration/confirm-restriction']);
       }
     }
   }
 
-  goForward(stepper: MatStepper, isLast: boolean, component: string): void {
+  goForward(stepper: MatStepper, isLast: boolean, component: string | Observable<any>): void {
     if (isLast) {
       this.submitFile();
     } else {
       if (this.form.status === 'VALID') {
-        this.setFormData(component);
+        this.setFormData(component as string);
         this.form$.unsubscribe();
         stepper.selected.completed = true;
         stepper.next();
@@ -169,19 +164,13 @@ export class NeedsAssessmentComponent
   }
 
   setFormData(component: string): void {
-
     switch (component) {
       case 'evac-address':
-        this.evacuationFileDataService.evacuatedAddress = this.form.get(
-          'evacuatedFromAddress'
-        ).value;
-        this.needsAssessmentService.insurance =
-          this.form.get('insurance').value;
+        this.evacuationFileDataService.evacuatedAddress = this.form.get('evacuatedFromAddress').value;
+        this.needsAssessmentService.insurance = this.form.get('insurance').value;
         break;
       case 'family-information-pets':
-        this.needsAssessmentService.setHouseHoldMembers(
-          this.form.get('householdMemberForm').value.householdMembers
-        );
+        this.needsAssessmentService.setHouseHoldMembers(this.form.get('householdMemberForm').value.householdMembers);
 
         this.needsAssessmentService.pets = this.form.get('petsForm').value.pets;
         break;
@@ -189,8 +178,7 @@ export class NeedsAssessmentComponent
         this.needsAssessmentService.setNeedsDetails(this.form);
         break;
       case 'secret':
-        this.evacuationFileDataService.secretPhrase =
-          this.form.get('secretPhrase').value;
+        this.evacuationFileDataService.secretPhrase = this.form.get('secretPhrase').value;
         this.evacuationFileDataService.secretPhraseEdited = true;
         break;
       default:
@@ -209,19 +197,17 @@ export class NeedsAssessmentComponent
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.nonVerifiedRegistrationService
-      .submitRegistration(this.captchaResponse)
-      .subscribe({
-        next: (response: RegistrationResult) => {
-          this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
-          this.router.navigate(['/non-verified-registration/file-submission']);
-        },
-        error: (error: any) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.setAlert('danger', globalConst.submissionError);
-        }
-      });
+    this.nonVerifiedRegistrationService.submitRegistration(this.captchaResponse).subscribe({
+      next: (response: RegistrationResult) => {
+        this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
+        this.router.navigate(['/non-verified-registration/file-submission']);
+      },
+      error: (error: any) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.setAlert('danger', globalConst.submissionError);
+      }
+    });
   }
 
   submitVerified(): void {

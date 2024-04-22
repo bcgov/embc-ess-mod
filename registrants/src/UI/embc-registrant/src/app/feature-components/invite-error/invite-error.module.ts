@@ -5,7 +5,6 @@ import { InviteErrorRoutingModule } from './invite-error-routing.module';
 import { InviteErrorComponent } from './invite-error.component';
 
 @NgModule({
-  declarations: [InviteErrorComponent],
-  imports: [CommonModule, InviteErrorRoutingModule]
+  imports: [CommonModule, InviteErrorRoutingModule, InviteErrorComponent]
 })
 export class InviteErrorModule {}

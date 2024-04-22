@@ -3,42 +3,35 @@
     <p class="title">System Unavailable</p>
   </div>
   <div class="outage-info">
-    <div *ngIf="outageType === 'planned'; else unplanned">
-      <p class="subtitle">
-        This system is currently undergoing planned maintenance.
-      </p>
-      <p class="dynamic-text">
-        {{ outageInfo?.content }}
-        <b
-          >from
-          {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
-          at
-          {{ outageInfo?.outageStartDate | date: 'shortTime' }}
-          to
-          {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
-          at
-          {{ outageInfo?.outageEndDate | date: 'shortTime' }}
-          PST
-        </b>
-      </p>
-    </div>
-
-    <ng-template #unplanned>
-      <p class="subtitle">
-        This system is currently unavailable or undergoing routine maintenance.
-      </p>
-    </ng-template>
+    @if (outageType === 'planned') {
+      <div>
+        <p class="subtitle">This system is currently undergoing planned maintenance.</p>
+        <p class="dynamic-text">
+          {{ outageInfo?.content }}
+          <b
+            >from
+            {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
+            at
+            {{ outageInfo?.outageStartDate | date: 'shortTime' }}
+            to
+            {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
+            at
+            {{ outageInfo?.outageEndDate | date: 'shortTime' }}
+            PST
+          </b>
+        </p>
+      </div>
+    } @else {
+      <p class="subtitle">This system is currently unavailable or undergoing routine maintenance.</p>
+    }
 
     <p class="description">
-      If you have been instructed to self-register for Emergency Support
-      Services please check back later or contact your Local Emergency Program
-      for next steps.
+      If you have been instructed to self-register for Emergency Support Services please check back later or contact
+      your Local Emergency Program for next steps.
     </p>
     <p class="description">
-      Visit <span class="link">@EmergencyInfoBC</span> or
-      <a class="link" href="https://www.emergencyinfobc.gov.bc.ca/"
-        >www.emergencyinfobc.gov.bc.ca</a
-      >
+      Visit <span class="link">&#64;EmergencyInfoBC</span> or
+      <a class="link" href="https://www.emergencyinfobc.gov.bc.ca/">www.emergencyinfobc.gov.bc.ca</a>
       for Evacuation and Reception Centre updates.
     </p>
     <p class="description">Thank you for understanding.</p>

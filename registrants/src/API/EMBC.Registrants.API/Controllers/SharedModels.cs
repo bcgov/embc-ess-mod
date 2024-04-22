@@ -5,7 +5,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Address data with optional lookup code
     /// </summary>
-    public class Address
+    public record Address
     {
         [Required]
         public string AddressLine1 { get; set; }
@@ -26,7 +26,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Profile personal details
     /// </summary>
-    public class PersonDetails
+    public record PersonDetails
     {
         [Required]
         public string FirstName { get; set; }
@@ -47,7 +47,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Profile contact information
     /// </summary>
-    public class ContactDetails
+    public record ContactDetails
     {
         [EmailAddress]
         public string? Email { get; set; }
@@ -63,7 +63,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Profile security questions
     /// </summary>
-    public class SecurityQuestion
+    public record SecurityQuestion
     {
         public int Id { get; set; }
         public string Question { get; set; }

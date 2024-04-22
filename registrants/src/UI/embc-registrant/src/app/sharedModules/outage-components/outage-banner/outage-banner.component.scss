@@ -7,15 +7,15 @@
   color: red;
   padding: 20px 0px 10px 100px;
 }
-.close-image img:last-child {
+.close-image img:last-of-type {
   display: none;
 }
 
-.close-image:hover img:last-child {
+.close-image:hover img:last-of-type {
   display: inline;
 }
 
-.close-image:hover img:first-child {
+.close-image:hover img:first-of-type {
   display: none;
 }
 

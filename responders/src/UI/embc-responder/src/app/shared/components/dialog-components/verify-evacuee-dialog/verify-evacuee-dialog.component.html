@@ -41,12 +41,10 @@
         required
       >
         <mat-radio-button [value]="true"
-          ><span class="radio-text"><b>Yes</b></span> - I did see government
-          issued identification</mat-radio-button
+          ><span class="radio-text"><b>Yes</b></span> - I did see government issued identification</mat-radio-button
         >
         <mat-radio-button [value]="false"
-          ><span class="radio-text"><b>No</b></span> - I did not see government
-          issued identification</mat-radio-button
+          ><span class="radio-text"><b>No</b></span> - I did not see government issued identification</mat-radio-button
         >
       </mat-radio-group>
 
@@ -62,8 +60,7 @@
       </div>
 
       <div class="field-error" *ngIf="!noIdFlag">
-        Evacuee profile cannot be verified without the presentation of
-        government issued identification
+        Evacuee profile cannot be verified without the presentation of government issued identification
       </div>
     </form>
   </div>
@@ -76,12 +73,7 @@
     </button>
   </div>
   <div class="col-md-6">
-    <button
-      *ngIf="noIdFlag"
-      class="button-p button-width"
-      mat-button
-      (click)="verify()"
-    >
+    <button *ngIf="noIdFlag" class="button-p button-width" mat-button (click)="verify()">
       {{ content?.confirmButton }}
     </button>
   </div>

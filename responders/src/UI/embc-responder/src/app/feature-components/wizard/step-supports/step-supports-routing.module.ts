@@ -15,44 +15,34 @@ const routes: Routes = [
       {
         path: 'view',
         loadChildren: () =>
-          import(
-            '../support-components/view-supports/view-supports.module'
-          ).then((m) => m.ViewSupportsModule)
+          import('../support-components/view-supports/view-supports.module').then((m) => m.ViewSupportsModule)
       },
       {
         path: 'select-support',
         loadChildren: () =>
-          import(
-            '../support-components/select-support/select-support.module'
-          ).then((m) => m.SelectSupportModule)
+          import('../support-components/select-support/select-support.module').then((m) => m.SelectSupportModule)
       },
       {
         path: 'details',
         loadChildren: () =>
-          import(
-            '../support-components/support-details/support-details.module'
-          ).then((m) => m.SupportDetailsModule)
+          import('../support-components/support-details/support-details.module').then((m) => m.SupportDetailsModule)
       },
       {
         path: 'delivery',
         loadChildren: () =>
-          import(
-            '../support-components/support-delivery/support-delivery.module'
-          ).then((m) => m.SupportDeliveryModule)
+          import('../support-components/support-delivery/support-delivery.module').then((m) => m.SupportDeliveryModule)
       },
       {
         path: 'view-detail',
         loadChildren: () =>
-          import(
-            '../support-components/existing-support-details/existing-support-details.module'
-          ).then((m) => m.ExistingSupportDetailsModule)
+          import('../support-components/existing-support-details/existing-support-details.module').then(
+            (m) => m.ExistingSupportDetailsModule
+          )
       },
       {
         path: 'review',
         loadChildren: () =>
-          import(
-            '../support-components/review-support/review-support.module'
-          ).then((m) => m.ReviewSupportModule)
+          import('../support-components/review-support/review-support.module').then((m) => m.ReviewSupportModule)
       }
     ]
   }

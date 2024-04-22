@@ -25,9 +25,7 @@ export class MockEssfileDashboardService extends EssfileDashboardService {
     lastName: string,
     dateOfBirth: string
   ): Observable<RegistrantProfileSearchResult[]> {
-    return new BehaviorSubject<RegistrantProfileSearchResult[]>(
-      this.possibleProfileMatches
-    );
+    return new BehaviorSubject<RegistrantProfileSearchResult[]>(this.possibleProfileMatches);
   }
 
   /**

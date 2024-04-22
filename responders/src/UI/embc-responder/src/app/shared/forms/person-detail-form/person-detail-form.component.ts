@@ -14,29 +14,15 @@ export class PersonDetailFormComponent implements OnInit {
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   sameLastNameOption: any;
-  readonly dateMask = [
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   readOnlyInput = false;
 
   constructor(private cacheService: CacheService) {}
 
   ngOnInit(): void {
     // Work in progress. Temporary calling from the cache. Needs to be changed to call the Profile GET API
-    const mainApplicantData = JSON.parse(
-      this.cacheService.get('evacueeSearchContext')
-    );
-    this.primaryApplicantLastName =
-      mainApplicantData?.evacueeSearchParameters?.lastName;
+    const mainApplicantData = JSON.parse(this.cacheService.get('evacueeSearchContext'));
+    this.primaryApplicantLastName = mainApplicantData?.evacueeSearchParameters?.lastName;
     this.sameLastNameEditForm();
   }
 
@@ -49,9 +35,7 @@ export class PersonDetailFormComponent implements OnInit {
 
   sameLastNameEvent(event: MatCheckboxChange): void {
     if (event.checked) {
-      this.personalDetailsForm
-        .get('lastName')
-        .setValue(this.primaryApplicantLastName);
+      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
       this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');

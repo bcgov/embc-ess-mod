@@ -8,17 +8,10 @@
     <div class="col-md-6">
       <mat-form-field appearance="outline">
         <mat-label>Mode of transport</mat-label>
-        <input
-          formControlName="transportMode"
-          matInput
-          placeholder="Mode of transport"
-          maxlength="50"
-          required
-        />
+        <input formControlName="transportMode" matInput placeholder="Mode of transport" maxlength="50" required />
         <mat-error
           *ngIf="
-            referralFormControl?.transportMode.invalid &&
-            referralFormControl?.transportMode.hasError('whitespaceError')
+            referralFormControl?.transportMode.invalid && referralFormControl?.transportMode.hasError('whitespaceError')
           "
         >
           Mode of transport is required</mat-error
@@ -47,19 +40,14 @@
         />
         <span matPrefix>$&nbsp;</span>
         <mat-error
-          *ngIf="
-            referralFormControl?.totalAmount.invalid &&
-            referralFormControl?.totalAmount.hasError('required')
-          "
+          *ngIf="referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('required')"
         >
           Total Amount is required</mat-error
         >
         <mat-error
           *ngIf="
-            (referralFormControl?.totalAmount.invalid &&
-              referralFormControl?.totalAmount.hasError('pattern')) ||
-            (referralFormControl?.totalAmount.invalid &&
-              referralFormControl?.totalAmount.hasError('totalZeroError'))
+            (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('pattern')) ||
+            (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('totalZeroError'))
           "
         >
           Invalid amount</mat-error

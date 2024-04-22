@@ -5,13 +5,12 @@ RUN npm install --ignore-scripts
 COPY ./embc-registrant/ .
 
 FROM node-builder as ng-builder
-#RUN npm run lint
+RUN npm run lint
 RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --configuration production
 
 FROM caddy:2-builder AS builder
-RUN xcaddy build \
-    --with github.com/caddyserver/replace-response
+RUN xcaddy build --with github.com/caddyserver/replace-response
 
 FROM caddy:2 as final
 ARG VERSION

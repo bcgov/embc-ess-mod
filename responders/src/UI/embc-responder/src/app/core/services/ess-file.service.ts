@@ -35,31 +35,23 @@ export class EssFileService {
         map((file: EvacuationFile): EvacuationFileModel => {
           const fileModel = {
             ...file,
-            evacuatedFromAddress:
-              this.locationsService.getAddressModelFromAddress(
-                file.evacuatedFromAddress
-              ),
-            assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
-              file?.task?.communityCode
-            )
+            evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(file.evacuatedFromAddress),
+            assignedTaskCommunity: this.locationsService.mapCommunityFromCode(file?.task?.communityCode)
           };
           fileModel.householdMembers.sort(
             (a, b) =>
               Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
-              new Date(a.dateOfBirth).valueOf() -
-                new Date(b.dateOfBirth).valueOf()
+              new Date(a.dateOfBirth).valueOf() - new Date(b.dateOfBirth).valueOf()
           );
           fileModel.needsAssessment.householdMembers.sort(
             (a, b) =>
               Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
-              new Date(a.dateOfBirth).valueOf() -
-                new Date(b.dateOfBirth).valueOf()
+              new Date(a.dateOfBirth).valueOf() - new Date(b.dateOfBirth).valueOf()
           );
           this.appBaseService.appModel.selectedEssFile = fileModel;
           this.appBaseService.etransferProperties = {
-            interacAllowed: fileModel?.task?.features.find(
-              (feature) => feature?.name === 'digital-support-etransfer'
-            )?.enabled
+            interacAllowed: fileModel?.task?.features.find((feature) => feature?.name === 'digital-support-etransfer')
+              ?.enabled
           };
           this.computeState.triggerEvent();
           return fileModel;
@@ -74,10 +66,7 @@ export class EssFileService {
    * @param fileId
    * @returns array of support
    */
-  public getSupports(
-    fileId?: string,
-    manualReferralId?: string
-  ): Observable<Support[]> {
+  public getSupports(fileId?: string, manualReferralId?: string): Observable<Support[]> {
     return this.registrationsService.registrationsSearchSupports({
       manualReferralId,
       fileId
@@ -94,11 +83,7 @@ export class EssFileService {
   public createFile(essFile: EvacuationFile): Observable<EvacuationFileModel> {
     return this.registrationsService
       .registrationsCreateFile({ body: essFile })
-      .pipe(
-        mergeMap((fileResult: RegistrationResult) =>
-          this.getFileFromId(fileResult.id)
-        )
-      );
+      .pipe(mergeMap((fileResult: RegistrationResult) => this.getFileFromId(fileResult.id)));
   }
 
   /**
@@ -109,19 +94,12 @@ export class EssFileService {
    *
    * @returns API profile mapped as EvacuationFileLocal
    */
-  public updateFile(
-    fileId: string,
-    essFile: EvacuationFile
-  ): Observable<EvacuationFileModel> {
+  public updateFile(fileId: string, essFile: EvacuationFile): Observable<EvacuationFileModel> {
     return this.registrationsService
       .registrationsUpdateFile({
         fileId,
         body: essFile
       })
-      .pipe(
-        mergeMap((regResult: RegistrationResult) =>
-          this.getFileFromId(regResult.id)
-        )
-      );
+      .pipe(mergeMap((regResult: RegistrationResult) => this.getFileFromId(regResult.id)));
   }
 }

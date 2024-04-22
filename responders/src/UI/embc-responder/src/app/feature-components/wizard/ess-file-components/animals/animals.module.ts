@@ -9,13 +9,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [AnimalsComponent],
-  imports: [
-    CommonModule,
-    AnimalsRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule
-  ],
+  imports: [CommonModule, AnimalsRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule],
   exports: [AnimalsComponent]
 })
 export class AnimalsModule {}

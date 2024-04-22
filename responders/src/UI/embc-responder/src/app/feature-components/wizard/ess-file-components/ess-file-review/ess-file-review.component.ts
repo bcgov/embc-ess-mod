@@ -27,16 +27,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   insuranceDisplay: string;
   needs: string[] = [];
 
-  memberColumns: string[] = [
-    'firstName',
-    'lastName',
-    'initials',
-    'gender',
-    'dateOfBirth'
-  ];
+  memberColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth'];
 
   petColumns: string[] = ['type', 'quantity'];
   tabMetaData: TabModel;
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -46,7 +41,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private essFileService: EssFileService,
     private alertService: AlertService,
     private appBaseService: AppBaseService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
@@ -54,10 +49,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(() => {
+      this.updateTabStatus();
+    });
     this.tabMetaData = this.stepEssFileService.getNavLinks('review');
   }
 
@@ -105,44 +99,37 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    * Calls Create new ESS File API
    */
   private createNewEssFile() {
-    this.essFileService
-      .createFile(this.stepEssFileService.createEvacFileDTO())
-      .subscribe({
-        next: (essFile: EvacuationFileModel) => {
-          // After creating and fetching ESS File, update ESS File Step values
-          this.stepEssFileService.setFormValuesFromFile(essFile);
-          // Once all profile work is done, user can close wizard or proceed to step 3
-          this.disableButton = true;
-          this.saveLoader = false;
+    this.essFileService.createFile(this.stepEssFileService.createEvacFileDTO()).subscribe({
+      next: (essFile: EvacuationFileModel) => {
+        // After creating and fetching ESS File, update ESS File Step values
+        this.stepEssFileService.setFormValuesFromFile(essFile);
+        // Once all profile work is done, user can close wizard or proceed to step 3
+        this.disableButton = true;
+        this.saveLoader = false;
 
-          this.stepEssFileService
-            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
-            .afterClosed()
-            .subscribe((event) => {
-              this.wizardService.setStepStatus(
-                '/ess-wizard/add-supports',
-                false
-              );
-              this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+        this.stepEssFileService
+          .openModal(globalConst.newRegWizardEssFileCreatedMessage)
+          .afterClosed()
+          .subscribe((event) => {
+            this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+            this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
-              if (event === 'exit') {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
-              } else {
-                this.router.navigate(['/ess-wizard/add-supports'], {
-                  state: { step: 'STEP 3', title: 'Add Supports' }
-                });
-                this.stepEssFileService.setReviewEssFileTabStatus();
-              }
-            });
-        },
-        error: (error) => {
-          this.saveLoader = false;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.createEssFileError);
-        }
-      });
+            if (event === 'exit') {
+              this.router.navigate(['responder-access/search/essfile-dashboard']);
+            } else {
+              this.router.navigate(['/ess-wizard/add-supports'], {
+                state: { step: 'STEP 3', title: 'Add Supports' }
+              });
+              this.stepEssFileService.setReviewEssFileTabStatus();
+            }
+          });
+      },
+      error: (error) => {
+        this.saveLoader = false;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.createEssFileError);
+      }
+    });
   }
 
   /**
@@ -150,10 +137,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   private editEssFile() {
     this.essFileService
-      .updateFile(
-        this.appBaseService?.appModel?.selectedEssFile?.id,
-        this.stepEssFileService.updateEvacFileDTO()
-      )
+      .updateFile(this.appBaseService?.appModel?.selectedEssFile?.id, this.stepEssFileService.updateEvacFileDTO())
       .subscribe({
         next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
@@ -166,16 +150,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
             .openModal(globalConst.newRegWizardEssFileCreatedMessage)
             .afterClosed()
             .subscribe((event) => {
-              this.wizardService.setStepStatus(
-                '/ess-wizard/add-supports',
-                false
-              );
+              this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
               if (event === 'exit') {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }

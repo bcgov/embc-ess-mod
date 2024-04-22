@@ -91,7 +91,9 @@ describe('WizardComponent-Test for New Registration', () => {
     spyOn(router, 'navigate').and.stub();
     component.sideNavMenu = wizardDataService.editProfileMenu;
     fixture.detectChanges();
-    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], { state: { step: 'STEP 1', title: 'Edit Evacuee Profile' } });
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], {
+      state: { step: 'STEP 1', title: 'Edit Evacuee Profile' }
+    });
   }));
 
   it('should load NEW-ESS-FILE menu', inject([Router], (router: Router) => {
@@ -138,7 +140,9 @@ describe('WizardComponent-Test for New Registration', () => {
     wizardService.menuItems = wizardDataService.newRegistrationMenu;
     fixture.detectChanges();
     component.ngOnInit();
-    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], { state: { step: 'STEP 1', title: 'Create Evacuee Profile' } });
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], {
+      state: { step: 'STEP 1', title: 'Create Evacuee Profile' }
+    });
   }));
 
   it('should not allow navigation to STEP-2 if STEP-1 is incomplete', inject([Router], (router: Router) => {

@@ -29,33 +29,15 @@ export class SearchDataService extends DashboardService {
   };
 
   nameSearchForm = {
-    firstName: [
-      '',
-      [Validators.required, this.customValidation.whitespaceValidator()]
-    ],
-    lastName: [
-      '',
-      [Validators.required, this.customValidation.whitespaceValidator()]
-    ],
-    dateOfBirth: [
-      '',
-      [Validators.required, this.customValidation.dateOfBirthValidator()]
-    ]
+    firstName: ['', [Validators.required, this.customValidation.whitespaceValidator()]],
+    lastName: ['', [Validators.required, this.customValidation.whitespaceValidator()]],
+    dateOfBirth: ['', [Validators.required, this.customValidation.dateOfBirthValidator()]]
   };
 
   paperNameSearchForm = {
-    firstName: [
-      '',
-      [Validators.required, this.customValidation.whitespaceValidator()]
-    ],
-    lastName: [
-      '',
-      [Validators.required, this.customValidation.whitespaceValidator()]
-    ],
-    dateOfBirth: [
-      '',
-      [Validators.required, this.customValidation.dateOfBirthValidator()]
-    ],
+    firstName: ['', [Validators.required, this.customValidation.whitespaceValidator()]],
+    lastName: ['', [Validators.required, this.customValidation.whitespaceValidator()]],
+    dateOfBirth: ['', [Validators.required, this.customValidation.dateOfBirthValidator()]],
     paperBasedEssFile: ['', this.customValidation.whitespaceValidator()]
   };
 
@@ -107,10 +89,8 @@ export class SearchDataService extends DashboardService {
       wizardType: WizardType.EditRegistration,
       lastCompletedStep: null,
       editFlag:
-        !this.appBaseService?.appModel?.selectedProfile
-          ?.selectedEvacueeInContext?.authenticatedUser &&
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.verifiedUser,
+        !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.authenticatedUser &&
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.verifiedUser,
       memberFlag: false
     };
     this.computeState.triggerEvent();
@@ -168,14 +148,8 @@ export class SearchDataService extends DashboardService {
   }
 
   async checkForPaperFile(wizardType: string): Promise<string> {
-    const paperFileNumber =
-      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-        ?.paperFileNumber;
-    return await this.searchForEssFiles(
-      undefined,
-      paperFileNumber,
-      undefined
-    ).then((result) => {
+    const paperFileNumber = this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
+    return await this.searchForEssFiles(undefined, paperFileNumber, undefined).then((result) => {
       if (result.length === 0) {
         switch (wizardType) {
           case WizardType.NewRegistration:
@@ -196,37 +170,28 @@ export class SearchDataService extends DashboardService {
     manualFileId?: string,
     id?: string
   ): Promise<Array<EvacuationFileSummaryModel>> {
-    const file$ = this.evacueeProfileService
-      .getProfileFiles(registrantId, manualFileId, id)
-      .pipe(
-        tap({
-          next: (result) => {},
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.findEssFileError);
-          }
-        })
-      );
+    const file$ = this.evacueeProfileService.getProfileFiles(registrantId, manualFileId, id).pipe(
+      tap({
+        next: (result) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.findEssFileError);
+        }
+      })
+    );
     return lastValueFrom(file$);
   }
 
-  public evacueeSearch(
-    evacueeSearchContext: EvacueeDetailsModel
-  ): Promise<EvacueeSearchResults> {
-    const $results = this.evacueeProfileService
-      .searchForEvacuee(evacueeSearchContext)
-      .pipe(
-        tap({
-          next: (result) => {},
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.evacueeSearchError
-            );
-          }
-        })
-      );
+  public evacueeSearch(evacueeSearchContext: EvacueeDetailsModel): Promise<EvacueeSearchResults> {
+    const $results = this.evacueeProfileService.searchForEvacuee(evacueeSearchContext).pipe(
+      tap({
+        next: (result) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.evacueeSearchError);
+        }
+      })
+    );
     return lastValueFrom($results);
   }
 

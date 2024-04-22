@@ -1,10 +1,6 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,18 +9,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
+import { PersonDetailFormComponent } from '../../person-detail-form/person-detail-form.component';
 
 @Component({
   selector: 'app-family-information',
   templateUrl: './family-information.component.html',
-  styleUrls: ['./family-information.component.scss']
+  styleUrls: ['./family-information.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatCardModule, MatTableModule, MatButtonModule, PersonDetailFormComponent]
 })
 export default class FamilyInformationComponent implements OnInit {
   householdMemberForm: UntypedFormGroup;
@@ -33,14 +32,7 @@ export default class FamilyInformationComponent implements OnInit {
   householdMemberForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
-  displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'initials',
-    'gender',
-    'dateOfBirth',
-    'buttons'
-  ];
+  displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'buttons'];
   dataSource = new BehaviorSubject([]);
   data = [];
   editIndex: number;
@@ -57,17 +49,13 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.householdMemberForm$ = this.formCreationService
-      .getHouseholdMembersForm()
-      .subscribe((householdMemberForm) => {
-        this.householdMemberForm = householdMemberForm;
-      });
+    this.householdMemberForm$ = this.formCreationService.getHouseholdMembersForm().subscribe((householdMemberForm) => {
+      this.householdMemberForm = householdMemberForm;
+    });
     this.householdMemberForm
       .get('addHouseholdMemberIndicator')
       .valueChanges.subscribe((value) => this.updateOnVisibility());
-    this.dataSource.next(
-      this.householdMemberForm.get('householdMembers').value
-    );
+    this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
   }
 
@@ -81,8 +69,7 @@ export default class FamilyInformationComponent implements OnInit {
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] =
-          this.householdMemberForm.get('householdMember').value;
+        this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
@@ -127,9 +114,7 @@ export default class FamilyInformationComponent implements OnInit {
           this.dataSource.next(this.data);
           this.householdMemberForm.get('householdMembers').setValue(this.data);
           if (this.data.length === 0) {
-            this.householdMemberForm
-              .get('addHouseholdMemberIndicator')
-              .setValue(false);
+            this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
           }
         }
       });
@@ -146,36 +131,9 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   updateOnVisibility(): void {
-    this.householdMemberForm
-      .get('householdMember.firstName')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.lastName')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.gender')
-      .updateValueAndValidity();
-    this.householdMemberForm
-      .get('householdMember.dateOfBirth')
-      .updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.firstName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
   }
-
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRadioModule,
-    PersonDetailFormModule,
-    MatTableModule,
-    MatIconModule
-  ],
-  declarations: [FamilyInformationComponent],
-  exports: [FamilyInformationComponent]
-})
-export class FamilyInformationModule {}

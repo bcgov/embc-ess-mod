@@ -10,8 +10,7 @@ describe('EvacAddressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EvacAddressComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, EvacAddressComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

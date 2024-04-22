@@ -117,6 +117,7 @@ namespace EMBC.ESS.Resources.Supports
         public bool IsEtransfer => SupportDelivery is ETransfer;
         public IEnumerable<SupportFlag> Flags { get; set; }
         public string TaskId { get; set; }
+        public bool IsSelfServe { get; set; }
     }
 
     public abstract record SupportDelivery

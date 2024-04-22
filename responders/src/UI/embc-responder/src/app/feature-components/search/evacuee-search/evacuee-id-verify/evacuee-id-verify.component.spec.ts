@@ -97,48 +97,40 @@ describe('EvacueeIdVerifyComponent', () => {
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const labelElem = nativeElem.querySelector('#photoId-label');
 
-    expect(labelElem.textContent).toEqual(
-      'Can you present any government-issued photo ID to verify your identity?'
-    );
+    expect(labelElem.textContent).toEqual('Can you present any government-issued photo ID to verify your identity?');
   });
 
-  it('should set id value and navigate to name search for digital', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.digital
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.idVerifyForm.get('photoId').setValue(true);
-      component.next();
+  it('should set id value and navigate to name search for digital', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.idVerifyForm.get('photoId').setValue(true);
+    component.next();
 
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/name-search'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/name-search'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
-  it('should set id value and navigate to name search for paper flow', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.paperBased
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.idVerifyForm.get('photoId').setValue(false);
-      component.next();
+  it('should set id value and navigate to name search for paper flow', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.paperBased
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.idVerifyForm.get('photoId').setValue(false);
+    component.next();
 
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/name-search'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/name-search'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
   afterAll(() => {
     TestBed.resetTestingModule();

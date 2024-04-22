@@ -6,23 +6,22 @@ import {
   UntypedFormGroup,
   FormGroupDirective,
   NgForm,
-  Validators
+  Validators,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { NgTemplateOutlet } from '@angular/common';
 
 export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: UntypedFormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return (
-      !!(
-        control &&
-        control.invalid &&
-        (control.dirty || control.touched || isSubmitted)
-      ) || control.parent.hasError('emailMatch')
+      !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) ||
+      control.parent.hasError('emailMatch')
     );
   }
 }
@@ -30,7 +29,9 @@ export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-bcsc-invite-dialog',
   templateUrl: './bcsc-invite-dialog.component.html',
-  styleUrls: ['./bcsc-invite-dialog.component.scss']
+  styleUrls: ['./bcsc-invite-dialog.component.scss'],
+  standalone: true,
+  imports: [NgTemplateOutlet, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule]
 })
 export class BcscInviteDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
@@ -67,10 +68,7 @@ export class BcscInviteDialogComponent implements OnInit {
             Validators.email,
             this.customValidation.conditionalValidation(
               () =>
-                !this.hideForm ||
-                this.initDialog === null ||
-                this.initDialog === '' ||
-                this.initDialog === undefined,
+                !this.hideForm || this.initDialog === null || this.initDialog === '' || this.initDialog === undefined,
               this.customValidation.whitespaceValidator()
             )
           ]

@@ -1,20 +1,14 @@
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-  waitForAsync
-} from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { VerifiedRegistrationComponent } from './verified-registration.component';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TimeoutService } from 'src/app/core/services/timeout.service';
 import { MockTimeoutService } from 'src/app/unit-tests/mockTimeout.service';
 import { MockExpiry } from 'src/app/unit-tests/mockExpiry.service';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { provideRouter } from '@angular/router';
 
 describe('VerifiedRegistrationComponent', () => {
   let app: VerifiedRegistrationComponent;
@@ -24,14 +18,13 @@ describe('VerifiedRegistrationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [VerifiedRegistrationComponent],
       imports: [
         ReactiveFormsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
         NgIdleKeepaliveModule.forRoot(),
         MatDialogModule,
-        OAuthModule.forRoot()
+        OAuthModule.forRoot(),
+        VerifiedRegistrationComponent
       ],
       providers: [
         UntypedFormBuilder,
@@ -39,7 +32,8 @@ describe('VerifiedRegistrationComponent', () => {
         {
           provide: TimeoutService,
           useClass: MockTimeoutService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   }));

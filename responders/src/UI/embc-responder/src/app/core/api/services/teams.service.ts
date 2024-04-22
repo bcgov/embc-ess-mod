@@ -16,13 +16,10 @@ import { TeamMember } from '../models/team-member';
 import { TeamMemberResult } from '../models/team-member-result';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TeamsService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -41,22 +38,24 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetTeams$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<Team>>> {
-
+  teamsGetTeams$Response(params?: {}): Observable<StrictHttpResponse<Array<Team>>> {
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetTeamsPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Team>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<Team>>;
+        })
+      );
   }
 
   /**
@@ -69,12 +68,8 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetTeams(params?: {
-  }): Observable<Array<Team>> {
-
-    return this.teamsGetTeams$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Team>>) => r.body as Array<Team>)
-    );
+  teamsGetTeams(params?: {}): Observable<Array<Team>> {
+    return this.teamsGetTeams$Response(params).pipe(map((r: StrictHttpResponse<Array<Team>>) => r.body as Array<Team>));
   }
 
   /**
@@ -93,27 +88,29 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsGetTeamsByCommunity$Response(params: {
-
     /**
      * communityCode
      */
     communityCode: string;
   }): Observable<StrictHttpResponse<Array<Team>>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetTeamsByCommunityPath, 'get');
     if (params) {
       rb.path('communityCode', params.communityCode, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Team>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<Team>>;
+        })
+      );
   }
 
   /**
@@ -127,13 +124,11 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsGetTeamsByCommunity(params: {
-
     /**
      * communityCode
      */
     communityCode: string;
   }): Observable<Array<Team>> {
-
     return this.teamsGetTeamsByCommunity$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Team>>) => r.body as Array<Team>)
     );
@@ -154,22 +149,24 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetTeamMembers$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<TeamMember>>> {
-
+  teamsGetTeamMembers$Response(params?: {}): Observable<StrictHttpResponse<Array<TeamMember>>> {
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetTeamMembersPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<TeamMember>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<TeamMember>>;
+        })
+      );
   }
 
   /**
@@ -182,9 +179,7 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetTeamMembers(params?: {
-  }): Observable<Array<TeamMember>> {
-
+  teamsGetTeamMembers(params?: {}): Observable<Array<TeamMember>> {
     return this.teamsGetTeamMembers$Response(params).pipe(
       map((r: StrictHttpResponse<Array<TeamMember>>) => r.body as Array<TeamMember>)
     );
@@ -206,27 +201,29 @@ export class TeamsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   teamsCreateTeamMember$Response(params: {
-
     /**
      * team member
      */
-    body: TeamMember
+    body: TeamMember;
   }): Observable<StrictHttpResponse<TeamMemberResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsCreateTeamMemberPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TeamMemberResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<TeamMemberResult>;
+        })
+      );
   }
 
   /**
@@ -240,13 +237,11 @@ export class TeamsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   teamsCreateTeamMember(params: {
-
     /**
      * team member
      */
-    body: TeamMember
+    body: TeamMember;
   }): Observable<TeamMemberResult> {
-
     return this.teamsCreateTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
@@ -268,27 +263,29 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsGetTeamMember$Response(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<StrictHttpResponse<TeamMember>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetTeamMemberPath, 'get');
     if (params) {
       rb.path('memberId', params.memberId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TeamMember>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<TeamMember>;
+        })
+      );
   }
 
   /**
@@ -302,13 +299,11 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsGetTeamMember(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<TeamMember> {
-
     return this.teamsGetTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<TeamMember>) => r.body as TeamMember)
     );
@@ -330,7 +325,6 @@ export class TeamsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   teamsUpdateTeamMember$Response(params: {
-
     /**
      * team member id to update
      */
@@ -339,24 +333,27 @@ export class TeamsService extends BaseService {
     /**
      * team member
      */
-    body: TeamMember
+    body: TeamMember;
   }): Observable<StrictHttpResponse<TeamMemberResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsUpdateTeamMemberPath, 'post');
     if (params) {
       rb.path('memberId', params.memberId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TeamMemberResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<TeamMemberResult>;
+        })
+      );
   }
 
   /**
@@ -370,7 +367,6 @@ export class TeamsService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   teamsUpdateTeamMember(params: {
-
     /**
      * team member id to update
      */
@@ -379,9 +375,8 @@ export class TeamsService extends BaseService {
     /**
      * team member
      */
-    body: TeamMember
+    body: TeamMember;
   }): Observable<TeamMemberResult> {
-
     return this.teamsUpdateTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
@@ -403,27 +398,29 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsDeleteTeamMember$Response(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<StrictHttpResponse<TeamMemberResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsDeleteTeamMemberPath, 'delete');
     if (params) {
       rb.path('memberId', params.memberId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TeamMemberResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<TeamMemberResult>;
+        })
+      );
   }
 
   /**
@@ -437,13 +434,11 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsDeleteTeamMember(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<TeamMemberResult> {
-
     return this.teamsDeleteTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
@@ -465,27 +460,29 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsActivateTeamMember$Response(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<StrictHttpResponse<TeamMemberResult>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsActivateTeamMemberPath, 'post');
     if (params) {
       rb.path('memberId', params.memberId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<TeamMemberResult>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<TeamMemberResult>;
+        })
+      );
   }
 
   /**
@@ -499,13 +496,11 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsActivateTeamMember(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<TeamMemberResult> {
-
     return this.teamsActivateTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
@@ -527,27 +522,29 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsDeactivateTeamMember$Response(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsDeactivateTeamMemberPath, 'post');
     if (params) {
       rb.path('memberId', params.memberId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -561,16 +558,12 @@ export class TeamsService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamsDeactivateTeamMember(params: {
-
     /**
      * team member id
      */
     memberId: string;
   }): Observable<void> {
-
-    return this.teamsDeactivateTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+    return this.teamsDeactivateTeamMember$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -588,22 +581,27 @@ export class TeamsService extends BaseService {
     userName?: string;
     memberId?: string;
   }): Observable<StrictHttpResponse<boolean>> {
-
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsIsUserNameExistsPath, 'get');
     if (params) {
       rb.query('userName', params.userName, {});
       rb.query('memberId', params.memberId, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({
+            body: String((r as HttpResponse<any>).body) === 'true'
+          }) as StrictHttpResponse<boolean>;
+        })
+      );
   }
 
   /**
@@ -612,14 +610,8 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsIsUserNameExists(params?: {
-    userName?: string;
-    memberId?: string;
-  }): Observable<boolean> {
-
-    return this.teamsIsUserNameExists$Response(params).pipe(
-      map((r: StrictHttpResponse<boolean>) => r.body as boolean)
-    );
+  teamsIsUserNameExists(params?: { userName?: string; memberId?: string }): Observable<boolean> {
+    return this.teamsIsUserNameExists$Response(params).pipe(map((r: StrictHttpResponse<boolean>) => r.body as boolean));
   }
 
   /**
@@ -637,22 +629,24 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetMemberRoles$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<MemberRoleDescription>>> {
-
+  teamsGetMemberRoles$Response(params?: {}): Observable<StrictHttpResponse<Array<MemberRoleDescription>>> {
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetMemberRolesPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<MemberRoleDescription>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<MemberRoleDescription>>;
+        })
+      );
   }
 
   /**
@@ -665,9 +659,7 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetMemberRoles(params?: {
-  }): Observable<Array<MemberRoleDescription>> {
-
+  teamsGetMemberRoles(params?: {}): Observable<Array<MemberRoleDescription>> {
     return this.teamsGetMemberRoles$Response(params).pipe(
       map((r: StrictHttpResponse<Array<MemberRoleDescription>>) => r.body as Array<MemberRoleDescription>)
     );
@@ -688,22 +680,24 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetMemberLabels$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<MemberLabelDescription>>> {
-
+  teamsGetMemberLabels$Response(params?: {}): Observable<StrictHttpResponse<Array<MemberLabelDescription>>> {
     const rb = new RequestBuilder(this.rootUrl, TeamsService.TeamsGetMemberLabelsPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<MemberLabelDescription>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<MemberLabelDescription>>;
+        })
+      );
   }
 
   /**
@@ -716,12 +710,9 @@ export class TeamsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  teamsGetMemberLabels(params?: {
-  }): Observable<Array<MemberLabelDescription>> {
-
+  teamsGetMemberLabels(params?: {}): Observable<Array<MemberLabelDescription>> {
     return this.teamsGetMemberLabels$Response(params).pipe(
       map((r: StrictHttpResponse<Array<MemberLabelDescription>>) => r.body as Array<MemberLabelDescription>)
     );
   }
-
 }

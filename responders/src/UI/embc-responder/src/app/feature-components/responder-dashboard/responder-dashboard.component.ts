@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  LoggedInUserProfile,
-  UserService
-} from 'src/app/core/services/user.service';
+import { LoggedInUserProfile, UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-responder-dashboard',
@@ -15,7 +12,10 @@ export class ResponderDashboardComponent implements OnInit {
     return this.userService.currentProfile;
   }
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 

@@ -75,7 +75,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     }
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
-    if (this.stepEssFileService.haveHouseHoldMembers === 'Yes' && this.stepEssFileService.householdMembers.length === 1) {
+    if (
+      this.stepEssFileService.haveHouseHoldMembers === 'Yes' &&
+      this.stepEssFileService.householdMembers.length === 1
+    ) {
       this.showMemberForm = true;
       this.householdForm.get('addMemberFormIndicator').setValue(true);
       this.householdForm.get('addMemberIndicator').setValue(true);
@@ -301,7 +304,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.stepEssFileService?.tempHouseholdMember?.firstName ?? '',
         [
           this.customValidation
-            .conditionalValidation(() => this.householdForm.get('addMemberFormIndicator').value === true, this.customValidation.whitespaceValidator())
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberFormIndicator').value === true,
+              this.customValidation.whitespaceValidator()
+            )
             .bind(this.customValidation)
         ]
       ],
@@ -309,20 +315,35 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.stepEssFileService?.tempHouseholdMember?.lastName ?? '',
         [
           this.customValidation
-            .conditionalValidation(() => this.householdForm.get('addMemberFormIndicator').value === true, this.customValidation.whitespaceValidator())
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberFormIndicator').value === true,
+              this.customValidation.whitespaceValidator()
+            )
             .bind(this.customValidation)
         ]
       ],
       dateOfBirth: [
         this.stepEssFileService?.tempHouseholdMember?.dateOfBirth ?? '',
         [
-          this.customValidation.conditionalValidation(() => this.householdForm.get('addMemberFormIndicator').value === true, Validators.required).bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberFormIndicator').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation),
           this.customValidation.dateOfBirthValidator()
         ]
       ],
       gender: [
         this.stepEssFileService?.tempHouseholdMember?.gender ?? '',
-        [this.customValidation.conditionalValidation(() => this.householdForm.get('addMemberFormIndicator').value === true, Validators.required).bind(this.customValidation)]
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberFormIndicator').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
       ],
       initials: [this.stepEssFileService?.tempHouseholdMember?.initials ?? ''],
       sameLastName: [this.stepEssFileService?.tempHouseholdMember?.sameLastName ?? ''],
@@ -351,7 +372,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.validHouseholdMemebersIndicator.emit(false);
       }
     } else if (this.essFileNumber) {
-      if (this.householdForm.valid && this.householdForm.get('addMemberIndicator').value === false && this.selection.selected.length >= 1) {
+      if (
+        this.householdForm.valid &&
+        this.householdForm.get('addMemberIndicator').value === false &&
+        this.selection.selected.length >= 1
+      ) {
         this.validHouseholdMemebersIndicator.emit(true);
       } else if (this.stepEssFileService.checkForPartialUpdates(this.householdForm)) {
         this.validHouseholdMemebersIndicator.emit(false);
@@ -399,7 +424,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   private saveEditedMember(): void {
-    const similarMember = this.householdService.householdMemberExists(this.householdForm.get('houseHoldMember').value, this.members);
+    const similarMember = this.householdService.householdMemberExists(
+      this.householdForm.get('houseHoldMember').value,
+      this.members
+    );
 
     if (similarMember === this.members[this.editIndex] || similarMember === undefined) {
       this.members[this.editIndex] = {

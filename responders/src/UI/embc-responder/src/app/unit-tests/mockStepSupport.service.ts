@@ -53,10 +53,7 @@ export class MockStepSupportsService extends StepSupportsService {
     includedHouseholdMembers: ['76d303d5-7466-47ad-9df8-0c117fa56980']
   };
 
-  getNeedsAssessmentInfo(
-    fileId: string,
-    needsAssessmentId: string
-  ): Observable<EvacuationFileModel> {
+  getNeedsAssessmentInfo(fileId: string, needsAssessmentId: string): Observable<EvacuationFileModel> {
     return new BehaviorSubject<EvacuationFileModel>(this.evacuationFileValue);
   }
 }

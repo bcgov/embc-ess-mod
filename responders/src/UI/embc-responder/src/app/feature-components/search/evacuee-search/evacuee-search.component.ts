@@ -51,8 +51,7 @@ export class EvacueeSearchComponent implements OnInit {
           result.startDate,
           result.endDate
         );
-        this.evacueeSessionService.isPaperBased =
-          result.status === 'Expired' ? true : false;
+        this.evacueeSessionService.isPaperBased = result.status === 'Expired' ? true : false;
       },
       error: (error) => {
         this.isLoading = !this.isLoading;

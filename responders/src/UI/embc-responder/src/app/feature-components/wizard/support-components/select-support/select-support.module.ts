@@ -8,11 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SelectSupportComponent],
-  imports: [
-    CommonModule,
-    SelectSupportRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule
-  ]
+  imports: [CommonModule, SelectSupportRoutingModule, MaterialModule, ReactiveFormsModule]
 })
 export class SelectSupportModule {}

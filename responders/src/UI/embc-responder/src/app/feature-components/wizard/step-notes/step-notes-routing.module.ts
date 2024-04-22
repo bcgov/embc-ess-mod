@@ -15,10 +15,7 @@ const routes: Routes = [
 
       {
         path: 'notes',
-        loadChildren: () =>
-          import('../notes-components/notes/notes.module').then(
-            (m) => m.NotesModule
-          )
+        loadChildren: () => import('../notes-components/notes/notes.module').then((m) => m.NotesModule)
       }
     ]
   }

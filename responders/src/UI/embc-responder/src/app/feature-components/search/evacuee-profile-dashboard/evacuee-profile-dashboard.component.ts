@@ -31,8 +31,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.evacueeProfileId =
-      this.evacueeProfileDashboardService.fetchProfileId();
+    this.evacueeProfileId = this.evacueeProfileDashboardService.fetchProfileId();
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
 
@@ -74,8 +73,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         if (!value) {
           this.isLoading = false;
           this.evacueeProfileDashboardService.openEssFileExistsDialog(
-            this.evacueeSearchService?.evacueeSearchContext
-              ?.evacueeSearchParameters?.paperFileNumber
+            this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
           );
         }
       })
@@ -110,23 +108,17 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         next: (emailId) => {
           if (emailId !== 'close') {
             this.emailLoader = !this.emailLoader;
-            this.evacueeProfileDashboardService
-              .inviteByEmail(emailId, this.evacueeProfile.id)
-              .subscribe({
-                next: (value) => {
-                  this.emailLoader = !this.emailLoader;
-                  this.emailSuccessMessage =
-                    'Email sent successfully to ' + emailId;
-                },
-                error: (error) => {
-                  this.emailLoader = !this.emailLoader;
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.bcscInviteError
-                  );
-                }
-              });
+            this.evacueeProfileDashboardService.inviteByEmail(emailId, this.evacueeProfile.id).subscribe({
+              next: (value) => {
+                this.emailLoader = !this.emailLoader;
+                this.emailSuccessMessage = 'Email sent successfully to ' + emailId;
+              },
+              error: (error) => {
+                this.emailLoader = !this.emailLoader;
+                this.alertService.clearAlert();
+                this.alertService.setAlert('danger', globalConst.bcscInviteError);
+              }
+            });
           }
         }
       });
@@ -137,25 +129,18 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    */
   private verifyProfile(): void {
     this.isLoading = !this.isLoading;
-    this.evacueeProfileService
-      .setVerifiedStatus(this.evacueeProfileId, true)
-      .subscribe({
-        next: (evacueeProfile) => {
-          this.evacueeProfile = evacueeProfile;
-          this.isLoading = !this.isLoading;
-          this.evacueeProfileDashboardService.openSuccessModal(
-            globalConst.successfulVerification
-          );
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.verifyRegistrantProfileError
-          );
-        }
-      });
+    this.evacueeProfileService.setVerifiedStatus(this.evacueeProfileId, true).subscribe({
+      next: (evacueeProfile) => {
+        this.evacueeProfile = evacueeProfile;
+        this.isLoading = !this.isLoading;
+        this.evacueeProfileDashboardService.openSuccessModal(globalConst.successfulVerification);
+      },
+      error: (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.verifyRegistrantProfileError);
+      }
+    });
   }
 
   /**
@@ -169,13 +154,10 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       ?.then((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
         if (
-          this.optionInjectionService.instance.optionType !==
-            SelectedPathType.paperBased &&
+          this.optionInjectionService.instance.optionType !== SelectedPathType.paperBased &&
           !this.evacueeProfile?.securityQuestions?.length
         ) {
-          this.evacueeProfileDashboardService.openIncompleteProfileDialog(
-            globalConst.incompleteProfileMessage
-          );
+          this.evacueeProfileDashboardService.openIncompleteProfileDialog(globalConst.incompleteProfileMessage);
         }
       })
       .catch((error) => {

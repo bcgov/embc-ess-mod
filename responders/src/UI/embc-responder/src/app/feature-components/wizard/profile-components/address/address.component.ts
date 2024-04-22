@@ -1,19 +1,10 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import {
-  Country,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Country, LocationsService } from 'src/app/core/services/locations.service';
 import { AddressService } from './address.service';
 
 @Component({
@@ -41,43 +32,23 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.primaryAddressForm = this.addressService.createForm();
     this.countries = this.locationService.getActiveCountriesList();
 
-    this.filteredOptions = this.addressService.filterPrimaryCountry(
-      this.primaryAddressForm,
-      this.countries
-    );
-    this.mailingFilteredOptions = this.addressService.filterMailingCountry(
-      this.primaryAddressForm,
-      this.countries
-    );
-    this.primaryAddressForm
-      .get('address.country')
-      .valueChanges.subscribe((value) => {
-        this.primaryAddressForm
-          .get('address.stateProvince')
-          .updateValueAndValidity();
-      });
+    this.filteredOptions = this.addressService.filterPrimaryCountry(this.primaryAddressForm, this.countries);
+    this.mailingFilteredOptions = this.addressService.filterMailingCountry(this.primaryAddressForm, this.countries);
+    this.primaryAddressForm.get('address.country').valueChanges.subscribe((value) => {
+      this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
+    });
 
-    this.primaryAddressForm
-      .get('mailingAddress.country')
-      .valueChanges.subscribe((value) => {
-        this.primaryAddressForm
-          .get('mailingAddress.stateProvince')
-          .updateValueAndValidity();
-      });
+    this.primaryAddressForm.get('mailingAddress.country').valueChanges.subscribe((value) => {
+      this.primaryAddressForm.get('mailingAddress.stateProvince').updateValueAndValidity();
+    });
 
-    this.primaryAddressForm
-      .get('isBcAddress')
-      .valueChanges.subscribe((value) => {
-        this.updateOnVisibility();
-      });
+    this.primaryAddressForm.get('isBcAddress').valueChanges.subscribe((value) => {
+      this.updateOnVisibility();
+    });
 
-    this.primaryAddressForm
-      .get('isNewMailingAddress')
-      .valueChanges.subscribe((value) => {
-        this.primaryAddressForm
-          .get('isBcMailingAddress')
-          .updateValueAndValidity();
-      });
+    this.primaryAddressForm.get('isNewMailingAddress').valueChanges.subscribe((value) => {
+      this.primaryAddressForm.get('isBcMailingAddress').updateValueAndValidity();
+    });
 
     this.primaryAddressForm.get('address').valueChanges.subscribe((value) => {
       if (this.primaryAddressForm.get('isNewMailingAddress').value === 'Yes') {
@@ -86,9 +57,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
       }
     });
 
-    this.tabUpdateSubscription = this.addressService.updateTabStatus(
-      this.primaryAddressForm
-    );
+    this.tabUpdateSubscription = this.addressService.updateTabStatus(this.primaryAddressForm);
   }
 
   ngAfterViewChecked(): void {
@@ -138,9 +107,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event MatAutocompleteSelectedEvent
    */
   public setCountryConfig(event: MatAutocompleteSelectedEvent): void {
-    this.primaryAddressForm = this.addressService.clearPrimaryAddressFields(
-      this.primaryAddressForm
-    );
+    this.primaryAddressForm = this.addressService.clearPrimaryAddressFields(this.primaryAddressForm);
     this.updateOnVisibility();
   }
 
@@ -150,9 +117,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event MatAutocompleteSelectedEvent
    */
   public setMailingCountryConfig(event: MatAutocompleteSelectedEvent): void {
-    this.primaryAddressForm = this.addressService.clearMailingAddressFields(
-      this.primaryAddressForm
-    );
+    this.primaryAddressForm = this.addressService.clearMailingAddressFields(this.primaryAddressForm);
     this.updateOnVisibility();
   }
 
@@ -162,11 +127,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event radio change event
    */
   public primaryAddressChange(event: MatRadioChange): void {
-    this.primaryAddressForm =
-      this.addressService.setDefaultPrimaryAddressValues(
-        this.primaryAddressForm,
-        event
-      );
+    this.primaryAddressForm = this.addressService.setDefaultPrimaryAddressValues(this.primaryAddressForm, event);
   }
 
   /**
@@ -175,11 +136,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event radio change event
    */
   public mailingAddressChange(event: MatRadioChange): void {
-    this.primaryAddressForm =
-      this.addressService.setDefaultMailingAddressValues(
-        this.primaryAddressForm,
-        event
-      );
+    this.primaryAddressForm = this.addressService.setDefaultMailingAddressValues(this.primaryAddressForm, event);
   }
 
   /**
@@ -236,9 +193,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Updates the value and validity of the forms
    */
   private updateOnVisibility(): void {
-    this.primaryAddressForm = this.addressService.updateOnVisibility(
-      this.primaryAddressForm
-    );
+    this.primaryAddressForm = this.addressService.updateOnVisibility(this.primaryAddressForm);
     this.cd.detectChanges();
   }
 }

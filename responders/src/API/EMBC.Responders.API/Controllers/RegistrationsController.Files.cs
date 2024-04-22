@@ -367,7 +367,7 @@ namespace EMBC.Responders.API.Controllers
         ShelterAllowance,
 
         [Description("Transportation")]
-        Tranportation,
+        Transportation,
 
         [Description("Food")]
         Food,

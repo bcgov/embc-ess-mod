@@ -26,8 +26,7 @@ export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
     HttpClientModule,
     OAuthModule.forRoot({
       resourceServer: {
-        customUrlValidation: (url) =>
-          url.startsWith('/api') && !url.endsWith('/configuration'),
+        customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/configuration'),
         sendAccessToken: true
       }
     }),

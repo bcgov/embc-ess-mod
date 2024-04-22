@@ -4,9 +4,7 @@
       <p class="step-heading">Step 2 of 3</p>
       <form [formGroup]="newForm">
         <p class="bold">Supplier Address</p>
-        <app-bc-address
-          [addressForm]="supplierAddressFormGroup"
-        ></app-bc-address>
+        <app-bc-address [addressForm]="supplierAddressFormGroup"></app-bc-address>
 
         <ng-container [formGroup]="supplierContactFormGroup">
           <p class="bold">Supplier Contact Person</p>
@@ -15,18 +13,9 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Last Name</mat-label>
-                <input
-                  formControlName="lastName"
-                  maxlength="100"
-                  matInput
-                  placeholder="Last Name"
-                  required
-                />
+                <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
                 <mat-error
-                  *ngIf="
-                    contactFormControl.lastName.invalid &&
-                    contactFormControl.lastName.hasError('whitespaceError')
-                  "
+                  *ngIf="contactFormControl.lastName.invalid && contactFormControl.lastName.hasError('whitespaceError')"
                 >
                   Last Name is required</mat-error
                 >
@@ -38,17 +27,10 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>First Name</mat-label>
-                <input
-                  formControlName="firstName"
-                  maxlength="100"
-                  matInput
-                  placeholder="First Name"
-                  required
-                />
+                <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
                 <mat-error
                   *ngIf="
-                    contactFormControl.firstName.invalid &&
-                    contactFormControl.firstName.hasError('whitespaceError')
+                    contactFormControl.firstName.invalid && contactFormControl.firstName.hasError('whitespaceError')
                   "
                 >
                   First Name is required</mat-error
@@ -68,19 +50,11 @@
                   [textMask]="{ mask: phoneMask, keepCharPositions: true }"
                   required
                 />
-                <mat-error
-                  *ngIf="
-                    contactFormControl.phone.invalid &&
-                    contactFormControl.phone.hasError('required')
-                  "
-                >
+                <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
                   Telephone Number is required</mat-error
                 >
                 <mat-error
-                  *ngIf="
-                    contactFormControl.phone.invalid &&
-                    contactFormControl.phone.hasError('incorrectLength')
-                  "
+                  *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')"
                 >
                   Telephone number must have 10 digits</mat-error
                 >
@@ -92,16 +66,8 @@
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Email Address</mat-label>
-                <input
-                  formControlName="email"
-                  matInput
-                  placeholder="Email Address"
-                />
-                <mat-error
-                  *ngIf="
-                    contactFormControl.email.invalid &&
-                    contactFormControl.email.hasError('email')
-                  "
+                <input formControlName="email" matInput placeholder="Email Address" />
+                <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')"
                   >Invalid email</mat-error
                 >
               </mat-form-field>
@@ -111,19 +77,10 @@
       </form>
       <div class="row">
         <div class="col-md-3">
-          <button class="button-s button-width" mat-button (click)="cancel()">
-            Cancel
-          </button>
+          <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
         </div>
         <div class="col-md-3">
-          <button
-            class="button-p button-width"
-            mat-button
-            [disabled]="!newForm.valid"
-            (click)="next()"
-          >
-            Next
-          </button>
+          <button class="button-p button-width" mat-button [disabled]="!newForm.valid" (click)="next()">Next</button>
         </div>
       </div>
     </mat-card>
@@ -135,8 +92,8 @@
         <span class="tips-heading"><b>Tips: </b>Contact Person</span>
       </div>
       <p class="tips-info">
-        The supplier contact person may be asked for additional information and/
-        or clarification regarding an invoice/ receipt reimbursement submission.
+        The supplier contact person may be asked for additional information and/ or clarification regarding an invoice/
+        receipt reimbursement submission.
       </p>
     </mat-card>
   </div>

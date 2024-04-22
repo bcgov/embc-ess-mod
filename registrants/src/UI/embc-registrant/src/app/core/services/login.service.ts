@@ -20,12 +20,11 @@ export class LoginService {
   public async login(targetUrl: string = undefined): Promise<boolean> {
     return await this.oauthService.tryLoginImplicitFlow().then(() => {
       if (!this.oauthService.hasValidAccessToken()) {
-        if (targetUrl == '/verified-registration') {
+        if (targetUrl === '/verified-registration') {
           this.oauthService.initImplicitFlow(targetUrl);
           this.isLoggedIn$.next(false);
           return Promise.resolve(false);
-        }
-        else {
+        } else {
           this.router.navigateByUrl('/');
           this.isLoggedIn$.next(false);
           return Promise.resolve(false);
@@ -50,9 +49,7 @@ export class LoginService {
   }
 
   public async getUserProfile(): Promise<Profile> {
-    const profile = await lastValueFrom(
-      this.profileService.profileGetProfile()
-    );
+    const profile = await lastValueFrom(this.profileService.profileGetProfile());
     return profile;
   }
   public async tryLogin(): Promise<void> {

@@ -7,11 +7,7 @@ import { DataService } from '../core/services/helper/data.service';
 
 @Injectable({ providedIn: 'root' })
 export class MockPaperOptionService extends PaperOptionService {
-  constructor(
-    router: Router,
-    dataService: DataService,
-    builder: UntypedFormBuilder
-  ) {
+  constructor(router: Router, dataService: DataService, builder: UntypedFormBuilder) {
     super(router, dataService, builder);
   }
 }

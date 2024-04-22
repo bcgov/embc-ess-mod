@@ -56,10 +56,7 @@ export class NotesComponent implements OnInit {
     this.stepNotesService.hideUnhideNotes(note.id, note.isHidden).subscribe({
       next: (notes) => {
         this.showLoader = !this.showLoader;
-        const sortedNotes = notes.sort(
-          (a, b) =>
-            new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
-        );
+        const sortedNotes = notes.sort((a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf());
         this.notesList = sortedNotes;
         this.count = notes.length;
       },
@@ -95,10 +92,7 @@ export class NotesComponent implements OnInit {
     this.stepNotesService.getNotes().subscribe({
       next: (notes) => {
         this.showLoader = !this.showLoader;
-        const note = notes.sort(
-          (a, b) =>
-            new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
-        );
+        const note = notes.sort((a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf());
         this.notesList = note;
         this.count = notes.length;
         this.cd.detectChanges();

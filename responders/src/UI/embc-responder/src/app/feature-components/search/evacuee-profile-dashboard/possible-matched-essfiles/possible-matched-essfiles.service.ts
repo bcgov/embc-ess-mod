@@ -13,15 +13,10 @@ export class PossibleMatchedEssfilesService {
     private evacueeSessionService: EvacueeSessionService
   ) {}
 
-  public setLinkMetaData(
-    fileId: string,
-    householdMemberId: string,
-    evacueeId: string
-  ) {
+  public setLinkMetaData(fileId: string, householdMemberId: string, evacueeId: string) {
     this.setSelectedFile(fileId);
     this.evacueeSessionService.fileLinkFlag = 'Y';
-    this.evacueeSessionService.securityPhraseOpenedFrom =
-      'responder-access/search/evacuee-profile-dashboard';
+    this.evacueeSessionService.securityPhraseOpenedFrom = 'responder-access/search/evacuee-profile-dashboard';
     this.evacueeSessionService.fileLinkMetaData = {
       fileId,
       linkRequest: {
@@ -50,10 +45,8 @@ export class PossibleMatchedEssfilesService {
   ): string {
     for (const member of householdMembers) {
       if (
-        member.firstName.toLocaleLowerCase() ===
-          evacueeProfile.personalDetails.firstName.toLocaleLowerCase() &&
-        member.lastName.toLocaleLowerCase() ===
-          evacueeProfile.personalDetails.lastName.toLocaleLowerCase() &&
+        member.firstName.toLocaleLowerCase() === evacueeProfile.personalDetails.firstName.toLocaleLowerCase() &&
+        member.lastName.toLocaleLowerCase() === evacueeProfile.personalDetails.lastName.toLocaleLowerCase() &&
         member.dateOfBirth === evacueeProfile.personalDetails.dateOfBirth
       ) {
         return member.id;

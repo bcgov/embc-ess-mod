@@ -26,10 +26,6 @@ import { ZeroFileResultComponent } from '../zero-file-result/zero-file-result.co
     CustomPipeModule,
     ReactiveFormsModule
   ],
-  exports: [
-    EssFilesResultsComponent,
-    ProfileResultsComponent,
-    ZeroFileResultComponent
-  ]
+  exports: [EssFilesResultsComponent, ProfileResultsComponent, ZeroFileResultComponent]
 })
 export class EvacueeSearchResultsModule {}

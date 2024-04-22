@@ -3,11 +3,16 @@ import { Router } from '@angular/router';
 import { EvacuationFileStatus } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
+import { DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-evacuation-card',
   templateUrl: './evacuation-card.component.html',
-  styleUrls: ['./evacuation-card.component.scss']
+  styleUrls: ['./evacuation-card.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, MatButtonModule, DatePipe]
 })
 export class EvacuationCardComponent implements OnInit {
   @Input() evacuationFileCard: EvacuationFileModel;
@@ -50,15 +55,9 @@ export class EvacuationCardComponent implements OnInit {
     this.evacuationFileMapping.mapEvacuationFile(this.evacuationFileCard);
 
     if (this.pathName === '/verified-registration/dashboard/current') {
-      this.router.navigate([
-        '/verified-registration/dashboard/current/' +
-          this.evacuationFileCard.fileId
-      ]);
+      this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileCard.fileId]);
     } else {
-      this.router.navigate([
-        '/verified-registration/dashboard/past/' +
-          this.evacuationFileCard.fileId
-      ]);
+      this.router.navigate(['/verified-registration/dashboard/past/' + this.evacuationFileCard.fileId]);
     }
   }
 }

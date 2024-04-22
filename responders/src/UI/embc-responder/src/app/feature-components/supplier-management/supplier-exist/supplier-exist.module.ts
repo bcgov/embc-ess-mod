@@ -8,11 +8,6 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [SupplierExistComponent],
-  imports: [
-    CommonModule,
-    SupplierExistRoutingModule,
-    MaterialModule,
-    CustomPipeModule
-  ]
+  imports: [CommonModule, SupplierExistRoutingModule, MaterialModule, CustomPipeModule]
 })
 export class SupplierExistModule {}

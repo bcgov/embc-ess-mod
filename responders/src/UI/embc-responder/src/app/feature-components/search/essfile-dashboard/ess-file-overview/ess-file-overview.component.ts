@@ -12,6 +12,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 export class EssFileOverviewComponent implements OnInit {
   essFile: EvacuationFileModel;
   animalCount = 0;
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     private router: Router,

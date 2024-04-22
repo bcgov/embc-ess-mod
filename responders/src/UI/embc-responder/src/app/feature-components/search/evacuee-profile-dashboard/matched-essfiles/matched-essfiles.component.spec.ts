@@ -64,12 +64,7 @@ describe('MatchedEssfilesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MatchedEssfilesComponent],
-      imports: [
-        MatDialogModule,
-        RouterTestingModule,
-        HttpClientTestingModule,
-        CustomPipeModule
-      ],
+      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, CustomPipeModule],
       providers: [
         MatchedEssfilesComponent,
         {
@@ -153,8 +148,6 @@ describe('MatchedEssfilesComponent', () => {
     evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
     fixture.detectChanges();
     component.ngOnInit();
-    expect(component.essFiles).toEqual(
-      evacueeProfileService.evacuationFileSummaryValue
-    );
+    expect(component.essFiles).toEqual(evacueeProfileService.evacuationFileSummaryValue);
   });
 });

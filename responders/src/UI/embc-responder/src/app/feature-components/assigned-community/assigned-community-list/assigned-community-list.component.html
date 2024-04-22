@@ -1,10 +1,7 @@
 <mat-card>
   <app-alert></app-alert>
   <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="filter($event)"
-    ></app-search-filter>
+    <app-search-filter [filtersToLoad]="filtersToLoad" (filterEvent)="filter($event)"></app-search-filter>
   </div>
   <div class="row data-margin">
     <div class="col-md-6">
@@ -18,13 +15,7 @@
       </button>
     </div>
     <div class="col-md-6">
-      <button
-        class="button-s add-button"
-        mat-stroked-button
-        (click)="addCommunities()"
-      >
-        Add New Community
-      </button>
+      <button class="button-s add-button" mat-stroked-button (click)="addCommunities()">Add New Community</button>
     </div>
   </div>
   <div class="data-margin">

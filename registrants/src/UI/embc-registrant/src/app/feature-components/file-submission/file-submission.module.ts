@@ -9,14 +9,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
-  declarations: [FileSubmissionComponent],
   imports: [
     CommonModule,
     FileSubmissionRoutingModule,
     MatCardModule,
     MatButtonModule,
     MatDialogModule,
-    CoreModule
+    CoreModule,
+    FileSubmissionComponent
   ]
 })
 export class FileSubmissionModule {}

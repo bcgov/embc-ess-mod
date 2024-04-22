@@ -14,10 +14,7 @@
           </mat-option>
         </mat-select>
         <mat-error
-          *ngIf="
-            referralFormControl?.noOfNights.invalid &&
-            referralFormControl?.noOfNights.hasError('required')
-          "
+          *ngIf="referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')"
         >
           Number of Nights is required</mat-error
         >

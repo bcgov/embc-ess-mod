@@ -1,22 +1,19 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {
-  ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  AbstractControl
-} from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-secret',
   templateUrl: './secret.component.html',
-  styleUrls: ['./secret.component.scss']
+  styleUrls: ['./secret.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule]
 })
 export default class SecretComponent implements OnInit, OnDestroy {
   formBuilder: UntypedFormBuilder;
@@ -33,11 +30,9 @@ export default class SecretComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.secretForm$ = this.formCreationService
-      .getSecretForm()
-      .subscribe((secretForm) => {
-        this.secretForm = secretForm;
-      });
+    this.secretForm$ = this.formCreationService.getSecretForm().subscribe((secretForm) => {
+      this.secretForm = secretForm;
+    });
   }
 
   /**
@@ -51,16 +46,3 @@ export default class SecretComponent implements OnInit, OnDestroy {
     this.secretForm$.unsubscribe();
   }
 }
-
-@NgModule({
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule
-  ],
-  declarations: [SecretComponent]
-})
-class SecretModule {}

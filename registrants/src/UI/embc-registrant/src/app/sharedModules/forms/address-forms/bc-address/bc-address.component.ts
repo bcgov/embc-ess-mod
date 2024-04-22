@@ -1,23 +1,21 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectorRef,
-  AfterViewChecked
-} from '@angular/core';
-import { UntypedFormGroup, AbstractControl } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { UntypedFormGroup, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
-import {
-  Community,
-  LocationService
-} from 'src/app/core/services/location.service';
+import { Community, LocationService } from 'src/app/core/services/location.service';
+import { MatOptionModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AsyncPipe } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-bc-address',
   templateUrl: './bc-address.component.html',
-  styleUrls: ['./bc-address.component.scss']
+  styleUrls: ['./bc-address.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatOptionModule, AsyncPipe]
 })
 export class BcAddressComponent implements OnInit, AfterViewChecked {
   @Input() addressForm: UntypedFormGroup;
@@ -89,9 +87,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.city.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.city.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

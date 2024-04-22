@@ -29,11 +29,7 @@ describe('NotesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [
-        NotesComponent,
-        ListNotesStubComponent,
-        AddNotesStubComponent
-      ],
+      declarations: [NotesComponent, ListNotesStubComponent, AddNotesStubComponent],
       providers: [{ provide: StepNotesService, useClass: MockStepNotesService }]
     }).compileComponents();
   });

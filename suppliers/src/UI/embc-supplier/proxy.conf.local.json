@@ -1,15 +1,14 @@
 {
-    "/api/*": {
-      "target": "http://localhost:5000/",
-      "secure": false,
-      "changeOrigin": true,
-      "logLevel": "debug"
-    },
-    "/version": {
-      "target": "http://localhost:5000/",
-      "secure": false,
-      "changeOrigin": true,
-      "logLevel": "debug"
-    }
+  "/api/*": {
+    "target": "http://localhost:5000/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/version": {
+    "target": "http://localhost:5000/",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
-  
+}

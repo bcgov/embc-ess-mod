@@ -97,8 +97,7 @@ export class ComponentCreationService {
   }
 
   createProfileSteps(): Array<ComponentMetaDataModel> {
-    const componentArr: Array<ComponentMetaDataModel> =
-      new Array<ComponentMetaDataModel>();
+    const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
     for (const comp of this.profileComponents) {
       componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
     }
@@ -106,8 +105,7 @@ export class ComponentCreationService {
   }
 
   createEvacSteps(): Array<ComponentMetaDataModel> {
-    const componentArr: Array<ComponentMetaDataModel> =
-      new Array<ComponentMetaDataModel>();
+    const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
     for (const comp of this.needsAssessmentComponents) {
       componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
     }

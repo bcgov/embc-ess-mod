@@ -21,11 +21,7 @@ import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-s
 import { MockEvacueeSearchResultsService } from 'src/app/unit-tests/mockEvacueeSearchResults.service';
 import { MockEssFileSecurityPhraseService } from 'src/app/unit-tests/mockEssFileSecurityPhrase.service';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
-import {
-  CommunityType,
-  EvacuationFileStatus,
-  HouseholdMemberType
-} from 'src/app/core/api/models';
+import { CommunityType, EvacuationFileStatus, HouseholdMemberType } from 'src/app/core/api/models';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { EssfileDashboardComponent } from '../../essfile-dashboard/essfile-dashboard.component';
@@ -194,9 +190,7 @@ describe('EssFilesResultsComponent', () => {
 
     tick();
     fixture.detectChanges();
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeTruthy();
   }));
@@ -225,9 +219,7 @@ describe('EssFilesResultsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/essfile-dashboard'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/essfile-dashboard']);
     })
   ));
 
@@ -254,9 +246,7 @@ describe('EssFilesResultsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-phrase'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-phrase']);
     })
   ));
 
@@ -283,9 +273,7 @@ describe('EssFilesResultsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/essfile-dashboard'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/essfile-dashboard']);
     })
   ));
 });

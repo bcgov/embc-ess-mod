@@ -54,10 +54,8 @@ export class SuppliersListComponent implements OnInit {
   ngOnInit(): void {
     this.addSupplierService.clearAddedSupplier();
     this.filtersToLoad = this.supplierListDataService.filtersToLoad;
-    this.primarySuppliersColumns =
-      this.supplierListDataService.primarySupplierColumns;
-    this.mutualAidSuppliersColumns =
-      this.supplierListDataService.mutualAidSupplierColumns;
+    this.primarySuppliersColumns = this.supplierListDataService.primarySupplierColumns;
+    this.mutualAidSuppliersColumns = this.supplierListDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService?.currentProfile?.role;
 
     this.getSuppliersLists();
@@ -88,20 +86,16 @@ export class SuppliersListComponent implements OnInit {
    */
   openSupplierDetails($event: SupplierListItem): void {
     this.isLoading = true;
-    this.supplierListDataService
-      .getSupplierDetails($event.id, 'supplier')
-      .then(() => {
-        this.isLoading = false;
-      });
+    this.supplierListDataService.getSupplierDetails($event.id, 'supplier').then(() => {
+      this.isLoading = false;
+    });
   }
 
   openMutualAidDetails($event: SupplierListItem): void {
     this.isLoading = true;
-    this.supplierListDataService
-      .getSupplierDetails($event.id, 'mutualAid')
-      .then(() => {
-        this.isLoading = false;
-      });
+    this.supplierListDataService.getSupplierDetails($event.id, 'mutualAid').then(() => {
+      this.isLoading = false;
+    });
   }
 
   /**
@@ -124,22 +118,17 @@ export class SuppliersListComponent implements OnInit {
           next: (event) => {
             if (event === 'confirm') {
               this.statusLoading = !this.statusLoading;
-              this.supplierServices
-                .activateSuppliersStatus($event.id)
-                .subscribe({
-                  next: (value) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.suppliersList = value;
-                  },
-                  error: (error) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.alertService.clearAlert();
-                    this.alertService.setAlert(
-                      'danger',
-                      globalConst.activateSupplierError
-                    );
-                  }
-                });
+              this.supplierServices.activateSuppliersStatus($event.id).subscribe({
+                next: (value) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.suppliersList = value;
+                },
+                error: (error) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.activateSupplierError);
+                }
+              });
             } else {
               this.cancelPrimarySuppliersListChanges();
             }
@@ -155,10 +144,7 @@ export class SuppliersListComponent implements OnInit {
         error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.activateSupplierError
-          );
+          this.alertService.setAlert('danger', globalConst.activateSupplierError);
         }
       });
     }
@@ -184,22 +170,17 @@ export class SuppliersListComponent implements OnInit {
           next: (event) => {
             if (event === 'confirm') {
               this.statusLoading = !this.statusLoading;
-              this.supplierServices
-                .deactivateSuppliersStatus($event.id)
-                .subscribe({
-                  next: (value) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.suppliersList = value;
-                  },
-                  error: (error) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.alertService.clearAlert();
-                    this.alertService.setAlert(
-                      'danger',
-                      globalConst.deActivateSupplierError
-                    );
-                  }
-                });
+              this.supplierServices.deactivateSuppliersStatus($event.id).subscribe({
+                next: (value) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.suppliersList = value;
+                },
+                error: (error) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.deActivateSupplierError);
+                }
+              });
             } else {
               this.cancelPrimarySuppliersListChanges();
             }
@@ -215,10 +196,7 @@ export class SuppliersListComponent implements OnInit {
         error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.deActivateSupplierError
-          );
+          this.alertService.setAlert('danger', globalConst.deActivateSupplierError);
         }
       });
     }
@@ -228,9 +206,7 @@ export class SuppliersListComponent implements OnInit {
    * Navigates to add team member page
    */
   addSupplier(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/add-supplier'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/add-supplier']);
   }
 
   /**
@@ -270,10 +246,7 @@ export class SuppliersListComponent implements OnInit {
       error: (error) => {
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }
@@ -291,10 +264,7 @@ export class SuppliersListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }

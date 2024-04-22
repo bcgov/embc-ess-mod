@@ -27,99 +27,91 @@ export class LoadEvacueeListService {
     return this.supportCategoryVal.length > 0
       ? this.supportCategoryVal
       : JSON.parse(this.cacheService.get('supportCategory'))
-      ? JSON.parse(this.cacheService.get('supportCategory'))
-      : this.getCategoryList();
+        ? JSON.parse(this.cacheService.get('supportCategory'))
+        : this.getCategoryList();
   }
 
   public getSupportSubCategories() {
     return this.supportSubCategoryVal.length > 0
       ? this.supportSubCategoryVal
       : JSON.parse(this.cacheService.get('supportSubCategory'))
-      ? JSON.parse(this.cacheService.get('supportSubCategory'))
-      : this.getSubCategoryList();
+        ? JSON.parse(this.cacheService.get('supportSubCategory'))
+        : this.getSubCategoryList();
   }
 
   public getSupportStatus() {
     return this.supportStatusVal.length > 0
       ? this.supportStatusVal
       : JSON.parse(this.cacheService.get('supportStatus'))
-      ? JSON.parse(this.cacheService.get('supportStatus'))
-      : this.getSupportStatusList();
+        ? JSON.parse(this.cacheService.get('supportStatus'))
+        : this.getSupportStatusList();
   }
 
   public getSupportMethods() {
     return this.supportMethodVal.length > 0
       ? this.supportMethodVal
       : JSON.parse(this.cacheService.get('supportMethod'))
-      ? JSON.parse(this.cacheService.get('supportMethod'))
-      : this.getSupportMethodList();
+        ? JSON.parse(this.cacheService.get('supportMethod'))
+        : this.getSupportMethodList();
   }
 
   public getVoidReasons() {
     return this.voidReasonVal.length > 0
       ? this.voidReasonVal
       : JSON.parse(this.cacheService.get('voidReason'))
-      ? JSON.parse(this.cacheService.get('voidReason'))
-      : this.getVoidReasonsList();
+        ? JSON.parse(this.cacheService.get('voidReason'))
+        : this.getVoidReasonsList();
   }
 
   public getReprintReasons() {
     return this.reprintReasonVal.length > 0
       ? this.reprintReasonVal
       : JSON.parse(this.cacheService.get('reprintReason'))
-      ? JSON.parse(this.cacheService.get('reprintReason'))
-      : this.getReprintReasonsList();
+        ? JSON.parse(this.cacheService.get('reprintReason'))
+        : this.getReprintReasonsList();
   }
 
   public getCommunityTypes() {
     return this.communityTypeVal.length > 0
       ? this.communityTypeVal
       : JSON.parse(this.cacheService.get('communityType'))
-      ? JSON.parse(this.cacheService.get('communityType'))
-      : this.getCommunityTypesList();
+        ? JSON.parse(this.cacheService.get('communityType'))
+        : this.getCommunityTypesList();
   }
 
   public getIdentifiedNeeds() {
     return this.communityTypeVal.length > 0
       ? this.identifiedNeedVal
       : JSON.parse(this.cacheService.get('identifiedNeeds'))
-      ? JSON.parse(this.cacheService.get('identifiedNeeds'))
-      : this.getIdentifiedNeedsList();
+        ? JSON.parse(this.cacheService.get('identifiedNeeds'))
+        : this.getIdentifiedNeedsList();
   }
 
   public loadStaticEvacueeLists(): Promise<void> {
-    const categories: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportCategory'
-      });
-    const subcategories: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportSubCategory'
-      });
-    const status: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportStatus'
-      });
-    const methods: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportMethod'
-      });
-    const voidReasons: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportVoidReason'
-      });
-    const reprintReasons: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'SupportReprintReason'
-      });
-    const communityTypes: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'CommunityType'
-      });
-      const identifiedNeeds: Observable<Array<Code>> =
-      this.configService.configurationGetCodes({
-        forEnumType: 'IdentifiedNeed'
-      });
+    const categories: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportCategory'
+    });
+    const subcategories: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportSubCategory'
+    });
+    const status: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportStatus'
+    });
+    const methods: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportMethod'
+    });
+    const voidReasons: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportVoidReason'
+    });
+    const reprintReasons: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'SupportReprintReason'
+    });
+    const communityTypes: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'CommunityType'
+    });
+    const identifiedNeeds: Observable<Array<Code>> = this.configService.configurationGetCodes({
+      forEnumType: 'IdentifiedNeed'
+    });
 
     const list$ = forkJoin([
       categories,
@@ -132,9 +124,7 @@ export class LoadEvacueeListService {
       identifiedNeeds
     ]).pipe(
       map((results) => {
-        this.setSupportCategories(
-          results[0].filter((value) => value.description !== '')
-        );
+        this.setSupportCategories(results[0].filter((value) => value.description !== ''));
         this.setSupportSubCategories(results[1]);
         this.setSupportStatus(results[2]);
         this.setSupportMethods(results[3]);
@@ -177,23 +167,16 @@ export class LoadEvacueeListService {
 
   private getCategoryList(): Code[] {
     let categoryList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe({
-        next: (categories: Code[]) => {
-          categoryList = categories;
-          this.setSupportCategories(
-            categories.filter((value) => value.description !== '')
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportCategory' }).subscribe({
+      next: (categories: Code[]) => {
+        categoryList = categories;
+        this.setSupportCategories(categories.filter((value) => value.description !== ''));
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportCategoryListError);
+      }
+    });
 
     return categoryList;
   }
@@ -205,21 +188,16 @@ export class LoadEvacueeListService {
 
   private getSubCategoryList(): Code[] {
     let subCategoryList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-      .subscribe({
-        next: (subCategories: Code[]) => {
-          subCategoryList = subCategories;
-          this.setSupportSubCategories(subCategories);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportSubCategory' }).subscribe({
+      next: (subCategories: Code[]) => {
+        subCategoryList = subCategories;
+        this.setSupportSubCategories(subCategories);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportCategoryListError);
+      }
+    });
     return subCategoryList;
   }
 
@@ -230,21 +208,16 @@ export class LoadEvacueeListService {
 
   private getSupportStatusList(): Code[] {
     let supportStatusList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportStatus' })
-      .subscribe({
-        next: (supStatus: Code[]) => {
-          supportStatusList = supStatus;
-          this.setSupportStatus(supStatus);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportStatusListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportStatus' }).subscribe({
+      next: (supStatus: Code[]) => {
+        supportStatusList = supStatus;
+        this.setSupportStatus(supStatus);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportStatusListError);
+      }
+    });
     return supportStatusList;
   }
 
@@ -255,21 +228,16 @@ export class LoadEvacueeListService {
 
   private getSupportMethodList(): Code[] {
     let methodSupportList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportMethod' })
-      .subscribe({
-        next: (methods: Code[]) => {
-          methodSupportList = methods;
-          this.setSupportMethods(methods);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportMethodListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportMethod' }).subscribe({
+      next: (methods: Code[]) => {
+        methodSupportList = methods;
+        this.setSupportMethods(methods);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportMethodListError);
+      }
+    });
     return methodSupportList;
   }
 
@@ -280,21 +248,16 @@ export class LoadEvacueeListService {
 
   private getVoidReasonsList(): Code[] {
     let supportVoidReasonsList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportVoidReason' })
-      .subscribe({
-        next: (voidReasons: Code[]) => {
-          supportVoidReasonsList = voidReasons;
-          this.setVoidReasons(voidReasons);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportVoidReasonsError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportVoidReason' }).subscribe({
+      next: (voidReasons: Code[]) => {
+        supportVoidReasonsList = voidReasons;
+        this.setVoidReasons(voidReasons);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportVoidReasonsError);
+      }
+    });
     return supportVoidReasonsList;
   }
 
@@ -305,21 +268,16 @@ export class LoadEvacueeListService {
 
   private getReprintReasonsList(): Code[] {
     let supportReprintReasonsList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportReprintReason' })
-      .subscribe({
-        next: (reprintReasons: Code[]) => {
-          supportReprintReasonsList = reprintReasons;
-          this.setReprintReasons(reprintReasons);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportReprintReasonsError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportReprintReason' }).subscribe({
+      next: (reprintReasons: Code[]) => {
+        supportReprintReasonsList = reprintReasons;
+        this.setReprintReasons(reprintReasons);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportReprintReasonsError);
+      }
+    });
     return supportReprintReasonsList;
   }
 
@@ -330,21 +288,16 @@ export class LoadEvacueeListService {
 
   private getCommunityTypesList(): Code[] {
     let communityTypesList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'CommunityType' })
-      .subscribe({
-        next: (communityTypes: Code[]) => {
-          communityTypesList = communityTypes;
-          this.setCommunityTypes(communityTypes);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.communityTypesError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'CommunityType' }).subscribe({
+      next: (communityTypes: Code[]) => {
+        communityTypesList = communityTypes;
+        this.setCommunityTypes(communityTypes);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.communityTypesError);
+      }
+    });
     return communityTypesList;
   }
 
@@ -355,21 +308,16 @@ export class LoadEvacueeListService {
 
   private getIdentifiedNeedsList(): Code[] {
     let identifiedNeedsList: Code[] = [];
-    this.configService
-      .configurationGetCodes({ forEnumType: 'IdentifiedNeed' })
-      .subscribe({
-        next: (identifiedNeeds: Code[]) => {
-          identifiedNeedsList = identifiedNeeds;
-          this.setIdentifiedNeeds(identifiedNeeds);
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.identifiedNeedsError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'IdentifiedNeed' }).subscribe({
+      next: (identifiedNeeds: Code[]) => {
+        identifiedNeedsList = identifiedNeeds;
+        this.setIdentifiedNeeds(identifiedNeeds);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.identifiedNeedsError);
+      }
+    });
     return identifiedNeedsList;
   }
 

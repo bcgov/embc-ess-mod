@@ -12,9 +12,7 @@ export class NonVerifiedRegistrationService {
     private registrationMapping: NonVerifiedRegistrationMappingService
   ) {}
 
-  public submitRegistration(
-    captchaResponse: CaptchaResponse
-  ): Observable<RegistrationResult> {
+  public submitRegistration(captchaResponse: CaptchaResponse): Observable<RegistrationResult> {
     return this.evacuationsService.evacuationsCreate({
       body: this.registrationMapping.mapAnonymousRegistration(captchaResponse)
     });

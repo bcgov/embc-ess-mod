@@ -1,41 +1,44 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AbstractControl, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import * as globalConst from '../../../core/services/globalConstants';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { IMaskDirective } from 'angular-imask';
 
 @Component({
   selector: 'app-person-detail-form',
   templateUrl: './person-detail-form.component.html',
-  styleUrls: ['./person-detail-form.component.scss']
+  styleUrls: ['./person-detail-form.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatOptionModule,
+    IMaskDirective
+  ]
 })
 export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: UntypedFormGroup;
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   sameLastNameOption: any;
-  readonly dateMask = [
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    '/',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly dateMask = globalConst.DateMask;
   readOnlyInput = false;
 
   constructor(private formCreationService: FormCreationService) {}
 
   ngOnInit(): void {
-    this.formCreationService
-      .getPersonalDetailsForm()
-      .subscribe((personalDetails) => {
-        this.primaryApplicantLastName = personalDetails.get('lastName').value;
-      });
+    this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {
+      this.primaryApplicantLastName = personalDetails.get('lastName').value;
+    });
     this.sameLastNameEditForm();
   }
 
@@ -48,9 +51,7 @@ export class PersonDetailFormComponent implements OnInit {
 
   sameLastNameEvent(event: MatCheckboxChange): void {
     if (event.checked) {
-      this.personalDetailsForm
-        .get('lastName')
-        .setValue(this.primaryApplicantLastName);
+      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
       this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');

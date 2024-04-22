@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
@@ -34,8 +26,8 @@ export class SearchFilterComponent implements OnInit {
         select.value === undefined
           ? ''
           : select.value.description !== undefined
-          ? select.value.description
-          : select.value
+            ? select.value.description
+            : select.value
       );
     });
     this.filterEvent.emit({ type: 'array', value: filterArray.join(',') });

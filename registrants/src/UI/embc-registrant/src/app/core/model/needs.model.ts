@@ -41,18 +41,50 @@ export class HouseholdMembersForm {
   householdMembers = new UntypedFormControl([]);
   addHouseholdMemberIndicator = new UntypedFormControl(false);
 
-  constructor(householdMembers: HouseholdMembers, customValidator: CustomValidationService, builder: UntypedFormBuilder) {
+  constructor(
+    householdMembers: HouseholdMembers,
+    customValidator: CustomValidationService,
+    builder: UntypedFormBuilder
+  ) {
     this.householdMember = builder.group({
-      firstName: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
-      lastName: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
+      firstName: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator)
+        ]
+      ],
+      lastName: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator)
+        ]
+      ],
       sameLastNameCheck: [''],
       initials: [''],
-      gender: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
+      gender: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator)
+        ]
+      ],
       dateOfBirth: [
         '',
         [
-          customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator),
-          customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.dateOfBirthValidator().bind(customValidator)).bind(customValidator)
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(
+              () => this.addHouseholdMemberIndicator.value,
+              customValidator.dateOfBirthValidator().bind(customValidator)
+            )
+            .bind(customValidator)
         ]
       ],
       isPrimaryRegistrant: ['']
@@ -77,11 +109,20 @@ export class PetForm {
       quantity: [
         '',
         [
-          customValidator.conditionalValidation(() => this.addPetIndicator.value, Validators.required).bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
+            .bind(customValidator),
           customValidator.quantityPetsValidator().bind(customValidator)
         ]
       ],
-      type: ['', [customValidator.conditionalValidation(() => this.addPetIndicator.value, Validators.required).bind(customValidator)]]
+      type: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
+            .bind(customValidator)
+        ]
+      ]
     });
   }
 }
@@ -94,20 +135,26 @@ export class IdentifyNeedsForm {
   requiresClothing = new UntypedFormControl();
   requiresFood = new UntypedFormControl();
   requiresIncidentals = new UntypedFormControl();
-  requiresShelterType = new UntypedFormControl(null, [this.customValidator.conditionalValidation(() => this.requiresShelter.value, Validators.required)]);
+  requiresShelterType = new UntypedFormControl(null);
   requiresShelter = new UntypedFormControl();
   requiresNothing = new UntypedFormControl();
 
-  constructor(identifyNeeds: IdentifyNeeds, private customValidator: CustomValidationService) {
+  constructor(identifyNeeds: IdentifyNeeds, customValidator: CustomValidationService) {
     this.requiresClothing.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Clothing));
     this.requiresFood.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Food));
     this.requiresIncidentals.setValue(identifyNeeds.needs.includes(IdentifiedNeed.Incidentals));
+    this.requiresShelterType.addValidators(
+      customValidator.conditionalValidation(() => this.requiresShelter.value, Validators.required)
+    );
     if (identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral)) {
       this.requiresShelterType.setValue('shelterReferral');
     } else if (identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance)) {
       this.requiresShelterType.setValue('shelterAllowance');
     }
-    this.requiresShelter.setValue(identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral) || identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance));
+    this.requiresShelter.setValue(
+      identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral) ||
+        identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance)
+    );
     this.requiresNothing.valueChanges.subscribe((checked) => {
       if (checked) {
         this.disableNeeds();

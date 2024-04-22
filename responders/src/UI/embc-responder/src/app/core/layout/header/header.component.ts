@@ -13,9 +13,7 @@ export class HeaderComponent implements OnInit {
     return this.userService.currentProfile;
   }
   public get signedInTask(): string {
-    return this.profile.taskNumber
-      ? `Task # ${this.profile.taskNumber}`
-      : `Not signed in to a task #`;
+    return this.profile.taskNumber ? `Task # ${this.profile.taskNumber}` : `Not signed in to a task #`;
   }
 
   public get taskStatus(): string {
@@ -30,10 +28,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public get displayName(): string {
-    return [
-      this.profile.firstName,
-      this.profile.lastName?.charAt(0).toUpperCase()
-    ].join(' ');
+    return [this.profile.firstName, this.profile.lastName?.charAt(0).toUpperCase()].join(' ');
   }
 
   constructor(

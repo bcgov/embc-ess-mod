@@ -1,19 +1,13 @@
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-  waitForAsync
-} from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { CollectionNoticeComponent } from './collection-notice.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
 import { CoreModule } from '../../core/core.module';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('CollectionNoticeComponent', () => {
   let component: CollectionNoticeComponent;
@@ -22,16 +16,15 @@ describe('CollectionNoticeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CollectionNoticeComponent],
       imports: [
-        RouterTestingModule.withRoutes([]),
         ReactiveFormsModule,
         MatDialogModule,
         MatCheckboxModule,
         BrowserAnimationsModule,
-        CoreModule
+        CoreModule,
+        CollectionNoticeComponent
       ],
-      providers: [UntypedFormBuilder]
+      providers: [UntypedFormBuilder, provideRouter([])]
     }).compileComponents();
   }));
 

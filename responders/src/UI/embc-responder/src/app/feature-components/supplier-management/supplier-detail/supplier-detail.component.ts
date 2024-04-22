@@ -7,20 +7,12 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 import { MemberRole, MutualAid, Team } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SupplierDetailService } from './supplier-detail.service';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
@@ -69,17 +61,14 @@ export class SupplierDetailComponent implements OnInit {
           this.detailsType = params.type;
         }
       }
-      this.selectedSupplier =
-        this.supplierListDataService.getSelectedSupplier();
+      this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
     }
   }
 
   ngOnInit(): void {
     // if selectedSupplier is not defined, go back to the main suppliers list page
     if (this.selectedSupplier === undefined) {
-      this.router.navigate([
-        '/responder-access/supplier-management/suppliers-list'
-      ]);
+      this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
     }
 
     // sets the current user's role to check access
@@ -89,32 +78,24 @@ export class SupplierDetailComponent implements OnInit {
     this.createSearchMutualAidForm();
 
     // In case the selected supplier has associated mutual Aid Teams, the corresponding table is filled up with this information.
-    this.mutualAidDataSource = new MatTableDataSource(
-      this.selectedSupplier?.mutualAids
-    );
+    this.mutualAidDataSource = new MatTableDataSource(this.selectedSupplier?.mutualAids);
 
     // Gets the community List for mutual Aid Search by Community field
     this.city = this.locationService.getActiveCommunityList();
 
     // Filters options as the user inserts characters on the Community field
-    this.communityFilteredOptions = this.searchMutualAidForm
-      .get('community')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => (value ? this.filterComm(value) : this.city.slice()))
-      );
+    this.communityFilteredOptions = this.searchMutualAidForm.get('community').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filterComm(value) : this.city.slice()))
+    );
 
     // Gets the Ess Team names of all existing teams
     this.essTeam = this.supplierListDataService.getNonMutualAidTeams();
 
-    this.essTeamFilteredOptions = this.searchMutualAidForm
-      .get('essTeam')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) =>
-          value ? this.filterEssTeam(value) : this.essTeam.slice()
-        )
-      );
+    this.essTeamFilteredOptions = this.searchMutualAidForm.get('essTeam').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filterEssTeam(value) : this.essTeam.slice()))
+    );
   }
 
   /**
@@ -163,24 +144,18 @@ export class SupplierDetailComponent implements OnInit {
       .subscribe({
         next: (event) => {
           if (event === 'confirm') {
-            this.supplierService
-              .deleteSupplier(this.selectedSupplier.id)
-              .subscribe({
-                next: (value) => {
-                  const stateIndicator = { action: 'delete' };
-                  this.router.navigate(
-                    ['/responder-access/supplier-management/suppliers-list'],
-                    { state: stateIndicator }
-                  );
-                },
-                error: (error) => {
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.deleteSupplierError
-                  );
-                }
-              });
+            this.supplierService.deleteSupplier(this.selectedSupplier.id).subscribe({
+              next: (value) => {
+                const stateIndicator = { action: 'delete' };
+                this.router.navigate(['/responder-access/supplier-management/suppliers-list'], {
+                  state: stateIndicator
+                });
+              },
+              error: (error) => {
+                this.alertService.clearAlert();
+                this.alertService.setAlert('danger', globalConst.deleteSupplierError);
+              }
+            });
           }
         }
       });
@@ -194,9 +169,7 @@ export class SupplierDetailComponent implements OnInit {
       this.editNotAllowedDialog();
     } else {
       this.editSupplierService.editedSupplier = this.selectedSupplier;
-      this.router.navigate([
-        '/responder-access/supplier-management/edit-supplier'
-      ]);
+      this.router.navigate(['/responder-access/supplier-management/edit-supplier']);
     }
   }
 
@@ -216,10 +189,7 @@ export class SupplierDetailComponent implements OnInit {
    * @returns true or false to show the mutual aid section.
    */
   showMutualAid(): boolean {
-    if (
-      this.loggedInRole === MemberRole.Tier4 ||
-      this.loggedInRole === MemberRole.Tier3
-    ) {
+    if (this.loggedInRole === MemberRole.Tier4 || this.loggedInRole === MemberRole.Tier3) {
       if (this.detailsType === 'supplier') {
         return true;
       } else {
@@ -239,8 +209,7 @@ export class SupplierDetailComponent implements OnInit {
     this.searchESSTeamLoader = !this.searchESSTeamLoader;
     this.supplierService.getMutualAidByCommunity(community.code).subscribe({
       next: (results) => {
-        this.essTeamsListResult =
-          this.supplierListDataService.filterEssTeams(results);
+        this.essTeamsListResult = this.supplierListDataService.filterEssTeams(results);
         if (this.essTeamsListResult.length === 0) {
           this.noneResults = true;
         }
@@ -293,10 +262,7 @@ export class SupplierDetailComponent implements OnInit {
         next: (event) => {
           if (event === 'confirm') {
             this.showLoader = !this.showLoader;
-            this.supplierDetailService.rescindMutualAid(
-              this.selectedSupplier.id,
-              mutialAid.givenToTeam.id
-            );
+            this.supplierDetailService.rescindMutualAid(this.selectedSupplier.id, mutialAid.givenToTeam.id);
           }
         }
       });
@@ -321,9 +287,7 @@ export class SupplierDetailComponent implements OnInit {
   private filterComm(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.city.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.city.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 
@@ -335,9 +299,7 @@ export class SupplierDetailComponent implements OnInit {
   private filterEssTeam(value?: string): Team[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.essTeam.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.essTeam.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

@@ -5,14 +5,7 @@ import { OutageDialogComponent } from 'src/app/shared/outage-components/outage-d
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  BehaviorSubject,
-  share,
-  Subject,
-  switchMap,
-  takeUntil,
-  timer
-} from 'rxjs';
+import { BehaviorSubject, share, Subject, switchMap, takeUntil, timer } from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import { Router } from '@angular/router';
@@ -24,17 +17,13 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
   providedIn: 'root'
 })
 export class OutageService {
-  public outageInformation: BehaviorSubject<OutageInformation> =
-    new BehaviorSubject<OutageInformation>(null);
+  public outageInformation: BehaviorSubject<OutageInformation> = new BehaviorSubject<OutageInformation>(null);
 
-  public outageInfoVal$: Observable<OutageInformation> =
-    this.outageInformation.asObservable();
+  public outageInfoVal$: Observable<OutageInformation> = this.outageInformation.asObservable();
 
-  public showOutageBanner: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  public showOutageBanner: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public showOutageBanner$: Observable<boolean> =
-    this.showOutageBanner.asObservable();
+  public showOutageBanner$: Observable<boolean> = this.showOutageBanner.asObservable();
 
   private outageInfoVal: null | OutageInformation;
   private closeBannerbyUserVal = false;
@@ -83,17 +72,11 @@ export class OutageService {
 
   public displayOutageInfoInit(): boolean {
     if (this.outageInfo) {
-      if (
-        this.outageInfo.outageStartDate !== null ||
-        this.outageInfo.outageEndDate !== null
-      ) {
+      if (this.outageInfo.outageStartDate !== null || this.outageInfo.outageEndDate !== null) {
         const now = new Date();
         const outageStart = new Date(this.outageInfo.outageStartDate);
         const outageEnd = new Date(this.outageInfo.outageEndDate);
-        return (
-          moment(outageStart).isSameOrBefore(now) &&
-          moment(outageEnd).isSameOrAfter(now)
-        );
+        return moment(outageStart).isSameOrBefore(now) && moment(outageEnd).isSameOrAfter(now);
       } else {
         return true;
       }
@@ -104,10 +87,7 @@ export class OutageService {
   public initOutageType(): void {
     this.stopPolling.next(true);
 
-    if (
-      this.outageInfo.outageStartDate !== null ||
-      this.outageInfo.outageEndDate !== null
-    ) {
+    if (this.outageInfo.outageStartDate !== null || this.outageInfo.outageEndDate !== null) {
       this.router.navigate(['/outage'], { state: { type: 'planned' } });
     } else {
       this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
@@ -116,17 +96,11 @@ export class OutageService {
 
   public routeOutageInfo(): void {
     if (this.outageInfo) {
-      if (
-        this.outageInfo.outageStartDate !== null ||
-        this.outageInfo.outageEndDate !== null
-      ) {
+      if (this.outageInfo.outageStartDate !== null || this.outageInfo.outageEndDate !== null) {
         const now = new Date();
         const outageStart = new Date(this.outageInfo?.outageStartDate);
         const outageEnd = new Date(this.outageInfo?.outageEndDate);
-        if (
-          moment(outageStart).isBefore(now) &&
-          moment(outageEnd).isAfter(now)
-        ) {
+        if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
           this.stopPolling.next(true);
           this.router.navigate(['/outage'], { state: { type: 'planned' } });
         }
@@ -140,14 +114,8 @@ export class OutageService {
   }
 
   public displayOutageBanner(newOutageInfo: OutageInformation): void {
-    if (
-      newOutageInfo.outageEndDate !== null &&
-      newOutageInfo.outageStartDate !== null
-    ) {
-      if (
-        !this.outageInfoIsEqual(newOutageInfo) ||
-        this.closeBannerbyUser === false
-      ) {
+    if (newOutageInfo.outageEndDate !== null && newOutageInfo.outageStartDate !== null) {
+      if (!this.outageInfoIsEqual(newOutageInfo) || this.closeBannerbyUser === false) {
         this.outageInfo = newOutageInfo;
         const now = new Date();
         const outageStart = new Date(this.outageInfo.outageStartDate);
@@ -165,11 +133,7 @@ export class OutageService {
       const now = moment();
       const outageStart = moment(this.outageInfo.outageStartDate);
       const duration = moment.duration(outageStart.diff(now));
-      if (
-        duration.asMinutes() <= 5 &&
-        Math.round(duration.asMinutes()) >= 4 &&
-        this.outageDialogCounter === 0
-      ) {
+      if (duration.asMinutes() <= 5 && Math.round(duration.asMinutes()) >= 4 && this.outageDialogCounter === 0) {
         this.dialog.open(OutageDialogComponent, {
           data: { message: this.outageInfo, time: 5 },
           maxHeight: '100%',

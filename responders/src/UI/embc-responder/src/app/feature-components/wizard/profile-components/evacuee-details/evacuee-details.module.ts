@@ -9,12 +9,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [EvacueeDetailsComponent],
-  imports: [
-    CommonModule,
-    EvacueeDetailsRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    TextMaskModule
-  ]
+  imports: [CommonModule, EvacueeDetailsRoutingModule, MaterialModule, ReactiveFormsModule, TextMaskModule]
 })
 export class EvacueeDetailsModule {}

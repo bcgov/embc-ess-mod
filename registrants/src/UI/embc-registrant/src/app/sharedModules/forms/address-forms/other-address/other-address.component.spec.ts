@@ -8,7 +8,7 @@ describe('OtherAddressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [OtherAddressComponent]
+      imports: [OtherAddressComponent]
     }).compileComponents();
   }));
 

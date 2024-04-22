@@ -5,11 +5,18 @@ import { FormCreationService } from '../../core/services/formCreation.service';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { UntypedFormGroup } from '@angular/forms';
 import { ShelterType } from 'src/app/core/services/globalConstants';
+import { CustomDate } from '../../core/pipe/customDate.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { CaptchaV2Component } from '../../core/components/captcha-v2/captcha-v2.component';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss']
+  styleUrls: ['./review.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, AsyncPipe, CustomDate]
 })
 export class ReviewComponent implements OnInit {
   @Output() captchaPassed = new EventEmitter<CaptchaResponse>();
@@ -25,7 +32,10 @@ export class ReviewComponent implements OnInit {
   hideCard = false;
   navigationExtras: NavigationExtras;
 
-  constructor(private router: Router, public formCreationService: FormCreationService) {}
+  constructor(
+    private router: Router,
+    public formCreationService: FormCreationService
+  ) {}
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };
@@ -54,6 +64,17 @@ export class ReviewComponent implements OnInit {
     this.captchaPassed.emit($event);
   }
 
+  isNoNeedSelected(form: UntypedFormGroup) {
+    const needsFormValue = form.value as any;
+
+    return [
+      needsFormValue.requiresClothing,
+      needsFormValue.requiresFood,
+      needsFormValue.requiresIncidentals,
+      needsFormValue.requiresShelter
+    ].every((need) => !need);
+  }
+
   public getNeedsIdentifiedCaptions(form: UntypedFormGroup): string[] {
     const needs: string[] = [];
     if (form.controls.requiresClothing?.value) {
@@ -71,7 +92,7 @@ export class ReviewComponent implements OnInit {
       needs.push('Shelter allowance');
     }
 
-    if (form.controls.requiresNothing?.value) {
+    if (form.controls.requiresNothing?.value || this.isNoNeedSelected(form)) {
       needs.push('Household currently does not require assistance.');
     }
 
