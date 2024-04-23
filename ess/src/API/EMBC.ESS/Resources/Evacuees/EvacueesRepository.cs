@@ -88,7 +88,8 @@ namespace EMBC.ESS.Resources.Evacuees
                 {
                     var newAddress = mapper.Map<era_bcscaddress>(cmd.Evacuee.GeocodedHomeAddress);
                     essContext.AddToera_bcscaddresses(newAddress);
-                    essContext.SetLink(newAddress, nameof(era_bcscaddress.era_Registrant), contact);
+                    essContext.SetLink(contact, nameof(contact.era_BCSCAddress), newAddress);
+                    essContext.AddLink(contact, nameof(contact.era_contact_era_bcscaddress_Registrant), newAddress);
                 }
             }
 

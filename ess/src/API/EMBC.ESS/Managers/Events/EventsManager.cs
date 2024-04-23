@@ -122,7 +122,7 @@ namespace EMBC.ESS.Managers.Events
                 ? (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault()
                 : null;
 
-            evacuee.Id = existingEvacuee?.Id;
+            evacuee.Id ??= existingEvacuee?.Id;
             //fill last login for new registrants from registrants portal - need to split this command into separate use cases
             evacuee.LastLogin = evacuee.UserId != null && evacuee.LastLogin == null ? DateTime.UtcNow : null;
 
@@ -131,7 +131,7 @@ namespace EMBC.ESS.Managers.Events
             {
                 var currentAddress = existingEvacuee?.GeocodedHomeAddress?.Address;
                 var currentAddressScore = existingEvacuee?.GeocodedHomeAddress?.Geocode.Accuracy ?? 0;
-                var geocode = await locationService.ResolveGeocode(new Location($"{homeAddress.AddressLine1} {homeAddress.City} {homeAddress.StateProvince}"), ct);
+                var geocode = await locationService.ResolveGeocode(new Location($"{homeAddress.AddressLine1}, {homeAddress.City}, {homeAddress.StateProvince}"), ct);
 
                 //save geocoded address if different than existing addrss or if new
                 if (homeAddress != currentAddress || geocode.Score != currentAddressScore)

@@ -51,7 +51,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
-                //.ForMember(d => d.era_lastlogin, opts => opts.MapFrom(s => s.LastLogin))
+                .ForMember(d => d.era_lastlogin, opts => opts.MapFrom(s => s.LastLogin))
                 ;
 
             CreateMap<contact, Evacuee>()
@@ -110,9 +110,10 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForPath(d => d.Geocode, opts => opts.MapFrom(s => new AddressGeocode
                 {
                     Coordinates = new Coordinates(s.era_longitude.GetValueOrDefault(), s.era_latitude.GetValueOrDefault()),
-                    Accuracy = s.era_geocodescore.GetValueOrDefault()
+                    Accuracy = s.era_geocodescore.GetValueOrDefault(),
+                    GeocodedOn = s.createdon,
+                    ResolvedAddress = s.era_resolvedaddress
                 }))
-                .ForPath(d => d.Geocode.GeocodedOn, opts => opts.MapFrom(s => s.createdon))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .ForMember(d => d.era_address, opts => opts.MapFrom(s => s.Address.AddressLine1))
@@ -121,7 +122,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.Address.StateProvince))
                 .ForMember(d => d.era_longitude, opts => opts.MapFrom(s => s.Geocode.Coordinates == null ? (double?)null : s.Geocode.Coordinates.Longitude))
                 .ForMember(d => d.era_latitude, opts => opts.MapFrom(s => s.Geocode.Coordinates == null ? (double?)null : s.Geocode.Coordinates.Latitude))
-                .ForMember(d => d.era_address, opts => opts.MapFrom(s => s.Address.AddressLine1))
+                .ForMember(d => d.era_geocodescore, opts => opts.MapFrom(s => s.Geocode.Accuracy))
                 .ForMember(d => d.era_resolvedaddress, opts => opts.MapFrom(s => s.Geocode.ResolvedAddress))
 
                 ;
