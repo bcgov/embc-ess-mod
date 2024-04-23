@@ -121,6 +121,7 @@ public record Evacuee
     public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
     public string? UserId { get; set; }
     public GeocodedAddress? GeocodedHomeAddress { get; set; }
+    public DateTimeOffset? LastLogin { get; set; }
 }
 
 public record Address
@@ -158,7 +159,7 @@ public enum InvitationStatus
 
 public record AddressGeocode
 {
-    public int Score { get; set; }
+    public int Accuracy { get; set; }
     public string? ResolvedAddress { get; set; }
     public Coordinates? Coordinates { get; set; }
     public DateTimeOffset? GeocodedOn { get; set; }

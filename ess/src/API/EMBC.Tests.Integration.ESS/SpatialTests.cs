@@ -26,10 +26,10 @@ public class SpatialTests : WebAppTestBase
     {
         score.ShouldBeGreaterThan(60);
         var geocode = (await locationService.ResolveGeocode(new Location(address), CancellationToken.None)).ShouldNotBeNull();
-        geocode.Precision.ShouldBe(score);
+        geocode.Score.ShouldBe(score);
     }
 
-     [Theory]
+    [Theory]
     [InlineData("1949 ROSEALEE LANE WEST KELOWNA BC", "1234")]
     [InlineData("1950 ROSEALEE LANE WEST KELOWNA BC", null)]
     [InlineData("2750 SMITH CREEK RD WEST KELOWNA BC", null)]

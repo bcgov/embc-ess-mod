@@ -51,6 +51,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
+                //.ForMember(d => d.era_lastlogin, opts => opts.MapFrom(s => s.LastLogin))
                 ;
 
             CreateMap<contact, Evacuee>()
@@ -92,6 +93,7 @@ namespace EMBC.ESS.Resources.Evacuees
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
                     : null))
                 .ForMember(d => d.GeocodedHomeAddress, opts => opts.MapFrom(s => s.era_BCSCAddress))
+                .ForMember(d => d.LastLogin, opts => opts.Ignore())
               ;
 
             CreateMap<era_evacueeemailinvite, Invitation>()
@@ -108,7 +110,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForPath(d => d.Geocode, opts => opts.MapFrom(s => new AddressGeocode
                 {
                     Coordinates = new Coordinates(s.era_longitude.GetValueOrDefault(), s.era_latitude.GetValueOrDefault()),
-                    Score = s.era_geocodescore.GetValueOrDefault()
+                    Accuracy = s.era_geocodescore.GetValueOrDefault()
                 }))
                 .ForPath(d => d.Geocode.GeocodedOn, opts => opts.MapFrom(s => s.createdon))
                 .ReverseMap()

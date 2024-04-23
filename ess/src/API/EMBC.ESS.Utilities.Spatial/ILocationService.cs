@@ -7,12 +7,13 @@ namespace EMBC.ESS.Utilities.Spatial
     public interface ILocationService
     {
         Task<Geocode> ResolveGeocode(Location location, CancellationToken ct);
+
         Task<IEnumerable<LocationAttribute>> GetGeocodeAttributes(Coordinates coordinates, CancellationToken ct);
     }
 
     public record Location(string AddressString);
 
-    public record Geocode(Coordinates Coordinates, int Precision, Location ResolvedLocation);
+    public record Geocode(Coordinates Coordinates, int Score, Location ResolvedLocation);
 
     public record Coordinates(double Latitude, double Longitude);
 
