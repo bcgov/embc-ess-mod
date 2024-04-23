@@ -120,7 +120,7 @@ namespace EMBC.ESS.Managers.Events
             var evacuee = mapper.Map<Evacuee>(cmd.Profile);
             var existingEvacuee = evacuee.Id == null && evacuee.UserId != null
                 ? (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault()
-                : null;
+                : (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = evacuee.Id })).Items.SingleOrDefault();
 
             evacuee.Id ??= existingEvacuee?.Id;
             //fill last login for new registrants from registrants portal - need to split this command into separate use cases

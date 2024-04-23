@@ -106,6 +106,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForPath(d => d.Address.AddressLine1, opts => opts.MapFrom(s => s.era_address))
                 .ForPath(d => d.Address.City, opts => opts.MapFrom(s => s.era_locality))
                 .ForPath(d => d.Address.StateProvince, opts => opts.MapFrom(s => s.era_province))
+                .ForPath(d => d.Address.Country, opts => opts.MapFrom(_ => "CA"))
                 .ForPath(d => d.Address.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
                 .ForPath(d => d.Geocode, opts => opts.MapFrom(s => new AddressGeocode
                 {
