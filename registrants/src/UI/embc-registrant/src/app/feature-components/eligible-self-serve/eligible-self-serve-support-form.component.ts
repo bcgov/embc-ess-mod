@@ -69,7 +69,7 @@ interface SupportDraftForm {
     `
   ]
 })
-export class EligibleSelfServeSupportForm implements OnInit {
+export class EligibleSelfServeSupportFormComponent implements OnInit {
   isLinear = false;
   SupportSubCategory = SupportSubCategory;
   supportRequiredDates = [moment(), moment().add(1, 'day'), moment().add(2, 'day')];

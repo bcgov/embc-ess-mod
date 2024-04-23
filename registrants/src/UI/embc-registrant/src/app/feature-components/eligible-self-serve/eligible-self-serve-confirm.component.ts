@@ -12,7 +12,7 @@ import { EligibleSelfServeOptOutDialogComponent } from './eligible-self-serve-op
   imports: [MatCardModule, MatStepperModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class EligibleSelfServeConfirm {
+export class EligibleSelfServeConfirmComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
