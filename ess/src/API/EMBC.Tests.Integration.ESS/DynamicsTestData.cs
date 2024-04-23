@@ -106,7 +106,7 @@ namespace EMBC.Tests.Integration.ESS
 
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
 
-            this.testContact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact(essContext);
+            this.testContact = essContext.contacts.Where(c => c.era_bcservicescardid == this.testPrefix + "-userId").SingleOrDefault() ?? CreateContact(essContext);
 
             this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier(essContext, "A", this.team1);
             this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").SingleOrDefault() ?? CreateSupplier(essContext, "B", this.team1);
