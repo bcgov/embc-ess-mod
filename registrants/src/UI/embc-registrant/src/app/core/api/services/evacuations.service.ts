@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { AnonymousRegistration } from '../models/anonymous-registration';
+import { EligibilityCheck } from '../models/eligibility-check';
 import { EvacuationFile } from '../models/evacuation-file';
 import { RegistrationResult } from '../models/registration-result';
 
@@ -244,6 +245,68 @@ export class EvacuationsService extends BaseService {
   }): Observable<RegistrationResult> {
     return this.evacuationsUpsertEvacuationFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation evacuationsCheckSelfServeEligibility
+   */
+  static readonly EvacuationsCheckSelfServeEligibilityPath = '/api/Evacuations/{evacuationFileId}/eligible';
+
+  /**
+   * Checks if a file is eligible for self-serve supports.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `evacuationsCheckSelfServeEligibility()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  evacuationsCheckSelfServeEligibility$Response(params: {
+    /**
+     * The file id to check
+     */
+    evacuationFileId: string;
+  }): Observable<StrictHttpResponse<EligibilityCheck>> {
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCheckSelfServeEligibilityPath, 'get');
+    if (params) {
+      rb.path('evacuationFileId', params.evacuationFileId, {});
+    }
+
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<EligibilityCheck>;
+        })
+      );
+  }
+
+  /**
+   * Checks if a file is eligible for self-serve supports.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `evacuationsCheckSelfServeEligibility$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  evacuationsCheckSelfServeEligibility(params: {
+    /**
+     * The file id to check
+     */
+    evacuationFileId: string;
+  }): Observable<EligibilityCheck> {
+    return this.evacuationsCheckSelfServeEligibility$Response(params).pipe(
+      map((r: StrictHttpResponse<EligibilityCheck>) => r.body as EligibilityCheck)
     );
   }
 }

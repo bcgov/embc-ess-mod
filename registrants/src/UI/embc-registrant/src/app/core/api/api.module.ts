@@ -7,6 +7,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { ConfigurationService } from './services/configuration.service';
 import { EvacuationsService } from './services/evacuations.service';
 import { ProfileService } from './services/profile.service';
+import { SupportsService } from './services/supports.service';
 
 /**
  * Module that provides all services and configuration.
@@ -15,7 +16,7 @@ import { ProfileService } from './services/profile.service';
   imports: [],
   exports: [],
   declarations: [],
-  providers: [ConfigurationService, EvacuationsService, ProfileService, ApiConfiguration]
+  providers: [ConfigurationService, EvacuationsService, ProfileService, SupportsService, ApiConfiguration]
 })
 export class ApiModule {
   static forRoot(params: ApiConfigurationParams): ModuleWithProviders<ApiModule> {
