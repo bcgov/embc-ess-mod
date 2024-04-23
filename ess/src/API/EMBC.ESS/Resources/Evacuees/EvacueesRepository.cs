@@ -25,13 +25,17 @@ namespace EMBC.ESS.Resources.Evacuees
             this.mapper = mapper;
         }
 
-        public async Task<ManageEvacueeCommandResult> Manage(ManageEvacueeCommand cmd) =>
-            cmd switch
+        public async Task<ManageEvacueeCommandResult> Manage(ManageEvacueeCommand cmd)
+        {
+            var ct = GetCancellationToken();
+            return cmd switch
             {
-                SaveEvacuee command => await Handle(command, GetCancellationToken()),
-                DeleteEvacuee command => await Handle(command, GetCancellationToken()),
+                SaveEvacuee command => await Handle(command, ct),
+                DeleteEvacuee command => await Handle(command, ct),
+
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
+        }
 
         public async Task<EvacueeQueryResult> Query(EvacueeQuery query) => await Handle(query, GetCancellationToken());
 
@@ -77,6 +81,18 @@ namespace EMBC.ESS.Resources.Evacuees
             essContext.SetLink(contact, nameof(contact.era_MailingProvinceState), essContext.LookupStateProvinceByCode(cmd.Evacuee.MailingAddress.StateProvince));
             essContext.SetLink(contact, nameof(contact.era_MailingCity), essContext.LookupJurisdictionByCode(cmd.Evacuee.MailingAddress.Community));
 
+            if (cmd.Evacuee.GeocodedHomeAddress != null)
+            {
+                var currentAddress = mapper.Map<GeocodedAddress>(contact.era_BCSCAddress);
+                if (currentAddress != cmd.Evacuee.GeocodedHomeAddress)
+                {
+                    var newAddress = mapper.Map<era_bcscaddress>(cmd.Evacuee.GeocodedHomeAddress);
+                    essContext.AddToera_bcscaddresses(newAddress);
+                    essContext.SetLink(contact, nameof(contact.era_BCSCAddress), newAddress);
+                    essContext.AddLink(contact, nameof(contact.era_contact_era_bcscaddress_Registrant), newAddress);
+                }
+            }
+
             await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
@@ -111,6 +127,7 @@ namespace EMBC.ESS.Resources.Evacuees
                   .Expand(c => c.era_MailingCity)
                   .Expand(c => c.era_MailingProvinceState)
                   .Expand(c => c.era_MailingCountry)
+                  .Expand(c => c.era_BCSCAddress)
                   .Where(c => c.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(query.EvacueeId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.EvacueeId));

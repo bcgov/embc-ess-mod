@@ -7,23 +7,16 @@ using Anywhere.ArcGIS.Operation;
 
 namespace EMBC.ESS.Utilities.Spatial.ArcGISApi
 {
-    internal class ArcGISAdapter : IArcGISAdapter
+    internal class ArcGISAdapter(PortalGateway portalGateway) : IArcGISAdapter
     {
-        private readonly PortalGateway portalGateway;
-
-        public ArcGISAdapter(PortalGateway portalGateway)
-        {
-            this.portalGateway = portalGateway;
-        }
-
         public async Task<IEnumerable<GISFeature>> QueryService(PointIntersectionQuery query)
         {
             var arcGisQuery = new Query(query.ServiceName.AsEndpoint())
             {
                 Geometry = new Point
                 {
-                    X = query.Point.Longitude,
-                    Y = query.Point.Latitude,
+                    X = query.Coordinates.Longitude,
+                    Y = query.Coordinates.Latitude,
                     SpatialReference = SpatialReference.WGS84
                 },
                 SpatialRelationship = SpatialRelationshipTypes.Intersects,
