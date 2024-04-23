@@ -12,13 +12,14 @@ import { NonVerifiedRegistrationService } from '../non-verified-registration/non
 import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
-import { map, mergeMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
 import { AlertComponent } from '../../core/components/alert/alert.component';
 import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
+import { EligibilityCheck } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -228,23 +229,26 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     });
   }
 
-  checkEligibleForSelfServe() {
-    return true;
-  }
-
   mapAndNavigate() {
-    this.evacuationFileDataService.createEvacuationFile().subscribe({
-      next: (value) => {
-        this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
-        if (this.checkEligibleForSelfServe()) this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
-        else this.router.navigate(['/verified-registration/dashboard']);
-      },
-      error: (error: any) => {
-        this.showLoader = !this.showLoader;
-        this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', globalConst.submissionError);
-      }
-    });
+    this.evacuationFileDataService
+      .createEvacuationFile()
+      .pipe(
+        switchMap((evacuationFileId) =>
+          this.evacuationFileDataService.checkEligibleForSelfServeSupport({ evacuationFileId })
+        )
+      )
+      .subscribe({
+        next: (value: EligibilityCheck) => {
+          this.needsAssessmentService.setVerifiedEvacuationFileNo(value.evacuationFileId);
+          if (value.isEligable) this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
+          else this.router.navigate(['/verified-registration/dashboard']);
+        },
+        error: (error: any) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.setAlert('danger', globalConst.submissionError);
+        }
+      });
   }
 
   allowSubmit($event: CaptchaResponse): void {

@@ -168,6 +168,12 @@ export class EvacuationFileDataService {
       .pipe(map((response) => response.referenceNumber));
   }
 
+  public checkEligibleForSelfServeSupport(
+    params: Parameters<EvacuationsService['evacuationsCheckSelfServeEligibility']>[0]
+  ): ReturnType<EvacuationsService['evacuationsCheckSelfServeEligibility']> {
+    return this.evacuationService.evacuationsCheckSelfServeEligibility(params);
+  }
+
   public clearESSFileData(): void {
     this.evacuatedAddress = undefined;
     this.evacuationFileDate = undefined;

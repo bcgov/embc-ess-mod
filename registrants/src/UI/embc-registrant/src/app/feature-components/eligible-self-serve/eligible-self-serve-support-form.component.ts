@@ -35,15 +35,16 @@ interface FoodRestaurantMealTypeForm {
   dinner: SupportDateFormArray;
 }
 
-interface SupportPersonFormWithMealTypes extends SupportPersonForm {
+type FundsFor = SupportSubCategory.Food_Groceries | SupportSubCategory.Food_Restaurant | null;
+
+interface RestaurantForm {
+  persons: FormArray<FormGroup<SupportPersonForm>>;
   mealTypes: FormGroup<FoodRestaurantMealTypeForm>;
 }
 
-type FundsFor = SupportSubCategory.Food_Groceries | SupportSubCategory.Food_Restaurant | null;
-
 interface FoodForm {
   fundsFor: FormControl<FundsFor>;
-  restaurant: FormArray<FormGroup<SupportPersonFormWithMealTypes>>;
+  restaurant: FormGroup<RestaurantForm>;
   groceries: FormArray<FormGroup<SupportPersonFormWithDates>>;
 }
 
@@ -77,7 +78,14 @@ export class EligibleSelfServeSupportForm implements OnInit {
     shelterAllowance: new FormArray<FormGroup<SupportPersonFormWithDates>>([]),
     food: new FormGroup<FoodForm>({
       fundsFor: new FormControl<FundsFor>(null),
-      restaurant: new FormArray<FormGroup<SupportPersonFormWithMealTypes>>([]),
+      restaurant: new FormGroup<RestaurantForm>({
+        persons: new FormArray([]),
+        mealTypes: new FormGroup({
+          breakfast: new FormArray([]),
+          lunch: new FormArray([]),
+          dinner: new FormArray([])
+        })
+      }),
       groceries: new FormArray<FormGroup<SupportPersonFormWithDates>>([])
     }),
     clothing: new FormArray<FormGroup<SupportPersonForm>>([]),
@@ -111,10 +119,18 @@ export class EligibleSelfServeSupportForm implements OnInit {
     this.persons.forEach((p) => {
       this.supportDraftForm.controls.shelterAllowance.push(this.createSupportPersonFormWithDates(p.id));
       this.supportDraftForm.controls.food.controls.groceries.push(this.createSupportPersonFormWithDates(p.id));
-      this.supportDraftForm.controls.food.controls.restaurant.push(this.createSupportPersonFormWithMealTypes(p.id));
+      this.supportDraftForm.controls.food.controls.restaurant.controls.persons.push(this.createSupportPersonForm(p.id));
+
       this.supportDraftForm.controls.clothing.push(this.createSupportPersonForm(p.id));
       this.supportDraftForm.controls.incidents.push(this.createSupportPersonForm(p.id));
     });
+
+    this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.breakfast =
+      this.createSupportDatesFormArray();
+    this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.lunch =
+      this.createSupportDatesFormArray();
+    this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.dinner =
+      this.createSupportDatesFormArray();
 
     console.log('FormArray:', this.supportDraftForm);
 
@@ -150,14 +166,6 @@ export class EligibleSelfServeSupportForm implements OnInit {
       personId: new FormControl(id),
       isSelected: new FormControl(),
       supportDates: this.createSupportDatesFormArray()
-    });
-  }
-
-  createSupportPersonFormWithMealTypes(id: string): FormGroup<SupportPersonFormWithMealTypes> {
-    return new FormGroup<SupportPersonFormWithMealTypes>({
-      personId: new FormControl(id),
-      isSelected: new FormControl(),
-      mealTypes: this.createMealTypesForm()
     });
   }
 
