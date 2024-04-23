@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface SelfServeSupport {
-  '$type': string;
+  $type: string;
   totalAmount?: null | number;
 }

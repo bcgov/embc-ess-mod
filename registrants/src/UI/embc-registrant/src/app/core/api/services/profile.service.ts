@@ -15,13 +15,10 @@ import { Profile } from '../models/profile';
 import { ProfileDataConflict } from '../models/profile-data-conflict';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ProfileService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -40,22 +37,24 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetProfile$Response(params?: {
-  }): Observable<StrictHttpResponse<Profile>> {
-
+  profileGetProfile$Response(params?: {}): Observable<StrictHttpResponse<Profile>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetProfilePath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Profile>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Profile>;
+        })
+      );
   }
 
   /**
@@ -68,12 +67,8 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetProfile(params?: {
-  }): Observable<Profile> {
-
-    return this.profileGetProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<Profile>) => r.body as Profile)
-    );
+  profileGetProfile(params?: {}): Observable<Profile> {
+    return this.profileGetProfile$Response(params).pipe(map((r: StrictHttpResponse<Profile>) => r.body as Profile));
   }
 
   /**
@@ -92,27 +87,29 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpsert$Response(params: {
-
     /**
      * The profile information
      */
-    body: Profile
+    body: Profile;
   }): Observable<StrictHttpResponse<string>> {
-
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpsertPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -126,16 +123,12 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpsert(params: {
-
     /**
      * The profile information
      */
-    body: Profile
+    body: Profile;
   }): Observable<string> {
-
-    return this.profileUpsert$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
-    );
+    return this.profileUpsert$Response(params).pipe(map((r: StrictHttpResponse<string>) => r.body as string));
   }
 
   /**
@@ -153,22 +146,26 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetDoesUserExists$Response(params?: {
-  }): Observable<StrictHttpResponse<boolean>> {
-
+  profileGetDoesUserExists$Response(params?: {}): Observable<StrictHttpResponse<boolean>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetDoesUserExistsPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({
+            body: String((r as HttpResponse<any>).body) === 'true'
+          }) as StrictHttpResponse<boolean>;
+        })
+      );
   }
 
   /**
@@ -181,9 +178,7 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetDoesUserExists(params?: {
-  }): Observable<boolean> {
-
+  profileGetDoesUserExists(params?: {}): Observable<boolean> {
     return this.profileGetDoesUserExists$Response(params).pipe(
       map((r: StrictHttpResponse<boolean>) => r.body as boolean)
     );
@@ -204,22 +199,24 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetProfileConflicts$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<ProfileDataConflict>>> {
-
+  profileGetProfileConflicts$Response(params?: {}): Observable<StrictHttpResponse<Array<ProfileDataConflict>>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetProfileConflictsPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<ProfileDataConflict>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<ProfileDataConflict>>;
+        })
+      );
   }
 
   /**
@@ -232,9 +229,7 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetProfileConflicts(params?: {
-  }): Observable<Array<ProfileDataConflict>> {
-
+  profileGetProfileConflicts(params?: {}): Observable<Array<ProfileDataConflict>> {
     return this.profileGetProfileConflicts$Response(params).pipe(
       map((r: StrictHttpResponse<Array<ProfileDataConflict>>) => r.body as Array<ProfileDataConflict>)
     );
@@ -251,24 +246,25 @@ export class ProfileService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileInvite$Response(params: {
-    body: InviteRequest
-  }): Observable<StrictHttpResponse<void>> {
-
+  profileInvite$Response(params: { body: InviteRequest }): Observable<StrictHttpResponse<void>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileInvitePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -277,13 +273,8 @@ export class ProfileService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileInvite(params: {
-    body: InviteRequest
-  }): Observable<void> {
-
-    return this.profileInvite$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  profileInvite(params: { body: InviteRequest }): Observable<void> {
+    return this.profileInvite$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -297,24 +288,27 @@ export class ProfileService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileProcessInvite$Response(params: {
-    body: InviteToken
-  }): Observable<StrictHttpResponse<boolean>> {
-
+  profileProcessInvite$Response(params: { body: InviteToken }): Observable<StrictHttpResponse<boolean>> {
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileProcessInvitePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({
+            body: String((r as HttpResponse<any>).body) === 'true'
+          }) as StrictHttpResponse<boolean>;
+        })
+      );
   }
 
   /**
@@ -323,13 +317,7 @@ export class ProfileService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileProcessInvite(params: {
-    body: InviteToken
-  }): Observable<boolean> {
-
-    return this.profileProcessInvite$Response(params).pipe(
-      map((r: StrictHttpResponse<boolean>) => r.body as boolean)
-    );
+  profileProcessInvite(params: { body: InviteToken }): Observable<boolean> {
+    return this.profileProcessInvite$Response(params).pipe(map((r: StrictHttpResponse<boolean>) => r.body as boolean));
   }
-
 }

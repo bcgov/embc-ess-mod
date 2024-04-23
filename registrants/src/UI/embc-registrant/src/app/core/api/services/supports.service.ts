@@ -13,13 +13,10 @@ import { SelfServeSupport } from '../models/self-serve-support';
 import { SubmitSupportsRequest } from '../models/submit-supports-request';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SupportsService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -37,21 +34,24 @@ export class SupportsService extends BaseService {
   supportsGetDraftSupports$Response(params: {
     fileReferenceNumber: string;
   }): Observable<StrictHttpResponse<Array<SelfServeSupport>>> {
-
     const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsGetDraftSupportsPath, 'get');
     if (params) {
       rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<SelfServeSupport>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<SelfServeSupport>>;
+        })
+      );
   }
 
   /**
@@ -60,10 +60,7 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsGetDraftSupports(params: {
-    fileReferenceNumber: string;
-  }): Observable<Array<SelfServeSupport>> {
-
+  supportsGetDraftSupports(params: { fileReferenceNumber: string }): Observable<Array<SelfServeSupport>> {
     return this.supportsGetDraftSupports$Response(params).pipe(
       map((r: StrictHttpResponse<Array<SelfServeSupport>>) => r.body as Array<SelfServeSupport>)
     );
@@ -82,24 +79,27 @@ export class SupportsService extends BaseService {
    */
   supportsCalculateAmounts$Response(params: {
     fileReferenceNumber: string;
-    body: Array<SelfServeSupport>
+    body: Array<SelfServeSupport>;
   }): Observable<StrictHttpResponse<Array<SelfServeSupport>>> {
-
     const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsCalculateAmountsPath, 'post');
     if (params) {
       rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<SelfServeSupport>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<SelfServeSupport>>;
+        })
+      );
   }
 
   /**
@@ -110,9 +110,8 @@ export class SupportsService extends BaseService {
    */
   supportsCalculateAmounts(params: {
     fileReferenceNumber: string;
-    body: Array<SelfServeSupport>
+    body: Array<SelfServeSupport>;
   }): Observable<Array<SelfServeSupport>> {
-
     return this.supportsCalculateAmounts$Response(params).pipe(
       map((r: StrictHttpResponse<Array<SelfServeSupport>>) => r.body as Array<SelfServeSupport>)
     );
@@ -129,24 +128,25 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsOptOut$Response(params: {
-    fileReferenceNumber: string;
-  }): Observable<StrictHttpResponse<void>> {
-
+  supportsOptOut$Response(params: { fileReferenceNumber: string }): Observable<StrictHttpResponse<void>> {
     const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsOptOutPath, 'post');
     if (params) {
       rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -155,13 +155,8 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsOptOut(params: {
-    fileReferenceNumber: string;
-  }): Observable<void> {
-
-    return this.supportsOptOut$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  supportsOptOut(params: { fileReferenceNumber: string }): Observable<void> {
+    return this.supportsOptOut$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
 
   /**
@@ -177,24 +172,27 @@ export class SupportsService extends BaseService {
    */
   supportsSubmitSupports$Response(params: {
     fileReferenceNumber: string;
-    body: SubmitSupportsRequest
+    body: SubmitSupportsRequest;
   }): Observable<StrictHttpResponse<void>> {
-
     const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsSubmitSupportsPath, 'post');
     if (params) {
       rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*'
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -203,14 +201,7 @@ export class SupportsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  supportsSubmitSupports(params: {
-    fileReferenceNumber: string;
-    body: SubmitSupportsRequest
-  }): Observable<void> {
-
-    return this.supportsSubmitSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  supportsSubmitSupports(params: { fileReferenceNumber: string; body: SubmitSupportsRequest }): Observable<void> {
+    return this.supportsSubmitSupports$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
   }
-
 }
