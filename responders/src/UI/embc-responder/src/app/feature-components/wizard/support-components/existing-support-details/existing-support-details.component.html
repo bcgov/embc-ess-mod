@@ -694,7 +694,7 @@
   <div
   *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance' && selectedSupport?.method === 'Referral'"
   class="row row-padding">
-  <div class="col-md-4 box-text-color">Payee Details:</div>
+  <div class="col-md-4 box-text-color">Payee Full Name:</div>
   <div class="col-md-4 bold">
     {{ referral?.issuedToPersonName | uppercase }}
   </div>
@@ -703,7 +703,7 @@
 <div
 *ngIf="(selectedSupport?.subCategory === 'Lodging_Allowance') && shelterAllowanceReferral?.contactPhone &&  shelterAllowanceReferral?.contactEmail"
 class="row row-padding">
-<div class="col-md-4 box-text-color">Contact Information:</div>
+<div class="col-md-4 box-text-color">Payee Contact Details:</div>
 <div class="col-md-4 bold"  [innerHTML]="
 shelterAllowanceReferral?.contactPhone
   | supplierContact: shelterAllowanceReferral?.contactEmail
