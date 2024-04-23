@@ -10,13 +10,14 @@
         Before proceeding, please <b></b>confirm that you meet the following <b>requirements</b>.
       </h2>
 
-      <img
-        src="http://embc.number41media.com/EMCR2024/RegistrantPortal/images/evacuation_file_-_authenticated_-_eligible_selfser/u18584.svg"
-        width="200"
-        height="200"
-      />
+      <img src="assets/images/valid_bank_account.svg" width="200" height="200" />
 
-      <p style="font-size: 18px">You have a <b>valid bank account</b> <br />and can accept an e-Transfer</p>
+      <p style="font-size: 18px">
+        You have a <b>valid bank account</b> <br />and can accept an e-Transfer
+        <button mat-icon-button (click)="openInteracETransferDialog()">
+          <img src="assets/images/info.svg" height="28" width="28" />
+        </button>
+      </p>
 
       <button
         class="button-p"
@@ -26,9 +27,14 @@
       >
         Proceed With e-Transfer
       </button>
-      <a class="highlightText" style="cursor: pointer" (click)="optOutSelfServe()">
-        Opt-out and Receive Supports via Referrals
-      </a>
+      <div>
+        <a class="highlightText" style="cursor: pointer" (click)="optOutSelfServe()">
+          Opt-out and Receive Supports via Referrals
+        </a>
+        <button mat-icon-button (click)="openInteracOptOutDialog()">
+          <img src="assets/images/info.svg" height="28" width="28" />
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
   <mat-card style="background-color: #f2f2f2; padding: calc(var(--size-1) * 5); margin-bottom: var(--size-4)">
@@ -36,11 +42,7 @@
       <span style="font-size: var(--size-3)">Why Choose Interac® eTransfer?</span>
       <div style="display: flex; gap: var(--size-3); flex-wrap: wrap; justify-content: space-around; width: 100%">
         <div style="display: flex; gap: var(--size-1); flex-direction: column; align-items: center; text-align: center">
-          <img
-            src="http://embc.number41media.com/EMCR2024/RegistrantPortal/images/evacuation_file_-_authenticated_-_eligible_selfser/u18599.svg"
-            width="80"
-            height="80"
-          />
+          <img src="assets/images/money_in_account.svg" width="80" height="80" />
           <b style="font-size: 18px">Money in your Account</b>
           <span style="font-size: 16px">
             Get money directly deposited <br />
@@ -49,11 +51,7 @@
           </span>
         </div>
         <div style="display: flex; gap: var(--size-1); flex-direction: column; align-items: center; text-align: center">
-          <img
-            src="http://embc.number41media.com/EMCR2024/RegistrantPortal/images/evacuation_file_-_authenticated_-_eligible_selfser/u18598.svg"
-            width="80"
-            height="80"
-          />
+          <img src="assets/images/flexibility.svg" width="80" height="80" />
           <b style="font-size: 18px">Flexibility</b>
           <span style="font-size: 16px">
             Use the funds at your <br />
@@ -62,11 +60,7 @@
           </span>
         </div>
         <div style="display: flex; gap: var(--size-1); flex-direction: column; align-items: center; text-align: center">
-          <img
-            src="http://embc.number41media.com/EMCR2024/RegistrantPortal/images/evacuation_file_-_authenticated_-_eligible_selfser/u18597.svg"
-            width="80"
-            height="80"
-          />
+          <img src="assets/images/skip_the_queue.svg" width="80" height="80" />
           <b style="font-size: 18px">Skip the Queue </b>
           <span style="font-size: 16px">
             No need to wait in line or <br />

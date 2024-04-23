@@ -76,6 +76,16 @@ export const incidentalsNeedDialog: DialogContent = {
   text: 'Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.'
 };
 
+export const interacETransferDialog: DialogContent = {
+  title: 'Interac e-Transfers',
+  text: 'Please Note: While the majority of Interac e-Transfers are processed immediately, there are instances where processing delays may occur'
+};
+
+export const interacOptOut: DialogContent = {
+  title: 'Referrals',
+  text: 'Provided by an ESS responder to direct evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
+};
+
 export const securityQuesError = 'An error occurred while loading the security questions. Please try again later';
 export const systemError = 'The service is temporarily unavailable. Please try again later';
 export const profileExistError = 'User profile does not exist.';
