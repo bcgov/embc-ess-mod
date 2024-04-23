@@ -81,6 +81,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
                 .ForMember(d => d.Minor, opts => opts.Ignore())
+                .ForMember(d => d.GeocodedHomeAddress, opts => opts.Ignore())
                 ;
 
             CreateMap<Evacuee, Shared.Contracts.Events.RegistrantProfile>()
