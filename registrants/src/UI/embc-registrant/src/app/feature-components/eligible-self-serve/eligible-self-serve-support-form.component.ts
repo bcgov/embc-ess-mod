@@ -5,7 +5,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatStepperModule } from '@angular/material/stepper';
 import * as moment from 'moment';
-import { SupportSubCategory } from 'src/app/core/api/models';
+import {
+  SelfServeFoodGroceriesSupport,
+  SelfServeFoodRestaurantSupport,
+  SelfServeShelterAllowanceSupport,
+  SubmitSupportsRequest,
+  SupportSubCategory
+} from 'src/app/core/api/models';
 import { SupportsService } from 'src/app/core/api/services';
 
 interface Person {
@@ -94,20 +100,7 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   eTransferForm: FormGroup;
 
-  persons = [
-    {
-      id: '1',
-      name: 'Test person1 1'
-    },
-    {
-      id: '2',
-      name: 'Test Person2 2'
-    },
-    {
-      id: '3',
-      name: 'Test person 3'
-    }
-  ];
+  persons = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -115,8 +108,15 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Get no.of persons
-    this.persons.forEach((p) => {
+    this.eTransferForm = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+    //
+    this.getDraft();
+  }
+
+  createSupportDraftForm(persons: Person[]) {
+    persons.forEach((p) => {
       this.supportDraftForm.controls.shelterAllowance.push(this.createSupportPersonFormWithDates(p.id));
       this.supportDraftForm.controls.food.controls.groceries.push(this.createSupportPersonFormWithDates(p.id));
       this.supportDraftForm.controls.food.controls.restaurant.controls.persons.push(this.createSupportPersonForm(p.id));
@@ -131,14 +131,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       this.createSupportDatesFormArray();
     this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.dinner =
       this.createSupportDatesFormArray();
-
-    console.log('FormArray:', this.supportDraftForm);
-
-    this.eTransferForm = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
-    //
-    this.getDraft();
   }
 
   createSupportDateForm(date: moment.Moment): FormGroup<SupportDateForm> {
@@ -188,7 +180,94 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   getDraft() {
     // this.supportService.supportsGetDraftSupports({ fileReferenceNumber: 'test' }).subscribe((res) => {
-    //   console.log('supportsGetDraftSupports:', res);
+    // console.log('supportsGetDraftSupports:', res);
+    const persons = [
+      {
+        id: '1',
+        name: 'Test person1 1'
+      },
+      {
+        id: '2',
+        name: 'Test Person2 2'
+      },
+      {
+        id: '3',
+        name: 'Test person 3'
+      }
+    ];
+    this.createSupportDraftForm(persons);
+    this.persons = persons;
     // });
+  }
+
+  processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
+    const shelterAllowanceFormValue = this.supportDraftForm.value.shelterAllowance;
+
+    const data: SelfServeShelterAllowanceSupport = {
+      $type: 'shelter',
+      totalAmount: 2342
+    };
+
+    const datesWithMembers = {};
+    shelterAllowanceFormValue.forEach((p) => {
+      p.supportDates.forEach((d) => {
+        if (d.isRequired) {
+          if (!datesWithMembers[d.date.toISOString()]) datesWithMembers[d.date.toISOString()] = [];
+          datesWithMembers[d.date.toISOString()].push(p.personId);
+        }
+      });
+    });
+
+    if (Object.keys(datesWithMembers).length === 0) return null;
+
+    data.nights = Object.entries(datesWithMembers).map(([date, includedHouseholdMembers]) => ({
+      date,
+      includedHouseholdMembers: includedHouseholdMembers as string[]
+    }));
+
+    return data;
+  }
+
+  processFoodData(): SelfServeFoodGroceriesSupport | SelfServeFoodRestaurantSupport | null {
+    const foodData = this.supportDraftForm.value.food;
+
+    const data: SelfServeFoodGroceriesSupport = { $type: 'food', totalAmount: 34, nights: [] }; // @TODO:
+
+    if (foodData.fundsFor === SupportSubCategory.Food_Groceries) {
+      const datesWithMembers = {};
+      foodData.groceries.map((p) => {
+        p.supportDates.forEach((d) => {
+          if (d.isRequired) {
+            if (!datesWithMembers[d.date.toISOString()]) datesWithMembers[d.date.toISOString()] = [];
+            datesWithMembers[d.date.toISOString()].push(p.personId);
+          }
+        });
+      });
+
+      if (Object.keys(datesWithMembers).length === 0) return null;
+
+      data.nights = Object.entries(datesWithMembers).map(([date, includedHouseholdMembers]) => ({
+        date,
+        includedHouseholdMembers: includedHouseholdMembers as string[]
+      }));
+
+      return data;
+    } else if (foodData.fundsFor === SupportSubCategory.Food_Restaurant) {
+    }
+
+    return null;
+  }
+
+  submit() {
+    console.log('On Submit');
+
+    const selfServeSupportRequest: SubmitSupportsRequest = {
+      supports: []
+    };
+
+    const shelterSupportData = this.processShelterAllowanceData();
+    const foodData = this.processFoodData();
+    console.log(shelterSupportData, foodData);
+    
   }
 }

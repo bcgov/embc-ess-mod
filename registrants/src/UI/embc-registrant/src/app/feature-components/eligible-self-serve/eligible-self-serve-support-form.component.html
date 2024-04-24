@@ -85,13 +85,21 @@
             }
             <!-- Restaurant -->
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.Food_Restaurant) {
-              <div>
+              <label for="">Which people in your household require Restaurant Meals? </label>
+              <div style="display: flex; flex-direction: column">
                 @for (
                   person of supportDraftForm.controls.food.controls.restaurant.controls.persons.controls;
                   track $index
                 ) {
-                  <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
-                  {{ getPersonName(person.controls.personId.value) }}
+                  <div>
+                    <mat-checkbox
+                      [name]="'Food_Restaurant' + person.controls.personId.value"
+                      [formControl]="person.controls.isSelected"
+                    ></mat-checkbox>
+                    <label [for]="'Food_Restaurant' + person.controls.personId.value">{{
+                      getPersonName(person.controls.personId.value)
+                    }}</label>
+                  </div>
                 }
               </div>
               <div>
@@ -144,10 +152,12 @@
             <div>
               <label>Which people in your household require Clothing?</label>
             </div>
-            <div>
+            <div style="display: flex; flex-direction: column">
               @for (person of supportDraftForm.controls.clothing.controls; track $index) {
-                <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
-                {{ getPersonName(person.controls.personId.value) }}
+                <div>
+                  <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
+                  {{ getPersonName(person.controls.personId.value) }}
+                </div>
               }
             </div>
           </mat-card-content>
@@ -159,18 +169,21 @@
             <div>
               <label>Which people in your household require Incidentals?</label>
             </div>
-            <div>
+            <div style="display: flex; flex-direction: column">
               @for (person of supportDraftForm.controls.incidents.controls; track $index) {
-                <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
-                {{ getPersonName(person.controls.personId.value) }}
+                <div>
+                  <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
+                  {{ getPersonName(person.controls.personId.value) }}
+                </div>
               }
             </div>
           </mat-card-content>
         </mat-card>
 
-        <div>
-          <button mat-button matStepperNext class="button-s">Next</button>
-          <button mat-button matStepperNext>Next</button>
+        <div style="display: flex; gap: 16px">
+          <button type="button" mat-button matStepperNext>Next</button>
+          <button type="button" mat-button matStepperNext>Next</button>
+          <button type="button" mat-button (click)="submit()">Submit</button>
         </div>
       </form>
     </mat-step>
