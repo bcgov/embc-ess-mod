@@ -116,9 +116,12 @@ public partial class EventsManager(
     {
         var ct = CancellationToken.None;
         var evacuee = mapper.Map<Evacuee>(cmd.Profile);
-        var existingEvacuee = evacuee.Id == null && evacuee.UserId != null
-            ? (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault()
-            : (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = evacuee.Id })).Items.SingleOrDefault();
+
+        Evacuee existingEvacuee = null;
+        if (evacuee.Id == null && evacuee.UserId != null)
+            existingEvacuee = (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault();
+        else if (evacuee.Id != null)
+            existingEvacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = evacuee.Id })).Items.SingleOrDefault();
 
         evacuee.Id ??= existingEvacuee?.Id;
         //fill last login for new registrants from registrants portal - need to split this command into separate use cases
