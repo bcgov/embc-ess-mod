@@ -121,6 +121,14 @@ namespace EMBC.ESS.Managers.Events
                     interac.SecurityQuestion = payment.SecurityAnswer;
                     interac.RelatedPaymentId = payment.Id;
                 }
+                if (support.IsSelfServe)
+                {
+                    support.IssuedBy.DisplayName = "";
+                    if (recipient != null)
+                    {
+                        support.IssuedBy.DisplayName = $"{recipient.LastName}, {recipient.FirstName}";
+                    }
+                }
             }
         }
     }
