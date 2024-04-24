@@ -1,76 +1,100 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.Controllers;
 
-[Route("api/Evacuations/{fileReferenceNumber}/[controller]")]
+[Route("api/Evacuations/{evacuationFileId}/Supports")]
 [ApiController]
 [Authorize]
-public class SupportsController : ControllerBase
+public class SupportsController(IMessagingClient messagingClient, IMapper mapper) : ControllerBase
 {
+    /// <summary>
+    /// Checks if a file is eligible for self-serve supports
+    /// </summary>
+    /// <param name="evacuationFileId">The file id to check</param>
+    /// <param name="ct"></param>
+    /// <returns>A decision if the file is eligibile or not</returns>
+    [HttpGet("eligible")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
+    public async Task<ActionResult<EligibilityCheck>> CheckSelfServeEligibility(string evacuationFileId, CancellationToken ct)
+    {
+        await messagingClient.Send(new CheckEligibileForSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
+        var eligilityCheck = await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct);
+        return Ok(new EligibilityCheck
+        {
+            EvacuationFileId = evacuationFileId,
+            IsEligable = eligilityCheck.IsEligible,
+            From = eligilityCheck.From,
+            To = eligilityCheck.To,
+            TaskNumber = eligilityCheck.TaskNumber
+        });
+    }
+
     [HttpGet("draft")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string fileReferenceNumber, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
     {
-        await Task.CompletedTask;
-        var fromDate = DateTime.UtcNow;
-        var toDate = fromDate.AddHours(72);
-        var days = Enumerable.Range(0, 1 + toDate.Subtract(fromDate).Days).Select(offset => fromDate.AddDays(offset)).Select(DateOnly.FromDateTime).ToArray();
-        var householdMembers = new[] { "1", "2", "3" };
+        var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId }, ct);
 
-        return new SelfServeSupport[]
-        {
-            new SelfServeFoodGroceriesSupport { Nights = days.Select(d=>new SupportDay(d, householdMembers)) },
-            new SelfServeFoodRestaurantSupport { IncludedHouseholdMembers = householdMembers, Meals = days.Select(d=>new SupportDayMeals(d, true, true, true)) },
-            new SelfServeShelterAllowanceSupport { Nights = days.Select(d=>new SupportDay(d, householdMembers)) },
-            new SelfServeClothingSupport { IncludedHouseholdMembers = householdMembers  },
-            new SelfServeIncidentalsSupport { IncludedHouseholdMembers = householdMembers }
-        };
+        return Ok(mapper.Map<IEnumerable<SelfServeSupport>>(response.Items));
     }
 
-    [HttpPost("draft/totals")]
+    [HttpPost("draft")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> CalculateAmounts(string fileReferenceNumber, IEnumerable<SelfServeSupport> supports, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> CalculateAmounts(string evacuationFileId, IEnumerable<SelfServeSupport> supports, CancellationToken ct)
     {
-        await Task.CompletedTask;
-        return Ok(supports.Select(s => { s.TotalAmount = 100.00; return s; }));
+        var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId, Items = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(supports) }, ct);
+
+        return Ok(mapper.Map<IEnumerable<SelfServeSupport>>(response.Items));
     }
 
     [HttpPost("optout")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> OptOut(string fileReferenceNumber, CancellationToken ct)
+    public async Task<ActionResult> OptOut(string evacuationFileId, CancellationToken ct)
     {
-        await Task.CompletedTask;
+        await messagingClient.Send(new OptOutSelfServeCommand { EvacuationFileId = evacuationFileId });
         return Ok();
     }
 
-    [HttpPost("")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> SubmitSupports(string fileReferenceNumber, SubmitSupportsRequest request, CancellationToken ct)
+    public async Task<Results<Ok, BadRequest<string>>> SubmitSupports(string evacuationFileId, SubmitSupportsRequest request, CancellationToken ct)
     {
-        await Task.CompletedTask;
-        return Ok();
+        if (evacuationFileId != request.EvacuationFileId) return TypedResults.BadRequest(evacuationFileId);
+        await messagingClient.Send(new SubmitSelfServeSupportsCommand
+        {
+            EvacuationFileId = evacuationFileId,
+            Supports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(request.Supports),
+            ETransferDetails = mapper.Map<ESS.Shared.Contracts.Events.SelfServe.ETransferDetails>(request.ETransferDetails)
+        });
+        return TypedResults.Ok();
     }
 }
 
 public record SubmitSupportsRequest
 {
-    public string FileReferenceNumber { get; set; }
+    public string EvacuationFileId { get; set; }
     public IEnumerable<SelfServeSupport> Supports { get; set; }
     public ETransferDetails ETransferDetails { get; set; }
 }
@@ -95,29 +119,29 @@ public abstract record SelfServeSupport
 
 public record SelfServeShelterAllowanceSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; }
+    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
 }
 
 public record SupportDay(DateOnly Date, IEnumerable<string> IncludedHouseholdMembers);
 
 public record SelfServeFoodGroceriesSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; }
+    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
 }
 
 public record SelfServeFoodRestaurantSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; }
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
     public IEnumerable<SupportDayMeals> Meals { get; set; }
 }
 public record SupportDayMeals(DateOnly Date, bool Breakfast, bool Dinner, bool Lunch);
 
 public record SelfServeIncidentalsSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; }
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
 }
 
 public record SelfServeClothingSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; }
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
 }
