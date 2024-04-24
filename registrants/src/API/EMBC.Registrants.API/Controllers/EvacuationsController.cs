@@ -74,7 +74,7 @@ public class EvacuationsController : ControllerBase
         {
             File = file,
             SubmitterProfile = profile
-        });
+        }, ct);
 
         return Ok(new RegistrationResult { ReferenceNumber = id });
     }
@@ -91,8 +91,7 @@ public class EvacuationsController : ControllerBase
         try
         {
             var userId = currentUserId;
-            var files = await evacuationSearchService.GetFiles(userId,
-                new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired }, ct);
+            var files = await evacuationSearchService.GetFiles(userId, [ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired], ct);
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
