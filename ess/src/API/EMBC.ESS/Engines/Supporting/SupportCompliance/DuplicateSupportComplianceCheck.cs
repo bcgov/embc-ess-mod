@@ -35,7 +35,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             var type = checkedSupport.era_supporttype.Value;
             var householdMembers = checkedSupport.era_era_householdmember_era_evacueesupport.ToList();
 
-            var similarSupports = new List<era_evacueesupport>();
+            List<era_evacueesupport> similarSupports;
 
             //EMBCESSMOD-4653 - treat 'Food - Groceries' and 'Food - Restaurant Meals' as the same support type
             if (type == (int)SupportType.Food_Groceries ||
