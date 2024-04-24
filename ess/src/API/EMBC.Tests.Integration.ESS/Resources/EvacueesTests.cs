@@ -187,6 +187,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 {
                     City = newLocality,
                     StateProvince = "BC",
+                    Country = "CA",
                     AddressLine1 = "123 Main St"
                 },
                 Geocode = new AddressGeocode

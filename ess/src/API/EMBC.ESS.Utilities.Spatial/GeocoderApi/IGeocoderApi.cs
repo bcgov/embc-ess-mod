@@ -64,9 +64,9 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
     internal record Properties2
     {
         public string? accessNotes { get; set; }
-        public string? blockID { get; set; }
+        //public string? blockID { get; set; }
         public string? changeDate { get; set; }
-        public string? civicNumber { get; set; }
+        //public string? civicNumber { get; set; }
         public string? civicNumberSuffix { get; set; }
         public string? electoralArea { get; set; }
         public object[]? faults { get; set; }

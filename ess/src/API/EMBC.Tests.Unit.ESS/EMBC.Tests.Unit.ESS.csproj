@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Nullable>enable</Nullable>
+        <Nullable>annotations</Nullable>
         <IsPackable>false</IsPackable>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
