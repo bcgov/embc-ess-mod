@@ -36,13 +36,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.MailingAddress.City) ? string.Empty : s.MailingAddress.City))
                 .ForMember(d => d.address2_postalcode, opts => opts.MapFrom(s => s.MailingAddress.PostalCode))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
-                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
-                    s.MailingAddress.Country.Equals(s.PrimaryAddress.Country, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.StateProvince.Equals(s.PrimaryAddress.StateProvince, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.Community.Equals(s.PrimaryAddress.Community, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.PostalCode.Equals(s.PrimaryAddress.PostalCode, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.AddressLine1.Equals(s.PrimaryAddress.AddressLine1, StringComparison.OrdinalIgnoreCase) &&
-                    s.MailingAddress.AddressLine2.Equals(s.PrimaryAddress.AddressLine2, StringComparison.OrdinalIgnoreCase)))
+                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s => s.PrimaryAddress == s.MailingAddress))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
@@ -57,6 +51,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Question)))
                 .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
+                .ForMember(d => d.era_lastlogin, opts => opts.MapFrom(s => s.LastLogin))
                 ;
 
             CreateMap<contact, Evacuee>()
@@ -97,12 +92,40 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
                     : null))
+                .ForMember(d => d.GeocodedHomeAddress, opts => opts.MapFrom(s => s.era_BCSCAddress))
+                .ForMember(d => d.LastLogin, opts => opts.Ignore())
               ;
 
             CreateMap<era_evacueeemailinvite, Invitation>()
                 .ForMember(d => d.InviteId, opts => opts.MapFrom(s => s.era_evacueeemailinviteid.ToString()))
                 .ForMember(d => d.EvacueeId, opts => opts.MapFrom(s => s._era_registrant_value.ToString()))
                 .ForMember(d => d.ExpiryDate, opts => opts.MapFrom(s => s.era_expirydate.Value.UtcDateTime))
+                ;
+
+            CreateMap<era_bcscaddress, GeocodedAddress>()
+                .ForPath(d => d.Address.AddressLine1, opts => opts.MapFrom(s => s.era_address))
+                .ForPath(d => d.Address.City, opts => opts.MapFrom(s => s.era_locality))
+                .ForPath(d => d.Address.StateProvince, opts => opts.MapFrom(s => s.era_province))
+                .ForPath(d => d.Address.Country, opts => opts.MapFrom(_ => "CA"))
+                .ForPath(d => d.Address.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
+                .ForPath(d => d.Geocode, opts => opts.MapFrom(s => new AddressGeocode
+                {
+                    Coordinates = new Coordinates(s.era_longitude.GetValueOrDefault(), s.era_latitude.GetValueOrDefault()),
+                    Accuracy = s.era_geocodescore.GetValueOrDefault(),
+                    GeocodedOn = s.createdon,
+                    ResolvedAddress = s.era_resolvedaddress
+                }))
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Source)
+                .ForMember(d => d.era_address, opts => opts.MapFrom(s => s.Address.AddressLine1))
+                .ForMember(d => d.era_locality, opts => opts.MapFrom(s => s.Address.City))
+                .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.Address.PostalCode))
+                .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.Address.StateProvince))
+                .ForMember(d => d.era_longitude, opts => opts.MapFrom(s => s.Geocode.Coordinates == null ? (double?)null : s.Geocode.Coordinates.Longitude))
+                .ForMember(d => d.era_latitude, opts => opts.MapFrom(s => s.Geocode.Coordinates == null ? (double?)null : s.Geocode.Coordinates.Latitude))
+                .ForMember(d => d.era_geocodescore, opts => opts.MapFrom(s => s.Geocode.Accuracy))
+                .ForMember(d => d.era_resolvedaddress, opts => opts.MapFrom(s => s.Geocode.ResolvedAddress))
+
                 ;
         }
     }

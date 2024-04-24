@@ -299,6 +299,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.ModifiedOn))
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastLogin, opts => opts.Ignore())
+                .ForMember(d => d.HomeAddress, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.RegistrantProfile, RegistrantProfile>()

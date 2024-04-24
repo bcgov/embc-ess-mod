@@ -4,6 +4,7 @@ using AutoMapper;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Supports;
+using EMBC.ESS.Utilities.Spatial;
 
 namespace EMBC.ESS.Managers.Events
 {
@@ -81,12 +82,14 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
                 .ForMember(d => d.Minor, opts => opts.Ignore())
+                .ForMember(d => d.GeocodedHomeAddress, opts => opts.Ignore())
                 ;
 
             CreateMap<Evacuee, Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.Verified))
                 .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.Minor))
+                .ForMember(d => d.HomeAddress, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Events.Address, Address>()
@@ -267,6 +270,13 @@ namespace EMBC.ESS.Managers.Events
 
             CreateMap<Resources.Teams.TeamMember, Shared.Contracts.Events.TeamMember>()
                 .ForMember(d => d.DisplayName, opts => opts.MapFrom(s => $"{s.LastName}, {s.FirstName}"))
+                ;
+
+            CreateMap<Geocode, AddressGeocode>()
+                .ForMember(d => d.ResolvedAddress, opts => opts.MapFrom(s => s.ResolvedLocation.AddressString))
+                .ForMember(d => d.Coordinates, opts => opts.MapFrom(s => new Resources.Evacuees.Coordinates(s.Coordinates.Longitude, s.Coordinates.Latitude)))
+                .ForMember(d => d.Accuracy, opts => opts.MapFrom(s => s.Score))
+                .ForMember(d => d.GeocodedOn, opts => opts.MapFrom(_ => DateTimeOffset.UtcNow))
                 ;
         }
 
