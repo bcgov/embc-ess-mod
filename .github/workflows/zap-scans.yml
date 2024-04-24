@@ -18,7 +18,7 @@ jobs:
           artifact_name: 'responders_ui_zap_scan'
           issue_title: 'responders_ui_zap_scan'
       - name: API
-        uses: zaproxy/action-api-scan@v0.6.0
+        uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://dev-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
@@ -36,7 +36,7 @@ jobs:
           artifact_name: 'registrants_ui_zap_scan'
           issue_title: 'registrants_ui_zap_scan'
       - name: API
-        uses: zaproxy/action-api-scan@v0.6.0
+        uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://dev-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
@@ -54,7 +54,7 @@ jobs:
           artifact_name: 'suppliers_ui_zap_scan'
           issue_title: 'suppliers_ui_zap_scan'
       - name: API
-        uses: zaproxy/action-api-scan@v0.6.0
+        uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://dev-era-suppliers.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
