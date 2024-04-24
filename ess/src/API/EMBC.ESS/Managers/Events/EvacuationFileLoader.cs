@@ -123,11 +123,7 @@ namespace EMBC.ESS.Managers.Events
                 }
                 if (support.IsSelfServe)
                 {
-                    support.IssuedBy.DisplayName = "";
-                    if (recipient != null)
-                    {
-                        support.IssuedBy.DisplayName = $"{recipient.LastName}, {recipient.FirstName}";
-                    }
+                    support.IssuedBy.DisplayName = recipient == null ? string.Empty : $"{recipient.LastName}, {recipient.FirstName}";
                 }
             }
         }
