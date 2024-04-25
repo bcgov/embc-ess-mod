@@ -9,16 +9,16 @@ public record CheckEligibileForSelfServeCommand : Command
     public string EvacuationFileId { get; set; }
 }
 
-public record EligibilityCheckQuery : Query<EligibilityCheckResponse>
+public record EligibilityCheckQuery : Query<EligibilityCheckQueryResponse>
 {
     public string EvacuationFileId { get; set; }
 }
 
-public record EligibilityCheckResponse
+public record EligibilityCheckQueryResponse
 {
     public bool IsEligible { get; set; }
-    public DateTime? From { get; set; }
-    public DateTime? To { get; set; }
+    public DateTimeOffset? From { get; set; }
+    public DateTimeOffset? To { get; set; }
     public string TaskNumber { get; set; }
 }
 
@@ -27,13 +27,13 @@ public record OptOutSelfServeCommand : Command
     public string EvacuationFileId { get; set; }
 }
 
-public record DraftSelfServeSupportQuery : Query<DraftSupportResponse>
+public record DraftSelfServeSupportQuery : Query<DraftSelfServeSupportQueryResponse>
 {
     public string EvacuationFileId { get; set; }
     public IEnumerable<SelfServeSupport>? Items { get; set; }
 }
 
-public record DraftSupportResponse
+public record DraftSelfServeSupportQueryResponse
 {
     public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
 }
@@ -45,12 +45,12 @@ public record SubmitSelfServeSupportsCommand : Command
     public ETransferDetails ETransferDetails { get; set; }
 }
 
-//[JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
-//[JsonDerivedType(typeof(SelfServeFoodGroceriesSupport), typeDiscriminator: nameof(SelfServeFoodGroceriesSupport))]
-//[JsonDerivedType(typeof(SelfServeFoodRestaurantSupport), typeDiscriminator: nameof(SelfServeFoodRestaurantSupport))]
-//[JsonDerivedType(typeof(SelfServeIncidentalsSupport), typeDiscriminator: nameof(SelfServeIncidentalsSupport))]
-//[JsonDerivedType(typeof(SelfServeClothingSupport), typeDiscriminator: nameof(SelfServeClothingSupport))]
-[JsonConverter(typeof(PolymorphicJsonConverter<SelfServeSupport>))]
+[JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
+[JsonDerivedType(typeof(SelfServeFoodGroceriesSupport), typeDiscriminator: nameof(SelfServeFoodGroceriesSupport))]
+[JsonDerivedType(typeof(SelfServeFoodRestaurantSupport), typeDiscriminator: nameof(SelfServeFoodRestaurantSupport))]
+[JsonDerivedType(typeof(SelfServeIncidentalsSupport), typeDiscriminator: nameof(SelfServeIncidentalsSupport))]
+[JsonDerivedType(typeof(SelfServeClothingSupport), typeDiscriminator: nameof(SelfServeClothingSupport))]
+//[JsonConverter(typeof(PolymorphicJsonConverter<SelfServeSupport>))]
 public abstract record SelfServeSupport
 {
     public double? TotalAmount { get; set; }

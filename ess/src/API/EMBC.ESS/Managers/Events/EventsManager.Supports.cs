@@ -12,6 +12,7 @@ using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
 
@@ -299,5 +300,83 @@ public partial class EventsManager
                 }
             }
         }
+    }
+
+    public async System.Threading.Tasks.Task Handle(OptOutSelfServeCommand cmd)
+    {
+        await System.Threading.Tasks.Task.CompletedTask;
+    }
+
+    public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)
+    {
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
+
+        // move to engine to calculate supports as sent in
+        if (query.Items != null)
+        {
+            foreach (var support in query.Items)
+            {
+                support.TotalAmount = 100d;
+            }
+            return new DraftSelfServeSupportQueryResponse { Items = query.Items };
+        }
+
+        // move to engine to generate draft support for a file
+        var householdMembers = file.HouseholdMembers.Select(hm => hm.Id).ToList();
+        DateOnly[] days = [DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(2))];
+        return new DraftSelfServeSupportQueryResponse
+        {
+            Items =
+            [
+                new SelfServeClothingSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
+                new SelfServeFoodGroceriesSupport { Nights = days.Select(d=>new SupportDay(d,householdMembers)), TotalAmount = 100d },
+                new SelfServeFoodRestaurantSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
+                new SelfServeIncidentalsSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
+                new SelfServeShelterAllowanceSupport { Nights = days.Select(d=>new SupportDay(d,householdMembers)), TotalAmount = 100d },
+            ]
+        };
+    }
+
+    public async System.Threading.Tasks.Task Handle(CheckEligibileForSelfServeCommand cmd)
+    {
+        // move to engine to determine eligibility
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
+
+        var registrant = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+        if (registrant == null) throw new NotFoundException("evacuee not found", file.PrimaryRegistrantId);
+
+        var task = (await taskRepository.QueryTask(new TaskQuery { ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.FirstOrDefault();
+        if (task == null) throw new NotFoundException("task not found");
+
+        await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
+        {
+            FileId = cmd.EvacuationFileId,
+            Eligible = registrant.GeocodedHomeAddress != null,
+            TaskId = task.Id
+        });
+    }
+
+    public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
+    {
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
+
+        return new EligibilityCheckQueryResponse
+        {
+            IsEligible = file.NeedsAssessment.EligibilityCheck?.Eligible ?? false,
+            TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskId,
+            From = file.NeedsAssessment.EligibilityCheck?.From,
+            To = file.NeedsAssessment.EligibilityCheck?.From,
+        };
+    }
+
+    public async System.Threading.Tasks.Task Handle(SubmitSelfServeSupportsCommand cmd)
+    {
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
+
+        //map self serve supports into e-transfer supports and create them
     }
 }
