@@ -11,21 +11,29 @@
         <mat-card appearance="outlined">
           <mat-card-content>
             <p class="card-heading">Shelter Allowance</p>
-            <div>
+            <div class="card-question">
               <label>Which people in your household require <b>Shelter Allowance</b> and for which days?</label>
             </div>
 
-            <div stlye="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div
+              style="
+                display: flex;
+                gap: var(--size-3);
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+              "
+            >
               <table>
-                <tr>
-                  <th>Name</th>
+                <tr class="header-row">
+                  <th></th>
                   @for (date of supportRequiredDates; track $index) {
                     <th>{{ date.format('MMM DD, yyy') }}</th>
                   }
                 </tr>
                 @for (person of persons; track person.id) {
                   <tr>
-                    <td>{{ person.name }}</td>
+                    <th>{{ person.name }}</th>
                     @for (date of supportRequiredDates; track $index) {
                       <td>
                         <mat-checkbox
@@ -36,16 +44,19 @@
                   </tr>
                 }
               </table>
-              <div>TEst</div>
+              <div class="note-box">
+                Shelter Allowance is provided at <b>$30 per night</b> based on single occupancy, <b>$10</b> for each
+                additional adult and youth and <b>$5</b> for each additional child.
+              </div>
             </div>
           </mat-card-content>
         </mat-card>
 
         <mat-card appearance="outlined">
           <mat-card-content>
-            <p class="card-heading">Food *</p>
-            <div>
-              <label>Would you like to be provided funds for Restaurant Meals or Groceries?</label>
+            <p class="card-heading requiredField">Food</p>
+            <div class="card-question">
+              <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
             </div>
             <div>
               <mat-radio-group
@@ -58,17 +69,18 @@
             </div>
             <!-- Groceries -->
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.Food_Groceries) {
+              <label>For which <b>days</b> does your household require <b>Groceries</b>?</label>
               <div>
                 <table>
-                  <tr>
-                    <th>Name</th>
+                  <tr class="header-row">
+                    <th></th>
                     @for (date of supportRequiredDates; track $index) {
                       <th>{{ date.format('MMM DD, yyy') }}</th>
                     }
                   </tr>
                   @for (person of persons; track person.id) {
                     <tr>
-                      <td>{{ person.name }}</td>
+                      <th>{{ person.name }}</th>
                       @for (date of supportRequiredDates; track $index) {
                         <td>
                           <mat-checkbox
@@ -85,105 +97,114 @@
             }
             <!-- Restaurant -->
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.Food_Restaurant) {
-              <label for="">Which people in your household require Restaurant Meals? </label>
+              <label>Which people in your household require <b>Restaurant Meals</b>? </label>
               <div style="display: flex; flex-direction: column">
                 @for (
                   person of supportDraftForm.controls.food.controls.restaurant.controls.persons.controls;
                   track $index
                 ) {
                   <div>
-                    <mat-checkbox
-                      [name]="'Food_Restaurant' + person.controls.personId.value"
-                      [formControl]="person.controls.isSelected"
-                    ></mat-checkbox>
-                    <label [for]="'Food_Restaurant' + person.controls.personId.value">{{
-                      getPersonName(person.controls.personId.value)
-                    }}</label>
+                    <mat-checkbox [formControl]="person.controls.isSelected">
+                      {{ getPersonName(person.controls.personId.value) }}
+                    </mat-checkbox>
                   </div>
                 }
               </div>
+              <label>What <b>meals</b> are required for your household?</label>
               <div>
                 <table>
-                  <tr>
-                    <th>Meal Type</th>
+                  <tr class="header-row">
+                    <th></th>
                     @for (date of supportRequiredDates; track $index) {
-                      <th>{{ date }}</th>
+                      <th>{{ date.format('MMM DD, yyy') }}</th>
                     }
                   </tr>
                   <tr>
                     <th>Breakfast</th>
                     @for (
-                      date of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.breakfast
-                        .controls;
+                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
                       track $index
                     ) {
-                      <td><mat-checkbox [formControl]="date.controls.isRequired"></mat-checkbox></td>
+                      <td><mat-checkbox [formControl]="meal.controls.breakfast"></mat-checkbox></td>
                     }
                   </tr>
                   <tr>
                     <th>Lunch</th>
                     @for (
-                      date of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.lunch
-                        .controls;
+                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
                       track $index
                     ) {
-                      <td><mat-checkbox [formControl]="date.controls.isRequired"></mat-checkbox></td>
+                      <td><mat-checkbox [formControl]="meal.controls.lunch"></mat-checkbox></td>
                     }
                   </tr>
                   <tr>
                     <th>Dinner</th>
                     @for (
-                      date of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.dinner
-                        .controls;
+                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
                       track $index
                     ) {
-                      <td><mat-checkbox [formControl]="date.controls.isRequired"></mat-checkbox></td>
+                      <td><mat-checkbox [formControl]="meal.controls.dinner"></mat-checkbox></td>
                     }
                   </tr>
                 </table>
               </div>
             }
+
+            @if (supportDraftForm.controls.food.touched && supportDraftForm.controls.food.hasError('required')) {
+              <mat-error>Food is required</mat-error>
+            }
+            <div class="note-box">
+              Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and
+              <b>$25.50</b> for dinner per person per day. Groceries are provided at a daily rate of
+              <b>$22.50 per person</b> per day.
+            </div>
           </mat-card-content>
         </mat-card>
 
         <mat-card appearance="outlined">
           <mat-card-content>
             <p class="card-heading">Clothing</p>
-            <div>
-              <label>Which people in your household require Clothing?</label>
+            <div class="card-question">
+              <label>Which people in your household require <b>Clothing</b>?</label>
             </div>
             <div style="display: flex; flex-direction: column">
               @for (person of supportDraftForm.controls.clothing.controls; track $index) {
                 <div>
-                  <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
-                  {{ getPersonName(person.controls.personId.value) }}
+                  <mat-checkbox [formControl]="person.controls.isSelected">
+                    {{ getPersonName(person.controls.personId.value) }}
+                  </mat-checkbox>
                 </div>
               }
             </div>
+            <div class="note-box">Clothing is provided at <b>$150 per person</b> for the time you are evacuated.</div>
           </mat-card-content>
         </mat-card>
 
         <mat-card appearance="outlined">
           <mat-card-content>
             <p class="card-heading">Incidentals</p>
-            <div>
-              <label>Which people in your household require Incidentals?</label>
+            <div class="card-question">
+              <label>Which people in your household require <b>Incidentals</b>?</label>
             </div>
             <div style="display: flex; flex-direction: column">
               @for (person of supportDraftForm.controls.incidents.controls; track $index) {
                 <div>
-                  <mat-checkbox [formControl]="person.controls.isSelected"></mat-checkbox>
-                  {{ getPersonName(person.controls.personId.value) }}
+                  <mat-checkbox [formControl]="person.controls.isSelected">
+                    {{ getPersonName(person.controls.personId.value) }}
+                  </mat-checkbox>
                 </div>
               }
+            </div>
+            <div class="note-box">
+              Incidentals are provided at <b>$50 per person</b> for the time you are evacuated.
             </div>
           </mat-card-content>
         </mat-card>
 
-        <div style="display: flex; gap: 16px">
-          <button type="button" mat-button matStepperNext>Next</button>
-          <button type="button" mat-button matStepperNext>Next</button>
-          <button type="button" mat-button (click)="submit()">Submit</button>
+        <div style="display: flex; gap: 16px; justify-content: space-between">
+          <button type="button" mat-button class="button-s" matStepperNext>Next</button>
+          <button type="button" mat-button class="button-p" matStepperNext>Next</button>
+          <button type="button" mat-button class="button-p" (click)="submit()">Submit</button>
         </div>
       </form>
     </mat-step>
