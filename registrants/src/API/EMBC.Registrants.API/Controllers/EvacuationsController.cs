@@ -602,15 +602,6 @@ public enum SupportReprintReason
     EvacueeLostReferral
 }
 
-public record EligibilityCheck
-{
-    public bool IsEligable { get; set; }
-    public string EvacuationFileId { get; set; }
-    public DateTime? From { get; set; }
-    public DateTime? To { get; set; }
-    public string? TaskNumber { get; set; }
-}
-
 public class SupportJsonConverter : JsonConverter<Support>
 {
     private string FirstLetterCapital(string str) => char.ToUpper(str[0]) + str.Remove(0, 1);

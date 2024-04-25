@@ -107,6 +107,15 @@ public record ETransferDetails
     public string RecipientName { get; set; }
 }
 
+public record EligibilityCheck
+{
+    public bool IsEligable { get; set; }
+    public string EvacuationFileId { get; set; }
+    public DateTime? From { get; set; }
+    public DateTime? To { get; set; }
+    public string? TaskNumber { get; set; }
+}
+
 [JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
 [JsonDerivedType(typeof(SelfServeFoodGroceriesSupport), typeDiscriminator: nameof(SelfServeFoodGroceriesSupport))]
 [JsonDerivedType(typeof(SelfServeFoodRestaurantSupport), typeDiscriminator: nameof(SelfServeFoodRestaurantSupport))]
