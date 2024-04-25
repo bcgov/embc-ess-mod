@@ -424,16 +424,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           moment(to).isSameOrAfter(moment(s.from)) &&
           moment(from).isSameOrBefore(moment(s.to))
     );
-    const overlappingSupportsFood = existingSupports.filter(
+    const overlappingFoodSupports = existingSupports.filter(
       (s) =>
-        (((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Groceries.toString()) &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))) || ((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Restaurant.toString()) &&
-            moment(to).isSameOrAfter(moment(s.from)) &&
-            moment(from).isSameOrBefore(moment(s.to))))
+        (this.generateSupportType(s) === SupportSubCategory.Food_Groceries.toString() || this.generateSupportType(s) === SupportSubCategory.Food_Restaurant.toString()) &&
+        (this.stepSupportsService.supportTypeToAdd.description == SupportSubCategory.Food_Groceries.toString() || this.stepSupportsService.supportTypeToAdd.description == SupportSubCategory.Food_Restaurant.toString()) &&
+        moment(to).isSameOrAfter(moment(s.from)) &&
+        moment(from).isSameOrBefore(moment(s.to))
     );
     
-    hasConflict = overlappingSupports.length > 0 || overlappingSupportsFood.length > 0;
+    hasConflict = overlappingSupports.length > 0 || overlappingFoodSupports.length > 0;
 
     if (hasConflict) {
       this.dialog
