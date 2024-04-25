@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Teams
 {
@@ -117,7 +116,6 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         public bool IsActive { get; set; }
     }
 
-    [Serializable]
     public class CommunitiesAlreadyAssignedException : BusinessValidationException
     {
         public CommunitiesAlreadyAssignedException(string message) : base(message)
@@ -130,13 +128,8 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         }
 
         public IEnumerable<string> Communities { get; } = Array.Empty<string>();
-
-        protected CommunitiesAlreadyAssignedException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 
-    [Serializable]
     public class UsernameAlreadyExistsException : BusinessValidationException
     {
         public UsernameAlreadyExistsException(string message) : base(message)
@@ -145,9 +138,5 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         }
 
         public string UserName { get; }
-
-        protected UsernameAlreadyExistsException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

@@ -61,6 +61,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.EvacuatedFrom, opts => opts.Ignore())
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedTeamMemberId, opts => opts.Ignore())
+                .ForMember(d => d.EligibilityCheck, opts => opts.Ignore())
                 .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CompletedOn == default ? DateTime.UtcNow : s.CompletedOn))
                 ;

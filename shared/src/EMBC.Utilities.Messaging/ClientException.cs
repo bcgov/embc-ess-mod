@@ -2,7 +2,6 @@
 
 namespace EMBC.Utilities.Messaging
 {
-    [Serializable]
     public class ClientException : Exception
     {
         public ClientException(string type, string message) : base(message)

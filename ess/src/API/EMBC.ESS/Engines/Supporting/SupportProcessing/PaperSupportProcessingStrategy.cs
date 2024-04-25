@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Supports;
 
 namespace EMBC.ESS.Engines.Supporting.SupportProcessing
@@ -12,13 +11,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
     {
         private readonly IMapper mapper;
         private readonly ISupportRepository supportRepository;
-        private readonly IPrintRequestsRepository printRequestsRepository;
 
-        public PaperSupportProcessingStrategy(IMapper mapper, ISupportRepository supportRepository, IPrintRequestsRepository printRequestsRepository)
+        public PaperSupportProcessingStrategy(IMapper mapper, ISupportRepository supportRepository)
         {
             this.mapper = mapper;
             this.supportRepository = supportRepository;
-            this.printRequestsRepository = printRequestsRepository;
         }
 
         public async Task<ProcessResponse> Process(ProcessRequest request)
