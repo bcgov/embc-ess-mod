@@ -171,5 +171,46 @@ namespace EMBC.Tests.Integration.ESS.Resources
             savedInvite.EvacueeId.ShouldBe(evacuee.Id);
             savedInvite.InviteId.ShouldBe(inviteId);
         }
+
+        [Fact]
+        public async Task Manage_UpdatedHomeAddress_Updated()
+        {
+            var evacuee = (await evacueeRepository.Query(new EvacueeQuery
+            {
+                UserId = TestEvacueeUserId
+            })).Items.ShouldHaveSingleItem();
+
+            var newLocality = TestData.RandomCommunity.Substring(0, 4);
+            evacuee.GeocodedHomeAddress = new GeocodedAddress
+            {
+                Address = new Address
+                {
+                    City = newLocality,
+                    StateProvince = "BC",
+                    Country = "CA",
+                    AddressLine1 = "123 Main St"
+                },
+                Geocode = new AddressGeocode
+                {
+                    Coordinates = new Coordinates(100d, 100d),
+                    Accuracy = 90,
+                    ResolvedAddress = "100 Main st. Vancouver BC"
+                }
+            };
+
+            var updatedEvacueeId = (await evacueeRepository.Manage(new SaveEvacuee
+            {
+                Evacuee = evacuee
+            })).EvacueeId;
+
+            var updatedEvacuee = (await evacueeRepository.Query(new EvacueeQuery
+            {
+                EvacueeId = updatedEvacueeId
+            })).Items.ShouldHaveSingleItem();
+
+            var updatedAddress = updatedEvacuee.GeocodedHomeAddress.ShouldNotBeNull();
+            evacuee.GeocodedHomeAddress.Geocode.GeocodedOn = updatedEvacuee.GeocodedHomeAddress.Geocode.GeocodedOn;
+            updatedAddress.ShouldBe(evacuee.GeocodedHomeAddress);
+        }
     }
 }

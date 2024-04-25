@@ -8,7 +8,6 @@ on:
       - "suppliers/src/API/**"
       - "suppliers/src/UI/**"
       - "suppliers/src/**"
-      - "shared/src/**"
       - .github/workflows/build-suppliers-portal.yml
       - .github/workflows/build-template.yml
 
@@ -17,7 +16,6 @@ on:
       - "suppliers/src/API/**"
       - "suppliers/src/UI/**"
       - "suppliers/src/**"
-      - "shared/src/**"
       - .github/workflows/build-suppliers-portal.yml
       - .github/workflows/build-template.yml
 

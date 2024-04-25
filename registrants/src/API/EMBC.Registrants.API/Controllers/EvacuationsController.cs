@@ -22,7 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EMBC.Registrants.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/Evacuations")]
 public class EvacuationsController : ControllerBase
 {
     private readonly IMessagingClient messagingClient;
@@ -74,7 +74,7 @@ public class EvacuationsController : ControllerBase
         {
             File = file,
             SubmitterProfile = profile
-        });
+        }, ct);
 
         return Ok(new RegistrationResult { ReferenceNumber = id });
     }
@@ -91,8 +91,7 @@ public class EvacuationsController : ControllerBase
         try
         {
             var userId = currentUserId;
-            var files = await evacuationSearchService.GetFiles(userId,
-                new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired }, ct);
+            var files = await evacuationSearchService.GetFiles(userId, [ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired], ct);
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
@@ -139,27 +138,6 @@ public class EvacuationsController : ControllerBase
         var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file }, ct);
 
         return Ok(new RegistrationResult { ReferenceNumber = fileId });
-    }
-
-    /// <summary>
-    /// Checks if a file is eligible for self-serve supports
-    /// </summary>
-    /// <param name="evacuationFileId">The file id to check</param>
-    /// <param name="ct"></param>
-    /// <returns>A decision if the file is eligibile or not</returns>
-    [HttpGet("{evacuationFileId}/eligible")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
-    public async Task<ActionResult<EligibilityCheck>> CheckSelfServeEligibility(string evacuationFileId, CancellationToken ct)
-    {
-        await Task.CompletedTask;
-        return Ok(new EligibilityCheck
-        {
-            EvacuationFileId = evacuationFileId,
-            IsEligable = true
-        });
     }
 }
 
@@ -622,12 +600,6 @@ public enum SupportReprintReason
 
     [Description("Evacuee Lost Referral")]
     EvacueeLostReferral
-}
-
-public record EligibilityCheck
-{
-    public bool IsEligable { get; set; }
-    public string EvacuationFileId { get; set; }
 }
 
 public class SupportJsonConverter : JsonConverter<Support>

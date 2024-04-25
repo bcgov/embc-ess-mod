@@ -13,7 +13,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 
     internal class SupportProcessingStrategyFactory
     {
-        private IServiceProvider services;
+        private readonly IServiceProvider services;
 
         public SupportProcessingStrategyFactory(IServiceProvider services)
         {

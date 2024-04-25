@@ -139,13 +139,11 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
             await RunSingleSupportTest<FoodRestaurantSupport>();
         }
 
-
         [Fact]
         public async Task GenerateReferrals_IncidentalsSupport_Created()
         {
             await RunSingleSupportTest<IncidentalsSupport>();
         }
-
 
         [Fact]
         public async Task GenerateReferrals_ClothingSupport_Created()
@@ -153,13 +151,11 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
             await RunSingleSupportTest<ClothingSupport>();
         }
 
-
         [Fact]
         public async Task GenerateReferrals_TransportationOtherSupport_Created()
         {
             await RunSingleSupportTest<TransportationOtherSupport>();
         }
-
 
         [Fact]
         public async Task GenerateReferrals_TransportationTaxiSupport_Created()
@@ -194,6 +190,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
         where TSupport : Support
         where TSupportDelivery : SupportDelivery
         {
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
             return typeof(TSupport) switch
             {
                 Type t when t == typeof(ShelterAllowanceSupport) => new Faker<ShelterAllowanceSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<ShelterAllowanceSupport, TSupportDelivery>().Generate(),
@@ -205,7 +202,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
                 _ => new Faker<TSupport>("en_CA").WithDefaultSupportRules(file, teamMember).WithSupportDeliveryRules<TSupport, TSupportDelivery>().Generate()
             };
-
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
         }
     }
 
@@ -261,7 +258,6 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
                 ;
         }
 
-
         public static Faker<SupplierDetails> WithSupplierDetailsRules(this Faker<SupplierDetails> faker)
         {
             return faker
@@ -288,6 +284,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
         where TSupport : Support
         where TSupportDelivery : SupportDelivery
         {
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
             return typeof(TSupportDelivery) switch
             {
                 Type t when t == typeof(Referral) => faker.RuleFor(s => s.SupportDelivery, f => new Faker<Referral>().WithReferralRules().Generate()),
@@ -295,6 +292,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
                 _ => throw new NotImplementedException()
             };
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
         }
 
         public static Faker<Referral> WithReferralRules(this Faker<Referral> faker)

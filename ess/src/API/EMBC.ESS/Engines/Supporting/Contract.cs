@@ -143,7 +143,6 @@ namespace EMBC.ESS.Engines.Supporting
 
     public class GeneratePaymentsResponse : GenerateResponse
     {
-        //TODO: create manager level payment dto
         public IEnumerable<Payment> Payments { get; set; }
     }
 }

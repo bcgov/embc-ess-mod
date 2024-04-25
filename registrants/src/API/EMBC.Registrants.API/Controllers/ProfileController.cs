@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -17,227 +18,235 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EMBC.Registrants.API.Controllers;
-
-[Route("api/profiles")]
-[ApiController]
-[Authorize]
-public class ProfileController : ControllerBase
+namespace EMBC.Registrants.API.Controllers
 {
-    private readonly IMessagingClient messagingClient;
-    private readonly IMapper mapper;
-    private readonly IEvacuationSearchService evacuationSearchService;
-    private readonly IProfileInviteService profileInviteService;
-
-    private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-
-    public ProfileController(
-        IMessagingClient messagingClient,
-        IMapper mapper,
-        IEvacuationSearchService evacuationSearchService,
-        IProfileInviteService profileInviteService)
+    [Route("api/profiles")]
+    [ApiController]
+    [Authorize]
+    public class ProfileController : ControllerBase
     {
-        this.messagingClient = messagingClient;
-        this.mapper = mapper;
-        this.evacuationSearchService = evacuationSearchService;
-        this.profileInviteService = profileInviteService;
-    }
+        private readonly IMessagingClient messagingClient;
+        private readonly IMapper mapper;
+        private readonly IEvacuationSearchService evacuationSearchService;
+        private readonly IProfileInviteService profileInviteService;
 
-    /// <summary>
-    /// Get the current logged in user's profile
-    /// </summary>
-    /// <returns>Currently logged in user's profile</returns>
-    [HttpGet("current")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Profile>> GetProfile(CancellationToken ct)
-    {
-        var userId = currentUserId;
-        var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId, ct));
-        if (profile == null)
+        private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+        public ProfileController(
+            IMessagingClient messagingClient,
+            IMapper mapper,
+            IEvacuationSearchService evacuationSearchService,
+            IProfileInviteService profileInviteService)
         {
-            //try get BCSC profile
-            profile = GetUserFromPrincipal();
+            this.messagingClient = messagingClient;
+            this.mapper = mapper;
+            this.evacuationSearchService = evacuationSearchService;
+            this.profileInviteService = profileInviteService;
         }
-        if (profile == null) return NotFound(userId);
-        return Ok(profile);
+
+        /// <summary>
+        /// Get the current logged in user's profile
+        /// </summary>
+        /// <returns>Currently logged in user's profile</returns>
+        [HttpGet("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Profile>> GetProfile(CancellationToken ct)
+        {
+            var userId = currentUserId;
+            var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId, ct));
+            if (profile == null)
+            {
+                //try get BCSC profile
+                profile = GetUserFromPrincipal();
+            }
+            if (profile == null) return NotFound(userId);
+            return Ok(profile);
+        }
+
+        /// <summary>
+        /// check if user exists or not
+        /// </summary>
+        /// <returns>true if existing user, false if a new user</returns>
+        [HttpGet("current/exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> GetDoesUserExists(CancellationToken ct)
+        {
+            var userId = currentUserId;
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
+            if (profile != null)
+            {
+                profile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
+                profile.LastLogin = DateTimeOffset.UtcNow;
+                await messagingClient.Send(new SaveRegistrantCommand { Profile = profile });
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+
+        /// <summary>
+        /// Create or update the current user's profile
+        /// </summary>
+        /// <returns>profile id</returns>
+        [HttpPost("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<string>> Upsert(Profile profile, CancellationToken ct)
+        {
+            profile.Id = currentUserId;
+            var mappedProfile = mapper.Map<RegistrantProfile>(profile);
+            //BCSC profiles are authenticated and verified
+            mappedProfile.AuthenticatedUser = true;
+            mappedProfile.VerifiedUser = true;
+            mappedProfile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
+
+            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile }, ct);
+            return Ok(profileId);
+        }
+
+        /// <summary>
+        /// Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider
+        /// </summary>
+        /// <returns>The current user's profile, the identity provider's profile and the detected conflicts</returns>
+        [HttpGet("current/conflicts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts(CancellationToken ct)
+        {
+            var userId = currentUserId;
+
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
+            if (profile == null) return NotFound(userId);
+
+            var userProfile = GetUserFromPrincipal();
+            var conflicts = ProfilesConflictDetector.DetectConflicts(mapper.Map<Profile>(profile), userProfile);
+            return Ok(conflicts);
+        }
+
+        private Profile GetUserFromPrincipal()
+        {
+            if (!User.HasClaim(c => c.Type.Equals("userInfo", System.StringComparison.OrdinalIgnoreCase))) return null;
+            var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity?.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
+            return userProfile;
+        }
+
+        [HttpPost("invite-anonymous")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        public async Task<IActionResult> Invite(InviteRequest request, CancellationToken ct)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesQuery { FileId = request.FileId })).Items.SingleOrDefault();
+            if (file == null) return NotFound(request.FileId);
+            await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email }, ct);
+            return Ok();
+        }
+
+        [HttpPost("current/join")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> ProcessInvite(InviteToken token, CancellationToken ct)
+        {
+            return Ok(await profileInviteService.ProcessInvite(token.Token, currentUserId, ct));
+        }
     }
 
     /// <summary>
-    /// check if user exists or not
+    /// User's profile
     /// </summary>
-    /// <returns>true if existing user, false if a new user</returns>
-    [HttpGet("current/exists")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<bool>> GetDoesUserExists(CancellationToken ct)
+    public class Profile
     {
-        var userId = currentUserId;
-        var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
-        return Ok(profile != null);
+        public string? Id { get; set; }
+
+        [Required]
+        public PersonDetails PersonalDetails { get; set; }
+
+        [Required]
+        public ContactDetails ContactDetails { get; set; }
+
+        [Required]
+        public Address PrimaryAddress { get; set; }
+
+        public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
+        public bool RestrictedAccess { get; set; }
+        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
     }
 
     /// <summary>
-    /// Create or update the current user's profile
+    /// Base class for profile data conflicts
     /// </summary>
-    /// <param name="profile">The profile information</param>
-    /// <param name="ct"></param>
-    /// <returns>profile id</returns>
-    [HttpPost("current")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<string>> Upsert(Profile profile, CancellationToken ct)
+    [JsonConverter(typeof(PolymorphicJsonConverter<ProfileDataConflict>))]
+    [KnownType(typeof(DateOfBirthDataConflict))]
+    [KnownType(typeof(NameDataConflict))]
+    [KnownType(typeof(AddressDataConflict))]
+    public abstract class ProfileDataConflict
     {
-        profile.Id = currentUserId;
-        var mappedProfile = mapper.Map<RegistrantProfile>(profile);
-        //BCSC profiles are authenticated and verified
-        mappedProfile.AuthenticatedUser = true;
-        mappedProfile.VerifiedUser = true;
-        var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile }, ct);
-        return Ok(profileId);
+        [Required]
+        public abstract string DataElementName { get; }
     }
 
     /// <summary>
-    /// Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider
+    /// Date of birth data conflict
     /// </summary>
-    /// <returns>The current user's profile, the identity provider's profile and the detected conflicts</returns>
-    [HttpGet("current/conflicts")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts(CancellationToken ct)
+    public class DateOfBirthDataConflict : ProfileDataConflict
     {
-        var userId = currentUserId;
+        [Required]
+        public override string DataElementName => nameof(DateOfBirthDataConflict);
 
-        var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
-        if (profile == null) return NotFound(userId);
+        public string ConflictingValue { get; set; }
 
-        var userProfile = GetUserFromPrincipal();
-        var conflicts = ProfilesConflictDetector.DetectConflicts(mapper.Map<Profile>(profile), userProfile);
-        return Ok(conflicts);
+        public string OriginalValue { get; set; }
     }
 
-    private Profile GetUserFromPrincipal()
+    /// <summary>
+    /// Name data conflict
+    /// </summary>
+    public class NameDataConflict : ProfileDataConflict
     {
-        if (!User.HasClaim(c => c.Type.Equals("userInfo", System.StringComparison.OrdinalIgnoreCase))) return null;
-        var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity?.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
-        return userProfile;
+        [Required]
+        public override string DataElementName => nameof(NameDataConflict);
+
+        public ProfileName ConflictingValue
+        { get; set; }
+
+        public ProfileName OriginalValue
+        { get; set; }
     }
 
-    [HttpPost("invite-anonymous")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [AllowAnonymous]
-    public async Task<IActionResult> Invite(InviteRequest request, CancellationToken ct)
+    public class ProfileName
     {
-        var file = (await messagingClient.Send(new EvacuationFilesQuery { FileId = request.FileId })).Items.SingleOrDefault();
-        if (file == null) return NotFound(request.FileId);
-        await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email }, ct);
-        return Ok();
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 
-    [HttpPost("current/join")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<bool>> ProcessInvite(InviteToken token, CancellationToken ct)
+    /// <summary>
+    /// Address data conflict
+    /// </summary>
+    public class AddressDataConflict : ProfileDataConflict
     {
-        return Ok(await profileInviteService.ProcessInvite(token.Token, currentUserId, ct));
+        [Required]
+        public override string DataElementName => nameof(AddressDataConflict);
+
+        public Address ConflictingValue { get; set; }
+
+        public Address OriginalValue { get; set; }
     }
-}
 
-/// <summary>
-/// User's profile
-/// </summary>
-public record Profile
-{
-    public string? Id { get; set; }
+    public class InviteRequest
+    {
+        [Required]
+        public string FileId { get; set; }
 
-    [Required]
-    public PersonDetails PersonalDetails { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
 
-    [Required]
-    public ContactDetails ContactDetails { get; set; }
-
-    [Required]
-    public Address PrimaryAddress { get; set; }
-
-    public Address MailingAddress { get; set; }
-    public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
-    public bool RestrictedAccess { get; set; }
-    public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
-}
-
-/// <summary>
-/// Base class for profile data conflicts
-/// </summary>
-[JsonConverter(typeof(PolymorphicJsonConverter<ProfileDataConflict>))]
-[KnownType(typeof(DateOfBirthDataConflict))]
-[KnownType(typeof(NameDataConflict))]
-[KnownType(typeof(AddressDataConflict))]
-public abstract record ProfileDataConflict
-{
-    [Required]
-    public abstract string DataElementName { get; }
-}
-
-/// <summary>
-/// Date of birth data conflict
-/// </summary>
-public record DateOfBirthDataConflict : ProfileDataConflict
-{
-    [Required]
-    public override string DataElementName => nameof(DateOfBirthDataConflict);
-
-    public string ConflictingValue { get; set; }
-
-    public string OriginalValue { get; set; }
-}
-
-/// <summary>
-/// Name data conflict
-/// </summary>
-public record NameDataConflict : ProfileDataConflict
-{
-    [Required]
-    public override string DataElementName => nameof(NameDataConflict);
-
-    public ProfileName ConflictingValue
-    { get; set; }
-
-    public ProfileName OriginalValue
-    { get; set; }
-}
-
-public record ProfileName
-{
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-}
-
-/// <summary>
-/// Address data conflict
-/// </summary>
-public record AddressDataConflict : ProfileDataConflict
-{
-    [Required]
-    public override string DataElementName => nameof(AddressDataConflict);
-
-    public Address ConflictingValue { get; set; }
-
-    public Address OriginalValue { get; set; }
-}
-
-public record InviteRequest
-{
-    [Required]
-    public string FileId { get; set; }
-
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
-}
-
-public record InviteToken
-{
-    [Required]
-    public string Token { get; set; }
+    public class InviteToken
+    {
+        [Required]
+        public string Token { get; set; }
+    }
 }
