@@ -32,5 +32,6 @@
     <ItemGroup>
       <ProjectReference Include="..\EMBC.ESS.Host\EMBC.ESS.Host.csproj" />
       <ProjectReference Include="..\EMBC.ESS.Utilities.Spatial\EMBC.ESS.Utilities.Spatial.csproj" />
+      <ProjectReference Include="..\EMBC.Tests.Unit.ESS\EMBC.Tests.Unit.ESS.csproj" />
     </ItemGroup>
 </Project>

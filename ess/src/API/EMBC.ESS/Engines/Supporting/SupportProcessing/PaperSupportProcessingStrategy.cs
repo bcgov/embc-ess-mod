@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Supports;
@@ -18,21 +19,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             this.supportRepository = supportRepository;
         }
 
-        public async Task<ProcessResponse> Process(ProcessRequest request)
+        public async Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct)
         {
             if (!(request is ProcessPaperSupportsRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(PaperSupportProcessingStrategy)} can only handle {nameof(ProcessPaperSupportsRequest)} request types");
-            return await HandleInternal(r);
+            return await HandleInternal(r, ct);
         }
 
-        public async Task<ValidationResponse> Validate(ValidationRequest request)
+        public async Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct)
         {
             if (!(request is PaperSupportsValidationRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(PaperSupportProcessingStrategy)} can only handle {nameof(PaperSupportsValidationRequest)} request types");
-            return await HandleInternal(r);
+            return await HandleInternal(r, ct);
         }
 
-        private async Task<ProcessPaperSupportsResponse> HandleInternal(ProcessPaperSupportsRequest r)
+        private async Task<ProcessPaperSupportsResponse> HandleInternal(ProcessPaperSupportsRequest r, CancellationToken ct)
         {
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
@@ -45,7 +46,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             return new ProcessPaperSupportsResponse { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(procesedSupports) };
         }
 
-        private async Task<PaperSupportsValidationResponse> HandleInternal(PaperSupportsValidationRequest r)
+        private async Task<PaperSupportsValidationResponse> HandleInternal(PaperSupportsValidationRequest r, CancellationToken ct)
         {
             await Task.CompletedTask;
             //validate only paper referrals were passed in the command

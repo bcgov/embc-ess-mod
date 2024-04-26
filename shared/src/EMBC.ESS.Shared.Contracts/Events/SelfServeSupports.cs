@@ -16,10 +16,7 @@ public record EligibilityCheckQuery : Query<EligibilityCheckQueryResponse>
 
 public record EligibilityCheckQueryResponse
 {
-    public bool IsEligible { get; set; }
-    public DateTimeOffset? From { get; set; }
-    public DateTimeOffset? To { get; set; }
-    public string TaskNumber { get; set; }
+    public SupportEligibility Eligibility { get; set; }
 }
 
 public record OptOutSelfServeCommand : Command
@@ -91,4 +88,12 @@ public record ETransferDetails
     public string? ETransferEmail { get; set; }
     public string? ETransferMobile { get; set; }
     public string RecipientName { get; set; }
+}
+
+public record SupportEligibility
+{
+    public bool IsEligible { get; set; }
+    public DateTimeOffset? From { get; set; }
+    public DateTimeOffset? To { get; set; }
+    public string TaskNumber { get; set; }
 }

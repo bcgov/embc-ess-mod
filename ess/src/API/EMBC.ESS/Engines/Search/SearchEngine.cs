@@ -1,23 +1,18 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Engines.Search
 {
-    internal partial class SearchEngine : ISearchEngine
+    internal partial class SearchEngine(IEssContextFactory essContextFactory) : ISearchEngine
     {
-        private readonly IEssContextFactory essContextFactory;
-
-        public SearchEngine(IEssContextFactory essContextFactory)
-        {
-            this.essContextFactory = essContextFactory;
-        }
-
-        public async Task<SearchResponse> Search(SearchRequest request) =>
+        public async Task<SearchResponse> Search(SearchRequest request, CancellationToken ct = default) =>
             request switch
             {
-                EvacueeSearchRequest r => await Handle(r),
-                SupportSearchRequest r => await Handle(r),
+                EvacueeSearchRequest r => await Handle(r, ct),
+                SupportSearchRequest r => await Handle(r, ct),
+
                 _ => throw new NotSupportedException($"{request.GetType().Name} is not supported")
             };
     }

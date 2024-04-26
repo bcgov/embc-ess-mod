@@ -10,19 +10,18 @@ namespace EMBC.ESS.Engines.Search
 {
     internal partial class SearchEngine
     {
-        private async Task<SupportSearchResponse> Handle(SupportSearchRequest request)
+        private async Task<SupportSearchResponse> Handle(SupportSearchRequest request, CancellationToken ct)
         {
             return request switch
             {
-                PendingPaymentSupportSearchRequest r => await HandleInternal(r),
+                PendingPaymentSupportSearchRequest r => await HandleInternal(r, ct),
 
                 _ => throw new NotImplementedException($"{nameof(SupportSearchRequest)} of type {request.GetType().Name} is not implemented")
             };
         }
 
-        private async Task<PendingPaymentSupportSearchResponse> HandleInternal(PendingPaymentSupportSearchRequest _)
+        private async Task<PendingPaymentSupportSearchResponse> HandleInternal(PendingPaymentSupportSearchRequest _, CancellationToken ct)
         {
-            var ct = new CancellationTokenSource().Token;
             var ctx = essContextFactory.CreateReadOnly();
 
             var pendingPaymentSupports = await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports

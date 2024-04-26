@@ -32,7 +32,7 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     public async Task<ActionResult<EligibilityCheck>> CheckSelfServeEligibility(string evacuationFileId, CancellationToken ct)
     {
         await messagingClient.Send(new CheckEligibileForSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
-        var eligilityCheck = await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct);
+        var eligilityCheck = (await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct)).Eligibility;
         return Ok(new EligibilityCheck
         {
             EvacuationFileId = evacuationFileId,

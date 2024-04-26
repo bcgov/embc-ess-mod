@@ -12,14 +12,13 @@ namespace EMBC.ESS.Engines.Search
 {
     internal partial class SearchEngine
     {
-        private async Task<EvacueeSearchResponse> Handle(EvacueeSearchRequest request)
+        private async Task<EvacueeSearchResponse> Handle(EvacueeSearchRequest request, CancellationToken ct)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrWhiteSpace(request.FirstName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.FirstName));
             if (string.IsNullOrWhiteSpace(request.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.LastName));
             if (string.IsNullOrWhiteSpace(request.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.DateOfBirth));
 
-            var ct = new CancellationTokenSource().Token;
             var ctx = essContextFactory.CreateReadOnly();
 
             IEnumerable<era_householdmember> membersQuery;
