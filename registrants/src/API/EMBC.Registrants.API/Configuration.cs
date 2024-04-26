@@ -17,9 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using NSwag;
-using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
+using Microsoft.OpenApi.Models;
 
 namespace EMBC.Registrants.API
 {
@@ -114,34 +112,15 @@ namespace EMBC.Registrants.API
                 options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
             });
 
-            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+            services.AddSwaggerGen(opts =>
             {
-                options.Path = "/api/openapi/{documentName}/openapi.json";
-                options.DocumentName = "Registrants Portal API";
-                options.PostProcess = (document, req) =>
+                opts.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    document.Info.Title = "Registrants Portal API";
-                };
-            });
-
-            services.Configure<SwaggerUiSettings>(options =>
-            {
-                options.Path = "/api/openapi";
-                options.DocumentTitle = "Registrants Portal API Documentation";
-                options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
-            });
-
-            services.AddOpenApiDocument(document =>
-            {
-                document.AddSecurity("bearer token", Array.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "paste token here",
-                    In = OpenApiSecurityApiKeyLocation.Header
+                    Title = "Registrants Portal API",
+                    Version = "v1"
                 });
-
-                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
+                opts.UseOneOfForPolymorphism();
+                opts.UseAllOfForInheritance();
             });
 
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
@@ -166,8 +145,15 @@ namespace EMBC.Registrants.API
             }
             if (!env.IsProduction())
             {
-                app.UseOpenApi();
-                app.UseSwaggerUi();
+                app.UseSwagger(opts =>
+                {
+                    opts.RouteTemplate = "api/openapi/{documentName}/openapi.json";
+                });
+                app.UseSwaggerUI(opts =>
+                {
+                    opts.SwaggerEndpoint("v1/openapi.json", "Registrants portal API");
+                    opts.RoutePrefix = "api/openapi";
+                });
             }
             app.UseAuthentication();
             app.UseAuthorization();
