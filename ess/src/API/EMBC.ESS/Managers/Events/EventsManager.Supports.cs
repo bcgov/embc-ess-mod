@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
@@ -304,7 +305,18 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(OptOutSelfServeCommand cmd)
     {
-        await System.Threading.Tasks.Task.CompletedTask;
+        if (string.IsNullOrEmpty(cmd.EvacuationFileId)) throw new ArgumentNullException("FileId is required");
+
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
+        {
+            FileId = cmd.EvacuationFileId,
+        })).Items.SingleOrDefault();
+
+        if (file == null) throw new NotFoundException($"Evacuation File {cmd.EvacuationFileId} not found", cmd.EvacuationFileId);
+
+        file.NeedsAssessment.SelfServeOptOut = true;
+
+       await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)
