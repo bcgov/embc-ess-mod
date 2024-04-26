@@ -113,6 +113,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.Pets, opts => opts.Ignore())
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.Needs, opts => opts.Ignore())
+                .ForMember(d => d.SelfServeOptOut, opts => opts.MapFrom(s => s.era_selfserveoptout))
                 .AfterMap((s, d) =>
                 {
                     var needs = new List<IdentifiedNeed>();

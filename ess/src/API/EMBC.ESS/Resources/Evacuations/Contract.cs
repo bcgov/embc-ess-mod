@@ -33,6 +33,11 @@ public record SubmitEvacuationFileNeedsAssessment : ManageEvacuationFileCommand
     public EvacuationFile EvacuationFile { get; set; }
 }
 
+public record UpdateEvacuationFileNeedsAssessmentOptOut : ManageEvacuationFileCommand
+{
+    public EvacuationFile EvacuationFile { get; set; }
+}
+
 public record LinkEvacuationFileRegistrant : ManageEvacuationFileCommand
 {
     public string FileId { get; set; }
@@ -120,6 +125,7 @@ public record NeedsAssessment
     public IEnumerable<Note> Notes { get; set; }
     public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
     public SelfServeEligibilityCheck? EligibilityCheck { get; set; }
+    public bool? SelfServeOptOut { get; set; }
 }
 
 public record HouseholdMember
