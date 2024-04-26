@@ -22,7 +22,6 @@ namespace EMBC.ESS.Resources.Payments
         public Task<InvoiceItem> QueryInvoice(string invoiceNumber, string suppliernumber, string suppliersitecode, CancellationToken ct);
     }
 
-    [Serializable]
     public class CasException : Exception
     {
         public CasException(string message) : base(message)

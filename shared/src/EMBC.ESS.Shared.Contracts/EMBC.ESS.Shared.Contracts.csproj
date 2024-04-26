@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <TargetFramework>net8</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Nullable>warnings</Nullable>
+        <Nullable>annotations</Nullable>
         <Company>Province of British Columbia</Company>
         <Authors>Quartech Systems Limited</Authors>
         <Copyright>Copyright 2021 Province of British Columbia</Copyright>
@@ -19,6 +18,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="8.0.3" />
+        <PackageReference Include="System.Text.Json" Version="8.0.*" />
     </ItemGroup>
 </Project>
