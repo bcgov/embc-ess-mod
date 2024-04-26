@@ -119,6 +119,25 @@ namespace EMBC.Registrants.API
                     Title = "Registrants Portal API",
                     Version = "v1"
                 });
+
+                opts.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+                opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
+                        },
+                        new string[] {}
+                    }
+                });
+
                 opts.UseOneOfForPolymorphism();
                 opts.UseAllOfForInheritance();
             });
