@@ -9,6 +9,7 @@ on:
       - "responders/src/API/**"
       - "shared/src/**"
       - ".github/workflows/cd-responders-portal-api.yml"
+      - 'release/**'
 
 env:
   IMAGE_NAME: responders-portal-api
