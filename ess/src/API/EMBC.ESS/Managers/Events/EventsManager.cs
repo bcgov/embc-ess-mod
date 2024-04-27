@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Anywhere.ArcGIS.Operation;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
@@ -20,7 +19,6 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Spatial;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Notifications;
@@ -513,22 +511,5 @@ public partial class EventsManager(
         };
     }
 
-    public async Task<string> Handle(OptOutSelfServeCommand cmd)
-    {
-
-        if (string.IsNullOrEmpty(cmd.EvacuationFileId)) throw new ArgumentNullException("FileId is required");
-
-            var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
-            {
-                FileId = cmd.EvacuationFileId,
-            })).Items.SingleOrDefault();
-
-        if (file == null) throw new NotFoundException($"Evacuation File {cmd.EvacuationFileId} not found", cmd.EvacuationFileId);
-
-        file.NeedsAssessment.SelfServeOptOut = true;
-
-        var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
-
-        return caseId;
-    }
+ 
 }
