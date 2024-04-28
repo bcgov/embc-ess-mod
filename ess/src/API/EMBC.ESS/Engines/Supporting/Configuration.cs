@@ -23,6 +23,7 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceCheck>()
                 .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceCheck>()
                 .AddTransient<PaymentGenerationStrategyFactory>()
+                .AddTransient<SelfServeSupportProcessingStrategy>()
                 ;
         }
     }

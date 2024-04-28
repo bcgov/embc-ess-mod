@@ -25,6 +25,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             SupportProcessingStrategyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
             SupportProcessingStrategyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
+            SupportProcessingStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportProcessingStrategy>(),
 
             _ => throw new NotImplementedException($"{type}")
         };
@@ -33,6 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
     internal enum SupportProcessingStrategyType
     {
         Digital,
-        Paper
+        Paper,
+        SelfServe
     }
 }

@@ -52,7 +52,7 @@ namespace EMBC.ESS.Engines.Supporting
                 DigitalSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Validate(r, ct),
                 PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Validate(r, ct),
                 CheckSupportComplianceRequest r => await supportComplianceStrategyFactory.Create().CheckCompliance(r),
-                //ValidateSelfServeSupportsEligibility r => await new EligibilityChecker().Check(r),
+                ValidateSelfServeSupportsEligibility r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.SelfServe).Validate(r, ct),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };

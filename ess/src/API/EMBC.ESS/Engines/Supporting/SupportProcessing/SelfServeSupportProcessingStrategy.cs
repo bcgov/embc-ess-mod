@@ -28,15 +28,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 
         private async Task<SelfServeSupportEligibility> ValidateInternal(ValidateSelfServeSupportsEligibility request, CancellationToken ct)
         {
-            var ctx = essContextFactory.CreateReadOnly();
-            var file = ctx.era_evacuationfiles
+            var ctx = essContextFactory.Create();
+            var file = await ctx.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_CurrentNeedsAssessmentid.era_TaskNumber)
                 .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
                 .Expand(f => f.era_Registrant)
                 .Expand(f => f.era_Registrant.era_BCSCAddress)
-                .Expand(f => f.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
-                .SingleOrDefault(f => f.era_name == request.EvacuationFileId);
+                //.Expand(f => f.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
+                .Where(f => f.era_name == request.EvacuationFileId).SingleOrDefaultAsync();
+
+            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
 
             if (file == null) throw new InvalidOperationException($"File {request.EvacuationFileId} not found");
 
@@ -63,9 +65,10 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
             // check the task is enabled for self-serve
-            var task = ctx.era_tasks
+            var task = await ctx.era_tasks
                 .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
-                .SingleOrDefault(t => t.era_name == taskNumber);
+                .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
+
             if (task == null) return NotEligible($"Task {taskNumber} was not found in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
             if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
 

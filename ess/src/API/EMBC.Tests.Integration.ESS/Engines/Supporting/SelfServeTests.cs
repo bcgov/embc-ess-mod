@@ -22,6 +22,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var ct = CancellationToken.None;
         var registrant = TestHelper.CreateRegistrantProfile();
+        registrant.HomeAddress = TestHelper.CreateBcscValidAddress();
         var file = TestHelper.CreateNewTestEvacuationFile(registrant, null);
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5).ToList();
         var fileId = await SaveFile(registrant, file);
@@ -30,7 +31,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
 
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId), ct);
         eligibilityResponse.ShouldNotBeNull();
-        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedEligibilityResult);
+        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedEligibilityResult, eligibilityResponse.Eligibility.Reason);
     }
 
     private async Task<string> SaveFile(RegistrantProfile registrant, EvacuationFile evacuationFile)

@@ -44,7 +44,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             context.UpdateObject(entity);
         }
 
-        public static async Task<T> SingleOrDefaultAsync<T>(this IQueryable<T> query, CancellationToken? ct = null)
+        public static async Task<T?> SingleOrDefaultAsync<T>(this IQueryable<T> query, CancellationToken? ct = null)
             where T : crmbaseentity =>
             (await ((DataServiceQuery<T>)query).ExecuteAsync(ct ?? CancellationToken.None)).SingleOrDefault();
 

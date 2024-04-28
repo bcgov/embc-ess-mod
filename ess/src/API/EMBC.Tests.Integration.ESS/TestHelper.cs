@@ -16,6 +16,7 @@ namespace EMBC.Tests.Integration.ESS
         {
             var file = new Faker<EvacuationFile>("en_CA").WithFileRules(registrant).Generate();
             file.Id = null;
+            file.RelatedTask = null;
             if (taskNumber != null) file.RelatedTask = new IncidentTask { Id = taskNumber };
             file.PrimaryRegistrantId = registrant.Id;
             return file;
@@ -109,5 +110,16 @@ namespace EMBC.Tests.Integration.ESS
         public static decimal RandomAmount() => decimal.Round(Convert.ToDecimal(Random.Shared.NextDouble() * 100), 2);
 
         public static int RandomInt(int min = 1, int max = 10) => Random.Shared.Next(min, max);
+
+        internal static Address CreateBcscValidAddress()
+        {
+            return new Address
+            {
+                AddressLine1 = "100 Main st",
+                City = "Vancouver",
+                StateProvince = "BC",
+                Country = "CA"
+            };
+        }
     }
 }
