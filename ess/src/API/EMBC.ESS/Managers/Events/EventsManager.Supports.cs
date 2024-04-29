@@ -13,6 +13,7 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
+using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
 
@@ -313,14 +314,18 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
         if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligable for self serve");
 
+        var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskId, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
+        if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskId);
+
         if (query.Items == null)
         {
             //generate the supports based on the file
-            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(
-                file.NeedsAssessment.Needs),
-                file.NeedsAssessment.EligibilityCheck.From.Value,
-                file.NeedsAssessment.EligibilityCheck.To.Value,
-                file.HouseholdMembers.Select(hm => hm.Id)));
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
+                task.StartDate.ToPST(),
+                task.EndDate.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.From.Value.DateTime.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.To.Value.DateTime.ToPST(),
+                file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
 
             return new DraftSelfServeSupportQueryResponse
             {
@@ -330,7 +335,7 @@ public partial class EventsManager
         else
         {
             //recalculate the totals and return as is
-            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(query.Items));
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(query.Items, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
 
             return new DraftSelfServeSupportQueryResponse
             {

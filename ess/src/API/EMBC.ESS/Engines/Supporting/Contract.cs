@@ -155,6 +155,8 @@ public record ValidateSelfServeSupportsEligibilityResponse(SelfServeSupportEligi
 
 public record SelfServeSupportEligibility(bool Eligible, string? Reason, string? TaskNumber, string? HomeAddressReferenceId, DateTimeOffset? From, DateTimeOffset? To);
 
-public record GenerateSelfServeSupports(IEnumerable<IdentifiedNeed> Needs, DateTimeOffset From, DateTimeOffset To, IEnumerable<string> HouseholdMembersIds) : GenerateRequest;
-public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports) : GenerateRequest;
+public record GenerateSelfServeSupports(IEnumerable<IdentifiedNeed> Needs, DateTime TaskStartDate, DateTime TaskEndDate, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
+
+public record SelfServeHouseholdMember(string Id, bool IsMinor);
+public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 public record GenerateSelfServeSupportsResponse(IEnumerable<SelfServeSupport> Supports) : GenerateResponse;

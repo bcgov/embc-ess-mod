@@ -2,6 +2,7 @@
 using EMBC.ESS.Engines.Supporting.SupportCompliance;
 using EMBC.ESS.Engines.Supporting.SupportGeneration;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
 using EMBC.ESS.Engines.Supporting.SupportProcessing;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceCheck>()
                 .AddTransient<PaymentGenerationStrategyFactory>()
                 .AddTransient<SelfServeSupportProcessingStrategy>()
+                .AddTransient<SelfServeSupportGenerator>()
                 ;
         }
     }

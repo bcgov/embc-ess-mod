@@ -35,12 +35,10 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
                 .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
                 .Expand(f => f.era_Registrant)
                 .Expand(f => f.era_Registrant.era_BCSCAddress)
-                //.Expand(f => f.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
                 .Where(f => f.era_name == request.EvacuationFileId).SingleOrDefaultAsync();
 
-            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
-
             if (file == null) throw new InvalidOperationException($"File {request.EvacuationFileId} not found");
+            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
 
             var registrant = file.era_Registrant;
             if (registrant == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no primar yregistrant");
@@ -66,17 +64,19 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 
             // check the task is enabled for self-serve
             var task = await ctx.era_tasks
-                .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
                 .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
 
             if (task == null) return NotEligible($"Task {taskNumber} was not found in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
             if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
+            await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
             // check if requested supports are enabled for self-serve
             var requestedSupports = MapSupportTypesFromNeeds(needsAssessment).ToArray();
             if (requestedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", referencedHomeAddressId: homeAddress.era_bcscaddressid);
-            var allowedSupports = task.era_era_task_era_selfservesupportlimits_Task.Select(s => Enum.Parse<SupportType>(s.ToString())).ToArray();
-            if (allowedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", referencedHomeAddressId: homeAddress.era_bcscaddressid);
+            var allowedSupports = (await ctx.era_selfservesupportlimitses
+                .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
+                .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
+            if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", referencedHomeAddressId: homeAddress.era_bcscaddressid);
             if (!Array.TrueForAll(requestedSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
             // add - duplicate check

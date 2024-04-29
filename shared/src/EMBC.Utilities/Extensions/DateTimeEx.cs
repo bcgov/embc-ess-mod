@@ -24,7 +24,7 @@ namespace EMBC.Utilities.Extensions
             return Environment.OSVersion.Platform switch
             {
                 PlatformID.Win32NT => "Pacific Standard Time",
-                PlatformID.Unix => "America/Vancouver", // NOTE: Previous value "Canada/Pacific" is deprecated
+                PlatformID.Unix => "America/Vancouver",
                 _ => throw new NotSupportedException()
             };
         }

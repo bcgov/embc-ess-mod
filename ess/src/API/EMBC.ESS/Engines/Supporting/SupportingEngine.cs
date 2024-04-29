@@ -33,6 +33,7 @@ namespace EMBC.ESS.Engines.Supporting
                 GenerateReferralsRequest r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.Referral).Generate(r, ct),
                 GeneratePaymentsRequest r => await paymentGenerationStrategyFactory.Create().GeneratePayments(r),
                 GenerateSelfServeSupports r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServe).Generate(r, ct),
+                CalculateSelfServeSupports r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServe).Generate(r, ct),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
