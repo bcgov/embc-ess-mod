@@ -1,74 +1,74 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Engines.Search
+namespace EMBC.ESS.Engines.Search;
+
+public interface ISearchEngine
 {
-    public interface ISearchEngine
-    {
-        public Task<SearchResponse> Search(SearchRequest request);
-    }
+    public Task<SearchResponse> Search(SearchRequest request, CancellationToken ct = default);
+}
 
-    public abstract class SearchRequest
-    { }
+public abstract record SearchRequest
+{ }
 
-    public abstract class SearchResponse
-    { }
+public abstract record SearchResponse
+{ }
 
-    public class EvacueeSearchRequest : SearchRequest
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
-        public SearchMode SearchMode { get; set; } = SearchMode.Both;
-    }
+public record EvacueeSearchRequest : SearchRequest
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string DateOfBirth { get; set; }
+    public SearchMode SearchMode { get; set; } = SearchMode.Both;
+}
 
-    public enum SearchMode
-    {
-        Registrants,
-        HouseholdMembers,
-        Both
-    }
+public enum SearchMode
+{
+    Registrants,
+    HouseholdMembers,
+    Both
+}
 
-    public class EvacueeSearchResponse : SearchResponse
-    {
-        public IEnumerable<string> MatchingRegistrantIds { get; set; }
-        public IEnumerable<string> MatchingHouseholdMemberIds { get; set; }
-    }
+public record EvacueeSearchResponse : SearchResponse
+{
+    public IEnumerable<string> MatchingRegistrantIds { get; set; }
+    public IEnumerable<string> MatchingHouseholdMemberIds { get; set; }
+}
 
-    public abstract class SupportSearchRequest : SearchRequest
-    {
-    }
+public abstract record SupportSearchRequest : SearchRequest
+{
+}
 
-    public class PendingPaymentSupportSearchRequest : SupportSearchRequest
-    {
-    }
+public record PendingPaymentSupportSearchRequest : SupportSearchRequest
+{
+}
 
-    public abstract class SupportSearchResponse : SearchResponse
-    {
-    }
+public abstract record SupportSearchResponse : SearchResponse
+{
+}
 
-    public class PendingPaymentSupportSearchResponse : SupportSearchResponse
-    {
-        public IEnumerable<PayableSupport> Supports { get; set; }
-    }
+public record PendingPaymentSupportSearchResponse : SupportSearchResponse
+{
+    public IEnumerable<PayableSupport> Supports { get; set; }
+}
 
-    public class PayableSupport
-    {
-        public string FileId { get; set; }
-        public string SupportId { get; set; }
-        public string PayeeId { get; set; }
-        public decimal Amount { get; set; }
-        public PayableSupportDelivery Delivery { get; set; }
-    }
+public record PayableSupport
+{
+    public string FileId { get; set; }
+    public string SupportId { get; set; }
+    public string PayeeId { get; set; }
+    public decimal Amount { get; set; }
+    public PayableSupportDelivery Delivery { get; set; }
+}
 
-    public abstract class PayableSupportDelivery
-    { }
+public abstract record PayableSupportDelivery
+{ }
 
-    public class PayableSupportInteracDelivery : PayableSupportDelivery
-    {
-        public string NotificationEmail { get; set; }
-        public string NotificationPhone { get; set; }
-        public string RecipientFirstName { get; set; }
-        public string RecipientLastName { get; set; }
-    }
+public record PayableSupportInteracDelivery : PayableSupportDelivery
+{
+    public string NotificationEmail { get; set; }
+    public string NotificationPhone { get; set; }
+    public string RecipientFirstName { get; set; }
+    public string RecipientLastName { get; set; }
 }

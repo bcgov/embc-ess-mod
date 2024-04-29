@@ -187,46 +187,21 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<ESS.Shared.Contracts.Events.TransportationTaxiSupport, TransportationTaxiSupport>()
                 ;
 
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.DraftSelfServeSupportQueryResponse, DraftSupports>()
+                ;
+
             CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport, SelfServeSupport>()
                 .IncludeAllDerived()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                .IncludeAllDerived();
-
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeClothingSupport, SelfServeClothingSupport>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodGroceriesSupport, SelfServeFoodGroceriesSupport>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeClothingSupport, SelfServeClothingSupport>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeIncidentalsSupport, SelfServeIncidentalsSupport>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeShelterAllowanceSupport, SelfServeShelterAllowanceSupport>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodGroceriesSupport, SelfServeFoodGroceriesSupport>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodRestaurantSupport, SelfServeFoodRestaurantSupport>();
 
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodRestaurantSupport, SelfServeFoodRestaurantSupport>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeIncidentalsSupport, SelfServeIncidentalsSupport>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeShelterAllowanceSupport, SelfServeShelterAllowanceSupport>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDay, SupportDay>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDayMeals, SupportDayMeals>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDay, SupportDay>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDayMeals, SupportDayMeals>();
         }
     }
 }

@@ -23,10 +23,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact]
         public async Task ProcessPendingSupportsCommand_PendingScanSupports_FlagsAdded()
         {
-            var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
+            var registrant = TestHelper.CreateRegistrantProfile();
             registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
-            var firstFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
-            var secondFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+            var firstFile = TestHelper.CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
+            var secondFile = TestHelper.CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
 
             firstFile.Id = await TestHelper.SaveEvacuationFile(manager, firstFile);
             secondFile.Id = await TestHelper.SaveEvacuationFile(manager, secondFile);
@@ -155,9 +155,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
 
-            var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
+            var registrant = TestHelper.CreateRegistrantProfile();
             registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
-            var file = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+            var file = TestHelper.CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
             file.Id = await TestHelper.SaveEvacuationFile(manager, file);
             file = await TestHelper.GetEvacuationFileById(manager, file.Id) ?? null!;
 
