@@ -8,69 +8,15 @@
         <ng-template matStepLabel>Support Details</ng-template>
         <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
 
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <p class="card-heading">Shelter Allowance</p>
-            <div class="card-question">
-              <label>Which people in your household require <b>Shelter Allowance</b> and for which days?</label>
-            </div>
-
-            <div
-              style="
-                display: flex;
-                gap: var(--size-3);
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-between;
-              "
-            >
-              <table>
-                <tr class="header-row">
-                  <th></th>
-                  @for (date of supportRequiredDates; track $index) {
-                    <th>{{ date.format('MMM DD, yyy') }}</th>
-                  }
-                </tr>
-                @for (person of persons; track person.id) {
-                  <tr>
-                    <th>{{ person.name }}</th>
-                    @for (date of supportRequiredDates; track $index) {
-                      <td>
-                        <mat-checkbox
-                          [formControl]="getDateControl(supportDraftForm.controls.shelterAllowance, person, date)"
-                        ></mat-checkbox>
-                      </td>
-                    }
-                  </tr>
-                }
-              </table>
-              <div class="note-box">
-                Shelter Allowance is provided at <b>$30 per night</b> based on single occupancy, <b>$10</b> for each
-                additional adult and youth and <b>$5</b> for each additional child.
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <p class="card-heading requiredField">Food</p>
-            <div class="card-question">
-              <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
-            </div>
-            <div>
-              <mat-radio-group
-                class="primary-radio-group"
-                [formControl]="supportDraftForm.controls.food.controls.fundsFor"
-              >
-                <mat-radio-button [value]="SupportSubCategory.Food_Groceries"> Groceries </mat-radio-button>
-                <mat-radio-button [value]="SupportSubCategory.Food_Restaurant"> Restaurant </mat-radio-button>
-              </mat-radio-group>
-            </div>
-            <!-- Groceries -->
-            @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.Food_Groceries) {
-              <label>For which <b>days</b> does your household require <b>Groceries</b>?</label>
+        @if (needsAssessmentService.requiresShelterType) {
+          <mat-card appearance="outlined">
+            <mat-card-content>
               <div>
+                <p class="card-heading">Shelter Allowance</p>
+                <div class="card-question">
+                  <label>Which people in your household require <b>Shelter Allowance</b> and for which days?</label>
+                </div>
+
                 <table>
                   <tr class="header-row">
                     <th></th>
@@ -82,129 +28,224 @@
                     <tr>
                       <th>{{ person.name }}</th>
                       @for (date of supportRequiredDates; track $index) {
-                        <td>
-                          <mat-checkbox
-                            [formControl]="
-                              getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)
-                            "
-                          ></mat-checkbox>
-                        </td>
+                        @if (
+                          supportDraftForm.controls?.shelterAllowance?.controls?.nights &&
+                          getDateControl(supportDraftForm.controls.shelterAllowance.controls.nights, person, date)
+                            ?.controls?.isSelected
+                        ) {
+                          <td>
+                            <mat-checkbox
+                              [formControl]="
+                                getDateControl(supportDraftForm.controls.shelterAllowance.controls.nights, person, date)
+                                  .controls.isSelected
+                              "
+                            ></mat-checkbox>
+                          </td>
+                        }
                       }
                     </tr>
                   }
                 </table>
               </div>
-            }
-            <!-- Restaurant -->
-            @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.Food_Restaurant) {
-              <label>Which people in your household require <b>Restaurant Meals</b>? </label>
-              <div style="display: flex; flex-direction: column">
-                @for (
-                  person of supportDraftForm.controls.food.controls.restaurant.controls.persons.controls;
-                  track $index
-                ) {
+              <div class="note-box">
+                Shelter Allowance is provided at <b>$30 per night</b> based on single occupancy, <b>$10</b> for each
+                additional adult and youth and <b>$5</b> for each additional child.
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (needsAssessmentService.requiresFood) {
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <div style="flex: 1 0 450px">
+                <p class="card-heading requiredField">Food</p>
+                <div class="card-question">
+                  <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
+                </div>
+                <div>
+                  <mat-radio-group
+                    class="primary-radio-group"
+                    [formControl]="supportDraftForm.controls.food.controls.fundsFor"
+                  >
+                    <mat-radio-button [value]="SupportSubCategory.FoodGroceries"> Groceries </mat-radio-button>
+                    <mat-radio-button [value]="SupportSubCategory.FoodRestaurant"> Restaurant </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <!-- Groceries -->
+                @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.FoodGroceries) {
+                  <label>For which <b>days</b> does your household require <b>Groceries</b>?</label>
                   <div>
-                    <mat-checkbox [formControl]="person.controls.isSelected">
-                      {{ getPersonName(person.controls.personId.value) }}
-                    </mat-checkbox>
+                    <table>
+                      <tr class="header-row">
+                        <th></th>
+                        @for (date of supportRequiredDates; track $index) {
+                          <th>{{ date.format('MMM DD, yyy') }}</th>
+                        }
+                      </tr>
+                      @for (person of persons; track person.id) {
+                        <tr>
+                          <th>{{ person.name }}</th>
+                          @for (date of supportRequiredDates; track $index) {
+                            @if (
+                              supportDraftForm.controls?.food?.controls?.groceries &&
+                              getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)?.controls
+                                ?.isSelected
+                            ) {
+                              <td>
+                                <mat-checkbox
+                                  [formControl]="
+                                    getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)
+                                      .controls.isSelected
+                                  "
+                                ></mat-checkbox>
+                              </td>
+                            }
+                          }
+                        </tr>
+                      }
+                    </table>
                   </div>
                 }
+                <!-- Restaurant -->
+                @if (supportDraftForm.controls.food.controls.fundsFor.value === SupportSubCategory.FoodRestaurant) {
+                  <label>Which people in your household require <b>Restaurant Meals</b>? </label>
+                  <div style="display: flex; flex-direction: column">
+                    @for (
+                      person of supportDraftForm.controls?.food?.controls?.restaurant?.controls
+                        ?.includedHouseholdMembers.controls;
+                      track $index
+                    ) {
+                      <div>
+                        <mat-checkbox [formControl]="person.controls.isSelected">
+                          {{ getPersonName(person.controls.personId.value) }}
+                        </mat-checkbox>
+                      </div>
+                    }
+                  </div>
+                  <label>What <b>meals</b> are required for your household?</label>
+                  <div>
+                    <table>
+                      <tr class="header-row">
+                        <th></th>
+                        @for (date of supportRequiredDates; track $index) {
+                          <th>{{ date.format('MMM DD, yyy') }}</th>
+                        }
+                      </tr>
+                      <tr>
+                        <th>Breakfast</th>
+                        @for (
+                          meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                          track $index
+                        ) {
+                          <td><mat-checkbox [formControl]="meal.controls.breakfast"></mat-checkbox></td>
+                        }
+                      </tr>
+                      <tr>
+                        <th>Lunch</th>
+                        @for (
+                          meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                          track $index
+                        ) {
+                          <td><mat-checkbox [formControl]="meal.controls.lunch"></mat-checkbox></td>
+                        }
+                      </tr>
+                      <tr>
+                        <th>Dinner</th>
+                        @for (
+                          meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                          track $index
+                        ) {
+                          <td><mat-checkbox [formControl]="meal.controls.dinner"></mat-checkbox></td>
+                        }
+                      </tr>
+                    </table>
+                  </div>
+                }
+
+                @if (
+                  supportDraftForm.controls?.food?.touched &&
+                  supportDraftForm.controls?.food?.controls?.fundsFor?.hasError('required')
+                ) {
+                  <mat-error>Food is required</mat-error>
+                }
               </div>
-              <label>What <b>meals</b> are required for your household?</label>
-              <div>
-                <table>
-                  <tr class="header-row">
-                    <th></th>
-                    @for (date of supportRequiredDates; track $index) {
-                      <th>{{ date.format('MMM DD, yyy') }}</th>
-                    }
-                  </tr>
-                  <tr>
-                    <th>Breakfast</th>
-                    @for (
-                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
-                      track $index
-                    ) {
-                      <td><mat-checkbox [formControl]="meal.controls.breakfast"></mat-checkbox></td>
-                    }
-                  </tr>
-                  <tr>
-                    <th>Lunch</th>
-                    @for (
-                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
-                      track $index
-                    ) {
-                      <td><mat-checkbox [formControl]="meal.controls.lunch"></mat-checkbox></td>
-                    }
-                  </tr>
-                  <tr>
-                    <th>Dinner</th>
-                    @for (
-                      meal of supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls;
-                      track $index
-                    ) {
-                      <td><mat-checkbox [formControl]="meal.controls.dinner"></mat-checkbox></td>
-                    }
-                  </tr>
-                </table>
+              <div class="note-box">
+                Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and
+                <b>$25.50</b> for dinner per person per day. Groceries are provided at a daily rate of
+                <b>$22.50 per person</b> per day.
               </div>
-            }
+            </mat-card-content>
+          </mat-card>
+        }
 
-            @if (supportDraftForm.controls.food.touched && supportDraftForm.controls.food.hasError('required')) {
-              <mat-error>Food is required</mat-error>
-            }
-            <div class="note-box">
-              Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and
-              <b>$25.50</b> for dinner per person per day. Groceries are provided at a daily rate of
-              <b>$22.50 per person</b> per day.
-            </div>
-          </mat-card-content>
-        </mat-card>
-
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <p class="card-heading">Clothing</p>
-            <div class="card-question">
-              <label>Which people in your household require <b>Clothing</b>?</label>
-            </div>
-            <div style="display: flex; flex-direction: column">
-              @for (person of supportDraftForm.controls.clothing.controls; track $index) {
-                <div>
-                  <mat-checkbox [formControl]="person.controls.isSelected">
-                    {{ getPersonName(person.controls.personId.value) }}
-                  </mat-checkbox>
+        @if (needsAssessmentService.requiresClothing) {
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <div style="flex: 1 0 450px">
+                <p class="card-heading">Clothing</p>
+                <div class="card-question">
+                  <label>Which people in your household require <b>Clothing</b>?</label>
                 </div>
-              }
-            </div>
-            <div class="note-box">Clothing is provided at <b>$150 per person</b> for the time you are evacuated.</div>
-          </mat-card-content>
-        </mat-card>
-
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <p class="card-heading">Incidentals</p>
-            <div class="card-question">
-              <label>Which people in your household require <b>Incidentals</b>?</label>
-            </div>
-            <div style="display: flex; flex-direction: column">
-              @for (person of supportDraftForm.controls.incidents.controls; track $index) {
-                <div>
-                  <mat-checkbox [formControl]="person.controls.isSelected">
-                    {{ getPersonName(person.controls.personId.value) }}
-                  </mat-checkbox>
+                <div style="display: flex; flex-direction: column">
+                  @for (
+                    person of supportDraftForm.controls?.clothing?.controls?.includedHouseholdMembers?.controls;
+                    track $index
+                  ) {
+                    <div>
+                      <mat-checkbox [formControl]="person.controls.isSelected">
+                        {{ getPersonName(person.controls.personId.value) }}
+                      </mat-checkbox>
+                    </div>
+                  }
                 </div>
-              }
-            </div>
-            <div class="note-box">
-              Incidentals are provided at <b>$50 per person</b> for the time you are evacuated.
-            </div>
-          </mat-card-content>
-        </mat-card>
+              </div>
+              <div class="note-box">Clothing is provided at <b>$150 per person</b> for the time you are evacuated.</div>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (needsAssessmentService.requiresIncidentals) {
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <div style="flex: 1 0 450px">
+                <p class="card-heading">Incidentals</p>
+                <div class="card-question">
+                  <label>Which people in your household require <b>Incidentals</b>?</label>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                  @for (
+                    person of supportDraftForm.controls?.incidents?.controls?.includedHouseholdMembers?.controls;
+                    track $index
+                  ) {
+                    <div>
+                      <mat-checkbox [formControl]="person.controls.isSelected">
+                        {{ getPersonName(person.controls.personId.value) }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="note-box">
+                Incidentals are provided at <b>$50 per person</b> for the time you are evacuated.
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
 
         <div style="display: flex; gap: 16px; justify-content: space-between">
-          <button type="button" mat-button class="button-s" matStepperNext>Next</button>
-          <button type="button" mat-button class="button-p" matStepperNext>Next</button>
-          <button type="button" mat-button class="button-p" (click)="submit()">Submit</button>
+          <button type="button" mat-button matStepperPrevious class="button-s" style="width: 240px">
+            Go Back & Edit
+          </button>
+          <button
+            type="button"
+            mat-button
+            class="button-p"
+            style="width: 240px"
+            (click)="gotoNextStep(supportDraftForm)"
+          >
+            Next - e-Transfer Details
+          </button>
         </div>
       </form>
     </mat-step>
@@ -215,17 +256,17 @@
           <input matInput placeholder="Address" formControlName="secondCtrl" required />
         </mat-form-field>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button matStepperPrevious style="width: 240px">Go Back & Edit</button>
+          <button mat-button style="width: 240px">Next - e-Transfer Details</button>
         </div>
       </form>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      Review and Submit
+      <ng-template matStepLabel>Review & Submit</ng-template>
+      Review Details
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-button matStepperPrevious style="width: 240px">Go Back & Edit</button>
+        <button mat-button style="width: 240px" (click)="submit()">Submit</button>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
