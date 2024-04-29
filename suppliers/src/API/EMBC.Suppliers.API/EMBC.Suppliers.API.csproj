@@ -30,7 +30,7 @@
         <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
         <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-        <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.3" />
+        <PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.4" />
         <PackageReference Include="SerilogTraceListener" Version="3.2.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
             <PrivateAssets>all</PrivateAssets>
