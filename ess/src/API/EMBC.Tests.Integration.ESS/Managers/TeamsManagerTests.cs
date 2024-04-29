@@ -263,7 +263,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task AssignCommunities_Team_PreserveDateAssigned()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.AddSeconds(-10);
             var communities = TestData.Commmunities;
 
             var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);

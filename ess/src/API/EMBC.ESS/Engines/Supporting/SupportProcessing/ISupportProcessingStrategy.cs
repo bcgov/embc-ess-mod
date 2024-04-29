@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,9 +7,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 {
     internal interface ISupportProcessingStrategy
     {
-        Task<ProcessResponse> Process(ProcessRequest request);
+        Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct);
 
-        Task<ValidationResponse> Validate(ValidationRequest request);
+        Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct);
     }
 
     internal class SupportProcessingStrategyFactory
@@ -24,6 +25,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             SupportProcessingStrategyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
             SupportProcessingStrategyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
+            SupportProcessingStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportProcessingStrategy>(),
 
             _ => throw new NotImplementedException($"{type}")
         };
@@ -32,6 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
     internal enum SupportProcessingStrategyType
     {
         Digital,
-        Paper
+        Paper,
+        SelfServe
     }
 }

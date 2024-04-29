@@ -24,7 +24,7 @@ namespace EMBC.Utilities.Extensions
             return Environment.OSVersion.Platform switch
             {
                 PlatformID.Win32NT => "Pacific Standard Time",
-                PlatformID.Unix => "America/Vancouver", // NOTE: Previous value "Canada/Pacific" is deprecated
+                PlatformID.Unix => "America/Vancouver",
                 _ => throw new NotSupportedException()
             };
         }
@@ -38,6 +38,8 @@ namespace EMBC.Utilities.Extensions
                 _ => throw new NotSupportedException()
             };
         }
+
+        public static bool IsMinor(this DateTime dob) => dob.CalculatetAge(null) < 19;
 
         public static int CalculatetAge(this DateTime dob) => dob.CalculatetAge(null);
 

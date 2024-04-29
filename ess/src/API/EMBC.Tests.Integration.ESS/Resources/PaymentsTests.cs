@@ -20,7 +20,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private async Task<string> CreateNewRegistrant()
         {
-            var registrant = TestHelper.CreateRegistrantProfile(TestData.TestPrefix);
+            var registrant = TestHelper.CreateRegistrantProfile();
             return await TestHelper.SaveRegistrant(Services.GetRequiredService<EventsManager>(), registrant);
         }
 
@@ -169,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task SendPaymentToCas_InteracPayment_VerifySupplier(bool postalCodeMatches)
         {
             var manager = Services.GetRequiredService<EventsManager>();
-            var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
+            var registrant = TestHelper.CreateRegistrantProfile();
             registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
 

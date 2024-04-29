@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 {
     internal interface ISupportGenerationStrategy
     {
-        Task<GenerateResponse> Generate(GenerateRequest request);
+        Task<GenerateResponse> Generate(GenerateRequest request, CancellationToken ct);
     }
 
     internal class SupportGenerationStrategyStragetyFactory
@@ -20,7 +23,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 
         public ISupportGenerationStrategy Create(SupportGenerationStrategyType type) => type switch
         {
-            SupportGenerationStrategyType.Pdf => services.GetRequiredService<SingleDocumentStrategy>(),
+            SupportGenerationStrategyType.Referral => services.GetRequiredService<SingleDocumentStrategy>(),
+            SupportGenerationStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportGenerator>(),
 
             _ => throw new NotImplementedException($"{type}")
         };
@@ -28,6 +32,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 
     internal enum SupportGenerationStrategyType
     {
-        Pdf
+        Referral,
+        SelfServe,
     }
 }
