@@ -1,13 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { PersonDetails } from './person-details';
-
-/**
- * A member of the household in needs assessment
- */
+import { PersonDetails } from '../models/person-details';
 export interface HouseholdMember {
   details?: PersonDetails;
-  id?: null | string;
+  id?: string | null;
   isMinor?: boolean;
   isPrimaryRegistrant?: boolean;
 }

@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
+import { SelfServeSupportType } from '../models/self-serve-support-type';
 export interface SelfServeSupport {
-  $type: string;
-  totalAmount?: null | number;
+  totalAmount?: number | null;
+  type?: SelfServeSupportType;
 }

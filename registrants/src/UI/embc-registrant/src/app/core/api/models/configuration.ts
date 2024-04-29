@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { CaptchaConfiguration } from './captcha-configuration';
-import { OidcOptions } from './oidc-options';
-import { OutageInformation } from './outage-information';
-import { TimeoutConfiguration } from './timeout-configuration';
+import { CaptchaConfiguration } from '../models/captcha-configuration';
+import { OidcOptions } from '../models/oidc-options';
+import { OutageInformation } from '../models/outage-information';
+import { TimeoutConfiguration } from '../models/timeout-configuration';
 export interface Configuration {
   captcha?: CaptchaConfiguration;
   oidc?: OidcOptions;

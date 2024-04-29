@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface OutageInformation {
-  content?: string;
-  outageEndDate?: null | string;
-  outageStartDate?: null | string;
+  content?: string | null;
+  outageEndDate?: string | null;
+  outageStartDate?: string | null;
 }

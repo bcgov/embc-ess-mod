@@ -14,7 +14,7 @@ export class BaseService {
     protected http: HttpClient
   ) {}
 
-  private _rootUrl: string = '';
+  private _rootUrl?: string;
 
   /**
    * Returns the root url for all operations in this service. If not set directly in this

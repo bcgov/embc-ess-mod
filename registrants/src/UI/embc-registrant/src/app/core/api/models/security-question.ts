@@ -1,12 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Profile security questions
- */
 export interface SecurityQuestion {
-  answer?: string;
+  answer?: string | null;
   answerChanged?: boolean;
   id?: number;
-  question?: string;
+  question?: string | null;
 }

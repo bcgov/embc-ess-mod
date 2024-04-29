@@ -1,0 +1,39 @@
+/* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { StrictHttpResponse } from '../../strict-http-response';
+import { RequestBuilder } from '../../request-builder';
+
+import { CommunityCode } from '../../models/community-code';
+import { CommunityType } from '../../models/community-type';
+
+export interface ConfigurationGetCommunities$Params {
+  stateProvinceId?: string;
+  countryId?: string;
+  types?: Array<CommunityType>;
+}
+
+export function configurationGetCommunities(
+  http: HttpClient,
+  rootUrl: string,
+  params?: ConfigurationGetCommunities$Params,
+  context?: HttpContext
+): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+  const rb = new RequestBuilder(rootUrl, configurationGetCommunities.PATH, 'get');
+  if (params) {
+    rb.query('stateProvinceId', params.stateProvinceId, {});
+    rb.query('countryId', params.countryId, {});
+    rb.query('types', params.types, {});
+  }
+
+  return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<Array<CommunityCode>>;
+    })
+  );
+}
+
+configurationGetCommunities.PATH = '/api/Configuration/codes/communities';

@@ -1,20 +1,16 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { ContactDetails } from './contact-details';
-import { PersonDetails } from './person-details';
-import { SecurityQuestion } from './security-question';
-
-/**
- * User's profile
- */
+import { Address } from '../models/address';
+import { ContactDetails } from '../models/contact-details';
+import { PersonDetails } from '../models/person-details';
+import { SecurityQuestion } from '../models/security-question';
 export interface Profile {
   contactDetails: ContactDetails;
-  id?: null | string;
+  id?: string | null;
   isMailingAddressSameAsPrimaryAddress?: boolean;
   mailingAddress?: Address;
   personalDetails: PersonDetails;
   primaryAddress: Address;
   restrictedAccess?: boolean;
-  securityQuestions?: Array<SecurityQuestion>;
+  securityQuestions?: Array<SecurityQuestion> | null;
 }
