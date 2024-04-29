@@ -339,7 +339,8 @@ public partial class EventsManager
 
             return new DraftSelfServeSupportQueryResponse
             {
-                Items = response.Supports
+                Items = response.Supports,
+                HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(file.NeedsAssessment.HouseholdMembers)
             };
         }
     }

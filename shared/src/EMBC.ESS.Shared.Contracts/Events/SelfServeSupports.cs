@@ -32,6 +32,7 @@ public record DraftSelfServeSupportQuery : Query<DraftSelfServeSupportQueryRespo
 
 public record DraftSelfServeSupportQueryResponse
 {
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
     public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
 }
 

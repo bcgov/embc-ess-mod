@@ -47,11 +47,11 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
+    public async Task<ActionResult<DraftSupports>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
     {
         var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId }, ct);
 
-        return Ok(mapper.Map<IEnumerable<SelfServeSupport>>(response.Items));
+        return Ok(mapper.Map<DraftSupports>(response));
     }
 
     [HttpPost("draft")]
@@ -114,6 +114,12 @@ public record EligibilityCheck
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
     public string? TaskNumber { get; set; }
+}
+
+public record DraftSupports
+{
+    public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
 }
 
 [JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
