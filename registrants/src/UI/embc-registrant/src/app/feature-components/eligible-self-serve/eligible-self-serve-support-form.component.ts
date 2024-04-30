@@ -8,6 +8,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import * as moment from 'moment';
 import {
+  DraftSupports,
+  HouseholdMember,
   SelfServeClothingSupport,
   SelfServeFoodGroceriesSupport,
   SelfServeFoodRestaurantSupport,
@@ -22,17 +24,6 @@ import {
 import { SupportsService } from 'src/app/core/api/services';
 import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
-
-type SelfServeSupportUnionType =
-  | SelfServeShelterAllowanceSupport
-  | SelfServeFoodGroceriesSupport
-  | SelfServeFoodRestaurantSupport
-  | SelfServeIncidentalsSupport
-  | SelfServeClothingSupport;
-interface Person {
-  id: string;
-  name: string;
-}
 
 type SelfServeSupportFormControl = {
   [k in keyof SelfServeSupport]: FormControl<SelfServeSupport[k]>;
@@ -66,31 +57,38 @@ interface SelfServeSupportDayMealForm extends Omit<SupportDayFormControl, 'date'
 
 type FundsFor = SupportSubCategory.FoodGroceries | SupportSubCategory.FoodRestaurant | null;
 
-interface SelfServeFoodRestaurantForm {
+interface SelfServeFoodRestaurantSupportForm {
   includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
   mealTypes: FormArray<FormGroup<SelfServeSupportDayMealForm>>;
+  totalAmount: FormControl<number>;
 }
 
-interface FoodForm {
+interface SelfServeFoodGroceriesSupportForm {
+  nights: FormArray<FormGroup<SupportPersonDateForm>>;
+  totalAmount: FormControl<number>;
+}
+
+interface SelfServeFoodSupportForm {
   fundsFor: FormControl<FundsFor>;
-  restaurant: FormGroup<SelfServeFoodRestaurantForm>;
-  groceries: FormArray<FormGroup<SupportPersonDateForm>>;
+  restaurant: FormGroup<SelfServeFoodRestaurantSupportForm>;
+  groceries: FormGroup<SelfServeFoodGroceriesSupportForm>;
 }
 
-interface SelfServeShelerAllowanceForm extends BaseSelfServeSupportForm {
+interface SelfServeShelerAllowanceSupportForm extends BaseSelfServeSupportForm {
   nights: FormArray<FormGroup<SupportPersonDateForm>>;
 }
 
 interface SelfServeClothingSupportForm extends BaseSelfServeSupportForm {
   includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
 }
+
 interface SelfServeIncidentsSupportForm extends BaseSelfServeSupportForm {
   includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
 }
 
-interface SupportDraftForm {
-  shelterAllowance: FormGroup<SelfServeShelerAllowanceForm>;
-  food: FormGroup<FoodForm>;
+interface DraftSupportForm {
+  shelterAllowance: FormGroup<SelfServeShelerAllowanceSupportForm>;
+  food: FormGroup<SelfServeFoodSupportForm>;
   clothing: FormGroup<SelfServeClothingSupportForm>;
   incidents: FormGroup<SelfServeIncidentsSupportForm>;
 }
@@ -169,21 +167,37 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   isLinear = false;
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
   SupportSubCategory = SupportSubCategory;
-  supportRequiredDates = [];
-  persons = [];
 
-  supportDraftForm = new FormGroup<SupportDraftForm>({
-    shelterAllowance: new FormGroup<SelfServeShelerAllowanceForm>({
+  showSelfServeShelterAllowanceSupport = false;
+  showSelfServeFoodSupport = false;
+  showSelfServeClothingSupport = false;
+  showSelfServeIncidentsSupport = false;
+
+  shelterAllowanceDates: moment.Moment[] = [];
+  foodGroceriesDates: moment.Moment[] = [];
+  foodRestaurantDates: moment.Moment[] = [];
+
+  draftSupports: DraftSupports = {
+    items: [],
+    householdMembers: []
+  };
+
+  supportDraftForm = new FormGroup<DraftSupportForm>({
+    shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
       totalAmount: new FormControl<number>(0),
       nights: new FormArray<FormGroup<SupportPersonDateForm>>([])
     }),
-    food: new FormGroup<FoodForm>({
+    food: new FormGroup<SelfServeFoodSupportForm>({
       fundsFor: new FormControl<FundsFor>(null, Validators.required),
-      restaurant: new FormGroup<SelfServeFoodRestaurantForm>({
+      restaurant: new FormGroup<SelfServeFoodRestaurantSupportForm>({
         includedHouseholdMembers: new FormArray([]),
-        mealTypes: new FormArray([])
+        mealTypes: new FormArray([]),
+        totalAmount: new FormControl<number>(0)
       }),
-      groceries: new FormArray<FormGroup<SupportPersonDateForm>>([])
+      groceries: new FormGroup({
+        nights: new FormArray<FormGroup<SupportPersonDateForm>>([]),
+        totalAmount: new FormControl<number>(0)
+      })
     }),
     clothing: new FormGroup<SelfServeClothingSupportForm>({
       totalAmount: new FormControl(0),
@@ -217,75 +231,117 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     this.getDraft();
   }
 
-  createSupportDraftForm(persons: Person[], dates: moment.Moment[], selfServeSupports: SelfServeSupportUnionType[]) {
-    const shelterAllowanceSupport = selfServeSupports.find(
-      (s) => s.type === SelfServeSupportType.ShelterAllowance
-    ) as SelfServeShelterAllowanceSupport;
+  private getDraft() {
+    this.supportService.supportsGetDraftSupports({ evacuationFileId: '168743' }).subscribe((res) => {
+      this.draftSupports = res;
+
+      this.draftSupports.items.forEach((support) => {
+        switch (support.type) {
+          case SelfServeSupportType.ShelterAllowance:
+            this.createSelfServeShelterAllowanceSupportForm(support as any);
+            break;
+
+          case SelfServeSupportType.FoodGroceries:
+            this.createSelfServeFoodGroceriesSupportForm(support as any);
+            break;
+
+          case SelfServeSupportType.FoodRestaurant:
+            this.createSelfServeFoodRestaurantSupportForm(support as any);
+            break;
+          case SelfServeSupportType.Clothing:
+            this.createSelfServeClothingSupportForm(support as any);
+            break;
+
+          case SelfServeSupportType.Incidentals:
+            this.createSelfServeIncidentsSupportForm(support as any);
+            break;
+
+          default:
+            break;
+        }
+      });
+    });
+  }
+
+  private createSelfServeShelterAllowanceSupportForm(selfServeSupport: SelfServeShelterAllowanceSupport) {
+    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
+    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
+
+    this.createSupportPersonDateForm(this.supportDraftForm.controls.shelterAllowance.controls.nights, persons, dates);
+
+    this.shelterAllowanceDates = [...dates];
+    this.showSelfServeShelterAllowanceSupport = true;
+  }
+
+  private createSelfServeFoodGroceriesSupportForm(selfServeSupport: SelfServeFoodGroceriesSupport) {
+    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
+    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
+
     this.createSupportPersonDateForm(
-      this.supportDraftForm.controls.shelterAllowance.controls.nights,
+      this.supportDraftForm.controls.food.controls.groceries.controls.nights,
       persons,
-      dates,
-      shelterAllowanceSupport.nights
+      dates
     );
 
-    const groceriesSupport = selfServeSupports.find(
-      (s) => s.type === SelfServeSupportType.FoodGroceries
-    ) as SelfServeFoodGroceriesSupport;
+    this.foodGroceriesDates = [...dates];
+    this.showSelfServeFoodSupport = true;
+  }
 
-    this.createSupportPersonDateForm(
-      this.supportDraftForm.controls.food.controls.groceries,
-      persons,
-      dates,
-      groceriesSupport.nights
-    );
-
-    persons.forEach((p) => {
+  private createSelfServeFoodRestaurantSupportForm(selfServeSupport: SelfServeFoodRestaurantSupport) {
+    const dates = selfServeSupport.meals.map((m) => moment(m.date, 'YYYY-MM-DD'));
+    selfServeSupport.includedHouseholdMembers.forEach((p) => {
       this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.push(
-        this.createSupportPersonForm(p.id)
-      );
-
-      this.supportDraftForm.controls.clothing.controls.includedHouseholdMembers.push(
-        this.createSupportPersonForm(p.id)
-      );
-      this.supportDraftForm.controls.incidents.controls.includedHouseholdMembers.push(
-        this.createSupportPersonForm(p.id)
+        this.createSupportPersonForm(p)
       );
     });
 
-    this.createMealTypesForm(dates);
-  }
-
-  createSupportPersonForm(id: string): FormGroup<SupportPersonForm> {
-    return new FormGroup<SupportPersonForm>({ personId: new FormControl(id), isSelected: new FormControl() });
-  }
-
-  createMealTypesForm(dates: moment.Moment[]) {
-    dates.forEach((date) => {
+    selfServeSupport.meals.forEach((m) => {
       this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.push(
         new FormGroup<SelfServeSupportDayMealForm>({
-          date: new FormControl(date),
-          breakfast: new FormControl(false),
-          lunch: new FormControl(false),
-          dinner: new FormControl(false)
+          date: new FormControl(moment(m.date, 'YYYY-MM-DD')),
+          breakfast: new FormControl({ value: m.breakfast, disabled: m.breakfast !== true && m.breakfast !== false }),
+          lunch: new FormControl({ value: m.lunch, disabled: m.lunch !== true && m.lunch !== false }),
+          dinner: new FormControl({ value: m.dinner, disabled: m.dinner !== true && m.dinner !== false })
         })
       );
     });
+
+    this.foodRestaurantDates = [...dates];
+
+    this.showSelfServeShelterAllowanceSupport = true;
+  }
+
+  private createSelfServeClothingSupportForm(selfServeSupport: SelfServeClothingSupport) {
+    selfServeSupport.includedHouseholdMembers.forEach((p) => {
+      this.supportDraftForm.controls.clothing.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
+    });
+
+    this.showSelfServeClothingSupport = true;
+  }
+
+  private createSelfServeIncidentsSupportForm(selfServeSupport: SelfServeIncidentalsSupport) {
+    selfServeSupport.includedHouseholdMembers.forEach((p) => {
+      this.supportDraftForm.controls.incidents.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
+    });
+
+    this.showSelfServeIncidentsSupport = true;
+  }
+
+  createSupportPersonForm(id: string, isSelected: boolean = true): FormGroup<SupportPersonForm> {
+    return new FormGroup<SupportPersonForm>({ personId: new FormControl(id), isSelected: new FormControl(isSelected) });
   }
 
   createSupportPersonDateForm(
     formArray: FormArray<FormGroup<SupportPersonDateForm>>,
-    perons: Person[],
-    dates: moment.Moment[],
-    supportDays: SupportDay[]
+    perons: string[],
+    dates: moment.Moment[]
   ) {
     perons.forEach((p) => {
       dates.forEach((d) => {
-        const findSupportDay = supportDays?.find((s) => moment(s.date).format('mm/dd/yyyy') === d.format('mm/dd/yyyy'));
-
         formArray.push(
           new FormGroup<SupportPersonDateForm>({
-            personId: new FormControl(p.id),
-            isSelected: new FormControl(findSupportDay?.includedHouseholdMembers?.includes(p.id)),
+            personId: new FormControl(p),
+            isSelected: new FormControl(true),
             date: new FormControl(d)
           })
         );
@@ -294,12 +350,13 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   }
 
   getPersonName(id: string) {
-    return this.persons.find((p) => p.id == id).name;
+    const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
+    return `${personDetails?.firstName ?? ''} ${personDetails?.lastName ?? ''}`;
   }
 
   getDateControl(
     supportPersonDateForm: FormArray<FormGroup<SupportPersonDateForm>>,
-    person: Person,
+    person: HouseholdMember,
     date: moment.Moment
   ): FormGroup<SupportPersonDateForm> {
     const personFormGroup = supportPersonDateForm.controls.find(
@@ -310,92 +367,23 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   }
 
   gotoNextStep(formGroup: FormGroup) {
-    console.log(formGroup.value);
     formGroup.markAllAsTouched();
     if (!this.essFileId && formGroup.invalid) return;
+    this.getTotals();
     this.stepper.next();
   }
 
-  getDraft() {
-    // const essFile = this.evacuationFileDateService.createEvacuationFileDTO();
-    // this.supportService.supportsGetDraftSupports({ evacuationFileId: fileId }).subscribe((res) => {
-    const shelterAllowance = <SelfServeShelterAllowanceSupport>{
-      type: SelfServeSupportType.ShelterAllowance,
-      totalAmount: 223,
-      nights: [
-        {
-          date: moment().toISOString(),
-          includedHouseholdMembers: ['2']
-        },
-        {
-          date: moment().add(1, 'day').toISOString(),
-          includedHouseholdMembers: ['1', '2']
-        }
-      ]
-    };
-
-    // this.supportDraftForm.controls.shelterAllowance.setValue({});
-
-    const foodGroceries = <SelfServeFoodGroceriesSupport>{
-      type: SelfServeSupportType.FoodGroceries,
-      nights: [
-        {
-          date: moment().add(2, 'day').toISOString(),
-          includedHouseholdMembers: ['1', '2']
-        }
-      ],
-      totalAmount: 345
-    };
-
-    const foodRestaurant = <SelfServeFoodRestaurantSupport>{
-      type: SelfServeSupportType.FoodRestaurant,
-      includedHouseholdMembers: ['1'],
-      meals: [
-        {
-          breakfast: true,
-          date: moment().toISOString(),
-          lunch: false,
-          dinner: true
-        }
-      ]
-    };
-
-    const selfServeSupports: SelfServeSupport[] = [shelterAllowance as any, foodGroceries as any];
-    const persons = [
-      {
-        id: '1',
-        name: 'Test person1 1'
-      },
-      {
-        id: '2',
-        name: 'Test Person2 2'
-      },
-      {
-        id: '3',
-        name: 'Test person 3'
-      }
-    ];
-    const dates = [moment(), moment().add(1, 'day'), moment().add(2, 'day')];
-    // this.evacuationFileDateService.createEvacuationFileDTO().needsAssessment.householdMembers;
-    this.createSupportDraftForm(persons, dates, selfServeSupports);
-    this.persons = persons;
-    this.supportRequiredDates = [...dates];
-    // });
-  }
-
   processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
-    const shelterAllowanceFormValue = this.supportDraftForm.value.shelterAllowance;
+    const supportFormValue = this.supportDraftForm.value.shelterAllowance;
 
     const data: SelfServeShelterAllowanceSupport = {
-      // $type: 'shelter',
-      totalAmount: 2342
+      type: SelfServeSupportType.ShelterAllowance,
+      totalAmount: supportFormValue.totalAmount
     };
 
     const datesWithMembers: Record<string, SupportDay> = this.getSupportDays(
       this.supportDraftForm.controls.shelterAllowance.controls.nights
     );
-
-    if (Object.keys(datesWithMembers).length === 0) return null;
 
     data.nights = Object.values(datesWithMembers);
 
@@ -403,55 +391,74 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   }
 
   processFoodData(): SelfServeFoodGroceriesSupport | SelfServeFoodRestaurantSupport | null {
-    const foodData = this.supportDraftForm.value.food;
+    const supportFormValue = this.supportDraftForm.value.food;
 
-    if (foodData.fundsFor === SupportSubCategory.FoodGroceries) {
+    if (supportFormValue.fundsFor === SupportSubCategory.FoodGroceries) {
       const data: SelfServeFoodGroceriesSupport = {
-        // $type: 'food',
-        totalAmount: 34,
-        nights: []
-      }; // @TODO:
-      const supportDays: Record<string, SupportDay> = this.getSupportDays(
-        this.supportDraftForm.controls.food.controls.groceries
-      );
+        type: SelfServeSupportType.FoodGroceries,
+        totalAmount: 34
+      };
 
-      if (Object.keys(supportDays).length === 0) return null;
+      const supportDays: Record<string, SupportDay> = this.getSupportDays(
+        this.supportDraftForm.controls.food.controls.groceries.controls.nights
+      );
 
       data.nights = Object.values(supportDays);
 
       return data;
-    } else if (foodData.fundsFor === SupportSubCategory.FoodRestaurant) {
+    } else if (supportFormValue.fundsFor === SupportSubCategory.FoodRestaurant) {
       const data: SelfServeFoodRestaurantSupport = {
-        // $type: 'restaurant',
+        type: SelfServeSupportType.FoodRestaurant,
         totalAmount: 234,
         includedHouseholdMembers: [],
         meals: []
       };
 
-      data.includedHouseholdMembers = foodData.restaurant.includedHouseholdMembers
+      data.includedHouseholdMembers = supportFormValue.restaurant.includedHouseholdMembers
         .filter((p) => p.isSelected)
         .map((p) => p.personId);
-      data.meals = foodData.restaurant.mealTypes
+
+      data.meals = supportFormValue.restaurant.mealTypes
         .filter((m) => m.breakfast || m.lunch || m.dinner)
         .map((m) => ({
           breakfast: m.breakfast,
           lunch: m.lunch,
           dinner: m.dinner,
-          date: m.date.toISOString()
+          date: m.date.format('YYYY-MM-DD')
         }));
-
-      if (
-        !data.includedHouseholdMembers ||
-        data.includedHouseholdMembers?.length === 0 ||
-        !data.meals ||
-        data.meals?.length === 0
-      )
-        return null;
 
       return data;
     }
 
     return null;
+  }
+
+  processClothing() {
+    const supportFormValue = this.supportDraftForm.value.clothing;
+    const data: SelfServeClothingSupport = {
+      type: SelfServeSupportType.Clothing,
+      totalAmount: supportFormValue.totalAmount
+    };
+
+    data.includedHouseholdMembers = supportFormValue.includedHouseholdMembers
+      .filter((m) => m.isSelected)
+      .map((m) => m.personId);
+
+    return data;
+  }
+
+  processIncidents() {
+    const supportFormValue = this.supportDraftForm.value.incidents;
+    const data: SelfServeIncidentalsSupport = {
+      type: SelfServeSupportType.Incidentals,
+      totalAmount: supportFormValue.totalAmount
+    };
+
+    data.includedHouseholdMembers = supportFormValue.includedHouseholdMembers
+      .filter((m) => m.isSelected)
+      .map((m) => m.personId);
+
+    return data;
   }
 
   private getSupportDays(supportDays: FormArray<FormGroup<SupportPersonDateForm>>) {
@@ -469,15 +476,32 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     return datesWithMembers;
   }
 
-  submit() {
+  getPayloadData() {
     this.supportDraftForm.markAllAsTouched();
 
     const selfServeSupportRequest: SubmitSupportsRequest = {
       supports: []
     };
 
-    const shelterSupportData = this.processShelterAllowanceData();
-    const foodData = this.processFoodData();
-    console.log(shelterSupportData, foodData);
+    if (this.showSelfServeShelterAllowanceSupport)
+      selfServeSupportRequest.supports.push(this.processShelterAllowanceData());
+
+    if (this.showSelfServeFoodSupport) selfServeSupportRequest.supports.push(this.processFoodData());
+
+    if (this.showSelfServeClothingSupport) selfServeSupportRequest.supports.push(this.processClothing());
+
+    if (this.showSelfServeIncidentsSupport) selfServeSupportRequest.supports.push(this.processIncidents());
+
+    console.log('getTotals: Payload:', selfServeSupportRequest);
+
+    return selfServeSupportRequest;
+  }
+
+  getTotals() {
+    const selfServeRequestPayload = this.getPayloadData();
+  }
+
+  submit() {
+    const selfServeRequestPayload = this.getPayloadData();
   }
 }

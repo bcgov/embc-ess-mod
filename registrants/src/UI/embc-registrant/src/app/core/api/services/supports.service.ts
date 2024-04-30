@@ -9,6 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { DraftSupports } from '../models/draft-supports';
 import { EligibilityCheck } from '../models/eligibility-check';
 import { SelfServeClothingSupport } from '../models/self-serve-clothing-support';
 import { SelfServeFoodGroceriesSupport } from '../models/self-serve-food-groceries-support';
@@ -75,17 +76,7 @@ export class SupportsService extends BaseService {
   supportsGetDraftSupports$Response(
     params: SupportsGetDraftSupports$Params,
     context?: HttpContext
-  ): Observable<
-    StrictHttpResponse<
-      Array<
-        | SelfServeShelterAllowanceSupport
-        | SelfServeFoodGroceriesSupport
-        | SelfServeFoodRestaurantSupport
-        | SelfServeIncidentalsSupport
-        | SelfServeClothingSupport
-      >
-    >
-  > {
+  ): Observable<StrictHttpResponse<DraftSupports>> {
     return supportsGetDraftSupports(this.http, this.rootUrl, params, context);
   }
 
@@ -95,38 +86,9 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsGetDraftSupports(
-    params: SupportsGetDraftSupports$Params,
-    context?: HttpContext
-  ): Observable<
-    Array<
-      | SelfServeShelterAllowanceSupport
-      | SelfServeFoodGroceriesSupport
-      | SelfServeFoodRestaurantSupport
-      | SelfServeIncidentalsSupport
-      | SelfServeClothingSupport
-    >
-  > {
+  supportsGetDraftSupports(params: SupportsGetDraftSupports$Params, context?: HttpContext): Observable<DraftSupports> {
     return this.supportsGetDraftSupports$Response(params, context).pipe(
-      map(
-        (
-          r: StrictHttpResponse<
-            Array<
-              | SelfServeShelterAllowanceSupport
-              | SelfServeFoodGroceriesSupport
-              | SelfServeFoodRestaurantSupport
-              | SelfServeIncidentalsSupport
-              | SelfServeClothingSupport
-            >
-          >
-        ): Array<
-          | SelfServeShelterAllowanceSupport
-          | SelfServeFoodGroceriesSupport
-          | SelfServeFoodRestaurantSupport
-          | SelfServeIncidentalsSupport
-          | SelfServeClothingSupport
-        > => r.body
-      )
+      map((r: StrictHttpResponse<DraftSupports>): DraftSupports => r.body)
     );
   }
 

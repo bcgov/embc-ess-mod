@@ -172,8 +172,7 @@ export class EvacuationFileDataService {
   public checkEligibleForSelfServeSupport(
     params: Parameters<SupportsService['supportsCheckSelfServeEligibility']>[0]
   ): ReturnType<SupportsService['supportsCheckSelfServeEligibility']> {
-    return of({ evacuationFileId: params.evacuationFileId, isEligable: true });
-    // return this.supportService.supportsCheckSelfServeEligibility(params);
+    return this.supportService.supportsCheckSelfServeEligibility(params);
   }
 
   public clearESSFileData(): void {

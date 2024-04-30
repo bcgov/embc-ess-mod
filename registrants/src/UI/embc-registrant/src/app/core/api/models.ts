@@ -11,6 +11,7 @@ export { CommunityType } from './models/community-type';
 export { Configuration } from './models/configuration';
 export { ContactDetails } from './models/contact-details';
 export { DateOfBirthDataConflict } from './models/date-of-birth-data-conflict';
+export { DraftSupports } from './models/draft-supports';
 export { EligibilityCheck } from './models/eligibility-check';
 export { ETransferDetails } from './models/e-transfer-details';
 export { EvacuationFile } from './models/evacuation-file';

@@ -7,11 +7,10 @@
       <form>
         <ng-template matStepLabel>Support Details</ng-template>
         <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
-
-        @if (needsAssessmentService.requiresShelterType) {
+        @if (showSelfServeShelterAllowanceSupport) {
           <mat-card appearance="outlined">
             <mat-card-content>
-              <div>
+              <div style="display: flex; flex-direction: column; gap: var(--size-2)">
                 <p class="card-heading">Shelter Allowance</p>
                 <div class="card-question">
                   <label>Which people in your household require <b>Shelter Allowance</b> and for which days?</label>
@@ -19,15 +18,15 @@
 
                 <table>
                   <tr class="header-row">
-                    <th></th>
-                    @for (date of supportRequiredDates; track $index) {
+                    <th style="width: 160px"></th>
+                    @for (date of shelterAllowanceDates; track $index) {
                       <th>{{ date.format('MMM DD, yyy') }}</th>
                     }
                   </tr>
-                  @for (person of persons; track person.id) {
+                  @for (person of draftSupports.householdMembers; track person.id) {
                     <tr>
-                      <th>{{ person.name }}</th>
-                      @for (date of supportRequiredDates; track $index) {
+                      <th>{{ getPersonName(person.id) }}</th>
+                      @for (date of shelterAllowanceDates; track $index) {
                         @if (
                           supportDraftForm.controls?.shelterAllowance?.controls?.nights &&
                           getDateControl(supportDraftForm.controls.shelterAllowance.controls.nights, person, date)
@@ -55,10 +54,10 @@
           </mat-card>
         }
 
-        @if (needsAssessmentService.requiresFood) {
+        @if (showSelfServeFoodSupport) {
           <mat-card appearance="outlined">
             <mat-card-content>
-              <div style="flex: 1 0 450px">
+              <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: 30px">
                 <p class="card-heading requiredField">Food</p>
                 <div class="card-question">
                   <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
@@ -79,24 +78,30 @@
                     <table>
                       <tr class="header-row">
                         <th></th>
-                        @for (date of supportRequiredDates; track $index) {
+                        @for (date of foodGroceriesDates; track $index) {
                           <th>{{ date.format('MMM DD, yyy') }}</th>
                         }
                       </tr>
-                      @for (person of persons; track person.id) {
+                      @for (person of draftSupports.householdMembers; track person.id) {
                         <tr>
-                          <th>{{ person.name }}</th>
-                          @for (date of supportRequiredDates; track $index) {
+                          <th>{{ getPersonName(person.id) }}</th>
+                          @for (date of foodGroceriesDates; track $index) {
                             @if (
                               supportDraftForm.controls?.food?.controls?.groceries &&
-                              getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)?.controls
-                                ?.isSelected
+                              getDateControl(
+                                supportDraftForm.controls.food.controls.groceries.controls.nights,
+                                person,
+                                date
+                              )?.controls?.isSelected
                             ) {
                               <td>
                                 <mat-checkbox
                                   [formControl]="
-                                    getDateControl(supportDraftForm.controls.food.controls.groceries, person, date)
-                                      .controls.isSelected
+                                    getDateControl(
+                                      supportDraftForm.controls.food.controls.groceries.controls.nights,
+                                      person,
+                                      date
+                                    ).controls.isSelected
                                   "
                                 ></mat-checkbox>
                               </td>
@@ -128,7 +133,7 @@
                     <table>
                       <tr class="header-row">
                         <th></th>
-                        @for (date of supportRequiredDates; track $index) {
+                        @for (date of foodRestaurantDates; track $index) {
                           <th>{{ date.format('MMM DD, yyy') }}</th>
                         }
                       </tr>
@@ -179,10 +184,10 @@
           </mat-card>
         }
 
-        @if (needsAssessmentService.requiresClothing) {
+        @if (showSelfServeClothingSupport) {
           <mat-card appearance="outlined">
             <mat-card-content>
-              <div style="flex: 1 0 450px">
+              <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: var(--size-2)">
                 <p class="card-heading">Clothing</p>
                 <div class="card-question">
                   <label>Which people in your household require <b>Clothing</b>?</label>
@@ -205,10 +210,10 @@
           </mat-card>
         }
 
-        @if (needsAssessmentService.requiresIncidentals) {
+        @if (showSelfServeIncidentsSupport) {
           <mat-card appearance="outlined">
             <mat-card-content>
-              <div style="flex: 1 0 450px">
+              <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: var(--size-2)">
                 <p class="card-heading">Incidentals</p>
                 <div class="card-question">
                   <label>Which people in your household require <b>Incidentals</b>?</label>
