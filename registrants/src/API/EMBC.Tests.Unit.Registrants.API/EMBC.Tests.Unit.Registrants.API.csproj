@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bogus" Version="35.5.0" />
+    <PackageReference Include="bogus" Version="35.5.1" />
     <PackageReference Include="fakeiteasy" Version="8.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="shouldly" Version="4.2.1" />
