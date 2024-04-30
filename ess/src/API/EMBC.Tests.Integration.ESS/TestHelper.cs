@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bogus;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
-using Address = EMBC.ESS.Shared.Contracts.Events.Address;
+using EMBC.Tests.Unit.ESS;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -11,118 +12,19 @@ namespace EMBC.Tests.Integration.ESS
     {
         public static string GenerateNewUniqueId(string prefix) => prefix + Guid.NewGuid().ToString().Substring(0, 4);
 
-        public static EvacuationFile CreateNewTestEvacuationFile(string prefix, RegistrantProfile registrant)
+        public static EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant, string? taskNumber)
         {
-            var uniqueSignature = GenerateNewUniqueId(prefix);
-            var file = new EvacuationFile()
-            {
-                PrimaryRegistrantId = registrant.Id,
-                SecurityPhrase = "SecretPhrase",
-                SecurityPhraseChanged = true,
-                RelatedTask = new IncidentTask { Id = "0001" },
-                EvacuatedFromAddress = new Address()
-                {
-                    AddressLine1 = $"{uniqueSignature}-3738 Main St",
-                    AddressLine2 = "Suite 3",
-                    Community = "9e6adfaf-9f97-ea11-b813-005056830319",
-                    StateProvince = "BC",
-                    Country = "CAN",
-                    PostalCode = "V8V 2W3"
-                },
-                NeedsAssessment =
-                    new NeedsAssessment
-                    {
-                        Type = NeedsAssessmentType.Preliminary,
-                        Insurance = InsuranceOption.Yes,
-                        Needs = new[] { IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals },
-                        HouseholdMembers = new[]
-                        {
-                            new HouseholdMember
-                            {
-                                FirstName = registrant.FirstName,
-                                LastName = registrant.LastName,
-                                Initials = registrant.Initials,
-                                Gender = registrant.Gender,
-                                DateOfBirth = registrant.DateOfBirth,
-                                IsPrimaryRegistrant = true,
-                                LinkedRegistrantId = registrant.Id
-                            },
-                            new HouseholdMember
-                            {
-                                FirstName = $"{uniqueSignature}-hm1first",
-                                LastName = $"{uniqueSignature}-hm1last",
-                                Initials = $"{uniqueSignature}-1",
-                                Gender = "X",
-                                DateOfBirth = "03/15/2000",
-                                IsMinor = false,
-                                IsPrimaryRegistrant = false
-                            },
-                             new HouseholdMember
-                            {
-                                FirstName = $"{uniqueSignature}-hm2first",
-                                LastName = $"{uniqueSignature}-hm2last",
-                                Initials = $"{uniqueSignature}-2",
-                                Gender = "M",
-                                DateOfBirth = "03/16/2010",
-                                IsMinor = true,
-                                IsPrimaryRegistrant = false
-                            }
-                        },
-                        Pets = new[]
-                        {
-                            new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" },
-                            new Pet{ Type = $"{uniqueSignature}_Dog", Quantity = "4" }
-                        }
-                    }
-            };
+            var file = new Faker<EvacuationFile>("en_CA").WithFileRules(registrant).Generate();
+            file.Id = null;
+            file.RelatedTask = null;
+            if (taskNumber != null) file.RelatedTask = new IncidentTask { Id = taskNumber };
+            file.PrimaryRegistrantId = registrant.Id;
             return file;
         }
 
-        public static RegistrantProfile CreateRegistrantProfile(string prefix)
+        public static RegistrantProfile CreateRegistrantProfile()
         {
-            var uniqueIdentifier = GenerateNewUniqueId(prefix);
-            var address = new Address
-            {
-                AddressLine1 = $"{uniqueIdentifier} st.",
-                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
-                StateProvince = "BC",
-                Country = "CAN",
-                PostalCode = "V1V1V1"
-            };
-            return new RegistrantProfile
-            {
-                FirstName = $"autotest-dev-{uniqueIdentifier}_first",
-                LastName = $"{uniqueIdentifier}_last",
-                Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
-                DateOfBirth = "12/13/2000",
-                Gender = "M",
-                PrimaryAddress = address,
-                MailingAddress = address
-            };
-        }
-
-        public static RegistrantProfile CreateRegistrantProfileWithBCSC(string prefix)
-        {
-            var uniqueIdentifier = GenerateNewUniqueId(prefix);
-            var address = new Address
-            {
-                AddressLine1 = $"{uniqueIdentifier} st.",
-                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
-                StateProvince = "BC",
-                Country = "CAN",
-                PostalCode = "V1V1V1"
-            };
-            return new RegistrantProfile
-            {
-                FirstName = $"autotest-dev-{uniqueIdentifier}_first",
-                LastName = $"{uniqueIdentifier}_last",
-                Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
-                DateOfBirth = "12/13/2000",
-                Gender = "M",
-                UserId = uniqueIdentifier,
-                PrimaryAddress = address,
-                MailingAddress = address
-            };
+            return new Faker<RegistrantProfile>("en_CA").WithRegistrantRules().Generate();
         }
 
         public static IEnumerable<Support> CreateSupports(string prefix, EvacuationFile file)
@@ -208,5 +110,16 @@ namespace EMBC.Tests.Integration.ESS
         public static decimal RandomAmount() => decimal.Round(Convert.ToDecimal(Random.Shared.NextDouble() * 100), 2);
 
         public static int RandomInt(int min = 1, int max = 10) => Random.Shared.Next(min, max);
+
+        internal static Address CreateBcscValidAddress()
+        {
+            return new Address
+            {
+                AddressLine1 = "100 Main st",
+                City = "Vancouver",
+                StateProvince = "BC",
+                Country = "CA"
+            };
+        }
     }
 }

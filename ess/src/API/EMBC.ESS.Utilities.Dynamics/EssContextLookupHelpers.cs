@@ -25,7 +25,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             return context.era_jurisdictions_cached.Value.Where(p => p.era_jurisdictionid == parsedCode).SingleOrDefault();
         }
 
-        public static async Task<systemuser> GetCurrentSystemUser(this EssContext ctx)
+        public static async Task<systemuser?> GetCurrentSystemUser(this EssContext ctx)
         {
             var currentUserId = (await ctx.WhoAmI().GetValueAsync()).UserId;
             return await ctx.systemusers.Where(su => su.systemuserid == currentUserId).SingleOrDefaultAsync();

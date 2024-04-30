@@ -14,6 +14,7 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
+using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
 
@@ -135,9 +136,9 @@ public partial class EventsManager
         })).Items.SingleOrDefault());
         if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
 
-        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+        var registrant = mapper.Map<RegistrantProfile>((await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault());
 
-        if (evacuee == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
+        if (registrant == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
 
         var ct = new CancellationTokenSource().Token;
         await evacuationFileLoader.Load(file, ct);
@@ -157,7 +158,7 @@ public partial class EventsManager
             AddSummary = printRequest.IncludeSummary,
             AddWatermark = !isProduction,
             PrintingMember = requestingUser,
-            Evacuee = evacuee
+            Evacuee = registrant
         });
 
         var content = generatedReferrals.Content;
@@ -323,52 +324,71 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
+        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligable for self serve");
 
-        // move to engine to calculate supports as sent in
-        if (query.Items != null)
+        var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskId, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
+        if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskId);
+
+        if (query.Items == null)
         {
-            foreach (var support in query.Items)
+            //generate the supports based on the file
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
+                task.StartDate.ToPST(),
+                task.EndDate.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.From.Value.DateTime.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.To.Value.DateTime.ToPST(),
+                file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
+
+            return new DraftSelfServeSupportQueryResponse
             {
-                support.TotalAmount = 100d;
-            }
-            return new DraftSelfServeSupportQueryResponse { Items = query.Items };
+                Items = response.Supports
+            };
         }
-
-        // move to engine to generate draft support for a file
-        var householdMembers = file.HouseholdMembers.Select(hm => hm.Id).ToList();
-        DateOnly[] days = [DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now.AddDays(1)), DateOnly.FromDateTime(DateTime.Now.AddDays(2))];
-        return new DraftSelfServeSupportQueryResponse
+        else
         {
-            Items =
-            [
-                new SelfServeClothingSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
-                new SelfServeFoodGroceriesSupport { Nights = days.Select(d=>new SupportDay(d,householdMembers)), TotalAmount = 100d },
-                new SelfServeFoodRestaurantSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
-                new SelfServeIncidentalsSupport { IncludedHouseholdMembers = householdMembers, TotalAmount = 100d },
-                new SelfServeShelterAllowanceSupport { Nights = days.Select(d=>new SupportDay(d,householdMembers)), TotalAmount = 100d },
-            ]
-        };
+            //recalculate the totals and return as is
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(query.Items, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
+
+            return new DraftSelfServeSupportQueryResponse
+            {
+                Items = response.Supports,
+                HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(file.NeedsAssessment.HouseholdMembers)
+            };
+        }
     }
 
     public async System.Threading.Tasks.Task Handle(CheckEligibileForSelfServeCommand cmd)
     {
+        var ct = CancellationToken.None;
         // move to engine to determine eligibility
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
+        //var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
+        //if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
 
-        var registrant = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
-        if (registrant == null) throw new NotFoundException("evacuee not found", file.PrimaryRegistrantId);
+        //var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+        //if (evacuee == null) throw new NotFoundException("evacuee not found", file.PrimaryRegistrantId);
 
-        var task = (await taskRepository.QueryTask(new TaskQuery { ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.FirstOrDefault();
-        if (task == null) throw new NotFoundException("task not found");
+        // var taskNumber = await GetTaskNumberForAddress(evacuee.GeocodedHomeAddress.Geocode.Coordinates, ct);
+        //var task = taskNumber == null ? null : (await taskRepository.QueryTask(new TaskQuery { ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.FirstOrDefault();
+
+        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(
+            //new ValidateSelfServeSupportsEligibility(mapper.Map<EvacuationFile>(file), mapper.Map<RegistrantProfile>(evacuee), mapper.Map<IncidentTask>(task), evacuee.GeocodedHomeAddress.Geocode.Accuracy))).Eligibility;
+            new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
 
         await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
             FileId = cmd.EvacuationFileId,
-            Eligible = registrant.GeocodedHomeAddress != null,
-            TaskId = task.Id
+            Eligible = eligibilityResult.Eligible,
+            TaskNumber = eligibilityResult.TaskNumber,
+            From = eligibilityResult.From,
+            To = eligibilityResult.To
         });
     }
+
+    //private async Task<string?> GetTaskNumberForAddress(Coordinates coordinates, CancellationToken ct)
+    //{
+    //    var locationProperties = await locationService.GetGeocodeAttributes(new Utilities.Spatial.Coordinates(coordinates.Latitude, coordinates.Latitude), ct);
+    //    return locationProperties.SingleOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+    //}
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
     {
@@ -377,10 +397,13 @@ public partial class EventsManager
 
         return new EligibilityCheckQueryResponse
         {
-            IsEligible = file.NeedsAssessment.EligibilityCheck?.Eligible ?? false,
-            TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskId,
-            From = file.NeedsAssessment.EligibilityCheck?.From,
-            To = file.NeedsAssessment.EligibilityCheck?.From,
+            Eligibility = new SupportEligibility
+            {
+                IsEligible = file.NeedsAssessment.EligibilityCheck?.Eligible ?? false,
+                TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskId,
+                From = file.NeedsAssessment.EligibilityCheck?.From,
+                To = file.NeedsAssessment.EligibilityCheck?.From
+            }
         };
     }
 

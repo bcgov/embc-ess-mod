@@ -32,7 +32,7 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     public async Task<ActionResult<EligibilityCheck>> CheckSelfServeEligibility(string evacuationFileId, CancellationToken ct)
     {
         await messagingClient.Send(new CheckEligibileForSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
-        var eligilityCheck = await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct);
+        var eligilityCheck = (await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct)).Eligibility;
         return Ok(new EligibilityCheck
         {
             EvacuationFileId = evacuationFileId,
@@ -47,11 +47,11 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<SelfServeSupport>>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
+    public async Task<ActionResult<DraftSupports>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
     {
         var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId }, ct);
 
-        return Ok(mapper.Map<IEnumerable<SelfServeSupport>>(response.Items));
+        return Ok(mapper.Map<DraftSupports>(response));
     }
 
     [HttpPost("draft")]
@@ -116,6 +116,12 @@ public record EligibilityCheck
     public string? TaskNumber { get; set; }
 }
 
+public record DraftSupports
+{
+    public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
+}
+
 [JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
 [JsonDerivedType(typeof(SelfServeFoodGroceriesSupport), typeDiscriminator: nameof(SelfServeFoodGroceriesSupport))]
 [JsonDerivedType(typeof(SelfServeFoodRestaurantSupport), typeDiscriminator: nameof(SelfServeFoodRestaurantSupport))]
@@ -124,11 +130,13 @@ public record EligibilityCheck
 public abstract record SelfServeSupport
 {
     public double? TotalAmount { get; set; }
+    public abstract SelfServeSupportType Type { get; }
 }
 
 public record SelfServeShelterAllowanceSupport : SelfServeSupport
 {
     public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public override SelfServeSupportType Type => SelfServeSupportType.ShelterAllowance;
 }
 
 public record SupportDay(DateOnly Date, IEnumerable<string> IncludedHouseholdMembers);
@@ -136,21 +144,34 @@ public record SupportDay(DateOnly Date, IEnumerable<string> IncludedHouseholdMem
 public record SelfServeFoodGroceriesSupport : SelfServeSupport
 {
     public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public override SelfServeSupportType Type => SelfServeSupportType.FoodGroceries;
 }
 
 public record SelfServeFoodRestaurantSupport : SelfServeSupport
 {
     public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
     public IEnumerable<SupportDayMeals> Meals { get; set; }
+    public override SelfServeSupportType Type => SelfServeSupportType.FoodRestaurant;
 }
 public record SupportDayMeals(DateOnly Date, bool Breakfast, bool Dinner, bool Lunch);
 
 public record SelfServeIncidentalsSupport : SelfServeSupport
 {
     public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public override SelfServeSupportType Type => SelfServeSupportType.Incidentals;
 }
 
 public record SelfServeClothingSupport : SelfServeSupport
 {
     public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public override SelfServeSupportType Type => SelfServeSupportType.Clothing;
+}
+
+public enum SelfServeSupportType
+{
+    ShelterAllowance,
+    FoodGroceries,
+    FoodRestaurant,
+    Incidentals,
+    Clothing
 }

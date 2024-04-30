@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Print;
@@ -21,21 +22,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             this.printRequestsRepository = printRequestsRepository;
         }
 
-        public async Task<ProcessResponse> Process(ProcessRequest request)
+        public async Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct)
         {
             if (!(request is ProcessDigitalSupportsRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(DigitalSupportProcessingStrategy)} can only handle {nameof(ProcessDigitalSupportsRequest)} request types");
-            return await HandleInternal(r);
+            return await HandleInternal(r, ct);
         }
 
-        public async Task<ValidationResponse> Validate(ValidationRequest request)
+        public async Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct)
         {
             if (!(request is DigitalSupportsValidationRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(DigitalSupportProcessingStrategy)} can only handle {nameof(DigitalSupportsValidationRequest)} request types");
-            return await HandleInternal(r);
+            return await HandleInternal(r, ct);
         }
 
-        private async Task<ProcessDigitalSupportsResponse> HandleInternal(ProcessDigitalSupportsRequest r)
+        private async Task<ProcessDigitalSupportsResponse> HandleInternal(ProcessDigitalSupportsRequest r, CancellationToken ct)
         {
             if (r.FileId == null) throw new ArgumentNullException(nameof(r.FileId));
             if (r.RequestingUserId == null) throw new ArgumentNullException(nameof(r.RequestingUserId));
@@ -79,7 +80,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             }
         }
 
-        private async Task<ValidationResponse> HandleInternal(DigitalSupportsValidationRequest r)
+        private async Task<ValidationResponse> HandleInternal(DigitalSupportsValidationRequest r, CancellationToken ct)
         {
             await Task.CompletedTask;
             //verify no paper supports included

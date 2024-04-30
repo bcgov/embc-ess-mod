@@ -70,9 +70,11 @@ public record SaveEvacuationFileNote : ManageEvacuationFileCommand
 public record AddEligibilityCheck : ManageEvacuationFileCommand
 {
     public string FileId { get; set; }
-    public string? TaskId { get; set; }
+    public string? TaskNumber { get; set; }
 
     public bool Eligible { get; set; }
+    public DateTimeOffset? From { get; set; }
+    public DateTimeOffset? To { get; set; }
 }
 
 public record EvacuationFile
