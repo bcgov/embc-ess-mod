@@ -80,7 +80,7 @@ public class EvacuationRepository : IEvacuationRepository
        var ctx = essContextFactory.Create();
        bool needsAssessmentOptOut = true;
 
-       return new ManageEvacuationFileCommandResult { Id = await UpdateNeedsAssessmentOptOut(ctx, cmd.EvacuationFile, needsAssessmentOptOut, ct) };
+       return new ManageEvacuationFileCommandResult { Id = await UpdateNeedsAssessmentOptOut(ctx, cmd.EvacuationFile.NeedsAssessment.Id, needsAssessmentOptOut, ct) };
 
     }
 
@@ -452,19 +452,10 @@ public class EvacuationRepository : IEvacuationRepository
         return updatedNote.era_essfilenoteid.ToString();
     }
 
-    private async Task<string> UpdateNeedsAssessmentOptOut(EssContext essContext, EvacuationFile evacuationFile,bool needsAssessmentOptOut, CancellationToken ct)
+    private async Task<string> UpdateNeedsAssessmentOptOut(EssContext essContext, string currentNeedsAssessmentId, bool needsAssessmentOptOut, CancellationToken ct)
     {
-        //var currentFile = essContext.era_evacuationfiles
-        //    .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
-        //if (currentFile == null) throw new ArgumentException($"Evacuation file {evacuationFile.Id} not found");
-
-        //if (currentFile.era_CurrentNeedsAssessmentid == null) await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
-
-        //await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), ct);
-        //await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile._era_currentneedsassessmentid_value), ct);
-
-        var existingNeedsAssessment = await essContext.era_needassessments.ByKey(new Guid(evacuationFile.NeedsAssessment.Id)).GetValueAsync(ct);
-        if (existingNeedsAssessment == null) throw new ArgumentException($"Evacuation file needs assessment {evacuationFile.NeedsAssessment.Id} not found");
+        var existingNeedsAssessment = await essContext.era_needassessments.ByKey(new Guid(currentNeedsAssessmentId)).GetValueAsync(ct);
+        if (existingNeedsAssessment == null) throw new ArgumentException($"Evacuation file needs assessment {currentNeedsAssessmentId} not found");
 
         existingNeedsAssessment.era_selfserveoptout = needsAssessmentOptOut;
 

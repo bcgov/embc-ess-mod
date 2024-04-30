@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
-using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
@@ -14,10 +13,9 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
-using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
-
+using EMBC.Utilities.Extensions;
 namespace EMBC.ESS.Managers.Events;
 
 public partial class EventsManager
@@ -317,7 +315,7 @@ public partial class EventsManager
 
         file.NeedsAssessment.SelfServeOptOut = true;
       
-        await evacuationRepository.Manage(new UpdateEvacuationFileNeedsAssessmentOptOut { EvacuationFile = file });
+        await evacuationRepository.Manage(new Resources.Evacuations.UpdateEvacuationFileNeedsAssessmentOptOut { EvacuationFile = file });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)
