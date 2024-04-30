@@ -64,6 +64,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.EligibilityCheck, opts => opts.Ignore())
                 .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CompletedOn == default ? DateTime.UtcNow : s.CompletedOn))
+                .ForMember(d => d.SelfServeOptOut, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, Shared.Contracts.Events.NeedsAssessment>()
