@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
@@ -18,43 +19,93 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
-    public async Task CheckHouseholdMembers()
+    public async Task ValidateEligibility_EligibleFile_True()
     {
         var (file, _) = await CreateTestSubjects();
-
-        var expectedEligibilityResult = true;
-
-        var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(file.Id));
-        eligibilityResponse.ShouldNotBeNull();
-        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedEligibilityResult, eligibilityResponse.Eligibility.Reason);
+        var eligibility = await RunEligibilityTest(file.Id, true, null);
+        eligibility.From.ShouldNotBeNull();
+        eligibility.To.ShouldNotBeNull();
+        eligibility.HomeAddressReferenceId.ShouldNotBeNull();
     }
 
     [Fact]
-    public async Task GenerateSelfServSupports()
+    public async Task ValidateEligibility_MoreThan5HouseholdMembers_False()
+    {
+        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 6);
+        await RunEligibilityTest(file.Id, false, "File has more than 5 household members");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_NotEligibleAddress_False()
+    {
+        var (file, _) = await CreateTestSubjects(eligibleAddress: false);
+        await RunEligibilityTest(file.Id, false, "No suitable task found for home address");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_NotHomeAddress_False()
+    {
+        var (file, _) = await CreateTestSubjects(eligibleAddress: null);
+        await RunEligibilityTest(file.Id, false, "Registarnt has no home address");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_NoNeeds_False()
+    {
+        var (file, _) = await CreateTestSubjects(noNeeds: true);
+        await RunEligibilityTest(file.Id, false, "Evacuee didn't identify any needs");
+    }
+
+    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
+    {
+        var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
+        eligibilityResponse.ShouldNotBeNull();
+        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedResult, eligibilityResponse.Eligibility.Reason);
+        if (string.IsNullOrEmpty(reason))
+            eligibilityResponse.Eligibility.Reason.ShouldBeNullOrEmpty();
+        else
+            eligibilityResponse.Eligibility.Reason.ShouldContain(reason);
+
+        return eligibilityResponse.Eligibility;
+    }
+
+    [Fact]
+    public async Task GenerateSelfServeSupports_ShelterAllowance_Generated()
     {
         var (file, _) = await CreateTestSubjects();
         var task = await GetTask("1234");
         var supports = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
-                file.NeedsAssessment.Needs,
-                task.StartDate.ToPST(),
-                task.StartDate.ToPST().AddHours(72),
+                [IdentifiedNeed.ShelterAllowance],
+                DateTime.Now.ToPST(),
+                DateTime.Now.ToPST().AddHours(72),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
         supports.Supports.ShouldNotBeEmpty();
     }
 
-    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(int numberOfHoldholdMembers = 5)
+    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(
+        int numberOfHoldholdMembers = 5,
+        bool? eligibleAddress = true,
+        bool noNeeds = false)
     {
         var registrant = TestHelper.CreateRegistrantProfile();
-        registrant.HomeAddress = TestHelper.CreateBcscValidAddress();
-        registrant.Id = await SaveRegistrant(registrant);
+        if (eligibleAddress == null)
+            registrant.HomeAddress = null;
+        else if (eligibleAddress.Value)
+            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
+        else
+            registrant.HomeAddress = TestHelper.CreateSelfServeIneligibleAddress();
 
+        registrant.Id = await SaveRegistrant(registrant);
         var file = TestHelper.CreateNewTestEvacuationFile(registrant, null);
         file.PrimaryRegistrantId = registrant.Id;
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(numberOfHoldholdMembers).ToList();
-        file.NeedsAssessment.Needs = [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+        if (noNeeds)
+            file.NeedsAssessment.Needs = [];
+        else
+            file.NeedsAssessment.Needs = [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
 
         file.Id = await SaveFile(file);
         return (file, registrant);

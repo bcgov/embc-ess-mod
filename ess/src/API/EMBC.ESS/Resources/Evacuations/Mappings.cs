@@ -145,7 +145,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ReverseMap()
                 .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
-                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth, CultureInfo.InvariantCulture).CalculatetAge() < 19))
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth, CultureInfo.InvariantCulture).CalculateAge() < 19))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initials, opts => opts.MapFrom(s => s.Initials))

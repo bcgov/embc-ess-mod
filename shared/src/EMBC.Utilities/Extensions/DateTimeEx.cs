@@ -39,11 +39,11 @@ namespace EMBC.Utilities.Extensions
             };
         }
 
-        public static bool IsMinor(this DateTime dob) => dob.CalculatetAge(null) < 19;
+        public static bool IsMinor(this DateTime dob) => dob.CalculateAge(null) < 19;
 
-        public static int CalculatetAge(this DateTime dob) => dob.CalculatetAge(null);
+        public static int CalculateAge(this DateTime dob) => dob.CalculateAge(null);
 
-        public static int CalculatetAge(this DateTime dob, DateTime? referenceDate)
+        public static int CalculateAge(this DateTime dob, DateTime? referenceDate)
         {
             var now = referenceDate ?? DateTime.Now;
             var age = now.Year - dob.Year;

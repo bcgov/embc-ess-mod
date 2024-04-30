@@ -11,18 +11,18 @@ namespace EMBC.ESS.Engines.Supporting
     internal class SupportingEngine : ISupportingEngine
     {
         private readonly SupportProcessingStrategyFactory supportProcessingStrategyFactory;
-        private readonly SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory;
+        private readonly SupportGenerationStrategyStrategyFactory supportGenerationStrategyStragetyFactory;
         private readonly SupportComplianceStrategyFactory supportComplianceStrategyFactory;
         private readonly PaymentGenerationStrategyFactory paymentGenerationStrategyFactory;
 
         public SupportingEngine(
             SupportProcessingStrategyFactory supportProcessingStrategyFactory,
-            SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory,
+            SupportGenerationStrategyStrategyFactory supportGenerationStrategyStrategyFactory,
             SupportComplianceStrategyFactory supportComplianceStrategyFactory,
             PaymentGenerationStrategyFactory paymentGenerationStrategyFactory)
         {
             this.supportProcessingStrategyFactory = supportProcessingStrategyFactory;
-            this.supportGenerationStrategyStragetyFactory = supportGenerationStrategyStragetyFactory;
+            this.supportGenerationStrategyStragetyFactory = supportGenerationStrategyStrategyFactory;
             this.supportComplianceStrategyFactory = supportComplianceStrategyFactory;
             this.paymentGenerationStrategyFactory = paymentGenerationStrategyFactory;
         }
