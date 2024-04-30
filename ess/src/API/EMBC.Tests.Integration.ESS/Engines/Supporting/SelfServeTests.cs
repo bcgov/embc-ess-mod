@@ -56,12 +56,15 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await RunEligibilityTest(file.Id, false, "Evacuee didn't identify any needs");
     }
 
-    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string reason)
+    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
     {
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
         eligibilityResponse.ShouldNotBeNull();
         eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedResult, eligibilityResponse.Eligibility.Reason);
-        eligibilityResponse.Eligibility.Reason.ShouldContain(reason);
+        if (string.IsNullOrEmpty(reason))
+            eligibilityResponse.Eligibility.Reason.ShouldBeNullOrEmpty();
+        else
+            eligibilityResponse.Eligibility.Reason.ShouldContain(reason);
 
         return eligibilityResponse.Eligibility;
     }
