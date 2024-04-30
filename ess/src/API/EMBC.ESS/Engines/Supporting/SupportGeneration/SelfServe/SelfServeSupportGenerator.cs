@@ -195,9 +195,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             var amount = 0d;
             foreach (var meal in support.Meals)
             {
-                if (meal.Breakfast.GetValueOrDefault()) amount += 12.75d * numberOfHouseholdMembers;
-                if (meal.Lunch.GetValueOrDefault()) amount += 14.75d * numberOfHouseholdMembers;
-                if (meal.Dinner.GetValueOrDefault()) amount += 25.50d * numberOfHouseholdMembers;
+                if (meal.Breakfast == true) amount += 12.75d * numberOfHouseholdMembers;
+                if (meal.Lunch == true) amount += 14.75d * numberOfHouseholdMembers;
+                if (meal.Dinner == true) amount += 25.50d * numberOfHouseholdMembers;
             }
             return amount;
         }

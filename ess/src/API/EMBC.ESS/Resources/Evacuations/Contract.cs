@@ -48,8 +48,8 @@ public record EvacuationFilesQuery : EvacuationFileQuery
     public bool MaskSecurityPhrase { get; set; } = true;
 
     public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
-    public DateTime? RegistraionDateFrom { get; set; }
-    public DateTime? RegistraionDateTo { get; set; }
+    public DateTime? RegistrationDateFrom { get; set; }
+    public DateTime? RegistrationDateTo { get; set; }
     public int? Limit { get; set; }
     public string HouseholdMemberId { get; set; }
     public string LinkedRegistrantId { get; set; }

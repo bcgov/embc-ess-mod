@@ -183,11 +183,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
         }
-
-        public static bool CheckIfUnder19Years(Date birthdate, Date currentDate)
-        {
-            return birthdate.AddYears(19) >= currentDate;
-        }
     }
 
 #pragma warning disable CA1008 // Enums should have zero value

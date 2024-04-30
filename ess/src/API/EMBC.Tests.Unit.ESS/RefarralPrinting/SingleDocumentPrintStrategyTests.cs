@@ -13,7 +13,7 @@ using FakeItEasy;
 using Shouldly;
 using Xunit;
 
-namespace EMBC.Tests.Unit.ESS.RefarralPrinting
+namespace EMBC.Tests.Unit.ESS.ReferralPrinting
 {
     public class SingleDocumentPrintStrategyTests
     {

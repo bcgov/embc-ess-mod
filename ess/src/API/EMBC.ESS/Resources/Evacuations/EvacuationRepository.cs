@@ -313,8 +313,8 @@ public class EvacuationRepository : IEvacuationRepository
 
         //secondary filter after loading the files
         if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
-        if (query.RegistraionDateFrom.HasValue) files = files.Where(f => f.createdon.Value.UtcDateTime >= query.RegistraionDateFrom.Value);
-        if (query.RegistraionDateTo.HasValue) files = files.Where(f => f.createdon.Value.UtcDateTime <= query.RegistraionDateTo.Value);
+        if (query.RegistrationDateFrom.HasValue) files = files.Where(f => f.createdon.Value.UtcDateTime >= query.RegistrationDateFrom.Value);
+        if (query.RegistrationDateTo.HasValue) files = files.Where(f => f.createdon.Value.UtcDateTime <= query.RegistrationDateTo.Value);
         if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.era_essfilestatus));
         if (query.Limit.HasValue) files = files.OrderByDescending(f => f.era_name).Take(query.Limit.Value);
 
@@ -360,8 +360,8 @@ public class EvacuationRepository : IEvacuationRepository
             string.IsNullOrEmpty(query.NeedsAssessmentId) &&
             (!string.IsNullOrEmpty(query.FileId) ||
             !string.IsNullOrEmpty(query.ManualFileId) ||
-            query.RegistraionDateFrom.HasValue ||
-            query.RegistraionDateTo.HasValue);
+            query.RegistrationDateFrom.HasValue ||
+            query.RegistrationDateTo.HasValue);
 
         if (!shouldQueryFiles) return Array.Empty<era_evacuationfile>();
 
@@ -369,8 +369,8 @@ public class EvacuationRepository : IEvacuationRepository
 
         if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId);
         if (!string.IsNullOrEmpty(query.ManualFileId)) filesQuery = filesQuery.Where(f => f.era_paperbasedessfile == query.ManualFileId);
-        if (query.RegistraionDateFrom.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
-        if (query.RegistraionDateTo.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
+        if (query.RegistrationDateFrom.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.RegistrationDateFrom.Value);
+        if (query.RegistrationDateTo.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.RegistrationDateTo.Value);
 
         return await filesQuery.GetAllPagesAsync(ct);
     }
