@@ -71,7 +71,12 @@ public record SelfServeFoodRestaurantSupport : SelfServeSupport
     public IEnumerable<string> IncludedHouseholdMembers { get; set; }
     public IEnumerable<SupportDayMeals> Meals { get; set; } = Array.Empty<SupportDayMeals>();
 }
-public record SupportDayMeals(DateOnly Date, bool Breakfast, bool Dinner, bool Lunch);
+public record SupportDayMeals(DateOnly Date)
+{
+    public bool? Breakfast { get; set; }
+    public bool? Lunch { get; set; }
+    public bool? Dinner { get; set; }
+}
 
 public record SelfServeIncidentalsSupport : SelfServeSupport
 {

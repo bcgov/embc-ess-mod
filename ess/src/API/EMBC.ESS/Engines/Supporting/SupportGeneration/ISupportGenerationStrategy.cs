@@ -12,11 +12,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
         Task<GenerateResponse> Generate(GenerateRequest request, CancellationToken ct);
     }
 
-    internal class SupportGenerationStrategyStragetyFactory
+    internal class SupportGenerationStrategyStrategyFactory
     {
         private readonly IServiceProvider services;
 
-        public SupportGenerationStrategyStragetyFactory(IServiceProvider services)
+        public SupportGenerationStrategyStrategyFactory(IServiceProvider services)
         {
             this.services = services;
         }

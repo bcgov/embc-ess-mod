@@ -43,12 +43,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         private async Task<GenerateResponse> Handle(GenerateSelfServeSupports req, CancellationToken ct)
         {
             var householdMembers = req.HouseholdMembersIds.ToArray();
-            var days = CalculateSupportDays(req.SupportPeriodFrom, req.SupportPeriodTo).ToArray();
-            var supports = req.Needs.Select(n => CreateSupportsForNeed(n, days, householdMembers)).SelectMany(s => s).ToList();
+            var supports = req.Needs.Select(n => CreateSupportsForNeed(n, req.SupportPeriodFrom, req.SupportPeriodTo, householdMembers)).SelectMany(s => s).ToList();
             return await Task.FromResult(new GenerateSelfServeSupportsResponse(supports));
         }
 
-        private static IEnumerable<DateTime> CalculateSupportDays(DateTime from, DateTime to)
+        private static IEnumerable<DateTime> CreateSupportDays(DateTime from, DateTime to)
         {
             while (from < to)
             {
@@ -57,13 +56,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             }
         }
 
-        private static IEnumerable<SelfServeSupport> CreateSupportsForNeed(IdentifiedNeed need, DateTime[] days, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
+        private static IEnumerable<SelfServeSupport> CreateSupportsForNeed(IdentifiedNeed need, DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
             need switch
             {
-                IdentifiedNeed.Food => [CreateSelfServeFoodGroceriesSupport(days, householdMembers), CreateSelfServeFoodRestaurantSupport(days, householdMembers)],
+                IdentifiedNeed.Food => [CreateSelfServeFoodGroceriesSupport(from, to, householdMembers), CreateSelfServeFoodRestaurantSupport(from, to, householdMembers)],
                 IdentifiedNeed.Incidentals => [CreateIncidentalsSupport(householdMembers)],
                 IdentifiedNeed.Clothing => [CreateClothingSupport(householdMembers)],
-                IdentifiedNeed.ShelterAllowance => [CreateShelterAllowanceSupport(days, householdMembers)],
+                IdentifiedNeed.ShelterAllowance => [CreateShelterAllowanceSupport(from, to, householdMembers)],
 
                 _ => throw new NotImplementedException($"{need}")
             };
@@ -72,7 +71,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeClothingSupport
             {
-                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id),
+                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
             support.TotalAmount = CalculateSelfServeSupportAmount(support);
@@ -85,7 +84,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeIncidentalsSupport()
             {
-                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id),
+                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
             support.TotalAmount = CalculateSelfServeSupportAmount(support);
@@ -94,9 +93,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
 
         private static double CalculateSelfServeSupportAmount(SelfServeIncidentalsSupport support) => 50 * support.IncludedHouseholdMembers.Count();
 
-        private static SelfServeShelterAllowanceSupport CreateShelterAllowanceSupport(IEnumerable<DateTime> days, IEnumerable<SelfServeHouseholdMember> householdMembers)
+        private static SelfServeShelterAllowanceSupport CreateShelterAllowanceSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
-            var support = new SelfServeShelterAllowanceSupport { Nights = days.Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id))), TotalAmount = 0d };
+            var support = new SelfServeShelterAllowanceSupport
+            {
+                Nights = CreateSupportDays(from, to).Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id).ToList())).ToList(),
+                TotalAmount = 0d
+            };
             support.TotalAmount = CalculateSelfServeSupportAmount(support, householdMembers);
             return support;
         }
@@ -104,10 +107,10 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
             var amount = 0d;
-            var hmList = householdMembers.ToList();
+            var hmList = householdMembers.OrderByDescending(hm => hm.IsMinor).ToList();
             foreach (var hmId in support.Nights.SelectMany(d => d.IncludedHouseholdMembers))
             {
-                if (amount == 0d)
+                if (amount.Equals(0d))
                 {
                     // first occupant
                     amount = 30d;
@@ -120,35 +123,70 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             return amount;
         }
 
-        private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime[] days, IEnumerable<SelfServeHouseholdMember> householdMembers)
+        private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
-            var support = new SelfServeFoodGroceriesSupport { Nights = days.Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id))), TotalAmount = 0d };
+            var support = new SelfServeFoodGroceriesSupport
+            {
+                Nights = CreateSupportDays(from, to).Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id).ToList())).ToList(),
+                TotalAmount = 0d
+            };
             support.TotalAmount = CalculateSelfServeSupportAmount(support);
             return support;
         }
 
         private static double CalculateSelfServeSupportAmount(SelfServeFoodGroceriesSupport support) => support.Nights.Aggregate(0d, (amount, night) => amount + night.IncludedHouseholdMembers.Count() * 22.5d);
 
-        private static SelfServeFoodRestaurantSupport CreateSelfServeFoodRestaurantSupport(DateTime[] days, IEnumerable<SelfServeHouseholdMember> householdMembers)
+        private static SelfServeFoodRestaurantSupport CreateSelfServeFoodRestaurantSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
-            var support = new SelfServeFoodRestaurantSupport { Meals = CalculateMealPlan(days), IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id), TotalAmount = 0d };
+            var support = new SelfServeFoodRestaurantSupport
+            {
+                Meals = CalculateMealPlan(from, to),
+                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
+                TotalAmount = 0d
+            };
             support.TotalAmount = CalculateSelfServeSupportAmount(support);
             return support;
         }
 
-        private static IEnumerable<SupportDayMeals> CalculateMealPlan(DateTime[] days)
+        private static IEnumerable<SupportDayMeals> CalculateMealPlan(DateTime from, DateTime to)
         {
-            if (days.Length == 0) yield break;
-            // add previous day with no meals if the first eligible day
-            // to add - check if task start date allows for the extra day
-            if (days[0].Hour <= 11) yield return new SupportDayMeals(DateOnly.FromDateTime(days[0].AddDays(-1)), false, false, false);
-            foreach (var day in days)
+            var meals = new Dictionary<DateOnly, SupportDayMeals>();
+
+            var startingTime = from;
+            var endingTime = to;
+
+            // allow previous day dinner if breakfast is selected for first day
+            if (startingTime.Hour < 11)
             {
-                var breakfast = day.Hour >= 1 && day.Hour <= 11;
-                var lunch = day.Hour > 11 && day.Hour <= 15;
-                var dinner = day.Hour > 15 && day.AddDays(1).Hour < 1;
-                yield return new SupportDayMeals(DateOnly.FromDateTime(day), breakfast, lunch, dinner);
+                var prevDay = DateOnly.FromDateTime(from.AddDays(-1));
+                meals.Add(prevDay, new SupportDayMeals(prevDay) { Dinner = false });
             }
+
+            while (startingTime < endingTime)
+            {
+                var day = DateOnly.FromDateTime(startingTime);
+                var meal = meals.ContainsKey(day) ? meals[day] : new SupportDayMeals(day);
+                switch (startingTime.Hour)
+                {
+                    case >= 1 and < 11:
+                        meal.Breakfast = meals.Values.Count(m => m.Breakfast == true) < 3;
+                        startingTime = new DateTime(day, new TimeOnly(11, 1), DateTimeKind.Unspecified);
+                        break;
+
+                    case >= 11 and < 15:
+                        meal.Lunch = meals.Values.Count(m => m.Lunch == true) < 3;
+                        startingTime = new DateTime(day, new TimeOnly(15, 1), DateTimeKind.Unspecified);
+                        break;
+
+                    case (>= 15 and <= 24) or (>= 0 and < 1):
+                        meal.Dinner = meals.Values.Count(m => m.Dinner == true) < 3;
+                        startingTime = new DateTime(day.AddDays(1), new TimeOnly(1, 1), DateTimeKind.Unspecified);
+                        break;
+                }
+                meals[day] = meal;
+            }
+
+            return meals.Values;
         }
 
         private static double CalculateSelfServeSupportAmount(SelfServeFoodRestaurantSupport support)
@@ -157,9 +195,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             var amount = 0d;
             foreach (var meal in support.Meals)
             {
-                if (meal.Breakfast) amount += 12.75d * numberOfHouseholdMembers;
-                if (meal.Lunch) amount += 14.75d * numberOfHouseholdMembers;
-                if (meal.Dinner) amount += 25.50d * numberOfHouseholdMembers;
+                if (meal.Breakfast.GetValueOrDefault()) amount += 12.75d * numberOfHouseholdMembers;
+                if (meal.Lunch.GetValueOrDefault()) amount += 14.75d * numberOfHouseholdMembers;
+                if (meal.Dinner.GetValueOrDefault()) amount += 25.50d * numberOfHouseholdMembers;
             }
             return amount;
         }
