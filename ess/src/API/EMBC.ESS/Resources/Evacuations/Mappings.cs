@@ -78,6 +78,7 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFrom.PostalCode))
                   .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                   .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
+                  .ForMember(d => d.era_selfserveoptout, opts => opts.MapFrom(s => s.SelfServeOptOut))
                   .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
                   .AfterMap((s, d) =>
                   {

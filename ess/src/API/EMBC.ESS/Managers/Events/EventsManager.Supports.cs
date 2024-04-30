@@ -315,8 +315,8 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException($"Evacuation File {cmd.EvacuationFileId} not found", cmd.EvacuationFileId);
 
         file.NeedsAssessment.SelfServeOptOut = true;
-
-       await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+      
+        await evacuationRepository.Manage(new UpdateEvacuationFileNeedsAssessmentOptOut { EvacuationFile = file });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)

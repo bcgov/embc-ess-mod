@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities;
@@ -31,7 +32,7 @@ public class EvacuationRepository : IEvacuationRepository
             LinkEvacuationFileRegistrant c => await Handle(c, ct),
             SaveEvacuationFileNote c => await HandleSaveEvacuationFileNote(c, ct),
             AddEligibilityCheck c => await Handle(c, ct),
-
+            UpdateEvacuationFileNeedsAssessmentOptOut c => await HandleUpdateUpdateEvacuationFileNeedsAssessmentOptOut(c, ct),
             _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
         };
     }
@@ -72,6 +73,15 @@ public class EvacuationRepository : IEvacuationRepository
         {
             return new ManageEvacuationFileCommandResult { Id = await UpdateNote(ctx, cmd.FileId, cmd.Note, ct) };
         }
+    }
+
+    private async Task<ManageEvacuationFileCommandResult> HandleUpdateUpdateEvacuationFileNeedsAssessmentOptOut(UpdateEvacuationFileNeedsAssessmentOptOut cmd, CancellationToken ct)
+    {
+       var ctx = essContextFactory.Create();
+       bool needsAssessmentOptOut = true;
+
+       return new ManageEvacuationFileCommandResult { Id = await UpdateNeedsAssessmentOptOut(ctx, cmd.EvacuationFile, needsAssessmentOptOut, ct) };
+
     }
 
     public async Task<string> Create(EssContext essContext, EvacuationFile evacuationFile, CancellationToken ct)
@@ -440,6 +450,31 @@ public class EvacuationRepository : IEvacuationRepository
         essContext.DetachAll();
 
         return updatedNote.era_essfilenoteid.ToString();
+    }
+
+    private async Task<string> UpdateNeedsAssessmentOptOut(EssContext essContext, EvacuationFile evacuationFile,bool needsAssessmentOptOut, CancellationToken ct)
+    {
+        //var currentFile = essContext.era_evacuationfiles
+        //    .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
+        //if (currentFile == null) throw new ArgumentException($"Evacuation file {evacuationFile.Id} not found");
+
+        //if (currentFile.era_CurrentNeedsAssessmentid == null) await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
+
+        //await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), ct);
+        //await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile._era_currentneedsassessmentid_value), ct);
+
+        var existingNeedsAssessment = await essContext.era_needassessments.ByKey(new Guid(evacuationFile.NeedsAssessment.Id)).GetValueAsync(ct);
+        if (existingNeedsAssessment == null) throw new ArgumentException($"Evacuation file needs assessment {evacuationFile.NeedsAssessment.Id} not found");
+
+        existingNeedsAssessment.era_selfserveoptout = needsAssessmentOptOut;
+
+        essContext.AttachTo(nameof(EssContext.era_needassessments), existingNeedsAssessment);
+        essContext.UpdateObject(existingNeedsAssessment);
+
+        await essContext.SaveChangesAsync(ct);
+        essContext.DetachAll();
+
+        return existingNeedsAssessment.era_needassessmentid.ToString();
     }
 
     private async Task<ManageEvacuationFileCommandResult> Handle(AddEligibilityCheck command, CancellationToken ct)
