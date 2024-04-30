@@ -11,7 +11,6 @@ using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
-using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
@@ -20,91 +19,44 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Utilities.Spatial;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Notifications;
 using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class EventsManager
+    public class EventsManager(
+        ITelemetryProvider telemetryProvider,
+        IMapper mapper,
+        IEvacueesRepository evacueesRepository,
+        IInvitationRepository invitationRepository,
+        ITemplateProviderResolver templateProviderResolver,
+        IEvacuationRepository evacuationRepository,
+        ISupportRepository supportRepository,
+        ITransformator transformator,
+        INotificationSender notificationSender,
+        ITaskRepository taskRepository,
+        ITeamRepository teamRepository,
+        ISupplierRepository supplierRepository,
+        ISearchEngine searchEngine,
+        IPrintRequestsRepository printingRepository,
+        IWebHostEnvironment env,
+        IDataProtectionProvider dataProtectionProvider,
+        IConfiguration configuration,
+        ISupportingEngine supportingEngine,
+        IPaymentRepository paymentRepository,
+        ICache cache,
+        ILocationService locationService)
     {
-        private readonly ITelemetryProvider telemetryProvider;
-        private readonly IMapper mapper;
-        private readonly IEvacueesRepository evacueesRepository;
-        private readonly IInvitationRepository invitationRepository;
-        private readonly ITemplateProviderResolver templateProviderResolver;
-        private readonly IEvacuationRepository evacuationRepository;
-        private readonly ISupportRepository supportRepository;
-        private readonly ITransformator transformator;
-        private readonly INotificationSender notificationSender;
-        private readonly ITaskRepository taskRepository;
-        private readonly ITeamRepository teamRepository;
-        private readonly ISupplierRepository supplierRepository;
-        private readonly ISearchEngine searchEngine;
-        private readonly IPrintRequestsRepository printingRepository;
-        private readonly IMetadataRepository metadataRepository;
-        private readonly IDataProtectionProvider dataProtectionProvider;
-        private readonly IConfiguration configuration;
-        private readonly ISupportingEngine supportingEngine;
-        private readonly IPaymentRepository paymentRepository;
-        private readonly ICache cache;
-        private readonly EvacuationFileLoader evacuationFileLoader;
-        private readonly IWebHostEnvironment env;
-        private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
-
-        public EventsManager(
-            ITelemetryProvider telemetryProvider,
-            IMapper mapper,
-            IEvacueesRepository evacueesRepository,
-            IInvitationRepository invitationRepository,
-            ITemplateProviderResolver templateProviderResolver,
-            IEvacuationRepository evacuationRepository,
-            ISupportRepository supportRepository,
-            ITransformator transformator,
-            INotificationSender notificationSender,
-            ITaskRepository taskRepository,
-            ITeamRepository teamRepository,
-            ISupplierRepository supplierRepository,
-            ISearchEngine searchEngine,
-            IPrintRequestsRepository printingRepository,
-            IWebHostEnvironment env,
-            IMetadataRepository metadataRepository,
-            IDataProtectionProvider dataProtectionProvider,
-            IConfiguration configuration,
-            ISupportingEngine supportingEngine,
-            IPaymentRepository paymentRepository,
-            ICache cache)
-        {
-            this.telemetryProvider = telemetryProvider;
-            this.mapper = mapper;
-            this.evacueesRepository = evacueesRepository;
-            this.invitationRepository = invitationRepository;
-            this.templateProviderResolver = templateProviderResolver;
-            this.evacuationRepository = evacuationRepository;
-            this.supportRepository = supportRepository;
-            this.transformator = transformator;
-            this.notificationSender = notificationSender;
-            this.taskRepository = taskRepository;
-            this.teamRepository = teamRepository;
-            this.supplierRepository = supplierRepository;
-            this.searchEngine = searchEngine;
-            this.printingRepository = printingRepository;
-            this.metadataRepository = metadataRepository;
-            this.dataProtectionProvider = dataProtectionProvider;
-            this.configuration = configuration;
-            this.supportingEngine = supportingEngine;
-            this.paymentRepository = paymentRepository;
-            this.cache = cache;
-            this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, this.evacueesRepository, paymentRepository);
-        }
+        private readonly EvacuationFileLoader evacuationFileLoader = new(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
+        private static TeamMemberStatus[] activeOnlyStatus = [TeamMemberStatus.Active];
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
@@ -164,12 +116,35 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
+            var ct = CancellationToken.None;
             var evacuee = mapper.Map<Evacuee>(cmd.Profile);
 
+            Evacuee existingEvacuee = null;
             if (evacuee.Id == null && evacuee.UserId != null)
+                existingEvacuee = (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault();
+            else if (evacuee.Id != null)
+                existingEvacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = evacuee.Id })).Items.SingleOrDefault();
+
+            evacuee.Id ??= existingEvacuee?.Id;
+            //fill last login for new registrants from registrants portal - need to split this command into separate use cases
+            evacuee.LastLogin = evacuee.UserId != null && evacuee.LastLogin == null ? DateTime.UtcNow : null;
+
+            var homeAddress = mapper.Map<Resources.Evacuees.Address>(cmd.Profile.HomeAddress);
+            if (homeAddress != null)
             {
-                //look up evacuee by user id
-                evacuee.Id = (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault()?.Id;
+                var currentAddress = existingEvacuee?.GeocodedHomeAddress?.Address;
+                var currentAddressScore = existingEvacuee?.GeocodedHomeAddress?.Geocode.Accuracy ?? 0;
+                var geocode = await locationService.ResolveGeocode(new Location($"{homeAddress.AddressLine1}, {homeAddress.City}, {homeAddress.StateProvince}"), ct);
+
+                //save geocoded address if different than existing addrss or if new
+                if (homeAddress != currentAddress || geocode.Score != currentAddressScore)
+                {
+                    evacuee.GeocodedHomeAddress = new GeocodedAddress
+                    {
+                        Address = homeAddress,
+                        Geocode = mapper.Map<AddressGeocode>(geocode)
+                    };
+                }
             }
 
             var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
@@ -592,7 +567,7 @@ namespace EMBC.ESS.Managers.Events
                 AddSummary = printRequest.IncludeSummary,
                 AddWatermark = !isProduction,
                 PrintingMember = requestingUser,
-                evacuee = evacuee
+                Evacuee = evacuee
             });
 
             var content = generatedReferrals.Content;

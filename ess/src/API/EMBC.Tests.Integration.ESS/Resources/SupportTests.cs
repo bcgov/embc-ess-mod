@@ -37,7 +37,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
                    To = now.AddDays(3),
-                   IssuedOn = now
+                   IssuedOn = now,
+                   TotalAmount = 655.29m,
+                   ApproverName = "name",
+                   ExtremeWinterConditions = false
                },
                new IncidentalsSupport {
                    SupportDelivery = new Interac
@@ -51,7 +54,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
                    To = now.AddDays(5),
-                   IssuedOn = now
+                   IssuedOn = now,
+                   ApprovedItems = "approved",
+                   ApproverName = "name"
                },
                new TransportationTaxiSupport {
                    SupportDelivery = new Referral
@@ -65,6 +70,124 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    From = now,
                    To = now.AddDays(3),
                    IssuedOn = now,
+                   ToAddress = "toaddr",
+                   FromAddress = "fromaddr"
+               },
+               new TransportationOtherSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   TotalAmount = 1461.30m,
+                   TransportMode = "mode"
+               },
+               new ShelterAllowanceSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   ContactEmail = "email",
+                   ContactPhone = "phone",
+                   NumberOfNights = 4,
+                   TotalAmount = 353.99m
+               },
+               new ShelterBilletingSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   HostEmail = "email",
+                   HostAddress = "addr",
+                   HostCity = "city",
+                   HostName = "name",
+                   HostPhone = "phone",
+                   NumberOfNights = 4
+               },
+               new ShelterGroupSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   FacilityAddress = "addr",
+                   FacilityCity = "city",
+                   FacilityName = "name",
+                   FacilityContactPhone = "phone",
+                   NumberOfNights = 1
+               },
+               new ShelterHotelSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   NumberOfNights = 1,
+                   NumberOfRooms = 3
+               },
+               new FoodGroceriesSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   NumberOfDays = 3,
+                   TotalAmount = 1004.23m,
+               },
+               new FoodRestaurantSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
+                   NumberOfBreakfastsPerPerson = 4,
+                   NumberOfDinnersPerPerson = 3,
+                   NumberOfLunchesPerPerson = 2,
+                   TotalAmount = 1300.10m,
                }
             };
 
@@ -73,20 +196,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 FileId = evacuationFileId,
                 Supports = newSupports
             })).Supports.Select(s => s.Id).ToArray();
+
             newSupportIds.Count().ShouldBe(newSupports.Length);
 
-            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
-                .Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId })).Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
+
             supports.Length.ShouldBe(newSupports.Length);
 
             foreach (var support in supports)
             {
                 var sourceSupport = newSupports.Single(s => s.GetType() == support.GetType());
 
-                if (sourceSupport.IncludedHouseholdMembers.Any())
-                    support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                if (sourceSupport.CreatedByTeamMemberId != null)
-                    support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
+                if (sourceSupport.IncludedHouseholdMembers.Any()) support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                if (sourceSupport.CreatedByTeamMemberId != null) support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
 
                 support.To.ShouldBe(sourceSupport.To);
                 support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
@@ -113,6 +235,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     etransfer.NotificationEmail.ShouldBe(sourceETransfer.NotificationEmail);
                     etransfer.NotificationMobile.ShouldBe(sourceETransfer.NotificationMobile);
                     etransfer.ReceivingRegistrantId.ShouldBe(sourceETransfer.ReceivingRegistrantId);
+                }
+                if (support is ShelterAllowanceSupport support1)
+                {
+                    support1.NumberOfNights.ShouldBe(((ShelterAllowanceSupport)sourceSupport).NumberOfNights);
+                    support1.ContactEmail.ShouldBe(((ShelterAllowanceSupport)sourceSupport).ContactEmail);
+                    support1.ContactPhone.ShouldBe(((ShelterAllowanceSupport)sourceSupport).ContactPhone);
                 }
             }
         }

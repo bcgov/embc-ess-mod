@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import * as globalConst from '../services/globalConstants';
@@ -38,11 +38,7 @@ export class CustomValidationService {
    * @param validator : validator to test again
    * @param errorName : custom error name
    */
-  conditionalValidation(
-    predicate: () => boolean,
-    validator: ValidatorFn,
-    errorName?: string
-  ): ValidatorFn {
+  conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.parent) {
         let validationError = null;
@@ -70,14 +66,7 @@ export class CustomValidationService {
       if (control) {
         const email = control.get('email').value;
         const confirmEmail = control.get('confirmEmail').value;
-        if (
-          email !== undefined &&
-          confirmEmail !== undefined &&
-          email !== null &&
-          confirmEmail !== null &&
-          email !== '' &&
-          confirmEmail !== ''
-        ) {
+        if (email !== undefined && confirmEmail !== undefined && email !== null && confirmEmail !== null && email !== '' && confirmEmail !== '') {
           if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
             return { emailMatch: true };
           }
@@ -94,16 +83,8 @@ export class CustomValidationService {
         const confirmEmail = control.get('confirmEmail').value;
         const phone = control.get('phone').value;
 
-        if (
-          control.get('showContacts').value === true &&
-          (phone === null || phone === undefined || phone === '')
-        ) {
-          if (
-            (email !== undefined || email !== null || email === '') &&
-            (confirmEmail === null ||
-              confirmEmail === '' ||
-              confirmEmail === undefined)
-          ) {
+        if (control.get('showContacts').value === true && (phone === null || phone === undefined || phone === '')) {
+          if ((email !== undefined || email !== null || email === '') && (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
             return { confirmEmailRequired: true };
           }
         }
@@ -118,10 +99,7 @@ export class CustomValidationService {
   postalValidation(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.parent) {
-        if (
-          control.parent.get('country').value !== undefined &&
-          control.parent.get('country').value !== null
-        ) {
+        if (control.parent.get('country').value !== undefined && control.parent.get('country').value !== null) {
           if (control.parent.get('country').value.code === 'CAN') {
             return Validators.pattern(globalConst.postalPattern)(control);
           } else if (control.parent.get('country').value.code === 'USA') {
@@ -151,8 +129,7 @@ export class CustomValidationService {
    * Checks if the quantity inserted is between 1 and 999
    */
   quantityPetsValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null =>
-      Validators.pattern(globalConst.petsQuantityPattern)(control);
+    return (control: AbstractControl): { [key: string]: boolean } | null => Validators.pattern(globalConst.petsQuantityPattern)(control);
   }
 
   whitespaceValidator(): ValidatorFn {
@@ -164,7 +141,6 @@ export class CustomValidationService {
       }
     };
   }
-
 
   /**
    * Checks an array of controls by name, to see if they all have different values (unless empty)
@@ -200,6 +176,19 @@ export class CustomValidationService {
           controlVal.setErrors({ notUnique: true });
           return { notUnique: true };
         }
+      }
+      return null;
+    };
+  }
+
+  public needsValidator(): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const anyNeedsIdentified =
+        group.controls['requiresShelter'].value || group.controls['requiresFood'].value || group.controls['requiresClothing'].value || group.controls['requiresIncidentals'].value;
+
+      const noNeedsIdentified = group.controls['requiresNothing'].value;
+      if (!anyNeedsIdentified && !noNeedsIdentified) {
+        return { invalid: true };
       }
       return null;
     };

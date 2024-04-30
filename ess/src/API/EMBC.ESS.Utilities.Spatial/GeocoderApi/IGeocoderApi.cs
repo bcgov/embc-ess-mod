@@ -64,9 +64,9 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
     internal record Properties2
     {
         public string? accessNotes { get; set; }
-        public double? blockID { get; set; }
+        // public string? blockID { get; set; }
         public string? changeDate { get; set; }
-        public double? civicNumber { get; set; }
+        //public string? civicNumber { get; set; }
         public string? civicNumberSuffix { get; set; }
         public string? electoralArea { get; set; }
         public object[]? faults { get; set; }
@@ -92,7 +92,7 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
         public string? streetQualifier { get; set; }
         public string? streetType { get; set; }
         public string? unitDesignator { get; set; }
-        public string? unitNumber { get; set; }
+        //public int? unitNumber { get; set; }
         public string? unitNumberSuffix { get; set; }
     }
 }

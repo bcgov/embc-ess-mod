@@ -25,6 +25,7 @@ export { EvacuationFileHouseholdMember } from './models/evacuation-file-househol
 export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
+export { IdentifiedNeed } from './models/identified-need';
 export { Note } from './models/note';
 export { Support } from './models/support';
 export { SupportStatus } from './models/support-status';
@@ -42,6 +43,7 @@ export { FoodRestaurantSupport } from './models/food-restaurant-support';
 export { LodgingBilletingSupport } from './models/lodging-billeting-support';
 export { LodgingGroupSupport } from './models/lodging-group-support';
 export { LodgingHotelSupport } from './models/lodging-hotel-support';
+export { LodgingAllowanceSupport } from './models/lodging-allowance-support';
 export { TransportationOtherSupport } from './models/transportation-other-support';
 export { TransportationTaxiSupport } from './models/transportation-taxi-support';
 export { EvacuationFileStatus } from './models/evacuation-file-status';

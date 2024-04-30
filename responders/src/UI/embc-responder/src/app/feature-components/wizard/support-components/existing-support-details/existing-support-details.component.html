@@ -238,7 +238,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" *ngIf="canExtendSupport()">
             <div class="col-md-12">
               <a (click)="extendSupport()"
                 ><img
@@ -297,7 +297,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" *ngIf="canExtendSupport()">
             <div class="col-md-12">
               <a (click)="extendSupport()"
                 ><img
@@ -314,7 +314,7 @@
           *ngIf="selectedSupport?.status === 'Draft'"
           class="col-md-4 link-padding"
         >
-          <div class="row">
+          <div class="row" *ngIf="canEditSupport()">
             <div class="col-md-12">
               <a (click)="editDraft()"
                 ><img
@@ -340,7 +340,7 @@
         </div>
 
         <div
-          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports"
+          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && canExtendSupport()"
           class="col-md-4 link-padding"
         >
           <div class="row">
@@ -501,6 +501,21 @@
       <div class="col-md-4 bold">{{ groupReferral?.numberOfNights }}</div>
     </div>
   </div>
+    <!--Group Lodging-->
+  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance'">
+      <div class="row row-padding">
+        <div class="col-md-4 box-text-color"># Nights:</div>
+        <div class="col-md-4 bold">
+          {{ shelterAllowanceReferral?.numberOfNights }}
+        </div>
+      </div>
+      <div class="row row-padding">
+        <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+        <div class="col-md-4 bold">
+          ${{ shelterAllowanceReferral?.totalAmount }}
+        </div>
+      </div>
+    </div>
   <!--Taxi-->
   <div *ngIf="selectedSupport?.subCategory === 'Transportation_Taxi'">
     <div class="row row-padding">
@@ -579,7 +594,8 @@
     </div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral' &&
+  selectedSupport?.subCategory !== 'Lodging_Allowance'">
     <div class="col-md-4 box-text-color">
       Person Responsible for Purchasing Goods:
     </div>
@@ -591,7 +607,8 @@
   <div
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.subCategory !== 'Lodging_Group'&&
+      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
       selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
@@ -620,6 +637,7 @@
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
       selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
       selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
@@ -673,7 +691,25 @@
       "
     ></div>
   </div>
+  <div
+  *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance' && selectedSupport?.method === 'Referral'"
+  class="row row-padding">
+  <div class="col-md-4 box-text-color">Payee Full Name:</div>
+  <div class="col-md-4 bold">
+    {{ referral?.issuedToPersonName | uppercase }}
+  </div>
+</div>
 
+<div
+*ngIf="(selectedSupport?.subCategory === 'Lodging_Allowance') && shelterAllowanceReferral?.contactPhone &&  shelterAllowanceReferral?.contactEmail"
+class="row row-padding">
+<div class="col-md-4 box-text-color">Payee Contact Details:</div>
+<div class="col-md-4 bold"  [innerHTML]="
+shelterAllowanceReferral?.contactPhone
+  | supplierContact: shelterAllowanceReferral?.contactEmail
+">
+</div>
+</div>
   <div
     *ngIf="selectedSupport?.subCategory === 'Lodging_Group'"
     class="row row-padding"
@@ -684,7 +720,8 @@
     </div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral' &&
+  selectedSupport?.subCategory !== 'Lodging_Allowance'">
     <div class="col-md-4 box-text-color">Notes for Supplier:</div>
     <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
   </div>

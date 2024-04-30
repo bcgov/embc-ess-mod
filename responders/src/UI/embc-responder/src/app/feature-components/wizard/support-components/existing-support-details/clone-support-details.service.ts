@@ -24,6 +24,7 @@ import {
   Incidentals,
   OtherTransport,
   RestaurantMeal,
+  ShelterAllowance,
   SupplierDetailsModel,
   Taxi
 } from 'src/app/core/models/support-details.model';
@@ -177,6 +178,7 @@ export class CloneSupportDetailsService {
     | OtherTransport
     | Billeting
     | GroupLodging
+    | ShelterAllowance
     | HotelMotel
     | Incidentals
     | Clothing {
@@ -224,6 +226,16 @@ export class CloneSupportDetailsService {
         noOfNights: 1
       };
     } else if (
+      selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance
+      ) {
+        return {
+          noOfNights: 1,
+          totalAmount: null,
+          contactEmail: null,
+          contactPhone: null,
+          fullName: null
+        };
+      } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
     ) {
       return {

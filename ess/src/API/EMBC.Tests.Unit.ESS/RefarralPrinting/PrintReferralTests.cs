@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.Utilities.Extensions;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Shouldly;
 using Xunit;
 
@@ -88,10 +88,10 @@ namespace EMBC.Tests.Unit.ESS.Prints
 
         private PrintRequestingUser GeneratePrintRequestingUser() =>
             new Faker<PrintRequestingUser>()
-                .RuleFor(o => o.FirstName, f => f.Person.FirstName)
-                .RuleFor(o => o.LastName, f => f.Person.LastName)
-                .RuleFor(o => o.Id, f => f.Random.Number(1000, 9999).ToString())
-            ;
+                    .RuleFor(o => o.FirstName, f => f.Person.FirstName)
+                    .RuleFor(o => o.LastName, f => f.Person.LastName)
+                    .RuleFor(o => o.Id, f => f.Random.Number(1000, 9999).ToString())
+                ;
 
         private PrintEvacuee GeneratePrintEvacuee() =>
             new Faker<PrintEvacuee>()
@@ -109,7 +109,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                     .RuleFor(o => o.Id, f => string.Join("", f.Random.Digits(6)))
                     .RuleFor(o => o.FromDate, f => f.Date.Soon().Date.ToShortDateString())
                     .RuleFor(o => o.FromTime, f => f.Date.Recent().ToLongTimeString())
-                    .RuleFor(o => o.ToDate, (f, o) => DateTime.Parse(o.FromDate).AddDays(3).ToShortDateString())
+                    .RuleFor(o => o.ToDate, (f, o) => DateTime.Parse(o.FromDate, CultureInfo.InvariantCulture).AddDays(3).ToShortDateString())
                     .RuleFor(o => o.ToTime, (f, o) => o.FromTime)
                     .RuleFor(o => o.Comments, f => f.Random.Words(20))
                     .RuleFor(o => o.PrintDate, f => DateTime.Now.ToString())
@@ -138,7 +138,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                         .RuleFor(o => o.Province, f => f.Address.State())
                         .Generate())
                     .RuleFor(o => o.Evacuees, f => f.Make(f.Random.Number(20), () => new Faker<PrintEvacuee>()
-                        .RuleFor(o => o.EvacueeTypeCode, f => f.PickRandom(new[] { "F", "A", "C" }))
+                        .RuleFor(o => o.EvacueeTypeCode, f => f.PickRandom("F", "A", "C"))
                         .RuleFor(o => o.FirstName, f => f.Person.FirstName)
                         .RuleFor(o => o.LastName, f => f.Person.LastName)
                         .Generate()))

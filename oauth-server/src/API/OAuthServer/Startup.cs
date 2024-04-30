@@ -22,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
@@ -183,7 +184,9 @@ namespace OAuthServer
                     {
                         OnTokenValidated = async ctx =>
                         {
-                            var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
+                            var ct = CancellationToken.None;
+                            var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<OpenIdConnectEvents>>();
+                            var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(ct);
 
                             //set token validation parameters
                             var validationParameters = ctx.Options.TokenValidationParameters.Clone();
@@ -200,8 +203,8 @@ namespace OAuthServer
                             userInfoRequest.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/jwt"));
 
                             //request userinfo claims through the backchannel
-                            var response = await ctx.Options.Backchannel.GetUserInfoAsync(userInfoRequest, CancellationToken.None);
-                            if (response.IsError && response.HttpStatusCode == HttpStatusCode.OK)
+                            var response = await ctx.Options.Backchannel.GetUserInfoAsync(userInfoRequest, ct);
+                            if (!response.IsError && response.HttpStatusCode == HttpStatusCode.OK)
                             {
                                 //handle encrypted userinfo response...
                                 if (response.HttpResponse.Content?.Headers?.ContentType?.MediaType == "application/jwt")
@@ -211,24 +214,20 @@ namespace OAuthServer
                                     {
                                         handler.ValidateToken(response.Raw, validationParameters, out var token);
                                         var jwe = token as JwtSecurityToken;
-                                        ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", jwe.Payload.SerializeToJson()) }));
+                                        ctx.Principal.AddIdentity(new ClaimsIdentity([new Claim("userInfo", jwe.Payload.SerializeToJson())]));
                                     }
                                 }
                                 else
                                 {
-                                    //...or fail
-                                    ctx.Fail(response.Error);
+                                    //handle non encrypted userinfo response...
+                                    ctx.Principal.AddIdentity(new ClaimsIdentity([new Claim("userInfo", response.Raw)]));
                                 }
-                            }
-                            else if (response.IsError)
-                            {
-                                //handle for all other failures
-                                ctx.Fail(response.Error);
                             }
                             else
                             {
-                                //handle non encrypted userinfo response
-                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Json.GetRawText()) }));
+                                //handle for all other failures
+                                logger.LogError(response.Exception, response.Error);
+                                ctx.Fail(response.Error);
                             }
                         },
                         OnUserInformationReceived = async ctx =>
@@ -252,7 +251,6 @@ namespace OAuthServer
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
-            services.AddOpenTelemetry(applicationName);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

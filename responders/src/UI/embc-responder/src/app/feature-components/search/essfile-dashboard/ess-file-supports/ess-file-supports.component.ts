@@ -22,6 +22,7 @@ import {
   LodgingGroupSupport,
   LodgingHotelSupport,
   Referral,
+  LodgingAllowanceSupport,
   Support,
   SupportMethod,
   SupportStatus,
@@ -96,7 +97,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
-        : event.value.description;
+        : event.value.value;
     const filterTerm = { type: filterType, value: selectedValue };
     this.filter(filterTerm);
   }
@@ -186,6 +187,9 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     return selectedSupport as LodgingGroupSupport;
   }
 
+  getShelterAllowanceReferral(selectedSupport: Support): LodgingAllowanceSupport {
+    return selectedSupport as LodgingAllowanceSupport;
+  }
   getIncidentalReferral(selectedSupport: Support): IncidentalsSupport {
     return selectedSupport as IncidentalsSupport;
   }

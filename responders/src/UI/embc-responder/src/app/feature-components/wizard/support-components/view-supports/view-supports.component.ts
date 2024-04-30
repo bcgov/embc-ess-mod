@@ -111,6 +111,7 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
             if (
               support.subCategory === 'Lodging_Group' ||
               support.subCategory === 'Lodging_Billeting' ||
+              support.subCategory === 'Lodging_Allowance' ||
               support.method === 'ETransfer'
             ) {
               supportModel.push(support);
@@ -142,7 +143,7 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
-        : event.value.description;
+        : event.value.value;
     this.filterTerm = { type: filterType, value: selectedValue };
   }
 

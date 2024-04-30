@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -15,7 +16,6 @@ using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Registrants.API.Controllers
 {
@@ -24,7 +24,6 @@ namespace EMBC.Registrants.API.Controllers
     [Authorize]
     public class ProfileController : ControllerBase
     {
-        private readonly IHostEnvironment env;
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
@@ -33,13 +32,11 @@ namespace EMBC.Registrants.API.Controllers
         private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
         public ProfileController(
-            IHostEnvironment env,
             IMessagingClient messagingClient,
             IMapper mapper,
             IEvacuationSearchService evacuationSearchService,
             IProfileInviteService profileInviteService)
         {
-            this.env = env;
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.evacuationSearchService = evacuationSearchService;
@@ -76,7 +73,14 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = currentUserId;
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
-            return Ok(profile != null);
+            if (profile != null)
+            {
+                profile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
+                profile.LastLogin = DateTimeOffset.UtcNow;
+                await messagingClient.Send(new SaveRegistrantCommand { Profile = profile });
+                return Ok(true);
+            }
+            return Ok(false);
         }
 
         /// <summary>
@@ -95,6 +99,8 @@ namespace EMBC.Registrants.API.Controllers
             //BCSC profiles are authenticated and verified
             mappedProfile.AuthenticatedUser = true;
             mappedProfile.VerifiedUser = true;
+            mappedProfile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
+
             var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile });
             return Ok(profileId);
         }

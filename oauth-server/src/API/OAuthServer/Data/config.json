@@ -20,7 +20,7 @@
   ],
   "ApiResources": [
     {
-      "Name": "registrants-portal-api",
+      "Name": "dev-registrants-portal-api",
       "ApiSecrets": [
         {
           "Value": "Ljl/xDyew9tA7HvWRQW47Z/Npt91qqipvSjKXTkxk0s="
@@ -36,7 +36,7 @@
   ],
   "Clients": [
     {
-      "ClientId": "registrants-portal-ui",
+      "ClientId": "dev-registrants-portal-ui",
       "AccessTokenType": "Reference",
       "RequireClientSecret": false,
       "AllowedGrantTypes": [
@@ -77,7 +77,7 @@
       ]
     },
     {
-      "ClientId": "registrants-portal-api",
+      "ClientId": "dev-registrants-portal-api",
       "ClientSecrets": [
         {
           "Value": "CaMNFhnp1U3SUwvpae8GLAVBMzzOSQ/fxeCV37hFdSo="

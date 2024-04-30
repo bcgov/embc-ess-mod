@@ -1,5 +1,6 @@
 ﻿using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -23,6 +24,13 @@ namespace EMBC.Tests.Integration.ESS
         {
             var context = Services.GetRequiredService<EssContext>();
             await Should.NotThrowAsync(async () => await context.era_countries.GetAllPagesAsync());
+        }
+
+        [Fact]
+        public void CanWriteToLog()
+        {
+            var logger = Services.GetRequiredService<ILogger<EssContext>>();
+            Should.NotThrow(() => logger.LogInformation("test123"));
         }
     }
 }

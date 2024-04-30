@@ -1,6 +1,8 @@
 import {
   AbstractControl,
+  FormGroup,
   UntypedFormGroup,
+  ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
@@ -387,5 +389,21 @@ export class CustomValidationService {
         }
       }
     };
+  }
+
+  public needsValidator(): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const anyNeedsIdentified = group.controls['requiresShelterType'].value ||
+        group.controls['requiresFood'].value ||
+        group.controls['requiresClothing'].value ||
+        group.controls['requiresIncidentals'].value ||
+        group.controls['requiresTransportation'].value;
+
+      const noNeedsIdentified = group.controls['requiresNothing'].value;
+      if (!anyNeedsIdentified && !noNeedsIdentified) {
+        return { invalid: true };
+      };
+      return null;
+    }
   }
 }

@@ -28,6 +28,8 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.LastLogin, opts => opts.Ignore())
+                .ForMember(d => d.HomeAddress, opts => opts.Ignore())
                 .ReverseMap()
 
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
@@ -51,20 +53,10 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Events.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
-                .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.CanEvacueeProvideFood))
-                .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => s.CanEvacueeProvideLodging))
-                .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))
-                .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.CanEvacueeProvideTransportation))
-                .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.CanEvacueeProvideIncidentals))
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
 
             CreateMap<ESS.Shared.Contracts.Events.NeedsAssessment, NeedsAssessment>()
-                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.CanProvideFood))
-                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.CanProvideLodging))
-                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.CanProvideClothing))
-                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.CanProvideTransportation))
-                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.CanProvideIncidentals))
              ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Events.HouseholdMember>()
@@ -176,14 +168,17 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<ESS.Shared.Contracts.Events.FoodRestaurantSupport, FoodRestaurantSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingBilletingSupport, LodgingBilletingSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterBilletingSupport, LodgingBilletingSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingGroupSupport, LodgingGroupSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterGroupSupport, LodgingGroupSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingHotelSupport, LodgingHotelSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterHotelSupport, LodgingHotelSupport>()
                 ;
+
+            CreateMap<ESS.Shared.Contracts.Events.ShelterAllowanceSupport, LodgingAllowanceSupport>()
+    ;
 
             CreateMap<ESS.Shared.Contracts.Events.TransportationOtherSupport, TransportationOtherSupport>()
                 ;

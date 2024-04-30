@@ -20,7 +20,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             var services = configurationServices.Services;
             var configuration = configurationServices.Configuration;
 
-            var options = configuration.GetSection("Dynamics").Get<DynamicsOptions>();
+            var options = configuration.GetSection("Dynamics").Get<DynamicsOptions>()!;
 
             services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
 

@@ -15,6 +15,7 @@ import {
   trigger
 } from '@angular/animations';
 import {
+  LodgingAllowanceSupport,
   LodgingBilletingSupport,
   LodgingGroupSupport,
   Support
@@ -67,6 +68,16 @@ export class ReferralDetailsComponent implements OnInit {
   getGroupReferral(support: Support): LodgingGroupSupport {
     return support as LodgingGroupSupport;
   }
+
+     /**
+   * Returns the current support as a ShelterAllowanceReferral
+   *
+   * @param support the support to cast as ShelterAllowanceReferral
+   * @returns a ShelterAllowanceReferral object
+   */
+     getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
+      return support as LodgingAllowanceSupport;
+    }
 
   /**
    * Returns the full name of the igiven householmember ID

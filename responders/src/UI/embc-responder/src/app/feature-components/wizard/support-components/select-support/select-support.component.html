@@ -73,50 +73,20 @@
 
           <div
             class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideFood
+            *ngFor="
+              let item of getIdentifiedNeeds()
             "
           >
-            <div class="col-4">Food</div>
+            <div class="col-4">{{ item }}</div>
           </div>
-
           <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideLodging
-            "
-          >
-            <div class="col-4">Lodging</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideClothing
-            "
-          >
-            <div class="col-4">Clothing</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideTransportation
-            "
-          >
-            <div class="col-4">Transportation</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideIncidentals
-            "
-          >
-            <div class="col-4">Incidentals</div>
-          </div>
+          class="row"
+          *ngIf="
+          getIdentifiedNeeds().length == 0
+          "
+        >
+          <div class="col-8">{{noAssistanceRequiredMessage}}</div>
+        </div>
         </mat-card>
       </div>
     </div>

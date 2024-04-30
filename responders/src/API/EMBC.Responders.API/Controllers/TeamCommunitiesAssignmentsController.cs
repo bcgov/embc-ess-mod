@@ -23,7 +23,7 @@ namespace EMBC.Responders.API.Controllers
     {
         private string teamId => User.FindFirstValue("user_team");
         private readonly IMessagingClient messagingClient;
-        private ErrorParser errorParser;
+        private readonly ErrorParser errorParser;
 
         public TeamCommunitiesAssignmentsController(IMessagingClient messagingClient)
         {

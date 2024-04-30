@@ -34,7 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(request.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral), opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var summaryItems = mapper.Map<IEnumerable<PrintSummary>>(request.Supports, opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var printingUser = new PrintRequestingUser { Id = request.PrintingMember.Id, FirstName = request.PrintingMember.FirstName, LastName = request.PrintingMember.LastName, TeamName = request.PrintingMember.TeamName };
-            var printingEvacuee = new PrintEvacuee { FirstName = request.evacuee.FirstName, LastName = request.evacuee.LastName };
+            var printingEvacuee = new PrintEvacuee { FirstName = request.Evacuee.FirstName, LastName = request.Evacuee.LastName };
 
             var communities = (await metadataRepository.GetCommunities()).ToDictionary(c => c.Code, c => c.Name);
 

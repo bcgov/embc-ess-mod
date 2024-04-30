@@ -49,7 +49,7 @@ namespace EMBC.Utilities.Messaging.Grpc
             if (response.IsError) throw new InvalidOperationException(response.Error);
 
             logger.LogDebug("Messaging token acquired");
-            return response.AccessToken;
+            return response.AccessToken!;
         }
     }
 

@@ -10,6 +10,8 @@ import { MaterialModule } from 'src/app/material.module';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 
 import { NeedsComponent } from './needs.component';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
+import { MockStepEssFileService } from 'src/app/unit-tests/mockStepEssFile.service';
 
 describe('NeedsComponent', () => {
   let component: NeedsComponent;
@@ -17,20 +19,17 @@ describe('NeedsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
-      ],
+      imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule, BrowserAnimationsModule],
       declarations: [NeedsComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
+        },
+        {
+          provide: StepEssFileService,
+          useClass: MockStepEssFileService
         }
       ]
     }).compileComponents();

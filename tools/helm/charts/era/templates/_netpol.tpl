@@ -15,6 +15,8 @@ spec:
       - namespaceSelector:
           matchLabels:
             network.openshift.io/policy-group: ingress
+      - podSelector:
+          matchLabels: {}
       ports:
         - protocol: {{ .Values.protocol | upper }}
           port: {{ .Values.port }}
@@ -23,8 +25,7 @@ spec:
   ingress:
     - from:
         - podSelector:
-            matchLabels:
-              role: external-app              
+            matchLabels: {}
       ports:
         - protocol: {{ .Values.protocol | upper }}
           port: {{ .Values.port }}

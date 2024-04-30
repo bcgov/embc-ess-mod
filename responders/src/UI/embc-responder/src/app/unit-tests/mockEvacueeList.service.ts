@@ -33,7 +33,7 @@ export class MockEvacueeListService extends LoadEvacueeListService {
     {
       type: 'SupportCategory',
       value: 'Lodging',
-      description: 'Lodging',
+      description: 'Shelter',
       parentCode: null
     },
     {
@@ -54,19 +54,25 @@ export class MockEvacueeListService extends LoadEvacueeListService {
     {
       type: 'SupportSubCategory',
       value: 'Lodging_Hotel',
-      description: 'Lodging - Hotel/Motel/Campground',
+      description: 'Shelter - Hotel/Motel/Campground',
       parentCode: null
     },
     {
       type: 'SupportSubCategory',
       value: 'Lodging_Billeting',
-      description: 'Lodging - Billeting',
+      description: 'Shelter - Billeting',
       parentCode: null
     },
     {
       type: 'SupportSubCategory',
       value: 'Lodging_Group',
-      description: 'Lodging - Group Lodging',
+      description: 'Shelter - Group Lodging',
+      parentCode: null
+    },
+    {
+      type: 'SupportSubCategory',
+      value: 'Lodging_Allowance',
+      description: 'Shelter - Allowance',
       parentCode: null
     },
     {

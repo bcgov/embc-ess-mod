@@ -11,7 +11,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 
     internal class SupportGenerationStrategyStragetyFactory
     {
-        private IServiceProvider services;
+        private readonly IServiceProvider services;
 
         public SupportGenerationStrategyStragetyFactory(IServiceProvider services)
         {

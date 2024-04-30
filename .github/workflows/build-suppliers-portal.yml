@@ -1,4 +1,4 @@
-name: suppliers-portal-api Build
+name: suppliers-portal Build
 on:
   push:
     branches:

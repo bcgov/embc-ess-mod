@@ -17,30 +17,18 @@ export class EvacuationFileMappingService {
 
   public mapEvacuationFile(evacuationFile: EvacuationFileModel): void {
     this.evacuationFileDataService.essFileId = evacuationFile.fileId;
-    this.evacuationFileDataService.externalReferenceId =
-      evacuationFile.manualFileId;
+    this.evacuationFileDataService.externalReferenceId = evacuationFile.manualFileId;
     this.evacuationFileDataService.isPaper = evacuationFile.isPaper;
-    this.evacuationFileDataService.evacuatedAddress =
-      evacuationFile.evacuatedAddress;
-    this.evacuationFileDataService.evacuationFileDate =
-      evacuationFile.evacuationFileDate;
+    this.evacuationFileDataService.evacuatedAddress = evacuationFile.evacuatedAddress;
+    this.evacuationFileDataService.evacuationFileDate = evacuationFile.evacuationFileDate;
     this.evacuationFileDataService.evacuationFileStatus = evacuationFile.status;
-    this.needsAssessmentMapService.setNeedsAssessment(
-      evacuationFile.evacuatedAddress,
-      evacuationFile.needsAssessment
-    );
-    this.mapSecretPhrase(
-      evacuationFile.secretPhrase,
-      evacuationFile.secretPhraseEdited
-    );
+    this.needsAssessmentMapService.setNeedsAssessment(evacuationFile.evacuatedAddress, evacuationFile.needsAssessment);
+    this.mapSecretPhrase(evacuationFile.secretPhrase, evacuationFile.secretPhraseEdited);
     this.restrictionService.restrictedAccess = evacuationFile.isRestricted;
     this.evacuationFileDataService.supports = evacuationFile.supports;
   }
 
-  private mapSecretPhrase(
-    secretPhrase: string,
-    secretPhraseEdited: boolean
-  ): void {
+  private mapSecretPhrase(secretPhrase: string, secretPhraseEdited: boolean): void {
     this.evacuationFileDataService.secretPhrase = secretPhrase;
     this.evacuationFileDataService.secretPhraseEdited = secretPhraseEdited;
 

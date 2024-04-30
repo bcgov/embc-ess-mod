@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
+import { ShelterType, StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+
+
 
 @Component({
   selector: 'app-needs',
@@ -19,37 +21,25 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
   styleUrls: ['./needs.component.scss']
 })
 export class NeedsComponent implements OnInit, OnDestroy {
-  needsForm: UntypedFormGroup;
-  radioOption = globalConst.needsOptions;
+  needsForm: UntypedFormGroup = this.stepEssFileService.needsForm;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
   constructor(
     private router: Router,
     private stepEssFileService: StepEssFileService,
-    private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    // Creates the main form
-    this.createNeedsForm();
-
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(() => {
+      this.updateTabStatus();
+    });
 
     this.tabMetaData = this.stepEssFileService.getNavLinks('needs');
-  }
-
-  /**
-   * Returns the control of the form
-   */
-  get needsFormControl(): { [key: string]: AbstractControl } {
-    return this.needsForm.controls;
   }
 
   /**
@@ -81,10 +71,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     if (this.stepEssFileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.needsForm.controls,
-        'needs'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(this.needsForm.controls, 'needs');
 
       this.wizardService.setEditStatus({
         tabName: 'needs',
@@ -96,28 +83,25 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription.unsubscribe();
   }
 
-  private createNeedsForm(): void {
-    this.needsForm = this.formBuilder.group({
-      canEvacueeProvideFood: [
-        this.stepEssFileService.canRegistrantProvideFood ?? '',
-        Validators.required
-      ],
-      canEvacueeProvideLodging: [
-        this.stepEssFileService.canRegistrantProvideLodging ?? '',
-        Validators.required
-      ],
-      canEvacueeProvideClothing: [
-        this.stepEssFileService.canRegistrantProvideClothing ?? '',
-        Validators.required
-      ],
-      canEvacueeProvideTransportation: [
-        this.stepEssFileService.canRegistrantProvideTransportation ?? '',
-        Validators.required
-      ],
-      canEvacueeProvideIncidentals: [
-        this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
-        Validators.required
-      ]
+  public openShelterAllowanceDialog() {
+    this.openInfoDialog(globalConst.shelterAllowanceNeedDialog);
+  }
+
+  public openShelterReferralDialog() {
+    this.openInfoDialog(globalConst.shelterReferralNeedDialog);
+  }
+
+  public openIncidentalsDialog() {
+    this.openInfoDialog(globalConst.incidentalsNeedDialog);
+  }
+
+  private openInfoDialog(dialog: DialogContent) {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: dialog
+      },
+      width: '400px'
     });
   }
 
@@ -139,18 +123,12 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
-      'canEvacueeProvideLodging'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
-      'canEvacueeProvideClothing'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideTransportation =
-      this.needsForm.get('canEvacueeProvideTransportation').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals =
-      this.needsForm.get('canEvacueeProvideIncidentals').value;
+    this.stepEssFileService.requiresClothing = this.needsForm.controls.requiresClothing.value;
+    this.stepEssFileService.requiresFood = this.needsForm.controls.requiresFood.value;
+    this.stepEssFileService.requiresIncidentals = this.needsForm.controls.requiresIncidentals.value;
+    this.stepEssFileService.requiresTransportation = this.needsForm.controls.requiresTransportation.value;
+    this.stepEssFileService.requiresShelterAllowance = this.needsForm.controls.requiresShelterType.value === ShelterType.allowance;
+    this.stepEssFileService.requiresShelterReferral = this.needsForm.controls.requiresShelterType.value === ShelterType.referral;
+    this.stepEssFileService.requiresNothing = this.needsForm.controls.requiresNothing.value;
   }
 }

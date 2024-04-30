@@ -1,0 +1,30 @@
+{{#if IsEtransfer}}
+<div class="col-6">
+    <h3 class="with-icon etransfer">E-Transfer Information</h3>
+    <div class="row">
+        <div class="col-6">
+            <strong>e-Transfer Recipient:</strong><br />
+            {{NotificationInformation.RecipientFirstName}} {{NotificationInformation.RecipientLastName}}<br />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-6">
+            <strong>e-Transfer Notification:</strong><br />
+            {{#if NotificationInformation.Email}}{{NotificationInformation.Email}}<br />{{/if}}
+            {{#if NotificationInformation.Mobile}}{{NotificationInformation.Mobile}}<br />{{/if}}
+        </div>
+    </div>
+
+</div>
+{{else}}
+<div class="col-6">
+    <h3 class="with-icon supplier">Payee Information</h3>
+    <div class="row">
+        {{ContactName}}<br />
+        {{#if ContactEmail}}{{ContactEmail}}<br />{{/if}}
+        {{#if ContactPhone}}{{ContactPhone}}<br />{{/if}}
+    </div>
+    {{> notesPartial}}
+</div>
+{{/if}}

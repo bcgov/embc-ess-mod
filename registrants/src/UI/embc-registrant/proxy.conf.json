@@ -25,7 +25,7 @@
     "logLevel": "debug"
   },
   "/env/info.json": {
-    "target": "https://era-evacuees-dev.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

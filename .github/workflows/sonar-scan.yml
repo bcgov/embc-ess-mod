@@ -3,6 +3,12 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * Mon'
+  #push:
+  #  branches:
+  #    - master
+  #    - 'release/**'
+  #pull_request:
+  #  types: [opened, synchronize, reopened]
     
 jobs:
   sonar-scan-net:
@@ -22,7 +28,7 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6'
+        dotnet-version: '8'
 
     - name: Cache SonarCloud packages
       uses: actions/cache@v4
