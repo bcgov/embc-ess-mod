@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
@@ -344,6 +345,16 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var pet = updatedFile.NeedsAssessment.Pets.ShouldHaveSingleItem();
             pet.Type.ShouldBe($"{TestData.TestPrefix}-dog");
             pet.Quantity.ShouldBe("2");
+        }
+
+        [Fact]
+        public async Task CheckEligibility_Created()
+        {
+            var eligibilityId = await manager.Handle(new CheckEligibileForSelfServeCommand { EvacuationFileId = TestData.EvacuationFileId });
+            eligibilityId.ShouldNotBeNull();
+
+            var eligibility = await manager.Handle(new EligibilityCheckQuery { EvacuationFileId = TestData.EvacuationFileId });
+            eligibility.ShouldNotBeNull();
         }
     }
 }

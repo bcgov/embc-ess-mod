@@ -254,6 +254,31 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
+        [Fact]
+        public async Task AddEligibilityCheck_Eligible_Added()
+        {
+            var cmd = new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = TestData.EvacuationFileId,
+                TaskNumber = TestData.ActiveTaskId,
+                From = null,
+                To = null,
+                Reason = null,
+                HomeAddressReferenceId = null,
+            };
+
+            var id = await evacuationRepository.Manage(cmd);
+            id.ShouldNotBeNull();
+            var file = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = TestData.EvacuationFileId })).Items.ShouldHaveSingleItem();
+
+            var eligibility = file.NeedsAssessment.EligibilityCheck.ShouldNotBeNull();
+            eligibility.Eligible.ShouldBeTrue();
+            eligibility.TaskNumber.ShouldBe(TestData.ActiveTaskId);
+            eligibility.From.ShouldNotBeNull();
+            eligibility.To.ShouldNotBeNull();
+        }
+
         private async Task<Evacuee> GetContactByUserId(string userId) =>
             (await Services.GetRequiredService<IEvacueesRepository>().Query(new EvacueeQuery { UserId = userId })).Items.Single();
 
