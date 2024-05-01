@@ -71,7 +71,7 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> OptOut(string evacuationFileId, CancellationToken ct)
     {
-        await messagingClient.Send(new OptOutSelfServeCommand { EvacuationFileId = evacuationFileId });
+        await messagingClient.Send(new OptOutSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
         return Ok();
     }
 
@@ -82,12 +82,12 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     public async Task<Results<Ok, BadRequest<string>>> SubmitSupports(string evacuationFileId, SubmitSupportsRequest request, CancellationToken ct)
     {
         if (evacuationFileId != request.EvacuationFileId) return TypedResults.BadRequest(evacuationFileId);
-        await messagingClient.Send(new SubmitSelfServeSupportsCommand
+        await messagingClient.Send(new ProcessSelfServeSupportsCommand
         {
             EvacuationFileId = evacuationFileId,
             Supports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(request.Supports),
             ETransferDetails = mapper.Map<ESS.Shared.Contracts.Events.SelfServe.ETransferDetails>(request.ETransferDetails)
-        });
+        }, ct);
         return TypedResults.Ok();
     }
 }
