@@ -36,14 +36,15 @@ public record ProcessDigitalSupportsRequest : ProcessRequest
     public string FileId { get; set; }
     public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     public bool IncludeSummaryInReferralsPrintout { get; set; }
-    public string RequestingUserId { get; set; }
+    public string? RequestingUserId { get; set; }
+    public bool PrintReferrals { get; set; } = true;
 }
 
 public record ProcessDigitalSupportsResponse : ProcessResponse
 {
     public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
 
-    public string PrintRequestId { get; set; } = null!;
+    public string? PrintRequestId { get; set; } = null!;
 }
 
 public record DigitalSupportsValidationRequest : ValidationRequest
@@ -146,8 +147,8 @@ public record GeneratePaymentsResponse : GenerateResponse
     public IEnumerable<Resources.Payments.Payment> Payments { get; set; }
 }
 
-//public record ValidateSelfServeSupportsEligibility(EvacuationFile File, RegistrantProfile PrimaryRegistrant, IncidentTask Task, int locationAccuracy) : ValidationRequest;
 public record ValidateSelfServeSupportsEligibility(string EvacuationFileId) : ValidationRequest;
+
 public record ValidateSelfServeSupportsEligibilityResponse(SelfServeSupportEligibility Eligibility) : ValidationResponse
 {
     public override bool IsValid => Eligibility.Eligible;
@@ -158,5 +159,11 @@ public record SelfServeSupportEligibility(bool Eligible, string? Reason, string?
 public record GenerateSelfServeSupports(IEnumerable<IdentifiedNeed> Needs, DateTime TaskStartDate, DateTime TaskEndDate, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 
 public record SelfServeHouseholdMember(string Id, bool IsMinor);
+
 public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
+
 public record GenerateSelfServeSupportsResponse(IEnumerable<SelfServeSupport> Supports) : GenerateResponse;
+
+public record GenerateSelfServeSupports1(string EvacuationFileId, string RegistrantId, IEnumerable<SelfServeSupport> Supports, ETransferDetails ETransferDetails, DateTime SupportPeriodFrom, DateTime SupportPeriodTo) : GenerateRequest;
+
+public record GenerateSelfServeSupports1Response(IEnumerable<Support> Supports) : GenerateResponse;

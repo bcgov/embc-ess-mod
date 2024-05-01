@@ -382,7 +382,7 @@ namespace EMBC.ESS.Resources.Supports
                 ctx.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), ctx.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
 
             AssignHouseholdMembersToSupport(ctx, support, support.era_era_householdmember_era_evacueesupport);
-            await AssignTeamMemberToSupport(ctx, support, ct);
+            if (support.era_selfservesupport == false) await AssignTeamMemberToSupport(ctx, support, ct);
             await AssignSupplierToSupport(ctx, support, ct);
             await AssignETransferRecipientToSupport(ctx, support, ct);
         }
@@ -390,7 +390,7 @@ namespace EMBC.ESS.Resources.Supports
         private static IEnumerable<string> ValidateSupportInvariants(era_evacueesupport support)
         {
             if (!support.era_era_householdmember_era_evacueesupport.Any()) yield return "No household members associated";
-            if (!support._era_issuedbyid_value.HasValue) yield return "No issuing team member";
+            if (!support.era_selfservesupport == true && !support._era_issuedbyid_value.HasValue) yield return "No issuing team member";
         }
 
         private static void AssignHouseholdMembersToSupport(EssContext ctx, era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)

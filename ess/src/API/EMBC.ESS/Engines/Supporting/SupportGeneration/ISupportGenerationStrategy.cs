@@ -24,7 +24,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
         public ISupportGenerationStrategy Create(SupportGenerationStrategyType type) => type switch
         {
             SupportGenerationStrategyType.Referral => services.GetRequiredService<SingleDocumentStrategy>(),
-            SupportGenerationStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportGenerator>(),
+            SupportGenerationStrategyType.SelfServeDraft => services.GetRequiredService<SelfServeSupportGenerator>(),
+            SupportGenerationStrategyType.SelfServeETransfer => services.GetRequiredService<SelfServeEtransferGenerator>(),
 
             _ => throw new NotImplementedException($"{type}")
         };
@@ -33,6 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
     internal enum SupportGenerationStrategyType
     {
         Referral,
-        SelfServe,
+        SelfServeDraft,
+        SelfServeETransfer
     }
 }

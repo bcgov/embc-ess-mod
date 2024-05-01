@@ -195,11 +195,11 @@ namespace EMBC.ESS.Resources.Evacuations
                 ;
 
             CreateMap<era_eligibilitycheck, SelfServeEligibilityCheck>()
-                .ForMember(d => d.Eligible, opts => opts.MapFrom(s => s.era_iseligible))
+                .ForMember(d => d.Eligible, opts => opts.MapFrom(s => s.era_iseligible == (int)Eligible.Yes))
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_name))
                 // change to eligibility fields
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_taskstartdate))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_taskenddate))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_taskstartdate == null ? (DateTime?)null : s.era_Task.era_taskstartdate.Value.DateTime))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_era_task_era_needassessment_TaskNumber == null ? (DateTime?)null : s.era_Task.era_taskenddate.Value.DateTime))
                 ;
         }
     }

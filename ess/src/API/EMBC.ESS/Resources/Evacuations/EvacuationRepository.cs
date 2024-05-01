@@ -470,7 +470,7 @@ public class EvacuationRepository : IEvacuationRepository
         }
         if (command.TaskNumber != null)
         {
-            var task = await ctx.era_tasks.Where(t => t.era_name == command.TaskNumber).SingleOrDefaultAsync(ct);
+            var task = await ctx.era_tasks.Where(t => t.era_name == command.TaskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
             if (task == null) throw new ArgumentException($"Task {command.TaskNumber} not found");
             ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_Task), task);
         }
