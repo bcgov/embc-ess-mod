@@ -280,6 +280,13 @@ public class EvacuationRepository : IEvacuationRepository
             Task.Run(async () =>
             {
                 if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
+                ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
+                if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck==null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
+                if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
+                {
+                    ctx.AttachTo(nameof(EssContext.era_eligibilitychecks), file.era_CurrentNeedsAssessmentid.era_EligibilityCheck);
+                    await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_Task));
+                }
 
                 var members = await ctx.era_householdmembers
                     .Expand(m => m.era_Registrant)
@@ -444,7 +451,32 @@ public class EvacuationRepository : IEvacuationRepository
 
     private async Task<ManageEvacuationFileCommandResult> Handle(AddEligibilityCheck command, CancellationToken ct)
     {
-        // to implement
-        return await Task.FromResult(new ManageEvacuationFileCommandResult { Id = Guid.NewGuid().ToString() });
+        var ctx = essContextFactory.Create();
+        var file = await ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.era_name == command.EvacuationFileNumber).SingleOrDefaultAsync(ct);
+        if (file == null) throw new ArgumentException($"Evacuation file {command.EvacuationFileNumber} not found");
+
+        var eligibilityCheck = mapper.Map<era_eligibilitycheck>(command);
+        eligibilityCheck.era_eligibilitycheckid = Guid.NewGuid();
+
+        ctx.AddToera_eligibilitychecks(eligibilityCheck);
+        ctx.AddLink(eligibilityCheck, nameof(era_eligibilitycheck.era_era_eligibilitycheck_era_needassessment_EligibilityCheck), file.era_CurrentNeedsAssessmentid);
+        ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_NeedsAssessment), file.era_CurrentNeedsAssessmentid);
+        ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_ESSFile), file);
+        if (command.HomeAddressReferenceId != null)
+        {
+            var homeAddress = await ctx.era_bcscaddresses.Where(a => a.era_bcscaddressid == Guid.Parse(command.HomeAddressReferenceId)).SingleOrDefaultAsync(ct);
+            if (homeAddress == null) throw new ArgumentException($"Home address id {command.HomeAddressReferenceId} not found");
+            ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_BCSCAddress), homeAddress);
+        }
+        if (command.TaskNumber != null)
+        {
+            var task = await ctx.era_tasks.Where(t => t.era_name == command.TaskNumber).SingleOrDefaultAsync(ct);
+            if (task == null) throw new ArgumentException($"Task {command.TaskNumber} not found");
+            ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_Task), task);
+        }
+
+        await ctx.SaveChangesAsync(ct);
+
+        return new ManageEvacuationFileCommandResult { Id = eligibilityCheck.era_eligibilitycheckid.ToString() };
     }
 }
