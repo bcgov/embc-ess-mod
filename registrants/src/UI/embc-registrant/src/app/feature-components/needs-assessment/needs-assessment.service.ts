@@ -160,10 +160,13 @@ export class NeedsAssessmentService {
     };
     if (this.householdMembers.length === 0) {
       return [...this.householdMembers, primaryMember];
-    } else if (!this.householdMembers.find((member) => member.isPrimaryRegistrant === true)) {
+    } else if (!this.householdMembers.find((member) => member.isPrimaryRegistrant === true) &&
+      !this.householdMembers.find((member: any) => member.details.isPrimaryRegistrant === true)
+    ) {
       return [...this.householdMembers, primaryMember];
     } else {
-      return this.householdMembers;
+      this.householdMembers = this.householdMembers.filter((member: any) => !member.isPrimaryRegistrant && !member.details.isPrimaryRegistrant);
+      return [...this.householdMembers, primaryMember];
     }
   }
 

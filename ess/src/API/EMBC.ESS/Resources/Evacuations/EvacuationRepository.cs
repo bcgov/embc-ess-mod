@@ -114,6 +114,14 @@ namespace EMBC.ESS.Resources.Evacuations
 
             await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), ct);
             await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct);
+
+            //Remove Primary Household Member from update array:
+            if (currentFile != null && currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid != null &&
+                    currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Any(m => m.era_isprimaryregistrant == true))
+            {
+                evacuationFile.NeedsAssessment.HouseholdMembers = evacuationFile.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant);
+            }
+
             VerifyEvacuationFileInvariants(evacuationFile, currentFile);
 
             essContext.DetachAll();
