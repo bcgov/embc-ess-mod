@@ -231,9 +231,9 @@ public partial class EventsManager
                     try
                     {
                         var currentSupport = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ById = sf.Key.Id })).Items.SingleOrDefault();
-                        if (currentSupport == null) throw new InvalidOperationException($"Couldnt find support {sf.Key.Id}");
+                        if (currentSupport == null) throw new InvalidOperationException($"Couldn't find support {sf.Key.Id}");
                         var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = currentSupport.TaskId })).Items.SingleOrDefault();
-                        if (task == null) throw new InvalidOperationException($"Couldnt find task {currentSupport.TaskId}");
+                        if (task == null) throw new InvalidOperationException($"Couldn't find task {currentSupport.TaskId}");
 
                         var flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(sf.Value);
 
@@ -312,11 +312,12 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
-        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligable for self serve");
+        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligible for self serve");
 
         var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskId, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
         if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskId);
 
+        IEnumerable<SelfServeSupport> supports;
         if (query.Items == null)
         {
             //generate the supports based on the file
@@ -326,41 +327,26 @@ public partial class EventsManager
                 file.NeedsAssessment.EligibilityCheck.From.Value.DateTime.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.To.Value.DateTime.ToPST(),
                 file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
-
-            return new DraftSelfServeSupportQueryResponse
-            {
-                Items = response.Supports
-            };
+            supports = response.Supports;
         }
         else
         {
             //recalculate the totals and return as is
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(query.Items, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
-
-            return new DraftSelfServeSupportQueryResponse
-            {
-                Items = response.Supports,
-                HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(file.NeedsAssessment.HouseholdMembers)
-            };
+            supports = response.Supports;
         }
+        return new DraftSelfServeSupportQueryResponse
+        {
+            Items = supports,
+            HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(file.NeedsAssessment.HouseholdMembers)
+        };
     }
 
     public async System.Threading.Tasks.Task Handle(CheckEligibileForSelfServeCommand cmd)
     {
         var ct = CancellationToken.None;
-        // move to engine to determine eligibility
-        //var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
-        //if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
 
-        //var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
-        //if (evacuee == null) throw new NotFoundException("evacuee not found", file.PrimaryRegistrantId);
-
-        // var taskNumber = await GetTaskNumberForAddress(evacuee.GeocodedHomeAddress.Geocode.Coordinates, ct);
-        //var task = taskNumber == null ? null : (await taskRepository.QueryTask(new TaskQuery { ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.FirstOrDefault();
-
-        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(
-            //new ValidateSelfServeSupportsEligibility(mapper.Map<EvacuationFile>(file), mapper.Map<RegistrantProfile>(evacuee), mapper.Map<IncidentTask>(task), evacuee.GeocodedHomeAddress.Geocode.Accuracy))).Eligibility;
-            new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
+        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
 
         await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
@@ -371,12 +357,6 @@ public partial class EventsManager
             To = eligibilityResult.To
         });
     }
-
-    //private async Task<string?> GetTaskNumberForAddress(Coordinates coordinates, CancellationToken ct)
-    //{
-    //    var locationProperties = await locationService.GetGeocodeAttributes(new Utilities.Spatial.Coordinates(coordinates.Latitude, coordinates.Latitude), ct);
-    //    return locationProperties.SingleOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
-    //}
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
     {

@@ -18,7 +18,7 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<SupportProcessingStrategyFactory>()
                 .AddTransient<DigitalSupportProcessingStrategy>()
                 .AddTransient<PaperSupportProcessingStrategy>()
-                .AddTransient<SupportGenerationStrategyStragetyFactory>()
+                .AddTransient<SupportGenerationStrategyStrategyFactory>()
                 .AddTransient<SingleDocumentStrategy>()
                 .AddTransient<SupportComplianceStrategyFactory>()
                 .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceCheck>()

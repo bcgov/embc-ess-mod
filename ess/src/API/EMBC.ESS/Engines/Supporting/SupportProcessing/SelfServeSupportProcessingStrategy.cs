@@ -41,7 +41,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
 
             var registrant = file.era_Registrant;
-            if (registrant == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no primar yregistrant");
+            if (registrant == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no primary registrant");
 
             var needsAssessment = file.era_CurrentNeedsAssessmentid;
             if (needsAssessment == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no needs assesment");

@@ -111,11 +111,22 @@ namespace EMBC.Tests.Integration.ESS
 
         public static int RandomInt(int min = 1, int max = 10) => Random.Shared.Next(min, max);
 
-        internal static Address CreateBcscValidAddress()
+        public static Address CreateSelfServeEligibleAddress()
         {
             return new Address
             {
                 AddressLine1 = "100 Main st",
+                City = "Vancouver",
+                StateProvince = "BC",
+                Country = "CA"
+            };
+        }
+
+        public static Address CreateSelfServeIneligibleAddress()
+        {
+            return new Address
+            {
+                AddressLine1 = "100 Cambie st",
                 City = "Vancouver",
                 StateProvince = "BC",
                 Country = "CA"
