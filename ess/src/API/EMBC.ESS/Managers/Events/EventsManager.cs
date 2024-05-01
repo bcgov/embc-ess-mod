@@ -511,5 +511,4 @@ public partial class EventsManager(
         };
     }
 
- 
 }

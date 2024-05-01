@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities;
@@ -32,7 +31,7 @@ public class EvacuationRepository : IEvacuationRepository
             LinkEvacuationFileRegistrant c => await Handle(c, ct),
             SaveEvacuationFileNote c => await HandleSaveEvacuationFileNote(c, ct),
             AddEligibilityCheck c => await Handle(c, ct),
-            UpdateEvacuationFileNeedsAssessmentOptOut c => await HandleUpdateUpdateEvacuationFileNeedsAssessmentOptOut(c, ct),
+            UpdateEvacuationFileNeedsAssessmentOptOut c => await HandleUpdateEvacuationFileNeedsAssessmentOptOut(c, ct),
             _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
         };
     }
@@ -75,7 +74,7 @@ public class EvacuationRepository : IEvacuationRepository
         }
     }
 
-    private async Task<ManageEvacuationFileCommandResult> HandleUpdateUpdateEvacuationFileNeedsAssessmentOptOut(UpdateEvacuationFileNeedsAssessmentOptOut cmd, CancellationToken ct)
+    private async Task<ManageEvacuationFileCommandResult> HandleUpdateEvacuationFileNeedsAssessmentOptOut(UpdateEvacuationFileNeedsAssessmentOptOut cmd, CancellationToken ct)
     {
        var ctx = essContextFactory.Create();
        bool needsAssessmentOptOut = true;
