@@ -81,26 +81,6 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
-
-        //var validationResponse = (SelfServeSupportValidationResponse)await supportingEngine.Validate(new SelfServeSupportValidationRequest(cmd.EvacuationFileId, cmd.Supports, cmd.ETransferDetails));
-        //if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
-
-        //await supportingEngine.Process(new ProcessSelfServeSupportsRequest(cmd.EvacuationFileId, cmd.Supports, cmd.ETransferDetails));
-        var supports = ((GenerateSelfServeSupports1Response)await supportingEngine.Generate(new GenerateSelfServeSupports1(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails))).Supports;
-        var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
-        {
-            FileId = cmd.EvacuationFileId,
-            Supports = supports
-        });
-        if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
-
-        await supportingEngine.Process(new ProcessDigitalSupportsRequest
-        {
-            FileId = cmd.EvacuationFileId,
-            Supports = supports,
-            RequestingUserId = null,
-            IncludeSummaryInReferralsPrintout = false
-        });
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
