@@ -117,7 +117,8 @@ namespace EMBC.ESS.Resources.Evacuations
 
             //Remove Primary Household Member from update array:
             if (currentFile != null && currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid != null &&
-                    currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Any(m => m.era_isprimaryregistrant == true))
+                    currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Any(m => m.era_isprimaryregistrant == true)
+                    && evacuationFile.NeedsAssessment.HouseholdMembers.Any(m => m.IsPrimaryRegistrant && string.IsNullOrEmpty(m.Id)))
             {
                 evacuationFile.NeedsAssessment.HouseholdMembers = evacuationFile.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant);
             }
