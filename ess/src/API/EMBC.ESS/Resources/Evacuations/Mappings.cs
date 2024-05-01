@@ -189,6 +189,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForSourceMember(s => s.TaskNumber, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.HomeAddressReferenceId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.EvacuationFileNumber, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.Eligible, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_iseligible, opts => opts.MapFrom(s => s.Eligible ? Eligible.Yes : Eligible.No))
                 .ForMember(d => d.era_reason, opts => opts.MapFrom(s => s.Reason))
                 ;
