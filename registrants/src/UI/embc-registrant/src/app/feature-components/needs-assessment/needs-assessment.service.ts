@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { InsuranceOption, NeedsAssessment, PersonDetails, Pet, RegistrationResult, NeedsAssessmentType, HouseholdMember, IdentifiedNeed } from 'src/app/core/api/models';
+import { InsuranceOption, NeedsAssessment, Pet, RegistrationResult, NeedsAssessmentType, HouseholdMember, IdentifiedNeed } from 'src/app/core/api/models';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ShelterType } from 'src/app/core/services/globalConstants';
+import { PersonDetailsModel } from 'src/app/core/model/profile.model';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
@@ -90,11 +91,13 @@ export class NeedsAssessmentService {
     this.mainHouseholdMembers = value;
   }
 
-  public setHouseHoldMembers(members: PersonDetails[]): void {
+  public setHouseHoldMembers(personalDetails: PersonDetailsModel[]): void {
     const householdMembersArray: Array<HouseholdMember> = [];
-    for (const member of members) {
+    for (const member of personalDetails) {
       const houseHoldMember: HouseholdMember = {
-        id: null,
+        id: member.id,
+        isPrimaryRegistrant: member.isPrimaryRegistrant ?? false,
+        isMinor: member.isMinor ?? false,
         details: member
       };
 
@@ -114,7 +117,7 @@ export class NeedsAssessmentService {
     return {
       id: this.id,
       needs: this.addNeedsToNeedsAssessment(),
-      householdMembers: this.addPrimaryApplicantToHousehold(),
+      householdMembers: this.addPrimaryApplicantToHousehold(this.householdMembers),
       insurance: this.insurance,
       pets: this.pets,
       type: NeedsAssessmentType.Preliminary
@@ -153,17 +156,15 @@ export class NeedsAssessmentService {
     this.householdMembers = undefined;
   }
 
-  addPrimaryApplicantToHousehold(): HouseholdMember[] {
+  addPrimaryApplicantToHousehold(members: HouseholdMember[]): HouseholdMember[] {
     const primaryMember: HouseholdMember = {
       details: this.profileDataService.createProfileDTO().personalDetails,
       isPrimaryRegistrant: true
     };
-    if (this.householdMembers.length === 0) {
-      return [...this.householdMembers, primaryMember];
-    } else if (!this.householdMembers.find((member) => member.isPrimaryRegistrant === true)) {
-      return [...this.householdMembers, primaryMember];
+    if (!members.find((member) => member.isPrimaryRegistrant === true)) {
+      return [...members, primaryMember];
     } else {
-      return this.householdMembers;
+      return [...members];
     }
   }
 

@@ -22,7 +22,7 @@ export class RestrictionForm {
   }
 }
 
-export class PersonDetails {
+export class PersonDetailsModel {
   firstName: string;
   lastName: string;
   preferredName?: string;
@@ -31,17 +31,8 @@ export class PersonDetails {
   dateOfBirth: string;
   sameLastNameCheck?: boolean;
   isPrimaryRegistrant?: boolean;
-
-  constructor(
-    firstName?: string,
-    lastName?: string,
-    preferredName?: string,
-    initials?: string,
-    gender?: string,
-    dateOfBirth?: string,
-    sameLastNameCheck?: boolean,
-    isPrimaryRegistrant?: boolean
-  ) {}
+  id?: string;
+  isMinor: boolean;
 }
 
 export class PersonDetailsForm {
@@ -53,7 +44,7 @@ export class PersonDetailsForm {
   dateOfBirth = new UntypedFormControl();
 
   constructor(
-    personDetail: PersonDetails,
+    personDetail: PersonDetailsModel,
     customValidator: CustomValidationService
   ) {
     if (personDetail.firstName) {

@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import {
   PersonDetailsForm,
-  PersonDetails,
+  PersonDetailsModel,
   ContactDetailsForm,
   ContactDetails,
   AddressForm,
@@ -23,7 +23,7 @@ export class FormCreationService {
   restrictionForm$: Observable<UntypedFormGroup> = this.restrictionForm.asObservable();
 
   personalDetailsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator))
+    this.formBuilder.group(new PersonDetailsForm(new PersonDetailsModel(), this.customValidator))
   );
 
   personalDetailsForm$: Observable<UntypedFormGroup> = this.personalDetailsForm.asObservable();
@@ -155,7 +155,7 @@ export class FormCreationService {
   clearProfileData(): void {
     this.restrictionForm.next(this.formBuilder.group(new RestrictionForm(new Restriction())));
     this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
-    this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
+    this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetailsModel(), this.customValidator)));
     this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
     this.securityQuestionsForm.next(this.formBuilder.group(new SecurityQuestionsForm(new SecurityQuestions(), this.formBuilder, this.customValidator)));
   }
