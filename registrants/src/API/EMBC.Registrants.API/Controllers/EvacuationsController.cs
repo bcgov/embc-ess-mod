@@ -339,6 +339,7 @@ public abstract record Support
     public string? RecipientLastName { get; set; }
     public string? SecurityQuestion { get; set; }
     public string? SecurityAnswer { get; set; }
+    public bool IsSelfServe { get; set; }
 }
 
 public record ClothingSupport : Support

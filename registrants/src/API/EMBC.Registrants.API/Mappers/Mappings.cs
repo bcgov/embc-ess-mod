@@ -128,6 +128,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.RecipientLastName, opts => opts.Ignore())
                 .ForMember(d => d.SecurityQuestion, opts => opts.Ignore())
                 .ForMember(d => d.SecurityAnswer, opts => opts.Ignore())
+                .ForMember(d => d.IsSelfServe, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
                     if (s.SupportDelivery is ESS.Shared.Contracts.Events.Referral referral)
@@ -149,6 +150,7 @@ namespace EMBC.Registrants.API.Mappers
                         d.RecipientLastName = eTransfer.RecipientLastName;
                         d.SecurityQuestion = eTransfer.SecurityQuestion;
                         d.SecurityAnswer = eTransfer.SecurityAnswer;
+                        d.IsSelfServe = s.IsSelfServe;
                     }
                     else
                     {
