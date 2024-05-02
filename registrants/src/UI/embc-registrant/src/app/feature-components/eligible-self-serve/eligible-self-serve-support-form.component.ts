@@ -1,4 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,6 +25,10 @@ import {
 import { SupportsService } from 'src/app/core/api/services';
 import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EligibleSelfServeTotalAmountZeroDialogComponent } from './eligible-self-serve-total-amount-zero.component';
+import { AppLoaderComponent } from 'src/app/core/components/app-loader/app-loader.component';
+import { tap } from 'rxjs';
 
 type SelfServeSupportFormControl = {
   [k in keyof SelfServeSupport]: FormControl<SelfServeSupport[k]>;
@@ -104,7 +109,8 @@ interface DraftSupportForm {
     MatRadioModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    AppLoaderComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styles: [
@@ -182,6 +188,11 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     householdMembers: []
   };
 
+  isLoadingDraftSupport = true;
+  showButtonLoader = false;
+  draftSupportError = false;
+  loaderColor = '#169bd5';
+
   supportDraftForm = new FormGroup<DraftSupportForm>({
     shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
       totalAmount: new FormControl<number>(0),
@@ -218,8 +229,10 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private supportService: SupportsService,
-    private evacuationFileDateService: EvacuationFileDataService,
-    public needsAssessmentService: NeedsAssessmentService
+    public needsAssessmentService: NeedsAssessmentService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -232,34 +245,42 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   }
 
   private getDraft() {
-    this.supportService.supportsGetDraftSupports({ evacuationFileId: '168743' }).subscribe((res) => {
-      this.draftSupports = res;
+    this.supportService.supportsGetDraftSupports({ evacuationFileId: this.essFileId }).subscribe({
+      next: (res) => {
+        this.draftSupports = res;
 
-      this.draftSupports.items.forEach((support) => {
-        switch (support.type) {
-          case SelfServeSupportType.ShelterAllowance:
-            this.createSelfServeShelterAllowanceSupportForm(support as any);
-            break;
+        this.draftSupports.items.forEach((support) => {
+          switch (support.type) {
+            case SelfServeSupportType.ShelterAllowance:
+              this.createSelfServeShelterAllowanceSupportForm(support as any);
+              break;
 
-          case SelfServeSupportType.FoodGroceries:
-            this.createSelfServeFoodGroceriesSupportForm(support as any);
-            break;
+            case SelfServeSupportType.FoodGroceries:
+              this.createSelfServeFoodGroceriesSupportForm(support as any);
+              break;
 
-          case SelfServeSupportType.FoodRestaurant:
-            this.createSelfServeFoodRestaurantSupportForm(support as any);
-            break;
-          case SelfServeSupportType.Clothing:
-            this.createSelfServeClothingSupportForm(support as any);
-            break;
+            case SelfServeSupportType.FoodRestaurant:
+              this.createSelfServeFoodRestaurantSupportForm(support as any);
+              break;
+            case SelfServeSupportType.Clothing:
+              this.createSelfServeClothingSupportForm(support as any);
+              break;
 
-          case SelfServeSupportType.Incidentals:
-            this.createSelfServeIncidentsSupportForm(support as any);
-            break;
+            case SelfServeSupportType.Incidentals:
+              this.createSelfServeIncidentsSupportForm(support as any);
+              break;
 
-          default:
-            break;
-        }
-      });
+            default:
+              break;
+          }
+        });
+      },
+      error: (err) => {
+        this.draftSupportError = true;
+      },
+      complete: () => {
+        this.isLoadingDraftSupport = false;
+      }
     });
   }
 
@@ -304,6 +325,18 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
           dinner: new FormControl({ value: m.dinner, disabled: m.dinner !== true && m.dinner !== false })
         })
       );
+    });
+
+    this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.valueChanges.subscribe({
+      next: (includedHouseholdMembers) => {
+        if (includedHouseholdMembers.every((m) => !m.isSelected)) {
+          this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((m) => {
+            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false);
+            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false);
+            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false);
+          });
+        }
+      }
     });
 
     this.foodRestaurantDates = [...dates];
@@ -366,11 +399,14 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     return personFormGroup;
   }
 
-  gotoNextStep(formGroup: FormGroup) {
+  gotoETransfterStep(formGroup: FormGroup) {
     formGroup.markAllAsTouched();
-    if (!this.essFileId && formGroup.invalid) return;
-    this.getTotals();
-    this.stepper.next();
+    if (!this.essFileId || formGroup.invalid) return;
+    this.calculateSelfServeSupportsTotalAmount().subscribe((res) => {
+      if (res.every((s) => s.totalAmount === 0))
+        this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
+      else this.stepper.next();
+    });
   }
 
   processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
@@ -483,25 +519,47 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       supports: []
     };
 
-    if (this.showSelfServeShelterAllowanceSupport)
-      selfServeSupportRequest.supports.push(this.processShelterAllowanceData());
+    if (this.showSelfServeShelterAllowanceSupport) {
+      const processShelterAllowance = this.processShelterAllowanceData();
+      if (processShelterAllowance) selfServeSupportRequest.supports.push(processShelterAllowance);
+    }
 
-    if (this.showSelfServeFoodSupport) selfServeSupportRequest.supports.push(this.processFoodData());
+    if (this.showSelfServeFoodSupport) {
+      const processFood = this.processFoodData();
+      if (processFood) selfServeSupportRequest.supports.push(processFood);
+    }
 
-    if (this.showSelfServeClothingSupport) selfServeSupportRequest.supports.push(this.processClothing());
+    if (this.showSelfServeClothingSupport) {
+      const processClothing = this.processClothing();
+      if (processClothing) selfServeSupportRequest.supports.push(processClothing);
+    }
 
-    if (this.showSelfServeIncidentsSupport) selfServeSupportRequest.supports.push(this.processIncidents());
+    if (this.showSelfServeIncidentsSupport) {
+      const processIncidents = this.processIncidents();
+      if (processIncidents) selfServeSupportRequest.supports.push(processIncidents);
+    }
 
     console.log('getTotals: Payload:', selfServeSupportRequest);
 
     return selfServeSupportRequest;
   }
 
-  getTotals() {
+  calculateSelfServeSupportsTotalAmount() {
     const selfServeRequestPayload = this.getPayloadData();
+    this.showButtonLoader = true;
+    return this.supportService
+      .supportsCalculateAmounts({
+        evacuationFileId: this.essFileId,
+        body: selfServeRequestPayload.supports
+      })
+      .pipe(tap(() => (this.showButtonLoader = false)));
   }
 
   submit() {
     const selfServeRequestPayload = this.getPayloadData();
+  }
+
+  gotoEligibilityConfirmation() {
+    this.router.navigate(['../confirm'], { relativeTo: this.route });
   }
 }
