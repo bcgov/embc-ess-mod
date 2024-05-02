@@ -77,19 +77,40 @@ public partial class EventsManager
         await supportingEngine.Process(new ProcessPaperSupportsRequest { FileId = cmd.FileId, Supports = cmd.Supports });
     }
 
+    public async System.Threading.Tasks.Task Handle(ProcessSelfServeSupportsCommand cmd)
+    {
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
+
+        var supports = ((GenerateSelfServeSupports1Response)await supportingEngine.Generate(
+            new GenerateSelfServeSupports1(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+        var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
+        {
+            FileId = cmd.EvacuationFileId,
+            Supports = supports
+        });
+        if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
+
+        await supportingEngine.Process(new ProcessDigitalSupportsRequest
+        {
+            FileId = cmd.EvacuationFileId,
+            Supports = supports,
+            RequestingUserId = null,
+            IncludeSummaryInReferralsPrintout = false,
+            PrintReferrals = false
+        });
+    }
+
     public async Task<string> Handle(VoidSupportCommand cmd)
     {
         if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
         if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-        var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
+        return ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
         {
-            Items = new[]
-            {
-                SupportStatusTransition.VoidSupport(cmd.SupportId, Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString()))
-            }
+            Items = [SupportStatusTransition.VoidSupport(cmd.SupportId, Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString()))]
         })).Ids.SingleOrDefault();
-        return id;
     }
 
     public async Task<string> Handle(CancelSupportCommand cmd)
@@ -314,8 +335,8 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
         if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligible for self serve");
 
-        var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskId, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
-        if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskId);
+        var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskNumber, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
+        if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskNumber);
 
         IEnumerable<SelfServeSupport> supports;
         if (query.Items == null)
@@ -324,8 +345,8 @@ public partial class EventsManager
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
-                file.NeedsAssessment.EligibilityCheck.From.Value.DateTime.ToPST(),
-                file.NeedsAssessment.EligibilityCheck.To.Value.DateTime.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.To.Value.ToPST(),
                 file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
             supports = response.Supports;
         }
@@ -342,20 +363,24 @@ public partial class EventsManager
         };
     }
 
-    public async System.Threading.Tasks.Task Handle(CheckEligibileForSelfServeCommand cmd)
+    public async System.Threading.Tasks.Task<string> Handle(CheckEligibileForSelfServeCommand cmd)
     {
         var ct = CancellationToken.None;
 
         var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
 
-        await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
+        var response = await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
-            FileId = cmd.EvacuationFileId,
+            EvacuationFileNumber = cmd.EvacuationFileId,
             Eligible = eligibilityResult.Eligible,
             TaskNumber = eligibilityResult.TaskNumber,
+            HomeAddressReferenceId = eligibilityResult.HomeAddressReferenceId,
             From = eligibilityResult.From,
-            To = eligibilityResult.To
+            To = eligibilityResult.To,
+            Reason = eligibilityResult.Reason
         });
+
+        return response.Id;
     }
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
@@ -368,18 +393,10 @@ public partial class EventsManager
             Eligibility = new SupportEligibility
             {
                 IsEligible = file.NeedsAssessment.EligibilityCheck?.Eligible ?? false,
-                TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskId,
+                TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskNumber,
                 From = file.NeedsAssessment.EligibilityCheck?.From,
                 To = file.NeedsAssessment.EligibilityCheck?.From
             }
         };
-    }
-
-    public async System.Threading.Tasks.Task Handle(SubmitSelfServeSupportsCommand cmd)
-    {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
-
-        //map self serve supports into e-transfer supports and create them
     }
 }

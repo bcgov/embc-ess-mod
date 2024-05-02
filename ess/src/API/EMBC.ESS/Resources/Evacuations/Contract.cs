@@ -48,8 +48,8 @@ public record EvacuationFilesQuery : EvacuationFileQuery
     public bool MaskSecurityPhrase { get; set; } = true;
 
     public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
-    public DateTime? RegistraionDateFrom { get; set; }
-    public DateTime? RegistraionDateTo { get; set; }
+    public DateTime? RegistrationDateFrom { get; set; }
+    public DateTime? RegistrationDateTo { get; set; }
     public int? Limit { get; set; }
     public string HouseholdMemberId { get; set; }
     public string LinkedRegistrantId { get; set; }
@@ -64,10 +64,11 @@ public record SaveEvacuationFileNote : ManageEvacuationFileCommand
 
 public record AddEligibilityCheck : ManageEvacuationFileCommand
 {
-    public string FileId { get; set; }
+    public string EvacuationFileNumber { get; set; }
     public string? TaskNumber { get; set; }
-
+    public string? HomeAddressReferenceId { get; set; }
     public bool Eligible { get; set; }
+    public string? Reason { get; set; }
     public DateTimeOffset? From { get; set; }
     public DateTimeOffset? To { get; set; }
 }
@@ -161,9 +162,9 @@ public record Note
 public record SelfServeEligibilityCheck
 {
     public bool Eligible { get; set; }
-    public string? TaskId { get; set; }
-    public DateTimeOffset? From { get; set; }
-    public DateTimeOffset? To { get; set; }
+    public string? TaskNumber { get; set; }
+    public DateTime? From { get; set; }
+    public DateTime? To { get; set; }
 }
 
 public enum NoteType

@@ -109,7 +109,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentType>(((NeedsAssessmentTypeOptionSet)s.era_needsassessmenttype).ToString())))
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_insurancecoverage).ToString())))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_needassessment))
-                .ForMember(d => d.EligibilityCheck, opts => opts.Ignore())
+                .ForMember(d => d.EligibilityCheck, opts => opts.MapFrom(s => s.era_EligibilityCheck))
                 .ForMember(d => d.Pets, opts => opts.Ignore())
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.Needs, opts => opts.Ignore())
@@ -182,11 +182,25 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d._era_essteamuserid_value, opts => opts.MapFrom(s => isGuid(s.CreatingTeamMemberId) ? Guid.Parse(s.CreatingTeamMemberId) : (Guid?)null))
                 .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
-        }
 
-        public static bool CheckIfUnder19Years(Date birthdate, Date currentDate)
-        {
-            return birthdate.AddYears(19) >= currentDate;
+            CreateMap<AddEligibilityCheck, era_eligibilitycheck>(MemberList.Source)
+                .ForSourceMember(s => s.From, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.To, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.TaskNumber, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.HomeAddressReferenceId, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.EvacuationFileNumber, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.Eligible, opts => opts.DoNotValidate())
+                .ForMember(d => d.era_iseligible, opts => opts.MapFrom(s => s.Eligible ? Eligible.Yes : Eligible.No))
+                .ForMember(d => d.era_reason, opts => opts.MapFrom(s => s.Reason))
+                ;
+
+            CreateMap<era_eligibilitycheck, SelfServeEligibilityCheck>()
+                .ForMember(d => d.Eligible, opts => opts.MapFrom(s => s.era_iseligible == (int)Eligible.Yes))
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_name))
+                // change to eligibility fields
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_taskstartdate == null ? (DateTime?)null : s.era_Task.era_taskstartdate.Value.DateTime))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_era_task_era_needassessment_TaskNumber == null ? (DateTime?)null : s.era_Task.era_taskenddate.Value.DateTime))
+                ;
         }
     }
 
@@ -222,6 +236,12 @@ namespace EMBC.ESS.Resources.Evacuations
     {
         Allowance = 174360000,
         Referral = 174360001
+    }
+
+    public enum Eligible
+    {
+        Yes = 174360000,
+        No = 174360001
     }
 
 #pragma warning restore CA1008 // Enums should have zero value

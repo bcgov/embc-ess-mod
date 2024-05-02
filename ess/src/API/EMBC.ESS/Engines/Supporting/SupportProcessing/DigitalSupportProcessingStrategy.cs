@@ -22,24 +22,26 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             this.printRequestsRepository = printRequestsRepository;
         }
 
-        public async Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct)
-        {
-            if (!(request is ProcessDigitalSupportsRequest r))
-                throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(DigitalSupportProcessingStrategy)} can only handle {nameof(ProcessDigitalSupportsRequest)} request types");
-            return await HandleInternal(r, ct);
-        }
+        public async Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct) =>
+            request switch
+            {
+                ProcessDigitalSupportsRequest r => await HandleInternal(r, ct),
 
-        public async Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct)
-        {
-            if (!(request is DigitalSupportsValidationRequest r))
-                throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(DigitalSupportProcessingStrategy)} can only handle {nameof(DigitalSupportsValidationRequest)} request types");
-            return await HandleInternal(r, ct);
-        }
+                _ => throw new NotImplementedException($"{request.GetType().Name}")
+            };
+
+        public async Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct) =>
+            request switch
+            {
+                DigitalSupportsValidationRequest r => await HandleInternal(r, ct),
+
+                _ => throw new NotImplementedException($"{request.GetType().Name}")
+            };
 
         private async Task<ProcessDigitalSupportsResponse> HandleInternal(ProcessDigitalSupportsRequest r, CancellationToken ct)
         {
             if (r.FileId == null) throw new ArgumentNullException(nameof(r.FileId));
-            if (r.RequestingUserId == null) throw new ArgumentNullException(nameof(r.RequestingUserId));
+            if (r.PrintReferrals && r.RequestingUserId == null) throw new ArgumentNullException(nameof(r.RequestingUserId));
 
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
@@ -49,35 +51,39 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
                 Supports = supports
             })).Supports.ToArray();
 
-            try
+            if (r.PrintReferrals)
             {
-                var printRequestId = await printRequestsRepository.Manage(new SavePrintRequest
+                try
                 {
-                    PrintRequest = new ReferralPrintRequest
+                    var printRequestId = await printRequestsRepository.Manage(new SavePrintRequest
                     {
-                        FileId = r.FileId,
-                        SupportIds = processedSupports.Select(s => s.Id).ToArray(),
-                        IncludeSummary = r.IncludeSummaryInReferralsPrintout,
-                        RequestingUserId = r.RequestingUserId,
-                        Type = ReferralPrintType.New,
-                        Comments = "Process supports"
-                    }
-                });
+                        PrintRequest = new ReferralPrintRequest
+                        {
+                            FileId = r.FileId,
+                            SupportIds = processedSupports.Select(s => s.Id).ToArray(),
+                            IncludeSummary = r.IncludeSummaryInReferralsPrintout,
+                            RequestingUserId = r.RequestingUserId,
+                            Type = ReferralPrintType.New,
+                            Comments = "Process supports"
+                        }
+                    });
 
-                return new ProcessDigitalSupportsResponse
+                    return new ProcessDigitalSupportsResponse
+                    {
+                        Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(processedSupports),
+                        PrintRequestId = printRequestId
+                    };
+                }
+                catch (Exception)
                 {
-                    Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(processedSupports),
-                    PrintRequestId = printRequestId
-                };
+                    await supportRepository.Manage(new ChangeSupportStatusCommand
+                    {
+                        Items = processedSupports.Select(s => SupportStatusTransition.VoidSupport(s.Id, SupportVoidReason.ErrorOnPrintedReferral)).ToArray()
+                    });
+                    throw;
+                }
             }
-            catch (Exception)
-            {
-                await supportRepository.Manage(new ChangeSupportStatusCommand
-                {
-                    Items = processedSupports.Select(s => SupportStatusTransition.VoidSupport(s.Id, SupportVoidReason.ErrorOnPrintedReferral)).ToArray()
-                });
-                throw;
-            }
+            return new ProcessDigitalSupportsResponse { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(processedSupports), PrintRequestId = null };
         }
 
         private async Task<ValidationResponse> HandleInternal(DigitalSupportsValidationRequest r, CancellationToken ct)

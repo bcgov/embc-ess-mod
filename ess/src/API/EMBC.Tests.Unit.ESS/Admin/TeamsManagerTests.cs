@@ -45,7 +45,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         }
 
         [Fact]
-        public async Task AssignCommunities_UnassignedCommuity_CommunitiesAdded()
+        public async Task AssignCommunities_UnassignedCommunity_CommunitiesAdded()
         {
             var team = teamRepository.stagedTeams.First().Value;
             var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c5").ToArray();

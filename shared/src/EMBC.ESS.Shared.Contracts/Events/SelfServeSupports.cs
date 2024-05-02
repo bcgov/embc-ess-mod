@@ -36,7 +36,7 @@ public record DraftSelfServeSupportQueryResponse
     public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
 }
 
-public record SubmitSelfServeSupportsCommand : Command
+public record ProcessSelfServeSupportsCommand : Command
 {
     public string EvacuationFileId { get; set; }
     public IEnumerable<SelfServeSupport> Supports { get; set; } = Array.Empty<SelfServeSupport>();
@@ -48,7 +48,6 @@ public record SubmitSelfServeSupportsCommand : Command
 [JsonDerivedType(typeof(SelfServeFoodRestaurantSupport), typeDiscriminator: nameof(SelfServeFoodRestaurantSupport))]
 [JsonDerivedType(typeof(SelfServeIncidentalsSupport), typeDiscriminator: nameof(SelfServeIncidentalsSupport))]
 [JsonDerivedType(typeof(SelfServeClothingSupport), typeDiscriminator: nameof(SelfServeClothingSupport))]
-//[JsonConverter(typeof(PolymorphicJsonConverter<SelfServeSupport>))]
 public abstract record SelfServeSupport
 {
     public double? TotalAmount { get; set; }
