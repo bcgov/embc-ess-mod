@@ -29,6 +29,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { EligibleSelfServeTotalAmountZeroDialogComponent } from './eligible-self-serve-total-amount-zero.component';
 import { AppLoaderComponent } from 'src/app/core/components/app-loader/app-loader.component';
 import { tap } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { IMaskDirective } from 'angular-imask';
+import { ProfileService } from '../profile/profile.service';
+import { ProfileDataService } from '../profile/profile-data.service';
 
 type SelfServeSupportFormControl = {
   [k in keyof SelfServeSupport]: FormControl<SelfServeSupport[k]>;
@@ -98,6 +103,23 @@ interface DraftSupportForm {
   incidents: FormGroup<SelfServeIncidentsSupportForm>;
 }
 
+enum ETransferNotificationPreference {
+  Email = 'Email',
+  Mobile = 'Mobile',
+  EmailAndMobile = 'Email & Mobile'
+}
+
+interface ETransferDetails {
+  notificationPreference: FormControl<ETransferNotificationPreference>;
+  eTransferEmail: FormControl<string>;
+  confirmEmail: FormControl<string>;
+  useEmailOnFile: FormControl<boolean>;
+  eTransferMobile: FormControl<string>;
+  confirmMobile: FormControl<string>;
+  useMobileOnFile: FormControl<boolean>;
+  recipientName: FormControl<string>;
+}
+
 @Component({
   standalone: true,
   selector: 'app-eligible-self-serve-support-form',
@@ -110,7 +132,9 @@ interface DraftSupportForm {
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    AppLoaderComponent
+    MatSelectModule,
+    AppLoaderComponent,
+    IMaskDirective
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styles: [
@@ -188,7 +212,7 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     householdMembers: []
   };
 
-  isLoadingDraftSupport = true;
+  isLoadingDraftSupport = false;
   showButtonLoader = false;
   draftSupportError = false;
   loaderColor = '#169bd5';
@@ -220,9 +244,59 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     })
   });
 
-  eTransferForm: FormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required]
-  });
+  ETransferNotificationPreference = ETransferNotificationPreference;
+  eTransferNotificationPreferenceOptions = Object.values(ETransferNotificationPreference);
+  readonly phoneMask = { mask: '000-000-0000' };
+
+  eTransferDetailsForm = this._formBuilder.group<ETransferDetails>(
+    {
+      notificationPreference: new FormControl(null),
+      eTransferEmail: new FormControl(
+        '',
+        this.customValidation.conditionalValidation(
+          () =>
+            [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+              this.eTransferDetailsForm.controls.notificationPreference.value
+            ),
+          Validators.required
+        )
+      ),
+      confirmEmail: new FormControl(
+        '',
+        this.customValidation.conditionalValidation(
+          () =>
+            [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+              this.eTransferDetailsForm.controls.notificationPreference.value
+            ),
+          Validators.required
+        )
+      ),
+      eTransferMobile: new FormControl(
+        '',
+        this.customValidation.conditionalValidation(
+          () =>
+            [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+              this.eTransferDetailsForm.controls.notificationPreference.value
+            ),
+          Validators.required
+        )
+      ),
+      confirmMobile: new FormControl(
+        '',
+        this.customValidation.conditionalValidation(
+          () =>
+            [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+              this.eTransferDetailsForm.controls.notificationPreference.value
+            ),
+          Validators.required
+        )
+      ),
+      useEmailOnFile: new FormControl(false),
+      useMobileOnFile: new FormControl(false),
+      recipientName: new FormControl()
+    },
+    { validators: [] }
+  );
 
   @ViewChild('stepper') stepper: MatStepper;
 
@@ -230,12 +304,20 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private supportService: SupportsService,
     public needsAssessmentService: NeedsAssessmentService,
+    private profileDataService: ProfileDataService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit() {
+    console.log(
+      'ngOnInit:',
+      this.profileDataService,
+      this.profileDataService.getProfile(),
+      this.profileDataService.personalDetails
+    );
     if (!this.essFileId) {
       throw new Error(`${this.constructor.name}:ngOnInit:  Ess File Id is not set`);
       return;
@@ -407,6 +489,10 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
         this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
       else this.stepper.next();
     });
+  }
+
+  gotoReviewStep(formGroup: FormGroup) {
+    this.stepper.next();
   }
 
   processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {

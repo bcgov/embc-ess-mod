@@ -283,23 +283,217 @@
           </div>
         </form>
       </mat-step>
-      <mat-step [stepControl]="eTransferForm">
-        <form [formGroup]="eTransferForm">
-          <ng-template matStepLabel>e-Transfer Details</ng-template>
-          <mat-form-field>
-            <input matInput placeholder="Address" formControlName="secondCtrl" required />
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious style="width: 240px">Go Back & Edit</button>
-            @if (draftSupports.items?.length > 0) {
-              <button mat-button style="width: 240px">Next - Review</button>
-            }
-          </div>
+      <mat-step [stepControl]="eTransferDetailsForm">
+        <ng-template matStepLabel>e-Transfer Details</ng-template>
+        <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
+        <form>
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <div style="display: flex; flex-direction: column">
+                <p class="card-heading">e-Transfer Details *</p>
+                <div class="card-question">
+                  <label> e-Transfer Recipient</label>
+                </div>
+                <mat-form-field>
+                  <mat-label>Full Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Full Name"
+                    [formControl]="eTransferDetailsForm.controls.recipientName"
+                    required
+                  />
+                </mat-form-field>
+                <div class="card-question">How would you prefer to be notified of your e-Transfer?</div>
+                <mat-form-field appearance="outline">
+                  <mat-select
+                    [formControl]="eTransferDetailsForm.controls.notificationPreference"
+                    required
+                    placeholder="-- Select One"
+                  >
+                    @for (preference of eTransferNotificationPreferenceOptions; track preference) {
+                      <mat-option [value]="preference">
+                        {{ preference }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  @if (
+                    eTransferDetailsForm.controls?.notificationPreference.invalid &&
+                    eTransferDetailsForm.controls?.notificationPreference.hasError('required')
+                  ) {
+                    <mat-error> Required </mat-error>
+                  }
+                </mat-form-field>
+                @if (
+                  [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+                    eTransferDetailsForm.controls.notificationPreference.value
+                  )
+                ) {
+                  <div style="display: flex">
+                    <mat-form-field>
+                      <mat-label>Email</mat-label>
+                      <input
+                        matInput
+                        placeholder="Email"
+                        [formControl]="eTransferDetailsForm.controls.email"
+                        required
+                      />
+                    </mat-form-field>
+                    <mat-checkbox> Use email address on file </mat-checkbox>
+                  </div>
+                  <mat-form-field>
+                    <mat-label>Confirm Email</mat-label>
+                    <input
+                      matInput
+                      placeholder="Confirm Email"
+                      [formControl]="eTransferDetailsForm.controls.confirmEmail"
+                      required
+                    />
+                    @if (eTransferDetailsForm.controls.confirmEmail.hasError('emailMatch')) {
+                      <mat-error> Email should match </mat-error>
+                    }
+                  </mat-form-field>
+                }
+                @if (
+                  [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+                    eTransferDetailsForm.controls.notificationPreference.value
+                  )
+                ) {
+                  <div>
+                    <mat-form-field>
+                      <mat-label>Mobile</mat-label>
+                      <input
+                        matInput
+                        placeholder="Mobile"
+                        [formControl]="eTransferDetailsForm.controls.eTransferMobile"
+                        required
+                        [imask]="phoneMask"
+                      />
+                    </mat-form-field>
+                    <mat-checkbox>Use mobile number on file</mat-checkbox>
+                  </div>
+                  <mat-form-field>
+                    <mat-label>Confirm Mobile</mat-label>
+                    <input
+                      matInput
+                      placeholder="Confirm Mobile"
+                      [formControl]="eTransferDetailsForm.controls.confirmMobile"
+                      required
+                      [imask]="phoneMask"
+                    />
+                  </mat-form-field>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
         </form>
+        <div style="display: flex; gap: 16px; justify-content: space-between">
+          <button type="button" mat-button class="button-s" style="width: 240px" matStepperPrevious>
+            Go Back & Edit
+          </button>
+          @if (draftSupports.items?.length > 0) {
+            <button
+              type="button"
+              mat-button
+              class="button-p"
+              style="width: 240px"
+              (click)="gotoReviewStep(eTransferDetailsForm)"
+            >
+              Next - Review
+              @if (showButtonLoader) {
+                <app-loader class="spinner" [strokeWidth]="10" [diameter]="50" [color]="loaderColor"> </app-loader>
+              }
+            </button>
+          }
+        </div>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Review & Submit</ng-template>
         Review Details
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <div style="display: flex; flex-direction: column; width: 100%">
+              <p class="card-heading">Review Details</p>
+              <div style="display: flex; justify-content: space-between">
+                <p class="card-heading">Support Details</p>
+                <button mat-icon-button>Edit</button>
+              </div>
+              <hr />
+              <div style="display: flex">
+                <div style="width: 240px">Shelter Allowance</div>
+                <div style="width: 160px"><b>100</b></div>
+              </div>
+              <div style="display: flex">
+                <div style="width: 240px">Grocery</div>
+                <div style="width: 160px"><b>100</b></div>
+              </div>
+              <div style="display: flex">
+                <div style="width: 240px">Restaurant</div>
+                <div style="width: 160px"><b>100</b></div>
+              </div>
+              <div style="display: flex">
+                <div style="width: 240px">Clothing</div>
+                <div style="width: 160px"><b>100</b></div>
+              </div>
+              <div style="display: flex">
+                <div style="width: 240px">Incidentals</div>
+                <div style="width: 160px"><b>100</b></div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between">
+                <p class="card-heading">e-Transfer Recipient Details</p>
+                <button mat-icon-button>Edit</button>
+              </div>
+
+              <div style="display: flex">
+                <div style="width: 240px">e-Transfer Recipient:</div>
+                <div style="width: 160px"><b>John Smith</b></div>
+              </div>
+
+              <div style="display: flex">
+                <div style="width: 240px">e-Transfer Notification:</div>
+                <div style="width: 160px"><b>250-123-4567</b></div>
+              </div>
+              <div style="display: flex">
+                <div style="width: 240px">Contact Email Address:</div>
+                <div style="width: 160px"><b>johnemail.com</b></div>
+              </div>
+
+              <hr />
+              <div style="display: flex; justify-content: space-between">
+                <p class="card-heading">Acknowledgment</p>
+              </div>
+              <hr />
+              <p>
+                <b>
+                  You are being provided with a one-time digital payment for supports. These funds have been provided
+                  for the sole purpose to meet essential needs of individuals and their household members.
+                </b>
+              </p>
+              <mat-checkbox>
+                I acknowledge that by accepting this digital payment, I agree to use the funds exclusively for meeting
+                my basic needs as outlined above. I understand that purchases such as alcohol, tobacco, cannabis
+                products, entertainment goods or services (such as online gaming), and luxury items are not permissible.
+              </mat-checkbox>
+              <mat-checkbox>
+                I acknowledge that by accepting this digital payment, I am able to meet my own needs and will not seek
+                further supports during the valid timeframe of <b>April 4 2024</b> to <b>April 6 2024</b>.
+              </mat-checkbox>
+              <mat-checkbox>
+                I certify that all information I have provided is accurate to the best of my knowledge. If information
+                is found to be untrue, this may result in repayment of funds already received. Intentional provision of
+                inaccurate information may be investigated, and legal action may be undertaken.
+              </mat-checkbox>
+
+              <div style="text-align: center">
+                <p>
+                  If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer will
+                  be your ESS File Number, which is VIC12345.
+                </p>
+                <p>You can find your ESS File number under the Current Events tab of your ERA profile.</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
         <div>
           <button mat-button matStepperPrevious style="width: 240px">Go Back & Edit</button>
           @if (draftSupports.items?.length > 0) {
