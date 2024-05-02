@@ -66,7 +66,6 @@ export class ReviewComponent implements OnInit {
 
   isNoNeedSelected(form: UntypedFormGroup) {
     const needsFormValue = form.value as any;
-
     return [
       needsFormValue.requiresClothing,
       needsFormValue.requiresFood,
