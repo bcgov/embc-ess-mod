@@ -55,7 +55,9 @@ export class HouseholdMembersForm {
           customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.dateOfBirthValidator().bind(customValidator)).bind(customValidator)
         ]
       ],
-      isPrimaryRegistrant: ['']
+      isPrimaryRegistrant: [''],
+      id: [''],
+      isMinor: ['']
     });
   }
 }
