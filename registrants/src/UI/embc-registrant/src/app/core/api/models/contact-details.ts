@@ -1,12 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Profile contact information
- */
 export interface ContactDetails {
-  email?: null | string;
+  email?: string | null;
   hideEmailRequired?: boolean;
   hidePhoneRequired?: boolean;
-  phone?: null | string;
+  phone?: string | null;
 }

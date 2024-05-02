@@ -1,19 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HouseholdMember } from './household-member';
-import { IdentifiedNeed } from './identified-need';
-import { InsuranceOption } from './insurance-option';
-import { NeedsAssessmentType } from './needs-assessment-type';
-import { Pet } from './pet';
-
-/**
- * Needs assessment form
- */
+import { HouseholdMember } from '../models/household-member';
+import { IdentifiedNeed } from '../models/identified-need';
+import { InsuranceOption } from '../models/insurance-option';
+import { NeedsAssessmentType } from '../models/needs-assessment-type';
+import { Pet } from '../models/pet';
 export interface NeedsAssessment {
-  householdMembers?: Array<HouseholdMember>;
-  id?: null | string;
+  householdMembers?: Array<HouseholdMember> | null;
+  id?: string | null;
   insurance: InsuranceOption;
-  needs?: Array<IdentifiedNeed>;
-  pets?: Array<Pet>;
+  needs?: Array<IdentifiedNeed> | null;
+  pets?: Array<Pet> | null;
   type?: NeedsAssessmentType;
 }

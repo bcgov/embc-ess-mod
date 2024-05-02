@@ -1,29 +1,71 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
-import { SelfServeSupport } from '../models/self-serve-support';
-import { SubmitSupportsRequest } from '../models/submit-supports-request';
+import { DraftSupports } from '../models/draft-supports';
+import { EligibilityCheck } from '../models/eligibility-check';
+import { SelfServeClothingSupport } from '../models/self-serve-clothing-support';
+import { SelfServeFoodGroceriesSupport } from '../models/self-serve-food-groceries-support';
+import { SelfServeFoodRestaurantSupport } from '../models/self-serve-food-restaurant-support';
+import { SelfServeIncidentalsSupport } from '../models/self-serve-incidentals-support';
+import { SelfServeShelterAllowanceSupport } from '../models/self-serve-shelter-allowance-support';
+import { supportsCalculateAmounts } from '../fn/supports/supports-calculate-amounts';
+import { SupportsCalculateAmounts$Params } from '../fn/supports/supports-calculate-amounts';
+import { supportsCheckSelfServeEligibility } from '../fn/supports/supports-check-self-serve-eligibility';
+import { SupportsCheckSelfServeEligibility$Params } from '../fn/supports/supports-check-self-serve-eligibility';
+import { supportsGetDraftSupports } from '../fn/supports/supports-get-draft-supports';
+import { SupportsGetDraftSupports$Params } from '../fn/supports/supports-get-draft-supports';
+import { supportsOptOut } from '../fn/supports/supports-opt-out';
+import { SupportsOptOut$Params } from '../fn/supports/supports-opt-out';
+import { supportsSubmitSupports } from '../fn/supports/supports-submit-supports';
+import { SupportsSubmitSupports$Params } from '../fn/supports/supports-submit-supports';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SupportsService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
+  /** Path part for operation `supportsCheckSelfServeEligibility()` */
+  static readonly SupportsCheckSelfServeEligibilityPath = '/api/Evacuations/{evacuationFileId}/Supports/eligible';
+
   /**
-   * Path part for operation supportsGetDraftSupports
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `supportsCheckSelfServeEligibility()` instead.
+   *
+   * This method doesn't expect any request body.
    */
-  static readonly SupportsGetDraftSupportsPath = '/api/Evacuations/{fileReferenceNumber}/Supports/draft';
+  supportsCheckSelfServeEligibility$Response(
+    params: SupportsCheckSelfServeEligibility$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<EligibilityCheck>> {
+    return supportsCheckSelfServeEligibility(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `supportsCheckSelfServeEligibility$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  supportsCheckSelfServeEligibility(
+    params: SupportsCheckSelfServeEligibility$Params,
+    context?: HttpContext
+  ): Observable<EligibilityCheck> {
+    return this.supportsCheckSelfServeEligibility$Response(params, context).pipe(
+      map((r: StrictHttpResponse<EligibilityCheck>): EligibilityCheck => r.body)
+    );
+  }
+
+  /** Path part for operation `supportsGetDraftSupports()` */
+  static readonly SupportsGetDraftSupportsPath = '/api/Evacuations/{evacuationFileId}/Supports/draft';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -31,96 +73,94 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsGetDraftSupports$Response(params: {
-    fileReferenceNumber: string;
-  }): Observable<StrictHttpResponse<Array<SelfServeSupport>>> {
-    const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsGetDraftSupportsPath, 'get');
-    if (params) {
-      rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<SelfServeSupport>>;
-        })
-      );
+  supportsGetDraftSupports$Response(
+    params: SupportsGetDraftSupports$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<DraftSupports>> {
+    return supportsGetDraftSupports(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `supportsGetDraftSupports$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  supportsGetDraftSupports(params: { fileReferenceNumber: string }): Observable<Array<SelfServeSupport>> {
-    return this.supportsGetDraftSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<SelfServeSupport>>) => r.body as Array<SelfServeSupport>)
+  supportsGetDraftSupports(params: SupportsGetDraftSupports$Params, context?: HttpContext): Observable<DraftSupports> {
+    return this.supportsGetDraftSupports$Response(params, context).pipe(
+      map((r: StrictHttpResponse<DraftSupports>): DraftSupports => r.body)
     );
   }
 
-  /**
-   * Path part for operation supportsCalculateAmounts
-   */
-  static readonly SupportsCalculateAmountsPath = '/api/Evacuations/{fileReferenceNumber}/Supports/draft/totals';
+  /** Path part for operation `supportsCalculateAmounts()` */
+  static readonly SupportsCalculateAmountsPath = '/api/Evacuations/{evacuationFileId}/Supports/draft';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `supportsCalculateAmounts()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  supportsCalculateAmounts$Response(params: {
-    fileReferenceNumber: string;
-    body: Array<SelfServeSupport>;
-  }): Observable<StrictHttpResponse<Array<SelfServeSupport>>> {
-    const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsCalculateAmountsPath, 'post');
-    if (params) {
-      rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<SelfServeSupport>>;
-        })
-      );
+  supportsCalculateAmounts$Response(
+    params: SupportsCalculateAmounts$Params,
+    context?: HttpContext
+  ): Observable<
+    StrictHttpResponse<
+      Array<
+        | SelfServeShelterAllowanceSupport
+        | SelfServeFoodGroceriesSupport
+        | SelfServeFoodRestaurantSupport
+        | SelfServeIncidentalsSupport
+        | SelfServeClothingSupport
+      >
+    >
+  > {
+    return supportsCalculateAmounts(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `supportsCalculateAmounts$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  supportsCalculateAmounts(params: {
-    fileReferenceNumber: string;
-    body: Array<SelfServeSupport>;
-  }): Observable<Array<SelfServeSupport>> {
-    return this.supportsCalculateAmounts$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<SelfServeSupport>>) => r.body as Array<SelfServeSupport>)
+  supportsCalculateAmounts(
+    params: SupportsCalculateAmounts$Params,
+    context?: HttpContext
+  ): Observable<
+    Array<
+      | SelfServeShelterAllowanceSupport
+      | SelfServeFoodGroceriesSupport
+      | SelfServeFoodRestaurantSupport
+      | SelfServeIncidentalsSupport
+      | SelfServeClothingSupport
+    >
+  > {
+    return this.supportsCalculateAmounts$Response(params, context).pipe(
+      map(
+        (
+          r: StrictHttpResponse<
+            Array<
+              | SelfServeShelterAllowanceSupport
+              | SelfServeFoodGroceriesSupport
+              | SelfServeFoodRestaurantSupport
+              | SelfServeIncidentalsSupport
+              | SelfServeClothingSupport
+            >
+          >
+        ): Array<
+          | SelfServeShelterAllowanceSupport
+          | SelfServeFoodGroceriesSupport
+          | SelfServeFoodRestaurantSupport
+          | SelfServeIncidentalsSupport
+          | SelfServeClothingSupport
+        > => r.body
+      )
     );
   }
 
-  /**
-   * Path part for operation supportsOptOut
-   */
-  static readonly SupportsOptOutPath = '/api/Evacuations/{fileReferenceNumber}/Supports/optout';
+  /** Path part for operation `supportsOptOut()` */
+  static readonly SupportsOptOutPath = '/api/Evacuations/{evacuationFileId}/Supports/optout';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -128,80 +168,45 @@ export class SupportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  supportsOptOut$Response(params: { fileReferenceNumber: string }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsOptOutPath, 'post');
-    if (params) {
-      rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  supportsOptOut$Response(params: SupportsOptOut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return supportsOptOut(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `supportsOptOut$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  supportsOptOut(params: { fileReferenceNumber: string }): Observable<void> {
-    return this.supportsOptOut$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+  supportsOptOut(params: SupportsOptOut$Params, context?: HttpContext): Observable<void> {
+    return this.supportsOptOut$Response(params, context).pipe(map((r: StrictHttpResponse<void>): void => r.body));
   }
 
-  /**
-   * Path part for operation supportsSubmitSupports
-   */
-  static readonly SupportsSubmitSupportsPath = '/api/Evacuations/{fileReferenceNumber}/Supports';
+  /** Path part for operation `supportsSubmitSupports()` */
+  static readonly SupportsSubmitSupportsPath = '/api/Evacuations/{evacuationFileId}/Supports';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `supportsSubmitSupports()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  supportsSubmitSupports$Response(params: {
-    fileReferenceNumber: string;
-    body: SubmitSupportsRequest;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, SupportsService.SupportsSubmitSupportsPath, 'post');
-    if (params) {
-      rb.path('fileReferenceNumber', params.fileReferenceNumber, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  supportsSubmitSupports$Response(
+    params: SupportsSubmitSupports$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return supportsSubmitSupports(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `supportsSubmitSupports$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  supportsSubmitSupports(params: { fileReferenceNumber: string; body: SubmitSupportsRequest }): Observable<void> {
-    return this.supportsSubmitSupports$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+  supportsSubmitSupports(params: SupportsSubmitSupports$Params, context?: HttpContext): Observable<void> {
+    return this.supportsSubmitSupports$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
   }
 }

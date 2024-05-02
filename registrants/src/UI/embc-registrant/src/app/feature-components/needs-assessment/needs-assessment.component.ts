@@ -12,7 +12,7 @@ import { NonVerifiedRegistrationService } from '../non-verified-registration/non
 import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
 import { AlertComponent } from '../../core/components/alert/alert.component';
@@ -233,13 +233,13 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.evacuationFileDataService
       .createEvacuationFile()
       .pipe(
+        tap((evacuationFileId) => this.needsAssessmentService.setVerifiedEvacuationFileNo(evacuationFileId)),
         switchMap((evacuationFileId) =>
           this.evacuationFileDataService.checkEligibleForSelfServeSupport({ evacuationFileId })
         )
       )
       .subscribe({
         next: (value: EligibilityCheck) => {
-          this.needsAssessmentService.setVerifiedEvacuationFileNo(value.evacuationFileId);
           if (value.isEligable) this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
           else this.router.navigate(['/verified-registration/dashboard']);
         },

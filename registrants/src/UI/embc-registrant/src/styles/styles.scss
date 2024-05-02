@@ -40,6 +40,8 @@ $custom-typography: mat.define-typography-config(
   --size-2: calc(var(--size-1) * 2);
   --size-3: calc(var(--size-1) * 3);
   --size-4: calc(var(--size-1) * 4);
+  --size-5: calc(var(--size-1) * 5);
+  --size-6: calc(var(--size-1) * 6);
 }
 
 main {

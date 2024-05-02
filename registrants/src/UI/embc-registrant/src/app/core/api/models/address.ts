@@ -1,15 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Address data with optional lookup code
- */
 export interface Address {
   addressLine1: string;
-  addressLine2?: null | string;
-  city?: null | string;
-  community?: null | string;
+  addressLine2?: string | null;
+  city?: string | null;
+  community?: string | null;
   country: string;
-  postalCode?: null | string;
-  stateProvince?: null | string;
+  postalCode?: string | null;
+  stateProvince?: string | null;
 }

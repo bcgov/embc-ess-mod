@@ -8,6 +8,8 @@ import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import * as globalConst from '../../core/services/globalConstants';
+import { SupportsService } from 'src/app/core/api/services';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
   standalone: true,
@@ -17,10 +19,14 @@ import * as globalConst from '../../core/services/globalConstants';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EligibleSelfServeConfirmComponent {
+  essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private supportService: SupportsService,
+    private needsAssessmentService: NeedsAssessmentService
   ) {}
 
   optOutSelfServe() {
@@ -29,8 +35,13 @@ export class EligibleSelfServeConfirmComponent {
         width: '700px'
       })
       .afterClosed()
-      .subscribe((res) => {
-        if (res) this.gotoDashboard();
+      .subscribe((optOut) => {
+        if (optOut)
+          this.supportService.supportsOptOut({ evacuationFileId: this.essFileId }).subscribe({
+            next: () => {
+              this.gotoDashboard();
+            }
+          });
       });
   }
 

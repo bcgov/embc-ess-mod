@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EvacuationFile, EvacuationFileStatus, NeedsAssessment, Support } from 'src/app/core/api/models';
-import { EvacuationsService, ProfileService } from 'src/app/core/api/services';
+import { EvacuationsService, ProfileService, SupportsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { LocationService } from 'src/app/core/services/location.service';
@@ -39,7 +39,8 @@ export class EvacuationFileDataService {
     private locationService: LocationService,
     private restrictionService: RestrictionService,
     private profileService: ProfileService,
-    private profileDataService: ProfileDataService
+    private profileDataService: ProfileDataService,
+    private supportService: SupportsService
   ) {}
 
   public get evacuatedAddress(): RegAddress {
@@ -169,9 +170,9 @@ export class EvacuationFileDataService {
   }
 
   public checkEligibleForSelfServeSupport(
-    params: Parameters<EvacuationsService['evacuationsCheckSelfServeEligibility']>[0]
-  ): ReturnType<EvacuationsService['evacuationsCheckSelfServeEligibility']> {
-    return this.evacuationService.evacuationsCheckSelfServeEligibility(params);
+    params: Parameters<SupportsService['supportsCheckSelfServeEligibility']>[0]
+  ): ReturnType<SupportsService['supportsCheckSelfServeEligibility']> {
+    return this.supportService.supportsCheckSelfServeEligibility(params);
   }
 
   public clearESSFileData(): void {

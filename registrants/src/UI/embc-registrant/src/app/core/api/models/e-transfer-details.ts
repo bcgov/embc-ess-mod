@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface ETransferDetails {
-  contactEmail?: null | string;
-  eTransferEmail?: null | string;
-  eTransferMobile?: null | string;
-  recipientName?: string;
+  contactEmail?: string | null;
+  eTransferEmail?: string | null;
+  eTransferMobile?: string | null;
+  recipientName?: string | null;
 }

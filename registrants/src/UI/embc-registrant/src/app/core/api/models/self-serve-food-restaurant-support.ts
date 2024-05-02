@@ -1,8 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SelfServeSupport } from './self-serve-support';
-import { SupportDayMeals } from './support-day-meals';
+import { SelfServeSupport } from '../models/self-serve-support';
+import { SelfServeSupportType } from '../models/self-serve-support-type';
+import { SupportDayMeals } from '../models/support-day-meals';
 export type SelfServeFoodRestaurantSupport = SelfServeSupport & {
-  includedHouseholdMembers?: Array<string>;
-  meals?: Array<SupportDayMeals>;
+  includedHouseholdMembers?: Array<string> | null;
+  meals?: Array<SupportDayMeals> | null;
+  type?: SelfServeSupportType;
 };
