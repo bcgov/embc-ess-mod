@@ -81,6 +81,25 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
+
+        var supports = ((GenerateSelfServeSupports1Response)await supportingEngine.Generate(
+            new GenerateSelfServeSupports1(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+        var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
+        {
+            FileId = cmd.EvacuationFileId,
+            Supports = supports
+        });
+        if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
+
+        await supportingEngine.Process(new ProcessDigitalSupportsRequest
+        {
+            FileId = cmd.EvacuationFileId,
+            Supports = supports,
+            RequestingUserId = null,
+            IncludeSummaryInReferralsPrintout = false,
+            PrintReferrals = false
+        });
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
@@ -326,8 +345,8 @@ public partial class EventsManager
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
-                file.NeedsAssessment.EligibilityCheck.From.Value.DateTime.ToPST(),
-                file.NeedsAssessment.EligibilityCheck.To.Value.DateTime.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
+                file.NeedsAssessment.EligibilityCheck.To.Value.ToPST(),
                 file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
             supports = response.Supports;
         }
@@ -357,7 +376,8 @@ public partial class EventsManager
             TaskNumber = eligibilityResult.TaskNumber,
             HomeAddressReferenceId = eligibilityResult.HomeAddressReferenceId,
             From = eligibilityResult.From,
-            To = eligibilityResult.To
+            To = eligibilityResult.To,
+            Reason = eligibilityResult.Reason
         });
 
         return response.Id;

@@ -5,6 +5,7 @@ using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -417,6 +418,61 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             supports = await manager.Handle(new SearchSupportsQuery { FileId = fileId });
             var scannedDuplicateSupport = supports.Items.Where(s => s is IncidentalsSupport i && i.ApprovedItems == duplicateSupport.ApprovedItems).Cast<IncidentalsSupport>().ShouldHaveSingleItem();
             scannedDuplicateSupport.Flags.ShouldHaveSingleItem().ShouldBeAssignableTo<DuplicateSupportFlag>().ShouldNotBeNull().DuplicatedSupportId.ShouldBe(duplicateSupportId);
+        }
+
+        [Fact]
+        public async Task CheckEligibility_Created()
+        {
+            var eligibilityId = await manager.Handle(new CheckEligibileForSelfServeCommand { EvacuationFileId = TestData.EvacuationFileId });
+            eligibilityId.ShouldNotBeNull();
+
+            var eligibility = await manager.Handle(new EligibilityCheckQuery { EvacuationFileId = TestData.EvacuationFileId });
+            eligibility.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task ProcessSelfServeSupports_Supports_SupportsCreated()
+        {
+            var registrant = TestHelper.CreateRegistrantProfile();
+            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
+            registrant.Id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var file = CreateNewTestEvacuationFile(registrant);
+            file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5);
+            file.NeedsAssessment.Needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+            file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            await manager.Handle(new CheckEligibileForSelfServeCommand { EvacuationFileId = file.Id });
+            file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+
+            var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            var fromDay = DateOnly.FromDateTime(from);
+            var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
+            var supportDays = (new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) }).Select(d => new SupportDay(d, householdMembers));
+            var etransferDetails = new ETransferDetails
+            {
+                ContactEmail = registrant.Email,
+                ETransferEmail = registrant.Email,
+                ETransferMobile = registrant.Phone,
+                RecipientName = $"{registrant.FirstName} {registrant.LastName}"
+            };
+
+            var supports = new SelfServeSupport[]
+            {
+                new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeFoodGroceriesSupport{ TotalAmount = 100d, Nights = supportDays },
+                new SelfServeShelterAllowanceSupport{ TotalAmount = 100d, Nights = supportDays },
+            };
+
+            await manager.Handle(new ProcessSelfServeSupportsCommand
+            {
+                Supports = supports,
+                ETransferDetails = etransferDetails,
+                EvacuationFileId = file.Id,
+            });
+
+            var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+            updatedFile.Supports.Count().ShouldBe(supports.Length);
         }
     }
 }

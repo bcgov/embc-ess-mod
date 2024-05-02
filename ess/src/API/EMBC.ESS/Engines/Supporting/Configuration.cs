@@ -26,6 +26,7 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<PaymentGenerationStrategyFactory>()
                 .AddTransient<SelfServeSupportProcessingStrategy>()
                 .AddTransient<SelfServeSupportGenerator>()
+                .AddTransient<SelfServeEtransferGenerator>()
                 ;
         }
     }
