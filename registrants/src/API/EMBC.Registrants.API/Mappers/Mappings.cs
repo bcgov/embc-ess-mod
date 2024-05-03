@@ -128,7 +128,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.RecipientLastName, opts => opts.Ignore())
                 .ForMember(d => d.SecurityQuestion, opts => opts.Ignore())
                 .ForMember(d => d.SecurityAnswer, opts => opts.Ignore())
-                .ForMember(d => d.IsSelfServe, opts => opts.Ignore())
                 .ForMember(d => d.IsSelfServe, opts => opts.MapFrom(s => s.IsSelfServe))
                 .AfterMap((s, d, ctx) =>
                 {
