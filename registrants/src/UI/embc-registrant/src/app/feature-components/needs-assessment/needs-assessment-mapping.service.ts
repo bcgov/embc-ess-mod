@@ -17,7 +17,7 @@ export class NeedsAssessmentMappingService {
     private profileDataService: ProfileDataService,
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService
-  ) { }
+  ) {}
 
   setNeedsAssessment(evacuatedAddress: RegAddress, needsAssessment: NeedsAssessment): void {
     this.setNeedsAssessmentId(needsAssessment.id);
@@ -65,7 +65,7 @@ export class NeedsAssessmentMappingService {
             sameLastNameCheck: '',
             isPrimaryRegistrant: '',
             id: '',
-            isMinor: '',
+            isMinor: ''
           },
           addHouseholdMemberIndicator: null
         });
@@ -122,7 +122,7 @@ export class NeedsAssessmentMappingService {
         isPrimaryRegistrant: member.isPrimaryRegistrant,
         sameLastNameCheck: this.isSameLastName(member.details.lastName),
         id: member.id,
-        isMinor: member.isMinor,
+        isMinor: member.isMinor
       };
 
       householdMembersFormArray.push(memberDetails);
@@ -142,7 +142,7 @@ export class NeedsAssessmentMappingService {
         gender: member.details.gender,
         dateOfBirth: member.details.dateOfBirth,
         sameLastNameCheck: this.isSameLastName(member.details.lastName),
-        isMinor: member.isMinor,
+        isMinor: member.isMinor
       };
 
       householdMembersFormArray.push(memberDetails);

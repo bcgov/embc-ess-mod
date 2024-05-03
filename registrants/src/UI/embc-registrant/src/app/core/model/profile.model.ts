@@ -38,10 +38,7 @@ export class PersonDetailsForm {
   gender = new UntypedFormControl();
   dateOfBirth = new UntypedFormControl();
 
-  constructor(
-    personDetail: PersonDetailsModel,
-    customValidator: CustomValidationService
-  ) {
+  constructor(personDetail: PersonDetailsModel, customValidator: CustomValidationService) {
     if (personDetail.firstName) {
       this.firstName.setValue(personDetail.firstName);
     }
