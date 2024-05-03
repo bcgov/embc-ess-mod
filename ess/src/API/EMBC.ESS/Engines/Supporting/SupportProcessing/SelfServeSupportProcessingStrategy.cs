@@ -70,18 +70,18 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         var task = await ctx.era_tasks
             .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
 
-        if (task == null) return NotEligible($"Task {taskNumber} was not found in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (task == null) return NotEligible($"Task {taskNumber} was not found or not active in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
         // check if requested supports are enabled for self-serve
         var requestedSupports = MapSupportTypesFromNeeds(needsAssessment).ToArray();
-        if (requestedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (requestedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
         var allowedSupports = (await ctx.era_selfservesupportlimitses
             .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
             .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
-        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", referencedHomeAddressId: homeAddress.era_bcscaddressid);
-        if (!Array.TrueForAll(requestedSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (!Array.TrueForAll(requestedSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
 
@@ -106,7 +106,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) yield return SupportType.ShelterAllowance;
     }
 
-    private static SelfServeSupportEligibility NotEligible(string reason, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, referencedHomeAddressId?.ToString(), null, null, null);
+    private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
 
     private static SelfServeSupportEligibility Eligible(string taskNumber, Guid referencedHomeAddressId, DateTimeOffset From, DateTimeOffset To) => new SelfServeSupportEligibility(true, null, taskNumber, referencedHomeAddressId.ToString(), From, To);
 
