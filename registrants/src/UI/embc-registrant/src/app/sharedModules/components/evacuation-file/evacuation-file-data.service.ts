@@ -21,6 +21,9 @@ export class EvacuationFileDataService {
   hasPendingEssFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public hasPendingEssFiles$: Observable<boolean> = this.hasPendingEssFiles.asObservable();
 
+  allSupportsSelfServe: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public allSupportsSelfServe$: Observable<boolean> = this.allSupportsSelfServe.asObservable();
+
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
   private essFileIdVal: string;
@@ -139,6 +142,22 @@ export class EvacuationFileDataService {
     } else {
       this.hasPendingEssFiles.next(false);
     }
+  }
+
+  public getAllSupportsSelfServe(): Observable<boolean> {
+    return this.allSupportsSelfServe$;
+  }
+
+  public setAllSupportsSelfServe(essFileData: EvacuationFileModel): void {
+    if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+      this.allSupportsSelfServe.next(false);
+    }
+    essFileData.supports.forEach((item) => {
+      if (item.isSelfServe !== true) {
+        this.allSupportsSelfServe.next(false);
+      }
+    });
+    this.allSupportsSelfServe.next(true);
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
