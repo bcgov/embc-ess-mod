@@ -58,11 +58,7 @@ public record SelfServeShelterAllowanceSupport : SelfServeSupport
     public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
 }
 
-public record SupportDay
-{
-    public DateOnly Date { get; set; }
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
-}
+public record SupportDay(DateOnly Date, IEnumerable<string> IncludedHouseholdMembers);
 
 public record SelfServeFoodGroceriesSupport : SelfServeSupport
 {
