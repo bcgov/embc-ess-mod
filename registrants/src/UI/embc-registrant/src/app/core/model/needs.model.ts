@@ -87,7 +87,9 @@ export class HouseholdMembersForm {
             .bind(customValidator)
         ]
       ],
-      isPrimaryRegistrant: ['']
+      isPrimaryRegistrant: [''],
+      id: [''],
+      isMinor: ['']
     });
   }
 }
