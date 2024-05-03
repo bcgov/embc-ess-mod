@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SupportsService } from 'src/app/core/api/services';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { Router } from '@angular/router';
@@ -29,7 +29,10 @@ import { Router } from '@angular/router';
       </p>
       <p>
         If you no longer require support or would prefer to proceed with referrals, you can
-        <button mat-button (click)="optOut()">click here to opt out and receive supports via referral</button>.
+
+        <a class="highlightText" style="cursor: pointer" (click)="optOut()">
+          click here to opt out and receive supports via referral.
+        </a>
       </p>
     </mat-dialog-content>
 
@@ -47,17 +50,22 @@ import { Router } from '@angular/router';
   ]
 })
 export class EligibleSelfServeTotalAmountZeroDialogComponent {
+  isProcessing = false;
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
   constructor(
+    private dialogRef: MatDialogRef<EligibleSelfServeTotalAmountZeroDialogComponent>,
     private needsAssessmentService: NeedsAssessmentService,
     private supportsService: SupportsService,
     private router: Router
   ) {}
 
   optOut() {
+    this.isProcessing = true;
     this.supportsService.supportsOptOut({ evacuationFileId: this.essFileId }).subscribe({
       next: () => {
+        this.isProcessing = false;
+        this.dialogRef.close();
         this.gotoDashboard();
       }
     });

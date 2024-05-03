@@ -319,7 +319,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       this.profileDataService.personalDetails
     );
     if (!this.essFileId) {
-      throw new Error(`${this.constructor.name}:ngOnInit:  Ess File Id is not set`);
       return;
     }
 
@@ -372,6 +371,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
     this.createSupportPersonDateForm(this.supportDraftForm.controls.shelterAllowance.controls.nights, persons, dates);
 
+    this.supportDraftForm.controls.shelterAllowance.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+
     this.shelterAllowanceDates = [...dates];
     this.showSelfServeShelterAllowanceSupport = true;
   }
@@ -384,6 +385,10 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       this.supportDraftForm.controls.food.controls.groceries.controls.nights,
       persons,
       dates
+    );
+
+    this.supportDraftForm.controls.food.controls.groceries.controls.totalAmount.setValue(
+      selfServeSupport.totalAmount ?? 0
     );
 
     this.foodGroceriesDates = [...dates];
@@ -421,6 +426,10 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       }
     });
 
+    this.supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.setValue(
+      selfServeSupport.totalAmount ?? 0
+    );
+
     this.foodRestaurantDates = [...dates];
 
     this.showSelfServeShelterAllowanceSupport = true;
@@ -431,6 +440,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       this.supportDraftForm.controls.clothing.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
     });
 
+    this.supportDraftForm.controls.clothing.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+
     this.showSelfServeClothingSupport = true;
   }
 
@@ -438,6 +449,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     selfServeSupport.includedHouseholdMembers.forEach((p) => {
       this.supportDraftForm.controls.incidents.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
     });
+
+    this.supportDraftForm.controls.incidents.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.showSelfServeIncidentsSupport = true;
   }
@@ -484,7 +497,9 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   gotoETransfterStep(formGroup: FormGroup) {
     formGroup.markAllAsTouched();
     if (!this.essFileId || formGroup.invalid) return;
+    this.showButtonLoader = true;
     this.calculateSelfServeSupportsTotalAmount().subscribe((res) => {
+      this.showButtonLoader = false;
       if (res.every((s) => s.totalAmount === 0))
         this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
       else this.stepper.next();
@@ -498,7 +513,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
     const supportFormValue = this.supportDraftForm.value.shelterAllowance;
 
-    const data: SelfServeShelterAllowanceSupport = {
+    const data: SelfServeShelterAllowanceSupport & { $type: 'SelfServeShelterAllowanceSupport' } = {
+      $type: 'SelfServeShelterAllowanceSupport',
       type: SelfServeSupportType.ShelterAllowance,
       totalAmount: supportFormValue.totalAmount
     };
@@ -516,7 +532,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     const supportFormValue = this.supportDraftForm.value.food;
 
     if (supportFormValue.fundsFor === SupportSubCategory.FoodGroceries) {
-      const data: SelfServeFoodGroceriesSupport = {
+      const data: SelfServeFoodGroceriesSupport & { $type: 'SelfServeFoodGroceriesSupport' } = {
+        $type: 'SelfServeFoodGroceriesSupport',
         type: SelfServeSupportType.FoodGroceries,
         totalAmount: 34
       };
@@ -529,7 +546,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
       return data;
     } else if (supportFormValue.fundsFor === SupportSubCategory.FoodRestaurant) {
-      const data: SelfServeFoodRestaurantSupport = {
+      const data: SelfServeFoodRestaurantSupport & { $type: 'SelfServeFoodRestaurantSupport' } = {
+        $type: 'SelfServeFoodRestaurantSupport',
         type: SelfServeSupportType.FoodRestaurant,
         totalAmount: 234,
         includedHouseholdMembers: [],
@@ -557,7 +575,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   processClothing() {
     const supportFormValue = this.supportDraftForm.value.clothing;
-    const data: SelfServeClothingSupport = {
+    const data: SelfServeClothingSupport & { $type: 'SelfServeClothingSupport' } = {
+      $type: 'SelfServeClothingSupport',
       type: SelfServeSupportType.Clothing,
       totalAmount: supportFormValue.totalAmount
     };
@@ -571,7 +590,8 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   processIncidents() {
     const supportFormValue = this.supportDraftForm.value.incidents;
-    const data: SelfServeIncidentalsSupport = {
+    const data: SelfServeIncidentalsSupport & { $type: 'SelfServeIncidentalsSupport' } = {
+      $type: 'SelfServeIncidentalsSupport',
       type: SelfServeSupportType.Incidentals,
       totalAmount: supportFormValue.totalAmount
     };
@@ -587,12 +607,12 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     const datesWithMembers: Record<string, SupportDay> = {};
     supportDays.value.map((s) => {
       if (s.isSelected) {
-        if (!datesWithMembers[s.date.toISOString()])
-          datesWithMembers[s.date.toISOString()] = {
-            date: s.date.toISOString(),
+        if (!datesWithMembers[s.date.format('YYYY-MM-DD')])
+          datesWithMembers[s.date.format('YYYY-MM-DD')] = {
+            date: s.date.format('YYYY-MM-DD'),
             includedHouseholdMembers: [s.personId]
           };
-        else datesWithMembers[s.date.toISOString()].includedHouseholdMembers.push(s.personId);
+        else datesWithMembers[s.date.format('YYYY-MM-DD')].includedHouseholdMembers.push(s.personId);
       }
     });
     return datesWithMembers;
@@ -625,20 +645,47 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       if (processIncidents) selfServeSupportRequest.supports.push(processIncidents);
     }
 
-    console.log('getTotals: Payload:', selfServeSupportRequest);
-
     return selfServeSupportRequest;
   }
 
   calculateSelfServeSupportsTotalAmount() {
     const selfServeRequestPayload = this.getPayloadData();
-    this.showButtonLoader = true;
+
     return this.supportService
       .supportsCalculateAmounts({
         evacuationFileId: this.essFileId,
         body: selfServeRequestPayload.supports
       })
-      .pipe(tap(() => (this.showButtonLoader = false)));
+      .pipe(
+        tap((res) => {
+          res.forEach((s) => {
+            switch (s.type) {
+              case SelfServeSupportType.ShelterAllowance:
+                this.supportDraftForm.controls.shelterAllowance.controls.totalAmount.setValue(s.totalAmount);
+                break;
+
+              case SelfServeSupportType.FoodGroceries:
+                this.supportDraftForm.controls.food.controls.groceries.controls.totalAmount.setValue(s.totalAmount);
+                break;
+
+              case SelfServeSupportType.FoodRestaurant:
+                this.supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.setValue(s.totalAmount);
+                break;
+
+              case SelfServeSupportType.Clothing:
+                this.supportDraftForm.controls.clothing.controls.totalAmount.setValue(s.totalAmount);
+                break;
+
+              case SelfServeSupportType.Incidentals:
+                this.supportDraftForm.controls.incidents.controls.totalAmount.setValue(s.totalAmount);
+                break;
+
+              default:
+                break;
+            }
+          });
+        })
+      );
   }
 
   submit() {

@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
@@ -192,16 +191,29 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport, SelfServeSupport>()
                 .IncludeAllDerived()
-                ;
+                .ReverseMap()
+                .IncludeAllDerived();
 
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeClothingSupport, SelfServeClothingSupport>();
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeIncidentalsSupport, SelfServeIncidentalsSupport>();
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeShelterAllowanceSupport, SelfServeShelterAllowanceSupport>();
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodGroceriesSupport, SelfServeFoodGroceriesSupport>();
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodRestaurantSupport, SelfServeFoodRestaurantSupport>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeClothingSupport, SelfServeClothingSupport>()
+                .ReverseMap();
 
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDay, SupportDay>();
-            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDayMeals, SupportDayMeals>();
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeIncidentalsSupport, SelfServeIncidentalsSupport>()
+                .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeShelterAllowanceSupport, SelfServeShelterAllowanceSupport>()
+                .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodGroceriesSupport, SelfServeFoodGroceriesSupport>()
+                .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeFoodRestaurantSupport, SelfServeFoodRestaurantSupport>()
+                .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDay, SupportDay>()
+                .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SupportDayMeals, SupportDayMeals>()
+                .ReverseMap();
         }
     }
 }

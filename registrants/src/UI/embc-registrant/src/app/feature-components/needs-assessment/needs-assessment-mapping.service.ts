@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { HouseholdMember, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { RegAddress } from 'src/app/core/model/address';
-import { PersonDetails } from 'src/app/core/model/profile.model';
+import { PersonDetailsModel } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { ProfileDataService } from '../profile/profile-data.service';
@@ -22,7 +22,7 @@ export class NeedsAssessmentMappingService {
   setNeedsAssessment(evacuatedAddress: RegAddress, needsAssessment: NeedsAssessment): void {
     this.setNeedsAssessmentId(needsAssessment.id);
     this.setInsurance(evacuatedAddress, needsAssessment.insurance);
-    this.setFamilyMedicationDiet(needsAssessment.householdMembers);
+    this.setHouseholdMembers(needsAssessment.householdMembers);
     this.setPets(needsAssessment.pets);
     this.setIdentifiedNeeds(needsAssessment.needs);
   }
@@ -47,7 +47,7 @@ export class NeedsAssessmentMappingService {
       });
   }
 
-  setFamilyMedicationDiet(householdMembers: Array<HouseholdMember>): void {
+  setHouseholdMembers(householdMembers: Array<HouseholdMember>): void {
     this.needsAssessmentService.householdMembers = householdMembers;
 
     this.formCreationService
@@ -63,7 +63,9 @@ export class NeedsAssessmentMappingService {
             initials: '',
             lastName: '',
             sameLastNameCheck: '',
-            isPrimaryRegistrant: ''
+            isPrimaryRegistrant: '',
+            id: '',
+            isMinor: ''
           },
           addHouseholdMemberIndicator: null
         });
@@ -107,18 +109,20 @@ export class NeedsAssessmentMappingService {
       });
   }
 
-  public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
-    const householdMembersFormArray: Array<PersonDetails> = [];
+  public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetailsModel> {
+    const householdMembersFormArray: Array<PersonDetailsModel> = [];
 
     for (const member of householdMembers) {
-      const memberDetails: PersonDetails = {
+      const memberDetails: PersonDetailsModel = {
         firstName: member.details.firstName,
         lastName: member.details.lastName,
         initials: member.details.initials,
         gender: member.details.gender,
         dateOfBirth: member.details.dateOfBirth,
         isPrimaryRegistrant: member.isPrimaryRegistrant,
-        sameLastNameCheck: this.isSameLastName(member.details.lastName)
+        sameLastNameCheck: this.isSameLastName(member.details.lastName),
+        id: member.id,
+        isMinor: member.isMinor
       };
 
       householdMembersFormArray.push(memberDetails);
@@ -127,17 +131,18 @@ export class NeedsAssessmentMappingService {
     return householdMembersFormArray;
   }
 
-  public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
-    const householdMembersFormArray: Array<PersonDetails> = [];
+  public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetailsModel> {
+    const householdMembersFormArray: Array<PersonDetailsModel> = [];
 
     for (const member of householdMembers) {
-      const memberDetails: PersonDetails = {
+      const memberDetails: PersonDetailsModel = {
         firstName: member.details.firstName,
         lastName: member.details.lastName,
         initials: member.details.initials,
         gender: member.details.gender,
         dateOfBirth: member.details.dateOfBirth,
-        sameLastNameCheck: this.isSameLastName(member.details.lastName)
+        sameLastNameCheck: this.isSameLastName(member.details.lastName),
+        isMinor: member.isMinor
       };
 
       householdMembersFormArray.push(memberDetails);
