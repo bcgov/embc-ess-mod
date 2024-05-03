@@ -152,7 +152,7 @@ export class EvacuationFileDataService {
     if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
       this.allSupportsSelfServe.next(false);
     }
-    essFileData.supports.forEach((item) => {
+    essFileData.supports.forEach((item: Support) => { 
       if (item.isSelfServe !== true) {
         this.allSupportsSelfServe.next(false);
       }
