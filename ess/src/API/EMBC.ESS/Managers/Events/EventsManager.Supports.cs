@@ -388,15 +388,22 @@ public partial class EventsManager
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
 
-        return new EligibilityCheckQueryResponse
-        {
-            Eligibility = new SupportEligibility
+        var eligibility = file.NeedsAssessment.EligibilityCheck?.Eligible == true
+            ? new SupportEligibility
             {
-                IsEligible = file.NeedsAssessment.EligibilityCheck?.Eligible ?? false,
+                IsEligible = true,
                 TaskNumber = file.NeedsAssessment.EligibilityCheck?.TaskNumber,
                 From = file.NeedsAssessment.EligibilityCheck?.From,
-                To = file.NeedsAssessment.EligibilityCheck?.From
+                To = file.NeedsAssessment.EligibilityCheck?.To
             }
+            : new SupportEligibility
+            {
+                IsEligible = false
+            };
+
+        return new EligibilityCheckQueryResponse
+        {
+            Eligibility = eligibility
         };
     }
 }
