@@ -257,26 +257,41 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact]
         public async Task AddEligibilityCheck_Eligible_Added()
         {
+            var fileId = TestData.EvacuationFileId;
+            var taskNumber = TestData.ActiveTaskId;
             var cmd = new AddEligibilityCheck
             {
                 Eligible = true,
-                EvacuationFileNumber = TestData.EvacuationFileId,
-                TaskNumber = TestData.ActiveTaskId,
+                EvacuationFileNumber = fileId,
+                TaskNumber = taskNumber,
                 From = null,
                 To = null,
                 Reason = null,
                 HomeAddressReferenceId = null,
             };
 
-            var id = await evacuationRepository.Manage(cmd);
-            id.ShouldNotBeNull();
-            var file = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = TestData.EvacuationFileId })).Items.ShouldHaveSingleItem();
+            var response = await evacuationRepository.Manage(cmd);
+            response.Id.ShouldNotBeNull();
+
+            var file = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             var eligibility = file.NeedsAssessment.EligibilityCheck.ShouldNotBeNull();
             eligibility.Eligible.ShouldBeTrue();
-            eligibility.TaskNumber.ShouldBe(TestData.ActiveTaskId);
+            eligibility.TaskNumber.ShouldBe(taskNumber);
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task OptOutEligibility_Success()
+        {
+            var cmd = new OptoutSelfServe
+            {
+                EvacuationFileNumber = TestData.EvacuationFileId
+            };
+
+            var response = await evacuationRepository.Manage(cmd);
+            response.Id.ShouldNotBeNull();
         }
 
         private async Task<Evacuee> GetContactByUserId(string userId) =>
