@@ -46,7 +46,6 @@
                   <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
                 </div>
               }
-              @if ((evacuationFilesDataService.hasPendingEssFiles$ | async) === false) {
                 @if ((evacuationFilesDataService.allSupportsSelfServe$ | async) === false) {
                   <div class="col-md-12">
                     <p class="top-detail">
@@ -61,7 +60,7 @@
                       >
                     </p>
                   </div>
-                } @else {
+                } @else if ((evacuationFilesDataService.hasPendingEssFiles$ | async) === false) {
                   <div class="col-md-12">
                     <p class="top-detail">
                       <b>Are you still on evacuation order and require additional supports?</b>
@@ -69,7 +68,6 @@
                     <p>Please connect with your Local Emergency Program for assistance.</p>
                   </div>
                 }
-              }
             }
           </mat-card-content>
         </mat-card>
