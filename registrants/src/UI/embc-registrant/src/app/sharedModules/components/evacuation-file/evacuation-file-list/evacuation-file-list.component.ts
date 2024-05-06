@@ -54,6 +54,7 @@ export class EvacuationFileListComponent implements OnInit {
           this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
           this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
+          this.evacuationFileDataService.setAllSupportsSelfServe(this.primaryEssFile);
           this.showLoading = false;
         },
         error: (error) => {
