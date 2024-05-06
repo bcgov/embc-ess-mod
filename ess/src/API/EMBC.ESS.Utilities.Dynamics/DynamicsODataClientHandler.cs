@@ -33,15 +33,15 @@ namespace EMBC.ESS.Utilities.Dynamics
             client.SendingRequest2 += Client_SendingRequest2;
         }
 
-        private void Client_SendingRequest2(object sender, SendingRequest2EventArgs e)
+        private void Client_SendingRequest2(object? sender, SendingRequest2EventArgs e)
         {
             e.RequestMessage.SetHeader("Authorization", $"Bearer {authToken}");
         }
 
-        private void Client_BuildingRequest(object sender, BuildingRequestEventArgs e)
+        private void Client_BuildingRequest(object? sender, BuildingRequestEventArgs e)
         {
             if (e.RequestUri != null)
-                e.RequestUri = RewriteRequestUri((DataServiceContext)sender, options.DynamicsApiEndpoint ?? null!, e.RequestUri);
+                e.RequestUri = RewriteRequestUri((DataServiceContext)sender!, options.DynamicsApiEndpoint ?? null!, e.RequestUri);
         }
 
         private static Uri RewriteRequestUri(DataServiceContext ctx, Uri endpointUri, Uri requestUri) =>
