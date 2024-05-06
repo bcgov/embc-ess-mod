@@ -10,6 +10,7 @@ public static class BogusExtensions
 {
     public static Faker<EvacuationFile> WithFileRules(this Faker<EvacuationFile> faker, RegistrantProfile? primaryRegistrant = null)
     {
+        if (primaryRegistrant == null) primaryRegistrant = new Faker<RegistrantProfile>("en_CA").WithRegistrantRules().Generate();
         return faker
             .RuleFor(f => f.Id, f => "F" + f.Random.Number(100000, 999999).ToString())
             .RuleFor(f => f.RelatedTask, f => new IncidentTask { Id = f.Hacker.Noun(), CommunityCode = "1" })
