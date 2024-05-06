@@ -179,7 +179,7 @@ public class EvacuationRepository : IEvacuationRepository
     private static void AssignToTask(EssContext essContext, era_evacuationfile file, string taskId)
     {
         if (string.IsNullOrEmpty(taskId)) return;
-        var task = essContext.era_tasks.Where(t => t.era_name == taskId).SingleOrDefault();
+        var task = essContext.era_tasks.Where(t => t.era_name == taskId).OrderByDescending(t => t.createdon).FirstOrDefault();
         if (task == null) throw new ArgumentException($"Task {taskId} not found");
         essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
     }

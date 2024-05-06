@@ -74,14 +74,18 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
-        // check if requested supports are enabled for self-serve
-        var requestedSupports = MapSupportTypesFromNeeds(needsAssessment).ToArray();
-        if (requestedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        // check if requested supports include referrals
+        var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();
+        if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+
+        // check if requested e-transfer supports are enabled for self-serve
+        var requestedETransferSupports = MapETransferSupportTypesFromNeeds(needsAssessment).ToArray();
+        if (requestedETransferSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
         var allowedSupports = (await ctx.era_selfservesupportlimitses
             .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
             .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
         if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
-        if (!Array.TrueForAll(requestedSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (!Array.TrueForAll(requestedETransferSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
 
@@ -94,7 +98,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo);
     }
 
-    private static IEnumerable<SupportType> MapSupportTypesFromNeeds(era_needassessment needsAssessment)
+    private static IEnumerable<SupportType> MapETransferSupportTypesFromNeeds(era_needassessment needsAssessment)
     {
         if (needsAssessment.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Incidentals;
         if (needsAssessment.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Clothing;
@@ -104,6 +108,11 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
             yield return SupportType.FoodRestaurant;
         }
         if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) yield return SupportType.ShelterAllowance;
+    }
+
+    private static IEnumerable<SupportType> MapReferralSupportTypesFromNeed(era_needassessment needsAssessment)
+    {
+        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return SupportType.ShelterAllowance;
     }
 
     private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
@@ -133,6 +142,6 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         Clothing = 174360006,
         TransporationTaxi = 174360007,
         TransportationOther = 174360008,
-        ShelterAllowance = 174360009,
+        ShelterAllowance = 174360009
     }
 }

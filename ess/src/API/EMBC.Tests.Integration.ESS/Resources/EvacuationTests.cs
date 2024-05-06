@@ -259,13 +259,15 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var fileId = TestData.EvacuationFileId;
             var taskNumber = TestData.ActiveTaskId;
+            var from = DateTimeOffset.Now;
+            var to = from.AddHours(72);
             var cmd = new AddEligibilityCheck
             {
                 Eligible = true,
                 EvacuationFileNumber = fileId,
                 TaskNumber = taskNumber,
-                From = null,
-                To = null,
+                From = from,
+                To = to,
                 Reason = null,
                 HomeAddressReferenceId = null,
             };
