@@ -74,6 +74,11 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
+        // calculate support eligibility period
+        var eligibleFrom = DateTimeOffset.Now;
+        var eligibleTo = eligibleFrom.Add(SupportsPeriod);
+        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
+
         // check if requested supports include referrals
         var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();
         if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
@@ -88,11 +93,21 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         if (!Array.TrueForAll(requestedETransferSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
+        var similarSupportTypes = requestedETransferSupports.SelectMany(t => SimilarSupportTypes(t)).Cast<int>().ToList();
+        foreach (var hm in needsAssessment.era_era_householdmember_era_needassessment)
+        {
+            var supports = (await ctx.era_evacueesupports
+                .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+                .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
+                .Where(s =>
+                    s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
+                    ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
+                .GetAllPagesAsync(ct))
+                .Select(s => s.era_name)
+                .ToList();
 
-        // calculate support eligibility period
-        var eligibleFrom = DateTimeOffset.Now;
-        var eligibleTo = eligibleFrom.Add(SupportsPeriod);
-        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
+            if (supports.Any()) return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        }
 
         // return eligibility results
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo);
@@ -114,6 +129,16 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
     {
         if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return SupportType.ShelterAllowance;
     }
+
+    private static SupportType[] SimilarSupportTypes(SupportType type) =>
+        type switch
+        {
+            SupportType.FoodGroceries or SupportType.FoodRestaurant => [SupportType.FoodGroceries, SupportType.FoodRestaurant],
+            SupportType.ShelterAllowance or SupportType.ShelterGroup or SupportType.ShelterBilleting or SupportType.ShelterHotel => [SupportType.ShelterGroup, SupportType.ShelterAllowance, SupportType.ShelterHotel, SupportType.ShelterBilleting],
+            SupportType.TransportationOther or SupportType.TransportationOther => [SupportType.TransportationOther, SupportType.TransporationTaxi],
+
+            _ => [type]
+        };
 
     private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
 

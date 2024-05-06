@@ -65,6 +65,41 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await RunEligibilityTest(file.Id, false, "Evacuee requested referrals");
     }
 
+    [Fact]
+    public async Task ValidateEligibility_DuplicateSupport_False()
+    {
+        var (file, _) = await CreateTestSubjects();
+        var actualFile = await GetFile(file.Id);
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport{FileId = file.Id, From = DateTime.Now, To = DateTime.Now.AddHours(72), IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+        };
+        await SaveSupports(file.Id, previousSupports);
+
+        await RunEligibilityTest(file.Id, false, "Duplicate supports found");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_NotDuplicateSupport_True()
+    {
+        var (file, _) = await CreateTestSubjects();
+        var actualFile = await GetFile(file.Id);
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport
+            {
+                FileId = file.Id,
+                From = DateTime.Now.AddDays(-7),
+                To = DateTime.Now.AddDays(-7).AddHours(72),
+                IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                SupportDelivery = new Referral()
+            }
+        };
+        await SaveSupports(file.Id, previousSupports);
+
+        await RunEligibilityTest(file.Id, true, null);
+    }
+
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
     {
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
@@ -133,5 +168,17 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var mgr = Services.GetRequiredService<EventsManager>();
         return (await mgr.Handle(new TasksSearchQuery { TaskId = taskNumber })).Items.Single(t => t.Status == IncidentTaskStatus.Active);
+    }
+
+    private async Task<EvacuationFile> GetFile(string fileId)
+    {
+        var mgr = Services.GetRequiredService<EventsManager>();
+        return (await mgr.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
+    }
+
+    private async Task SaveSupports(string fileId, IEnumerable<Support> supports)
+    {
+        var mgr = Services.GetRequiredService<EventsManager>();
+        await mgr.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
     }
 }
