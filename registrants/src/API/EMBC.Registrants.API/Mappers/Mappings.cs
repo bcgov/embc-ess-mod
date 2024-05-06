@@ -149,7 +149,6 @@ namespace EMBC.Registrants.API.Mappers
                         d.RecipientLastName = eTransfer.RecipientLastName;
                         d.SecurityQuestion = eTransfer.SecurityQuestion;
                         d.SecurityAnswer = eTransfer.SecurityAnswer;
-                        
                     }
                     else
                     {
