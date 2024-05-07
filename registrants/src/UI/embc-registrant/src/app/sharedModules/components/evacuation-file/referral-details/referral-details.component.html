@@ -37,7 +37,7 @@
             </p>
           }
           @if (element.method === 'ETransfer') {
-            <p>e-Transfer</p>
+            <p>e-Transfer{{ element?.isSelfServe ? ' (Self-serve)' : '' }}</p>
           }
         </td>
       </ng-container>

@@ -10,6 +10,7 @@ export interface Support {
   from?: string;
   id?: string | null;
   includedHouseholdMembers?: Array<string> | null;
+  isSelfServe?: boolean;
   issuedOn?: string;
   issuedToPersonName?: string | null;
   issuingMemberTeamName?: string | null;

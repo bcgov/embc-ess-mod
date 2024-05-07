@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Extensions;
@@ -10,12 +11,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 {
     public interface ISupportComplianceStrategy
     {
-        Task<CheckSupportComplianceResponse> CheckCompliance(CheckSupportComplianceRequest request);
+        Task<CheckSupportComplianceResponse> CheckCompliance(CheckSupportComplianceRequest request, CancellationToken ct = default);
     }
 
     internal interface ISupportComplianceCheck
     {
-        Task<IEnumerable<SupportFlag>> CheckCompliance(Support support);
+        Task<IEnumerable<SupportFlag>> CheckCompliance(Support support, CancellationToken ct);
     }
 
     internal class SupportComplianceStrategyFactory
@@ -39,14 +40,14 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             this.strategies = strategies;
         }
 
-        private Task<IEnumerable<SupportFlag>> CheckCompliance(Support support) => strategies.SelectManyAsync(s => s.CheckCompliance(support));
+        private Task<IEnumerable<SupportFlag>> CheckCompliance(Support support, CancellationToken ct) => strategies.SelectManyAsync(s => s.CheckCompliance(support, ct));
 
-        public async Task<CheckSupportComplianceResponse> CheckCompliance(CheckSupportComplianceRequest request)
+        public async Task<CheckSupportComplianceResponse> CheckCompliance(CheckSupportComplianceRequest request, CancellationToken ct = default)
         {
             var flags = new Dictionary<Support, IEnumerable<SupportFlag>>();
             foreach (var support in request.Supports)
             {
-                flags.Add(support, await CheckCompliance(support));
+                flags.Add(support, await CheckCompliance(support, ct));
             }
             return new CheckSupportComplianceResponse
             {

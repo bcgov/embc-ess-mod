@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Events;
 
@@ -7,7 +8,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 {
     internal class AmountExceededSupportComplianceCheck : ISupportComplianceCheck
     {
-        public async Task<IEnumerable<SupportFlag>> CheckCompliance(Support support)
+        public async Task<IEnumerable<SupportFlag>> CheckCompliance(Support support, CancellationToken ct)
         {
             await Task.CompletedTask;
             var approverName = support switch

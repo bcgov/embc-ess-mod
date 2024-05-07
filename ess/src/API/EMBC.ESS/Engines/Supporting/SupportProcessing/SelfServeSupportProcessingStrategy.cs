@@ -15,6 +15,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
     private const int LocationAccuracyThreshold = 90;
     private const int MaximumNumberOfHouseholdMember = 5;
     private static readonly TimeSpan SupportsPeriod = TimeSpan.FromHours(72);
+    private static bool isProduction = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Production" || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
 
     public Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct) =>
         request switch
@@ -62,8 +63,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
             return NotEligible($"Home address has geocode score less than {LocationAccuracyThreshold}", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // search for a task number
-        var locationProperties = await locationService.GetGeocodeAttributes(new Coordinates(homeAddress.era_latitude.Value, homeAddress.era_longitude.Value), ct);
-        var taskNumber = locationProperties.SingleOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+        var taskNumber = await GetTaskNumberForAddress(homeAddress, ct);
         if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // check the task is enabled for self-serve
@@ -74,27 +74,46 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
-        // check if requested supports are enabled for self-serve
-        var requestedSupports = MapSupportTypesFromNeeds(needsAssessment).ToArray();
-        if (requestedSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
-        var allowedSupports = (await ctx.era_selfservesupportlimitses
-            .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
-            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
-        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
-        if (!Array.TrueForAll(requestedSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
-
-        // add - duplicate check
-
         // calculate support eligibility period
         var eligibleFrom = DateTimeOffset.Now;
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
         if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
 
+        // check if requested supports include referrals
+        var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();
+        if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+
+        // check if requested e-transfer supports are enabled for self-serve
+        var requestedETransferSupports = MapETransferSupportTypesFromNeeds(needsAssessment).ToArray();
+        if (requestedETransferSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        var allowedSupports = (await ctx.era_selfservesupportlimitses
+            .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
+            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
+        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (!Array.TrueForAll(requestedETransferSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+
+        // add - duplicate check
+        var similarSupportTypes = requestedETransferSupports.SelectMany(t => SimilarSupportTypes(t)).Cast<int>().ToList();
+        foreach (var hm in needsAssessment.era_era_householdmember_era_needassessment)
+        {
+            var supports = (await ctx.era_evacueesupports
+                .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+                .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
+                .Where(s =>
+                    s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
+                    ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
+                .GetAllPagesAsync(ct))
+                .Select(s => s.era_name)
+                .ToList();
+
+            if (supports.Any()) return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        }
+
         // return eligibility results
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo);
     }
 
-    private static IEnumerable<SupportType> MapSupportTypesFromNeeds(era_needassessment needsAssessment)
+    private static IEnumerable<SupportType> MapETransferSupportTypesFromNeeds(era_needassessment needsAssessment)
     {
         if (needsAssessment.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Incidentals;
         if (needsAssessment.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Clothing;
@@ -104,6 +123,29 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
             yield return SupportType.FoodRestaurant;
         }
         if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) yield return SupportType.ShelterAllowance;
+    }
+
+    private static IEnumerable<SupportType> MapReferralSupportTypesFromNeed(era_needassessment needsAssessment)
+    {
+        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return SupportType.ShelterAllowance;
+    }
+
+    private static SupportType[] SimilarSupportTypes(SupportType type) =>
+        type switch
+        {
+            SupportType.FoodGroceries or SupportType.FoodRestaurant => [SupportType.FoodGroceries, SupportType.FoodRestaurant],
+            SupportType.ShelterAllowance or SupportType.ShelterGroup or SupportType.ShelterBilleting or SupportType.ShelterHotel => [SupportType.ShelterGroup, SupportType.ShelterAllowance, SupportType.ShelterHotel, SupportType.ShelterBilleting],
+            SupportType.TransportationOther or SupportType.TransportationOther => [SupportType.TransportationOther, SupportType.TransporationTaxi],
+
+            _ => [type]
+        };
+
+    private async Task<string?> GetTaskNumberForAddress(era_bcscaddress address, CancellationToken ct)
+    {
+        var features = (await locationService.GetGeocodeAttributes(new Coordinates(address.era_latitude.Value, address.era_longitude.Value), ct));
+        return features
+            .FirstOrDefault(p => p.Any(a => a.Name == "PRODUCTION" && a.Value == (isProduction ? "Yes" : "No")) && p.Any(a => a.Name == "ESS_STATUS" && a.Value == "Active"))
+            ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
     }
 
     private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
@@ -133,6 +175,6 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         Clothing = 174360006,
         TransporationTaxi = 174360007,
         TransportationOther = 174360008,
-        ShelterAllowance = 174360009,
+        ShelterAllowance = 174360009
     }
 }
