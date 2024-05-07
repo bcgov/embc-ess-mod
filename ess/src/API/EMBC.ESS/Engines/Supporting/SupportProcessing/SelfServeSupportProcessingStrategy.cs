@@ -15,6 +15,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
     private const int LocationAccuracyThreshold = 90;
     private const int MaximumNumberOfHouseholdMember = 5;
     private static readonly TimeSpan SupportsPeriod = TimeSpan.FromHours(72);
+    private static bool isProduction = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Production" || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
 
     public Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct) =>
         request switch
@@ -62,8 +63,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
             return NotEligible($"Home address has geocode score less than {LocationAccuracyThreshold}", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // search for a task number
-        var locationProperties = await locationService.GetGeocodeAttributes(new Coordinates(homeAddress.era_latitude.Value, homeAddress.era_longitude.Value), ct);
-        var taskNumber = locationProperties.SingleOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+        var taskNumber = await GetTaskNumberForAddress(homeAddress, ct);
         if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // check the task is enabled for self-serve
@@ -139,6 +139,14 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
 
             _ => [type]
         };
+
+    private async Task<string?> GetTaskNumberForAddress(era_bcscaddress address, CancellationToken ct)
+    {
+        var features = (await locationService.GetGeocodeAttributes(new Coordinates(address.era_latitude.Value, address.era_longitude.Value), ct));
+        return features
+            .FirstOrDefault(p => p.Any(a => a.Name == "PRODUCTION" && a.Value == (isProduction ? "Yes" : "No")) && p.Any(a => a.Name == "ESS_STATUS" && a.Value == "Active"))
+            ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+    }
 
     private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
 

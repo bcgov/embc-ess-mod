@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,10 +9,10 @@ namespace EMBC.ESS.Utilities.Spatial
 {
     internal class LocationService(IGeocoderAdapter geocoder, IArcGISAdapter arcGisAdapter) : ILocationService
     {
-        public async Task<IEnumerable<LocationAttribute>> GetGeocodeAttributes(Coordinates coordinates, CancellationToken ct)
+        public async Task<IEnumerable<IEnumerable<LocationAttribute>>> GetGeocodeAttributes(Coordinates coordinates, CancellationToken ct)
         {
             var features = await arcGisAdapter.QueryService(new PointIntersectionQuery("TASK_OA_24/FeatureServer/0", coordinates));
-            return features.FirstOrDefault()?.Attributes.Select(a => new LocationAttribute(a.Key, a.Value?.ToString())) ?? Array.Empty<LocationAttribute>();
+            return features.Select(f => f.Attributes.Select(a => new LocationAttribute(a.Key, a.Value?.ToString())));
         }
 
         public async Task<Geocode> ResolveGeocode(Location location, CancellationToken ct)

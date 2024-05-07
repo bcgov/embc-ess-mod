@@ -8,7 +8,7 @@ namespace EMBC.ESS.Utilities.Spatial
     {
         Task<Geocode> ResolveGeocode(Location location, CancellationToken ct);
 
-        Task<IEnumerable<LocationAttribute>> GetGeocodeAttributes(Coordinates coordinates, CancellationToken ct);
+        Task<IEnumerable<IEnumerable<LocationAttribute>>> GetGeocodeAttributes(Coordinates coordinates, CancellationToken ct);
     }
 
     public record Location(string AddressString);
