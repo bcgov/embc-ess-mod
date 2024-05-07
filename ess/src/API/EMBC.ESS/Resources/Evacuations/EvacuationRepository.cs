@@ -31,6 +31,7 @@ public class EvacuationRepository : IEvacuationRepository
             LinkEvacuationFileRegistrant c => await Handle(c, ct),
             SaveEvacuationFileNote c => await HandleSaveEvacuationFileNote(c, ct),
             AddEligibilityCheck c => await Handle(c, ct),
+            OptoutSelfServe c => await Handle(c, ct),
 
             _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
         };
@@ -178,7 +179,7 @@ public class EvacuationRepository : IEvacuationRepository
     private static void AssignToTask(EssContext essContext, era_evacuationfile file, string taskId)
     {
         if (string.IsNullOrEmpty(taskId)) return;
-        var task = essContext.era_tasks.Where(t => t.era_name == taskId).SingleOrDefault();
+        var task = essContext.era_tasks.Where(t => t.era_name == taskId).OrderByDescending(t => t.createdon).FirstOrDefault();
         if (task == null) throw new ArgumentException($"Task {taskId} not found");
         essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
     }
@@ -478,5 +479,17 @@ public class EvacuationRepository : IEvacuationRepository
         await ctx.SaveChangesAsync(ct);
 
         return new ManageEvacuationFileCommandResult { Id = eligibilityCheck.era_eligibilitycheckid.ToString() };
+    }
+
+    private async Task<ManageEvacuationFileCommandResult> Handle(OptoutSelfServe c, CancellationToken ct)
+    {
+        var ctx = essContextFactory.Create();
+        var check = await ctx.era_eligibilitychecks.Where(ec => ec.era_ESSFile.era_name == c.EvacuationFileNumber).OrderByDescending(ec => ec.createdon).Take(1).SingleOrDefaultAsync(ct);
+        if (check != null)
+        {
+            check.era_selfserveoptout = true;
+            await ctx.SaveChangesAsync(ct);
+        }
+        return new ManageEvacuationFileCommandResult { Id = check?.era_eligibilitycheckid?.ToString() };
     }
 }

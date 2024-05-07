@@ -386,7 +386,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             file = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
-            var newSupports = TestHelper.CreateSupports(TestData.TestPrefix, file);
+            var newSupports = TestHelper.CreateSupports(file);
 
             await manager.Handle(new ProcessSupportsCommand
             {

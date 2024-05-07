@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events;
@@ -52,8 +53,51 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_NoNeeds_False()
     {
-        var (file, _) = await CreateTestSubjects(noNeeds: true);
+        var (file, _) = await CreateTestSubjects(needs: []);
         await RunEligibilityTest(file.Id, false, "Evacuee didn't identify any needs");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_ShelterReferral_False()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Food]);
+
+        await RunEligibilityTest(file.Id, false, "Evacuee requested referrals");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_DuplicateSupport_False()
+    {
+        var (file, _) = await CreateTestSubjects();
+        var actualFile = await GetFile(file.Id);
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport{FileId = file.Id, From = DateTime.Now, To = DateTime.Now.AddHours(72), IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+        };
+        await SaveSupports(file.Id, previousSupports);
+
+        await RunEligibilityTest(file.Id, false, "Duplicate supports found");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_NotDuplicateSupport_True()
+    {
+        var (file, _) = await CreateTestSubjects();
+        var actualFile = await GetFile(file.Id);
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport
+            {
+                FileId = file.Id,
+                From = DateTime.Now.AddDays(-7),
+                To = DateTime.Now.AddDays(-7).AddHours(72),
+                IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                SupportDelivery = new Referral()
+            }
+        };
+        await SaveSupports(file.Id, previousSupports);
+
+        await RunEligibilityTest(file.Id, true, null);
     }
 
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
@@ -88,7 +132,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(
         int numberOfHoldholdMembers = 5,
         bool? eligibleAddress = true,
-        bool noNeeds = false)
+        IEnumerable<IdentifiedNeed>? needs = null)
     {
         var registrant = TestHelper.CreateRegistrantProfile();
         if (eligibleAddress == null)
@@ -102,10 +146,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         var file = TestHelper.CreateNewTestEvacuationFile(registrant, null);
         file.PrimaryRegistrantId = registrant.Id;
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(numberOfHoldholdMembers).ToList();
-        if (noNeeds)
-            file.NeedsAssessment.Needs = [];
-        else
-            file.NeedsAssessment.Needs = [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+        file.NeedsAssessment.Needs = needs ?? [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
 
         file.Id = await SaveFile(file);
         return (file, registrant);
@@ -127,5 +168,17 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var mgr = Services.GetRequiredService<EventsManager>();
         return (await mgr.Handle(new TasksSearchQuery { TaskId = taskNumber })).Items.Single(t => t.Status == IncidentTaskStatus.Active);
+    }
+
+    private async Task<EvacuationFile> GetFile(string fileId)
+    {
+        var mgr = Services.GetRequiredService<EventsManager>();
+        return (await mgr.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
+    }
+
+    private async Task SaveSupports(string fileId, IEnumerable<Support> supports)
+    {
+        var mgr = Services.GetRequiredService<EventsManager>();
+        await mgr.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
     }
 }

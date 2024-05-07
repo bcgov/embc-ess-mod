@@ -27,7 +27,7 @@ namespace EMBC.Tests.Integration.ESS
             return new Faker<RegistrantProfile>("en_CA").WithRegistrantRules().Generate();
         }
 
-        public static IEnumerable<Support> CreateSupports(string prefix, EvacuationFile file)
+        public static IEnumerable<Support> CreateSupports(EvacuationFile file)
         {
             var householdMemberIds = file.HouseholdMembers.Select(m => m.Id).ToArray();
             var from = DateTime.UtcNow.AddDays(-1);
@@ -49,10 +49,10 @@ namespace EMBC.Tests.Integration.ESS
             Func<Support, SupportDelivery> createSupportDelivery = sup =>
                 sup switch
                 {
-                    IncidentalsSupport _ => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
-                    ClothingSupport _ => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    IncidentalsSupport _ => new Interac { NotificationEmail = $"autotest-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    ClothingSupport _ => new Interac { NotificationEmail = $"autotest-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
 
-                    _ => new Referral { IssuedToPersonName = $"{prefix}-unitest" },
+                    _ => new Referral { IssuedToPersonName = $"autotest-unitest" },
                 };
 
             foreach (var support in supports)
@@ -82,9 +82,9 @@ namespace EMBC.Tests.Integration.ESS
         public static async Task<string> SaveEvacuationFile(EventsManager manager, EvacuationFile file) =>
             await manager.Handle(new SubmitEvacuationFileCommand { File = file });
 
-        public static async Task<IEnumerable<Support>> CreateSupports(EventsManager manager, EvacuationFile file, string RequestingUserId, string prefix)
+        public static async Task<IEnumerable<Support>> SaveSupports(EventsManager manager, EvacuationFile file, string RequestingUserId, string prefix)
         {
-            var newSupports = CreateSupports(prefix, file);
+            var newSupports = CreateSupports(file);
 
             await manager.Handle(new ProcessSupportsCommand
             {

@@ -73,6 +73,11 @@ public record AddEligibilityCheck : ManageEvacuationFileCommand
     public DateTimeOffset? To { get; set; }
 }
 
+public record OptoutSelfServe : ManageEvacuationFileCommand
+{
+    public string EvacuationFileNumber { get; set; }
+}
+
 public record EvacuationFile
 {
     public string Id { get; set; }

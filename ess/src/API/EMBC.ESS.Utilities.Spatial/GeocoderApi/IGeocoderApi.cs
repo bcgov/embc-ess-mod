@@ -38,11 +38,11 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
 
     internal record Crs
     {
-        public Properties? properties { get; set; }
+        public CrsProperties? properties { get; set; }
         public string? type { get; set; }
     }
 
-    internal record Properties
+    internal record CrsProperties
     {
         public int code { get; set; }
     }
@@ -50,7 +50,7 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
     internal record Feature
     {
         public Geometry? geometry { get; set; }
-        public Properties2? properties { get; set; }
+        public FeatureProperties? properties { get; set; }
         public string? type { get; set; }
     }
 
@@ -61,12 +61,12 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
         public string? type { get; set; }
     }
 
-    internal record Properties2
+    internal record FeatureProperties
     {
         public string? accessNotes { get; set; }
-        //public string? blockID { get; set; }
+        public object? blockID { get; set; }
         public string? changeDate { get; set; }
-        //public string? civicNumber { get; set; }
+        public object? civicNumber { get; set; }
         public string? civicNumberSuffix { get; set; }
         public string? electoralArea { get; set; }
         public object[]? faults { get; set; }
@@ -83,7 +83,7 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
         public int? precisionPoints { get; set; }
         public string? provinceCode { get; set; }
         public double? score { get; set; }
-        public string? siteID { get; set; }
+        public object? siteID { get; set; }
         public string? siteName { get; set; }
         public string? siteRetireDate { get; set; }
         public string? siteStatus { get; set; }
@@ -92,7 +92,7 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
         public string? streetQualifier { get; set; }
         public string? streetType { get; set; }
         public string? unitDesignator { get; set; }
-        //public int? unitNumber { get; set; }
+        public object? unitNumber { get; set; }
         public string? unitNumberSuffix { get; set; }
     }
 }

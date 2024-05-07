@@ -100,6 +100,9 @@ public partial class EventsManager
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
+
+        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
+        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
@@ -326,7 +329,7 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(OptOutSelfServeCommand cmd)
     {
-        await System.Threading.Tasks.Task.CompletedTask;
+        await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileId });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)

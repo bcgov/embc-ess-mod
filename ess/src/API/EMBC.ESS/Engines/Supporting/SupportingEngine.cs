@@ -43,7 +43,6 @@ internal class SupportingEngine : ISupportingEngine
         {
             ProcessDigitalSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Process(r, ct),
             ProcessPaperSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Process(r, ct),
-            //ProcessSelfServeSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.SelfServe).Process(r, ct),
 
             _ => throw new NotImplementedException(request.GetType().Name)
         };
@@ -55,7 +54,6 @@ internal class SupportingEngine : ISupportingEngine
             PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Validate(r, ct),
             CheckSupportComplianceRequest r => await supportComplianceStrategyFactory.Create().CheckCompliance(r),
             ValidateSelfServeSupportsEligibility r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.SelfServe).Validate(r, ct),
-            //SelfServeSupportValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.SelfServe).Validate(r, ct),
 
             _ => throw new NotImplementedException(request.GetType().Name)
         };
