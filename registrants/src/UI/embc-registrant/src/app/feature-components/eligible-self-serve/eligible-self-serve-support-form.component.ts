@@ -101,6 +101,7 @@ interface DraftSupportForm {
   food: FormGroup<SelfServeFoodSupportForm>;
   clothing: FormGroup<SelfServeClothingSupportForm>;
   incidents: FormGroup<SelfServeIncidentsSupportForm>;
+  totals: FormControl<number>;
 }
 
 enum ETransferNotificationPreference {
@@ -109,7 +110,7 @@ enum ETransferNotificationPreference {
   EmailAndMobile = 'Email & Mobile'
 }
 
-interface ETransferDetails {
+interface ETransferDetailsForm {
   notificationPreference: FormControl<ETransferNotificationPreference>;
   eTransferEmail: FormControl<string>;
   confirmEmail: FormControl<string>;
@@ -154,14 +155,28 @@ interface ETransferDetails {
       }
 
       :host .mat-mdc-checkbox ::ng-deep label {
-        font-weight: bold;
         font-size: var(--size-2);
-        line-height: var(--size-6);
+        padding: 4px 0;
+      }
+
+      :host .mat-mdc-checkbox ::ng-deep .mdc-form-field {
+        align-items: flex-start;
+      }
+
+      :host .support-details-form .mat-mdc-checkbox ::ng-deep label {
+        font-weight: bold;
+        line-height: var(--size-4);
       }
 
       .card-question {
         font-size: var(--size-2);
         margin-bottom: var(--size-2);
+      }
+
+      hr {
+        height: 1px;
+        background-color: #333;
+        margin-top: 0;
       }
 
       table {
@@ -190,6 +205,17 @@ interface ETransferDetails {
         height: min-content;
         padding: var(--size-2);
       }
+
+      .eTransfer-form mat-form-field {
+        width: 450px;
+      }
+
+      .container-with-logo {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap-reverse;
+        justify-content: space-between;
+      }
     `
   ]
 })
@@ -217,6 +243,9 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   draftSupportError = false;
   loaderColor = '#169bd5';
 
+  hasEmailAddressOnFile = false;
+  hasPhoneOnFile = false;
+
   supportDraftForm = new FormGroup<DraftSupportForm>({
     shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
       totalAmount: new FormControl<number>(0),
@@ -241,56 +270,58 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     incidents: new FormGroup<SelfServeIncidentsSupportForm>({
       totalAmount: new FormControl(0),
       includedHouseholdMembers: new FormArray<FormGroup<SupportPersonForm>>([])
-    })
+    }),
+    totals: new FormControl(0)
   });
 
   ETransferNotificationPreference = ETransferNotificationPreference;
   eTransferNotificationPreferenceOptions = Object.values(ETransferNotificationPreference);
   readonly phoneMask = { mask: '000-000-0000' };
 
-  eTransferDetailsForm = this._formBuilder.group<ETransferDetails>(
+  eTransferDetailsForm: FormGroup<ETransferDetailsForm> = this._formBuilder.group<ETransferDetailsForm>(
     {
       notificationPreference: new FormControl(null),
-      eTransferEmail: new FormControl(
-        '',
+      eTransferEmail: new FormControl('', [
         this.customValidation.conditionalValidation(
           () =>
             [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
               this.eTransferDetailsForm.controls.notificationPreference.value
-            ),
+            ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
           Validators.required
-        )
-      ),
-      confirmEmail: new FormControl(
-        '',
+        ),
+        Validators.email
+      ]),
+      confirmEmail: new FormControl('', [
         this.customValidation.conditionalValidation(
           () =>
             [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
               this.eTransferDetailsForm.controls.notificationPreference.value
-            ),
+            ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
           Validators.required
-        )
-      ),
+        ),
+        Validators.email
+        // this.customValidation.compare({ fieldName: 'eTransferEmail' })
+      ]),
       eTransferMobile: new FormControl(
         '',
         this.customValidation.conditionalValidation(
           () =>
             [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
               this.eTransferDetailsForm.controls.notificationPreference.value
-            ),
+            ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
           Validators.required
         )
       ),
-      confirmMobile: new FormControl(
-        '',
+      confirmMobile: new FormControl('', [
         this.customValidation.conditionalValidation(
           () =>
             [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
               this.eTransferDetailsForm.controls.notificationPreference.value
-            ),
+            ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
           Validators.required
         )
-      ),
+        // this.customValidation.compare({ fieldName: 'eTransferMobile' })
+      ]),
       useEmailOnFile: new FormControl(false),
       useMobileOnFile: new FormControl(false),
       recipientName: new FormControl()
@@ -304,7 +335,7 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private supportService: SupportsService,
     public needsAssessmentService: NeedsAssessmentService,
-    private profileDataService: ProfileDataService,
+    public profileDataService: ProfileDataService,
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
@@ -322,12 +353,26 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       return;
     }
 
+    const profile = this.profileDataService.getProfile();
+
+    this.eTransferDetailsForm.controls.recipientName.setValue(
+      `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
+    );
+
+    if (profile?.contactDetails?.email) this.hasEmailAddressOnFile = true;
+    if (profile?.contactDetails?.phone) this.hasPhoneOnFile = true;
+
     this.getDraft();
   }
 
   private getDraft() {
     this.supportService.supportsGetDraftSupports({ evacuationFileId: this.essFileId }).subscribe({
       next: (res) => {
+        // Show the primary applicant at the top of the list
+        res.householdMembers = res.householdMembers.sort((p) => {
+          return p.isPrimaryRegistrant === true ? -1 : 1;
+        });
+
         this.draftSupports = res;
 
         this.draftSupports.items.forEach((support) => {
@@ -479,7 +524,7 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   getPersonName(id: string) {
     const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
-    return `${personDetails?.firstName ?? ''} ${personDetails?.lastName ?? ''}`;
+    return `${personDetails?.firstName ?? ''}`;
   }
 
   getDateControl(
@@ -500,14 +545,33 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     this.showButtonLoader = true;
     this.calculateSelfServeSupportsTotalAmount().subscribe((res) => {
       this.showButtonLoader = false;
-      if (res.every((s) => s.totalAmount === 0))
+      const selfServeSupportsTotalAmount = res.reduce((prev, curr) => prev + curr.totalAmount, 0);
+
+      this.supportDraftForm.controls.totals.setValue(selfServeSupportsTotalAmount);
+
+      if (selfServeSupportsTotalAmount === 0)
         this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
       else this.stepper.next();
     });
   }
 
   gotoReviewStep(formGroup: FormGroup) {
+    formGroup.markAllAsTouched();
+    if (formGroup.invalid) return;
     this.stepper.next();
+  }
+
+  gotoStep(step: 'supportDetails' | 'eTransfer') {
+    switch (step) {
+      case 'supportDetails':
+        this.stepper.selectedIndex = 0;
+        break;
+      case 'eTransfer':
+        this.stepper.selectedIndex = 1;
+        break;
+      default:
+        break;
+    }
   }
 
   processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
@@ -690,6 +754,12 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
   submit() {
     const selfServeRequestPayload = this.getPayloadData();
+
+    this.supportService
+      .supportsSubmitSupports({ evacuationFileId: this.essFileId, body: selfServeRequestPayload })
+      .subscribe((res) => {
+        console.log('Submit: ', res);
+      });
   }
 
   gotoEligibilityConfirmation() {

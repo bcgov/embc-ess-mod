@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
       <div class="col-10">
         <h1 mat-dialog-title>Support Update Required</h1>
       </div>
-      <div class="col-2">
+      <div class="col-2" style="text-align: right;">
         <button class="close-image close-button-style" mat-icon-button aria-label="Close" mat-dialog-close>
           <img src="/assets/images/close.svg" height="20" width="20" />
           <img src="/assets/images/close_onhover.svg" height="20" width="20" />
