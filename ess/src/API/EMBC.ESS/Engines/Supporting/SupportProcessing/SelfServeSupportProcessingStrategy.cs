@@ -7,17 +7,15 @@ using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Spatial;
 using EMBC.Utilities.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Engines.Supporting.SupportProcessing;
 
-internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextFactory, ILocationService locationService, IWebHostEnvironment hostingEnvironment) : ISupportProcessingStrategy
+internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextFactory, ILocationService locationService) : ISupportProcessingStrategy
 {
     private const int LocationAccuracyThreshold = 90;
     private const int MaximumNumberOfHouseholdMember = 5;
     private static readonly TimeSpan SupportsPeriod = TimeSpan.FromHours(72);
-    private bool isProduction => hostingEnvironment.IsProduction();
+    private static bool isProduction = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") == "Production" || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
 
     public Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct) =>
         request switch
@@ -147,7 +145,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         var features = (await locationService.GetGeocodeAttributes(new Coordinates(address.era_latitude.Value, address.era_longitude.Value), ct));
         return features
             .FirstOrDefault(p => p.Any(a => a.Name == "PRODUCTION" && a.Value == (isProduction ? "Yes" : "No")) && p.Any(a => a.Name == "ESS_STATUS" && a.Value == "Active"))
-            .FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+            ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
     }
 
     private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
