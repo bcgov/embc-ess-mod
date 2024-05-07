@@ -77,9 +77,14 @@
                   <div class="col-md-2">
                     <p class="box-text-color header-width">Issued by:</p>
                   </div>
-                  <div class="col-md-4 bold header-width">
-                    <p>{{ selectedSupport?.createdBy }}</p>
+                  <div class="col-md-4 bold header-width" *ngIf="selectedSupport?.isSelfServe; else regularRecipientH">
+                    <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
                   </div>
+                  <ng-template #regularRecipientH>
+                    <div class="col-md-4 bold header-width">
+                      <p>{{ selectedSupport?.createdBy }}</p>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
 
@@ -150,9 +155,14 @@
             <div class="col-md-2">
               <p class="box-text-color">Issued by:</p>
             </div>
-            <div class="col-md-4 bold">
-              <p>{{ selectedSupport?.createdBy }}</p>
+            <div class="col-md-4 bold" *ngIf="selectedSupport?.isSelfServe; else regularRecipient">
+              <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
             </div>
+            <ng-template #regularRecipient>
+              <div class="col-md-4 bold">
+                <p>{{ selectedSupport?.createdBy }}</p>
+              </div>
+            </ng-template>
           </div>
         </div>
 
