@@ -5,7 +5,7 @@ import { SubmitSupportsRequest } from '../../api/models';
 import { ETransferNotificationPreference } from '../../model/e-transfer-notification-preference.model';
 
 @Component({
-  selector: 'ess-file-self-serve-submitssion-dialog',
+  selector: 'app-ess-file-self-serve-submitssion-dialog',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
   template: `
