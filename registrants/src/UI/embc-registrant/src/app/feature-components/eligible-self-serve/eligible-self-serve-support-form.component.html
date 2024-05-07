@@ -3,6 +3,16 @@
     Error: Unable to retrieve Draft Support information.
   </div>
 }
+@if (submitSupportError) {
+  <div style="display: block; color: white; background-color: orange; padding: var(--size-2); font-size: var(--size-3)">
+    Error: Unable to submit Support information.
+  </div>
+}
+@if (calculateTotalsError) {
+  <div style="display: block; color: white; background-color: orange; padding: var(--size-2); font-size: var(--size-3)">
+    Error: Unable to submit Support information.
+  </div>
+}
 <div class="container container-frame">
   <div class="heading-container">
     <span class="page-heading">Self Serve Supports</span>
@@ -365,6 +375,8 @@
                         />
                         @if (eTransferDetailsForm.controls.eTransferEmail.hasError('required')) {
                           <mat-error> Email Address is required </mat-error>
+                        } @else if (eTransferDetailsForm.controls.eTransferEmail.hasError('email')) {
+                          <mat-error> Enter a valid Email Address </mat-error>
                         }
                       </mat-form-field>
                     } @else {
@@ -388,10 +400,11 @@
                         required
                       />
                       @if (eTransferDetailsForm.controls.confirmEmail.hasError('required')) {
-                        <mat-error>Confirm Email Address is required</mat-error>
-                      }
-                      @if (eTransferDetailsForm.controls.confirmEmail.hasError('compare')) {
-                        <mat-error> Email Address mismatch </mat-error>
+                        <mat-error> Email Address is required </mat-error>
+                      } @else if (eTransferDetailsForm.controls.confirmEmail.hasError('email')) {
+                        <mat-error> Enter a valid Email Address </mat-error>
+                      } @else if (eTransferDetailsForm.controls.confirmEmail.hasError('compare')) {
+                        <mat-error> Email Address Mismatch </mat-error>
                       }
                     </mat-form-field>
                   }
@@ -462,11 +475,13 @@
                       <input
                         matInput
                         placeholder="Email"
-                        [formControl]="eTransferDetailsForm.controls.eTransferEmail"
+                        [formControl]="eTransferDetailsForm.controls.contactEmail"
                         required
                       />
-                      @if (eTransferDetailsForm.controls.eTransferEmail.hasError('required')) {
+                      @if (eTransferDetailsForm.controls.contactEmail.hasError('required')) {
                         <mat-error> Email Address is required </mat-error>
+                      } @else if (eTransferDetailsForm.controls.contactEmail.hasError('email')) {
+                        <mat-error> Enter a valid Email Address </mat-error>
                       }
                     </mat-form-field>
                     <mat-form-field>
@@ -474,10 +489,14 @@
                       <input
                         matInput
                         placeholder="Confirm Email"
-                        [formControl]="eTransferDetailsForm.controls.confirmEmail"
+                        [formControl]="eTransferDetailsForm.controls.confirmContactEmail"
                         required
                       />
-                      @if (eTransferDetailsForm.controls.confirmEmail.hasError('compare')) {
+                      @if (eTransferDetailsForm.controls.confirmContactEmail.hasError('required')) {
+                        <mat-error> Email Address is required </mat-error>
+                      } @else if (eTransferDetailsForm.controls.confirmContactEmail.hasError('email')) {
+                        <mat-error> Enter a valid Email Address </mat-error>
+                      } @else if (eTransferDetailsForm.controls.confirmContactEmail.hasError('compare')) {
                         <mat-error> Email Address Mismatch </mat-error>
                       }
                     </mat-form-field>
@@ -496,12 +515,19 @@
               type="button"
               mat-button
               class="button-p"
-              style="width: 240px"
+              style="min-width: 240px; display: flex; align-items: center; justify-content: center"
               (click)="gotoReviewStep(eTransferDetailsForm)"
             >
               Next - Review
               @if (showButtonLoader) {
-                <app-loader class="spinner" [strokeWidth]="10" [diameter]="50" [color]="loaderColor"> </app-loader>
+                <app-loader
+                  class="spinner"
+                  [strokeWidth]="10"
+                  [diameter]="50"
+                  [color]="loaderColor"
+                  [showLoader]="showButtonLoader"
+                >
+                </app-loader>
               }
             </button>
           }
@@ -525,7 +551,7 @@
                 <div style="display: flex">
                   <div style="width: 240px">Shelter Allowance</div>
                   <div style="width: 160px">
-                    <b>{{ supportDraftForm.controls.shelterAllowance.controls.totalAmount.value }}</b>
+                    <b>$ {{ supportDraftForm.controls.shelterAllowance.controls.totalAmount.value }}</b>
                   </div>
                 </div>
               }
@@ -534,7 +560,7 @@
                   <div style="display: flex">
                     <div style="width: 240px">Grocery</div>
                     <div style="width: 160px">
-                      <b>{{ supportDraftForm.controls.food.controls.groceries.controls.totalAmount.value }}</b>
+                      <b>$ {{ supportDraftForm.controls.food.controls.groceries.controls.totalAmount.value }}</b>
                     </div>
                   </div>
                 }
@@ -542,7 +568,7 @@
                   <div style="display: flex">
                     <div style="width: 240px">Restaurant</div>
                     <div style="width: 160px">
-                      <b>{{ supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.value }}</b>
+                      <b>$ {{ supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.value }}</b>
                     </div>
                   </div>
                 }
@@ -551,7 +577,7 @@
                 <div style="display: flex">
                   <div style="width: 240px">Clothing</div>
                   <div style="width: 160px">
-                    <b>{{ supportDraftForm.controls.clothing.controls.totalAmount.value }}</b>
+                    <b>$ {{ supportDraftForm.controls.clothing.controls.totalAmount.value }}</b>
                   </div>
                 </div>
               }
@@ -559,7 +585,7 @@
                 <div style="display: flex">
                   <div style="width: 240px">Incidentals</div>
                   <div style="width: 160px">
-                    <b>{{ supportDraftForm.controls.incidents.controls.totalAmount.value }}</b>
+                    <b>$ {{ supportDraftForm.controls.incidents.controls.totalAmount.value }}</b>
                   </div>
                 </div>
               }
@@ -567,7 +593,7 @@
               <div style="display: flex">
                 <div style="width: 240px"><b>Total Amount</b></div>
                 <div style="width: 160px">
-                  <b>{{ supportDraftForm.controls.totals.value }}</b>
+                  <b>$ {{ supportDraftForm.controls.totals.value }}</b>
                 </div>
               </div>
 
@@ -606,7 +632,7 @@
                   <div style="display: flex">
                     <div style="width: 240px">Contact Email Address</div>
                     <div style="width: 160px">
-                      <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+                      <b>{{ eTransferDetailsForm.controls.contactEmail.value }}</b>
                     </div>
                   </div>
                 }
@@ -625,12 +651,6 @@
                   </div>
                 }
               }
-              <div style="display: flex">
-                <div style="width: 240px">Contact Email Address:</div>
-                <div style="width: 160px">
-                  <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
-                </div>
-              </div>
 
               <div style="display: flex; justify-content: space-between">
                 <p class="card-heading">Acknowledgment</p>
@@ -642,27 +662,57 @@
                   for the sole purpose to meet essential needs of individuals and their household members.
                 </b>
               </p>
-              <mat-checkbox>
+
+              <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.fundsExclusive">
                 I acknowledge that by accepting this digital payment, I agree to use the funds exclusively for meeting
                 my basic needs as outlined above. I understand that purchases such as alcohol, tobacco, cannabis
                 products, entertainment goods or services (such as online gaming), and luxury items are not permissible.
               </mat-checkbox>
-              <mat-checkbox>
+              @if (
+                reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+                reviewAcknowledgeForm.controls.fundsExclusive.hasError('required')
+              ) {
+                <mat-error>Acknowledgment is required</mat-error>
+              }
+              <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.meetMyOwnNeeds">
                 I acknowledge that by accepting this digital payment, I am able to meet my own needs and will not seek
-                further supports during the valid timeframe of <b>April 4 2024</b> to <b>April 6 2024</b>.
+                further supports during the valid timeframe of
+                <b>{{ shelterAllowanceDates[0].format('MMM DD, YYYY') }}</b> to
+                <b>{{ shelterAllowanceDates[shelterAllowanceDates.length - 1].format('MMM DD, YYYY') }}</b
+                >.
               </mat-checkbox>
-              <mat-checkbox>
+              @if (
+                reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+                reviewAcknowledgeForm.controls.meetMyOwnNeeds.hasError('required')
+              ) {
+                <mat-error>Acknowledgment is required</mat-error>
+              }
+              <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.information">
                 I certify that all information I have provided is accurate to the best of my knowledge. If information
                 is found to be untrue, this may result in repayment of funds already received. Intentional provision of
                 inaccurate information may be investigated, and legal action may be undertaken.
               </mat-checkbox>
+              @if (
+                reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+                reviewAcknowledgeForm.controls.information.hasError('required')
+              ) {
+                <mat-error>Acknowledgment is required</mat-error>
+              }
 
               <div
-                style="text-align: center; border: 4px solid orange; padding: 16px; background: #eee; font-size: 20px"
+                style="
+                  text-align: center;
+                  border: 4px solid orange;
+                  padding: var(--size-2);
+                  margin: var(--size-5);
+                  background: #eee;
+                  font-size: 20px;
+                "
               >
                 <p>
                   If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer will
-                  be your ESS File Number, which is <b>VIC12345</b>.
+                  be your ESS File Number, which is <b>{{ essFileId }}</b
+                  >.
                 </p>
                 <p>You can find your ESS File number under the Current Events tab of your ERA profile.</p>
               </div>
@@ -674,8 +724,24 @@
             Go Back & Edit
           </button>
           @if (draftSupports.items?.length > 0) {
-            <button type="button" mat-button class="button-p" style="width: 240px" (click)="submit()">
+            <button
+              type="button"
+              mat-button
+              class="button-p"
+              style="min-width: 240px; display: flex; align-items: center; justify-content: center"
+              (click)="submit()"
+            >
               Next- Submit
+              @if (showButtonLoader) {
+                <app-loader
+                  class="spinner"
+                  [strokeWidth]="10"
+                  [diameter]="50"
+                  [color]="loaderColor"
+                  [showLoader]="showButtonLoader"
+                >
+                </app-loader>
+              }
             </button>
           }
         </div>

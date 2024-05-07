@@ -83,6 +83,31 @@ export class CustomValidationService {
     };
   }
 
+  /**
+   * Checks if the email and confirm email field matches
+   */
+  compare({ fieldName }: { fieldName: string }): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const value = control.parent.get(fieldName).value;
+        const confirmValue = control.value;
+        if (
+          value !== undefined &&
+          confirmValue !== undefined &&
+          value !== null &&
+          confirmValue !== null &&
+          value !== '' &&
+          confirmValue !== ''
+        ) {
+          if (value.toLowerCase() !== confirmValue.toLowerCase()) {
+            return { compare: true };
+          }
+        }
+      }
+      return null;
+    };
+  }
+
   requiredConfirmEmailValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control) {

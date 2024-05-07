@@ -10,6 +10,7 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import * as moment from 'moment';
 import {
   DraftSupports,
+  ETransferDetails,
   HouseholdMember,
   SelfServeClothingSupport,
   SelfServeFoodGroceriesSupport,
@@ -34,6 +35,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { IMaskDirective } from 'angular-imask';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileDataService } from '../profile/profile-data.service';
+import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-notification-preference.model';
 
 type SelfServeSupportFormControl = {
   [k in keyof SelfServeSupport]: FormControl<SelfServeSupport[k]>;
@@ -104,16 +106,12 @@ interface DraftSupportForm {
   totals: FormControl<number>;
 }
 
-enum ETransferNotificationPreference {
-  Email = 'Email',
-  Mobile = 'Mobile',
-  EmailAndMobile = 'Email & Mobile'
-}
-
 interface ETransferDetailsForm {
   notificationPreference: FormControl<ETransferNotificationPreference>;
   eTransferEmail: FormControl<string>;
   confirmEmail: FormControl<string>;
+  contactEmail: FormControl<string>;
+  confirmContactEmail: FormControl<string>;
   useEmailOnFile: FormControl<boolean>;
   eTransferMobile: FormControl<string>;
   confirmMobile: FormControl<string>;
@@ -238,9 +236,11 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     householdMembers: []
   };
 
-  isLoadingDraftSupport = false;
+  isLoadingDraftSupport = true;
   showButtonLoader = false;
   draftSupportError = false;
+  calculateTotalsError = false;
+  submitSupportError = false;
   loaderColor = '#169bd5';
 
   hasEmailAddressOnFile = false;
@@ -278,56 +278,77 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   eTransferNotificationPreferenceOptions = Object.values(ETransferNotificationPreference);
   readonly phoneMask = { mask: '000-000-0000' };
 
-  eTransferDetailsForm: FormGroup<ETransferDetailsForm> = this._formBuilder.group<ETransferDetailsForm>(
-    {
-      notificationPreference: new FormControl(null),
-      eTransferEmail: new FormControl('', [
-        this.customValidation.conditionalValidation(
-          () =>
-            [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
-              this.eTransferDetailsForm.controls.notificationPreference.value
-            ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
-          Validators.required
-        ),
-        Validators.email
-      ]),
-      confirmEmail: new FormControl('', [
-        this.customValidation.conditionalValidation(
-          () =>
-            [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
-              this.eTransferDetailsForm.controls.notificationPreference.value
-            ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
-          Validators.required
-        ),
-        Validators.email
-        // this.customValidation.compare({ fieldName: 'eTransferEmail' })
-      ]),
-      eTransferMobile: new FormControl(
-        '',
-        this.customValidation.conditionalValidation(
-          () =>
-            [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
-              this.eTransferDetailsForm.controls.notificationPreference.value
-            ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
-          Validators.required
-        )
+  eTransferDetailsForm: FormGroup<ETransferDetailsForm> = this._formBuilder.group<ETransferDetailsForm>({
+    notificationPreference: new FormControl(null),
+    eTransferEmail: new FormControl('', [
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.required
       ),
-      confirmMobile: new FormControl('', [
-        this.customValidation.conditionalValidation(
-          () =>
-            [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
-              this.eTransferDetailsForm.controls.notificationPreference.value
-            ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
-          Validators.required
-        )
-        // this.customValidation.compare({ fieldName: 'eTransferMobile' })
-      ]),
-      useEmailOnFile: new FormControl(false),
-      useMobileOnFile: new FormControl(false),
-      recipientName: new FormControl()
-    },
-    { validators: [] }
-  );
+      Validators.email
+    ]),
+    confirmEmail: new FormControl('', [
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.required
+      ),
+      Validators.email
+    ]),
+    contactEmail: new FormControl('', [
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.required
+      ),
+      Validators.email
+    ]),
+    confirmContactEmail: new FormControl('', [
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.required
+      ),
+      Validators.email
+    ]),
+    eTransferMobile: new FormControl(
+      '',
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
+        Validators.required
+      )
+    ),
+    confirmMobile: new FormControl('', [
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useMobileOnFile.value === false,
+        Validators.required
+      )
+    ]),
+    useEmailOnFile: new FormControl(false),
+    useMobileOnFile: new FormControl(false),
+    recipientName: new FormControl()
+  });
+
+  reviewAcknowledgeForm = new FormGroup({
+    fundsExclusive: new FormControl('', Validators.requiredTrue),
+    meetMyOwnNeeds: new FormControl('', Validators.requiredTrue),
+    information: new FormControl('', Validators.requiredTrue)
+  });
 
   @ViewChild('stepper') stepper: MatStepper;
 
@@ -343,12 +364,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(
-      'ngOnInit:',
-      this.profileDataService,
-      this.profileDataService.getProfile(),
-      this.profileDataService.personalDetails
-    );
     if (!this.essFileId) {
       return;
     }
@@ -357,6 +372,16 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
 
     this.eTransferDetailsForm.controls.recipientName.setValue(
       `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
+    );
+
+    // @NOTE: adding it directly in the form group is not population `control.parent` property of the control
+    // which is required in the `compare` validator, adding the `compare` validator after the formgroup initialized
+    // keeps the `control.parent` property = the FormGorup(eTransferDetailsForm)
+    this.eTransferDetailsForm.controls.confirmEmail.addValidators(
+      this.customValidation.compare({ fieldName: 'eTransferEmail' })
+    );
+    this.eTransferDetailsForm.controls.confirmMobile.addValidators(
+      this.customValidation.compare({ fieldName: 'eTransferMobile' })
     );
 
     if (profile?.contactDetails?.email) this.hasEmailAddressOnFile = true;
@@ -543,15 +568,22 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     formGroup.markAllAsTouched();
     if (!this.essFileId || formGroup.invalid) return;
     this.showButtonLoader = true;
-    this.calculateSelfServeSupportsTotalAmount().subscribe((res) => {
-      this.showButtonLoader = false;
-      const selfServeSupportsTotalAmount = res.reduce((prev, curr) => prev + curr.totalAmount, 0);
+    this.calculateTotalsError = false;
+    this.calculateSelfServeSupportsTotalAmount().subscribe({
+      next: (res) => {
+        this.showButtonLoader = false;
+        const selfServeSupportsTotalAmount = res.reduce((prev, curr) => prev + curr.totalAmount, 0);
 
-      this.supportDraftForm.controls.totals.setValue(selfServeSupportsTotalAmount);
+        this.supportDraftForm.controls.totals.setValue(selfServeSupportsTotalAmount);
 
-      if (selfServeSupportsTotalAmount === 0)
-        this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
-      else this.stepper.next();
+        if (selfServeSupportsTotalAmount === 0)
+          this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
+        else this.stepper.next();
+      },
+      error: (err) => {
+        this.calculateTotalsError = true;
+        this.showButtonLoader = false;
+      }
     });
   }
 
@@ -753,12 +785,64 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   }
 
   submit() {
-    const selfServeRequestPayload = this.getPayloadData();
+    this.reviewAcknowledgeForm.markAllAsTouched();
+    if (this.reviewAcknowledgeForm.invalid) return;
 
+    const selfServeSupportsPayload = this.getPayloadData();
+
+    const eTransferFormDetailsValue = this.eTransferDetailsForm.value;
+    const eTransferDetails: ETransferDetails = {
+      recipientName: eTransferFormDetailsValue.recipientName
+    };
+
+    switch (eTransferFormDetailsValue.notificationPreference) {
+      case ETransferNotificationPreference.Email:
+        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.eTransferEmail;
+        break;
+
+      case ETransferNotificationPreference.Mobile:
+        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.eTransferMobile;
+        if (eTransferFormDetailsValue.contactEmail)
+          eTransferDetails.contactEmail = eTransferFormDetailsValue.contactEmail;
+        break;
+
+      case ETransferNotificationPreference.EmailAndMobile:
+        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.eTransferEmail;
+        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.eTransferMobile;
+        break;
+
+      default:
+        break;
+    }
+
+    const selfServeRequestPayload: SubmitSupportsRequest = {
+      evacuationFileId: this.essFileId,
+      supports: selfServeSupportsPayload.supports,
+      eTransferDetails
+    };
+
+    this.showButtonLoader = true;
+    this.submitSupportError = false;
     this.supportService
       .supportsSubmitSupports({ evacuationFileId: this.essFileId, body: selfServeRequestPayload })
-      .subscribe((res) => {
-        console.log('Submit: ', res);
+      .subscribe({
+        next: (res) => {
+          this.showButtonLoader = false;
+          this.router.navigate(['/verified-registration/dashboard'], {
+            state: {
+              selfServe: true,
+              supportData: {
+                notificationPreference: this.eTransferDetailsForm.controls.notificationPreference.value,
+                eTransferDetails: selfServeRequestPayload.eTransferDetails,
+                totalAmount: this.supportDraftForm.controls.totals.value
+              }
+            }
+          });
+        },
+        error: (err) => {
+          this.submitSupportError = true;
+          this.showButtonLoader = false;
+        }
       });
   }
 
