@@ -151,10 +151,12 @@ export class EvacuationFileDataService {
   public setAllSupportsSelfServe(essFileData: EvacuationFileModel): void {
     if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
       this.allSupportsSelfServe.next(false);
+      return;
     }
     essFileData.supports.forEach((item: Support) => {
       if (item.isSelfServe !== true) {
         this.allSupportsSelfServe.next(false);
+        return;
       }
     });
     this.allSupportsSelfServe.next(true);
