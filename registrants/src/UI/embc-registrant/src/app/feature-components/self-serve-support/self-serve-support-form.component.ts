@@ -27,7 +27,6 @@ import { AppLoaderComponent } from 'src/app/core/components/app-loader/app-loade
 import { tap } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { IMaskDirective } from 'angular-imask';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-notification-preference.model';
 import {
@@ -41,7 +40,7 @@ import {
   SupportPersonForm,
   SelfServeIncidentsSupportForm,
   ETransferDetailsForm,
-  SelfServeSupportDayMealForm
+  SelfServeFoodGroceriesSupportForm
 } from './self-serve-support.model';
 import { SelfServeSupportDetailsFormComponent } from './self-serve-support-details-form/self-serve-support-details-form.component';
 import { SelfServeSupportInteracETransfterFormComponent } from './self-serve-interac-e-transfer-form/self-serve-support-interac-e-transfer-form.component';
@@ -296,8 +295,10 @@ export class SelfServeSupportFormComponent implements OnInit {
     }
   }
 
-  processShelterAllowanceData(): SelfServeShelterAllowanceSupport | null {
-    const supportFormValue = this.supportDraftForm.value.shelterAllowance;
+  processShelterAllowanceData(
+    supportForm: FormGroup<SelfServeShelerAllowanceSupportForm>
+  ): SelfServeShelterAllowanceSupport | null {
+    const supportFormValue = supportForm.value;
 
     const data: SelfServeShelterAllowanceSupport & { $type: 'SelfServeShelterAllowanceSupport' } = {
       $type: 'SelfServeShelterAllowanceSupport',
@@ -314,61 +315,56 @@ export class SelfServeSupportFormComponent implements OnInit {
     return data;
   }
 
-  processFoodGroceriesData(): SelfServeFoodGroceriesSupport | null {
-    const supportFormValue = this.supportDraftForm.value.food;
+  processFoodGroceriesData(
+    supportForm: FormGroup<SelfServeFoodGroceriesSupportForm>
+  ): SelfServeFoodGroceriesSupport | null {
+    const supportFormValue = supportForm.value;
 
-    if (supportFormValue.fundsFor === SelfServeSupportType.FoodGroceries) {
-      const data: SelfServeFoodGroceriesSupport & { $type: 'SelfServeFoodGroceriesSupport' } = {
-        $type: 'SelfServeFoodGroceriesSupport',
-        type: SelfServeSupportType.FoodGroceries,
-        totalAmount: 34
-      };
+    const data: SelfServeFoodGroceriesSupport & { $type: 'SelfServeFoodGroceriesSupport' } = {
+      $type: 'SelfServeFoodGroceriesSupport',
+      type: SelfServeSupportType.FoodGroceries,
+      totalAmount: supportFormValue.totalAmount
+    };
 
-      const supportDays: Record<string, SupportDay> = this.getSupportDays(
-        this.supportDraftForm.controls.food.controls.groceries.controls.nights
-      );
+    const supportDays: Record<string, SupportDay> = this.getSupportDays(supportForm.controls.nights);
 
-      data.nights = Object.values(supportDays);
+    data.nights = Object.values(supportDays);
 
-      return data;
-    }
-
-    return null;
+    return data;
   }
 
-  processFoodRestaurantData(): SelfServeFoodRestaurantSupport | null {
-    const supportFormValue = this.supportDraftForm.value.food;
+  processFoodRestaurantData(
+    supportForm: FormGroup<SelfServeFoodRestaurantSupportForm>
+  ): SelfServeFoodRestaurantSupport | null {
+    const supportFormValue = supportForm.value;
 
-    if (supportFormValue.fundsFor === SelfServeSupportType.FoodRestaurant) {
-      const data: SelfServeFoodRestaurantSupport & { $type: 'SelfServeFoodRestaurantSupport' } = {
-        $type: 'SelfServeFoodRestaurantSupport',
-        type: SelfServeSupportType.FoodRestaurant,
-        totalAmount: 234,
-        includedHouseholdMembers: [],
-        meals: []
-      };
+    const data: SelfServeFoodRestaurantSupport & { $type: 'SelfServeFoodRestaurantSupport' } = {
+      $type: 'SelfServeFoodRestaurantSupport',
+      type: SelfServeSupportType.FoodRestaurant,
+      totalAmount: supportFormValue.totalAmount,
+      includedHouseholdMembers: [],
+      meals: []
+    };
 
-      data.includedHouseholdMembers = supportFormValue.restaurant.includedHouseholdMembers
-        .filter((p) => p.isSelected)
-        .map((p) => p.personId);
+    data.includedHouseholdMembers = supportFormValue.includedHouseholdMembers
+      .filter((p) => p.isSelected)
+      .map((p) => p.personId);
 
-      data.meals = supportFormValue.restaurant.mealTypes
-        .filter((m) => m.breakfast || m.lunch || m.dinner)
-        .map((m) => ({
-          breakfast: m.breakfast,
-          lunch: m.lunch,
-          dinner: m.dinner,
-          date: m.date.format('YYYY-MM-DD')
-        }));
+    data.meals = supportFormValue.mealTypes
+      .filter((m) => m.breakfast || m.lunch || m.dinner)
+      .map((m) => ({
+        breakfast: m.breakfast,
+        lunch: m.lunch,
+        dinner: m.dinner,
+        date: m.date.format('YYYY-MM-DD')
+      }));
 
-      return data;
-    }
-
-    return null;
+    return data;
   }
 
-  processClothing() {
-    const supportFormValue = this.supportDraftForm.value.clothing;
+  processClothing(supportForm: FormGroup<SelfServeClothingSupportForm>) {
+    const supportFormValue = supportForm.value;
+
     const data: SelfServeClothingSupport & { $type: 'SelfServeClothingSupport' } = {
       $type: 'SelfServeClothingSupport',
       type: SelfServeSupportType.Clothing,
@@ -382,8 +378,9 @@ export class SelfServeSupportFormComponent implements OnInit {
     return data;
   }
 
-  processIncidents() {
-    const supportFormValue = this.supportDraftForm.value.incidents;
+  processIncidents(supportForm: FormGroup<SelfServeIncidentsSupportForm>) {
+    const supportFormValue = supportForm.value;
+
     const data: SelfServeIncidentalsSupport & { $type: 'SelfServeIncidentalsSupport' } = {
       $type: 'SelfServeIncidentalsSupport',
       type: SelfServeSupportType.Incidentals,
@@ -422,27 +419,37 @@ export class SelfServeSupportFormComponent implements OnInit {
     this.draftSupports.items.forEach((support) => {
       switch (support.type) {
         case SelfServeSupportType.ShelterAllowance:
-          const processShelterAllowance = this.processShelterAllowanceData();
+          const processShelterAllowance = this.processShelterAllowanceData(
+            this.supportDraftForm.controls.shelterAllowance
+          );
           if (processShelterAllowance) selfServeSupportRequest.supports.push(processShelterAllowance);
           break;
 
         case SelfServeSupportType.FoodGroceries:
-          const processFoodGroceries = this.processFoodGroceriesData();
-          if (processFoodGroceries) selfServeSupportRequest.supports.push(processFoodGroceries);
+          if (this.supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+            const processFoodGroceries = this.processFoodGroceriesData(
+              this.supportDraftForm.controls.food.controls.groceries
+            );
+            if (processFoodGroceries) selfServeSupportRequest.supports.push(processFoodGroceries);
+          }
           break;
 
         case SelfServeSupportType.FoodRestaurant:
-          const processFoodRestaurant = this.processFoodRestaurantData();
-          if (processFoodRestaurant) selfServeSupportRequest.supports.push(processFoodRestaurant);
+          if (this.supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+            const processFoodRestaurant = this.processFoodRestaurantData(
+              this.supportDraftForm.controls.food.controls.restaurant
+            );
+            if (processFoodRestaurant) selfServeSupportRequest.supports.push(processFoodRestaurant);
+          }
           break;
 
         case SelfServeSupportType.Clothing:
-          const processClothing = this.processClothing();
+          const processClothing = this.processClothing(this.supportDraftForm.controls.clothing);
           if (processClothing) selfServeSupportRequest.supports.push(processClothing);
           break;
 
         case SelfServeSupportType.Incidentals:
-          const processIncidents = this.processIncidents();
+          const processIncidents = this.processIncidents(this.supportDraftForm.controls.incidents);
           if (processIncidents) selfServeSupportRequest.supports.push(processIncidents);
           break;
 
