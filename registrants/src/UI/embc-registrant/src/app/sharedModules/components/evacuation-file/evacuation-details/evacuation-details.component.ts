@@ -29,7 +29,6 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   @Input() allExpandState = false;
-  previousUrl: string;
   evacuationFileTab: string;
   backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
@@ -48,14 +47,10 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     public evacuationFileDataService: EvacuationFileDataService,
     private datePipe: DatePipe,
     private cd: ChangeDetectorRef
-  ) {
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.previousUrl = event.url;
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (this.previousUrl?.includes('current')) {
+    if (this.router.url?.includes('current')) {
       this.evacuationFileTab = 'Current';
     } else {
       this.evacuationFileTab = 'Past';
@@ -82,7 +77,7 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   }
 
   goToCurrent(): void {
-    if (this.previousUrl.includes('current')) {
+    if (this.router.url.includes('current')) {
       this.router.navigate(['/verified-registration/dashboard/current']);
     } else {
       this.router.navigate(['/verified-registration/dashboard/past']);

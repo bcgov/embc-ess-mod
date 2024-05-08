@@ -78,7 +78,11 @@ export class DashboardComponent implements OnInit {
     const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
-      const { selfServe, supportData } = this.router.lastSuccessfulNavigation.extras.state;
+      const { selfServe = null, supportData = null } = this.router.lastSuccessfulNavigation.extras?.state ?? {
+        selfServe: false,
+        supportData: null
+      };
+
       if (selfServe) {
         this.dialog
           .open(SelfServeSubmissionDialogComponent, {
