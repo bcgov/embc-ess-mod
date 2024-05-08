@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-10">
+    <h1 mat-dialog-title>Support Update Required</h1>
+  </div>
+  <div class="col-2" style="text-align: right">
+    <button class="close-image close-button-style" mat-icon-button aria-label="Close" mat-dialog-close>
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content>
+  <p>
+    <b>You currently have no supports selected.</b> Please take a moment to update your support details to select the
+    necessary assistance for you and your household while you are evacuated.
+  </p>
+  <p>
+    If you no longer require support or would prefer to proceed with referrals, you can
+
+    <a class="highlightText" style="cursor: pointer" (click)="optOut()">
+      click here to opt out and receive supports via referral.
+    </a>
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="button-p" mat-button mat-dialog-close>Edit Support Details</button>
+</mat-dialog-actions>
