@@ -53,7 +53,7 @@ export class SelfServeSupportInteracETransfterFormComponent {
       `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
     );
 
-    // @NOTE: adding it directly in the form group is not population `control.parent` property of the control
+    // @NOTE: adding it directly in the form group is not populating `control.parent` property of the control
     // which is required in the `compare` validator, adding the `compare` validator after the formgroup initialized
     // keeps the `control.parent` property = the FormGorup(eTransferDetailsForm)
     this.eTransferDetailsForm.controls.confirmEmail.addValidators(
