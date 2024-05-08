@@ -109,7 +109,7 @@ spec:
         {{- if (.Values.files).files }}
         - name: {{ $.name}}-files
           configMap:
-            name: {{ $.name}}-configmap
+            name: {{ $.name}}-files-configmap
             items:
             {{- range $key, $value :=.Values.files.files }}
             - key: {{ $key }}
