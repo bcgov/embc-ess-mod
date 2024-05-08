@@ -83,8 +83,8 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
         if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
 
-        var supports = ((GenerateSelfServeSupports1Response)await supportingEngine.Generate(
-            new GenerateSelfServeSupports1(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+        var supports = ((GenerateSelfServeETransferSupportsResponse)await supportingEngine.Generate(
+            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
         var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
         {
             FileId = cmd.EvacuationFileId,
