@@ -75,21 +75,21 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
         // calculate support eligibility period
-        var eligibleFrom = DateTimeOffset.Now;
+        var eligibleFrom = DateTimeOffset.UtcNow;
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
-        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
+        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
 
         // check if requested supports include referrals
         var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();
-        if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
 
         // check if requested e-transfer supports are enabled for self-serve
         var requestedETransferSupports = MapETransferSupportTypesFromNeeds(needsAssessment).ToArray();
-        if (requestedETransferSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (requestedETransferSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
         var allowedSupports = (await ctx.era_selfservesupportlimitses
             .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
             .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
-        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
         if (!Array.TrueForAll(requestedETransferSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
@@ -106,7 +106,7 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
                 .Select(s => s.era_name)
                 .ToList();
 
-            if (supports.Any()) return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+            if (supports.Any()) return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
         }
 
         // return eligibility results
@@ -148,9 +148,11 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
             ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
     }
 
-    private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null) => new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), null, null);
+    private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null, DateTimeOffset? from = null, DateTimeOffset? to = null) =>
+        new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), from, to);
 
-    private static SelfServeSupportEligibility Eligible(string taskNumber, Guid referencedHomeAddressId, DateTimeOffset From, DateTimeOffset To) => new SelfServeSupportEligibility(true, null, taskNumber, referencedHomeAddressId.ToString(), From, To);
+    private static SelfServeSupportEligibility Eligible(string taskNumber, Guid referencedHomeAddressId, DateTimeOffset from, DateTimeOffset to) =>
+        new SelfServeSupportEligibility(true, null, taskNumber, referencedHomeAddressId.ToString(), from, to);
 
     private enum NeedTrueFalse
     {

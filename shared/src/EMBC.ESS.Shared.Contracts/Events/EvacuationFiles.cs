@@ -85,6 +85,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public string? TaskNumber { get; set; }
         public DateTime CompletedOn { get; set; }
         public TeamMember CompletedBy { get; set; }
         public NeedsAssessmentType Type { get; set; }

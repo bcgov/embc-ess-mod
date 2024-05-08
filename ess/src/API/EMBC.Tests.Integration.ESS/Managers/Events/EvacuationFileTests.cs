@@ -204,20 +204,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task Update_EvacuationFileTask_ThrowsError()
-        {
-            var fileWithTask = await GetEvacuationFileById(TestData.EvacuationFileId);
-            fileWithTask.RelatedTask.Id = TestData.ActiveTaskId;
-            //update file to task
-            await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask });
-
-            //update to a different task
-            fileWithTask.RelatedTask.Id = TestData.InactiveTaskId;
-            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })))
-                .Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
-        }
-
-        [Fact]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
