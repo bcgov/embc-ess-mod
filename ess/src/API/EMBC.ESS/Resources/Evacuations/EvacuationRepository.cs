@@ -198,7 +198,6 @@ public class EvacuationRepository : IEvacuationRepository
             if (registrant == null) throw new ArgumentException($"Household member has registrant id {member._era_registrant_value} which was not found");
             essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
         }
-        //essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
         essContext.SetLink(member, nameof(era_householdmember.era_EvacuationFileid), file);
     }
 
@@ -212,7 +211,6 @@ public class EvacuationRepository : IEvacuationRepository
         foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
         {
             essContext.AddToera_animals(pet);
-            // essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
             essContext.SetLink(pet, nameof(era_animal.era_ESSFileid), file);
         }
     }
