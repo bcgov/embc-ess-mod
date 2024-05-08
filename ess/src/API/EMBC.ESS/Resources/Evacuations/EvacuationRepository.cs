@@ -88,10 +88,11 @@ public class EvacuationRepository : IEvacuationRepository
         essContext.AddToera_evacuationfiles(file);
         essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
         AssignPrimaryRegistrant(essContext, file, primaryContact);
-        AssignToTask(essContext, file, evacuationFile.TaskId);
         AddPets(essContext, file);
 
         AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
+
+        AssignToTask(essContext, file, evacuationFile.TaskId);
 
         await essContext.SaveChangesAsync(ct);
 
@@ -107,28 +108,32 @@ public class EvacuationRepository : IEvacuationRepository
 
     public async Task<string> Update(EssContext essContext, EvacuationFile evacuationFile, CancellationToken ct)
     {
-        var currentFile = essContext.era_evacuationfiles
-            .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
+        var currentFile = await essContext.era_evacuationfiles
+            .Expand(f => f.era_TaskId)
+            .Expand(f => f.era_era_evacuationfile_era_householdmember_EvacuationFileid)
+            .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
+            .Where(f => f.era_name == evacuationFile.Id)
+            .SingleOrDefaultAsync(ct);
         if (currentFile == null) throw new ArgumentException($"Evacuation file {evacuationFile.Id} not found");
+        essContext.DetachAll();
 
-        await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), ct);
-        await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct);
         VerifyEvacuationFileInvariants(evacuationFile, currentFile);
 
-        essContext.DetachAll();
         RemovePets(essContext, currentFile);
 
         var file = mapper.Map<era_evacuationfile>(evacuationFile);
         file.era_evacuationfileid = currentFile.era_evacuationfileid;
+        file.era_TaskId = currentFile.era_TaskId;
 
         essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
         essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
 
         essContext.UpdateObject(file);
-        AssignToTask(essContext, file, evacuationFile.TaskId);
         AddPets(essContext, file);
 
         AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
+
+        AssignToTask(essContext, file, evacuationFile.TaskId);
 
         await essContext.SaveChangesAsync(ct);
 
@@ -176,12 +181,13 @@ public class EvacuationRepository : IEvacuationRepository
         essContext.SetLink(file, nameof(era_evacuationfile.era_Registrant), primaryContact);
     }
 
-    private static void AssignToTask(EssContext essContext, era_evacuationfile file, string taskId)
+    private static void AssignToTask(EssContext essContext, era_evacuationfile file, string taskNumber)
     {
-        if (string.IsNullOrEmpty(taskId)) return;
-        var task = essContext.era_tasks.Where(t => t.era_name == taskId).OrderByDescending(t => t.createdon).FirstOrDefault();
-        if (task == null) throw new ArgumentException($"Task {taskId} not found");
-        essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
+        if (string.IsNullOrEmpty(taskNumber)) return;
+        var task = essContext.era_tasks.Where(t => t.era_name == taskNumber).OrderByDescending(t => t.createdon).FirstOrDefault();
+        if (task == null) throw new ArgumentException($"Task {taskNumber} not found");
+        if (file.era_TaskId == null) essContext.SetLink(file, nameof(era_evacuationfile.era_TaskId), task);
+        essContext.SetLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), task);
     }
 
     private static void AssignHouseholdMember(EssContext essContext, era_evacuationfile file, era_householdmember member)
@@ -192,7 +198,7 @@ public class EvacuationRepository : IEvacuationRepository
             if (registrant == null) throw new ArgumentException($"Household member has registrant id {member._era_registrant_value} which was not found");
             essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
         }
-        essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
+        //essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
         essContext.SetLink(member, nameof(era_householdmember.era_EvacuationFileid), file);
     }
 
@@ -206,7 +212,7 @@ public class EvacuationRepository : IEvacuationRepository
         foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
         {
             essContext.AddToera_animals(pet);
-            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
+            // essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
             essContext.SetLink(pet, nameof(era_animal.era_ESSFileid), file);
         }
     }
@@ -282,6 +288,7 @@ public class EvacuationRepository : IEvacuationRepository
             {
                 if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
                 ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
+                if (file.era_CurrentNeedsAssessmentid.era_TaskNumber==null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), ct);
                 if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck==null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
                 if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
                 {
@@ -391,6 +398,7 @@ public class EvacuationRepository : IEvacuationRepository
 
         var needsAssessmentQuery = ctx.era_needassessments
             .Expand(n => n.era_EvacuationFile)
+            .Expand(n => n.era_TaskNumber)
             .Where(n => n.statecode == (int)EntityState.Active);
 
         if (!string.IsNullOrEmpty(query.NeedsAssessmentId)) needsAssessmentQuery = needsAssessmentQuery.Where(n => n.era_needassessmentid == Guid.Parse(query.NeedsAssessmentId));

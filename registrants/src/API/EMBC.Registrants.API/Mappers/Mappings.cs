@@ -54,6 +54,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
+                .ForMember(d => d.TaskNumber, opts => opts.Ignore())
              ;
 
             CreateMap<ESS.Shared.Contracts.Events.NeedsAssessment, NeedsAssessment>()

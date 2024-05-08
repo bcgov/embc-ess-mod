@@ -116,6 +116,7 @@ public record EvacuationAddress
 public record NeedsAssessment
 {
     public string Id { get; set; }
+    public string? TaskNumber { get; set; }
     public EvacuationAddress EvacuatedFrom { get; set; }
     public DateTime CompletedOn { get; set; }
     public string CompletedByTeamMemberId { get; set; }

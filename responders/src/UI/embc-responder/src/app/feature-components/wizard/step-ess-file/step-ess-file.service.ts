@@ -555,7 +555,7 @@ export class StepEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
-        taskNumber: this.taskNumber ?? this.userService.currentProfile?.taskNumber
+        taskNumber: this.userService.currentProfile?.taskNumber
       }
     };
   }
