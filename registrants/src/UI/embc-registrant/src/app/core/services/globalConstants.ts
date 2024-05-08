@@ -78,7 +78,7 @@ export const incidentalsNeedDialog: DialogContent = {
 
 export const interacETransferDialog: DialogContent = {
   title: 'Interac e-Transfers',
-  text: 'Please Note: While the majority of Interac e-Transfers are processed immediately, there are instances where processing delays may occur'
+  text: 'Please Note: While the majority of Interac e-Transfers are processed immediately, there are instances where processing delays may occur.'
 };
 
 export const interacOptOut: DialogContent = {

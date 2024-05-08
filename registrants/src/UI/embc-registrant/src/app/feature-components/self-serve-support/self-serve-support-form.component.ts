@@ -7,122 +7,53 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import * as moment from 'moment';
 import {
   DraftSupports,
   ETransferDetails,
-  HouseholdMember,
   SelfServeClothingSupport,
   SelfServeFoodGroceriesSupport,
   SelfServeFoodRestaurantSupport,
   SelfServeIncidentalsSupport,
   SelfServeShelterAllowanceSupport,
-  SelfServeSupport,
   SelfServeSupportType,
   SubmitSupportsRequest,
-  SupportDay,
-  SupportSubCategory
+  SupportDay
 } from 'src/app/core/api/models';
 import { SupportsService } from 'src/app/core/api/services';
-import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { MatDialog } from '@angular/material/dialog';
-import { EligibleSelfServeTotalAmountZeroDialogComponent } from './eligible-self-serve-total-amount-zero.component';
+import { EligibleSelfServeTotalAmountZeroDialogComponent } from './self-serve-support-total-amount-zero-dialog/self-serve-support-total-amount-zero.component';
 import { AppLoaderComponent } from 'src/app/core/components/app-loader/app-loader.component';
 import { tap } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { IMaskDirective } from 'angular-imask';
-import { ProfileService } from '../profile/profile.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-notification-preference.model';
-
-type SelfServeSupportFormControl = {
-  [k in keyof SelfServeSupport]: FormControl<SelfServeSupport[k]>;
-};
-
-interface BaseSelfServeSupportForm extends Omit<SelfServeSupportFormControl, '$type'> {
-  totalAmount: FormControl<number>;
-}
-
-interface SupportPersonForm {
-  personId: FormControl<string>;
-  isSelected?: FormControl<boolean>;
-}
-
-interface SupportPersonDateForm {
-  date: FormControl<moment.Moment>;
-  personId: FormControl<string>;
-  isSelected?: FormControl<boolean>;
-}
-
-type SupportDayFormControl = {
-  [k in keyof SupportDay]: FormControl<SupportDay[k]>;
-};
-
-interface SelfServeSupportDayMealForm extends Omit<SupportDayFormControl, 'date'> {
-  date: FormControl<moment.Moment>;
-  breakfast: FormControl<boolean>;
-  lunch: FormControl<boolean>;
-  dinner: FormControl<boolean>;
-}
-
-type FundsFor = SupportSubCategory.FoodGroceries | SupportSubCategory.FoodRestaurant | null;
-
-interface SelfServeFoodRestaurantSupportForm {
-  includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
-  mealTypes: FormArray<FormGroup<SelfServeSupportDayMealForm>>;
-  totalAmount: FormControl<number>;
-}
-
-interface SelfServeFoodGroceriesSupportForm {
-  nights: FormArray<FormGroup<SupportPersonDateForm>>;
-  totalAmount: FormControl<number>;
-}
-
-interface SelfServeFoodSupportForm {
-  fundsFor: FormControl<FundsFor>;
-  restaurant: FormGroup<SelfServeFoodRestaurantSupportForm>;
-  groceries: FormGroup<SelfServeFoodGroceriesSupportForm>;
-}
-
-interface SelfServeShelerAllowanceSupportForm extends BaseSelfServeSupportForm {
-  nights: FormArray<FormGroup<SupportPersonDateForm>>;
-}
-
-interface SelfServeClothingSupportForm extends BaseSelfServeSupportForm {
-  includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
-}
-
-interface SelfServeIncidentsSupportForm extends BaseSelfServeSupportForm {
-  includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
-}
-
-interface DraftSupportForm {
-  shelterAllowance: FormGroup<SelfServeShelerAllowanceSupportForm>;
-  food: FormGroup<SelfServeFoodSupportForm>;
-  clothing: FormGroup<SelfServeClothingSupportForm>;
-  incidents: FormGroup<SelfServeIncidentsSupportForm>;
-  totals: FormControl<number>;
-}
-
-interface ETransferDetailsForm {
-  notificationPreference: FormControl<ETransferNotificationPreference>;
-  eTransferEmail: FormControl<string>;
-  confirmEmail: FormControl<string>;
-  contactEmail: FormControl<string>;
-  confirmContactEmail: FormControl<string>;
-  useEmailOnFile: FormControl<boolean>;
-  eTransferMobile: FormControl<string>;
-  confirmMobile: FormControl<string>;
-  useMobileOnFile: FormControl<boolean>;
-  recipientName: FormControl<string>;
-}
+import {
+  DraftSupportForm,
+  SelfServeShelerAllowanceSupportForm,
+  SupportPersonDateForm,
+  SelfServeFoodSupportForm,
+  FundsFor,
+  SelfServeFoodRestaurantSupportForm,
+  SelfServeClothingSupportForm,
+  SupportPersonForm,
+  SelfServeIncidentsSupportForm,
+  ETransferDetailsForm,
+  SelfServeSupportDayMealForm
+} from './self-serve-support.model';
+import { SelfServeSupportDetailsFormComponent } from './self-serve-support-details-form/self-serve-support-details-form.component';
+import { SelfServeSupportInteracETransfterFormComponent } from './self-serve-interac-e-transfer-form/self-serve-support-interac-e-transfer-form.component';
+import {
+  GotoStepType,
+  SelfServeSupportReviewComponent
+} from './self-serve-support-review/self-serve-support-review.component';
 
 @Component({
   standalone: true,
-  selector: 'app-eligible-self-serve-support-form',
-  templateUrl: './eligible-self-serve-support-form.component.html',
+  selector: 'app-self-serve-support-form',
+  templateUrl: './self-serve-support-form.component.html',
   imports: [
     MatStepperModule,
     MatCardModule,
@@ -133,103 +64,17 @@ interface ETransferDetailsForm {
     MatInputModule,
     MatSelectModule,
     AppLoaderComponent,
-    IMaskDirective
+    SelfServeSupportDetailsFormComponent,
+    SelfServeSupportInteracETransfterFormComponent,
+    SelfServeSupportReviewComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  styles: [
-    `
-      mat-card {
-        margin-bottom: var(--size-3);
-      }
-
-      .mat-mdc-card-content,
-      .mat-mdc-card-content:first-child,
-      .mat-mdc-card-content:last-child {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--size-3);
-        justify-content: space-between;
-        padding: var(--size-3);
-      }
-
-      :host .mat-mdc-checkbox ::ng-deep label {
-        font-size: var(--size-2);
-        padding: 4px 0;
-      }
-
-      :host .mat-mdc-checkbox ::ng-deep .mdc-form-field {
-        align-items: flex-start;
-      }
-
-      :host .support-details-form .mat-mdc-checkbox ::ng-deep label {
-        font-weight: bold;
-        line-height: var(--size-4);
-      }
-
-      .card-question {
-        font-size: var(--size-2);
-        margin-bottom: var(--size-2);
-      }
-
-      hr {
-        height: 1px;
-        background-color: #333;
-        margin-top: 0;
-      }
-
-      table {
-        min-width: 400px;
-      }
-
-      th {
-        font-weight: bold;
-        padding: var(--size-1);
-      }
-
-      td {
-        width: 150px;
-        word-break: break-word;
-        padding: var(--size-1);
-      }
-
-      tr.header-row {
-        height: 60px;
-        background: #f2f2f2;
-      }
-
-      .note-box {
-        flex: 1 0 300px;
-        max-width: 400px;
-        height: min-content;
-        padding: var(--size-2);
-      }
-
-      .eTransfer-form mat-form-field {
-        width: 450px;
-      }
-
-      .container-with-logo {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap-reverse;
-        justify-content: space-between;
-      }
-    `
-  ]
+  styleUrl: './self-serve-support-form.component.scss'
 })
-export class EligibleSelfServeSupportFormComponent implements OnInit {
+export class SelfServeSupportFormComponent implements OnInit {
   isLinear = false;
+  SelfServeSupportType = SelfServeSupportType;
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
-  SupportSubCategory = SupportSubCategory;
-
-  showSelfServeShelterAllowanceSupport = false;
-  showSelfServeFoodSupport = false;
-  showSelfServeClothingSupport = false;
-  showSelfServeIncidentsSupport = false;
-
-  shelterAllowanceDates: moment.Moment[] = [];
-  foodGroceriesDates: moment.Moment[] = [];
-  foodRestaurantDates: moment.Moment[] = [];
 
   draftSupports: DraftSupports = {
     items: [],
@@ -242,9 +87,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   calculateTotalsError = false;
   submitSupportError = false;
   loaderColor = '#169bd5';
-
-  hasEmailAddressOnFile = false;
-  hasPhoneOnFile = false;
 
   supportDraftForm = new FormGroup<DraftSupportForm>({
     shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
@@ -275,8 +117,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
   });
 
   ETransferNotificationPreference = ETransferNotificationPreference;
-  eTransferNotificationPreferenceOptions = Object.values(ETransferNotificationPreference);
-  readonly phoneMask = { mask: '000-000-0000' };
 
   eTransferDetailsForm: FormGroup<ETransferDetailsForm> = this._formBuilder.group<ETransferDetailsForm>({
     notificationPreference: new FormControl(null),
@@ -288,7 +128,13 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
           ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
         Validators.required
       ),
-      Validators.email
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.email
+      )
     ]),
     confirmEmail: new FormControl('', [
       this.customValidation.conditionalValidation(
@@ -298,27 +144,45 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
           ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
         Validators.required
       ),
-      Validators.email
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.email
+      )
     ]),
     contactEmail: new FormControl('', [
       this.customValidation.conditionalValidation(
         () =>
-          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+          [ETransferNotificationPreference.Mobile].includes(
             this.eTransferDetailsForm.controls.notificationPreference.value
           ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
         Validators.required
       ),
-      Validators.email
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Mobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.email
+      )
     ]),
     confirmContactEmail: new FormControl('', [
       this.customValidation.conditionalValidation(
         () =>
-          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+          [ETransferNotificationPreference.Mobile].includes(
             this.eTransferDetailsForm.controls.notificationPreference.value
           ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
         Validators.required
       ),
-      Validators.email
+      this.customValidation.conditionalValidation(
+        () =>
+          [ETransferNotificationPreference.Mobile].includes(
+            this.eTransferDetailsForm.controls.notificationPreference.value
+          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+        Validators.email
+      )
     ]),
     eTransferMobile: new FormControl(
       '',
@@ -368,25 +232,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       return;
     }
 
-    const profile = this.profileDataService.getProfile();
-
-    this.eTransferDetailsForm.controls.recipientName.setValue(
-      `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
-    );
-
-    // @NOTE: adding it directly in the form group is not population `control.parent` property of the control
-    // which is required in the `compare` validator, adding the `compare` validator after the formgroup initialized
-    // keeps the `control.parent` property = the FormGorup(eTransferDetailsForm)
-    this.eTransferDetailsForm.controls.confirmEmail.addValidators(
-      this.customValidation.compare({ fieldName: 'eTransferEmail' })
-    );
-    this.eTransferDetailsForm.controls.confirmMobile.addValidators(
-      this.customValidation.compare({ fieldName: 'eTransferMobile' })
-    );
-
-    if (profile?.contactDetails?.email) this.hasEmailAddressOnFile = true;
-    if (profile?.contactDetails?.phone) this.hasPhoneOnFile = true;
-
     this.getDraft();
   }
 
@@ -399,32 +244,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
         });
 
         this.draftSupports = res;
-
-        this.draftSupports.items.forEach((support) => {
-          switch (support.type) {
-            case SelfServeSupportType.ShelterAllowance:
-              this.createSelfServeShelterAllowanceSupportForm(support as any);
-              break;
-
-            case SelfServeSupportType.FoodGroceries:
-              this.createSelfServeFoodGroceriesSupportForm(support as any);
-              break;
-
-            case SelfServeSupportType.FoodRestaurant:
-              this.createSelfServeFoodRestaurantSupportForm(support as any);
-              break;
-            case SelfServeSupportType.Clothing:
-              this.createSelfServeClothingSupportForm(support as any);
-              break;
-
-            case SelfServeSupportType.Incidentals:
-              this.createSelfServeIncidentsSupportForm(support as any);
-              break;
-
-            default:
-              break;
-          }
-        });
       },
       error: (err) => {
         this.draftSupportError = true;
@@ -433,135 +252,6 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
         this.isLoadingDraftSupport = false;
       }
     });
-  }
-
-  private createSelfServeShelterAllowanceSupportForm(selfServeSupport: SelfServeShelterAllowanceSupport) {
-    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
-    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
-
-    this.createSupportPersonDateForm(this.supportDraftForm.controls.shelterAllowance.controls.nights, persons, dates);
-
-    this.supportDraftForm.controls.shelterAllowance.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
-
-    this.shelterAllowanceDates = [...dates];
-    this.showSelfServeShelterAllowanceSupport = true;
-  }
-
-  private createSelfServeFoodGroceriesSupportForm(selfServeSupport: SelfServeFoodGroceriesSupport) {
-    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
-    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
-
-    this.createSupportPersonDateForm(
-      this.supportDraftForm.controls.food.controls.groceries.controls.nights,
-      persons,
-      dates
-    );
-
-    this.supportDraftForm.controls.food.controls.groceries.controls.totalAmount.setValue(
-      selfServeSupport.totalAmount ?? 0
-    );
-
-    this.foodGroceriesDates = [...dates];
-    this.showSelfServeFoodSupport = true;
-  }
-
-  private createSelfServeFoodRestaurantSupportForm(selfServeSupport: SelfServeFoodRestaurantSupport) {
-    const dates = selfServeSupport.meals.map((m) => moment(m.date, 'YYYY-MM-DD'));
-    selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.push(
-        this.createSupportPersonForm(p)
-      );
-    });
-
-    selfServeSupport.meals.forEach((m) => {
-      this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.push(
-        new FormGroup<SelfServeSupportDayMealForm>({
-          date: new FormControl(moment(m.date, 'YYYY-MM-DD')),
-          breakfast: new FormControl({ value: m.breakfast, disabled: m.breakfast !== true && m.breakfast !== false }),
-          lunch: new FormControl({ value: m.lunch, disabled: m.lunch !== true && m.lunch !== false }),
-          dinner: new FormControl({ value: m.dinner, disabled: m.dinner !== true && m.dinner !== false })
-        })
-      );
-    });
-
-    this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.valueChanges.subscribe({
-      next: (includedHouseholdMembers) => {
-        if (includedHouseholdMembers.every((m) => !m.isSelected)) {
-          this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((m) => {
-            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false);
-            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false);
-            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false);
-          });
-        }
-      }
-    });
-
-    this.supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.setValue(
-      selfServeSupport.totalAmount ?? 0
-    );
-
-    this.foodRestaurantDates = [...dates];
-
-    this.showSelfServeShelterAllowanceSupport = true;
-  }
-
-  private createSelfServeClothingSupportForm(selfServeSupport: SelfServeClothingSupport) {
-    selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.clothing.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
-    });
-
-    this.supportDraftForm.controls.clothing.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
-
-    this.showSelfServeClothingSupport = true;
-  }
-
-  private createSelfServeIncidentsSupportForm(selfServeSupport: SelfServeIncidentalsSupport) {
-    selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.incidents.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
-    });
-
-    this.supportDraftForm.controls.incidents.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
-
-    this.showSelfServeIncidentsSupport = true;
-  }
-
-  createSupportPersonForm(id: string, isSelected: boolean = true): FormGroup<SupportPersonForm> {
-    return new FormGroup<SupportPersonForm>({ personId: new FormControl(id), isSelected: new FormControl(isSelected) });
-  }
-
-  createSupportPersonDateForm(
-    formArray: FormArray<FormGroup<SupportPersonDateForm>>,
-    perons: string[],
-    dates: moment.Moment[]
-  ) {
-    perons.forEach((p) => {
-      dates.forEach((d) => {
-        formArray.push(
-          new FormGroup<SupportPersonDateForm>({
-            personId: new FormControl(p),
-            isSelected: new FormControl(true),
-            date: new FormControl(d)
-          })
-        );
-      });
-    });
-  }
-
-  getPersonName(id: string) {
-    const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
-    return `${personDetails?.firstName ?? ''}`;
-  }
-
-  getDateControl(
-    supportPersonDateForm: FormArray<FormGroup<SupportPersonDateForm>>,
-    person: HouseholdMember,
-    date: moment.Moment
-  ): FormGroup<SupportPersonDateForm> {
-    const personFormGroup = supportPersonDateForm.controls.find(
-      (p: FormGroup) => p.controls.personId.value === person.id && p.controls.date.value === date
-    );
-
-    return personFormGroup;
   }
 
   gotoETransfterStep(formGroup: FormGroup) {
@@ -593,7 +283,7 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     this.stepper.next();
   }
 
-  gotoStep(step: 'supportDetails' | 'eTransfer') {
+  gotoStep(step: GotoStepType) {
     switch (step) {
       case 'supportDetails':
         this.stepper.selectedIndex = 0;
@@ -624,10 +314,10 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
     return data;
   }
 
-  processFoodData(): SelfServeFoodGroceriesSupport | SelfServeFoodRestaurantSupport | null {
+  processFoodGroceriesData(): SelfServeFoodGroceriesSupport | null {
     const supportFormValue = this.supportDraftForm.value.food;
 
-    if (supportFormValue.fundsFor === SupportSubCategory.FoodGroceries) {
+    if (supportFormValue.fundsFor === SelfServeSupportType.FoodGroceries) {
       const data: SelfServeFoodGroceriesSupport & { $type: 'SelfServeFoodGroceriesSupport' } = {
         $type: 'SelfServeFoodGroceriesSupport',
         type: SelfServeSupportType.FoodGroceries,
@@ -641,7 +331,15 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       data.nights = Object.values(supportDays);
 
       return data;
-    } else if (supportFormValue.fundsFor === SupportSubCategory.FoodRestaurant) {
+    }
+
+    return null;
+  }
+
+  processFoodRestaurantData(): SelfServeFoodRestaurantSupport | null {
+    const supportFormValue = this.supportDraftForm.value.food;
+
+    if (supportFormValue.fundsFor === SelfServeSupportType.FoodRestaurant) {
       const data: SelfServeFoodRestaurantSupport & { $type: 'SelfServeFoodRestaurantSupport' } = {
         $type: 'SelfServeFoodRestaurantSupport',
         type: SelfServeSupportType.FoodRestaurant,
@@ -721,25 +419,37 @@ export class EligibleSelfServeSupportFormComponent implements OnInit {
       supports: []
     };
 
-    if (this.showSelfServeShelterAllowanceSupport) {
-      const processShelterAllowance = this.processShelterAllowanceData();
-      if (processShelterAllowance) selfServeSupportRequest.supports.push(processShelterAllowance);
-    }
+    this.draftSupports.items.forEach((support) => {
+      switch (support.type) {
+        case SelfServeSupportType.ShelterAllowance:
+          const processShelterAllowance = this.processShelterAllowanceData();
+          if (processShelterAllowance) selfServeSupportRequest.supports.push(processShelterAllowance);
+          break;
 
-    if (this.showSelfServeFoodSupport) {
-      const processFood = this.processFoodData();
-      if (processFood) selfServeSupportRequest.supports.push(processFood);
-    }
+        case SelfServeSupportType.FoodGroceries:
+          const processFoodGroceries = this.processFoodGroceriesData();
+          if (processFoodGroceries) selfServeSupportRequest.supports.push(processFoodGroceries);
+          break;
 
-    if (this.showSelfServeClothingSupport) {
-      const processClothing = this.processClothing();
-      if (processClothing) selfServeSupportRequest.supports.push(processClothing);
-    }
+        case SelfServeSupportType.FoodRestaurant:
+          const processFoodRestaurant = this.processFoodRestaurantData();
+          if (processFoodRestaurant) selfServeSupportRequest.supports.push(processFoodRestaurant);
+          break;
 
-    if (this.showSelfServeIncidentsSupport) {
-      const processIncidents = this.processIncidents();
-      if (processIncidents) selfServeSupportRequest.supports.push(processIncidents);
-    }
+        case SelfServeSupportType.Clothing:
+          const processClothing = this.processClothing();
+          if (processClothing) selfServeSupportRequest.supports.push(processClothing);
+          break;
+
+        case SelfServeSupportType.Incidentals:
+          const processIncidents = this.processIncidents();
+          if (processIncidents) selfServeSupportRequest.supports.push(processIncidents);
+          break;
+
+        default:
+          break;
+      }
+    });
 
     return selfServeSupportRequest;
   }

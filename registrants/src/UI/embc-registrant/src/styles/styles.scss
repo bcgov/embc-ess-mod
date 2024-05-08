@@ -207,6 +207,13 @@ button:focus {
   outline: 0px !important;
 }
 
+.button-with-loader {
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
 .close-image,
 .edit-image {
   img:last-of-type {

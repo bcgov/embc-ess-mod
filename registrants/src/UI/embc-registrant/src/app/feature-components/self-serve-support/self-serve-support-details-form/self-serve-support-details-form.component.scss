@@ -1,0 +1,42 @@
+:host .support-details-form .mat-mdc-checkbox ::ng-deep label {
+  font-weight: bold;
+  line-height: var(--size-4);
+}
+
+.card-question {
+  font-size: var(--size-2);
+  margin-bottom: var(--size-2);
+}
+
+hr {
+  height: 1px;
+  background-color: #333;
+  margin-top: 0;
+}
+
+table {
+  min-width: 400px;
+}
+
+th {
+  font-weight: bold;
+  padding: var(--size-1);
+}
+
+td {
+  width: 150px;
+  word-break: break-word;
+  padding: var(--size-1);
+}
+
+tr.header-row {
+  height: 60px;
+  background: #f2f2f2;
+}
+
+.note-box {
+  flex: 1 0 300px;
+  max-width: 400px;
+  height: min-content;
+  padding: var(--size-2);
+}

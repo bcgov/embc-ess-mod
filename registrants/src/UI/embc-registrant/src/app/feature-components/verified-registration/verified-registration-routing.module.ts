@@ -59,7 +59,7 @@ const routes: Routes = [
       },
       {
         path: 'eligible-self-serve',
-        loadChildren: () => import('../eligible-self-serve/eligible-self-serve.routes').then((m) => m.routes)
+        loadChildren: () => import('../self-serve-support/self-serve-support.routes').then((m) => m.routes)
       },
       {
         path: 'fileSubmission',

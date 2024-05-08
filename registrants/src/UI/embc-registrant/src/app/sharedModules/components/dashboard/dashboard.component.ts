@@ -13,7 +13,7 @@ import { AlertComponent } from '../../../core/components/alert/alert.component';
 import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { EssFileSelfServeSubmissionDialogComponent } from 'src/app/core/components/dialog-components/ess-file-self-serve-submission-dialog.component';
+import { SelfServeSubmissionDialogComponent } from 'src/app/core/components/dialog-components/self-serve-submissoin-dialog/self-serve-submission-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
       const { selfServe, supportData } = this.router.lastSuccessfulNavigation.extras.state;
       if (selfServe) {
         this.dialog
-          .open(EssFileSelfServeSubmissionDialogComponent, {
+          .open(SelfServeSubmissionDialogComponent, {
             data: supportData,
             width: '80%',
             height: '750px',

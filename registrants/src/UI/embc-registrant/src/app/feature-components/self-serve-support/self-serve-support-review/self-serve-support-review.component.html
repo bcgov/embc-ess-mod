@@ -1,0 +1,191 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div style="display: flex; flex-direction: column; gap: var(--size-2); width: 100%">
+      <p class="card-heading" style="font-size: var(--size-4); margin-bottom: var(--size-5)">Review Details</p>
+      <div style="display: flex; justify-content: space-between">
+        <p class="card-heading">Support Details</p>
+        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="gotoStep.emit('supportDetails')">
+          <img src="/assets/images/edit.svg" height="35" width="35" />
+          <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+        </button>
+      </div>
+      <hr />
+
+      @for (support of draftSupports?.items; track support.type) {
+        @switch (support.type) {
+          @case (SelfServeSupportType.ShelterAllowance) {
+            <div style="display: flex">
+              <div style="width: 240px">Shelter Allowance</div>
+              <div style="width: 160px">
+                <b>$ {{ supportDraftForm.controls.shelterAllowance.controls.totalAmount.value }}</b>
+              </div>
+            </div>
+          }
+          @case (SelfServeSupportType.FoodGroceries) {
+            @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+              <div style="display: flex">
+                <div style="width: 240px">Grocery</div>
+                <div style="width: 160px">
+                  <b>$ {{ supportDraftForm.controls.food.controls.groceries.controls.totalAmount.value }}</b>
+                </div>
+              </div>
+            }
+          }
+          @case (SelfServeSupportType.FoodRestaurant) {
+            @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+              <div style="display: flex">
+                <div style="width: 240px">Restaurant</div>
+                <div style="width: 160px">
+                  <b>$ {{ supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.value }}</b>
+                </div>
+              </div>
+            }
+          }
+          @case (SelfServeSupportType.Clothing) {
+            <div style="display: flex">
+              <div style="width: 240px">Clothing</div>
+              <div style="width: 160px">
+                <b>$ {{ supportDraftForm.controls.clothing.controls.totalAmount.value }}</b>
+              </div>
+            </div>
+          }
+          @case (SelfServeSupportType.Incidentals) {
+            <div style="display: flex">
+              <div style="width: 240px">Incidentals</div>
+              <div style="width: 160px">
+                <b>$ {{ supportDraftForm.controls.incidents.controls.totalAmount.value }}</b>
+              </div>
+            </div>
+          }
+        }
+      }
+
+      <div style="display: flex">
+        <div style="width: 240px"><b>Total Amount</b></div>
+        <div style="width: 160px">
+          <b>$ {{ supportDraftForm.controls.totals.value }}</b>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between">
+        <p class="card-heading">e-Transfer Recipient Details</p>
+        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="gotoStep.emit('eTransfer')">
+          <img src="/assets/images/edit.svg" height="35" width="35" />
+          <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+        </button>
+      </div>
+      <hr />
+
+      <div style="display: flex">
+        <div style="width: 240px">e-Transfer Recipient:</div>
+        <div style="width: 160px">
+          <b>{{ eTransferDetailsForm.controls.recipientName.value }}</b>
+        </div>
+      </div>
+
+      @switch (eTransferDetailsForm.controls.notificationPreference.value) {
+        @case (ETransferNotificationPreference.Email) {
+          <div style="display: flex">
+            <div style="width: 240px">e-Transfer Notification:</div>
+            <div style="width: 160px">
+              <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+            </div>
+          </div>
+        }
+        @case (ETransferNotificationPreference.Mobile) {
+          <div style="display: flex">
+            <div style="width: 240px">e-Transfer Notification:</div>
+            <div style="width: 160px">
+              <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+            </div>
+          </div>
+          <div style="display: flex">
+            <div style="width: 240px">Contact Email Address</div>
+            <div style="width: 160px">
+              <b>{{ eTransferDetailsForm.controls.contactEmail.value }}</b>
+            </div>
+          </div>
+        }
+        @case (ETransferNotificationPreference.EmailAndMobile) {
+          <div style="display: flex">
+            <div style="width: 240px">e-Transfer Notification:</div>
+            <div style="width: 160px">
+              <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+            </div>
+          </div>
+          <div style="display: flex">
+            <div style="width: 240px">&nbsp;</div>
+            <div style="width: 160px">
+              <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+            </div>
+          </div>
+        }
+      }
+
+      <div style="display: flex; justify-content: space-between">
+        <p class="card-heading">Acknowledgment</p>
+      </div>
+      <hr />
+      <p>
+        <b>
+          You are being provided with a one-time digital payment for supports. These funds have been provided for the
+          sole purpose to meet essential needs of individuals and their household members.
+        </b>
+      </p>
+
+      <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.fundsExclusive">
+        I acknowledge that by accepting this digital payment, I agree to use the funds exclusively for meeting my basic
+        needs as outlined above. I understand that purchases such as alcohol, tobacco, cannabis products, entertainment
+        goods or services (such as online gaming), and luxury items are not permissible.
+      </mat-checkbox>
+      @if (
+        reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+        reviewAcknowledgeForm.controls.fundsExclusive.hasError('required')
+      ) {
+        <mat-error>Acknowledgment is required</mat-error>
+      }
+      <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.meetMyOwnNeeds">
+        I acknowledge that by accepting this digital payment, I am able to meet my own needs and will not seek further
+        supports during the valid timeframe of
+        <b>{{ shelterAllowanceDates[0].format('MMM DD, YYYY') }}</b> to
+        <b>{{ shelterAllowanceDates[shelterAllowanceDates.length - 1].format('MMM DD, YYYY') }}</b
+        >.
+      </mat-checkbox>
+      @if (
+        reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+        reviewAcknowledgeForm.controls.meetMyOwnNeeds.hasError('required')
+      ) {
+        <mat-error>Acknowledgment is required</mat-error>
+      }
+      <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.information">
+        I certify that all information I have provided is accurate to the best of my knowledge. If information is found
+        to be untrue, this may result in repayment of funds already received. Intentional provision of inaccurate
+        information may be investigated, and legal action may be undertaken.
+      </mat-checkbox>
+      @if (
+        reviewAcknowledgeForm.controls.fundsExclusive.touched &&
+        reviewAcknowledgeForm.controls.information.hasError('required')
+      ) {
+        <mat-error>Acknowledgment is required</mat-error>
+      }
+
+      <div
+        style="
+          text-align: center;
+          border: 4px solid orange;
+          padding: var(--size-2);
+          margin: var(--size-5);
+          background: #eee;
+          font-size: 20px;
+        "
+      >
+        <p>
+          If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer will be your
+          ESS File Number, which is <b>{{ essFileId }}</b
+          >.
+        </p>
+        <p>You can find your ESS File number under the Current Events tab of your ERA profile.</p>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

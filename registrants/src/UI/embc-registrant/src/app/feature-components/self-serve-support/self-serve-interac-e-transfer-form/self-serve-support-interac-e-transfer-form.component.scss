@@ -1,0 +1,15 @@
+.eTransfer-form mat-form-field {
+  width: 450px;
+}
+
+.container-with-logo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: space-between;
+}
+
+.card-question {
+  font-size: var(--size-2);
+  margin-bottom: var(--size-2);
+}
