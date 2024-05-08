@@ -20,3 +20,11 @@ mat-card {
 :host .mat-mdc-checkbox ::ng-deep .mdc-form-field {
   align-items: flex-start;
 }
+
+.self-serve-support-error-container {
+  display: block;
+  color: white;
+  background-color: orange;
+  padding: var(--size-2);
+  font-size: var(--size-3);
+}
