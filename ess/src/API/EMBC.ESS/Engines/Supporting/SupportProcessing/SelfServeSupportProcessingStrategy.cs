@@ -75,9 +75,9 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
         // calculate support eligibility period
-        var eligibleFrom = DateTimeOffset.Now;
+        var eligibleFrom = DateTimeOffset.UtcNow;
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
-        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
+        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
 
         // check if requested supports include referrals
         var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();

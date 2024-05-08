@@ -37,8 +37,8 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
         {
             EvacuationFileId = evacuationFileId,
             IsEligable = eligilityCheck.IsEligible,
-            From = eligilityCheck.From?.DateTime,
-            To = eligilityCheck.To?.DateTime,
+            From = eligilityCheck.From?.DateTime.ToUniversalTime(),
+            To = eligilityCheck.To?.DateTime.ToUniversalTime(),
             TaskNumber = eligilityCheck.TaskNumber
         });
     }
