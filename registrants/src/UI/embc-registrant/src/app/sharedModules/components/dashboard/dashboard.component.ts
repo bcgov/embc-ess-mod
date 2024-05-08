@@ -13,6 +13,7 @@ import { AlertComponent } from '../../../core/components/alert/alert.component';
 import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { SelfServeSubmissionDialogComponent } from 'src/app/core/components/dialog-components/self-serve-submissoin-dialog/self-serve-submission-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -77,21 +78,36 @@ export class DashboardComponent implements OnInit {
     const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
-      this.dialog
-        .open(DialogComponent, {
-          data: {
-            component: EssFileDialogComponent,
-            content: globalConst.newEssFile,
-            essFileData: registrationResult,
-            initDialog: false
-          },
-          width: '700px',
-          height: '750px'
-        })
-        .afterClosed()
-        .subscribe(() => {
-          this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
-        });
+      const { selfServe, supportData } = this.router.lastSuccessfulNavigation.extras.state;
+      if (selfServe) {
+        this.dialog
+          .open(SelfServeSubmissionDialogComponent, {
+            data: supportData,
+            width: '80%',
+            height: '750px',
+            maxWidth: '900px'
+          })
+          .afterClosed()
+          .subscribe(() => {
+            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
+          });
+      } else {
+        this.dialog
+          .open(DialogComponent, {
+            data: {
+              component: EssFileDialogComponent,
+              content: globalConst.newEssFile,
+              essFileData: registrationResult,
+              initDialog: false
+            },
+            width: '700px',
+            height: '750px'
+          })
+          .afterClosed()
+          .subscribe(() => {
+            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
+          });
+      }
     }
   }
 
