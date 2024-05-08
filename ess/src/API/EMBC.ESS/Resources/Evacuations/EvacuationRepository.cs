@@ -496,6 +496,7 @@ public class EvacuationRepository : IEvacuationRepository
         if (check != null)
         {
             check.era_selfserveoptout = true;
+            ctx.UpdateObject(check);
             await ctx.SaveChangesAsync(ct);
         }
         return new ManageEvacuationFileCommandResult { Id = check?.era_eligibilitycheckid?.ToString() };
