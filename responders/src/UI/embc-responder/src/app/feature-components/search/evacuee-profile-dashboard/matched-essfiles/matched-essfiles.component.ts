@@ -134,10 +134,7 @@ export class MatchedEssfilesComponent implements OnInit {
           if (this.evacueeSessionService.isPaperBased) {
             if (loggedInRole !== MemberRole.Tier1) {
               this.essFiles = essFilesArray;
-            } else if (
-              loggedInRole === MemberRole.Tier1 &&
-              this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
-            ) {
+            } else {
               this.essFiles = essFilesArray.filter(
                 (files) =>
                   files.manualFileId ===
@@ -145,11 +142,7 @@ export class MatchedEssfilesComponent implements OnInit {
               );
             }
           } else {
-            if (loggedInRole === MemberRole.Tier1) {
-              this.essFiles = essFilesArray.filter((files) => files.status !== EvacuationFileStatus.Completed);
-            } else {
-              this.essFiles = essFilesArray;
-            }
+            this.essFiles = essFilesArray;
           }
         } else {
           this.essFiles = [];

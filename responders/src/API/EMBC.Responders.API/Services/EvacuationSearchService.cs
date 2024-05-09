@@ -11,7 +11,7 @@ namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId, MemberRole userRole);
+        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId);
 
         Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId);
 
@@ -19,11 +19,11 @@ namespace EMBC.Responders.API.Services
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id);
 
-        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId);
 
-        Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth);
 
-        Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth);
     }
 
     public class SearchResults
@@ -81,8 +81,6 @@ namespace EMBC.Responders.API.Services
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IConfiguration configuration;
-        private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
-        private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
 
         public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper, IConfiguration configuration)
         {
@@ -91,17 +89,14 @@ namespace EMBC.Responders.API.Services
             this.configuration = configuration;
         }
 
-        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId, MemberRole userRole)
+        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId)
         {
-            var allowedStatues = (!string.IsNullOrEmpty(manualFileId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
-                .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray();
             var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
-                IncludeRestrictedAccess = userRole != MemberRole.Tier1,
-                InStatuses = allowedStatues
+                IncludeRestrictedAccess = true
             });
             return new SearchResults
             {
@@ -160,7 +155,7 @@ namespace EMBC.Responders.API.Services
             return new[] { mapper.Map<EvacuationFileSummary>(mappedFile) };
         }
 
-        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId)
         {
             var files = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery
             {
@@ -170,20 +165,7 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
 
-        public async Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
-        {
-            var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                IncludeRestrictedAccess = userRole != MemberRole.Tier1,
-                IncludeRegistrantProfilesOnly = true
-            });
-            return mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(searchResults.Profiles);
-        }
-
-        public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
+        public async Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth)
         {
             var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
@@ -191,9 +173,20 @@ namespace EMBC.Responders.API.Services
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
                 IncludeRestrictedAccess = true,
-                IncludeEvacuationFilesOnly = true,
-                InStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
-                    .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray()
+                IncludeRegistrantProfilesOnly = true
+            });
+            return mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(searchResults.Profiles);
+        }
+
+        public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth)
+        {
+            var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                IncludeRestrictedAccess = true,
+                IncludeEvacuationFilesOnly = true
             });
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }

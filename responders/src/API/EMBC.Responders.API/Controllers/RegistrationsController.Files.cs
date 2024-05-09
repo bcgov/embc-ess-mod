@@ -55,8 +55,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(manualFileId))
             {
-                var userRole = Enum.Parse<MemberRole>(currentUserRole);
-                var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId, userRole);
+                var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId);
                 return Ok(files);
             }
             else if (!string.IsNullOrEmpty(manualFileId) && string.IsNullOrEmpty(registrantId))
