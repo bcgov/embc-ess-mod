@@ -1,9 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Address data with optional lookup code
- */
 export interface Address {
   addressLine1: string;
   addressLine2?: null | string;
