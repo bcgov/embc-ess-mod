@@ -66,7 +66,7 @@ export class SelfServeSupportDetailsFormComponent {
             this.supportDraftForm.controls.food.controls.restaurant
           );
           break;
-          
+
         case SelfServeSupportType.Clothing:
           this.createSelfServeClothingSupportForm(support, this.supportDraftForm.controls.clothing);
           break;
