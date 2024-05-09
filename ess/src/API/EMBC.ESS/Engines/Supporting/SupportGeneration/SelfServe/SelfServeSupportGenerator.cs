@@ -108,6 +108,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
             var hmList = householdMembers.ToList();
+            if (hmList.Count == 0) return 0d;
             var numberOfNights = support.Nights.Count();
             var numberOfAdults = hmList.Count(hm => !hm.IsMinor);
             var numberOfMinors = hmList.Count(hm => hm.IsMinor);
