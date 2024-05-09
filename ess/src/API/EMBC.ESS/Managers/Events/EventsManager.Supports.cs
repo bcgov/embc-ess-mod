@@ -21,6 +21,8 @@ using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using ContractsEvents = EMBC.ESS.Shared.Contracts.Events;
+
 
 namespace EMBC.ESS.Managers.Events;
 
@@ -108,67 +110,7 @@ public partial class EventsManager
             PrintReferrals = false
         });
 
-        #region eTrasnfer Email Confirmation
-
-        double totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
-
-        foreach (var item in response.Supports)
-        {
-            switch (item)
-            {
-                case SelfServeClothingSupport clothingSupport:
-                    clothingAmount += clothingSupport.TotalAmount ?? 0;
-                    break;
-                case SelfServeFoodGroceriesSupport groceriesSupport:
-                    groceryAmount += groceriesSupport.TotalAmount ?? 0;
-                    break;
-                case SelfServeFoodRestaurantSupport restaurantSupport:
-                    restaurantAmount += restaurantSupport.TotalAmount ?? 0;
-                    break;
-                case SelfServeIncidentalsSupport incidentalsSupport:
-                    incidentalsAmount += incidentalsSupport.TotalAmount ?? 0;
-                    break;
-                case SelfServeShelterAllowanceSupport shelterSupport:
-                    shelterAllowanceAmount += shelterSupport.TotalAmount ?? 0;
-                    break;
-            }
-        }
-        totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
-
-        string email = "";
-        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
-
-        if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
-        {
-            email = cmd.ETransferDetails.ETransferEmail;
-        }
-        else
-            email = evacuee.Email;
-
-        if (!string.IsNullOrWhiteSpace(email))
-        {
-            await SendEmailNotification(
-                SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
-                email: email,
-                name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: new[]
-                {
-                    KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
-                    KeyValuePair.Create("clothingAmount", clothingAmount.ToString("0.00")),
-                    KeyValuePair.Create("incidentalsAmount", incidentalsAmount.ToString("0.00")),
-                    KeyValuePair.Create("groceryAmount", groceryAmount.ToString("0.00")),
-                    KeyValuePair.Create("restaurantAmount", restaurantAmount.ToString("0.00")),
-                    KeyValuePair.Create("shelterAllowanceAmount", shelterAllowanceAmount.ToString("0.00")),
-                    KeyValuePair.Create("recipientName", cmd.ETransferDetails.RecipientName),
-                    KeyValuePair.Create("notificationEmail", cmd.ETransferDetails.ETransferEmail),
-                    KeyValuePair.Create("showClothingAmount", clothingAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showIncidentalsAmount", incidentalsAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showGroceryAmount", groceryAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showRestaurantAmount", restaurantAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showShelterAllowanceAmount", shelterAllowanceAmount > 0 ? "true" : "false")
-                });
-        } 
-        #endregion
+        bool emailSent = await SendEmailConfirmation(cmd, file, supports);
 
         file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
         await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
@@ -477,5 +419,69 @@ public partial class EventsManager
         {
             Eligibility = eligibility
         };
+    }
+
+    private async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, Resources.Evacuations.EvacuationFile file, IEnumerable<ContractsEvents.Support> supports)
+    {
+        decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
+
+        foreach (var item in supports)
+        {
+            switch (item)
+            {
+            case ContractsEvents.ClothingSupport clothingSupport:
+                clothingAmount += clothingSupport.TotalAmount;
+                break;
+            case ContractsEvents.FoodGroceriesSupport groceriesSupport:
+                groceryAmount += groceriesSupport.TotalAmount;
+                break;
+            case ContractsEvents.FoodRestaurantSupport restaurantSupport:
+                restaurantAmount += restaurantSupport.TotalAmount;
+                break;
+            case ContractsEvents.IncidentalsSupport incidentalsSupport:
+                incidentalsAmount += incidentalsSupport.TotalAmount;
+                break;
+            case ContractsEvents.ShelterAllowanceSupport shelterSupport:
+                shelterAllowanceAmount += shelterSupport.TotalAmount;
+                break;
+            }
+        }
+        totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+
+        string email = "";
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+
+        if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
+        {
+            email = eTransferDetails.ETransferEmail;
+        }
+        else
+            email = evacuee.Email;
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            await SendEmailNotification(
+                SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
+                email: email,
+                name: $"{evacuee.LastName}, {evacuee.FirstName}",
+                tokens: new[]
+                {
+                    KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
+                    KeyValuePair.Create("clothingAmount", clothingAmount.ToString("0.00")),
+                    KeyValuePair.Create("incidentalsAmount", incidentalsAmount.ToString("0.00")),
+                    KeyValuePair.Create("groceryAmount", groceryAmount.ToString("0.00")),
+                    KeyValuePair.Create("restaurantAmount", restaurantAmount.ToString("0.00")),
+                    KeyValuePair.Create("shelterAllowanceAmount", shelterAllowanceAmount.ToString("0.00")),
+                    KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
+                    KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
+                    KeyValuePair.Create("showClothingAmount", clothingAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showIncidentalsAmount", incidentalsAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showGroceryAmount", groceryAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showRestaurantAmount", restaurantAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showShelterAllowanceAmount", shelterAllowanceAmount > 0 ? "true" : "false")
+                });
+            return true;
+        }
+        return false;
     }
 }
