@@ -53,6 +53,15 @@ public class SelfServeSupportGenerationTests
     }
 
     [Fact]
+    public async Task Generate_ShelterAllowanceNoHouseholdMembers_Created()
+    {
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance, []);
+        support.Nights.ShouldBe(expectedDays);
+        support.IncludedHouseholdMembers.ShouldBe([]);
+        support.TotalAmount.ShouldBe(0d);
+    }
+
+    [Fact]
     public async Task Generate_Incidentals_Created()
     {
         var support = await GenerateSelfServeSupports<SelfServeIncidentalsSupport>(IdentifiedNeed.Incidentals);

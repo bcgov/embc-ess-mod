@@ -18,11 +18,11 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources:
         limits:
-          cpu: 25m
-          memory: 64Mi
+          cpu: 100m
+          memory: 128Mi
         requests:
-          cpu: 5m
-          memory: 32Mi
+          cpu: 50m
+          memory: 64Mi
       script: |
         old=$(oc get imagestream $(params.imageName) -o jsonpath='{.status.tags[?(@.tag=="$(params.toTag)")].items[0].image}')
         new=$(oc get imagestream $(params.imageName) -o jsonpath='{.status.tags[?(@.tag=="$(params.fromTag)")].items[0].image}')
@@ -36,10 +36,10 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
       resources:
         limits:
-          cpu: 25m
-          memory: 64Mi
+          cpu: 100m
+          memory: 128Mi
         requests:
-          cpu: 5m
-          memory: 32Mi
+          cpu: 50m
+          memory: 64Mi
       script: |
         oc tag $(params.imageName):$(params.fromTag) $(params.imageName):$(params.toTag) --reference-policy=$(params.referencePolicy)
