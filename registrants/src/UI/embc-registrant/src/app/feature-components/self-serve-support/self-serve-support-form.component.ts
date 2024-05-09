@@ -16,8 +16,7 @@ import {
   SelfServeIncidentalsSupport,
   SelfServeShelterAllowanceSupport,
   SelfServeSupportType,
-  SubmitSupportsRequest,
-  SupportDay
+  SubmitSupportsRequest
 } from 'src/app/core/api/models';
 import { SupportsService } from 'src/app/core/api/services';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
@@ -32,7 +31,7 @@ import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-n
 import {
   DraftSupportForm,
   SelfServeShelerAllowanceSupportForm,
-  SupportPersonDateForm,
+  SupportDateForm,
   SelfServeFoodSupportForm,
   FundsFor,
   SelfServeFoodRestaurantSupportForm,
@@ -90,7 +89,8 @@ export class SelfServeSupportFormComponent implements OnInit {
   supportDraftForm = new FormGroup<DraftSupportForm>({
     shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
       totalAmount: new FormControl<number>(0),
-      nights: new FormArray<FormGroup<SupportPersonDateForm>>([])
+      includedHouseholdMembers: new FormArray<FormGroup<SupportPersonForm>>([]),
+      nights: new FormArray<FormGroup<SupportDateForm>>([])
     }),
     food: new FormGroup<SelfServeFoodSupportForm>({
       fundsFor: new FormControl<FundsFor>(null, Validators.required),
@@ -100,7 +100,8 @@ export class SelfServeSupportFormComponent implements OnInit {
         totalAmount: new FormControl<number>(0)
       }),
       groceries: new FormGroup({
-        nights: new FormArray<FormGroup<SupportPersonDateForm>>([]),
+        includedHouseholdMembers: new FormArray<FormGroup<SupportPersonForm>>([]),
+        nights: new FormArray<FormGroup<SupportDateForm>>([]),
         totalAmount: new FormControl<number>(0)
       })
     }),
@@ -306,11 +307,13 @@ export class SelfServeSupportFormComponent implements OnInit {
       totalAmount: supportFormValue.totalAmount
     };
 
-    const datesWithMembers: Record<string, SupportDay> = this.getSupportDays(
-      this.supportDraftForm.controls.shelterAllowance.controls.nights
-    );
+    data.includedHouseholdMembers = supportForm.controls.includedHouseholdMembers.controls
+      .filter((c) => c.controls.isSelected.value === true)
+      .map((c) => c.controls.personId.value);
 
-    data.nights = Object.values(datesWithMembers);
+    data.nights = supportForm.controls.nights.controls
+      .filter((c) => c.controls.isSelected.value === true)
+      .map((c) => c.controls.date.value.format('YYYY-MM-DD'));
 
     return data;
   }
@@ -326,9 +329,13 @@ export class SelfServeSupportFormComponent implements OnInit {
       totalAmount: supportFormValue.totalAmount
     };
 
-    const supportDays: Record<string, SupportDay> = this.getSupportDays(supportForm.controls.nights);
+    data.includedHouseholdMembers = supportForm.controls.includedHouseholdMembers.controls
+      .filter((c) => c.controls.isSelected.value === true)
+      .map((c) => c.controls.personId.value);
 
-    data.nights = Object.values(supportDays);
+    data.nights = supportForm.controls.nights.controls
+      .filter((c) => c.controls.isSelected.value === true)
+      .map((c) => c.controls.date.value.format('YYYY-MM-DD'));
 
     return data;
   }
@@ -392,21 +399,6 @@ export class SelfServeSupportFormComponent implements OnInit {
       .map((m) => m.personId);
 
     return data;
-  }
-
-  private getSupportDays(supportDays: FormArray<FormGroup<SupportPersonDateForm>>) {
-    const datesWithMembers: Record<string, SupportDay> = {};
-    supportDays.value.map((s) => {
-      if (s.isSelected) {
-        if (!datesWithMembers[s.date.format('YYYY-MM-DD')])
-          datesWithMembers[s.date.format('YYYY-MM-DD')] = {
-            date: s.date.format('YYYY-MM-DD'),
-            includedHouseholdMembers: [s.personId]
-          };
-        else datesWithMembers[s.date.format('YYYY-MM-DD')].includedHouseholdMembers.push(s.personId);
-      }
-    });
-    return datesWithMembers;
   }
 
   getPayloadData() {

@@ -2,8 +2,13 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   DraftSupportForm,
+  SelfServeClothingSupportForm,
+  SelfServeFoodGroceriesSupportForm,
+  SelfServeFoodRestaurantSupportForm,
+  SelfServeIncidentsSupportForm,
+  SelfServeShelerAllowanceSupportForm,
   SelfServeSupportDayMealForm,
-  SupportPersonDateForm,
+  SupportDateForm,
   SupportPersonForm
 } from '../self-serve-support.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -39,8 +44,6 @@ export class SelfServeSupportDetailsFormComponent {
   showSelfServeClothingSupport = false;
   showSelfServeIncidentsSupport = false;
 
-  shelterAllowanceDates: moment.Moment[] = [];
-  foodGroceriesDates: moment.Moment[] = [];
   foodRestaurantDates: moment.Moment[] = [];
 
   _draftSupports: DraftSupports;
@@ -50,22 +53,26 @@ export class SelfServeSupportDetailsFormComponent {
     draftSupports.items.forEach((support) => {
       switch (support.type) {
         case SelfServeSupportType.ShelterAllowance:
-          this.createSelfServeShelterAllowanceSupportForm(support as any);
+          this.createSelfServeShelterAllowanceSupportForm(support, this.supportDraftForm.controls.shelterAllowance);
           break;
 
         case SelfServeSupportType.FoodGroceries:
-          this.createSelfServeFoodGroceriesSupportForm(support as any);
+          this.createSelfServeFoodGroceriesSupportForm(support, this.supportDraftForm.controls.food.controls.groceries);
           break;
 
         case SelfServeSupportType.FoodRestaurant:
-          this.createSelfServeFoodRestaurantSupportForm(support as any);
+          this.createSelfServeFoodRestaurantSupportForm(
+            support,
+            this.supportDraftForm.controls.food.controls.restaurant
+          );
           break;
+          
         case SelfServeSupportType.Clothing:
-          this.createSelfServeClothingSupportForm(support as any);
+          this.createSelfServeClothingSupportForm(support, this.supportDraftForm.controls.clothing);
           break;
 
         case SelfServeSupportType.Incidentals:
-          this.createSelfServeIncidentsSupportForm(support as any);
+          this.createSelfServeIncidentsSupportForm(support, this.supportDraftForm.controls.incidents);
           break;
 
         default:
@@ -80,47 +87,50 @@ export class SelfServeSupportDetailsFormComponent {
     return this._draftSupports;
   }
 
-  private createSelfServeShelterAllowanceSupportForm(selfServeSupport: SelfServeShelterAllowanceSupport) {
-    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
-    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
+  private createSelfServeShelterAllowanceSupportForm(
+    selfServeSupport: SelfServeShelterAllowanceSupport,
+    selfServeSupportFormGroup: FormGroup<SelfServeShelerAllowanceSupportForm>
+  ) {
+    this.createSupportPersonFormArray(
+      selfServeSupport.includedHouseholdMembers,
+      selfServeSupportFormGroup.controls.includedHouseholdMembers
+    );
 
-    this.createSupportPersonDateForm(this.supportDraftForm.controls.shelterAllowance.controls.nights, persons, dates);
+    this.createSupportDateFormArray(selfServeSupport.nights, selfServeSupportFormGroup.controls.nights);
 
-    this.supportDraftForm.controls.shelterAllowance.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+    selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
-    this.shelterAllowanceDates = [...dates];
     this.showSelfServeShelterAllowanceSupport = true;
   }
 
-  private createSelfServeFoodGroceriesSupportForm(selfServeSupport: SelfServeFoodGroceriesSupport) {
-    const dates = selfServeSupport.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
-    const persons = selfServeSupport.nights[0].includedHouseholdMembers;
-
-    this.createSupportPersonDateForm(
-      this.supportDraftForm.controls.food.controls.groceries.controls.nights,
-      persons,
-      dates
+  private createSelfServeFoodGroceriesSupportForm(
+    selfServeSupport: SelfServeFoodGroceriesSupport,
+    selfServeSupportFormGroup: FormGroup<SelfServeFoodGroceriesSupportForm>
+  ) {
+    this.createSupportPersonFormArray(
+      selfServeSupport.includedHouseholdMembers,
+      selfServeSupportFormGroup.controls.includedHouseholdMembers
     );
 
-    this.supportDraftForm.controls.food.controls.groceries.controls.totalAmount.setValue(
-      selfServeSupport.totalAmount ?? 0
-    );
+    this.createSupportDateFormArray(selfServeSupport.nights, selfServeSupportFormGroup.controls.nights);
 
-    this.foodGroceriesDates = [...dates];
+    selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+
     this.showSelfServeFoodSupport = true;
   }
 
-  private createSelfServeFoodRestaurantSupportForm(selfServeSupport: SelfServeFoodRestaurantSupport) {
+  private createSelfServeFoodRestaurantSupportForm(
+    selfServeSupport: SelfServeFoodRestaurantSupport,
+    selfServeSupportFormGroup: FormGroup<SelfServeFoodRestaurantSupportForm>
+  ) {
     const dates = selfServeSupport.meals.map((m) => moment(m.date, 'YYYY-MM-DD'));
     selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.push(
-        this.createSupportPersonForm(p)
-      );
+      selfServeSupportFormGroup.controls.includedHouseholdMembers.push(this.createSupportPersonFormGroup(p));
     });
 
     const originalMealSupportsDraft: Record<string, SupportDayMeals> = {};
 
-    this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.valueChanges.subscribe({
+    selfServeSupportFormGroup.controls.mealTypes.valueChanges.subscribe({
       next: () => {
         // get all unchecked and undisabled control
         const unCheckedControls: Record<string, FormControl[]> = {
@@ -135,7 +145,7 @@ export class SelfServeSupportDetailsFormComponent {
           dinner: 0
         };
 
-        this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((meal) => {
+        selfServeSupportFormGroup.controls.mealTypes.controls.forEach((meal) => {
           if (meal.controls.breakfast.value === true) checkedCount.breakfast++;
           else if (
             originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === true ||
@@ -185,7 +195,7 @@ export class SelfServeSupportDetailsFormComponent {
 
       originalMealSupportsDraft[date.format('YYYY-MM-DD')] = m;
 
-      this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.push(
+      selfServeSupportFormGroup.controls.mealTypes.push(
         new FormGroup<SelfServeSupportDayMealForm>({
           date: new FormControl(date),
           breakfast: new FormControl({ value: m.breakfast, disabled: m.breakfast !== true && m.breakfast !== false }),
@@ -195,10 +205,10 @@ export class SelfServeSupportDetailsFormComponent {
       );
     });
 
-    this.supportDraftForm.controls.food.controls.restaurant.controls.includedHouseholdMembers.valueChanges.subscribe({
+    selfServeSupportFormGroup.controls.includedHouseholdMembers.valueChanges.subscribe({
       next: (includedHouseholdMembers) => {
         if (includedHouseholdMembers.every((m) => !m.isSelected)) {
-          this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((m) => {
+          selfServeSupportFormGroup.controls.mealTypes.controls.forEach((m) => {
             if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false, { emitEvent: false });
             if (m.controls.lunch.value === true) m.controls.lunch.setValue(false, { emitEvent: false });
             if (m.controls.dinner.value === true) m.controls.dinner.setValue(false, { emitEvent: false });
@@ -207,71 +217,57 @@ export class SelfServeSupportDetailsFormComponent {
       }
     });
 
-    this.supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.setValue(
-      selfServeSupport.totalAmount ?? 0
-    );
+    selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.foodRestaurantDates = [...dates];
 
     this.showSelfServeFoodSupport = true;
   }
 
-  private createSelfServeClothingSupportForm(selfServeSupport: SelfServeClothingSupport) {
+  private createSelfServeClothingSupportForm(
+    selfServeSupport: SelfServeClothingSupport,
+    selfServeSupportFormGroup: FormGroup<SelfServeClothingSupportForm>
+  ) {
     selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.clothing.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
+      selfServeSupportFormGroup.controls.includedHouseholdMembers.push(this.createSupportPersonFormGroup(p));
     });
 
-    this.supportDraftForm.controls.clothing.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+    selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.showSelfServeClothingSupport = true;
   }
 
-  private createSelfServeIncidentsSupportForm(selfServeSupport: SelfServeIncidentalsSupport) {
+  private createSelfServeIncidentsSupportForm(
+    selfServeSupport: SelfServeIncidentalsSupport,
+    selfServeSupportFormGroup: FormGroup<SelfServeIncidentsSupportForm>
+  ) {
     selfServeSupport.includedHouseholdMembers.forEach((p) => {
-      this.supportDraftForm.controls.incidents.controls.includedHouseholdMembers.push(this.createSupportPersonForm(p));
+      selfServeSupportFormGroup.controls.includedHouseholdMembers.push(this.createSupportPersonFormGroup(p));
     });
 
-    this.supportDraftForm.controls.incidents.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+    selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.showSelfServeIncidentsSupport = true;
   }
 
-  createSupportPersonForm(id: string, isSelected: boolean = true): FormGroup<SupportPersonForm> {
+  createSupportPersonFormArray(persons: string[], personFormArray: FormArray<FormGroup<SupportPersonForm>>) {
+    persons.forEach((p) => personFormArray.push(this.createSupportPersonFormGroup(p)));
+  }
+
+  createSupportPersonFormGroup(id: string, isSelected: boolean = true): FormGroup<SupportPersonForm> {
     return new FormGroup<SupportPersonForm>({ personId: new FormControl(id), isSelected: new FormControl(isSelected) });
   }
 
-  createSupportPersonDateForm(
-    formArray: FormArray<FormGroup<SupportPersonDateForm>>,
-    perons: string[],
-    dates: moment.Moment[]
-  ) {
-    perons.forEach((p) => {
-      dates.forEach((d) => {
-        formArray.push(
-          new FormGroup<SupportPersonDateForm>({
-            personId: new FormControl(p),
-            isSelected: new FormControl(true),
-            date: new FormControl(d)
-          })
-        );
-      });
-    });
+  createSupportDateFormArray(dates: string[], datesFormArray: FormArray<FormGroup<SupportDateForm>>) {
+    dates.forEach((d) => datesFormArray.push(this.createSupportDateFormGroup(moment(d, 'YYYY-MM-DD'))));
+  }
+
+  createSupportDateFormGroup(date: moment.Moment, isSelected: boolean = true): FormGroup<SupportDateForm> {
+    return new FormGroup<SupportDateForm>({ date: new FormControl(date), isSelected: new FormControl(isSelected) });
   }
 
   getPersonName(id: string) {
     const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
     return `${personDetails?.firstName ?? ''}`;
-  }
-
-  getDateControl(
-    supportPersonDateForm: FormArray<FormGroup<SupportPersonDateForm>>,
-    person: HouseholdMember,
-    date: moment.Moment
-  ): FormGroup<SupportPersonDateForm> {
-    const personFormGroup = supportPersonDateForm.controls.find(
-      (p: FormGroup) => p.controls.personId.value === person.id && p.controls.date.value === date
-    );
-
-    return personFormGroup;
   }
 }
