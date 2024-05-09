@@ -7,41 +7,55 @@
                 <p style='font-size: 13pt;color:#00a6ed;font-weight: bold;'>e-Transfer Details:</p>
 
                 <p>
-                    e-Transfer Recipient: <b>  {{recipientFirstName}} {{recipientLastName }}</b>
+                    e-Transfer Recipient: <b>  {{recipientName}}</b>
                     <br />
                     e-Transfer Notification: <b>{{notificationEmail}}</b>
-                <p>
-                <p>
-                    Grocery: <b>${{groceryAmount}}</b>
-                    <br />
-                    Clothing: <b>${{clothingAmount}}</b>
-                    <br>
-                    Incidentals: <b>${{incidentalsAmount}}</b>
-                <p>
-                <p style='font-size: 13pt;font-weight: bold;'>Total Amount: ${{totalAmount}}</p>
-                <p style='font-size: 13pt;color:#00a6ed;font-weight: bold;'>Next Steps:</p>
-                <ul>
-                    <li>
-                        <b>No Further Action Required:</b> You DO NOT need to meet with a responder at a reception centre. For information about evacuation orders and alerts, please visit your Local Emergency Programs website or <a href="https://www.emergencyinfobc.gov.bc.ca/" style="color:#00a6ed;text-decoration:underline;">EmergencyInfoBC.ca</a>.
-                    </li>
-                    <br>
-                    <li>
-                        If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer can be found in your ERA Profile.
-                    </li>
-                    <br>
-                    <li>
-                        While most e-Transfers are processed immediately, there are instances where processing delays can occur. If your e-Transfer is not received within 24 hours, please contact 1-800-585-9559.
-                    </li>
-                    <br>
-                </ul>
-                <p>
-                    <strong>
-                        Please use the following link to login to the tool and review and/or edit your new ESS File:
-                        <a href='https://ess.gov.bc.ca' style="color:#00a6ed;text-decoration:underline;">https://ess.gov.bc.ca</a>
-                        <br /><i style="color: #808080">(select the 'Already have an account? Log in' button)</i>
-                    </strong>
                 </p>
-            </td>
+                <p>
+                    <span ng-show="showGroceryAmount">
+                        Grocery: <b>${{groceryAmount}}</b>
+                        <br>
+                    </span>
+                    <span ng-show="showRestaurantAmount">
+                        Restaurant: <b>${{restaurantAmount}}</b>
+                        <br />
+                    </span>
+                    <span ng-show="showClothingAmount">
+                        Clothing: <b>${{clothingAmount}}</b>
+                        <br>
+                    </span>
+                    <span ng-show="showIncidentalsAmount">
+                        Incidentals: <b>${{incidentalsAmount}}</b>
+                        <br>
+                    </span>
+                    <span ng-show="showShelterAllowanceAmount">
+                        Shelter Allowance: <b>${{shelterAllowanceAmount}}</b>
+                    </span>
+                                    <p>
+                                    <p style='font-size: 13pt;font-weight: bold;'>Total Amount: ${{totalAmount}}</p>
+                                    <p style='font-size: 13pt;color:#00a6ed;font-weight: bold;'>Next Steps:</p>
+                                    <ul>
+                                        <li>
+                                            <b>No Further Action Required:</b> You DO NOT need to meet with a responder at a reception centre. For information about evacuation orders and alerts, please visit your Local Emergency Programs website or <a href="https://www.emergencyinfobc.gov.bc.ca/" style="color:#00a6ed;text-decoration:underline;">EmergencyInfoBC.ca</a>.
+                                        </li>
+                                        <br>
+                                        <li>
+                                            If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer can be found in your ERA Profile.
+                                        </li>
+                                        <br>
+                                        <li>
+                                            While most e-Transfers are processed immediately, there are instances where processing delays can occur. If your e-Transfer is not received within 24 hours, please contact 1-800-585-9559.
+                                        </li>
+                                        <br>
+                                    </ul>
+                                    <p>
+                                        <strong>
+                                            Please use the following link to login to the tool and review and/or edit your new ESS File:
+                                            <a href='https://ess.gov.bc.ca' style="color:#00a6ed;text-decoration:underline;">https://ess.gov.bc.ca</a>
+                                            <br /><i style="color: #808080">(select the 'Already have an account? Log in' button)</i>
+                                        </strong>
+                                    </p>
+</td>
         </tr>
         <tr>
             <td style="padding:30px;text-align:center;font-size:12px;background-color:#234075;color:#cccccc;">

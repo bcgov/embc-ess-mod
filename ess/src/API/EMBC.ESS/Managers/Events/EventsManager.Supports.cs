@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Engines.Supporting.SupportGeneration;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
+using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
@@ -15,6 +19,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Managers.Events;
@@ -83,8 +88,10 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
         if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
 
+        var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(cmd.Supports, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
+
         var supports = ((GenerateSelfServeETransferSupportsResponse)await supportingEngine.Generate(
-            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, response.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
         var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
         {
             FileId = cmd.EvacuationFileId,
@@ -100,6 +107,68 @@ public partial class EventsManager
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
+
+        #region eTrasnfer Email Confirmation
+
+        double totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
+
+        foreach (var item in response.Supports)
+        {
+            switch (item)
+            {
+                case SelfServeClothingSupport clothingSupport:
+                    clothingAmount += clothingSupport.TotalAmount ?? 0;
+                    break;
+                case SelfServeFoodGroceriesSupport groceriesSupport:
+                    groceryAmount += groceriesSupport.TotalAmount ?? 0;
+                    break;
+                case SelfServeFoodRestaurantSupport restaurantSupport:
+                    restaurantAmount += restaurantSupport.TotalAmount ?? 0;
+                    break;
+                case SelfServeIncidentalsSupport incidentalsSupport:
+                    incidentalsAmount += incidentalsSupport.TotalAmount ?? 0;
+                    break;
+                case SelfServeShelterAllowanceSupport shelterSupport:
+                    shelterAllowanceAmount += shelterSupport.TotalAmount ?? 0;
+                    break;
+            }
+        }
+        totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+
+        string email = "";
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+
+        if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
+        {
+            email = cmd.ETransferDetails.ETransferEmail;
+        }
+        else
+            email = evacuee.Email;
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            await SendEmailNotification(
+                SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
+                email: email,
+                name: $"{evacuee.LastName}, {evacuee.FirstName}",
+                tokens: new[]
+                {
+                    KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
+                    KeyValuePair.Create("clothingAmount", clothingAmount.ToString("0.00")),
+                    KeyValuePair.Create("incidentalsAmount", incidentalsAmount.ToString("0.00")),
+                    KeyValuePair.Create("groceryAmount", groceryAmount.ToString("0.00")),
+                    KeyValuePair.Create("restaurantAmount", restaurantAmount.ToString("0.00")),
+                    KeyValuePair.Create("shelterAllowanceAmount", shelterAllowanceAmount.ToString("0.00")),
+                    KeyValuePair.Create("recipientName", cmd.ETransferDetails.RecipientName),
+                    KeyValuePair.Create("notificationEmail", cmd.ETransferDetails.ETransferEmail),
+                    KeyValuePair.Create("showClothingAmount", clothingAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showIncidentalsAmount", incidentalsAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showGroceryAmount", groceryAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showRestaurantAmount", restaurantAmount > 0 ? "true" : "false"),
+                    KeyValuePair.Create("showShelterAllowanceAmount", shelterAllowanceAmount > 0 ? "true" : "false")
+                });
+        } 
+        #endregion
 
         file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
         await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
