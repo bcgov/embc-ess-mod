@@ -18,7 +18,8 @@ import {
   SelfServeFoodRestaurantSupport,
   SelfServeIncidentalsSupport,
   SelfServeShelterAllowanceSupport,
-  SelfServeSupportType
+  SelfServeSupportType,
+  SupportDayMeals
 } from 'src/app/core/api/models';
 import * as moment from 'moment';
 
@@ -117,10 +118,76 @@ export class SelfServeSupportDetailsFormComponent {
       );
     });
 
+    const originalMealSupportsDraft: Record<string, SupportDayMeals> = {};
+
+    this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.valueChanges.subscribe({
+      next: () => {
+        // get all unchecked and undisabled control
+        const unCheckedControls: Record<string, FormControl[]> = {
+          breakfast: [],
+          lunch: [],
+          dinner: []
+        };
+
+        const checkedCount: Record<string, number> = {
+          breakfast: 0,
+          lunch: 0,
+          dinner: 0
+        };
+
+        this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((meal) => {
+          if (meal.controls.breakfast.value === true) checkedCount.breakfast++;
+          else if (
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === true ||
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === false
+          )
+            unCheckedControls.breakfast.push(meal.controls.breakfast);
+
+          if (meal.controls.lunch.value === true) checkedCount.lunch++;
+          else if (
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === true ||
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === false
+          )
+            unCheckedControls.lunch.push(meal.controls.lunch);
+
+          if (meal.controls.dinner.value === true) checkedCount.dinner++;
+          else if (
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === true ||
+            originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === false
+          )
+            unCheckedControls.dinner.push(meal.controls.dinner);
+        });
+
+        // @Note: Only 3 dates can be checked per meal type
+        // check count of selected checkboxes are 3 then disable the first unchecked
+        if (checkedCount.breakfast >= 3) {
+          unCheckedControls.breakfast.forEach((c) => c.disable({ emitEvent: false }));
+        } else {
+          unCheckedControls.breakfast.forEach((c) => c.enable({ emitEvent: false }));
+        }
+
+        if (checkedCount.lunch >= 3) {
+          unCheckedControls.lunch.forEach((c) => c.disable({ emitEvent: false }));
+        } else {
+          unCheckedControls.lunch.forEach((c) => c.enable({ emitEvent: false }));
+        }
+
+        if (checkedCount.dinner >= 3) {
+          unCheckedControls.dinner.forEach((c) => c.disable({ emitEvent: false }));
+        } else {
+          unCheckedControls.dinner.forEach((c) => c.enable({ emitEvent: false }));
+        }
+      }
+    });
+
     selfServeSupport.meals.forEach((m) => {
+      const date = moment(m.date, 'YYYY-MM-DD');
+
+      originalMealSupportsDraft[date.format('YYYY-MM-DD')] = m;
+
       this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.push(
         new FormGroup<SelfServeSupportDayMealForm>({
-          date: new FormControl(moment(m.date, 'YYYY-MM-DD')),
+          date: new FormControl(date),
           breakfast: new FormControl({ value: m.breakfast, disabled: m.breakfast !== true && m.breakfast !== false }),
           lunch: new FormControl({ value: m.lunch, disabled: m.lunch !== true && m.lunch !== false }),
           dinner: new FormControl({ value: m.dinner, disabled: m.dinner !== true && m.dinner !== false })
@@ -132,9 +199,9 @@ export class SelfServeSupportDetailsFormComponent {
       next: (includedHouseholdMembers) => {
         if (includedHouseholdMembers.every((m) => !m.isSelected)) {
           this.supportDraftForm.controls.food.controls.restaurant.controls.mealTypes.controls.forEach((m) => {
-            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false);
-            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false);
-            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false);
+            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false, { emitEvent: false });
+            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false, { emitEvent: false });
+            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false, { emitEvent: false });
           });
         }
       }

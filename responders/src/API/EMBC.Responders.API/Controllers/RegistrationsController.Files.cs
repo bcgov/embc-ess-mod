@@ -90,6 +90,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var mappedFile = mapper.Map<EMBC.ESS.Shared.Contracts.Events.EvacuationFile>(file);
 
+            mappedFile.Id = null;
             mappedFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             mappedFile.NeedsAssessment.CompletedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = currentUserId };
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
@@ -548,6 +549,7 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<NeedsAssessment, EMBC.ESS.Shared.Contracts.Events.NeedsAssessment>()
+                .ForMember(d => d.TaskNumber, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))

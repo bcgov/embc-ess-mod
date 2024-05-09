@@ -164,6 +164,6 @@ public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports,
 
 public record GenerateSelfServeSupportsResponse(IEnumerable<SelfServeSupport> Supports) : GenerateResponse;
 
-public record GenerateSelfServeSupports1(string EvacuationFileId, string RegistrantId, IEnumerable<SelfServeSupport> Supports, ETransferDetails ETransferDetails, DateTime SupportPeriodFrom, DateTime SupportPeriodTo) : GenerateRequest;
+public record GenerateSelfServeETransferSupports(string EvacuationFileId, string RegistrantId, IEnumerable<SelfServeSupport> Supports, ETransferDetails ETransferDetails, DateTime SupportPeriodFrom, DateTime SupportPeriodTo) : GenerateRequest;
 
-public record GenerateSelfServeSupports1Response(IEnumerable<Support> Supports) : GenerateResponse;
+public record GenerateSelfServeETransferSupportsResponse(IEnumerable<Support> Supports) : GenerateResponse;

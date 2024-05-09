@@ -87,15 +87,6 @@ public partial class EventsManager(
         if (evacuee == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
         file.PrimaryRegistrantId = evacuee.Id;
 
-        if (!string.IsNullOrEmpty(file.Id))
-        {
-            var caseRecord = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
-            var existingFile = mapper.Map<Resources.Evacuations.EvacuationFile>(caseRecord);
-
-            if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId, StringComparison.Ordinal))
-                throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
-        }
-
         var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
         var shouldEmailNotification = string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email) && string.IsNullOrEmpty(file.ManualFileId);

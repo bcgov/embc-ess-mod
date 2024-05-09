@@ -101,6 +101,7 @@ namespace EMBC.ESS.Resources.Evacuations
 
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_TaskNumber == null ? null : s.era_TaskNumber.era_name))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s._era_reviewedbyid_value))
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
@@ -197,8 +198,8 @@ namespace EMBC.ESS.Resources.Evacuations
             CreateMap<era_eligibilitycheck, SelfServeEligibilityCheck>()
                 .ForMember(d => d.Eligible, opts => opts.MapFrom(s => s.era_iseligible == (int)Eligible.Yes))
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_name))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_eligibilityperiodfrom.HasValue ? s.era_eligibilityperiodfrom.Value.DateTime : (DateTime?)null))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_eligibilityperiodto.HasValue ? s.era_eligibilityperiodto.Value.DateTime : (DateTime?)null))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_eligibilityperiodfrom.HasValue ? s.era_eligibilityperiodfrom.Value.DateTime.ToUniversalTime() : (DateTime?)null))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_eligibilityperiodto.HasValue ? s.era_eligibilityperiodto.Value.DateTime.ToUniversalTime() : (DateTime?)null))
                 ;
         }
     }

@@ -34,7 +34,7 @@ internal class SupportingEngine : ISupportingEngine
             GeneratePaymentsRequest r => await paymentGenerationStrategyFactory.Create().GeneratePayments(r),
             GenerateSelfServeSupports r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServeDraft).Generate(r, ct),
             CalculateSelfServeSupports r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServeDraft).Generate(r, ct),
-            GenerateSelfServeSupports1 r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServeETransfer).Generate(r, ct),
+            GenerateSelfServeETransferSupports r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.SelfServeETransfer).Generate(r, ct),
             _ => throw new NotImplementedException(request.GetType().Name)
         };
 

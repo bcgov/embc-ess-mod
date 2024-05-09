@@ -14,12 +14,12 @@ internal class SelfServeEtransferGenerator(IMapper mapper) : ISupportGenerationS
     public Task<GenerateResponse> Generate(GenerateRequest request, CancellationToken ct) =>
         request switch
         {
-            GenerateSelfServeSupports1 r => Handle(r, ct),
+            GenerateSelfServeETransferSupports r => Handle(r, ct),
 
             _ => throw new NotImplementedException($"{request.GetType().Name}")
         };
 
-    private async Task<GenerateResponse> Handle(GenerateSelfServeSupports1 r, CancellationToken ct)
+    private async Task<GenerateResponse> Handle(GenerateSelfServeETransferSupports r, CancellationToken ct)
     {
         await Task.CompletedTask;
         var supports = new List<Support>();
@@ -47,7 +47,7 @@ internal class SelfServeEtransferGenerator(IMapper mapper) : ISupportGenerationS
             supports.Add(support);
         }
 
-        return new GenerateSelfServeSupports1Response(supports);
+        return new GenerateSelfServeETransferSupportsResponse(supports);
     }
 }
 
