@@ -31,7 +31,7 @@
               @for (night of supportDraftForm.controls?.shelterAllowance?.controls?.nights?.controls; track $index) {
                 <div>
                   <mat-checkbox [formControl]="night.controls.isSelected">
-                    {{ night.controls.date.value.format('YYYY-MM-DD') }}
+                    {{ night.controls.date.value.format('DD MMMM') }}
                   </mat-checkbox>
                 </div>
               }
