@@ -40,7 +40,7 @@ export class MatchedEssfilesComponent implements OnInit {
     private userService: UserService,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
