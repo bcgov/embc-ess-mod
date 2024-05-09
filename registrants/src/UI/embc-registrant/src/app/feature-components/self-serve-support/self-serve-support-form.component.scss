@@ -28,3 +28,14 @@ mat-card {
   padding: var(--size-2);
   font-size: var(--size-3);
 }
+
+.self-serve-support-actions-container {
+  display: flex;
+  gap: var(--size-2);
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.button-s {
+  width: 240px;
+}

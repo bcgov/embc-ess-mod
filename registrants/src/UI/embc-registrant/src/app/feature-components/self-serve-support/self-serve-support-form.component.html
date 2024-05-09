@@ -31,14 +31,8 @@
             [draftSupports]="draftSupports"
           ></app-self-serve-support-details-form>
         }
-        <div style="display: flex; gap: 16px; justify-content: space-between">
-          <button
-            type="button"
-            mat-button
-            class="button-s"
-            style="width: 240px"
-            (click)="gotoEligibilityConfirmation()"
-          >
+        <div class="self-serve-support-actions-container">
+          <button type="button" mat-button class="button-s" (click)="gotoEligibilityConfirmation()">
             Go Back & Edit
           </button>
           @if (draftSupports.items?.length > 0) {
@@ -69,10 +63,8 @@
           <app-self-serve-support-interac-e-transfer-form [eTransferDetailsForm]="eTransferDetailsForm">
           </app-self-serve-support-interac-e-transfer-form>
         }
-        <div style="display: flex; gap: 16px; justify-content: space-between">
-          <button type="button" mat-button class="button-s" style="width: 240px" matStepperPrevious>
-            Go Back & Edit
-          </button>
+        <div class="self-serve-support-actions-container">
+          <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
           @if (draftSupports.items?.length > 0) {
             <button
               type="button"
@@ -107,10 +99,8 @@
           >
           </app-self-serve-support-review>
         }
-        <div>
-          <button type="button" mat-button class="button-s" matStepperPrevious style="width: 240px">
-            Go Back & Edit
-          </button>
+        <div class="self-serve-support-actions-container">
+          <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
           @if (draftSupports.items?.length > 0) {
             <button type="button" mat-button class="button-p button-with-loader" (click)="submit()">
               Next- Submit

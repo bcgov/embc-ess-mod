@@ -52,7 +52,6 @@ export { SelfServeSupportType } from './models/self-serve-support-type';
 export { SubmitSupportsRequest } from './models/submit-supports-request';
 export { Support } from './models/support';
 export { SupportCategory } from './models/support-category';
-export { SupportDay } from './models/support-day';
 export { SupportDayMeals } from './models/support-day-meals';
 export { SupportMethod } from './models/support-method';
 export { SupportStatus } from './models/support-status';

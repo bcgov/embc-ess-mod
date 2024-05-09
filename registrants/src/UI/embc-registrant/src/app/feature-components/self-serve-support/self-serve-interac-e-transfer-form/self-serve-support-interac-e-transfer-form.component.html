@@ -52,7 +52,7 @@
               eTransferDetailsForm.controls.notificationPreference.value
             )
           ) {
-            <div style="display: flex">
+            <div style="display: flex; flex-wrap: wrap">
               @if (eTransferDetailsForm.controls.useEmailOnFile.value === false) {
                 <mat-form-field>
                   <mat-label>Email</mat-label>
@@ -103,7 +103,7 @@
               eTransferDetailsForm.controls.notificationPreference.value
             )
           ) {
-            <div>
+            <div style="display: flex; flex-wrap: wrap">
               @if (eTransferDetailsForm.controls.useMobileOnFile.value === false) {
                 <mat-form-field>
                   <mat-label>Mobile</mat-label>

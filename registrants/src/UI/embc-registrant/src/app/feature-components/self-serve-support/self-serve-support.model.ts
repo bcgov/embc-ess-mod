@@ -1,5 +1,5 @@
 import { FormControl, FormArray, FormGroup } from '@angular/forms';
-import { SelfServeSupport, SelfServeSupportType, SupportDay } from 'src/app/core/api/models';
+import { SelfServeSupport, SelfServeSupportType, SupportDayMeals } from 'src/app/core/api/models';
 import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-notification-preference.model';
 
 export type SelfServeSupportFormControl = {
@@ -15,14 +15,13 @@ export interface SupportPersonForm {
   isSelected?: FormControl<boolean>;
 }
 
-export interface SupportPersonDateForm {
+export interface SupportDateForm {
   date: FormControl<moment.Moment>;
-  personId: FormControl<string>;
   isSelected?: FormControl<boolean>;
 }
 
 export type SupportDayFormControl = {
-  [k in keyof SupportDay]: FormControl<SupportDay[k]>;
+  [k in keyof SupportDayMeals]: FormControl<SupportDayMeals[k]>;
 };
 
 export interface SelfServeSupportDayMealForm extends Omit<SupportDayFormControl, 'date'> {
@@ -41,7 +40,8 @@ export interface SelfServeFoodRestaurantSupportForm {
 }
 
 export interface SelfServeFoodGroceriesSupportForm {
-  nights: FormArray<FormGroup<SupportPersonDateForm>>;
+  nights: FormArray<FormGroup<SupportDateForm>>;
+  includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
   totalAmount: FormControl<number>;
 }
 
@@ -52,7 +52,8 @@ export interface SelfServeFoodSupportForm {
 }
 
 export interface SelfServeShelerAllowanceSupportForm extends BaseSelfServeSupportForm {
-  nights: FormArray<FormGroup<SupportPersonDateForm>>;
+  nights: FormArray<FormGroup<SupportDateForm>>;
+  includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
 }
 
 export interface SelfServeClothingSupportForm extends BaseSelfServeSupportForm {

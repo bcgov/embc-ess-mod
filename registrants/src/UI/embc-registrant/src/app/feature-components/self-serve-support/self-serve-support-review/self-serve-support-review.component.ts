@@ -41,7 +41,7 @@ export class SelfServeSupportReviewComponent {
       draftSupports.items.find(
         (s) => s.type === SelfServeSupportType.ShelterAllowance
       ) as SelfServeShelterAllowanceSupport
-    )?.nights.map((n) => moment(n.date, 'YYYY-MM-DD'));
+    )?.nights.map((d) => moment(d, 'YYYY-MM-DD'));
 
     if (dates) this.shelterAllowanceDates = [...dates];
 
