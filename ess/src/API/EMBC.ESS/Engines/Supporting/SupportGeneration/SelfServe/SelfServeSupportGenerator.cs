@@ -97,7 +97,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeShelterAllowanceSupport
             {
-                Nights = CreateSupportDays(from, to).Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id).ToList())).ToList(),
+                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
             support.TotalAmount = CalculateSelfServeSupportAmount(support, householdMembers);
@@ -106,35 +107,30 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
 
         private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
-            var amount = 0d;
-            var hmList = householdMembers.OrderByDescending(hm => hm.IsMinor).ToList();
-            foreach (var hmId in support.Nights.SelectMany(d => d.IncludedHouseholdMembers))
-            {
-                if (amount.Equals(0d))
-                {
-                    // first occupant
-                    amount = 30d;
-                    continue;
-                }
-                var hm = hmList.Find(i => i.Id == hmId)!;
-                // adult or minor additional amount
-                amount += hm.IsMinor ? 5d : 10d;
-            }
-            return amount;
+            var hmList = householdMembers.ToList();
+            var numberOfNights = support.Nights.Count();
+            var numberOfAdults = hmList.Count(hm => !hm.IsMinor);
+            var numberOfMinors = hmList.Count(hm => hm.IsMinor);
+
+            //compensate for first adult
+            if (numberOfAdults >= 1) numberOfAdults--;
+
+            return (30d + numberOfAdults * 10d + numberOfMinors * 5d) * numberOfNights;
         }
 
         private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
             var support = new SelfServeFoodGroceriesSupport
             {
-                Nights = CreateSupportDays(from, to).Select(d => new SupportDay(DateOnly.FromDateTime(d), householdMembers.Select(hm => hm.Id).ToList())).ToList(),
+                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
             support.TotalAmount = CalculateSelfServeSupportAmount(support);
             return support;
         }
 
-        private static double CalculateSelfServeSupportAmount(SelfServeFoodGroceriesSupport support) => support.Nights.Aggregate(0d, (amount, night) => amount + night.IncludedHouseholdMembers.Count() * 22.5d);
+        private static double CalculateSelfServeSupportAmount(SelfServeFoodGroceriesSupport support) => support.IncludedHouseholdMembers.Count() * support.Nights.Count() * 22.5d;
 
         private static SelfServeFoodRestaurantSupport CreateSelfServeFoodRestaurantSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {

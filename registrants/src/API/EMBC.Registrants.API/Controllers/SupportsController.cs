@@ -118,8 +118,8 @@ public record EligibilityCheck
 
 public record DraftSupports
 {
-    public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
-    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
+    public IEnumerable<SelfServeSupport> Items { get; set; } = [];
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = [];
 }
 
 [JsonDerivedType(typeof(SelfServeShelterAllowanceSupport), typeDiscriminator: nameof(SelfServeShelterAllowanceSupport))]
@@ -135,26 +135,22 @@ public abstract record SelfServeSupport
 
 public record SelfServeShelterAllowanceSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
+    public IEnumerable<DateOnly> Nights { get; set; } = [];
     public override SelfServeSupportType Type => SelfServeSupportType.ShelterAllowance;
-}
-
-public record SupportDay
-{
-    public DateOnly Date { get; set; }
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
 }
 
 public record SelfServeFoodGroceriesSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
+    public IEnumerable<DateOnly> Nights { get; set; } = [];
     public override SelfServeSupportType Type => SelfServeSupportType.FoodGroceries;
 }
 
 public record SelfServeFoodRestaurantSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
-    public IEnumerable<SupportDayMeals> Meals { get; set; } = Array.Empty<SupportDayMeals>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
+    public IEnumerable<SupportDayMeals> Meals { get; set; } = [];
     public override SelfServeSupportType Type => SelfServeSupportType.FoodRestaurant;
 }
 
@@ -168,13 +164,13 @@ public record SupportDayMeals
 
 public record SelfServeIncidentalsSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
     public override SelfServeSupportType Type => SelfServeSupportType.Incidentals;
 }
 
 public record SelfServeClothingSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
     public override SelfServeSupportType Type => SelfServeSupportType.Clothing;
 }
 
