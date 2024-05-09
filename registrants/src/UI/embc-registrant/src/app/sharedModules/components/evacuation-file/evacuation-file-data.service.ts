@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { EvacuationFile, EvacuationFileStatus, NeedsAssessment, Support } from 'src/app/core/api/models';
+import { map, tap } from 'rxjs/operators';
+import {
+  EligibilityCheck,
+  EvacuationFile,
+  EvacuationFileStatus,
+  NeedsAssessment,
+  Support
+} from 'src/app/core/api/models';
 import { EvacuationsService, ProfileService, SupportsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
@@ -35,6 +41,8 @@ export class EvacuationFileDataService {
   private evacuationFileStatusVal: EvacuationFileStatus;
 
   private supportsVal: Array<Support>;
+
+  public selfServeEligibilityCheck?: EligibilityCheck;
 
   constructor(
     private evacuationService: EvacuationsService,
@@ -193,7 +201,9 @@ export class EvacuationFileDataService {
   public checkEligibleForSelfServeSupport(
     params: Parameters<SupportsService['supportsCheckSelfServeEligibility']>[0]
   ): ReturnType<SupportsService['supportsCheckSelfServeEligibility']> {
-    return this.supportService.supportsCheckSelfServeEligibility(params);
+    return this.supportService
+      .supportsCheckSelfServeEligibility(params)
+      .pipe(tap((eligibilityCheck) => (this.selfServeEligibilityCheck = eligibilityCheck)));
   }
 
   public clearESSFileData(): void {
@@ -204,6 +214,7 @@ export class EvacuationFileDataService {
     this.secretPhraseEdited = undefined;
     this.evacuationFileStatus = undefined;
     this.supports = undefined;
+    this.selfServeEligibilityCheck = undefined;
     this.needsAssessmentService.clearNeedsAssessmentData();
   }
 

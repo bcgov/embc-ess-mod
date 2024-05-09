@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-notification-preference.model';
 import { DraftSupports, SelfServeShelterAllowanceSupport, SelfServeSupportType } from 'src/app/core/api/models';
 import * as moment from 'moment';
+import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
 
 export type GotoStepType = 'supportDetails' | 'eTransfer';
 
@@ -20,6 +21,7 @@ export type GotoStepType = 'supportDetails' | 'eTransfer';
 })
 export class SelfServeSupportReviewComponent {
   SelfServeSupportType = SelfServeSupportType;
+  moment = moment;
   ETransferNotificationPreference = ETransferNotificationPreference;
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
@@ -32,8 +34,6 @@ export class SelfServeSupportReviewComponent {
     information: new FormControl('', Validators.requiredTrue)
   });
 
-  shelterAllowanceDates = [];
-
   _draftSupports: DraftSupports;
   @Input()
   set draftSupports(draftSupports: DraftSupports) {
@@ -43,8 +43,6 @@ export class SelfServeSupportReviewComponent {
       ) as SelfServeShelterAllowanceSupport
     )?.nights.map((d) => moment(d, 'YYYY-MM-DD'));
 
-    if (dates) this.shelterAllowanceDates = [...dates];
-
     this._draftSupports = draftSupports;
   }
 
@@ -52,7 +50,14 @@ export class SelfServeSupportReviewComponent {
     return this._draftSupports;
   }
 
+  get eligibilityCheck() {
+    return this.evacuationFileDataService.selfServeEligibilityCheck;
+  }
+
   @Output() gotoStep: EventEmitter<GotoStepType> = new EventEmitter<GotoStepType>();
 
-  constructor(private needsAssessmentService: NeedsAssessmentService) {}
+  constructor(
+    private needsAssessmentService: NeedsAssessmentService,
+    private evacuationFileDataService: EvacuationFileDataService
+  ) {}
 }
