@@ -87,7 +87,7 @@ public class Mapping : Profile
             ;
 
         CreateMap<SelfServeFoodGroceriesSupport, FoodGroceriesSupport>()
-            .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.Nights.SelectMany(n => n.IncludedHouseholdMembers).Distinct()))
+            .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.IncludedHouseholdMembers))
             .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.Nights.Count()))
             .ForMember(d => d.ApproverName, opts => opts.Ignore())
             ;
@@ -100,7 +100,7 @@ public class Mapping : Profile
             ;
 
         CreateMap<SelfServeShelterAllowanceSupport, ShelterAllowanceSupport>()
-            .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.Nights.SelectMany(n => n.IncludedHouseholdMembers).Distinct()))
+            .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.IncludedHouseholdMembers))
             .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.Nights.Count()))
             .ForMember(d => d.ContactEmail, opts => opts.Ignore())
             .ForMember(d => d.ContactPhone, opts => opts.Ignore())

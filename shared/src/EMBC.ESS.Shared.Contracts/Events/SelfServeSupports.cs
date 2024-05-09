@@ -32,14 +32,14 @@ public record DraftSelfServeSupportQuery : Query<DraftSelfServeSupportQueryRespo
 
 public record DraftSelfServeSupportQueryResponse
 {
-    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
-    public IEnumerable<SelfServeSupport> Items { get; set; } = Array.Empty<SelfServeSupport>();
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = [];
+    public IEnumerable<SelfServeSupport> Items { get; set; } = [];
 }
 
 public record ProcessSelfServeSupportsCommand : Command
 {
     public string EvacuationFileId { get; set; }
-    public IEnumerable<SelfServeSupport> Supports { get; set; } = Array.Empty<SelfServeSupport>();
+    public IEnumerable<SelfServeSupport> Supports { get; set; } = [];
     public ETransferDetails ETransferDetails { get; set; }
 }
 
@@ -55,20 +55,20 @@ public abstract record SelfServeSupport
 
 public record SelfServeShelterAllowanceSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; }
+    public IEnumerable<DateOnly> Nights { get; set; } = [];
 }
-
-public record SupportDay(DateOnly Date, IEnumerable<string> IncludedHouseholdMembers);
 
 public record SelfServeFoodGroceriesSupport : SelfServeSupport
 {
-    public IEnumerable<SupportDay> Nights { get; set; } = Array.Empty<SupportDay>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; }
+    public IEnumerable<DateOnly> Nights { get; set; } = [];
 }
 
 public record SelfServeFoodRestaurantSupport : SelfServeSupport
 {
     public IEnumerable<string> IncludedHouseholdMembers { get; set; }
-    public IEnumerable<SupportDayMeals> Meals { get; set; } = Array.Empty<SupportDayMeals>();
+    public IEnumerable<SupportDayMeals> Meals { get; set; } = [];
 }
 public record SupportDayMeals(DateOnly Date)
 {
@@ -79,12 +79,12 @@ public record SupportDayMeals(DateOnly Date)
 
 public record SelfServeIncidentalsSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
 }
 
 public record SelfServeClothingSupport : SelfServeSupport
 {
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
 }
 
 public record ETransferDetails

@@ -36,12 +36,20 @@ public class SelfServeSupportGenerationTests
     public async Task Generate_ShelterAllowance_Created()
     {
         var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance);
-        support.Nights.Select(n => n.Date).ShouldBe(expectedDays);
-        foreach (var night in support.Nights)
-        {
-            night.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        }
-        support.TotalAmount.ShouldBe(170d);
+        support.Nights.ShouldBe(expectedDays);
+        support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
+        support.TotalAmount.ShouldBe(210d);
+    }
+
+    [Fact]
+    public async Task Generate_ShelterAllowanceWithMinors_Created()
+    {
+        var householdMembersWithMinors = householdMembers.ToList();
+        householdMembersWithMinors[4] = new SelfServeHouseholdMember(householdMembersWithMinors[4].Id, true);
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance, householdMembersWithMinors);
+        support.Nights.ShouldBe(expectedDays);
+        support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
+        support.TotalAmount.ShouldBe(195d);
     }
 
     [Fact]
@@ -67,11 +75,9 @@ public class SelfServeSupportGenerationTests
         response.Supports.Count().ShouldBe(2);
 
         var groceries = (SelfServeFoodGroceriesSupport)response.Supports.Single(s => s is SelfServeFoodGroceriesSupport);
-        groceries.Nights.Select(n => n.Date).ShouldBe(expectedDays);
-        foreach (var night in groceries.Nights)
-        {
-            night.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        }
+        groceries.Nights.ShouldBe(expectedDays);
+        groceries.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
+
         groceries.TotalAmount.ShouldBe(337.5d);
 
         var restaurant = (SelfServeFoodRestaurantSupport)response.Supports.Single(s => s is SelfServeFoodRestaurantSupport);
@@ -89,9 +95,9 @@ public class SelfServeSupportGenerationTests
         restaurant.TotalAmount.ShouldBe(795d);
     }
 
-    private async Task<T> GenerateSelfServeSupports<T>(IdentifiedNeed forNeed) where T : SelfServeSupport
+    private async Task<T> GenerateSelfServeSupports<T>(IdentifiedNeed forNeed, IEnumerable<SelfServeHouseholdMember>? overrideHouseholdMembers = null) where T : SelfServeSupport
     {
-        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([forNeed], startDate, endDate, startDate, endDate, householdMembers), default);
+        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([forNeed], startDate, endDate, startDate, endDate, overrideHouseholdMembers ?? this.householdMembers), default);
         return response.Supports.ShouldHaveSingleItem().ShouldBeOfType<T>();
     }
 }

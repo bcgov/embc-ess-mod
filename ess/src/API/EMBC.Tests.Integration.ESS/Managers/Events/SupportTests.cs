@@ -447,7 +447,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             var fromDay = DateOnly.FromDateTime(from);
             var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
-            var supportDays = (new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) }).Select(d => new SupportDay(d, householdMembers));
+            var supportDays = (new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) });
             var etransferDetails = new ETransferDetails
             {
                 ContactEmail = registrant.Email,
@@ -460,8 +460,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
                 new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
-                new SelfServeFoodGroceriesSupport{ TotalAmount = 100d, Nights = supportDays },
-                new SelfServeShelterAllowanceSupport{ TotalAmount = 100d, Nights = supportDays },
+                new SelfServeFoodGroceriesSupport{ TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+                new SelfServeShelterAllowanceSupport{ TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
             };
 
             await manager.Handle(new ProcessSelfServeSupportsCommand
