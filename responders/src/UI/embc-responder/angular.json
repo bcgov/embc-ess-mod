@@ -113,7 +113,6 @@
       }
     }
   },
-  "defaultProject": "embc-responder",
   "cli": {
     "analytics": false
   }
