@@ -109,6 +109,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var hmList = householdMembers.ToList();
             var numberOfNights = support.Nights.Count();
+
+            if (hmList.Count == 0 || numberOfNights == 0) return 0d;
+
             var numberOfAdults = hmList.Count(hm => !hm.IsMinor);
             var numberOfMinors = hmList.Count(hm => hm.IsMinor);
 
