@@ -20,8 +20,6 @@ export class MaskFullAddressPipe implements PipeTransform {
    */
   transform(address: AddressModel): SafeHtml {
     if (address !== null && address !== undefined) {
-      const communities = this.locationService.getCommunityList();
-
       const line1 = address.addressLine1;
       const line2 = address.addressLine2;
       let line3 = '';
@@ -35,20 +33,20 @@ export class MaskFullAddressPipe implements PipeTransform {
 
         if (address.stateProvince?.name.length > 0) line3 += ', ' + address.stateProvince.code;
         if (address.postalCode?.length > 0) line4 += address.postalCode + ', ';
+
+        line4 += address.country.name;
+
+        // All values must be HTML-sanitized for us to include <br> line break.
+        let addressStr = _.escape(line1);
+
+        if (address.addressLine2?.length > 0) addressStr += '<br>' + _.escape(line2) + ',';
+        else addressStr += ',';
+
+        if (line3.length > 0) addressStr += '<br>' + _.escape(line3);
+        addressStr += '<br>' + _.escape(line4);
+
+        return this.sanitizer.bypassSecurityTrustHtml(addressStr);
       }
-
-      line4 += address.country.name;
-
-      // All values must be HTML-sanitized for us to include <br> line break.
-      let addressStr = _.escape(line1);
-
-      if (address.addressLine2?.length > 0) addressStr += '<br>' + _.escape(line2) + ',';
-      else addressStr += ',';
-
-      if (line3.length > 0) addressStr += '<br>' + _.escape(line3);
-      addressStr += '<br>' + _.escape(line4);
-
-      return this.sanitizer.bypassSecurityTrustHtml(addressStr);
     }
   }
 }
