@@ -46,12 +46,50 @@ export class SelfServeSupportInteracETransfterFormComponent {
   ) {}
 
   ngOnInit() {
-    console.log('Etransfer Form:', this.eTransferDetailsForm);
     const profile = this.profileDataService.getProfile();
 
     this.eTransferDetailsForm.controls.recipientName.setValue(
       `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
     );
+
+    this.eTransferDetailsForm.valueChanges.subscribe({
+      next: (eTransferDetails) => {
+        if (
+          [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+            eTransferDetails.notificationPreference
+          )
+        ) {
+          this.eTransferDetailsForm.controls.eTransferEmail.enable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmEmail.enable({ emitEvent: false });
+        } else {
+          this.eTransferDetailsForm.controls.eTransferEmail.disable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmEmail.disable({ emitEvent: false });
+        }
+
+        if (
+          [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+            eTransferDetails.notificationPreference
+          )
+        ) {
+          this.eTransferDetailsForm.controls.eTransferMobile.enable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmMobile.enable({ emitEvent: false });
+        } else {
+          this.eTransferDetailsForm.controls.eTransferMobile.disable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmMobile.disable({ emitEvent: false });
+        }
+
+        if (
+          ETransferNotificationPreference.Mobile === eTransferDetails.notificationPreference &&
+          !this.hasEmailAddressOnFile
+        ) {
+          this.eTransferDetailsForm.controls.contactEmail.enable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmContactEmail.enable({ emitEvent: false });
+        } else {
+          this.eTransferDetailsForm.controls.contactEmail.disable({ emitEvent: false });
+          this.eTransferDetailsForm.controls.confirmContactEmail.disable({ emitEvent: false });
+        }
+      }
+    });
 
     // @NOTE: adding it directly in the form group is not populating `control.parent` property of the control
     // which is required in the `compare` validator, adding the `compare` validator after the formgroup initialized
