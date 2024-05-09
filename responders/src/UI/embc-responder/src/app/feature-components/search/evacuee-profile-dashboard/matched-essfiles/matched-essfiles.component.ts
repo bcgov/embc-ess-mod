@@ -40,7 +40,7 @@ export class MatchedEssfilesComponent implements OnInit {
     private userService: UserService,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
@@ -129,25 +129,7 @@ export class MatchedEssfilesComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
       next: (essFilesArray: Array<EvacuationFileSummaryModel>) => {
-        const loggedInRole = this.userService?.currentProfile?.role;
-        if (essFilesArray !== undefined || essFilesArray.length !== 0) {
-          if (this.evacueeSessionService.isPaperBased) {
-            if (loggedInRole !== MemberRole.Tier1) {
-              this.essFiles = essFilesArray;
-            } else {
-              this.essFiles = essFilesArray.filter(
-                (files) =>
-                  files.manualFileId ===
-                  this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
-              );
-            }
-          } else {
-            this.essFiles = essFilesArray;
-          }
-        } else {
-          this.essFiles = [];
-        }
-
+        this.essFiles = essFilesArray ?? [];
         this.isLoading = !this.isLoading;
       },
       error: (error) => {
