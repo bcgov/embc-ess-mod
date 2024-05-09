@@ -81,7 +81,7 @@ namespace EMBC.Responders.API
                     {
                         await Task.CompletedTask;
                         var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                        logger.LogError(c.Exception, $"Error authenticating token");
+                        logger.LogError(c.Exception, "Error authenticating token");
                     },
                     OnTokenValidated = async c =>
                     {
