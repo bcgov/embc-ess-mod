@@ -152,38 +152,26 @@ export class SelfServeSupportFormComponent implements OnInit {
         Validators.email
       )
     ]),
-    contactEmail: new FormControl('', [
+    contactEmail: new FormControl(
+      '',
       this.customValidation.conditionalValidation(
         () =>
           [ETransferNotificationPreference.Mobile].includes(
             this.eTransferDetailsForm.controls.notificationPreference.value
-          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+          ),
         Validators.required
-      ),
-      this.customValidation.conditionalValidation(
-        () =>
-          [ETransferNotificationPreference.Mobile].includes(
-            this.eTransferDetailsForm.controls.notificationPreference.value
-          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
-        Validators.email
       )
-    ]),
-    confirmContactEmail: new FormControl('', [
+    ),
+    confirmContactEmail: new FormControl(
+      '',
       this.customValidation.conditionalValidation(
         () =>
           [ETransferNotificationPreference.Mobile].includes(
             this.eTransferDetailsForm.controls.notificationPreference.value
-          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
+          ),
         Validators.required
-      ),
-      this.customValidation.conditionalValidation(
-        () =>
-          [ETransferNotificationPreference.Mobile].includes(
-            this.eTransferDetailsForm.controls.notificationPreference.value
-          ) && this.eTransferDetailsForm.controls.useEmailOnFile.value === false,
-        Validators.email
       )
-    ]),
+    ),
     eTransferMobile: new FormControl(
       '',
       this.customValidation.conditionalValidation(
@@ -494,8 +482,11 @@ export class SelfServeSupportFormComponent implements OnInit {
   }
 
   submit() {
+    this.supportDraftForm.markAllAsTouched();
+    this.eTransferDetailsForm.markAllAsTouched();
     this.reviewAcknowledgeForm.markAllAsTouched();
-    if (this.reviewAcknowledgeForm.invalid) return;
+    if (this.supportDraftForm.invalid || this.eTransferDetailsForm.invalid || this.reviewAcknowledgeForm.invalid)
+      return;
 
     const selfServeSupportsPayload = this.getPayloadData();
 

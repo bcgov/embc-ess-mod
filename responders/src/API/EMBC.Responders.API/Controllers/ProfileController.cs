@@ -182,11 +182,13 @@ namespace EMBC.Responders.API.Controllers
 
     public class SecurityMapping : Profile
     {
+        public static readonly TimeSpan AgreementRenewalTime = TimeSpan.FromDays(-365); // one year back
+
         public SecurityMapping()
         {
             CreateMap<EMBC.ESS.Shared.Contracts.Teams.TeamMember, UserProfile>()
                 .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
-                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue));
+                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue || s.AgreementSignDate.Value <= DateTime.UtcNow.Add(AgreementRenewalTime)));
         }
     }
 }
