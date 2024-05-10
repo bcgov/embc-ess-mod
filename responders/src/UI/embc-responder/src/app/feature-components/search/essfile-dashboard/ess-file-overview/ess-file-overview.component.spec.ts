@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EssFileOverviewComponent } from './ess-file-overview.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { ReactiveFormsModule } from '@angular/forms';

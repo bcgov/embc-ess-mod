@@ -9,8 +9,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HouseholdMemberType } from 'src/app/core/api/models';

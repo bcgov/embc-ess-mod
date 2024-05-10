@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SecurityQuestionsComponent } from './security-questions.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';

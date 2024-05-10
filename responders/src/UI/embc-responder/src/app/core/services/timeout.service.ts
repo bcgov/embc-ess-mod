@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
 import { TimeOutDialogComponent } from 'src/app/shared/components/dialog-components/time-out-dialog/time-out-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';

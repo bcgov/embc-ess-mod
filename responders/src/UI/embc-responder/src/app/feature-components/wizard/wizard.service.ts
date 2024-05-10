@@ -13,7 +13,7 @@ import { Community } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 import * as globalConst from '../../core/services/global-constants';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';

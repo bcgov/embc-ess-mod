@@ -11,7 +11,7 @@ import {
 
 import { EvacueeDetailsComponent } from './evacuee-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

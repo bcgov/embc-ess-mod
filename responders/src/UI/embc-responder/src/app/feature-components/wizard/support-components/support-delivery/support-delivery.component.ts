@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { ComputeRulesService } from '../../../../core/services/computeRules.service';

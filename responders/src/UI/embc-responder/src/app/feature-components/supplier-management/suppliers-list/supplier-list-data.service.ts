@@ -8,7 +8,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Team } from 'src/app/core/api/models';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';

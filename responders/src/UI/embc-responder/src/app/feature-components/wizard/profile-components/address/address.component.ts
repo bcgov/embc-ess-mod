@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
+import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Country, LocationsService } from 'src/app/core/services/locations.service';

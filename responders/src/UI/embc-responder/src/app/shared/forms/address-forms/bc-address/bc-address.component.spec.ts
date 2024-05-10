@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BcAddressComponent } from './bc-address.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

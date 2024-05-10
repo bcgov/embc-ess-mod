@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatLegacySelect as MatSelect, MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { Router } from '@angular/router';
 import { Referral, Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -11,7 +11,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { WizardService } from '../../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';

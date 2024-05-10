@@ -12,7 +12,7 @@ import {
 import { EvacueeSearchResultsComponent } from './evacuee-search-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { Router } from '@angular/router';

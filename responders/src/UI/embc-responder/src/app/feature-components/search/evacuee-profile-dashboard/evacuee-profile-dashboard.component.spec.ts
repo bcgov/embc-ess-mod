@@ -10,7 +10,7 @@ import {
 } from '@angular/core/testing';
 
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';

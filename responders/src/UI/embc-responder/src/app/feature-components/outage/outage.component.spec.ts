@@ -8,7 +8,7 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';

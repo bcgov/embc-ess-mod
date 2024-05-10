@@ -6,8 +6,8 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 import * as globalConst from '../../../../../core/services/global-constants';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
-import { MatSelectChange } from '@angular/material/select';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({

@@ -2,7 +2,7 @@ import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/t
 
 import { StepEvacueeProfileComponent } from './step-evacuee-profile.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { MockSecurityQuestionsService } from 'src/app/unit-tests/mockSecurityQuestions.service';

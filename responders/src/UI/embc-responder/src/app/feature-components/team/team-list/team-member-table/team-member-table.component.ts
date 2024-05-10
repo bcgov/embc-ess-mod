@@ -8,10 +8,10 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';

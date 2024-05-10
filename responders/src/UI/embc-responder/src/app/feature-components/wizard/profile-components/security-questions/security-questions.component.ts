@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TabModel } from 'src/app/core/models/tab.model';

@@ -10,7 +10,7 @@ import {
 
 import { ListNotesComponent } from './list-notes.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import { MockStepNotesService } from 'src/app/unit-tests/mockStepNotes.service';

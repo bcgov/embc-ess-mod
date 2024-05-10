@@ -4,7 +4,7 @@ import { ViewSupportsComponent } from './view-supports.component';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { DatePipe } from '@angular/common';
 import { computeInterfaceToken } from 'src/app/app.module';
 

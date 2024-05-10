@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('SupportDetailsComponent', () => {

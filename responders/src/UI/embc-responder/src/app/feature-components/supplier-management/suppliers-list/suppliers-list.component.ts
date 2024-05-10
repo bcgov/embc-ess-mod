@@ -12,7 +12,7 @@ import { SupplierListItem } from 'src/app/core/api/models';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 
 @Component({

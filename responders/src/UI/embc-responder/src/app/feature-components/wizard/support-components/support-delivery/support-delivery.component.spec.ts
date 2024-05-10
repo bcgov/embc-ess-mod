@@ -4,8 +4,8 @@ import { SupportDeliveryComponent } from './support-delivery.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { DatePipe } from '@angular/common';
 import { computeInterfaceToken } from 'src/app/app.module';
 

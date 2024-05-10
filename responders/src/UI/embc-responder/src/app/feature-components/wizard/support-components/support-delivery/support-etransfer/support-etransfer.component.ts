@@ -3,12 +3,12 @@ import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import {
   CustomErrorMailMatcher,
   CustomErrorMobileMatcher
 } from '../../../profile-components/contact/contact.component';
-import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckbox as MatCheckbox, MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
 import { CacheService } from '../../../../../core/services/cache.service';
 import { WizardType } from '../../../../../core/models/wizard-type.model';

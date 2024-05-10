@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CanAddressComponent } from './can-address.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
 
 describe('CanAddressComponent', () => {
   let component: CanAddressComponent;

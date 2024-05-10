@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { TimeoutService } from './core/services/timeout.service';
 import { MockTimeoutService } from './unit-tests/mockTimeout.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';

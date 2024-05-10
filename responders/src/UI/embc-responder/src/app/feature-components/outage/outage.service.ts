@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { OutageInformation } from 'src/app/core/api/models/outage-information';
 import * as moment from 'moment';
 import { OutageDialogComponent } from 'src/app/shared/outage-components/outage-dialog/outage-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject, share, Subject, switchMap, takeUntil, timer } from 'rxjs';

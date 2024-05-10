@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, lastValueFrom, Observable, tap } from 'rxjs';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';

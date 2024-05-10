@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';

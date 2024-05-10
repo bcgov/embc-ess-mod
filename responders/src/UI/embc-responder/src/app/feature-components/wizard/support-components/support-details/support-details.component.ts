@@ -13,10 +13,10 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import * as moment from 'moment';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { SupportDetailsService } from './support-details.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Support, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';

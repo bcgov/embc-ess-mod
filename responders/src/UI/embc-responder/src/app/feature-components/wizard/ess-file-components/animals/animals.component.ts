@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Pet } from 'src/app/core/api/models';
 import { WizardService } from '../../wizard.service';
 

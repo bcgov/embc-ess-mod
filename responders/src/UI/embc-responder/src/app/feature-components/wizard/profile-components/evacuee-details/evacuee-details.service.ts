@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';

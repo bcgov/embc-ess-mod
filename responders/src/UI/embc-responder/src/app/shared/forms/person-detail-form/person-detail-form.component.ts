@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { CacheService } from 'src/app/core/services/cache.service';
 import * as globalConst from 'src/app/core/services/global-constants';
 
