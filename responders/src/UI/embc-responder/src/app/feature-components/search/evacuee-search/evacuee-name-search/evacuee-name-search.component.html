@@ -7,127 +7,129 @@
 <div class="row">
   <div class="col-md-8">
     <mat-card>
-      <p class="heading">Enter the evacuee's <b>first name, last name & date of birth.</b></p>
-      <p>
-        If the evacuee presented identification, please enter the details below as they appear on their
-        government-issued identity document.
-      </p>
+      <mat-card-content>
+        <p class="heading">Enter the evacuee's <b>first name, last name & date of birth.</b></p>
+        <p>
+          If the evacuee presented identification, please enter the details below as they appear on their
+          government-issued identity document.
+        </p>
 
-      <form [formGroup]="nameSearchForm">
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input formControlName="lastName" matInput placeholder="Last Name" maxlength="100" required />
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.lastName.invalid && nameSearchFormControl.lastName.hasError('whitespaceError')
-                "
-              >
-                Last Name is required</mat-error
-              >
-            </mat-form-field>
+        <form [formGroup]="nameSearchForm">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input formControlName="lastName" matInput placeholder="Last Name" maxlength="100" required />
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.lastName.invalid && nameSearchFormControl.lastName.hasError('whitespaceError')
+                  "
+                >
+                  Last Name is required</mat-error
+                >
+              </mat-form-field>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input formControlName="firstName" matInput placeholder="First Name" maxlength="100" required />
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.firstName.invalid && nameSearchFormControl.firstName.hasError('whitespaceError')
-                "
-              >
-                First Name is required</mat-error
-              >
-            </mat-form-field>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
+                <input formControlName="firstName" matInput placeholder="First Name" maxlength="100" required />
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.firstName.invalid && nameSearchFormControl.firstName.hasError('whitespaceError')
+                  "
+                >
+                  First Name is required</mat-error
+                >
+              </mat-form-field>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field type="date" appearance="outline">
-              <mat-label>Date of Birth</mat-label>
-              <input
-                formControlName="dateOfBirth"
-                matInput
-                placeholder="mm/dd/yyyy"
-                [textMask]="{ mask: dateMask, keepCharPositions: true }"
-                required
-              />
-              <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('required')
-                "
-              >
-                Date of Birth is required</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidDate')
-                "
-              >
-                Date of Birth is invalid</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('futureDate')
-                "
-              >
-                Date of Birth should be in the past</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidYear')
-                "
-              >
-                Invalid year. The Year must be between 1800-2100</mat-error
-              >
-            </mat-form-field>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field type="date" appearance="outline">
+                <mat-label>Date of Birth</mat-label>
+                <input
+                  formControlName="dateOfBirth"
+                  matInput
+                  placeholder="mm/dd/yyyy"
+                  [textMask]="{ mask: dateMask, keepCharPositions: true }"
+                  required
+                />
+                <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('required')
+                  "
+                >
+                  Date of Birth is required</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidDate')
+                  "
+                >
+                  Date of Birth is invalid</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('futureDate')
+                  "
+                >
+                  Date of Birth should be in the past</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidYear')
+                  "
+                >
+                  Invalid year. The Year must be between 1800-2100</mat-error
+                >
+              </mat-form-field>
+            </div>
           </div>
-        </div>
 
-        <div
-          class="row"
-          *ngIf="optionInjectionService?.instance?.optionType === selectedPathType.paperBased"
-          id="essFilePaperBased"
-        >
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Paper ESS File#</mat-label>
-              <input maxlength="100" formControlName="paperBasedEssFile" matInput required />
-              <span matPrefix>T</span>
-              <mat-hint>This is the ESS File # on the paper ESS File that you are doing data entry for.</mat-hint>
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.paperBasedEssFile.invalid &&
-                  nameSearchFormControl.paperBasedEssFile.hasError('whitespaceError')
-                "
-              >
-                Paper ESS File # is required</mat-error
-              >
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
-
-      <br />
-      <div class="row">
-        <div class="col-md-4">
-          <button
-            class="button-p submit"
-            type="button"
-            (click)="search()"
-            mat-button
-            [disabled]="!nameSearchForm.valid"
+          <div
+            class="row"
+            *ngIf="optionInjectionService?.instance?.optionType === selectedPathType.paperBased"
+            id="essFilePaperBased"
           >
-            Search
-          </button>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Paper ESS File#</mat-label>
+                <input maxlength="100" formControlName="paperBasedEssFile" matInput required />
+                <span matPrefix>T</span>
+                <mat-hint>This is the ESS File # on the paper ESS File that you are doing data entry for.</mat-hint>
+                <mat-error
+                  *ngIf="
+                    nameSearchFormControl.paperBasedEssFile.invalid &&
+                    nameSearchFormControl.paperBasedEssFile.hasError('whitespaceError')
+                  "
+                >
+                  Paper ESS File # is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+
+        <br />
+        <div class="row">
+          <div class="col-md-4">
+            <button
+              class="button-p submit"
+              type="button"
+              (click)="search()"
+              mat-button
+              [disabled]="!nameSearchForm.valid"
+            >
+              Search
+            </button>
+          </div>
         </div>
-      </div>
+      </mat-card-content>
     </mat-card>
     <br />
   </div>

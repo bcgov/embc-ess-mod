@@ -27,47 +27,49 @@
   <div class="row">
     <div class="col-lg-8">
       <mat-card class="support-time-box">
-        <div class="row row-padding">
-          <div class="col-md-12">
-            <p class="time-heading">Task Number Details</p>
+        <mat-card-content>
+          <div class="row row-padding">
+            <div class="col-md-12">
+              <p class="time-heading">Task Number Details</p>
+            </div>
           </div>
-        </div>
 
-        <div class="row row-padding">
-          <div class="col-md-4">
-            <p>Task Number Start Date & Time:</p>
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number Start Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p class="bold">
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
+              </p>
+            </div>
           </div>
-          <div class="col-md-4">
-            <p class="bold">
-              {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
-              at
-              {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
-            </p>
-          </div>
-        </div>
 
-        <div class="row row-padding">
-          <div class="col-md-4">
-            <p>Task Number End Date & Time:</p>
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number End Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p
+                class="bold"
+                [ngStyle]="{
+                  color: validTaskDate(
+                    evacueeSessionService?.evacFile?.task?.from,
+                    evacueeSessionService?.evacFile?.task?.to
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
+              </p>
+            </div>
           </div>
-          <div class="col-md-4">
-            <p
-              class="bold"
-              [ngStyle]="{
-                color: validTaskDate(
-                  evacueeSessionService?.evacFile?.task?.from,
-                  evacueeSessionService?.evacFile?.task?.to
-                )
-                  ? 'black'
-                  : 'red'
-              }"
-            >
-              {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
-              at
-              {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
-            </p>
-          </div>
-        </div>
+        </mat-card-content>
       </mat-card>
 
       <div class="row-padding">

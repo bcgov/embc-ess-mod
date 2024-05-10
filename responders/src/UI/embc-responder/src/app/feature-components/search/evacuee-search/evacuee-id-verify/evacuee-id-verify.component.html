@@ -7,43 +7,45 @@
 <div class="row">
   <div class="col-md-8">
     <mat-card>
-      <p id="photoId-label" class="heading" [innerHTML]="idQuestion"></p>
+      <mat-card-content>
+        <p id="photoId-label" class="heading" [innerHTML]="idQuestion"></p>
 
-      <form [formGroup]="idVerifyForm">
-        <mat-radio-group
-          aria-labelledby="photoId-radio-group-label"
-          formControlName="photoId"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button class="primary-radio-button" [value]="true" id="yesOption">
-            <span class="highlight">Yes</span> - the evacuee did provide valid government issued photo identification.
-          </mat-radio-button>
-          <mat-radio-button class="primary-radio-button" [value]="false" id="noOption">
-            <span class="highlight">No</span> - the evacuee did not provide valid government issued photo
-            identification.
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              idVerifyFormControl?.photoId?.touched &&
-              idVerifyFormControl?.photoId?.invalid &&
-              idVerifyFormControl?.photoId?.hasError('required')
-            "
+        <form [formGroup]="idVerifyForm">
+          <mat-radio-group
+            aria-labelledby="photoId-radio-group-label"
+            formControlName="photoId"
+            class="primary-radio-group"
+            required
           >
-            A selected option is required</mat-error
-          >
-        </mat-radio-group>
-      </form>
+            <mat-radio-button class="primary-radio-button" [value]="true" id="yesOption">
+              <span class="highlight">Yes</span> - the evacuee did provide valid government issued photo identification.
+            </mat-radio-button>
+            <mat-radio-button class="primary-radio-button" [value]="false" id="noOption">
+              <span class="highlight">No</span> - the evacuee did not provide valid government issued photo
+              identification.
+            </mat-radio-button>
+            <mat-error
+              class="custom-mat-error"
+              *ngIf="
+                idVerifyFormControl?.photoId?.touched &&
+                idVerifyFormControl?.photoId?.invalid &&
+                idVerifyFormControl?.photoId?.hasError('required')
+              "
+            >
+              A selected option is required</mat-error
+            >
+          </mat-radio-group>
+        </form>
 
-      <br />
-      <div class="row">
-        <div class="col-md-4">
-          <button class="button-p submit" type="button" mat-button (click)="next()" [disabled]="!idVerifyForm.valid">
-            Next
-          </button>
+        <br />
+        <div class="row">
+          <div class="col-md-4">
+            <button class="button-p submit" type="button" mat-button (click)="next()" [disabled]="!idVerifyForm.valid">
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      </mat-card-content>
     </mat-card>
     <br />
   </div>

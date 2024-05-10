@@ -27,6 +27,20 @@ $custom-typography: mat.define-typography-config(
 
 @include mat.all-component-typographies($custom-typography);
 
+
+:root {
+  --size-1: 8px;
+
+  --size-quarter: calc(var(--size-1) / 4);
+  --size-half: calc(var(--size-1) / 2);
+  --size-one-and-half: calc(var(--size-1) * 1.5);
+  --size-2: calc(var(--size-1) * 2);
+  --size-3: calc(var(--size-1) * 3);
+  --size-4: calc(var(--size-1) * 4);
+  --size-5: calc(var(--size-1) * 5);
+  --size-6: calc(var(--size-1) * 6);
+}
+
 main {
   padding-bottom: 0px !important;
   padding-top: 0px !important;
@@ -98,25 +112,27 @@ footer nav {
 }
 
 .button-style {
-  height: 55px;
+  height: 55px !important;
   font-weight: normal;
 }
 
-.button-yellow {
+.mat-mdc-button-base.button-yellow {
   @extend .button-style;
   color: black;
   background-color: #fcba19 !important;
   font-size: 21px;
 }
 
-.button-p {
+.mat-mdc-button-base.button-p {
   @extend .button-style;
   background-color: #234075;
   color: #ffffff;
-  font-size: 16px;
+  font-size: var(--size-2);
+
+  --mdc-text-button-label-text-color: #fff;
 }
 
-.button-s {
+.mat-mdc-button-base.button-s {
   @extend .button-style;
   border: 1px solid #b5b5b5 !important;
   color: #606060;
@@ -124,26 +140,26 @@ footer nav {
   font-size: 16px;
 }
 
-.button-transparent {
+.mat-mdc-button-base.button-transparent {
   @extend .button-style;
   color: #169bd5;
   font-size: 16px;
 }
 
-.button-p:hover {
+.mat-mdc-button-base.button-p:hover {
   background-color: #169bd5;
 }
 
-.button-yellow:hover {
+.mat-mdc-button-base.button-yellow:hover {
   background-color: #234075 !important;
   color: #ffffff;
 }
 
-.button-s:hover {
+.mat-mdc-button-base.button-s:hover {
   background-color: #e5e5e5;
 }
 
-.button-p:disabled {
+.mat-mdc-button-base.button-p:disabled {
   background-color: #234075;
   color: #ffffff !important;
 }
@@ -157,13 +173,13 @@ button:focus {
 }
 
 @media screen and (max-width: 833px) {
-  .button-yellow {
+  .mat-mdc-button-base.button-yellow {
     width: 100% !important;
   }
-  .button-p {
+  .mat-mdc-button-base.button-p {
     width: 100% !important;
   }
-  .button-s {
+  .mat-mdc-button-base.button-s {
     margin-right: 0px !important;
     width: 100% !important;
     margin-bottom: 10px !important;

@@ -225,21 +225,23 @@
 
       <div class="col-md-4" *ngIf="essFileNumber">
         <mat-card class="tips-card">
-          <div>
-            <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-            <span class="tips-heading"> <span class="bold">Tip:</span> Household Members </span>
-          </div>
+          <mat-card-content>
+            <div>
+              <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+              <span class="tips-heading"> <span class="bold">Tip:</span> Household Members </span>
+            </div>
 
-          <p class="tips-info">
-            <b>Editing Household Members</b>
-            <br />
-            Only household members NOT connected to a profile can be edited.
-          </p>
-          <p class="tips-info">
-            <b>Removing household members</b>
-            <br />
-            Household members removed from the current ESS File can NOT be issued supports.
-          </p>
+            <p class="tips-info">
+              <b>Editing Household Members</b>
+              <br />
+              Only household members NOT connected to a profile can be edited.
+            </p>
+            <p class="tips-info">
+              <b>Removing household members</b>
+              <br />
+              Household members removed from the current ESS File can NOT be issued supports.
+            </p>
+          </mat-card-content>
         </mat-card>
       </div>
     </div>

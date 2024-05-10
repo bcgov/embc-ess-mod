@@ -338,14 +338,16 @@
           "
         >
           <mat-card class="support-card">
-            <span class="support-subtitle">Support Delivery</span>
-            <p class="no-margin">
-              <b>{{ getReferral(support)?.supplierName }}</b>
-            </p>
-            <p [innerHTML]="getSupplierAddress(support) | maskFullAddress"></p>
+            <mat-card-content>
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getReferral(support)?.supplierName }}</b>
+              </p>
+              <p [innerHTML]="getSupplierAddress(support) | maskFullAddress"></p>
 
-            <p class="no-margin"><b>Supplier Notes</b></p>
-            <p>{{ getReferral(support)?.supplierNotes }}</p>
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card-content>
           </mat-card>
         </div>
         <!-- Lodging-Billeting Support Delivery -->
@@ -354,16 +356,18 @@
           *ngIf="support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer"
         >
           <mat-card class="support-card">
-            <span class="support-subtitle">Support Delivery</span>
-            <p class="no-margin">
-              <b>{{ getBilletingReferral(support)?.hostName }}</b>
-            </p>
-            <p class="no-margin">
-              {{ getBilletingReferral(support)?.hostAddress }}
-            </p>
-            <p>{{ getBilletingReferral(support)?.hostCity }}</p>
-            <p class="no-margin"><b>Supplier Notes</b></p>
-            <p>{{ getReferral(support)?.supplierNotes }}</p>
+            <mat-card-content>
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getBilletingReferral(support)?.hostName }}</b>
+              </p>
+              <p class="no-margin">
+                {{ getBilletingReferral(support)?.hostAddress }}
+              </p>
+              <p>{{ getBilletingReferral(support)?.hostCity }}</p>
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card-content>
           </mat-card>
         </div>
 
@@ -373,14 +377,16 @@
           *ngIf="support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer"
         >
           <mat-card class="support-card">
-            <span class="support-subtitle">Support Delivery</span>
-            <p class="no-margin">
-              <b>{{ getReferral(support)?.issuedToPersonName }}</b>
-            </p>
-            <p class="no-margin">
-              {{ getShelterAllowanceReferral(support)?.contactEmail }}
-            </p>
-            <p>{{ getShelterAllowanceReferral(support)?.contactPhone }}</p>
+            <mat-card-content>
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getReferral(support)?.issuedToPersonName }}</b>
+              </p>
+              <p class="no-margin">
+                {{ getShelterAllowanceReferral(support)?.contactEmail }}
+              </p>
+              <p>{{ getShelterAllowanceReferral(support)?.contactPhone }}</p>
+            </mat-card-content>
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
@@ -389,45 +395,49 @@
           *ngIf="support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer"
         >
           <mat-card class="support-card">
-            <span class="support-subtitle">Support Delivery</span>
-            <p class="no-margin">
-              <b>{{ getGroupReferral(support)?.facilityName }}</b>
-            </p>
-            <p class="no-margin">
-              {{ getGroupReferral(support)?.facilityAddress }}
-            </p>
-            <p>
-              {{ getGroupReferral(support)?.facilityCity }}
-            </p>
-            <p class="no-margin"><b>Supplier Notes</b></p>
-            <p>{{ getReferral(support)?.supplierNotes }}</p>
+            <mat-card-content>
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getGroupReferral(support)?.facilityName }}</b>
+              </p>
+              <p class="no-margin">
+                {{ getGroupReferral(support)?.facilityAddress }}
+              </p>
+              <p>
+                {{ getGroupReferral(support)?.facilityCity }}
+              </p>
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card-content>
           </mat-card>
         </div>
 
         <div class="col-md-4" *ngIf="support.method === supportMethod.ETransfer">
           <mat-card class="support-card">
-            <span class="support-subtitle">Support Delivery - <b>e-Transfer</b></span>
+           <mat-card-content>
+             <span class="support-subtitle">Support Delivery - <b>e-Transfer</b></span>
 
-            <p class="no-margin"><b>e-Transfer Recipient</b></p>
-            <p>
-              {{
-                appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
-              }},
-              {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName }}
-            </p>
+             <p class="no-margin"><b>e-Transfer Recipient</b></p>
+             <p>
+               {{
+                 appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+               }},
+               {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName }}
+             </p>
 
-            <p class="no-margin"><b>Notification Preference</b></p>
-            <p>{{ getNotificationPreference(getInterac(support)) }}</p>
+             <p class="no-margin"><b>Notification Preference</b></p>
+             <p>{{ getNotificationPreference(getInterac(support)) }}</p>
 
-            <div *ngIf="getInterac(support)?.notificationEmail">
-              <p class="no-margin"><b>Email Address</b></p>
-              <p>{{ getInterac(support)?.notificationEmail }}</p>
-            </div>
+             <div *ngIf="getInterac(support)?.notificationEmail">
+               <p class="no-margin"><b>Email Address</b></p>
+               <p>{{ getInterac(support)?.notificationEmail }}</p>
+             </div>
 
-            <div *ngIf="getInterac(support)?.notificationMobile">
-              <p class="no-margin"><b>Mobile Number</b></p>
-              <p>{{ getInterac(support)?.notificationMobile }}</p>
-            </div>
+             <div *ngIf="getInterac(support)?.notificationMobile">
+               <p class="no-margin"><b>Mobile Number</b></p>
+               <p>{{ getInterac(support)?.notificationMobile }}</p>
+             </div>
+           </mat-card-content>
           </mat-card>
         </div>
       </div>

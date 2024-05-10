@@ -109,8 +109,10 @@
     </div>
 
     <mat-card *ngIf="showSupplierFlag" class="supplier-box">
-      <p class="bold">{{ selectedSupplierItem?.name }}</p>
-      <p [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"></p>
+      <mat-card-content>
+        <p class="bold">{{ selectedSupplierItem?.name }}</p>
+        <p [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"></p>
+      </mat-card-content>
     </mat-card>
   </div>
 

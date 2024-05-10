@@ -172,31 +172,34 @@ footer nav {
   height: 55px !important;
   font-weight: normal;
 }
-.button-p {
+
+.mat-mdc-button-base.mat-mdc-button-base.button-p {
   @extend .button-style;
-  background-color: #234075 !important;
-  color: #ffffff !important;
+  background-color: #234075;
+  color: #ffffff;
   float: right;
+
+  --mdc-text-button-label-text-color: #fff;
 }
 
-.button-s {
+.mat-mdc-button-base.button-s {
   @extend .button-style;
-  border: 1px solid #b5b5b5 !important;
+  border: 1px solid #b5b5b5;
   color: #606060;
-  background-color: #ffffff !important;
+  background-color: #ffffff;
 }
 
-.button-p:hover {
-  background-color: #169bd5 !important;
+.mat-mdc-button-base.button-p:hover {
+  background-color: #169bd5;
 }
 
-.button-s:hover {
-  background-color: #e5e5e5 !important;
+.mat-mdc-button-base.button-s:hover {
+  background-color: #e5e5e5;
 }
 
-.button-p:disabled {
-  background-color: #234075 !important;
-  color: #ffffff !important;
+.mat-mdc-button-base.button-p:disabled {
+  background-color: #234075;
+  color: #ffffff;
 }
 
 button {
@@ -207,7 +210,7 @@ button:focus {
   outline: 0px !important;
 }
 
-.button-with-loader {
+.mat-mdc-button-base.button-with-loader {
   min-width: 240px;
   display: flex;
   align-items: center;
@@ -236,12 +239,12 @@ button:focus {
 }
 
 @media screen and (max-width: 768px) {
-  .resp-style .button-p {
+  .resp-style .mat-mdc-button-base.button-p {
     width: 100% !important;
     float: none;
   }
 
-  .resp-style .button-s {
+  .resp-style .mat-mdc-button-base.button-s {
     margin-bottom: 10px;
     width: 100% !important;
   }

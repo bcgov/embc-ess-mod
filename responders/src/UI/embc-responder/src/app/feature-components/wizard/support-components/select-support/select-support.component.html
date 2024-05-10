@@ -49,17 +49,19 @@
 
       <div class="col-md-5">
         <mat-card class="needs-box">
-          <div class="row">
-            <div class="col-md-12">
-              <p class="bold">Support requirements based on current Needs Assessment</p>
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <p class="bold">Support requirements based on current Needs Assessment</p>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
-            <div class="col-4">{{ item }}</div>
-          </div>
-          <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
-            <div class="col-8">{{ noAssistanceRequiredMessage }}</div>
-          </div>
+            <div class="row" *ngFor="let item of getIdentifiedNeeds()">
+              <div class="col-4">{{ item }}</div>
+            </div>
+            <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
+              <div class="col-8">{{ noAssistanceRequiredMessage }}</div>
+            </div>
+          </mat-card-content>
         </mat-card>
       </div>
     </div>
