@@ -340,7 +340,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 await manager.Handle(new RecordAuditAccessCommand
                 {
                     TeamMemberId = TestData.Tier4TeamMemberId,
-                    AccessReasonId = 0,
+                    AccessReasonId = 174360000,
                     EvacuationFileNumber = TestData.EvacuationFileId
                 });
             });

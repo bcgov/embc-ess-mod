@@ -96,6 +96,6 @@ public record AccessAuditEntry
 {
     public string TeamMemberId { get; set; }
     public string? RegistrantId { get; set; }
-    public string? EvacuationFileId { get; set; }
+    public string? EvacuationFileNumber { get; set; }
     public int AccessReason { get; set; }
 }

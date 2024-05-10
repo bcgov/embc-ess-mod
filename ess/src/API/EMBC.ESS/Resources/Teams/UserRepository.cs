@@ -41,7 +41,7 @@ public class UserRepository(
         var user = await ctx.era_essteamusers.Where(u => u.era_essteamuserid == Guid.Parse(auditEntry.TeamMemberId)).SingleOrDefaultAsync(ct);
         if (user == null) throw new InvalidOperationException($"Team member {auditEntry.TeamMemberId} not found");
 
-        var file = auditEntry.EvacuationFileId == null ? null : await ctx.era_evacuationfiles.Where(f => f.era_name == auditEntry.EvacuationFileId).SingleOrDefaultAsync(ct);
+        var file = auditEntry.EvacuationFileNumber == null ? null : await ctx.era_evacuationfiles.Where(f => f.era_name == auditEntry.EvacuationFileNumber).SingleOrDefaultAsync(ct);
         var registrant = auditEntry.RegistrantId == null ? null : await ctx.contacts.Where(c => c.contactid == Guid.Parse(auditEntry.RegistrantId)).SingleOrDefaultAsync(ct);
 
         var auditRecord = new era_portalaccessauditlogs
