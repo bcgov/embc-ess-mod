@@ -139,13 +139,11 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
             await RunSingleSupportTest<FoodRestaurantSupport>();
         }
 
-
         [Fact]
         public async Task GenerateReferrals_IncidentalsSupport_Created()
         {
             await RunSingleSupportTest<IncidentalsSupport>();
         }
-
 
         [Fact]
         public async Task GenerateReferrals_ClothingSupport_Created()
@@ -153,13 +151,11 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
             await RunSingleSupportTest<ClothingSupport>();
         }
 
-
         [Fact]
         public async Task GenerateReferrals_TransportationOtherSupport_Created()
         {
             await RunSingleSupportTest<TransportationOtherSupport>();
         }
-
 
         [Fact]
         public async Task GenerateReferrals_TransportationTaxiSupport_Created()
@@ -178,10 +174,10 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
             var response = (await strategy.Generate(new GenerateReferralsRequest
             {
-                AddSummary = false,
+                AddSummary = true,
                 AddWatermark = true,
                 File = file,
-                Supports = new[] { support },
+                Supports = [support],
                 RequestingUserId = teamMember.Id,
                 PrintingMember = teamMember,
                 Evacuee = new EMBC.ESS.Resources.Evacuees.Evacuee { FirstName = "first", LastName = "last" }
@@ -205,7 +201,6 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
                 _ => new Faker<TSupport>("en_CA").WithDefaultSupportRules(file, teamMember).WithSupportDeliveryRules<TSupport, TSupportDelivery>().Generate()
             };
-
         }
     }
 
@@ -260,7 +255,6 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
                 .RuleFor(f => f.TeamName, f => f.Company.CompanyName(0))
                 ;
         }
-
 
         public static Faker<SupplierDetails> WithSupplierDetailsRules(this Faker<SupplierDetails> faker)
         {
