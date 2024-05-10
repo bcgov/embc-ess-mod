@@ -14,11 +14,10 @@
             {{#if NotificationInformation.Mobile}}{{NotificationInformation.Mobile}}<br />{{/if}}
         </div>
     </div>
-
 </div>
 {{else}}
 <div class="col-6">
-    {{#if (isDefined(Supplier)}}
+    {{#if Supplier}}
     <h3 class="with-icon supplier">Supplier Information</h3>
     <div class="row">
         <div class="col-6">
