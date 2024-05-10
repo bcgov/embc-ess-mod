@@ -248,6 +248,19 @@ namespace EMBC.Responders.API.Controllers
             return Ok(res);
         }
 
+        [HttpPost("files/{fileId}/access")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AuditFileAcccess(string fileId, AuditAccessRequest request)
+        {
+            await messagingClient.Send(new RecordAuditAccessCommand
+            {
+                EvacuationFileNumber = fileId,
+                AccessReasonId = request.AccessReasonId
+            });
+            return Ok();
+        }
+
         private bool UserCanEditNote(Note note) => !string.IsNullOrEmpty(note.CreatingTeamMemberId) && note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
 
         private bool UserCanHideNote()
