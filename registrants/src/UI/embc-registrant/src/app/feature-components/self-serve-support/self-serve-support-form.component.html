@@ -25,6 +25,8 @@
     <mat-horizontal-stepper class="stepper-style" [linear]="isLinear" #stepper labelPosition="bottom">
       <mat-step [stepControl]="supportDraftForm">
         <ng-template matStepLabel>Support Details</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
         @if (supportDraftForm) {
           <app-self-serve-support-details-form
             [supportDraftForm]="supportDraftForm"
@@ -59,6 +61,8 @@
       </mat-step>
       <mat-step [stepControl]="eTransferDetailsForm">
         <ng-template matStepLabel>e-Transfer Details</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
         @if (eTransferDetailsForm) {
           <app-self-serve-support-interac-e-transfer-form [eTransferDetailsForm]="eTransferDetailsForm">
           </app-self-serve-support-interac-e-transfer-form>
@@ -89,6 +93,8 @@
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Review & Submit</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
         @if (supportDraftForm && eTransferDetailsForm) {
           <app-self-serve-support-review
             [supportDraftForm]="supportDraftForm"
