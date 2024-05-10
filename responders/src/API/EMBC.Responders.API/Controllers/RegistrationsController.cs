@@ -178,6 +178,7 @@ namespace EMBC.Responders.API.Controllers
         {
             await messagingClient.Send(new RecordAuditAccessCommand
             {
+                TeamMemberId = currentUserId,
                 RegistrantId = registrantId,
                 AccessReasonId = request.AccessReasonId
             });

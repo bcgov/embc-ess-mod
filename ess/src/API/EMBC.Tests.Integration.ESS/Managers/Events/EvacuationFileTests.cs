@@ -331,5 +331,19 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             pet.Type.ShouldBe($"{TestData.TestPrefix}-dog");
             pet.Quantity.ShouldBe("2");
         }
+
+        [Fact]
+        public async Task CanAuditEvacuationFileAccess()
+        {
+            await Should.NotThrowAsync(async () =>
+            {
+                await manager.Handle(new RecordAuditAccessCommand
+                {
+                    TeamMemberId = TestData.Tier4TeamMemberId,
+                    AccessReasonId = 0,
+                    EvacuationFileNumber = TestData.EvacuationFileId
+                });
+            });
+        }
     }
 }

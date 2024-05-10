@@ -255,6 +255,7 @@ namespace EMBC.Responders.API.Controllers
         {
             await messagingClient.Send(new RecordAuditAccessCommand
             {
+                TeamMemberId = currentUserId,
                 EvacuationFileNumber = fileId,
                 AccessReasonId = request.AccessReasonId
             });

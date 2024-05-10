@@ -338,5 +338,19 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             homeAddress.City.ShouldBe(registrant.HomeAddress.City);
             homeAddress.StateProvince.ShouldBe(registrant.HomeAddress.StateProvince);
         }
+
+        [Fact]
+        public async Task CanAuditRegistrantAccess()
+        {
+            await Should.NotThrowAsync(async () =>
+            {
+                await manager.Handle(new RecordAuditAccessCommand
+                {
+                    TeamMemberId = TestData.Tier4TeamMemberId,
+                    AccessReasonId = 0,
+                    RegistrantId = TestData.ContactId
+                });
+            });
+        }
     }
 }
