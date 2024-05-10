@@ -11,11 +11,25 @@
                     e-Transfer Notification: <b>{{notificationEmail}}</b>
                 </p>
                 <p>
-                    {{#customComparerDecimalAmount groceryAmount 0 'Grocery'}}
-                    {{#customComparerDecimalAmount restaurantAmount 0 'Restaurant'}}
-                    {{#customComparerDecimalAmount clothingAmount 0 'Clothing'}}
-                    {{#customComparerDecimalAmount incidentalsAmount 0 'Incidentals'}}
-                    {{#customComparerDecimalAmount shelterAllowanceAmount 0 'Shelter Allowance'}}
+                    {{#if groceryAmount}}
+                    Grocery: <b>${{groceryAmount}}</b>
+                    <br>
+                    {{/if}}
+                    {{#if restaurantAmount}}
+                    Restaurant: <b>${{restaurantAmount}}</b>
+                    <br />
+                    {{/if}}
+                    {{#if clothingAmount}}
+                    Clothing: <b>${{clothingAmount}}</b>
+                    <br>
+                    {{/if}}
+                    {{#if incidentalsAmount}}
+                    Incidentals: <b>${{incidentalsAmount}}</b>
+                    <br>
+                    {{/if}}
+                    {{#if shelterAllowanceAmount}}
+                    Shelter Allowance: <b>${{shelterAllowanceAmount}}</b>
+                    {{/if}}
                 <p>
                 <p style='font-size: 13pt;font-weight: bold;'>Total Amount: ${{totalAmount}}</p>
                 <p style='font-size: 13pt;color:#00a6ed;font-weight: bold;'>Next Steps:</p>

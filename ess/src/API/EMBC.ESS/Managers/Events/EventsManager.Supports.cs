@@ -462,11 +462,11 @@ public partial class EventsManager
                 tokens: new[]
                 {
                     KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
-                    KeyValuePair.Create("clothingAmount", clothingAmount.ToString("0.00")),
-                    KeyValuePair.Create("incidentalsAmount", incidentalsAmount.ToString("0.00")),
-                    KeyValuePair.Create("groceryAmount", groceryAmount.ToString("0.00")),
-                    KeyValuePair.Create("restaurantAmount", restaurantAmount.ToString("0.00")),
-                    KeyValuePair.Create("shelterAllowanceAmount", shelterAllowanceAmount.ToString("0.00")),
+                    KeyValuePair.Create("clothingAmount", (clothingAmount > 0) ? clothingAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("incidentalsAmount", (incidentalsAmount > 0) ? incidentalsAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("groceryAmount", (groceryAmount > 0) ? groceryAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
                     KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
                     KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
                 });
