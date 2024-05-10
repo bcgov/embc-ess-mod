@@ -110,7 +110,7 @@ public partial class EventsManager
             PrintReferrals = false
         });
 
-        bool emailSent = await SendEmailConfirmation(cmd, file, supports);
+        bool emailSent = await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
 
         file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
         await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
@@ -421,7 +421,7 @@ public partial class EventsManager
         };
     }
 
-    private async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, Resources.Evacuations.EvacuationFile file, IEnumerable<ContractsEvents.Support> supports)
+    public async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<ContractsEvents.Support> supports)
     {
         decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
 
@@ -449,7 +449,7 @@ public partial class EventsManager
         totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
 
         string email = "";
-        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId, UserId = primaryRegistrantUserId })).Items.SingleOrDefault();
 
         if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
         {
@@ -461,7 +461,7 @@ public partial class EventsManager
         if (!string.IsNullOrWhiteSpace(email))
         {
             await SendEmailNotification(
-                SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
+                SubmissionTemplateType.ETransferConfirmation,
                 email: email,
                 name: $"{evacuee.LastName}, {evacuee.FirstName}",
                 tokens: new[]
@@ -473,12 +473,7 @@ public partial class EventsManager
                     KeyValuePair.Create("restaurantAmount", restaurantAmount.ToString("0.00")),
                     KeyValuePair.Create("shelterAllowanceAmount", shelterAllowanceAmount.ToString("0.00")),
                     KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
-                    KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
-                    KeyValuePair.Create("showClothingAmount", clothingAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showIncidentalsAmount", incidentalsAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showGroceryAmount", groceryAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showRestaurantAmount", restaurantAmount > 0 ? "true" : "false"),
-                    KeyValuePair.Create("showShelterAllowanceAmount", shelterAllowanceAmount > 0 ? "true" : "false")
+                    KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
                 });
             return true;
         }

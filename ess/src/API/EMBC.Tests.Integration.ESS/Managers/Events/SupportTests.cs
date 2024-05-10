@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
@@ -473,6 +476,49 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
             updatedFile.Supports.Count().ShouldBe(supports.Length);
+        }
+
+        [Fact]
+        public async Task CreateSelfServeSupportsETransferEmail()
+        {
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var file = CreateNewTestEvacuationFile(registrant);
+ 
+            var eTransferDetails = new ETransferDetails
+            {
+                ETransferEmail = "tim.asadov@quartech.com",
+                RecipientName = "John Doe [No Incident, No Groceries]"
+            };
+
+            var supports = new List<Support>
+            {
+                new ClothingSupport { TotalAmount = 10 },
+                new FoodGroceriesSupport { TotalAmount = 0 },
+                new FoodRestaurantSupport { TotalAmount = 30 },
+                new ShelterAllowanceSupport { TotalAmount = 50 },
+                //new IncidentalsSupport { TotalAmount = 50 }
+            };
+
+            // Act1
+            var result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
+
+            eTransferDetails = new ETransferDetails
+            {
+                ETransferEmail = "tim.asadov@quartech.com",
+                RecipientName = "John Doe [No Clothing, No Restaurant, No ShelterAll]"
+            };
+
+            supports = new List<Support>
+            {
+                new FoodGroceriesSupport { TotalAmount = 20 },
+             // new FoodRestaurantSupport { TotalAmount = 0 },
+                new IncidentalsSupport { TotalAmount = 40 },
+                new ShelterAllowanceSupport { TotalAmount = 0 }
+            };
+
+            // Act2
+            result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
+            return;
         }
     }
 }
