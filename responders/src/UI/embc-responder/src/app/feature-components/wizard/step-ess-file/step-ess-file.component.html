@@ -10,7 +10,7 @@
     </div>
   </div>
   <br />
-  <nav mat-tab-nav-bar dynamicHeight>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" dynamicHeight>
     <a
       mat-tab-link
       #tabNavLinks
@@ -48,7 +48,8 @@
 
   <div class="content-container">
     <app-alert></app-alert>
-
-    <router-outlet></router-outlet>
+    <mat-tab-nav-panel #tabPanel>
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
   </div>
 </div>
