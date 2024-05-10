@@ -37,7 +37,6 @@ namespace EMBC.Tests.Unit.ESS
         public static IServiceCollection AddTemplateBuilding(this IServiceCollection services, ITestOutputHelper output)
         {
             services.AddTransient<ITransformator, HbsTransformator>();
-
             services.AddTransient<EmailTemplateProvider>();
             services.AddTransient<ITemplateProviderResolver>(sp =>
             {
