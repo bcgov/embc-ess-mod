@@ -104,7 +104,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "communities",
                 async () => (await client.Send(new CommunitiesQuery())).Items,
-                TimeSpan.FromMinutes(15));
+                TimeSpan.FromMinutes(60));
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
             if (!string.IsNullOrEmpty(stateProvinceId)) items = items.Where(i => i.StateProvinceCode == stateProvinceId);
@@ -121,7 +121,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "statesprovinces",
                 async () => (await client.Send(new StateProvincesQuery())).Items,
-                TimeSpan.FromMinutes(15));
+                TimeSpan.FromMinutes(60));
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
 
@@ -136,7 +136,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "countries",
                 async () => (await client.Send(new CountriesQuery())).Items,
-                TimeSpan.FromMinutes(15));
+                TimeSpan.FromMinutes(60));
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
@@ -149,7 +149,7 @@ namespace EMBC.Responders.API.Controllers
             var questions = await cache.GetOrSet(
                 "securityquestions",
                 async () => (await client.Send(new SecurityQuestionsQuery())).Items,
-                TimeSpan.FromMinutes(15));
+                TimeSpan.FromMinutes(60));
             return Ok(questions);
         }
 
@@ -163,6 +163,20 @@ namespace EMBC.Responders.API.Controllers
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo,
                 TimeSpan.FromSeconds(30));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
+        }
+
+        [HttpGet("access-reasons")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyDictionary<int, string>>> GetAuditOptions()
+        {
+            var questions = await cache.GetOrSet(
+
+              "accessreasons",
+              async () => (await client.Send(new AuditAccessReasonsQuery())).Items,
+              TimeSpan.FromMinutes(60));
+
+            return Ok(questions);
         }
     }
 
