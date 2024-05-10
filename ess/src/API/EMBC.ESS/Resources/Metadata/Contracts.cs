@@ -15,6 +15,8 @@ namespace EMBC.ESS.Resources.Metadata
         Task<string[]> GetSecurityQuestions();
 
         Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query);
+
+        Task<IReadOnlyDictionary<int, string>> GetAuditAccessReasons();
     }
 
     public class Country
