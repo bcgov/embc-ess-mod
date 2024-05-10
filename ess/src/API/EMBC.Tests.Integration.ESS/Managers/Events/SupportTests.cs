@@ -479,7 +479,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CreateSelfServeSupportsETransferEmail()
+        public async Task CreateSelfServeSupportsETransferEmailNoFood()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var file = CreateNewTestEvacuationFile(registrant);
@@ -487,37 +487,42 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var eTransferDetails = new ETransferDetails
             {
                 ETransferEmail = "tim.asadov@quartech.com",
-                RecipientName = "John Doe [No Incident, No Groceries]"
+                RecipientName = "John Doe [No Food, No Restaurant]"
             };
 
             var supports = new List<Support>
             {
                 new ClothingSupport { TotalAmount = 10 },
                 new FoodGroceriesSupport { TotalAmount = 0 },
-                new FoodRestaurantSupport { TotalAmount = 30 },
-                new ShelterAllowanceSupport { TotalAmount = 50 },
-                //new IncidentalsSupport { TotalAmount = 50 }
+                new IncidentalsSupport { TotalAmount = 30 },
+                new ShelterAllowanceSupport { TotalAmount = 50 }
             };
 
-            // Act1
             var result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
+            return;
+        }
 
-            eTransferDetails = new ETransferDetails
+        [Fact]
+        public async Task SelfServeSupportsETransferEmailOnlyFood()
+        {
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var file = CreateNewTestEvacuationFile(registrant);
+
+ 
+            var eTransferDetails = new ETransferDetails
             {
                 ETransferEmail = "tim.asadov@quartech.com",
-                RecipientName = "John Doe [No Clothing, No Restaurant, No ShelterAll]"
+                RecipientName = "John Doe [Only Food and Restaurant]"
             };
 
-            supports = new List<Support>
+            var supports = new List<Support>
             {
                 new FoodGroceriesSupport { TotalAmount = 20 },
-             // new FoodRestaurantSupport { TotalAmount = 0 },
-                new IncidentalsSupport { TotalAmount = 40 },
+                new FoodRestaurantSupport { TotalAmount = 40 },
                 new ShelterAllowanceSupport { TotalAmount = 0 }
             };
 
-            // Act2
-            result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
+            var result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
             return;
         }
     }

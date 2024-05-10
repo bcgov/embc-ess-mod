@@ -27,17 +27,11 @@ namespace EMBC.Utilities.Transformation
         {
             Handlebars.RegisterHelper("customComparerDecimalAmount", (writer, context, parameters) =>
             {
-                if (parameters.Length < 3)
-                {
-                    throw new ArgumentException("Insufficient parameters for 'customComparerAmount' helper.");
-                }
-
                 if (!decimal.TryParse(parameters[0]?.ToString(), out decimal value1) || !decimal.TryParse(parameters[1]?.ToString(), out decimal value2))
                 {
-                    throw new ArgumentException("Invalid parameters for 'customComparerAmount' helper.");
+                    throw new ArgumentException("Invalid parameters for 'customComparerDecimalAmount' helper.");
                 }
-                if (parameters.Length > 2)
-                    writer.WriteSafeString(value1 > value2 ? $"{parameters[2]}: <b>${parameters[0]}</b><br/>" : "");
+                writer.WriteSafeString(value1 > value2 ? $"{parameters[2]}: <b>${parameters[0]}</b><br/>" : "");
             });
 
             var template = Handlebars.Compile(transformationData.Template);
