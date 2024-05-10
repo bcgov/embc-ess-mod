@@ -10,9 +10,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api-prj": "ng-openapi-gen -i https://dev-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
-    "gen-api-sup": "ng-openapi-gen -i https://era-responders-dev.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
-    "gen-api-local": "ng-openapi-gen -i http://localhost:6020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
+    "format:write": "prettier . --write",
+    "gen-api-prj": "ng-openapi-gen -i https://dev-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false &&  && npm run format:write",
+    "gen-api-sup": "ng-openapi-gen -i https://era-responders-dev.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false &&  && npm run format:write",
+    "gen-api-local": "ng-openapi-gen -i http://localhost:6020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false &&  && npm run format:write"
   },
   "private": true,
   "dependencies": {
@@ -65,7 +66,7 @@
     "karma-coverage": "^2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "ng-openapi-gen": "^0.21.2",
+    "ng-openapi-gen": "^0.51.0",
     "prettier": "^3.2.5",
     "protractor": "~7.0.0",
     "ts-node": "^8.10.2",
