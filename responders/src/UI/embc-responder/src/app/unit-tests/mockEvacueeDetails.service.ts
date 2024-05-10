@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CustomValidationService } from '../core/services/customValidation.service';
 import { AppBaseService } from '../core/services/helper/appBase.service';
 import { EvacueeDetailsService } from '../feature-components/wizard/profile-components/evacuee-details/evacuee-details.service';

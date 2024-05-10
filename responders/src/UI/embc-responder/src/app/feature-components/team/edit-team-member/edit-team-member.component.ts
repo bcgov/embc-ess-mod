@@ -9,7 +9,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { EditTeamMemberService } from './edit-team-member.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-team-member',

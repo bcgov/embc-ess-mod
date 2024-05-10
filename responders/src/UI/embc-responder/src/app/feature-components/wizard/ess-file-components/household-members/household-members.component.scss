@@ -72,13 +72,14 @@
   margin-bottom: 18px;
 }
 
-::ng-deep th.mat-header-cell,
-td.mat-cell,
-td.mat-footer-cell {
+::ng-deep th.mat-mdc-header-cell,
+td.mat-mdc-cell,
+td.mat-mdc-footer-cell {
   border-bottom-width: 0px !important;
   border-bottom-style: none !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 ::ng-deep .mat-checkbox-inner-container {
   background-color: white;
 }

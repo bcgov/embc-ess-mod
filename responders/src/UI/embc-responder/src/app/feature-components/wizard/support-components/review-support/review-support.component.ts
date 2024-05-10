@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import {
   FoodGroceriesSupport,
@@ -22,7 +22,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import * as moment from 'moment';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ProcessSupportsDialogComponent } from 'src/app/shared/components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 import { ReviewSupportService } from './review-support.service';

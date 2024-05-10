@@ -16,7 +16,7 @@ import {
   InsuranceOption,
   NeedsAssessmentType
 } from 'src/app/core/api/models';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { ReactiveFormsModule } from '@angular/forms';

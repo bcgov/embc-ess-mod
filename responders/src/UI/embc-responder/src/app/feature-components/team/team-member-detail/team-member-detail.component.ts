@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';

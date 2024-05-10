@@ -5,7 +5,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 
 import * as globalConst from '../../../../core/services/global-constants';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';

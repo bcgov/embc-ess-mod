@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
@@ -10,7 +10,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { SupplierDetailService } from './supplier-detail.service';
 import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
