@@ -41,7 +41,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 VerifiedUser = false,
                 RestrictedAccess = false,
                 SecurityQuestions = securityQuestions,
-                FirstName = $"{testContextIdentifier}-PriRegTestFirst",
+                FirstName = $"autotest-{testContextIdentifier}-PriRegTestFirst",
                 LastName = $"{testContextIdentifier}-PriRegTestLast",
                 DateOfBirth = "2000/01/01",
                 Gender = "Female",
