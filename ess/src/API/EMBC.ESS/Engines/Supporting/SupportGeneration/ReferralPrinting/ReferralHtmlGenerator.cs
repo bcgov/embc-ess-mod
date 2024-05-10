@@ -36,7 +36,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var upperCaseString = (string)arguments[0];
                 output.WriteSafeString(upperCaseString.ToUpperInvariant());
             });
-            handleBars.RegisterHelper("isDefined", (output, context, arguments) => arguments[0] != null);
 
             return handleBars;
         }
@@ -155,7 +154,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         private static Task<string> GetSupplierPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}SupplierPartial");
 
         private static Task<string> GetNotesPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}NotesPartial");
+
         private static Task<string> GetAdditionalInfoPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}AdditionalInfoPartial");
+
         private static Task<string> GetDeliverySummaryPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}DeliverySummaryPartial");
 
         private enum ReferalMainViews
