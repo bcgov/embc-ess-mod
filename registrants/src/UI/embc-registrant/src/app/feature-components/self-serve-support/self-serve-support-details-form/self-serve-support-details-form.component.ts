@@ -209,9 +209,42 @@ export class SelfServeSupportDetailsFormComponent {
       next: (includedHouseholdMembers) => {
         if (includedHouseholdMembers.every((m) => !m.isSelected)) {
           selfServeSupportFormGroup.controls.mealTypes.controls.forEach((m) => {
-            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false, { emitEvent: false });
-            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false, { emitEvent: false });
-            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false, { emitEvent: false });
+            if (m.controls.breakfast.value === true) {
+              m.controls.breakfast.setValue(false, { emitEvent: false });
+            }
+            if (m.controls.lunch.value === true) {
+              m.controls.lunch.setValue(false, { emitEvent: false });
+            }
+            if (m.controls.dinner.value === true) {
+              m.controls.dinner.setValue(false, { emitEvent: false });
+            }
+            // disalbe all fields
+            m.controls.breakfast.disable({ emitEvent: false });
+            m.controls.lunch.disable({ emitEvent: false });
+            m.controls.dinner.disable({ emitEvent: false });
+          });
+        } else {
+          selfServeSupportFormGroup.controls.mealTypes.controls.forEach((meal) => {
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === false
+            ) {
+              meal.controls.breakfast.enable({ emitEvent: false });
+            }
+
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === false
+            ) {
+              meal.controls.lunch.enable({ emitEvent: false });
+            }
+
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === false
+            ) {
+              meal.controls.dinner.enable({ emitEvent: false });
+            }
           });
         }
       }

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   selector: 'app-eligible-self-serve-opt-out-dialog',
   imports: [MatDialogModule, MatButtonModule],
-  template: './self-serve-support-total-amount-zero.component.html',
+  templateUrl: './self-serve-support-total-amount-zero.component.html',
   styles: [
     `
       :host {
