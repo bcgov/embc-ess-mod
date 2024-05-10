@@ -256,6 +256,14 @@ mat-card {
   white-space: normal !important;
 }
 
+.mat-mdc-radio-button.mat-accent {
+  --mdc-radio-selected-focus-icon-color: #169bd5;
+  --mdc-radio-selected-hover-icon-color: #169bd5;
+  --mdc-radio-selected-icon-color: #169bd5;
+  --mdc-radio-selected-pressed-icon-color: #169bd5;
+  --mat-radio-checked-ripple-color: #169bd5;
+}
+
 /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
 .mat-mdc-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
   border-color: #169bd5 !important;
