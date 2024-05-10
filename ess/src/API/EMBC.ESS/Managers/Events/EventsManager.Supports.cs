@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
-using EMBC.ESS.Engines.Supporting.SupportGeneration;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
-using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts;
@@ -19,9 +16,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using ContractsEvents = EMBC.ESS.Shared.Contracts.Events;
 
 
 namespace EMBC.ESS.Managers.Events;
@@ -421,7 +416,7 @@ public partial class EventsManager
         };
     }
 
-    public async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<ContractsEvents.Support> supports)
+    public async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<Shared.Contracts.Events.Support> supports)
     {
         decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
 
@@ -429,19 +424,19 @@ public partial class EventsManager
         {
             switch (item)
             {
-            case ContractsEvents.ClothingSupport clothingSupport:
+            case Shared.Contracts.Events.ClothingSupport clothingSupport:
                 clothingAmount += clothingSupport.TotalAmount;
                 break;
-            case ContractsEvents.FoodGroceriesSupport groceriesSupport:
+            case Shared.Contracts.Events.FoodGroceriesSupport groceriesSupport:
                 groceryAmount += groceriesSupport.TotalAmount;
                 break;
-            case ContractsEvents.FoodRestaurantSupport restaurantSupport:
+            case Shared.Contracts.Events.FoodRestaurantSupport restaurantSupport:
                 restaurantAmount += restaurantSupport.TotalAmount;
                 break;
-            case ContractsEvents.IncidentalsSupport incidentalsSupport:
+            case Shared.Contracts.Events.IncidentalsSupport incidentalsSupport:
                 incidentalsAmount += incidentalsSupport.TotalAmount;
                 break;
-            case ContractsEvents.ShelterAllowanceSupport shelterSupport:
+            case Shared.Contracts.Events.ShelterAllowanceSupport shelterSupport:
                 shelterAllowanceAmount += shelterSupport.TotalAmount;
                 break;
             }
