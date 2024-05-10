@@ -501,4 +501,12 @@ public partial class EventsManager(
             Items = supports
         };
     }
+
+    public async System.Threading.Tasks.Task Handle(RecordAuditAccessCommand cmd)
+    {
+        if (string.IsNullOrEmpty(cmd.RegistrantId) && string.IsNullOrEmpty(cmd.EvacuationFileNumber))
+            throw new BusinessLogicException($"Audit must be for a registrant profile or evacuation file");
+
+        await System.Threading.Tasks.Task.CompletedTask;
+    }
 }
