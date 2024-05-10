@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Transformation;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace EMBC.Tests.Unit.ESS.Engines;
 
@@ -21,7 +26,10 @@ public class SelfServeSupportGenerationTests
     private readonly DateOnly[] expectedDays;
     private readonly IEnumerable<string> expectedHouseholdMemberIds;
 
-    public SelfServeSupportGenerationTests()
+    private readonly ITransformator transformator;
+    private ITemplateProviderResolver templateProviderResolver;
+
+    public SelfServeSupportGenerationTests(ITestOutputHelper output)
     {
         strategy = new SelfServeSupportGenerator();
 
@@ -30,6 +38,11 @@ public class SelfServeSupportGenerationTests
         householdMembers = Enumerable.Range(1, 5).Select(i => new SelfServeHouseholdMember(i.ToString(), false));
         expectedDays = [DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(startDate.AddHours(24)), DateOnly.FromDateTime(startDate.AddHours(48))];
         expectedHouseholdMemberIds = householdMembers.Select(hm => hm.Id).ToList();
+
+        var services = TestHelper.CreateDIContainer().AddLogging(output).AddTemplateBuilding(output);
+        var serviceProvider = TestHelper.Build(services);
+        transformator = serviceProvider.GetRequiredService<ITransformator>();
+        templateProviderResolver = serviceProvider.GetRequiredService<ITemplateProviderResolver>();
     }
 
     [Fact]
@@ -93,5 +106,52 @@ public class SelfServeSupportGenerationTests
     {
         var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([forNeed], startDate, endDate, startDate, endDate, householdMembers), default);
         return response.Supports.ShouldHaveSingleItem().ShouldBeOfType<T>();
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodOnly()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "120"),
+                KeyValuePair.Create("groceryAmount", "30"),
+                KeyValuePair.Create("restaurantAmount", "90"),
+                KeyValuePair.Create("recipientName","John Doe - Food Only"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+
+        var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
+        var emailContent = (await transformator.Transform(new TransformationData
+        {
+            Template = template.Content,
+            Tokens = new Dictionary<string, string>(tokens)
+        })).Content;
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodOnly.html", emailContent);
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodExcluded()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "160"),
+                KeyValuePair.Create("clothingAmount", "30"),
+                KeyValuePair.Create("incidentalsAmount", "90"),
+                KeyValuePair.Create("shelterAllowanceAmount", "40"),
+                KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+
+        var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
+        var emailContent = (await transformator.Transform(new TransformationData
+        {
+            Template = template.Content,
+            Tokens = new Dictionary<string, string>(tokens)
+        })).Content;
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodExcluded.html", emailContent);
     }
 }

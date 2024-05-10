@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Transformation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
@@ -17,6 +18,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
     public class SupportTests : DynamicsWebAppTestBase
     {
         private readonly EventsManager manager;
+        private ITransformator transformator;
+        private ITemplateProviderResolver templateProviderResolver;
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
@@ -25,6 +28,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public SupportTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             manager = Services.GetRequiredService<EventsManager>();
+            transformator = Services.GetRequiredService<ITransformator>();
+            templateProviderResolver = Services.GetRequiredService<ITemplateProviderResolver>();
         }
 
         [Fact]
@@ -479,51 +484,52 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CreateSelfServeSupportsETransferEmailNoFood()
+        public async Task CreateSelfServeSupportsETransferEmailContentFoodOnly()
         {
-            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var file = CreateNewTestEvacuationFile(registrant);
- 
-            var eTransferDetails = new ETransferDetails
+            IEnumerable<KeyValuePair<string, string>> tokens = new[]
             {
-                ETransferEmail = "tim.asadov@quartech.com",
-                RecipientName = "John Doe [No Food, No Restaurant]"
+                KeyValuePair.Create("totalAmount", "120"),
+                KeyValuePair.Create("groceryAmount", "30"),
+                KeyValuePair.Create("restaurantAmount", "90"),
+                KeyValuePair.Create("recipientName","John Doe - Food Only"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+
             };
 
-            var supports = new List<Support>
+            var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
+            var emailContent = (await transformator.Transform(new TransformationData
             {
-                new ClothingSupport { TotalAmount = 10 },
-                new FoodGroceriesSupport { TotalAmount = 0 },
-                new IncidentalsSupport { TotalAmount = 30 },
-                new ShelterAllowanceSupport { TotalAmount = 50 }
-            };
+                Template = template.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            })).Content;
 
-            var result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
-            return;
+            emailContent.ShouldNotBeNullOrEmpty();
+            await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodOnly.html", emailContent);
         }
 
         [Fact]
-        public async Task SelfServeSupportsETransferEmailOnlyFood()
+        public async Task CreateSelfServeSupportsETransferEmailContentFoodExcluded()
         {
-            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var file = CreateNewTestEvacuationFile(registrant);
-
- 
-            var eTransferDetails = new ETransferDetails
+            IEnumerable<KeyValuePair<string, string>> tokens = new[]
             {
-                ETransferEmail = "tim.asadov@quartech.com",
-                RecipientName = "John Doe [Only Food and Restaurant]"
+                KeyValuePair.Create("totalAmount", "160"),
+                KeyValuePair.Create("clothingAmount", "30"),
+                KeyValuePair.Create("incidentalsAmount", "90"),
+                KeyValuePair.Create("shelterAllowanceAmount", "40"),
+                KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
             };
 
-            var supports = new List<Support>
+            var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
+            var emailContent = (await transformator.Transform(new TransformationData
             {
-                new FoodGroceriesSupport { TotalAmount = 20 },
-                new FoodRestaurantSupport { TotalAmount = 40 },
-                new ShelterAllowanceSupport { TotalAmount = 0 }
-            };
+                Template = template.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            })).Content;
 
-            var result = await manager.SendEmailConfirmation(eTransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
-            return;
+            emailContent.ShouldNotBeNullOrEmpty();
+            await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodExcluded.html", emailContent);
         }
+
     }
 }

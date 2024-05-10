@@ -18,7 +18,6 @@ using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
 
-
 namespace EMBC.ESS.Managers.Events;
 
 public partial class EventsManager
@@ -416,7 +415,7 @@ public partial class EventsManager
         };
     }
 
-    public async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<Shared.Contracts.Events.Support> supports)
+    private async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<Shared.Contracts.Events.Support> supports)
     {
         decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
 
