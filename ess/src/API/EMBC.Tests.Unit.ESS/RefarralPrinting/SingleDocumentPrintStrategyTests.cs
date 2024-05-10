@@ -172,10 +172,10 @@ namespace EMBC.Tests.Unit.ESS.ReferralPrinting
 
             var response = (await strategy.Generate(new GenerateReferralsRequest
             {
-                AddSummary = false,
+                AddSummary = true,
                 AddWatermark = true,
                 File = file,
-                Supports = new[] { support },
+                Supports = [support],
                 RequestingUserId = teamMember.Id,
                 PrintingMember = teamMember,
                 Evacuee = new RegistrantProfile { FirstName = "first", LastName = "last" }
