@@ -130,6 +130,7 @@ footer nav {
   font-size: var(--size-2);
 
   --mdc-text-button-label-text-color: #fff;
+  --mdc-outlined-button-label-text-color: #fff;
 }
 
 .mat-mdc-button-base.button-s {
@@ -164,6 +165,11 @@ footer nav {
   color: #ffffff !important;
 }
 
+.mat-mdc-icon-button svg, .mat-mdc-icon-button img {
+  width: inherit;
+  height: inherit;
+}
+
 button {
   border-width: 0px !important;
 }
@@ -174,14 +180,16 @@ button:focus {
 
 
 .close-image,
-.edit-image {
+.edit-image,
+.delete-image {
   img:last-of-type {
     display: none;
   }
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image:hover {
   img:last-of-type {
     display: inline;
   }

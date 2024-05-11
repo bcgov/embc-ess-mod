@@ -78,9 +78,17 @@
   background-color: #234075;
   color: white;
 
-  --mdc-radio-unselected-hover-icon-color: white;
-  --mdc-radio-unselected-icon-color: white;
   --mdc-theme-text-primary-on-background: white;
+
+  .mat-mdc-radio-button.mat-accent {
+    --mdc-radio-disabled-selected-icon-color: #000;
+    --mdc-radio-disabled-unselected-icon-color: #000;
+    --mdc-radio-unselected-focus-icon-color: #ffffff;
+    --mdc-radio-unselected-hover-icon-color: #ffffff;
+    --mdc-radio-unselected-icon-color: rgb(255 255 255);
+    --mdc-radio-unselected-pressed-icon-color: rgb(255 255 255 / 54%);
+    --mat-mdc-radio-ripple-color: #fff;
+  }
 }
 
 .e-transfer-panel {

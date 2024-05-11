@@ -168,6 +168,14 @@ footer nav {
   font-size: 45px;
 }
 
+button {
+  border-width: 0px;
+}
+
+button:focus {
+  outline: 0px !important;
+}
+
 .button-style {
   height: 55px !important;
   font-weight: normal;
@@ -180,13 +188,17 @@ footer nav {
   float: right;
 
   --mdc-text-button-label-text-color: #fff;
+  --mdc-outlined-button-label-text-color: #fff;
 }
 
-.mat-mdc-button-base.button-s {
+.mat-mdc-button-base.button-s,
+.mat-mdc-outlined-button:not(:disabled).button-s {
   @extend .button-style;
   border: 1px solid #b5b5b5;
   color: #606060;
   background-color: #ffffff;
+
+  --mdc-outlined-button-outline-color: #b5b5b5;
 }
 
 .mat-mdc-button-base.button-p:hover {
@@ -202,14 +214,6 @@ footer nav {
   color: #ffffff;
 }
 
-button {
-  border-width: 0px !important;
-}
-
-button:focus {
-  outline: 0px !important;
-}
-
 .mat-mdc-button-base.button-with-loader {
   min-width: 240px;
   display: flex;
@@ -218,21 +222,24 @@ button:focus {
 }
 
 .close-image,
-.edit-image {
+.edit-image,
+.delete-image  {
   img:last-of-type {
     display: none;
   }
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image :hover {
   img:last-of-type {
     display: inline;
   }
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image:hover {
   img:first-of-type {
     display: none;
   }
