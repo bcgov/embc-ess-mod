@@ -2,10 +2,8 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Telemetry;
-using EMBC.Utilities.Transformation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,23 +28,6 @@ namespace EMBC.Tests.Unit.ESS
         {
             Log.Logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger();
             services.AddSingleton<ITelemetryProvider>(new TelemetryProvider(new DiagnosticContext(Log.Logger)));
-
-            return services;
-        }
-
-        public static IServiceCollection AddTemplateBuilding(this IServiceCollection services, ITestOutputHelper output)
-        {
-            services.AddTransient<ITransformator, HbsTransformator>();
-            services.AddTransient<EmailTemplateProvider>();
-            services.AddTransient<ITemplateProviderResolver>(sp =>
-            {
-                Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch
-                {
-                    NotificationChannelType.Email => sp.GetRequiredService<EmailTemplateProvider>(),
-                    _ => throw new NotImplementedException($"No template provider was registered for {type}")
-                };
-                return new TemplateProviderResolver(resolverFunc);
-            });
 
             return services;
         }

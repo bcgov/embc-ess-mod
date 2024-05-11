@@ -10,7 +10,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Transformation;
-using Microsoft.Extensions.DependencyInjection;
+using HandlebarsDotNet;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,9 +26,6 @@ public class SelfServeSupportGenerationTests
     private readonly DateOnly[] expectedDays;
     private readonly IEnumerable<string> expectedHouseholdMemberIds;
 
-    private readonly ITransformator transformator;
-    private ITemplateProviderResolver templateProviderResolver;
-
     public SelfServeSupportGenerationTests(ITestOutputHelper output)
     {
         strategy = new SelfServeSupportGenerator();
@@ -38,11 +35,6 @@ public class SelfServeSupportGenerationTests
         householdMembers = Enumerable.Range(1, 5).Select(i => new SelfServeHouseholdMember(i.ToString(), false));
         expectedDays = [DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(startDate.AddHours(24)), DateOnly.FromDateTime(startDate.AddHours(48))];
         expectedHouseholdMemberIds = householdMembers.Select(hm => hm.Id).ToList();
-
-        var services = TestHelper.CreateDIContainer().AddLogging(output).AddTemplateBuilding(output);
-        var serviceProvider = TestHelper.Build(services);
-        transformator = serviceProvider.GetRequiredService<ITransformator>();
-        templateProviderResolver = serviceProvider.GetRequiredService<ITemplateProviderResolver>();
     }
 
     [Fact]
@@ -120,12 +112,22 @@ public class SelfServeSupportGenerationTests
                 KeyValuePair.Create("notificationEmail","John.Doe@example.com")
         };
 
-        var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
-        var emailContent = (await transformator.Transform(new TransformationData
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate = (EmailTemplate)await etp.Get(SubmissionTemplateType.ETransferConfirmation);
+
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
         {
-            Template = template.Content,
-            Tokens = new Dictionary<string, string>(tokens)
-        })).Content;
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
 
         emailContent.ShouldNotBeNullOrEmpty();
         await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodOnly.html", emailContent);
@@ -143,13 +145,23 @@ public class SelfServeSupportGenerationTests
                 KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
                 KeyValuePair.Create("notificationEmail","John.Doe@example.com")
         };
+ 
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate =(EmailTemplate) await etp.Get(SubmissionTemplateType.ETransferConfirmation);
 
-        var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.ETransferConfirmation);
-        var emailContent = (await transformator.Transform(new TransformationData
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
         {
-            Template = template.Content,
-            Tokens = new Dictionary<string, string>(tokens)
-        })).Content;
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
 
         emailContent.ShouldNotBeNullOrEmpty();
         await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodExcluded.html", emailContent);
