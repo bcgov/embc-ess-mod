@@ -172,6 +172,28 @@ button:focus {
   outline: 0px !important;
 }
 
+
+.close-image,
+.edit-image {
+  img:last-of-type {
+    display: none;
+  }
+}
+
+.close-image:hover,
+.edit-image:hover {
+  img:last-of-type {
+    display: inline;
+  }
+}
+
+.close-image:hover,
+.edit-image:hover {
+  img:first-of-type {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 833px) {
   .mat-mdc-button-base.button-yellow {
     width: 100% !important;
@@ -230,7 +252,7 @@ mat-card {
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-.mat-form-field-required-marker {
+.mat-mdc-form-field-required-marker {
   color: red !important;
 }
 

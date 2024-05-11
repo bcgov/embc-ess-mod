@@ -10,6 +10,7 @@ import { SecurityQuestionsRoutingModule } from './security-questions-routing.mod
 import { SecurityQuestionsComponent } from './security-questions.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [SecurityQuestionsComponent],
@@ -17,6 +18,7 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
     CommonModule,
     CustomPipeModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
