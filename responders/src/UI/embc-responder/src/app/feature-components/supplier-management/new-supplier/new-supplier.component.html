@@ -48,7 +48,7 @@
                     formControlName="phone"
                     matInput
                     placeholder="Contact Telephone Number"
-                    [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+                    [imask]="phoneMask"
                     required
                   />
                   <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">

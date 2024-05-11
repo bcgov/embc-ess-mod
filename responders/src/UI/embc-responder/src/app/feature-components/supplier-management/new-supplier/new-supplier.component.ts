@@ -13,7 +13,7 @@ import { SupplierStatus } from 'src/app/core/api/models';
 })
 export class NewSupplierComponent implements OnInit {
   newForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   constructor(
     private formBuilder: UntypedFormBuilder,

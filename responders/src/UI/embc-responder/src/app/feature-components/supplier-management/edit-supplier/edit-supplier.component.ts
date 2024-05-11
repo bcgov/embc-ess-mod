@@ -13,7 +13,7 @@ import * as globalConst from '../../../core/services/global-constants';
 })
 export class EditSupplierComponent implements OnInit {
   editForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   constructor(
     private formBuilder: UntypedFormBuilder,

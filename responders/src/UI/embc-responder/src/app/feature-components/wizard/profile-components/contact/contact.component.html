@@ -57,7 +57,7 @@
                       formControlName="phone"
                       matInput
                       placeholder="Telephone Number"
-                      [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+                      [imask]="phoneMask"
                     />
                     <mat-error
                       *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('whitespaceError')"

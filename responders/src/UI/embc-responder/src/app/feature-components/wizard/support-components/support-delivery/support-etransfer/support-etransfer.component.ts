@@ -12,6 +12,7 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
 import { CacheService } from '../../../../../core/services/cache.service';
 import { WizardType } from '../../../../../core/models/wizard-type.model';
+import * as globalConst from 'src/app/core/services/global-constants';
 
 @Component({
   selector: 'app-support-etransfer',
@@ -24,7 +25,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() cloneFlag: boolean;
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
   @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   supplierList: SupplierListItemModel[];
   filteredOptions: Observable<SupplierListItemModel[]>;

@@ -94,7 +94,7 @@
                 formControlName="phone"
                 matInput
                 placeholder="Contact Number"
-                [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+                [imask]="phoneMask"
               />
               <mat-error *ngIf="editFormControl.phone.invalid && editFormControl.phone.hasError('incorrectLength')">
                 Telephone number must have 10 digits

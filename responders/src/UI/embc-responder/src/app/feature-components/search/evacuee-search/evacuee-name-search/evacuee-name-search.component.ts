@@ -4,7 +4,7 @@ import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.se
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { EvacueeDetailsModel, EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { SearchFormRegistery, SearchPages } from 'src/app/core/services/helper/search-data.service';
-
+import * as globalConstants from 'src/app/core/services/global-constants';
 @Component({
   selector: 'app-evacuee-name-search',
   templateUrl: './evacuee-name-search.component.html',
@@ -15,7 +15,7 @@ export class EvacueeNameSearchComponent implements OnInit {
 
   panel1OpenState = false;
   panel2OpenState = false;
-  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  readonly dateMask = globalConstants.dateMask;
   nameSearchForm: UntypedFormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
   readonly selectedPathType = SelectedPathType;

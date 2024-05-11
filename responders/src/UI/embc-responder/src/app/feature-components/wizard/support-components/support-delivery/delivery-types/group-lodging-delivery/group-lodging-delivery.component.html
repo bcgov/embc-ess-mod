@@ -102,7 +102,7 @@
           maxlength="100"
           matInput
           placeholder="Telephone"
-          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+          [imask]="phoneMask"
         />
         <!-- <mat-error
           *ngIf="
@@ -110,7 +110,7 @@
             supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
           "
         >
-          Telephone is required</mat-error 
+          Telephone is required</mat-error
         > -->
         <mat-error
           *ngIf="

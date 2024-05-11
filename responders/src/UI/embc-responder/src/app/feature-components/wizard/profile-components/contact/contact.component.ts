@@ -37,7 +37,7 @@ export class CustomErrorMobileMatcher implements ErrorStateMatcher {
 })
 export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
   emailMatcher = new CustomErrorMailMatcher();
   tabUpdateSubscription: Subscription;
 

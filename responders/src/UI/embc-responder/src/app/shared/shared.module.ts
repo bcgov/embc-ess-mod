@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TopNavMenuComponent } from './components/top-nav-menu/top-nav-menu.component';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IMaskModule } from 'angular-imask';
+import { TopNavMenuComponent } from './components/top-nav-menu/top-nav-menu.component';
 import { ToggleSideNavComponent } from './components/toggle-side-nav/toggle-side-nav.component';
 import { MaterialModule } from '../material.module';
 import { SearchFilterComponent } from './components/search-filter/search-filter.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
@@ -17,7 +18,6 @@ import { UsaAddressComponent } from './forms/address-forms/usa-address/usa-addre
 import { OtherAddressComponent } from './forms/address-forms/other-address/other-address.component';
 import { PersonDetailFormComponent } from './forms/person-detail-form/person-detail-form.component';
 import { PetFormComponent } from './forms/pet-form/pet-form.component';
-import { TextMaskModule } from 'angular2-text-mask';
 import { StatusDefinitionDialogComponent } from './components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { OverlayLoaderComponent } from './components/overlay-loader/overlay-loader.component';
@@ -77,7 +77,7 @@ import { FileSearchFormComponent } from './forms/file-search-form/file-search-fo
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TextMaskModule,
+    IMaskModule,
     CustomPipeModule
   ],
   exports: [

@@ -78,7 +78,7 @@
           formControlName="hostPhone"
           matInput
           placeholder="Telephone"
-          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+          [imask]="phoneMask"
         />
         <mat-error
           *ngIf="

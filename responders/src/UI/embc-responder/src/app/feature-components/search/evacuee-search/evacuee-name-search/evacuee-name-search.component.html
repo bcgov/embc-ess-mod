@@ -55,7 +55,7 @@
                   formControlName="dateOfBirth"
                   matInput
                   placeholder="mm/dd/yyyy"
-                  [textMask]="{ mask: dateMask, keepCharPositions: true }"
+                  [imask]="dateMask"
                   required
                 />
                 <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
