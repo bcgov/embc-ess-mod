@@ -13,7 +13,6 @@ using EMBC.Utilities.Transformation;
 using HandlebarsDotNet;
 using Shouldly;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Unit.ESS.Engines;
 
@@ -26,7 +25,7 @@ public class SelfServeSupportGenerationTests
     private readonly DateOnly[] expectedDays;
     private readonly IEnumerable<string> expectedHouseholdMemberIds;
 
-    public SelfServeSupportGenerationTests(ITestOutputHelper output)
+    public SelfServeSupportGenerationTests()
     {
         strategy = new SelfServeSupportGenerator();
 
