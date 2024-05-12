@@ -51,7 +51,8 @@ public partial class EventsManager(
     ISupportingEngine supportingEngine,
     IPaymentRepository paymentRepository,
     ICache cache,
-    ILocationService locationService)
+    ILocationService locationService,
+    IUserRepository userRepository)
 {
     private readonly EvacuationFileLoader evacuationFileLoader = new(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
     private static TeamMemberStatus[] activeOnlyStatus = [TeamMemberStatus.Active];
@@ -500,5 +501,19 @@ public partial class EventsManager(
         {
             Items = supports
         };
+    }
+
+    public async System.Threading.Tasks.Task Handle(RecordAuditAccessCommand cmd)
+    {
+        if (string.IsNullOrEmpty(cmd.RegistrantId) && string.IsNullOrEmpty(cmd.EvacuationFileNumber))
+            throw new BusinessLogicException($"Audit must be for a registrant profile or evacuation file");
+
+        await userRepository.RecordAccessAudit(new AccessAuditEntry
+        {
+            AccessReason = cmd.AccessReasonId,
+            TeamMemberId = cmd.TeamMemberId,
+            EvacuationFileNumber = cmd.EvacuationFileNumber,
+            RegistrantId = cmd.RegistrantId
+        });
     }
 }
