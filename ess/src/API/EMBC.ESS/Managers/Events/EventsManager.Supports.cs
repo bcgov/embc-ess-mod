@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
@@ -83,8 +84,10 @@ public partial class EventsManager
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
         if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
 
+        var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(cmd.Supports, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
+
         var supports = ((GenerateSelfServeETransferSupportsResponse)await supportingEngine.Generate(
-            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, response.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
         var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
         {
             FileId = cmd.EvacuationFileId,
@@ -100,9 +103,11 @@ public partial class EventsManager
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
-
+   
         file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
         await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+
+        bool emailSent = await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
@@ -408,5 +413,64 @@ public partial class EventsManager
         {
             Eligibility = eligibility
         };
+    }
+
+    private async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<Shared.Contracts.Events.Support> supports)
+    {
+        decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
+
+        foreach (var item in supports)
+        {
+            switch (item)
+            {
+            case Shared.Contracts.Events.ClothingSupport clothingSupport:
+                clothingAmount += clothingSupport.TotalAmount;
+                break;
+            case Shared.Contracts.Events.FoodGroceriesSupport groceriesSupport:
+                groceryAmount += groceriesSupport.TotalAmount;
+                break;
+            case Shared.Contracts.Events.FoodRestaurantSupport restaurantSupport:
+                restaurantAmount += restaurantSupport.TotalAmount;
+                break;
+            case Shared.Contracts.Events.IncidentalsSupport incidentalsSupport:
+                incidentalsAmount += incidentalsSupport.TotalAmount;
+                break;
+            case Shared.Contracts.Events.ShelterAllowanceSupport shelterSupport:
+                shelterAllowanceAmount += shelterSupport.TotalAmount;
+                break;
+            }
+        }
+        totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+
+        string email = "";
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId, UserId = primaryRegistrantUserId })).Items.SingleOrDefault();
+
+        if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
+        {
+            email = eTransferDetails.ETransferEmail;
+        }
+        else
+            email = evacuee.Email;
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            await SendEmailNotification(
+                SubmissionTemplateType.ETransferConfirmation,
+                email: email,
+                name: $"{evacuee.LastName}, {evacuee.FirstName}",
+                tokens: new[]
+                {
+                    KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
+                    KeyValuePair.Create("clothingAmount", (clothingAmount > 0) ? clothingAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("incidentalsAmount", (incidentalsAmount > 0) ? incidentalsAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("groceryAmount", (groceryAmount > 0) ? groceryAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
+                    KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
+                    KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
+                });
+            return true;
+        }
+        return false;
     }
 }

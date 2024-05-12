@@ -32,7 +32,8 @@ namespace EMBC.ESS.Managers.Events.Notifications
         NewEvacuationFileSubmission,
         NewAnonymousEvacuationFileSubmission,
         NewProfileRegistration,
-        InviteProfile
+        InviteProfile,
+        ETransferConfirmation
     }
 
     public abstract class Template

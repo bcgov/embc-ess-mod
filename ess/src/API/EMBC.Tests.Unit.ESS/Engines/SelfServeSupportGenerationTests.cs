@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Transformation;
+using HandlebarsDotNet;
 using Shouldly;
 using Xunit;
 
@@ -108,5 +112,72 @@ public class SelfServeSupportGenerationTests
     {
         var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([forNeed], startDate, endDate, startDate, endDate, overrideHouseholdMembers ?? this.householdMembers), default);
         return response.Supports.ShouldHaveSingleItem().ShouldBeOfType<T>();
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodOnly()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "120"),
+                KeyValuePair.Create("groceryAmount", "30"),
+                KeyValuePair.Create("restaurantAmount", "90"),
+                KeyValuePair.Create("recipientName","John Doe - Food Only"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate = (EmailTemplate)await etp.Get(SubmissionTemplateType.ETransferConfirmation);
+
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
+        {
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodOnly.html", emailContent);
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodExcluded()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "160"),
+                KeyValuePair.Create("clothingAmount", "30"),
+                KeyValuePair.Create("incidentalsAmount", "90"),
+                KeyValuePair.Create("shelterAllowanceAmount", "40"),
+                KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+ 
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate =(EmailTemplate) await etp.Get(SubmissionTemplateType.ETransferConfirmation);
+
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
+        {
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodExcluded.html", emailContent);
     }
 }
