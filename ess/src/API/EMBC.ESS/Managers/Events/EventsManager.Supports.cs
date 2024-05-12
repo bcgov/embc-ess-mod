@@ -103,11 +103,11 @@ public partial class EventsManager
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
-
-        bool emailSent = await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
-
+   
         file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
         await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+
+        bool emailSent = await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
