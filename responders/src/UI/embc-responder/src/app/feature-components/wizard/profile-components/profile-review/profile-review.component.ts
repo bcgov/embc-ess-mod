@@ -24,7 +24,7 @@ import { MatButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
@@ -32,7 +32,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     templateUrl: './profile-review.component.html',
     styleUrls: ['./profile-review.component.scss'],
     standalone: true,
-    imports: [MatCheckbox, NgIf, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatFormField, MatLabel, MatInput, MatButton, AppLoaderComponent, DatePipe, MaskTextPipe]
+    imports: [MatCheckbox, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatFormField, MatLabel, MatInput, MatButton, AppLoaderComponent, DatePipe, MaskTextPipe]
 })
 export class ProfileReviewComponent implements OnInit, OnDestroy {
   verifiedProfileGroup: UntypedFormGroup = null;

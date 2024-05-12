@@ -20,7 +20,7 @@ import { ProfileResultsComponent } from '../profile-results/profile-results.comp
 import { MatButton } from '@angular/material/button';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { ZeroFileResultComponent } from '../zero-file-result/zero-file-result.component';
-import { NgIf, NgTemplateOutlet, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgTemplateOutlet, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -28,7 +28,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './evacuee-search-results.component.html',
     styleUrls: ['./evacuee-search-results.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgIf, ZeroFileResultComponent, AlertComponent, NgTemplateOutlet, MatButton, ProfileResultsComponent, EssFilesResultsComponent, OverlayLoaderComponent, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
+    imports: [MatCard, MatCardContent, ZeroFileResultComponent, AlertComponent, NgTemplateOutlet, MatButton, ProfileResultsComponent, EssFilesResultsComponent, OverlayLoaderComponent, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class EvacueeSearchResultsComponent implements OnInit {
   registrantResults: Array<RegistrantProfileSearchResultModel>;

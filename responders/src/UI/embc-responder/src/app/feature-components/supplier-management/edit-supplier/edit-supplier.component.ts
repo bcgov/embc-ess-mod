@@ -9,7 +9,7 @@ import { MatButton } from '@angular/material/button';
 import { IMaskDirective } from 'angular-imask';
 import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-address/bc-address.component';
 import { CustomGstFieldComponent } from '../../../shared/components/custom-gst-field/custom-gst-field.component';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -19,7 +19,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './edit-supplier.component.html',
     styleUrls: ['./edit-supplier.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, CustomGstFieldComponent, BcAddressComponent, IMaskDirective, MatButton]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, CustomGstFieldComponent, BcAddressComponent, IMaskDirective, MatButton]
 })
 export class EditSupplierComponent implements OnInit {
   editForm: UntypedFormGroup;

@@ -17,14 +17,14 @@ import { SupplierService } from './core/services/suppliers.service';
 import { FooterComponent } from './core/layout/footer/footer.component';
 import { HeaderComponent } from './core/layout/header/header.component';
 import { EnvironmentBannerComponent } from './core/layout/environment-banner/environment-banner.component';
-import { NgIf, NgStyle, AsyncPipe } from '@angular/common';
+import { NgStyle, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [NgIf, EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe]
+    imports: [EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

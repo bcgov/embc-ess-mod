@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { TabModel } from 'src/app/core/models/tab.model';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
-import { NgFor } from '@angular/common';
+
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
@@ -10,7 +10,7 @@ import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
     templateUrl: './supplier-management.component.html',
     styleUrls: ['./supplier-management.component.scss'],
     standalone: true,
-    imports: [MatTabNav, NgFor, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
+    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
 })
 export class SupplierManagementComponent implements OnInit {
   /**

@@ -7,7 +7,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
@@ -16,7 +16,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './supplier-exist.component.html',
     styleUrls: ['./supplier-exist.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatButton, MaskFullAddressPipe]
+    imports: [MatCard, MatCardContent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatButton, MaskFullAddressPipe]
 })
 export class SupplierExistComponent implements OnInit {
   displayedColumns: string[] = ['legalName', 'name', 'gstNumber', 'address', 'primaryTeam', 'action'];

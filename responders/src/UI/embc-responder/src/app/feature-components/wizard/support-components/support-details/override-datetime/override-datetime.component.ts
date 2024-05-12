@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, FormsModule, Rea
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -13,7 +13,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './override-datetime.component.html',
     styleUrls: ['./override-datetime.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatError, MatButton]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatError, MatButton]
 })
 export class OverrideDatetimeComponent implements OnInit {
   @ViewChild(MatDatepicker) picker: MatDatepicker<Date>;

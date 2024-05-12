@@ -19,14 +19,14 @@ import { MatButton } from '@angular/material/button';
 import { SupportEtransferComponent } from './support-etransfer/support-etransfer.component';
 import { SupportReferralComponent } from './support-referral/support-referral.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
     selector: 'app-support-delivery',
     templateUrl: './support-delivery.component.html',
     styleUrls: ['./support-delivery.component.scss'],
     standalone: true,
-    imports: [NgIf, MatCard, MatCardContent, NgFor, SupportReferralComponent, SupportEtransferComponent, MatButton]
+    imports: [MatCard, MatCardContent, SupportReferralComponent, SupportEtransferComponent, MatButton]
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: UntypedFormGroup;

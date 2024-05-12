@@ -13,7 +13,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { HouseholdMemberService } from './household-member.service';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
-import { NgFor, NgIf, NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -21,7 +21,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './household-member.component.html',
     styleUrls: ['./household-member.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, MatAccordion, NgFor, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription, NgIf, NgClass, AppLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe]
+    imports: [MatCard, MatCardContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription, NgClass, AppLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class HouseholdMemberComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;

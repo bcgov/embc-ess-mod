@@ -14,58 +14,61 @@
       <mat-form-field appearance="outline">
         <mat-label>Number of Nights</mat-label>
         <mat-select formControlName="noOfNights" required>
-          <mat-option *ngFor="let no of noOfDays | nightsArray" [value]="no">
-            {{ no }}
-          </mat-option>
+          @for (no of noOfDays | nightsArray; track no) {
+            <mat-option [value]="no">
+              {{ no }}
+            </mat-option>
+          }
         </mat-select>
-        <mat-error
-          *ngIf="referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')"
-        >
-          Number of Nights is required</mat-error
-        >
-      </mat-form-field>
+        @if (referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')) {
+          <mat-error
+            >
+            Number of Nights is required</mat-error
+            >
+          }
+        </mat-form-field>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p class="time-heading requiredField">Total Amount</p>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="time-heading requiredField">Total Amount</p>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p>
-        <span class="amount">${{ totalAmount | number: '1.2-2' }}</span>
-      </p>
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          <span class="amount">${{ totalAmount | number: '1.2-2' }}</span>
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p class="time-heading"></p>
-      <b>Acknowledgement to be read by Responder before completing page:</b>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="time-heading"></p>
+        <b>Acknowledgement to be read by Responder before completing page:</b>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p>
-        By accepting Shelter Allowance, you acknowledge that you will not be able to receive any other sheltering
-        supports during the valid timeframe noted on the referral.
-      </p>
-      <p>
-        If the evacuee no longer wants to receive the Shelter Allowance, please select cancel and return to the Supports
-        Page.
-      </p>
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          By accepting Shelter Allowance, you acknowledge that you will not be able to receive any other sheltering
+          supports during the valid timeframe noted on the referral.
+        </p>
+        <p>
+          If the evacuee no longer wants to receive the Shelter Allowance, please select cancel and return to the Supports
+          Page.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-8 accept-box">
-      <mat-checkbox formControlName="processEvacueeCert"
-        >Evacuee confirms they understand the above statement.
-      </mat-checkbox>
+    <div class="row">
+      <div class="col-md-8 accept-box">
+        <mat-checkbox formControlName="processEvacueeCert"
+          >Evacuee confirms they understand the above statement.
+        </mat-checkbox>
+      </div>
     </div>
-  </div>
-</form>
+  </form>

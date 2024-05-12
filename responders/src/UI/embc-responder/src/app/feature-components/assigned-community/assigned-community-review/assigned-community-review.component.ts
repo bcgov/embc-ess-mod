@@ -11,7 +11,7 @@ import { AppLoaderComponent } from '../../../shared/components/app-loader/app-lo
 import { MatButton } from '@angular/material/button';
 import { MatList, MatListItem } from '@angular/material/list';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgIf, NgFor } from '@angular/common';
+
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
@@ -19,7 +19,7 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
     templateUrl: './assigned-community-review.component.html',
     styleUrls: ['./assigned-community-review.component.scss'],
     standalone: true,
-    imports: [AlertComponent, NgIf, MatCard, MatCardContent, MatList, NgFor, MatListItem, MatButton, AppLoaderComponent]
+    imports: [AlertComponent, MatCard, MatCardContent, MatList, MatListItem, MatButton, AppLoaderComponent]
 })
 export class AssignedCommunityReviewComponent implements OnInit {
   reviewAction: string;

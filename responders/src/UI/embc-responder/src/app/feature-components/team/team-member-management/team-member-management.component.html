@@ -6,9 +6,11 @@
   </div>
   <br />
   <nav mat-tab-nav-bar [tabPanel]="tabPanel" dynamicHeight>
-    <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
-      {{ tabItem.label }}
-    </a>
+    @for (tabItem of tabs; track tabItem) {
+      <a mat-tab-link [routerLink]="tabItem.route" routerLinkActive="active-tab">
+        {{ tabItem.label }}
+      </a>
+    }
   </nav>
 
   <div class="content-container">

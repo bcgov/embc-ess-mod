@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { Note } from 'src/app/core/api/models';
 import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { NgFor, NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -14,7 +14,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './ess-file-notes.component.html',
     styleUrls: ['./ess-file-notes.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgFor, NgIf, MatPaginator, AsyncPipe, DatePipe]
+    imports: [MatCard, MatCardContent, MatPaginator, AsyncPipe, DatePipe]
 })
 export class EssFileNotesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

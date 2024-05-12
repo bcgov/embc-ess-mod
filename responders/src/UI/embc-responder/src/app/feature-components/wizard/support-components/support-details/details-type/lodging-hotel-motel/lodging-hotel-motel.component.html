@@ -9,39 +9,45 @@
       <mat-form-field appearance="outline">
         <mat-label>Number of Nights</mat-label>
         <mat-select formControlName="noOfNights" required>
-          <mat-option *ngFor="let no of noOfDays | nightsArray" [value]="no">
-            {{ no }}
-          </mat-option>
+          @for (no of noOfDays | nightsArray; track no) {
+            <mat-option [value]="no">
+              {{ no }}
+            </mat-option>
+          }
         </mat-select>
-        <mat-error
-          *ngIf="referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')"
-        >
-          Number of Nights is required</mat-error
-        >
-      </mat-form-field>
+        @if (referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')) {
+          <mat-error
+            >
+            Number of Nights is required</mat-error
+            >
+          }
+        </mat-form-field>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p class="time-heading requiredField">Number of Rooms</p>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="time-heading requiredField">Number of Rooms</p>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <mat-form-field appearance="outline">
-        <mat-label>Number of Rooms</mat-label>
-        <mat-select formControlName="noOfRooms" required>
-          <mat-option *ngFor="let no of noOfRooms" [value]="no">
-            {{ no }}
-          </mat-option>
-        </mat-select>
-        <mat-error
-          *ngIf="referralFormControl?.noOfRooms.invalid && referralFormControl?.noOfRooms.hasError('required')"
-        >
-          Number of Rooms is required</mat-error
-        >
-      </mat-form-field>
-    </div>
-  </div>
-</form>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Number of Rooms</mat-label>
+          <mat-select formControlName="noOfRooms" required>
+            @for (no of noOfRooms; track no) {
+              <mat-option [value]="no">
+                {{ no }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (referralFormControl?.noOfRooms.invalid && referralFormControl?.noOfRooms.hasError('required')) {
+            <mat-error
+              >
+              Number of Rooms is required</mat-error
+              >
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </form>

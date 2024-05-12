@@ -14,7 +14,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { IMaskDirective } from 'angular-imask';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -41,7 +41,7 @@ export class CustomErrorMobileMatcher implements ErrorStateMatcher {
     templateUrl: './contact.component.html',
     styleUrls: ['./contact.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatFormField, MatLabel, MatInput, IMaskDirective, MatError, MatCard, MatCardContent, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatLabel, MatInput, IMaskDirective, MatError, MatCard, MatCardContent, MatButton]
 })
 export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;

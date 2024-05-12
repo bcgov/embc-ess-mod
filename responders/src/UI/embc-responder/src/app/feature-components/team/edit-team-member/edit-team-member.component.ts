@@ -13,7 +13,7 @@ import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
@@ -24,7 +24,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './edit-team-member.component.html',
     styleUrls: ['./edit-team-member.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, AlertComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, AppLoaderComponent, MatSelect, MatOption, NgFor, MatButton]
+    imports: [MatCard, MatCardContent, AlertComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, AppLoaderComponent, MatSelect, MatOption, MatButton]
 })
 export class EditTeamMemberComponent implements OnInit {
   editForm: UntypedFormGroup;

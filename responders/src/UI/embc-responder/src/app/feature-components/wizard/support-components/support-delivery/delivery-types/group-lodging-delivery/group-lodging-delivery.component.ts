@@ -7,7 +7,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 import { IMaskDirective } from 'angular-imask';
 import { MatOption } from '@angular/material/core';
 import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
@@ -16,7 +16,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     templateUrl: './group-lodging-delivery.component.html',
     styleUrls: ['./group-lodging-delivery.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, IMaskDirective, AsyncPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatAutocompleteTrigger, MatAutocomplete, MatOption, IMaskDirective, AsyncPipe]
 })
 export class GroupLodgingDeliveryComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() supportDeliveryForm: UntypedFormGroup;

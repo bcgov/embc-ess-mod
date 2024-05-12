@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedInUserProfile, UserService } from '../../services/user.service';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
@@ -12,7 +12,7 @@ import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     standalone: true,
-    imports: [MatToolbar, MatToolbarRow, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
+    imports: [MatToolbar, MatToolbarRow, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class HeaderComponent implements OnInit {
   public get profile(): LoggedInUserProfile {

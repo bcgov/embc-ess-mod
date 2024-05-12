@@ -14,14 +14,14 @@ import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-security-phrase',
     templateUrl: './security-phrase.component.html',
     styleUrls: ['./security-phrase.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatCard, MatCardContent, MaskTextPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatCard, MatCardContent, MaskTextPipe]
 })
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
   securityForm: UntypedFormGroup = null;

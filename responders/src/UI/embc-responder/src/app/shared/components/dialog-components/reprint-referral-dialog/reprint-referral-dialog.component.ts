@@ -6,7 +6,7 @@ import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.
 import { EnumToArrayPipe } from '../../../pipes/EnumToArray.pipe';
 import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
@@ -20,7 +20,7 @@ interface ReprintOutput {
     templateUrl: './reprint-referral-dialog.component.html',
     styleUrls: ['./reprint-referral-dialog.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatCheckbox, MatButton, EnumToArrayPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatCheckbox, MatButton, EnumToArrayPipe]
 })
 export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;

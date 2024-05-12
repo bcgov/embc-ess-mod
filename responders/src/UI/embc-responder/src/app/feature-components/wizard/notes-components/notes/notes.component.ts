@@ -6,7 +6,7 @@ import * as globalConst from 'src/app/core/services/global-constants';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { ListNotesComponent } from '../list-notes/list-notes.component';
 import { AddNotesComponent } from '../add-notes/add-notes.component';
-import { NgIf } from '@angular/common';
+
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { MatButton } from '@angular/material/button';
 
@@ -15,7 +15,7 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './notes.component.html',
     styleUrls: ['./notes.component.scss'],
     standalone: true,
-    imports: [MatButton, AppLoaderComponent, NgIf, AddNotesComponent, ListNotesComponent, MatCard, MatCardContent]
+    imports: [MatButton, AppLoaderComponent, AddNotesComponent, ListNotesComponent, MatCard, MatCardContent]
 })
 export class NotesComponent implements OnInit {
   notesList: Array<Note>;

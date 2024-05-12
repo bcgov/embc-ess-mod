@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SecurityQuestion } from 'src/app/core/api/models';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -11,7 +11,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './security-question-card.component.html',
     styleUrls: ['./security-question-card.component.scss'],
     standalone: true,
-    imports: [MatCard, FormsModule, ReactiveFormsModule, MatCardContent, MatFormField, MatInput, NgIf, MatError]
+    imports: [MatCard, FormsModule, ReactiveFormsModule, MatCardContent, MatFormField, MatInput, MatError]
 })
 export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;

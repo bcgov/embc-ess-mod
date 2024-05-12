@@ -16,7 +16,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
 import { MatInput } from '@angular/material/input';
 import { MatError, MatFormField, MatPrefix } from '@angular/material/form-field';
-import { NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
@@ -24,7 +24,7 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
     templateUrl: './clothing.component.html',
     styleUrls: ['./clothing.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatError, MatFormField, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatFormField, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe]
 })
 export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

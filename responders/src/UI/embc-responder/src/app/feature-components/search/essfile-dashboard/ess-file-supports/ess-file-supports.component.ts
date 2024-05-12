@@ -28,7 +28,7 @@ import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.
 import { EssFileSupportsService } from './ess-file-supports.service';
 import { MatOption } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { NgFor, NgIf, NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -36,7 +36,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './ess-file-supports.component.html',
     styleUrls: ['./ess-file-supports.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgFor, MatFormField, MatLabel, MatSelect, MatOption, NgIf, NgClass, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
+    imports: [MatCard, MatCardContent, MatFormField, MatLabel, MatSelect, MatOption, NgClass, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

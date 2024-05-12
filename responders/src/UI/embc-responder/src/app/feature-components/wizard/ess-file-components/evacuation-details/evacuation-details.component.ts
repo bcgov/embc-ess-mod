@@ -22,14 +22,14 @@ import { BcAddressComponent } from '../../../../shared/forms/address-forms/bc-ad
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
     selector: 'app-evacuation-details',
     templateUrl: './evacuation-details.component.html',
     styleUrls: ['./evacuation-details.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatRadioGroup, MatRadioButton, BcAddressComponent, NgFor, MatCard, MatCardContent, MatButton, MaskEvacuatedAddressPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatRadioGroup, MatRadioButton, BcAddressComponent, MatCard, MatCardContent, MatButton, MaskEvacuatedAddressPipe]
 })
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: UntypedFormGroup;

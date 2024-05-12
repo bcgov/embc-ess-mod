@@ -9,50 +9,53 @@
       <mat-form-field appearance="outline">
         <mat-label>Mode of transport</mat-label>
         <input formControlName="transportMode" matInput placeholder="Mode of transport" maxlength="50" required />
-        <mat-error
-          *ngIf="
-            referralFormControl?.transportMode.invalid && referralFormControl?.transportMode.hasError('whitespaceError')
-          "
-        >
-          Mode of transport is required</mat-error
-        >
-      </mat-form-field>
+        @if (
+          referralFormControl?.transportMode.invalid && referralFormControl?.transportMode.hasError('whitespaceError')
+          ) {
+          <mat-error
+            >
+            Mode of transport is required</mat-error
+            >
+          }
+        </mat-form-field>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p class="time-heading requiredField">Total Amount</p>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="time-heading requiredField">Total Amount</p>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-4">
-      <mat-form-field appearance="outline">
-        <input
-          formControlName="totalAmount"
-          matInput
-          appNumberComma
-          type="text"
-          class="amount-right-align"
-          placeholder="0.00"
-          required
-        />
-        <span matPrefix>$&nbsp;</span>
-        <mat-error
-          *ngIf="referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('required')"
-        >
-          Total Amount is required</mat-error
-        >
-        <mat-error
-          *ngIf="
-            (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('pattern')) ||
-            (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('totalZeroError'))
-          "
-        >
-          Invalid amount</mat-error
-        >
-      </mat-form-field>
-    </div>
-  </div>
-</form>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <input
+            formControlName="totalAmount"
+            matInput
+            appNumberComma
+            type="text"
+            class="amount-right-align"
+            placeholder="0.00"
+            required
+            />
+            <span matPrefix>$&nbsp;</span>
+            @if (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('required')) {
+              <mat-error
+                >
+                Total Amount is required</mat-error
+                >
+            }
+            @if (
+              (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('pattern')) ||
+              (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('totalZeroError'))
+              ) {
+              <mat-error
+                >
+                Invalid amount</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
+        </div>
+      </form>

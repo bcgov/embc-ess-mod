@@ -1,14 +1,14 @@
 import { Component, ComponentRef, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-dialog',
     templateUrl: './dialog.component.html',
     styleUrls: ['./dialog.component.scss'],
     standalone: true,
-    imports: [NgIf, MatDialogTitle, MatIconButton, MatDialogContent, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, MatIconButton, MatDialogContent, MatDialogActions, MatButton, MatDialogClose]
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @ViewChild('target', { read: ViewContainerRef, static: true })

@@ -6,7 +6,7 @@ import { SearchFormRegistery, SearchPages } from 'src/app/core/services/helper/s
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
 import { MatButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
@@ -15,7 +15,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './evacuee-id-verify.component.html',
     styleUrls: ['./evacuee-id-verify.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatError, MatButton, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription]
 })
 export class EvacueeIdVerifyComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();

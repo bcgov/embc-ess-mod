@@ -12,7 +12,7 @@ import { AddTeamMemberService } from './add-team-member.service';
 import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -22,7 +22,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './add-team-member.component.html',
     styleUrls: ['./add-team-member.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, AppLoaderComponent, MatSelect, MatOption, NgFor, MatButton]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, AppLoaderComponent, MatSelect, MatOption, MatButton]
 })
 export class AddTeamMemberComponent implements OnInit {
   addForm: UntypedFormGroup;

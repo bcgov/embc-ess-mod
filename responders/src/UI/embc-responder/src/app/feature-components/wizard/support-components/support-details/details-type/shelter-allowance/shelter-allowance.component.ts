@@ -5,7 +5,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { NumberOfNightsPipe } from '../../../../../../shared/pipes/numberOfNights.pipe';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
-import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
@@ -14,7 +14,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     templateUrl: './shelter-allowance.component.html',
     styleUrls: ['./shelter-allowance.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatCheckbox, DecimalPipe, NumberOfNightsPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatCheckbox, DecimalPipe, NumberOfNightsPipe]
 })
 export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

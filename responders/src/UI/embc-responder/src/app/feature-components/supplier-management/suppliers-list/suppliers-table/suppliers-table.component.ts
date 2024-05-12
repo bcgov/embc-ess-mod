@@ -21,14 +21,14 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { SupplierListItem } from 'src/app/core/api/models';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
-import { NgFor, NgIf, NgClass, UpperCasePipe } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 
 @Component({
     selector: 'app-suppliers-table',
     templateUrl: './suppliers-table.component.html',
     styleUrls: ['./suppliers-table.component.scss'],
     standalone: true,
-    imports: [MatTable, MatSort, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, NgIf, MatCellDef, MatCell, MatSlideToggle, NgClass, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, UpperCasePipe]
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatSlideToggle, NgClass, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, UpperCasePipe]
 })
 export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -10,14 +10,14 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
 import { SearchOptionsComponent } from './search-options/search-options.component';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-evacuee-search',
     templateUrl: './evacuee-search.component.html',
     styleUrls: ['./evacuee-search.component.scss'],
     standalone: true,
-    imports: [NgIf, SearchOptionsComponent, OverlayLoaderComponent]
+    imports: [SearchOptionsComponent, OverlayLoaderComponent]
 })
 export class EvacueeSearchComponent implements OnInit {
   isLoading = true;

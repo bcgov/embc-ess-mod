@@ -51,7 +51,9 @@
         <ng-container matColumnDef="primaryTeam">
           <mat-header-cell *matHeaderCellDef> Primary ESS Team </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <p *ngIf="element?.team">{{ element.team.name }}</p>
+            @if (element?.team) {
+              <p>{{ element.team.name }}</p>
+            }
           </mat-cell>
         </ng-container>
 

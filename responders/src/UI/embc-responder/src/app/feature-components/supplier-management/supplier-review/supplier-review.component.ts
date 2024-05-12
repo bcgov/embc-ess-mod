@@ -9,7 +9,7 @@ import { SupplierListDataService } from '../suppliers-list/supplier-list-data.se
 import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
 import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
 import { MatButton } from '@angular/material/button';
-import { NgIf, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { MatCard } from '@angular/material/card';
 
 @Component({
@@ -17,7 +17,7 @@ import { MatCard } from '@angular/material/card';
     templateUrl: './supplier-review.component.html',
     styleUrls: ['./supplier-review.component.scss'],
     standalone: true,
-    imports: [MatCard, NgIf, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
+    imports: [MatCard, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
 })
 export class SupplierReviewComponent {
   selectedSupplier: SupplierModel;

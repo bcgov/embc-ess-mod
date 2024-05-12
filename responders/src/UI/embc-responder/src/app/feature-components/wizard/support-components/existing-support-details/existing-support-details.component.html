@@ -3,21 +3,22 @@
     <div class="col-md-12">
       <a (click)="back()"
         ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
-      >
+        >
+      </div>
     </div>
-  </div>
 
-  <div class="row row-padding">
-    <div class="col-md-12 needs-box">
-      <div class="row">
-        <div class="col-md-8" *ngIf="referral?.manualReferralId">
-          <p class="question-heading">Support #{{ referral?.manualReferralId }}</p>
-          <div class="row">
-            <div class="col-md-1">
-              <p class="box-text-color">Status:</p>
-            </div>
-            <div class="col-md-3 bold">
-              <p
+    <div class="row row-padding">
+      <div class="col-md-12 needs-box">
+        <div class="row">
+          @if (referral?.manualReferralId) {
+            <div class="col-md-8">
+              <p class="question-heading">Support #{{ referral?.manualReferralId }}</p>
+              <div class="row">
+                <div class="col-md-1">
+                  <p class="box-text-color">Status:</p>
+                </div>
+                <div class="col-md-3 bold">
+                  <p
                 [ngClass]="{
                   'active-status': selectedSupport?.status === 'Active',
                   'void-status': selectedSupport?.status === 'Void',
@@ -29,641 +30,706 @@
                   'paid-status': selectedSupport?.status === 'Paid',
                   'approved-status': selectedSupport?.status === 'Approved'
                 }"
-              >
-                {{ getStatusTextToDisplay(selectedSupport?.status) }}
-              </p>
+                    >
+                    {{ getStatusTextToDisplay(selectedSupport?.status) }}
+                  </p>
+                </div>
+              </div>
+              @if (selectedSupport?.status === 'Draft' && selectedSupport?.method === 'Referral') {
+                <div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <p class="box-text-color">Paper Support Completed On:</p>
+                    </div>
+                    <div class="col-md-4 bold">
+                      <p>
+                        {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
+                        {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <p class="box-text-color">Paper Support Issued by:</p>
+                    </div>
+                    <div class="col-md-4 bold">
+                      <p>{{ selectedSupport?.issuedBy }}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+              @if (selectedSupport?.status !== 'Draft') {
+                <div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p class="box-text-color header-width">Issued:</p>
+                        </div>
+                        <div class="col-md-4 bold header-width">
+                          <p>
+                            {{ selectedSupport?.createdOn | date: 'dd-MMM-yyyy' }} at
+                            {{ selectedSupport?.createdOn | date: 'hh:mm a' }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p class="box-text-color header-width">Issued by:</p>
+                        </div>
+                        @if (selectedSupport?.isSelfServe) {
+                          <div class="col-md-4 bold header-width">
+                            <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
+                          </div>
+                        } @else {
+                          <div class="col-md-4 bold header-width">
+                            <p>{{ selectedSupport?.createdBy }}</p>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <p class="box-text-color header-width">Paper Support Completed On:</p>
+                        </div>
+                        <div class="col-md-3 bold header-width">
+                          <p>
+                            {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
+                            {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <p class="box-text-color header-width">Paper Support Issued by:</p>
+                        </div>
+                        <div class="col-md-3 bold header-width">
+                          <p>{{ selectedSupport?.issuedBy }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
             </div>
-          </div>
-
-          <div *ngIf="selectedSupport?.status === 'Draft' && selectedSupport?.method === 'Referral'">
-            <div class="row">
-              <div class="col-md-2">
-                <p class="box-text-color">Paper Support Completed On:</p>
+          }
+          @if (!referral?.manualReferralId) {
+            <div class="col-md-8">
+              @if (selectedSupport?.status !== 'Draft') {
+                <p class="question-heading">Support #{{ selectedSupport?.id }}</p>
+              }
+              @if (selectedSupport?.status === 'Draft') {
+                <p class="question-heading">Support</p>
+              }
+              <div class="row">
+                <div class="col-md-2">
+                  <p class="box-text-color">Status:</p>
+                </div>
+                <div class="col-md-4 bold">
+                  <p
+                [ngClass]="{
+                  'active-status': selectedSupport?.status === 'Active',
+                  'void-status': selectedSupport?.status === 'Void',
+                  'expired-status': selectedSupport?.status === 'Expired',
+                  'draft-status': selectedSupport?.status === 'Draft',
+                  'review-status': selectedSupport?.status === 'UnderReview',
+                  'pending-status': selectedSupport?.status === 'PendingApproval',
+                  'cancel-status': selectedSupport?.status === 'Cancelled',
+                  'paid-status': selectedSupport?.status === 'Paid',
+                  'approved-status': selectedSupport?.status === 'Approved'
+                }"
+                    >
+                    {{ getStatusTextToDisplay(selectedSupport?.status) }}
+                  </p>
+                </div>
               </div>
-              <div class="col-md-4 bold">
-                <p>
-                  {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
-                  {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
-                </p>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-2">
-                <p class="box-text-color">Paper Support Issued by:</p>
-              </div>
-              <div class="col-md-4 bold">
-                <p>{{ selectedSupport?.issuedBy }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="selectedSupport?.status !== 'Draft'">
-            <div class="row">
-              <div class="col-md-6">
+              @if (selectedSupport?.status !== 'Draft') {
                 <div class="row">
                   <div class="col-md-2">
-                    <p class="box-text-color header-width">Issued:</p>
+                    <p class="box-text-color">Issued:</p>
                   </div>
-                  <div class="col-md-4 bold header-width">
+                  <div class="col-md-4 bold">
                     <p>
                       {{ selectedSupport?.createdOn | date: 'dd-MMM-yyyy' }} at
                       {{ selectedSupport?.createdOn | date: 'hh:mm a' }}
                     </p>
                   </div>
                 </div>
-
+              }
+              @if (selectedSupport?.status !== 'Draft') {
                 <div class="row">
                   <div class="col-md-2">
-                    <p class="box-text-color header-width">Issued by:</p>
+                    <p class="box-text-color">Issued by:</p>
                   </div>
-                  <div class="col-md-4 bold header-width" *ngIf="selectedSupport?.isSelfServe; else regularRecipientH">
-                    <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
-                  </div>
-                  <ng-template #regularRecipientH>
-                    <div class="col-md-4 bold header-width">
+                  @if (selectedSupport?.isSelfServe) {
+                    <div class="col-md-4 bold">
+                      <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
+                    </div>
+                  } @else {
+                    <div class="col-md-4 bold">
                       <p>{{ selectedSupport?.createdBy }}</p>
                     </div>
-                  </ng-template>
+                  }
                 </div>
-              </div>
+              }
+            </div>
+          }
 
-              <div class="col-md-6">
-                <div class="row">
-                  <div class="col-md-3">
-                    <p class="box-text-color header-width">Paper Support Completed On:</p>
-                  </div>
-                  <div class="col-md-3 bold header-width">
-                    <p>
-                      {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
-                      {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-3">
-                    <p class="box-text-color header-width">Paper Support Issued by:</p>
-                  </div>
-                  <div class="col-md-3 bold header-width">
-                    <p>{{ selectedSupport?.issuedBy }}</p>
+          @if (selectedSupport?.status !== 'Draft' && selectedSupport?.method === 'Referral' && !isExtendSupports) {
+            <div
+              class="col-md-4 link-padding"
+              >
+              <div class="row">
+                <div class="col-md-12">
+                  <a (click)="openAssessment()"
+                    ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
+                    src="/assets/images/view-assessment-spoon.svg"
+                    width="7"
+                    height="21"
+                    /><span class="back-link needs-padding">View Needs Assessment</span></a
+                    >
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="!referral?.manualReferralId" class="col-md-8">
-          <p *ngIf="selectedSupport?.status !== 'Draft'" class="question-heading">Support #{{ selectedSupport?.id }}</p>
-          <p *ngIf="selectedSupport?.status === 'Draft'" class="question-heading">Support</p>
-          <div class="row">
-            <div class="col-md-2">
-              <p class="box-text-color">Status:</p>
-            </div>
-            <div class="col-md-4 bold">
-              <p
-                [ngClass]="{
-                  'active-status': selectedSupport?.status === 'Active',
-                  'void-status': selectedSupport?.status === 'Void',
-                  'expired-status': selectedSupport?.status === 'Expired',
-                  'draft-status': selectedSupport?.status === 'Draft',
-                  'review-status': selectedSupport?.status === 'UnderReview',
-                  'pending-status': selectedSupport?.status === 'PendingApproval',
-                  'cancel-status': selectedSupport?.status === 'Cancelled',
-                  'paid-status': selectedSupport?.status === 'Paid',
-                  'approved-status': selectedSupport?.status === 'Approved'
-                }"
-              >
-                {{ getStatusTextToDisplay(selectedSupport?.status) }}
-              </p>
-            </div>
-          </div>
+                @if (selectedSupport?.status === 'Active' && !evacueeSessionService?.isPaperBased) {
+                  <div class="row">
+                    <div class="col-md-12">
+                      <a (click)="reprint()"
+                        ><img src="/assets/images/reprint.svg" width="18" height="18" /><span class="back-link img-padding"
+                        >Reprint Referral</span
+                        ></a
+                        >
+                      </div>
+                    </div>
+                  }
+                  @if (selectedSupport?.status !== 'Void') {
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a (click)="voidReferral()"
+                          ><img src="/assets/images/void.svg" width="18" height="18" /><span class="back-link img-padding"
+                          >Void Referral</span
+                          ></a
+                          >
+                        </div>
+                      </div>
+                    }
+                    @if (canExtendSupport()) {
+                      <div class="row">
+                        <div class="col-md-12">
+                          <a (click)="extendSupport()"
+                            ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
+                            class="back-link needs-padding"
+                            >Clone & Extend</span
+                            ></a
+                            >
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
 
-          <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
-            <div class="col-md-2">
-              <p class="box-text-color">Issued:</p>
-            </div>
-            <div class="col-md-4 bold">
-              <p>
-                {{ selectedSupport?.createdOn | date: 'dd-MMM-yyyy' }} at
-                {{ selectedSupport?.createdOn | date: 'hh:mm a' }}
-              </p>
-            </div>
-          </div>
+                  @if (selectedSupport?.status !== 'Draft' && selectedSupport?.method === 'ETransfer' && !isExtendSupports) {
+                    <div
+                      class="col-md-4 link-padding"
+                      >
+                      <div class="row">
+                        <div class="col-md-12">
+                          <a (click)="openAssessment()"
+                            ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
+                            src="/assets/images/view-assessment-spoon.svg"
+                            width="7"
+                            height="21"
+                            /><span class="back-link needs-padding">View Needs Assessment</span></a
+                            >
+                          </div>
+                        </div>
+                        @if (selectedSupport?.status === 'PendingApproval' || selectedSupport?.status === 'UnderReview') {
+                          <div
+                            class="row"
+                            >
+                            <div class="col-md-12">
+                              <a (click)="cancelEtransfer()"
+                                ><img src="/assets/images/void.svg" width="18" height="18" /><span class="back-link img-padding"
+                                >Cancel e-Transfer</span
+                                ></a
+                                >
+                              </div>
+                            </div>
+                          }
+                          @if (canExtendSupport()) {
+                            <div class="row">
+                              <div class="col-md-12">
+                                <a (click)="extendSupport()"
+                                  ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
+                                  class="back-link needs-padding"
+                                  >Clone & Extend</span
+                                  ></a
+                                  >
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        }
 
-          <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
-            <div class="col-md-2">
-              <p class="box-text-color">Issued by:</p>
-            </div>
-            <div class="col-md-4 bold" *ngIf="selectedSupport?.isSelfServe; else regularRecipient">
-              <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
-            </div>
-            <ng-template #regularRecipient>
-              <div class="col-md-4 bold">
-                <p>{{ selectedSupport?.createdBy }}</p>
-              </div>
-            </ng-template>
-          </div>
-        </div>
+                        @if (selectedSupport?.status === 'Draft') {
+                          <div class="col-md-4 link-padding">
+                            @if (canEditSupport()) {
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <a (click)="editDraft()"
+                                    ><img src="/assets/images/blue-edit.svg" width="19" height="19" /><span class="back-link img-padding"
+                                    >Edit</span
+                                    ></a
+                                    >
+                                  </div>
+                                </div>
+                              }
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <a (click)="deleteDraft()"
+                                    ><img src="/assets/images/blue-delete.svg" width="14" height="15" /><span class="back-link img-padding"
+                                    >Delete Support</span
+                                    ></a
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                            }
 
-        <div
-          *ngIf="selectedSupport?.status !== 'Draft' && selectedSupport?.method === 'Referral' && !isExtendSupports"
-          class="col-md-4 link-padding"
-        >
-          <div class="row">
-            <div class="col-md-12">
-              <a (click)="openAssessment()"
-                ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
-                  src="/assets/images/view-assessment-spoon.svg"
-                  width="7"
-                  height="21"
-                /><span class="back-link needs-padding">View Needs Assessment</span></a
-              >
-            </div>
-          </div>
+                            @if (selectedSupport?.status !== 'Draft' && isExtendSupports && canExtendSupport()) {
+                              <div
+                                class="col-md-4 link-padding"
+                                >
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <a (click)="extendSupport()"
+                                      ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
+                                      class="back-link needs-padding"
+                                      >Clone & Extend</span
+                                      ></a
+                                      >
+                                    </div>
+                                  </div>
+                                  @if (selectedSupport?.status !== 'Void') {
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <a (click)="reprint()">
+                                          <img src="/assets/images/reprint.svg" width="18" height="18" />
+                                          <span class="back-link img-padding">Reprint Referral</span>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  }
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <a (click)="openAssessment()"
+                                        ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
+                                        src="/assets/images/view-assessment-spoon.svg"
+                                        width="7"
+                                        height="21"
+                                        /><span class="back-link needs-padding">View Needs Assessment</span></a
+                                        >
+                                      </div>
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                          </div>
 
-          <div class="row" *ngIf="selectedSupport?.status === 'Active' && !evacueeSessionService?.isPaperBased">
-            <div class="col-md-12">
-              <a (click)="reprint()"
-                ><img src="/assets/images/reprint.svg" width="18" height="18" /><span class="back-link img-padding"
-                  >Reprint Referral</span
-                ></a
-              >
-            </div>
-          </div>
+                          <div class="row row-padding">
+                            <div class="col-md-12">
+                              <p class="subheading">Support Details</p>
+                            </div>
+                          </div>
 
-          <div class="row" *ngIf="selectedSupport?.status !== 'Void'">
-            <div class="col-md-12">
-              <a (click)="voidReferral()"
-                ><img src="/assets/images/void.svg" width="18" height="18" /><span class="back-link img-padding"
-                  >Void Referral</span
-                ></a
-              >
-            </div>
-          </div>
+                          <div class="row row-padding">
+                            <div class="col-md-4 box-text-color">Support Type:</div>
+                            <div class="col-md-4 bold">
+                              {{ generateSupportType(selectedSupport) }}
+                            </div>
+                          </div>
 
-          <div class="row" *ngIf="canExtendSupport()">
-            <div class="col-md-12">
-              <a (click)="extendSupport()"
-                ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
-                  class="back-link needs-padding"
-                  >Clone & Extend</span
-                ></a
-              >
-            </div>
-          </div>
-        </div>
+                          <div class="row row-padding">
+                            <div class="col-md-4 box-text-color">Valid From:</div>
+                            <div class="col-md-4 bold">
+                              {{ selectedSupport?.from | date: 'dd-MMM-yyyy' }} at
+                              {{ selectedSupport?.from | date: 'hh:mm a' }}
+                            </div>
+                          </div>
 
-        <div
-          *ngIf="selectedSupport?.status !== 'Draft' && selectedSupport?.method === 'ETransfer' && !isExtendSupports"
-          class="col-md-4 link-padding"
-        >
-          <div class="row">
-            <div class="col-md-12">
-              <a (click)="openAssessment()"
-                ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
-                  src="/assets/images/view-assessment-spoon.svg"
-                  width="7"
-                  height="21"
-                /><span class="back-link needs-padding">View Needs Assessment</span></a
-              >
-            </div>
-          </div>
+                          <div class="row row-padding">
+                            <div class="col-md-4 box-text-color">Valid To:</div>
+                            <div class="col-md-4 bold" [ngClass]="{ 'expired-status': selectedSupport?.status === 'Expired' }">
+                              {{ selectedSupport?.to | date: 'dd-MMM-yyyy' }} at
+                              {{ selectedSupport?.to | date: 'hh:mm a' }}
+                            </div>
+                          </div>
 
-          <div
-            class="row"
-            *ngIf="selectedSupport?.status === 'PendingApproval' || selectedSupport?.status === 'UnderReview'"
-          >
-            <div class="col-md-12">
-              <a (click)="cancelEtransfer()"
-                ><img src="/assets/images/void.svg" width="18" height="18" /><span class="back-link img-padding"
-                  >Cancel e-Transfer</span
-                ></a
-              >
-            </div>
-          </div>
+                          <div class="row row-padding">
+                            <div class="col-md-4 box-text-color">Support Provided For:</div>
+                            <div class="col-md-4 bold">
+                              @for (id of selectedSupport?.includedHouseholdMembers; track id) {
+                                <span>
+                                  <p>{{ mapMemberName(id) | uppercase }}</p>
+                                </span>
+                              }
+                            </div>
+                          </div>
 
-          <div class="row" *ngIf="canExtendSupport()">
-            <div class="col-md-12">
-              <a (click)="extendSupport()"
-                ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
-                  class="back-link needs-padding"
-                  >Clone & Extend</span
-                ></a
-              >
-            </div>
-          </div>
-        </div>
+                          <!--Groceries-->
+                          @if (selectedSupport?.subCategory === 'Food_Groceries') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># of Days for Meals:</div>
+                                <div class="col-md-4 bold">{{ groceryReferral?.numberOfDays }}</div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+                                <div class="col-md-2 bold">${{ groceryReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
+                                @if (!checkGroceryMaxRate()) {
+                                  <div class="col-md-4 warning">
+                                    Total monetary value exceeds the recommended ESS rate
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                          }
+                          <!--Restaurant Meals-->
+                          @if (selectedSupport?.subCategory === 'Food_Restaurant') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># Breakfasts per person:</div>
+                                <div class="col-md-4 bold">
+                                  {{ mealReferral?.numberOfBreakfastsPerPerson }}
+                                </div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">#Lunches per person:</div>
+                                <div class="col-md-4 bold">
+                                  {{ mealReferral?.numberOfLunchesPerPerson }}
+                                </div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">#Dinners per person:</div>
+                                <div class="col-md-4 bold">
+                                  {{ mealReferral?.numberOfDinnersPerPerson }}
+                                </div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+                                <div class="col-md-4 bold">${{ mealReferral?.totalAmount }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Lodging-->
+                          @if (selectedSupport?.subCategory === 'Lodging_Hotel') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># of Nights</div>
+                                <div class="col-md-4 bold">{{ hotelReferral?.numberOfNights }}</div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># of Rooms</div>
+                                <div class="col-md-4 bold">{{ hotelReferral?.numberOfRooms }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Billeting-->
+                          @if (selectedSupport?.subCategory === 'Lodging_Billeting') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># of Nights</div>
+                                <div class="col-md-4 bold">{{ billetingReferral?.numberOfNights }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Group Lodging-->
+                          @if (selectedSupport?.subCategory === 'Lodging_Group') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># of Nights</div>
+                                <div class="col-md-4 bold">{{ groupReferral?.numberOfNights }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Group Lodging-->
+                          @if (selectedSupport?.subCategory === 'Lodging_Allowance') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color"># Nights:</div>
+                                <div class="col-md-4 bold">
+                                  {{ shelterAllowanceReferral?.numberOfNights }}
+                                </div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+                                <div class="col-md-4 bold">${{ shelterAllowanceReferral?.totalAmount }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Taxi-->
+                          @if (selectedSupport?.subCategory === 'Transportation_Taxi') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">From Address</div>
+                                <div class="col-md-4 bold">{{ taxiReferral?.fromAddress }}</div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">To Address</div>
+                                <div class="col-md-4 bold">{{ taxiReferral?.toAddress }}</div>
+                              </div>
+                            </div>
+                          }
+                          <!--Other-->
+                          @if (selectedSupport?.subCategory === 'Transportation_Other') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Mode of Transport</div>
+                                <div class="col-md-4 bold">{{ otherReferral?.transportMode }}</div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to Maximum Value of</div>
+                                <div class="col-md-4 bold">${{ otherReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
+                              </div>
+                            </div>
+                          }
 
-        <div *ngIf="selectedSupport?.status === 'Draft'" class="col-md-4 link-padding">
-          <div class="row" *ngIf="canEditSupport()">
-            <div class="col-md-12">
-              <a (click)="editDraft()"
-                ><img src="/assets/images/blue-edit.svg" width="19" height="19" /><span class="back-link img-padding"
-                  >Edit</span
-                ></a
-              >
-            </div>
-          </div>
+                          <!--Incidentals-->
+                          @if (selectedSupport?.category === 'Incidentals') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">List of Approved Items:</div>
+                                <div class="col-md-4 bold">{{ incidentalReferral?.approvedItems }}</div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+                                <div class="col-md-4 bold">${{ incidentalReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
+                                @if (!checkIncidentalMaxRate()) {
+                                  <div class="col-md-4 warning">
+                                    Total monetary value exceeds the recommended ESS rate
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                          }
 
-          <div class="row">
-            <div class="col-md-12">
-              <a (click)="deleteDraft()"
-                ><img src="/assets/images/blue-delete.svg" width="14" height="15" /><span class="back-link img-padding"
-                  >Delete Support</span
-                ></a
-              >
-            </div>
-          </div>
-        </div>
+                          <!--Clothing-->
+                          @if (selectedSupport?.category === 'Clothing') {
+                            <div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
+                                <div class="col-md-4 bold">
+                                  {{ clothingReferral?.extremeWinterConditions ? 'Yes' : 'No' }}
+                                </div>
+                              </div>
+                              <div class="row row-padding">
+                                <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+                                <div class="col-md-4 bold">${{ clothingReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
+                                @if (!checkClothingMaxRate()) {
+                                  <div class="col-md-4 warning">
+                                    Total monetary value exceeds the recommended ESS rate
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                          }
 
-        <div
-          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports && canExtendSupport()"
-          class="col-md-4 link-padding"
-        >
-          <div class="row">
-            <div class="col-md-12">
-              <a (click)="extendSupport()"
-                ><img src="/assets/images/extend-support.svg" width="15" height="15" /><span
-                  class="back-link needs-padding"
-                  >Clone & Extend</span
-                ></a
-              >
-            </div>
-          </div>
-          <div class="row" *ngIf="selectedSupport?.status !== 'Void'">
-            <div class="col-md-12">
-              <a (click)="reprint()">
-                <img src="/assets/images/reprint.svg" width="18" height="18" />
-                <span class="back-link img-padding">Reprint Referral</span>
-              </a>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <a (click)="openAssessment()"
-                ><img src="/assets/images/view-assessment.svg" width="7" height="21" /><img
-                  src="/assets/images/view-assessment-spoon.svg"
-                  width="7"
-                  height="21"
-                /><span class="back-link needs-padding">View Needs Assessment</span></a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+                          <div class="row row-padding">
+                            <div class="col-md-12">
+                              <p class="subheading">Support Delivery</p>
+                            </div>
+                          </div>
 
-  <div class="row row-padding">
-    <div class="col-md-12">
-      <p class="subheading">Support Details</p>
-    </div>
-  </div>
+                          <div class="row row-padding">
+                            <div class="col-md-4 box-text-color">Method:</div>
+                            <div class="col-md-4 bold">
+                              {{ getMethodTextToDisplay(selectedSupport?.method, selectedSupport?.isSelfServe) }}
+                            </div>
+                          </div>
 
-  <div class="row row-padding">
-    <div class="col-md-4 box-text-color">Support Type:</div>
-    <div class="col-md-4 bold">
-      {{ generateSupportType(selectedSupport) }}
-    </div>
-  </div>
+                          @if (selectedSupport?.method === 'Referral' && selectedSupport?.subCategory !== 'Lodging_Allowance') {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Person Responsible for Purchasing Goods:</div>
+                              <div class="col-md-4 bold">
+                                {{ referral?.issuedToPersonName | uppercase }}
+                              </div>
+                            </div>
+                          }
 
-  <div class="row row-padding">
-    <div class="col-md-4 box-text-color">Valid From:</div>
-    <div class="col-md-4 bold">
-      {{ selectedSupport?.from | date: 'dd-MMM-yyyy' }} at
-      {{ selectedSupport?.from | date: 'hh:mm a' }}
-    </div>
-  </div>
+                          @if (
+                            selectedSupport?.subCategory !== 'Lodging_Billeting' &&
+                            selectedSupport?.subCategory !== 'Lodging_Group' &&
+                            selectedSupport?.subCategory !== 'Lodging_Allowance' &&
+                            selectedSupport?.method === 'Referral'
+                            ) {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Supplier:</div>
+                              <div class="col-md-4 bold">{{ referral?.supplierName }}</div>
+                            </div>
+                          }
 
-  <div class="row row-padding">
-    <div class="col-md-4 box-text-color">Valid To:</div>
-    <div class="col-md-4 bold" [ngClass]="{ 'expired-status': selectedSupport?.status === 'Expired' }">
-      {{ selectedSupport?.to | date: 'dd-MMM-yyyy' }} at
-      {{ selectedSupport?.to | date: 'hh:mm a' }}
-    </div>
-  </div>
+                          @if (selectedSupport?.subCategory === 'Lodging_Billeting') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Supplier:</div>
+                              <div class="col-md-4 bold">{{ billetingReferral?.hostName }}</div>
+                            </div>
+                          }
 
-  <div class="row row-padding">
-    <div class="col-md-4 box-text-color">Support Provided For:</div>
-    <div class="col-md-4 bold">
-      <span *ngFor="let id of selectedSupport?.includedHouseholdMembers">
-        <p>{{ mapMemberName(id) | uppercase }}</p>
-      </span>
-    </div>
-  </div>
+                          @if (selectedSupport?.subCategory === 'Lodging_Group') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Supplier:</div>
+                              <div class="col-md-4 bold">{{ groupReferral?.facilityName }}</div>
+                            </div>
+                          }
 
-  <!--Groceries-->
-  <div *ngIf="selectedSupport?.subCategory === 'Food_Groceries'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># of Days for Meals:</div>
-      <div class="col-md-4 bold">{{ groceryReferral?.numberOfDays }}</div>
-    </div>
+                          @if (
+                            selectedSupport?.subCategory !== 'Lodging_Billeting' &&
+                            selectedSupport?.subCategory !== 'Lodging_Group' &&
+                            selectedSupport?.subCategory !== 'Lodging_Allowance' &&
+                            selectedSupport?.method === 'Referral'
+                            ) {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Supplier Address:</div>
+                              <div class="col-md-4 bold" [innerHTML]="supplierAddress | maskEvacuatedaddress"></div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-2 bold">${{ groceryReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
-      <div *ngIf="!checkGroceryMaxRate()" class="col-md-4 warning">
-        Total monetary value exceeds the recommended ESS rate
-      </div>
-    </div>
-  </div>
-  <!--Restaurant Meals-->
-  <div *ngIf="selectedSupport?.subCategory === 'Food_Restaurant'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># Breakfasts per person:</div>
-      <div class="col-md-4 bold">
-        {{ mealReferral?.numberOfBreakfastsPerPerson }}
-      </div>
-    </div>
+                          @if (selectedSupport?.subCategory === 'Lodging_Billeting') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Supplier Address:</div>
+                              @if (billetingReferral?.hostAddress) {
+                                <div class="col-md-4 bold">
+                                  {{ billetingReferral?.hostAddress }}, <br />
+                                  {{ billetingReferral?.hostCity }}
+                                </div>
+                              } @else {
+                                <div class="col-md-4 bold">
+                                  {{ billetingReferral?.hostCity }}
+                                </div>
+                              }
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">#Lunches per person:</div>
-      <div class="col-md-4 bold">
-        {{ mealReferral?.numberOfLunchesPerPerson }}
-      </div>
-    </div>
+                          @if (selectedSupport?.subCategory === 'Lodging_Group') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Supplier Address:</div>
+                              <div class="col-md-4 bold">{{ groupReferral?.facilityAddress }}, {{ groupReferral?.facilityCity }}</div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">#Dinners per person:</div>
-      <div class="col-md-4 bold">
-        {{ mealReferral?.numberOfDinnersPerPerson }}
-      </div>
-    </div>
+                          @if (selectedSupport?.subCategory === 'Lodging_Billeting') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Supplier Contact Details:</div>
+                              <div
+                                class="col-md-4 bold"
+                                [innerHTML]="billetingReferral?.hostPhone | supplierContact: billetingReferral?.hostEmail"
+                              ></div>
+                            </div>
+                          }
+                          @if (selectedSupport?.subCategory === 'Lodging_Allowance' && selectedSupport?.method === 'Referral') {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Payee Details:</div>
+                              <div class="col-md-4 bold">
+                                {{ referral?.issuedToPersonName | uppercase }}
+                              </div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ mealReferral?.totalAmount }}</div>
-    </div>
-  </div>
-  <!--Lodging-->
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Hotel'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># of Nights</div>
-      <div class="col-md-4 bold">{{ hotelReferral?.numberOfNights }}</div>
-    </div>
+                          @if (
+                            selectedSupport?.subCategory === 'Lodging_Allowance' &&
+                            shelterAllowanceReferral?.contactPhone &&
+                            shelterAllowanceReferral?.contactEmail
+                            ) {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Contact Information:</div>
+                              <div
+                                class="col-md-4 bold"
+                                [innerHTML]="shelterAllowanceReferral?.contactPhone | supplierContact: shelterAllowanceReferral?.contactEmail"
+                              ></div>
+                            </div>
+                          }
+                          @if (selectedSupport?.subCategory === 'Lodging_Group') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Contact Details:</div>
+                              <div class="col-md-4 bold">
+                                {{ groupReferral?.facilityContactPhone }}
+                              </div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># of Rooms</div>
-      <div class="col-md-4 bold">{{ hotelReferral?.numberOfRooms }}</div>
-    </div>
-  </div>
-  <!--Billeting-->
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># of Nights</div>
-      <div class="col-md-4 bold">{{ billetingReferral?.numberOfNights }}</div>
-    </div>
-  </div>
-  <!--Group Lodging-->
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Group'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># of Nights</div>
-      <div class="col-md-4 bold">{{ groupReferral?.numberOfNights }}</div>
-    </div>
-  </div>
-  <!--Group Lodging-->
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color"># Nights:</div>
-      <div class="col-md-4 bold">
-        {{ shelterAllowanceReferral?.numberOfNights }}
-      </div>
-    </div>
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ shelterAllowanceReferral?.totalAmount }}</div>
-    </div>
-  </div>
-  <!--Taxi-->
-  <div *ngIf="selectedSupport?.subCategory === 'Transportation_Taxi'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">From Address</div>
-      <div class="col-md-4 bold">{{ taxiReferral?.fromAddress }}</div>
-    </div>
+                          @if (selectedSupport?.method === 'Referral' && selectedSupport?.subCategory !== 'Lodging_Allowance') {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Notes for Supplier:</div>
+                              <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">To Address</div>
-      <div class="col-md-4 bold">{{ taxiReferral?.toAddress }}</div>
-    </div>
-  </div>
-  <!--Other-->
-  <div *ngIf="selectedSupport?.subCategory === 'Transportation_Other'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Mode of Transport</div>
-      <div class="col-md-4 bold">{{ otherReferral?.transportMode }}</div>
-    </div>
+                          @if (selectedSupport?.method === 'ETransfer') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
+                              @if (interac?.recipientFirstName !== undefined && interac?.recipientLastName !== undefined) {
+                                <div
+                                  class="col-md-4 bold"
+                                  >
+                                  {{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}
+                                </div>
+                              } @else {
+                                <div class="col-md-4 bold">
+                                  {{ getMemberFullName(interac?.receivingRegistrantId) }}
+                                </div>
+                              }
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to Maximum Value of</div>
-      <div class="col-md-4 bold">${{ otherReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
-    </div>
-  </div>
+                          @if (selectedSupport?.method === 'ETransfer') {
+                            <div class="row row-padding">
+                              <div class="col-md-4 box-text-color">Notification Preference:</div>
+                              <div class="col-md-4 bold">{{ getNotificationPref() }}</div>
+                            </div>
+                          }
 
-  <!--Incidentals-->
-  <div *ngIf="selectedSupport?.category === 'Incidentals'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">List of Approved Items:</div>
-      <div class="col-md-4 bold">{{ incidentalReferral?.approvedItems }}</div>
-    </div>
+                          @if (
+                            selectedSupport?.method === 'ETransfer' &&
+                            interac?.notificationEmail !== null &&
+                            interac?.notificationEmail !== ''
+                            ) {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Email Address:</div>
+                              <div class="col-md-4 bold">
+                                {{ interac?.notificationEmail }}
+                              </div>
+                            </div>
+                          }
 
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ incidentalReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
-      <div *ngIf="!checkIncidentalMaxRate()" class="col-md-4 warning">
-        Total monetary value exceeds the recommended ESS rate
-      </div>
-    </div>
-  </div>
+                          @if (
+                            selectedSupport?.method === 'ETransfer' &&
+                            interac?.notificationMobile !== null &&
+                            interac?.notificationMobile !== ''
+                            ) {
+                            <div
+                              class="row row-padding"
+                              >
+                              <div class="col-md-4 box-text-color">Mobile Number:</div>
+                              <div class="col-md-4 bold">
+                                {{ interac?.notificationMobile }}
+                              </div>
+                            </div>
+                          }
+                        </div>
 
-  <!--Clothing-->
-  <div *ngIf="selectedSupport?.category === 'Clothing'">
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
-      <div class="col-md-4 bold">
-        {{ clothingReferral?.extremeWinterConditions ? 'Yes' : 'No' }}
-      </div>
-    </div>
-
-    <div class="row row-padding">
-      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ clothingReferral?.totalAmount | number: '1.2-2' : 'en-CA' }}</div>
-      <div *ngIf="!checkClothingMaxRate()" class="col-md-4 warning">
-        Total monetary value exceeds the recommended ESS rate
-      </div>
-    </div>
-  </div>
-
-  <div class="row row-padding">
-    <div class="col-md-12">
-      <p class="subheading">Support Delivery</p>
-    </div>
-  </div>
-
-  <div class="row row-padding">
-    <div class="col-md-4 box-text-color">Method:</div>
-    <div class="col-md-4 bold">
-      {{ getMethodTextToDisplay(selectedSupport?.method, selectedSupport?.isSelfServe) }}
-    </div>
-  </div>
-
-  <div
-    class="row row-padding"
-    *ngIf="selectedSupport?.method === 'Referral' && selectedSupport?.subCategory !== 'Lodging_Allowance'"
-  >
-    <div class="col-md-4 box-text-color">Person Responsible for Purchasing Goods:</div>
-    <div class="col-md-4 bold">
-      {{ referral?.issuedToPersonName | uppercase }}
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group' &&
-      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
-      selectedSupport?.method === 'Referral'
-    "
-    class="row row-padding"
-  >
-    <div class="col-md-4 box-text-color">Supplier:</div>
-    <div class="col-md-4 bold">{{ referral?.supplierName }}</div>
-  </div>
-
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Supplier:</div>
-    <div class="col-md-4 bold">{{ billetingReferral?.hostName }}</div>
-  </div>
-
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Group'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Supplier:</div>
-    <div class="col-md-4 bold">{{ groupReferral?.facilityName }}</div>
-  </div>
-
-  <div
-    *ngIf="
-      selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group' &&
-      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
-      selectedSupport?.method === 'Referral'
-    "
-    class="row row-padding"
-  >
-    <div class="col-md-4 box-text-color">Supplier Address:</div>
-    <div class="col-md-4 bold" [innerHTML]="supplierAddress | maskEvacuatedaddress"></div>
-  </div>
-
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Supplier Address:</div>
-    <div *ngIf="billetingReferral?.hostAddress; else noAddress" class="col-md-4 bold">
-      {{ billetingReferral?.hostAddress }}, <br />
-      {{ billetingReferral?.hostCity }}
-    </div>
-    <ng-template #noAddress>
-      <div class="col-md-4 bold">
-        {{ billetingReferral?.hostCity }}
-      </div>
-    </ng-template>
-  </div>
-
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Group'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Supplier Address:</div>
-    <div class="col-md-4 bold">{{ groupReferral?.facilityAddress }}, {{ groupReferral?.facilityCity }}</div>
-  </div>
-
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Supplier Contact Details:</div>
-    <div
-      class="col-md-4 bold"
-      [innerHTML]="billetingReferral?.hostPhone | supplierContact: billetingReferral?.hostEmail"
-    ></div>
-  </div>
-  <div
-    *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance' && selectedSupport?.method === 'Referral'"
-    class="row row-padding"
-  >
-    <div class="col-md-4 box-text-color">Payee Details:</div>
-    <div class="col-md-4 bold">
-      {{ referral?.issuedToPersonName | uppercase }}
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      selectedSupport?.subCategory === 'Lodging_Allowance' &&
-      shelterAllowanceReferral?.contactPhone &&
-      shelterAllowanceReferral?.contactEmail
-    "
-    class="row row-padding"
-  >
-    <div class="col-md-4 box-text-color">Contact Information:</div>
-    <div
-      class="col-md-4 bold"
-      [innerHTML]="shelterAllowanceReferral?.contactPhone | supplierContact: shelterAllowanceReferral?.contactEmail"
-    ></div>
-  </div>
-  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Group'" class="row row-padding">
-    <div class="col-md-4 box-text-color">Contact Details:</div>
-    <div class="col-md-4 bold">
-      {{ groupReferral?.facilityContactPhone }}
-    </div>
-  </div>
-
-  <div
-    class="row row-padding"
-    *ngIf="selectedSupport?.method === 'Referral' && selectedSupport?.subCategory !== 'Lodging_Allowance'"
-  >
-    <div class="col-md-4 box-text-color">Notes for Supplier:</div>
-    <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
-  </div>
-
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
-    <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
-    <div
-      class="col-md-4 bold"
-      *ngIf="interac?.recipientFirstName !== undefined && interac?.recipientLastName !== undefined; else draftRecipient"
-    >
-      {{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}
-    </div>
-    <ng-template #draftRecipient>
-      <div class="col-md-4 bold">
-        {{ getMemberFullName(interac?.receivingRegistrantId) }}
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
-    <div class="col-md-4 box-text-color">Notification Preference:</div>
-    <div class="col-md-4 bold">{{ getNotificationPref() }}</div>
-  </div>
-
-  <div
-    class="row row-padding"
-    *ngIf="
-      selectedSupport?.method === 'ETransfer' &&
-      interac?.notificationEmail !== null &&
-      interac?.notificationEmail !== ''
-    "
-  >
-    <div class="col-md-4 box-text-color">Email Address:</div>
-    <div class="col-md-4 bold">
-      {{ interac?.notificationEmail }}
-    </div>
-  </div>
-
-  <div
-    class="row row-padding"
-    *ngIf="
-      selectedSupport?.method === 'ETransfer' &&
-      interac?.notificationMobile !== null &&
-      interac?.notificationMobile !== ''
-    "
-  >
-    <div class="col-md-4 box-text-color">Mobile Number:</div>
-    <div class="col-md-4 bold">
-      {{ interac?.notificationMobile }}
-    </div>
-  </div>
-</div>
-
-<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
+                        <app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>

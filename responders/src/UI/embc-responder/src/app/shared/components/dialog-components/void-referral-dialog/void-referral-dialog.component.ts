@@ -7,14 +7,14 @@ import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
     selector: 'app-void-referral-dialog',
     templateUrl: './void-referral-dialog.component.html',
     styleUrls: ['./void-referral-dialog.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatError, MatButton, EnumToArrayPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatButton, EnumToArrayPipe]
 })
 export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;

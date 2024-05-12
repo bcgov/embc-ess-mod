@@ -23,7 +23,7 @@
         (clickedRow)="openSupplierDetails($event)"
         (toggleActive)="activateSupplier($event)"
         (toggleInactive)="deactivateSupplier($event)"
-      >
+        >
       </app-suppliers-table>
     </div>
 
@@ -48,10 +48,12 @@
         [loggedInRole]="loggedInRole"
         [showToggle]="false"
         (clickedRow)="openMutualAidDetails($event)"
-      >
+        >
       </app-suppliers-table>
     </div>
 
-    <app-overlay-loader *ngIf="isLoading" [showLoader]="isLoading"></app-overlay-loader>
+    @if (isLoading) {
+      <app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
+    }
   </mat-card-content>
 </mat-card>

@@ -17,14 +17,14 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamMemberModel } from 'src/app/core/models/team-member.model';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-team-member-table',
     templateUrl: './team-member-table.component.html',
     styleUrls: ['./team-member-table.component.scss'],
     standalone: true,
-    imports: [MatTable, MatSort, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, NgClass, MatSlideToggle, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatSlideToggle, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

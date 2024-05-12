@@ -32,21 +32,22 @@
         <div class="col-md-6">
           <mat-form-field appearance="outline">
             <input [formControlName]="controlName" matInput type="text" />
-            <mat-error
-              *ngIf="
-                (securityQuestionsFormControl.answer1.invalid &&
-                  securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
-                (securityQuestionsFormControl.answer2.invalid &&
-                  securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
-                (securityQuestionsFormControl.answer3.invalid &&
-                  securityQuestionsFormControl.answer3.hasError('whitespaceError'))
-              "
-            >
-              Security Question cannot be blank</mat-error
-            >
-          </mat-form-field>
+            @if (
+              (securityQuestionsFormControl.answer1.invalid &&
+              securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
+              (securityQuestionsFormControl.answer2.invalid &&
+              securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
+              (securityQuestionsFormControl.answer3.invalid &&
+              securityQuestionsFormControl.answer3.hasError('whitespaceError'))
+              ) {
+              <mat-error
+                >
+                Security Question cannot be blank</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
         </div>
       </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>

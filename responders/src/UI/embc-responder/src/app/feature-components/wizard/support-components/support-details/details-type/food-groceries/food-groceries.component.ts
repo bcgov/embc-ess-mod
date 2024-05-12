@@ -17,7 +17,7 @@ import { NumberArrayPipe } from '../../../../../../shared/pipes/numberArray.pipe
 import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
 import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
-import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 
@@ -26,7 +26,7 @@ import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/f
     templateUrl: './food-groceries.component.html',
     styleUrls: ['./food-groceries.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe, NumberArrayPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe, NumberArrayPipe]
 })
 export class FoodGroceriesComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

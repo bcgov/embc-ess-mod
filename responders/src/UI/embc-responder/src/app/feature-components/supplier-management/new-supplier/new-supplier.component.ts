@@ -7,7 +7,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { SupplierStatus } from 'src/app/core/api/models';
 import { MatButton } from '@angular/material/button';
 import { IMaskDirective } from 'angular-imask';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-address/bc-address.component';
@@ -18,7 +18,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './new-supplier.component.html',
     styleUrls: ['./new-supplier.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, BcAddressComponent, MatFormField, MatLabel, MatInput, NgIf, MatError, IMaskDirective, MatButton]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, BcAddressComponent, MatFormField, MatLabel, MatInput, MatError, IMaskDirective, MatButton]
 })
 export class NewSupplierComponent implements OnInit {
   newForm: UntypedFormGroup;

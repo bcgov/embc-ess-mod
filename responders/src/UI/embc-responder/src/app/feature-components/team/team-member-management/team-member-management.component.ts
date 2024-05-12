@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
-import { NgFor } from '@angular/common';
+
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
     templateUrl: './team-member-management.component.html',
     styleUrls: ['./team-member-management.component.scss'],
     standalone: true,
-    imports: [MatTabNav, NgFor, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
+    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
 })
 export class TeamMemberManagementComponent {
   /**

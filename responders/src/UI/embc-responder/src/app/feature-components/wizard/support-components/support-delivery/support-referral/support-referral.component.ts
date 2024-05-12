@@ -19,14 +19,14 @@ import { MatButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
-import { NgIf, NgFor, AsyncPipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 
 @Component({
     selector: 'app-support-referral',
     templateUrl: './support-referral.component.html',
     styleUrls: ['./support-referral.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatSelect, NgFor, MatOption, MatError, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatButton, AppLoaderComponent, MatCard, MatCardContent, BilletingDeliveryComponent, ShelterAllowanceDeliveryComponent, GroupLodgingDeliveryComponent, AsyncPipe, UpperCasePipe, MaskEvacuatedAddressPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, MatError, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatButton, AppLoaderComponent, MatCard, MatCardContent, BilletingDeliveryComponent, ShelterAllowanceDeliveryComponent, GroupLodgingDeliveryComponent, AsyncPipe, UpperCasePipe, MaskEvacuatedAddressPipe]
 })
 export class SupportReferralComponent implements OnInit {
   @Input() referralDeliveryForm: UntypedFormGroup;

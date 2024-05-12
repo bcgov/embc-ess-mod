@@ -10,14 +10,14 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'app-task-details',
     templateUrl: './task-details.component.html',
     styleUrls: ['./task-details.component.scss'],
     standalone: true,
-    imports: [NgIf, NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
+    imports: [NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
 })
 export class TaskDetailsComponent implements OnInit {
   essTask: EssTaskModel;

@@ -6,7 +6,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { RestrictionService } from './restriction.service';
 import { MatButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
@@ -14,7 +14,7 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
     templateUrl: './restriction.component.html',
     styleUrls: ['./restriction.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatError, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton]
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;

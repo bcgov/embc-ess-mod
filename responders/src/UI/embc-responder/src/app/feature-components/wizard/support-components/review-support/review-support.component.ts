@@ -35,14 +35,14 @@ import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe
 import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pipe';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgFor, NgIf, NgStyle, DecimalPipe, DatePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-review-support',
     templateUrl: './review-support.component.html',
     styleUrls: ['./review-support.component.scss'],
     standalone: true,
-    imports: [NgFor, NgIf, NgStyle, MatCard, MatCardContent, MatCheckbox, AppLoaderComponent, DecimalPipe, DatePipe, MaskFullAddressPipe]
+    imports: [NgStyle, MatCard, MatCardContent, MatCheckbox, AppLoaderComponent, DecimalPipe, DatePipe, MaskFullAddressPipe]
 })
 export class ReviewSupportComponent implements OnInit {
   certificationAccepted = false;

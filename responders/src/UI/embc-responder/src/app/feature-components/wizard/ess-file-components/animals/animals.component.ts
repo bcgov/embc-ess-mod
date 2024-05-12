@@ -15,14 +15,14 @@ import { PetFormComponent } from '../../../../shared/forms/pet-form/pet-form.com
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-animals',
     templateUrl: './animals.component.html',
     styleUrls: ['./animals.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, NgIf, MatError, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, PetFormComponent]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, PetFormComponent]
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
   @Output() validPetsIndicator: any = new EventEmitter();

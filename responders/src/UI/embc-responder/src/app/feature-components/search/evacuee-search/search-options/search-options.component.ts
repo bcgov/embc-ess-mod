@@ -8,7 +8,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -16,7 +16,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './search-options.component.html',
     styleUrls: ['./search-options.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgClass, NgIf, MatButton]
+    imports: [MatCard, MatCardContent, NgClass, MatButton]
 })
 export class SearchOptionsComponent implements OnInit {
   selectedPathway: SelectedPathType;

@@ -19,12 +19,14 @@
               }"
               class="option-card"
               (click)="setSelection('digital')"
-            >
+              >
               <mat-card-content>
-                <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.digital">
-                  <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                  <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-                </div>
+                @if (selectedPathway === selectedPathType.digital) {
+                  <div class="selected-icon-container">
+                    <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
                 <div class="row">
                   <img src="/assets/images/evacuee-regis.svg" height="89" width="89" />
                 </div>
@@ -49,12 +51,14 @@
               }"
               class="option-card"
               (click)="setSelection('paperBased')"
-            >
+              >
               <mat-card-content>
-                <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.paperBased">
-                  <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                  <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-                </div>
+                @if (selectedPathway === selectedPathType.paperBased) {
+                  <div class="selected-icon-container">
+                    <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
                 <div class="row">
                   <img src="/assets/images/data-entry.svg" height="89" width="89" />
@@ -76,12 +80,14 @@
               }"
               class="option-card"
               (click)="setSelection('remoteExtensions')"
-            >
+              >
               <mat-card-content>
-                <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.remoteExtensions">
-                  <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                  <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-                </div>
+                @if (selectedPathway === selectedPathType.remoteExtensions) {
+                  <div class="selected-icon-container">
+                    <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
                 <div class="row">
                   <img src="/assets/images/remote-ext.svg" height="89" width="89" />
@@ -107,12 +113,14 @@
               }"
               class="option-card"
               (click)="setSelection('caseNotes')"
-            >
+              >
               <mat-card-content>
-                <div class="selected-icon-container" *ngIf="selectedPathway === selectedPathType.caseNotes">
-                  <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                  <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-                </div>
+                @if (selectedPathway === selectedPathType.caseNotes) {
+                  <div class="selected-icon-container">
+                    <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
                 <div class="row">
                   <img src="/assets/images/add-case-notes.svg" height="90" width="90" />
@@ -131,7 +139,9 @@
           </div>
         </div>
 
-        <div class="field-error" *ngIf="noSelectionFlag">Please make a selection</div>
+        @if (noSelectionFlag) {
+          <div class="field-error">Please make a selection</div>
+        }
 
         <div class="row">
           <div class="col-md-6">

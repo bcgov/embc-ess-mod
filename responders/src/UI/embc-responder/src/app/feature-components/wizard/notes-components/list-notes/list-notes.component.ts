@@ -23,7 +23,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import { MatIconButton } from '@angular/material/button';
-import { NgFor, NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-list-notes',
@@ -31,7 +31,7 @@ import { NgFor, NgIf, AsyncPipe, DatePipe } from '@angular/common';
     styleUrls: ['./list-notes.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgFor, NgIf, MatIconButton, MatPaginator, AsyncPipe, DatePipe]
+    imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
 })
 export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

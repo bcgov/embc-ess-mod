@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { LoggedInUserProfile, UserService } from 'src/app/core/services/user.service';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-responder-dashboard',
     templateUrl: './responder-dashboard.component.html',
     styleUrls: ['./responder-dashboard.component.scss'],
     standalone: true,
-    imports: [NgIf, MatCard, MatCardContent, MatButton]
+    imports: [MatCard, MatCardContent, MatButton]
 })
 export class ResponderDashboardComponent implements OnInit {
   public get profile(): LoggedInUserProfile {

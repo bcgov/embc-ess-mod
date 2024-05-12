@@ -6,7 +6,7 @@ import * as globalConst from 'src/app/core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatError } from '@angular/material/form-field';
 
@@ -15,7 +15,7 @@ import { MatFormField, MatError } from '@angular/material/form-field';
     templateUrl: './add-notes.component.html',
     styleUrls: ['./add-notes.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, NgIf, MatError, MatButton, AppLoaderComponent]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError, MatButton, AppLoaderComponent]
 })
 export class AddNotesComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(false);

@@ -9,7 +9,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
@@ -18,7 +18,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     templateUrl: './select-support.component.html',
     styleUrls: ['./select-support.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatButton, MatCard, MatCardContent]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatButton, MatCard, MatCardContent]
 })
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];

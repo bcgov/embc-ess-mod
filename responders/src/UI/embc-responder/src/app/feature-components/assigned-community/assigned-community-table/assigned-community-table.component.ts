@@ -20,14 +20,14 @@ import { LoadEvacueeListService } from '../../../core/services/load-evacuee-list
 import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-assigned-community-table',
     templateUrl: './assigned-community-table.component.html',
     styleUrls: ['./assigned-community-table.component.scss'],
     standalone: true,
-    imports: [MatTable, MatSort, NgFor, MatColumnDef, NgIf, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatCheckbox, MatSortHeader, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AppLoaderComponent, MatPaginator, DatePipe]
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatCheckbox, MatSortHeader, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AppLoaderComponent, MatPaginator, DatePipe]
 })
 export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

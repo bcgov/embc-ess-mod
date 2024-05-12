@@ -24,14 +24,14 @@ import { SupportsTableComponent } from './supports-table/supports-table.componen
 import { MatOption } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
-import { NgIf, NgFor } from '@angular/common';
+
 
 @Component({
     selector: 'app-view-supports',
     templateUrl: './view-supports.component.html',
     styleUrls: ['./view-supports.component.scss'],
     standalone: true,
-    imports: [NgIf, MatButton, NgFor, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
+    imports: [MatButton, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
 })
 export class ViewSupportsComponent implements OnInit, OnDestroy {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;

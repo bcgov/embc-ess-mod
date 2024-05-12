@@ -8,7 +8,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -22,7 +22,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './essfile-security-phrase.component.html',
     styleUrls: ['./essfile-security-phrase.component.scss'],
     standalone: true,
-    imports: [NgIf, MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
+    imports: [MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: UntypedFormGroup;

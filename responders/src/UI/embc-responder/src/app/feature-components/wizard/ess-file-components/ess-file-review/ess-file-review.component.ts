@@ -17,14 +17,14 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
-import { NgIf, NgClass, NgFor, DatePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-ess-file-review',
     templateUrl: './ess-file-review.component.html',
     styleUrls: ['./ess-file-review.component.scss'],
     standalone: true,
-    imports: [NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, NgFor, MatCheckbox, MatButton, AppLoaderComponent, DatePipe, MaskEvacuatedAddressPipe, MaskTextPipe]
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, MatCheckbox, MatButton, AppLoaderComponent, DatePipe, MaskEvacuatedAddressPipe, MaskTextPipe]
 })
 export class EssFileReviewComponent implements OnInit, OnDestroy {
   taskNumber: string;

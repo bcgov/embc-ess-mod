@@ -15,7 +15,7 @@ import { WizardType } from '../../../../../core/models/wizard-type.model';
 import * as globalConst from 'src/app/core/services/global-constants';
 import { IMaskDirective } from 'angular-imask';
 import { MatInput } from '@angular/material/input';
-import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { MatOption } from '@angular/material/core';
 import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
 
@@ -24,7 +24,7 @@ import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
     templateUrl: './support-etransfer.component.html',
     styleUrls: ['./support-etransfer.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, NgFor, NgIf, MatError, MatLabel, MatInput, MatCheckbox, IMaskDirective, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, MatError, MatLabel, MatInput, MatCheckbox, IMaskDirective, TitleCasePipe]
 })
 export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() supportDeliveryForm: UntypedFormGroup;

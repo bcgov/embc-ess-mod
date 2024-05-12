@@ -19,13 +19,16 @@
               <app-loader [strokeWidth]="3" [diameter]="50" [showLoader]="showLoader" [color]="color"></app-loader>
             </div>
           </div>
-          <app-add-notes *ngIf="addNoteFlag" (closeEvent)="cancel()"></app-add-notes>
-          <app-list-notes
-            *ngIf="!addNoteFlag"
-            [notesList]="notesList"
-            (hideUnhideToggle)="hideUnhideNotes($event)"
-            (editNoteFlag)="editNote($event)"
-          ></app-list-notes>
+          @if (addNoteFlag) {
+            <app-add-notes (closeEvent)="cancel()"></app-add-notes>
+          }
+          @if (!addNoteFlag) {
+            <app-list-notes
+              [notesList]="notesList"
+              (hideUnhideToggle)="hideUnhideNotes($event)"
+              (editNoteFlag)="editNote($event)"
+            ></app-list-notes>
+          }
         </div>
         <div class="col-md-4">
           <mat-card class="tips-card">

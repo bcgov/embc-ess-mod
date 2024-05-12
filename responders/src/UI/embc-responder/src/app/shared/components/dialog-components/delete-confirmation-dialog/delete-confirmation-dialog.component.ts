@@ -1,14 +1,14 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-delete-confirmation-dialog',
     templateUrl: './delete-confirmation-dialog.component.html',
     styleUrls: ['./delete-confirmation-dialog.component.scss'],
     standalone: true,
-    imports: [MatCheckbox, NgIf, MatButton]
+    imports: [MatCheckbox, MatButton]
 })
 export class DeleteConfirmationDialogComponent {
   @Output() outputEvent = new EventEmitter<string>();

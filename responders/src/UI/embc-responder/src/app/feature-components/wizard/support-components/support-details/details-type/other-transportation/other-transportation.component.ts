@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, 
 import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as globalConst from '../../../../../../core/services/global-constants';
 import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 
@@ -11,7 +11,7 @@ import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/f
     templateUrl: './other-transportation.component.html',
     styleUrls: ['./other-transportation.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, NumberCommaDirective, MatPrefix]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, NumberCommaDirective, MatPrefix]
 })
 export class OtherTransportationComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

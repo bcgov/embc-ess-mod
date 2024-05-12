@@ -22,14 +22,14 @@ import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, Ma
 import { PersonDetailFormComponent } from '../../../../shared/forms/person-detail-form/person-detail-form.component';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
-import { NgIf, NgFor, NgClass, UpperCasePipe, DatePipe } from '@angular/common';
+import { NgClass, UpperCasePipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-household-members',
     templateUrl: './household-members.component.html',
     styleUrls: ['./household-members.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatRadioGroup, NgFor, MatRadioButton, MatError, MatButton, PersonDetailFormComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, NgClass, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatCardContent, UpperCasePipe, DatePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton, PersonDetailFormComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, NgClass, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatCardContent, UpperCasePipe, DatePipe]
 })
 export class HouseholdMembersComponent implements OnInit, OnDestroy {
   @Output() validHouseholdMemebersIndicator = new EventEmitter<boolean>();

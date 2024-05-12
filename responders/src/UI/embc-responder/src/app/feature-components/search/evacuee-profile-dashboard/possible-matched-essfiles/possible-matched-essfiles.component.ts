@@ -11,7 +11,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { PossibleMatchedEssfilesService } from './possible-matched-essfiles.service';
 import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
-import { NgIf, NgFor, NgClass, NgStyle, DatePipe } from '@angular/common';
+import { NgClass, NgStyle, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -19,7 +19,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './possible-matched-essfiles.component.html',
     styleUrls: ['./possible-matched-essfiles.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgIf, AppLoaderComponent, MatAccordion, NgFor, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, NgClass, MatExpansionPanelDescription, NgStyle, DatePipe, MaskEvacuatedAddressPipe]
+    imports: [MatCard, MatCardContent, AppLoaderComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, NgClass, MatExpansionPanelDescription, NgStyle, DatePipe, MaskEvacuatedAddressPipe]
 })
 export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;

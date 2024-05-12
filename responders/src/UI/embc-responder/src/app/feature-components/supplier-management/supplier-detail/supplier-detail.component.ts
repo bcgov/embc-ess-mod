@@ -25,7 +25,7 @@ import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autoc
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
-import { NgIf, NgFor, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
@@ -33,7 +33,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './supplier-detail.component.html',
     styleUrls: ['./supplier-detail.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, NgIf, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, AppLoaderComponent, MatRadioGroup, MatRadioButton, MatError, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe, UpperCasePipe, DatePipe, MaskFullAddressPipe]
+    imports: [MatCard, MatCardContent, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, AppLoaderComponent, MatRadioGroup, MatRadioButton, MatError, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AsyncPipe, UpperCasePipe, DatePipe, MaskFullAddressPipe]
 })
 export class SupplierDetailComponent implements OnInit {
   searchMutualAidForm: UntypedFormGroup;

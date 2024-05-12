@@ -3,7 +3,7 @@ import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/rou
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEssFileService } from './step-ess-file.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
@@ -11,7 +11,7 @@ import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
     templateUrl: './step-ess-file.component.html',
     styleUrls: ['./step-ess-file.component.scss'],
     standalone: true,
-    imports: [MatTabNav, NgFor, MatTabLink, RouterLinkActive, RouterLink, NgClass, NgIf, AlertComponent, MatTabNavPanel, RouterOutlet]
+    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, NgClass, AlertComponent, MatTabNavPanel, RouterOutlet]
 })
 export class StepEssFileComponent implements OnInit {
   stepId: string;

@@ -11,7 +11,7 @@ import { SupplierManagementService } from '../supplier-management.service';
 import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
 import { MatButton } from '@angular/material/button';
 import { CustomGstFieldComponent } from '../../../shared/components/custom-gst-field/custom-gst-field.component';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -21,7 +21,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './add-supplier.component.html',
     styleUrls: ['./add-supplier.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, CustomGstFieldComponent, MatButton, AppLoaderComponent]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, CustomGstFieldComponent, MatButton, AppLoaderComponent]
 })
 export class AddSupplierComponent implements OnInit {
   addForm: UntypedFormGroup;

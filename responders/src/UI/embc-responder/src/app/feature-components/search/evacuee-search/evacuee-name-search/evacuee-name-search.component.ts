@@ -8,7 +8,7 @@ import * as globalConstants from 'src/app/core/services/global-constants';
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
 import { MatButton } from '@angular/material/button';
 import { IMaskDirective } from 'angular-imask';
-import { NgIf } from '@angular/common';
+
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatHint, MatPrefix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -17,7 +17,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './evacuee-name-search.component.html',
     styleUrls: ['./evacuee-name-search.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, IMaskDirective, MatHint, MatPrefix, MatButton, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription]
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective, MatHint, MatPrefix, MatButton, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription]
 })
 export class EvacueeNameSearchComponent implements OnInit {
   @Output() showResultsComponent = new EventEmitter<boolean>();

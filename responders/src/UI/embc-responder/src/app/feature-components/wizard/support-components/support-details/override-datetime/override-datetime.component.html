@@ -11,23 +11,25 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
 
-            <mat-error *ngIf="datetTimeFormControl.date.invalid && datetTimeFormControl.date.hasError('invalidDate')">
-              Please enter a valid date</mat-error
-            >
-          </mat-form-field>
-        </div>
-        <div class="col-md-4">
-          <mat-form-field appearance="outline">
-            <mat-label>Valid From Time</mat-label>
-            <input type="time" formControlName="time" matInput placeholder="Valid From Time" />
-          </mat-form-field>
-        </div>
+            @if (datetTimeFormControl.date.invalid && datetTimeFormControl.date.hasError('invalidDate')) {
+              <mat-error>
+                Please enter a valid date</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Valid From Time</mat-label>
+              <input type="time" formControlName="time" matInput placeholder="Valid From Time" />
+            </mat-form-field>
+          </div>
 
-        <div class="col-md-4">
-          <button class="button-s cancel-button" mat-button (click)="cancel()">Cancel</button>
-          <button class="button-p" mat-button (click)="update()">Update</button>
+          <div class="col-md-4">
+            <button class="button-s cancel-button" mat-button (click)="cancel()">Cancel</button>
+            <button class="button-p" mat-button (click)="update()">Update</button>
+          </div>
         </div>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+      </form>
+    </mat-card-content>
+  </mat-card>

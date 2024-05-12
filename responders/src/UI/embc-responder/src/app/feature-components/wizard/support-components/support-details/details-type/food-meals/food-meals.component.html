@@ -11,80 +11,91 @@
         [ngClass]="{
           'select-error': !referralForm.valid && referralForm.errors.totalMealsError
         }"
-      >
+        >
         <mat-label># of Breakfasts per person</mat-label>
         <mat-select formControlName="noOfBreakfast" required>
-          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
-            {{ no }}
-          </mat-option>
+          @for (no of noOfDays | mealsArray; track no) {
+            <mat-option [value]="no">
+              {{ no }}
+            </mat-option>
+          }
         </mat-select>
-        <mat-error
-          *ngIf="referralFormControl.noOfBreakfast.invalid && referralFormControl.noOfBreakfast.hasError('required')"
-        >
-          Required</mat-error
-        >
-      </mat-form-field>
-    </div>
+        @if (referralFormControl.noOfBreakfast.invalid && referralFormControl.noOfBreakfast.hasError('required')) {
+          <mat-error
+            >
+            Required</mat-error
+            >
+          }
+        </mat-form-field>
+      </div>
 
-    <div class="col-md-4">
-      <mat-form-field
-        appearance="outline"
+      <div class="col-md-4">
+        <mat-form-field
+          appearance="outline"
         [ngClass]="{
           'select-error': !referralForm.valid && referralForm.errors.totalMealsError
         }"
-      >
-        <mat-label># of Lunches per person</mat-label>
-        <mat-select formControlName="noOfLunches" required>
-          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
-            {{ no }}
-          </mat-option>
-        </mat-select>
-        <mat-error
-          *ngIf="referralFormControl.noOfLunches.invalid && referralFormControl.noOfLunches.hasError('required')"
-        >
-          Required</mat-error
-        >
-      </mat-form-field>
-    </div>
+          >
+          <mat-label># of Lunches per person</mat-label>
+          <mat-select formControlName="noOfLunches" required>
+            @for (no of noOfDays | mealsArray; track no) {
+              <mat-option [value]="no">
+                {{ no }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (referralFormControl.noOfLunches.invalid && referralFormControl.noOfLunches.hasError('required')) {
+            <mat-error
+              >
+              Required</mat-error
+              >
+            }
+          </mat-form-field>
+        </div>
 
-    <div class="col-md-4">
-      <mat-form-field
-        appearance="outline"
+        <div class="col-md-4">
+          <mat-form-field
+            appearance="outline"
         [ngClass]="{
           'select-error': !referralForm.valid && referralForm.errors.totalMealsError
         }"
-      >
-        <mat-label># of Dinners per person</mat-label>
-        <mat-select formControlName="noOfDinners" required>
-          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
-            {{ no }}
-          </mat-option>
-        </mat-select>
-        <mat-error
-          *ngIf="referralFormControl.noOfDinners.invalid && referralFormControl.noOfDinners.hasError('required')"
-        >
-          Required</mat-error
-        >
-      </mat-form-field>
-    </div>
-    <mat-error class="error-message" *ngIf="!referralForm.valid && referralForm.errors.totalMealsError">
-      At least one meal is required</mat-error
-    >
-  </div>
+            >
+            <mat-label># of Dinners per person</mat-label>
+            <mat-select formControlName="noOfDinners" required>
+              @for (no of noOfDays | mealsArray; track no) {
+                <mat-option [value]="no">
+                  {{ no }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (referralFormControl.noOfDinners.invalid && referralFormControl.noOfDinners.hasError('required')) {
+              <mat-error
+                >
+                Required</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
+          @if (!referralForm.valid && referralForm.errors.totalMealsError) {
+            <mat-error class="error-message">
+              At least one meal is required</mat-error
+              >
+            }
+          </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p class="time-heading requiredField">Total Amount</p>
-      <p class="hint">Note: Transactions that exceed $10,000 cannot be processed as an e-Transfer.</p>
-    </div>
-  </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="time-heading requiredField">Total Amount</p>
+              <p class="hint">Note: Transactions that exceed $10,000 cannot be processed as an e-Transfer.</p>
+            </div>
+          </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <p>
-        Up to a maximum value of:
-        <span class="amount">${{ totalAmount | number: '1.2-2' }}</span>
-      </p>
-    </div>
-  </div>
-</form>
+          <div class="row">
+            <div class="col-md-12">
+              <p>
+                Up to a maximum value of:
+                <span class="amount">${{ totalAmount | number: '1.2-2' }}</span>
+              </p>
+            </div>
+          </div>
+        </form>

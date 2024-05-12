@@ -6,14 +6,14 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from 'src/app/feature-components/search/profile-security-questions/profile-security-questions.service';
 import { MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-file-dashboard-verify-dialog',
     templateUrl: './file-dashboard-verify-dialog.component.html',
     styleUrls: ['./file-dashboard-verify-dialog.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatButton]
 })
 export class FileDashboardVerifyDialogComponent implements OnInit {
   @Input() content: DialogContent;

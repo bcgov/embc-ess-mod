@@ -1,4 +1,4 @@
-import { DatePipe, NgIf, NgStyle, NgFor, NgSwitch, NgSwitchCase, UpperCasePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -44,7 +44,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './support-details.component.html',
     styleUrls: ['./support-details.component.scss'],
     standalone: true,
-    imports: [NgIf, MatCard, MatCardContent, NgStyle, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatPrefix, MatError, AppLoaderComponent, MatLabel, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgFor, MatOption, MatCheckbox, NgSwitch, NgSwitchCase, ShelterAllowanceGroupComponent, FoodMealsComponent, FoodGroceriesComponent, TaxiTransportationComponent, OtherTransportationComponent, LodgingHotelMotelComponent, LodgingBilletingComponent, LodgingGroupComponent, IncidentalsComponent, ClothingComponent, MatButton, UpperCasePipe, TitleCasePipe, DatePipe]
+    imports: [MatCard, MatCardContent, NgStyle, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatPrefix, MatError, AppLoaderComponent, MatLabel, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatCheckbox, ShelterAllowanceGroupComponent, FoodMealsComponent, FoodGroceriesComponent, TaxiTransportationComponent, OtherTransportationComponent, LodgingHotelMotelComponent, LodgingBilletingComponent, LodgingGroupComponent, IncidentalsComponent, ClothingComponent, MatButton, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class SupportDetailsComponent implements OnInit, OnDestroy {
   currentTime: string;

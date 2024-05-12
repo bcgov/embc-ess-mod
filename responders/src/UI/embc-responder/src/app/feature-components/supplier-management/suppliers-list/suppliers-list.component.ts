@@ -15,7 +15,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { MatDialog } from '@angular/material/dialog';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
-import { NgIf } from '@angular/common';
+
 import { SuppliersTableComponent } from './suppliers-table/suppliers-table.component';
 import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -25,7 +25,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     templateUrl: './suppliers-list.component.html',
     styleUrls: ['./suppliers-list.component.scss'],
     standalone: true,
-    imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, NgIf, OverlayLoaderComponent]
+    imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, OverlayLoaderComponent]
 })
 export class SuppliersListComponent implements OnInit {
   primarySupplierFilterTerm: TableFilterValueModel;

@@ -1,13 +1,16 @@
 <div class="main-border">
-  <app-outage-banner
-    *ngIf="outageService.getShowOutageBanner() | async"
-    (closeEvent)="closeOutageBanner($event)"
-  ></app-outage-banner>
+  @if (outageService.getShowOutageBanner() | async) {
+    <app-outage-banner
+      (closeEvent)="closeOutageBanner($event)"
+    ></app-outage-banner>
+  }
 
-  <app-environment-banner *ngIf="environment !== null && environment !== undefined"></app-environment-banner>
+  @if (environment !== null && environment !== undefined) {
+    <app-environment-banner></app-environment-banner>
+  }
 
-  <app-header
-    *ngIf="show"
+  @if (show) {
+    <app-header
     [ngStyle]="
       environment !== null && environment !== undefined
         ? {
@@ -17,9 +20,10 @@
         : { padding: '0px' }
     "
   ></app-header>
+}
 
-  <main
-    class="fill-body main-container background"
+<main
+  class="fill-body main-container background"
     [ngStyle]="
       environment !== null && environment !== undefined
         ? show
@@ -33,18 +37,20 @@
             }
         : { padding: '0px' }
     "
-  >
-    <div class="app-error">
-      <app-alert></app-alert>
-    </div>
+>
+<div class="app-error">
+  <app-alert></app-alert>
+</div>
 
-    <div *ngIf="!isLoading">
-      <router-outlet></router-outlet>
-    </div>
-  </main>
+@if (!isLoading) {
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+}
+</main>
 
+@if (show) {
   <div
-    *ngIf="show"
     class="footer mt-auto"
     [ngStyle]="
       environment !== null && environment !== undefined
@@ -55,8 +61,9 @@
         : { padding: '0px' }
     "
   >
-    <app-footer></app-footer>
-  </div>
+  <app-footer></app-footer>
+</div>
+}
 
-  <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"></app-loader>
+<app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"></app-loader>
 </div>

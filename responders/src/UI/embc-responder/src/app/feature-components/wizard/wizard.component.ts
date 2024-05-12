@@ -5,7 +5,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { WizardAdapterService } from './wizard-adapter.service';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { MatAnchor, MatButton } from '@angular/material/button';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 
 /**
@@ -18,7 +18,7 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
     templateUrl: './wizard.component.html',
     styleUrls: ['./wizard.component.scss'],
     standalone: true,
-    imports: [MatSidenavContainer, MatSidenav, NgFor, MatAnchor, RouterLinkActive, RouterLink, NgIf, MatButton, MatSidenavContent, RouterOutlet]
+    imports: [MatSidenavContainer, MatSidenav, MatAnchor, RouterLinkActive, RouterLink, MatButton, MatSidenavContent, RouterOutlet]
 })
 export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();

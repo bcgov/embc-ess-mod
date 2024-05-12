@@ -14,7 +14,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
-import { NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatError, MatPrefix } from '@angular/material/form-field';
 
@@ -23,7 +23,7 @@ import { MatFormField, MatError, MatPrefix } from '@angular/material/form-field'
     templateUrl: './incidentals.component.html',
     styleUrls: ['./incidentals.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, NgIf, MatError, NumberCommaDirective, MatPrefix, DecimalPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError, NumberCommaDirective, MatPrefix, DecimalPipe]
 })
 export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

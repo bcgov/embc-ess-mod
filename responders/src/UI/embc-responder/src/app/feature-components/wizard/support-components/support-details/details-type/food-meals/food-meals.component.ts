@@ -5,7 +5,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 import { NumberOfMealsPipe } from '../../../../../../shared/pipes/numberOfMeals.pipe';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { NgClass, NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
@@ -13,7 +13,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     templateUrl: './food-meals.component.html',
     styleUrls: ['./food-meals.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, NgClass, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, DecimalPipe, NumberOfMealsPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, NgClass, MatLabel, MatSelect, MatOption, MatError, DecimalPipe, NumberOfMealsPipe]
 })
 export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
