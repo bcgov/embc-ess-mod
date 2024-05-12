@@ -12,7 +12,19 @@ import {
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import {
   Support,
   Referral,
@@ -35,11 +47,29 @@ import { AppLoaderComponent } from '../../../../../shared/components/app-loader/
 import { NgClass, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-supports-table',
-    templateUrl: './supports-table.component.html',
-    styleUrls: ['./supports-table.component.scss'],
-    standalone: true,
-    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AppLoaderComponent, MatPaginator, DecimalPipe, DatePipe]
+  selector: 'app-supports-table',
+  templateUrl: './supports-table.component.html',
+  styleUrls: ['./supports-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    NgClass,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AppLoaderComponent,
+    MatPaginator,
+    DecimalPipe,
+    DatePipe
+  ]
 })
 export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -12,24 +12,22 @@
             <mat-datepicker #picker></mat-datepicker>
 
             @if (datetTimeFormControl.date.invalid && datetTimeFormControl.date.hasError('invalidDate')) {
-              <mat-error>
-                Please enter a valid date</mat-error
-                >
-              }
-            </mat-form-field>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Valid From Time</mat-label>
-              <input type="time" formControlName="time" matInput placeholder="Valid From Time" />
-            </mat-form-field>
-          </div>
-
-          <div class="col-md-4">
-            <button class="button-s cancel-button" mat-button (click)="cancel()">Cancel</button>
-            <button class="button-p" mat-button (click)="update()">Update</button>
-          </div>
+              <mat-error> Please enter a valid date</mat-error>
+            }
+          </mat-form-field>
         </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Valid From Time</mat-label>
+            <input type="time" formControlName="time" matInput placeholder="Valid From Time" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <button class="button-s cancel-button" mat-button (click)="cancel()">Cancel</button>
+          <button class="button-p" mat-button (click)="update()">Update</button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

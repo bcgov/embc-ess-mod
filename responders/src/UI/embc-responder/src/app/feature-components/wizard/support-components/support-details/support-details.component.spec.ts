@@ -15,9 +15,9 @@ describe('SupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, SupportDetailsComponent],
-    providers: [DatePipe, UntypedFormBuilder, { provide: computeInterfaceToken, useValue: {} }]
-}).compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, SupportDetailsComponent],
+      providers: [DatePipe, UntypedFormBuilder, { provide: computeInterfaceToken, useValue: {} }]
+    }).compileComponents();
   });
 
   beforeEach(() => {

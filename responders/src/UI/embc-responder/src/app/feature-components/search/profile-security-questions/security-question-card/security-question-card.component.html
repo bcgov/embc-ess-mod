@@ -34,20 +34,17 @@
             <input [formControlName]="controlName" matInput type="text" />
             @if (
               (securityQuestionsFormControl.answer1.invalid &&
-              securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
+                securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer2.invalid &&
-              securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
+                securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer3.invalid &&
-              securityQuestionsFormControl.answer3.hasError('whitespaceError'))
-              ) {
-              <mat-error
-                >
-                Security Question cannot be blank</mat-error
-                >
-              }
-            </mat-form-field>
-          </div>
+                securityQuestionsFormControl.answer3.hasError('whitespaceError'))
+            ) {
+              <mat-error> Security Question cannot be blank</mat-error>
+            }
+          </mat-form-field>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

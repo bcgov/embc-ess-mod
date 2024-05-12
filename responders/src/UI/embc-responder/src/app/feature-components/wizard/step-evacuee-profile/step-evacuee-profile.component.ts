@@ -10,11 +10,11 @@ import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
  * Initializes the profile tabs layout and defines navigation rules
  */
 @Component({
-    selector: 'app-step-evacuee-profile',
-    templateUrl: './step-evacuee-profile.component.html',
-    styleUrls: ['./step-evacuee-profile.component.scss'],
-    standalone: true,
-    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, NgClass, AlertComponent, MatTabNavPanel, RouterOutlet]
+  selector: 'app-step-evacuee-profile',
+  templateUrl: './step-evacuee-profile.component.html',
+  styleUrls: ['./step-evacuee-profile.component.scss'],
+  standalone: true,
+  imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, NgClass, AlertComponent, MatTabNavPanel, RouterOutlet]
 })
 export class StepEvacueeProfileComponent {
   stepId: string;

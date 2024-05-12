@@ -5,6 +5,6 @@ import { SearchRegistrationRoutingModule } from './search-registration-routing.m
 import { SearchRegistrationComponent } from './search-registration.component';
 
 @NgModule({
-    imports: [CommonModule, SearchRegistrationRoutingModule, SearchRegistrationComponent]
+  imports: [CommonModule, SearchRegistrationRoutingModule, SearchRegistrationComponent]
 })
 export class SearchRegistrationModule {}

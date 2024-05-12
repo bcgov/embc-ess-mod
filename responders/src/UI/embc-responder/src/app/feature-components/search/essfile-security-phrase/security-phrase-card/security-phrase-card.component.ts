@@ -7,11 +7,11 @@ import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-security-phrase-card',
-    templateUrl: './security-phrase-card.component.html',
-    styleUrls: ['./security-phrase-card.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError]
+  selector: 'app-security-phrase-card',
+  templateUrl: './security-phrase-card.component.html',
+  styleUrls: ['./security-phrase-card.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError]
 })
 export class SecurityPhraseCardComponent implements OnInit {
   @Input() phrase: GetSecurityPhraseResponse;

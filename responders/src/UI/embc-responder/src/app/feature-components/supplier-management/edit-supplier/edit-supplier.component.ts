@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators, AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  Validators,
+  AbstractControl,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -15,11 +22,24 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-edit-supplier',
-    templateUrl: './edit-supplier.component.html',
-    styleUrls: ['./edit-supplier.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, CustomGstFieldComponent, BcAddressComponent, IMaskDirective, MatButton]
+  selector: 'app-edit-supplier',
+  templateUrl: './edit-supplier.component.html',
+  styleUrls: ['./edit-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    CustomGstFieldComponent,
+    BcAddressComponent,
+    IMaskDirective,
+    MatButton
+  ]
 })
 export class EditSupplierComponent implements OnInit {
   editForm: UntypedFormGroup;

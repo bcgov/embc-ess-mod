@@ -13,11 +13,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-    selector: 'app-task-details',
-    templateUrl: './task-details.component.html',
-    styleUrls: ['./task-details.component.scss'],
-    standalone: true,
-    imports: [NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
+  selector: 'app-task-details',
+  templateUrl: './task-details.component.html',
+  styleUrls: ['./task-details.component.scss'],
+  standalone: true,
+  imports: [NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
 })
 export class TaskDetailsComponent implements OnInit {
   essTask: EssTaskModel;

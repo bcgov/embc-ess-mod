@@ -19,19 +19,19 @@ describe('SearchWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, SearchWrapperComponent],
-    providers: [
+      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, SearchWrapperComponent],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

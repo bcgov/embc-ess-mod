@@ -11,9 +11,9 @@ describe('NewSupplierComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule, NewSupplierComponent],
-    providers: [UntypedFormBuilder]
-}).compileComponents();
+      imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule, NewSupplierComponent],
+      providers: [UntypedFormBuilder]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -7,6 +7,6 @@ import { SelectSupportComponent } from './select-support.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [CommonModule, SelectSupportRoutingModule, ReactiveFormsModule, SelectSupportComponent]
+  imports: [CommonModule, SelectSupportRoutingModule, ReactiveFormsModule, SelectSupportComponent]
 })
 export class SelectSupportModule {}

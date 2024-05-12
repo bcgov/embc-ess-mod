@@ -27,18 +27,24 @@ describe('StepEssFileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, ReactiveFormsModule, StepEssFileComponent],
-    providers: [
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        StepEssFileComponent
+      ],
+      providers: [
         UntypedFormBuilder,
         WizardDataService,
         { provide: Router, useValue: routerMock },
         {
-            provide: StepEssFileService,
-            useClass: MockStepEssFileService
+          provide: StepEssFileService,
+          useClass: MockStepEssFileService
         },
         { provide: computeInterfaceToken, useValue: {} }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

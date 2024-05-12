@@ -11,11 +11,11 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-team-member-review',
-    templateUrl: './team-member-review.component.html',
-    styleUrls: ['./team-member-review.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, AlertComponent, MatButton, AppLoaderComponent]
+  selector: 'app-team-member-review',
+  templateUrl: './team-member-review.component.html',
+  styleUrls: ['./team-member-review.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, MatButton, AppLoaderComponent]
 })
 export class TeamMemberReviewComponent {
   teamMember: TeamMember;

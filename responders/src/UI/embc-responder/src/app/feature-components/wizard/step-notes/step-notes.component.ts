@@ -3,11 +3,11 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
-    selector: 'app-step-notes',
-    templateUrl: './step-notes.component.html',
-    styleUrls: ['./step-notes.component.scss'],
-    standalone: true,
-    imports: [AlertComponent, RouterOutlet]
+  selector: 'app-step-notes',
+  templateUrl: './step-notes.component.html',
+  styleUrls: ['./step-notes.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, RouterOutlet]
 })
 export class StepNotesComponent implements OnInit {
   stepName: string;

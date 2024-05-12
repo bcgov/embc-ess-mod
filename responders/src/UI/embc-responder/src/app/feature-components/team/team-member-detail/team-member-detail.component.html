@@ -73,21 +73,13 @@
       <div class="row">
         <div class="col-md-1">
           @if (hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4') {
-            <button
-              class="button-s"
-              mat-button
-              (click)="deleteUser()"
-              >
-              Delete User
-            </button>
+            <button class="button-s" mat-button (click)="deleteUser()">Delete User</button>
           }
         </div>
 
         <div class="col-md-1">
           @if (isEditAllowed(teamMember)) {
-            <button class="button-p" mat-button (click)="editUser()">
-              Edit User Details
-            </button>
+            <button class="button-p" mat-button (click)="editUser()">Edit User Details</button>
           }
         </div>
       </div>

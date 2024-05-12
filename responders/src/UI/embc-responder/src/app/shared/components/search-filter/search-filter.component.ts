@@ -10,11 +10,11 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-search-filter',
-    templateUrl: './search-filter.component.html',
-    styleUrls: ['./search-filter.component.scss'],
-    standalone: true,
-    imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatSelect, MatOption]
+  selector: 'app-search-filter',
+  templateUrl: './search-filter.component.html',
+  styleUrls: ['./search-filter.component.scss'],
+  standalone: true,
+  imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatSelect, MatOption]
 })
 export class SearchFilterComponent implements OnInit {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;

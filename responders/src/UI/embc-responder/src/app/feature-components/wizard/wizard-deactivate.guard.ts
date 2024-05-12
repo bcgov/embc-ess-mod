@@ -8,7 +8,7 @@ import { WizardDataService } from './wizard-data.service';
 import { WizardComponent } from './wizard.component';
 
 @Injectable({ providedIn: 'root' })
-export class WizardDeactivateGuard  {
+export class WizardDeactivateGuard {
   constructor(
     private cacheService: CacheService,
     private wizardAdapterService: WizardAdapterService,

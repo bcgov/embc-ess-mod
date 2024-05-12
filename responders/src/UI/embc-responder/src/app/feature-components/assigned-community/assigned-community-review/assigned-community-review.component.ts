@@ -15,11 +15,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
-    selector: 'app-assigned-community-review',
-    templateUrl: './assigned-community-review.component.html',
-    styleUrls: ['./assigned-community-review.component.scss'],
-    standalone: true,
-    imports: [AlertComponent, MatCard, MatCardContent, MatList, MatListItem, MatButton, AppLoaderComponent]
+  selector: 'app-assigned-community-review',
+  templateUrl: './assigned-community-review.component.html',
+  styleUrls: ['./assigned-community-review.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, MatCard, MatCardContent, MatList, MatListItem, MatButton, AppLoaderComponent]
 })
 export class AssignedCommunityReviewComponent implements OnInit {
   reviewAction: string;

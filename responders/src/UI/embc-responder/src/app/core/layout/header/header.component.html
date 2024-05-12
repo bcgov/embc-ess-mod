@@ -10,60 +10,58 @@
               width="181"
               height="45"
               alt="B.C. Government Logo"
-              />
-              <img
-                class="img-fluid d-md-none"
-                src="/assets/images/bcid-symbol-rev.svg"
-                width="64"
-                height="45"
-                alt="B.C. Government Logo"
-                />
-              </a>
-            </div>
+            />
+            <img
+              class="img-fluid d-md-none"
+              src="/assets/images/bcid-symbol-rev.svg"
+              width="64"
+              height="45"
+              alt="B.C. Government Logo"
+            />
+          </a>
+        </div>
 
-            <div class="col-md-1 divider-col">
-              <div class="divider"></div>
-            </div>
+        <div class="col-md-1 divider-col">
+          <div class="divider"></div>
+        </div>
 
-            <div class="col-md-6 app-heading">
-              <span class="heading-text1">Evacuee Registration & Assistance&nbsp;</span>
-              <span class="heading-text2">(ERA)</span>
-            </div>
+        <div class="col-md-6 app-heading">
+          <span class="heading-text1">Evacuee Registration & Assistance&nbsp;</span>
+          <span class="heading-text2">(ERA)</span>
+        </div>
 
-            <div class="col-md-3 menu-responsive">
-              @if (showUserProfile()) {
-                <button mat-button class="button-align" [matMenuTriggerFor]="menu">
-                  <div class="row">
-                    <div class="col-md-2">
-                      <img class="img-align" src="/assets/images/user.svg" height="34" width="34" />
-                    </div>
-                    <div class="col-md-8">
-                      <span style="color: white"
-                        ><b>{{ this.displayName }}</b> ({{ this.teamName }})</span
-                        >
-                        <p class="text">
-                          {{ this.signedInTask }} <b>{{ this.taskStatus }}</b>
-                        </p>
-                      </div>
-                      <div class="col-md-2">
-                        <img src="/assets/images/down-arrow-head.svg" height="7" width="12" />
-                      </div>
-                    </div>
-                  </button>
-                  <mat-menu #menu="matMenu">
-                    @if (allowSignIn()) {
-                      <button mat-menu-item (click)="newTaskSignIn()">
-                        Sign in to a different task #
-                      </button>
-                    }
-                    @if (allowMyProfile()) {
-                      <button mat-menu-item (click)="openUserProfile()">My Profile</button>
-                    }
-                    <button mat-menu-item (click)="signOut()">Sign out</button>
-                  </mat-menu>
-                }
+        <div class="col-md-3 menu-responsive">
+          @if (showUserProfile()) {
+            <button mat-button class="button-align" [matMenuTriggerFor]="menu">
+              <div class="row">
+                <div class="col-md-2">
+                  <img class="img-align" src="/assets/images/user.svg" height="34" width="34" />
+                </div>
+                <div class="col-md-8">
+                  <span style="color: white"
+                    ><b>{{ this.displayName }}</b> ({{ this.teamName }})</span
+                  >
+                  <p class="text">
+                    {{ this.signedInTask }} <b>{{ this.taskStatus }}</b>
+                  </p>
+                </div>
+                <div class="col-md-2">
+                  <img src="/assets/images/down-arrow-head.svg" height="7" width="12" />
+                </div>
               </div>
-            </div>
-          </mat-toolbar-row>
-        </mat-toolbar>
-      </header>
+            </button>
+            <mat-menu #menu="matMenu">
+              @if (allowSignIn()) {
+                <button mat-menu-item (click)="newTaskSignIn()">Sign in to a different task #</button>
+              }
+              @if (allowMyProfile()) {
+                <button mat-menu-item (click)="openUserProfile()">My Profile</button>
+              }
+              <button mat-menu-item (click)="signOut()">Sign out</button>
+            </mat-menu>
+          }
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>

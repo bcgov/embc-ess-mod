@@ -22,7 +22,6 @@
   <ng-container *ngTemplateOutlet="emailForm"></ng-container>
 }
 
-
 <div class="row row-padding">
   @if (showError) {
     <div class="col-md-12 field-error">
@@ -54,58 +53,47 @@
           <mat-label class="requiredField">Email Address</mat-label>
           <input formControlName="email" matInput placeholder="joe@myemail.com" />
           @if (emailFormControl?.email.invalid && emailFormControl?.email.hasError('whitespaceError')) {
-            <mat-error>
-              Email is required</mat-error
-              >
-            }
-            @if (emailFormControl.email.invalid && emailFormControl.email.hasError('email')) {
-              <mat-error
-                >Invalid email</mat-error
-                >
+            <mat-error> Email is required</mat-error>
+          }
+          @if (emailFormControl.email.invalid && emailFormControl.email.hasError('email')) {
+            <mat-error>Invalid email</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    @if (showConfirm) {
+      <div>
+        <div class="row">
+          <div class="col-md-12">
+            <p><strong>Confirm email</strong> address</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label class="requiredField">Confirm Email Address</mat-label>
+              <input
+                formControlName="confirmEmail"
+                matInput
+                placeholder="joe@myemail.com"
+                [errorStateMatcher]="emailMatcher"
+              />
+              @if (
+                emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('whitespaceError')
+              ) {
+                <mat-error> Confirm email is required</mat-error>
+              }
+              @if (emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('email')) {
+                <mat-error>Invalid email</mat-error>
+              }
+              @if (emailFormControl?.confirmEmail?.parent?.hasError('emailMatch')) {
+                <mat-error> Email address mismatch</mat-error>
               }
             </mat-form-field>
           </div>
         </div>
-
-        @if (showConfirm) {
-          <div>
-            <div class="row">
-              <div class="col-md-12">
-                <p><strong>Confirm email</strong> address</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <mat-form-field appearance="outline">
-                  <mat-label class="requiredField">Confirm Email Address</mat-label>
-                  <input
-                    formControlName="confirmEmail"
-                    matInput
-                    placeholder="joe@myemail.com"
-                    [errorStateMatcher]="emailMatcher"
-                    />
-                    @if (
-                      emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('whitespaceError')
-                      ) {
-                      <mat-error
-                        >
-                        Confirm email is required</mat-error
-                        >
-                    }
-                    @if (emailFormControl?.confirmEmail.invalid && emailFormControl?.confirmEmail.hasError('email')) {
-                      <mat-error
-                        >Invalid email</mat-error
-                        >
-                      }
-                      @if (emailFormControl?.confirmEmail?.parent?.hasError('emailMatch')) {
-                        <mat-error>
-                          Email address mismatch</mat-error
-                          >
-                        }
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              }
-            </form>
-          </ng-template>
+      </div>
+    }
+  </form>
+</ng-template>

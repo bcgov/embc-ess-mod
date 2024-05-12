@@ -9,10 +9,8 @@
         @if (
           petFormControl.type.invalid &&
           (petFormControl.type.hasError('required') || petFormControl.type.hasError('whitespaceError'))
-          ) {
-          <mat-error
-            >Pet Type is required
-          </mat-error>
+        ) {
+          <mat-error>Pet Type is required </mat-error>
         }
       </mat-form-field>
     </div>
@@ -24,17 +22,13 @@
         @if (
           petFormControl.quantity.invalid &&
           (petFormControl.quantity.hasError('required') || petFormControl.quantity.hasError('whitespaceError'))
-          ) {
-          <mat-error
-            >How many pets is required</mat-error
-            >
-          }
-          @if (petFormControl.quantity.invalid && petFormControl.quantity.hasError('pattern')) {
-            <mat-error
-              >Quantity is invalid</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
+        ) {
+          <mat-error>How many pets is required</mat-error>
+        }
+        @if (petFormControl.quantity.invalid && petFormControl.quantity.hasError('pattern')) {
+          <mat-error>Quantity is invalid</mat-error>
+        }
+      </mat-form-field>
     </div>
+  </div>
+</div>

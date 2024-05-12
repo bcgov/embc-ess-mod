@@ -102,8 +102,8 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                stepEvacueeProfileService?.primaryAddressDetails?.stateProvince?.name ||
-                stepEvacueeProfileService?.primaryAddressDetails?.stateProvince
+                  stepEvacueeProfileService?.primaryAddressDetails?.stateProvince?.name ||
+                    stepEvacueeProfileService?.primaryAddressDetails?.stateProvince
                 }}
               </div>
             </div>
@@ -119,8 +119,8 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                stepEvacueeProfileService?.primaryAddressDetails?.country?.name ||
-                stepEvacueeProfileService?.primaryAddressDetails?.country
+                  stepEvacueeProfileService?.primaryAddressDetails?.country?.name ||
+                    stepEvacueeProfileService?.primaryAddressDetails?.country
                 }}
               </div>
             </div>
@@ -156,8 +156,8 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                stepEvacueeProfileService?.mailingAddressDetails?.stateProvince?.name ||
-                stepEvacueeProfileService?.mailingAddressDetails?.stateProvince
+                  stepEvacueeProfileService?.mailingAddressDetails?.stateProvince?.name ||
+                    stepEvacueeProfileService?.mailingAddressDetails?.stateProvince
                 }}
               </div>
             </div>
@@ -173,8 +173,8 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                stepEvacueeProfileService?.mailingAddressDetails?.country?.name ||
-                stepEvacueeProfileService?.mailingAddressDetails?.country
+                  stepEvacueeProfileService?.mailingAddressDetails?.country?.name ||
+                    stepEvacueeProfileService?.mailingAddressDetails?.country
                 }}
               </div>
             </div>
@@ -228,9 +228,7 @@
                 </div>
               }
               @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 0) {
-                <div
-                  class="row"
-                  >
+                <div class="row">
                   <div class="col-4">
                     {{ displayQuestions[0]?.question }}
                   </div>
@@ -240,9 +238,7 @@
                 </div>
               }
               @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 1) {
-                <div
-                  class="row"
-                  >
+                <div class="row">
                   <div class="col-4">
                     {{ displayQuestions[1]?.question }}
                   </div>
@@ -252,9 +248,7 @@
                 </div>
               }
               @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 2) {
-                <div
-                  class="row"
-                  >
+                <div class="row">
                   <div class="col-4">
                     {{ displayQuestions[2]?.question }}
                   </div>
@@ -270,10 +264,8 @@
         @if (
           !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id ||
           this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration
-          ) {
-          <div
-            class="col-12"
-            >
+        ) {
+          <div class="col-12">
             <div class="confirm-panel">
               <label class="tab-subtitle">Identification</label>
               <p id="verifiedProfile-radio-group-label" class="requiredField">
@@ -287,7 +279,7 @@
                       formControlName="verifiedProfile"
                       class="primary-radio-group"
                       required
-                      >
+                    >
                       <mat-radio-button class="primary-radio-button" [value]="true" id="yesOption">
                         <span class="bold">Yes</span> - I have seen government issued identification
                       </mat-radio-button>
@@ -299,11 +291,8 @@
                       verifiedProfileControl?.verifiedProfile?.touched &&
                       verifiedProfileControl?.verifiedProfile?.invalid &&
                       verifiedProfileControl?.verifiedProfile?.hasError('required')
-                      ) {
-                      <mat-error
-                        >
-                        Please select an option.
-                      </mat-error>
+                    ) {
+                      <mat-error> Please select an option. </mat-error>
                     }
                   </div>
                 </div>
@@ -315,11 +304,9 @@
         @if (
           !evacueeSessionService?.isPaperBased &&
           (this.appBaseService?.wizardProperties?.wizardType === wizardType.NewRegistration ||
-          this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration)
-          ) {
-          <div
-            class="col-12"
-            >
+            this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration)
+        ) {
+          <div class="col-12">
             <div class="e-transfer-panel">
               <label class="tab-subtitle">e-Transfer Eligibility</label>
               <p>
@@ -335,62 +322,55 @@
                       <mat-label>Email Address</mat-label>
                       <input formControlName="email" matInput placeholder="Email Address" />
                       @if (inviteEmailControl?.email.invalid && inviteEmailControl?.email.hasError('email')) {
-                        <mat-error
-                          >Invalid email</mat-error
-                          >
+                        <mat-error>Invalid email</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                @if (inviteEmailControl?.email.value) {
+                  <div class="row">
+                    <div class="col-md-5">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Confirm Email Address</mat-label>
+                        <input
+                          formControlName="confirmEmail"
+                          matInput
+                          placeholder="Confirm Email Address"
+                          [errorStateMatcher]="emailMatcher"
+                        />
+                        @if (
+                          inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')
+                        ) {
+                          <mat-error> Invalid email</mat-error>
+                        }
+                        @if (inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')) {
+                          <mat-error> Email address mismatch</mat-error>
                         }
                       </mat-form-field>
                     </div>
                   </div>
-                  @if (inviteEmailControl?.email.value) {
-                    <div class="row">
-                      <div class="col-md-5">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Confirm Email Address</mat-label>
-                          <input
-                            formControlName="confirmEmail"
-                            matInput
-                            placeholder="Confirm Email Address"
-                            [errorStateMatcher]="emailMatcher"
-                            />
-                            @if (
-                              inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')
-                              ) {
-                              <mat-error
-                                >
-                                Invalid email</mat-error
-                                >
-                            }
-                            @if (inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')) {
-                              <mat-error>
-                                Email address mismatch</mat-error
-                                >
-                              }
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      }
-                    </form>
-                  </div>
-                </div>
-              }
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 nav-buttons">
-                <button class="button-s back" mat-button (click)="back()">Back</button>
-
-                <button class="button-p save" mat-stroked-button (click)="save()" [disabled]="saveLoader || disableButton">
-                  Save Profile
-                  <app-loader
-                    style="display: inline-flex; justify-content: center; align-items: center"
-                    [strokeWidth]="3"
-                    [diameter]="20"
-                    [showLoader]="saveLoader"
-                  ></app-loader>
-                </button>
-              </div>
+                }
+              </form>
             </div>
           </div>
+        }
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 nav-buttons">
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+
+          <button class="button-p save" mat-stroked-button (click)="save()" [disabled]="saveLoader || disableButton">
+            Save Profile
+            <app-loader
+              style="display: inline-flex; justify-content: center; align-items: center"
+              [strokeWidth]="3"
+              [diameter]="20"
+              [showLoader]="saveLoader"
+            ></app-loader>
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>

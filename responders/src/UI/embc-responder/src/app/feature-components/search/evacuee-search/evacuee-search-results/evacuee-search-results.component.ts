@@ -24,11 +24,25 @@ import { NgTemplateOutlet, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } f
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-evacuee-search-results',
-    templateUrl: './evacuee-search-results.component.html',
-    styleUrls: ['./evacuee-search-results.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, ZeroFileResultComponent, AlertComponent, NgTemplateOutlet, MatButton, ProfileResultsComponent, EssFilesResultsComponent, OverlayLoaderComponent, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
+  selector: 'app-evacuee-search-results',
+  templateUrl: './evacuee-search-results.component.html',
+  styleUrls: ['./evacuee-search-results.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    ZeroFileResultComponent,
+    AlertComponent,
+    NgTemplateOutlet,
+    MatButton,
+    ProfileResultsComponent,
+    EssFilesResultsComponent,
+    OverlayLoaderComponent,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class EvacueeSearchResultsComponent implements OnInit {
   registrantResults: Array<RegistrantProfileSearchResultModel>;

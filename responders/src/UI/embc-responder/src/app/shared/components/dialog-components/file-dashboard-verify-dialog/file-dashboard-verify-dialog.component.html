@@ -14,49 +14,45 @@
         class="primary-radio-group"
         (change)="isVerified($event)"
         required
-        >
+      >
         <mat-radio-button [value]="'Yes'"
           ><span class="radio-text"><b>Yes</b></span> - I saw government issued identification.</mat-radio-button
-          >
-          <mat-radio-button [value]="'No'"
-            ><span class="radio-text"><b>No</b></span> - I did not see government issued identification.</mat-radio-button
-            >
-            <mat-radio-button [disabled]="isOptionDisabled()" [value]="'answered'"
-              ><span class="radio-text"><b>No</b></span> - I did not see government issued identification, but the evacuee
-              has answered their security questions correctly.</mat-radio-button
-              >
-            </mat-radio-group>
+        >
+        <mat-radio-button [value]="'No'"
+          ><span class="radio-text"><b>No</b></span> - I did not see government issued identification.</mat-radio-button
+        >
+        <mat-radio-button [disabled]="isOptionDisabled()" [value]="'answered'"
+          ><span class="radio-text"><b>No</b></span> - I did not see government issued identification, but the evacuee
+          has answered their security questions correctly.</mat-radio-button
+        >
+      </mat-radio-group>
 
-            @if (
-              verifiedFormControl?.verified.touched &&
-              verifiedFormControl?.verified.invalid &&
-              verifiedFormControl?.verified.hasError('required')
-              ) {
-              <div
-                class="field-error"
-                >
-                Please make a selection
-              </div>
-            }
+      @if (
+        verifiedFormControl?.verified.touched &&
+        verifiedFormControl?.verified.invalid &&
+        verifiedFormControl?.verified.hasError('required')
+      ) {
+        <div class="field-error">Please make a selection</div>
+      }
 
-            @if (!noIdFlag) {
-              <div class="field-error">Evacuee identification must be provided to access the profile</div>
-            }
-          </form>
-        </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-md-6">
-          <button class="button-s button-width" mat-button (click)="close()">
-            {{ content?.cancelButton }}
-          </button>
-        </div>
-        @if (noIdFlag) {
-          <div class="col-md-6">
-            <button class="button-p button-width" mat-button (click)="verify()">
-              {{ content?.confirmButton }}
-            </button>
-          </div>
-        }
-      </div>
+      @if (!noIdFlag) {
+        <div class="field-error">Evacuee identification must be provided to access the profile</div>
+      }
+    </form>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      {{ content?.cancelButton }}
+    </button>
+  </div>
+  @if (noIdFlag) {
+    <div class="col-md-6">
+      <button class="button-p button-width" mat-button (click)="verify()">
+        {{ content?.confirmButton }}
+      </button>
+    </div>
+  }
+</div>

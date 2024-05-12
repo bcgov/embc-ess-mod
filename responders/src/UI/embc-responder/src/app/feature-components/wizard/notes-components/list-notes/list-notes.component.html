@@ -13,12 +13,7 @@
       </div>
       <div class="col-md-4 image-align">
         @if (note?.isEditable) {
-          <button
-            class="list-image button-margin"
-            (click)="editNote(note)"
-            mat-icon-button
-            aria-label="Edit"
-            >
+          <button class="list-image button-margin" (click)="editNote(note)" mat-icon-button aria-label="Edit">
             <img src="/assets/images/edit.svg" height="40" width="40" />
             <img src="/assets/images/edit_onhover.svg" height="40" width="40" />
           </button>
@@ -29,7 +24,7 @@
             (click)="hideNote(note?.id, note?.content)"
             mat-icon-button
             aria-label="Hide"
-            >
+          >
             <img src="/assets/images/hide.svg" height="40" width="40" />
             <img src="/assets/images/hide-onhover.svg" height="40" width="40" />
           </button>
@@ -40,7 +35,7 @@
             (click)="showNote(note?.id, note?.content)"
             mat-icon-button
             aria-label="Unhide"
-            >
+          >
             <img src="/assets/images/unhide.svg" height="40" width="40" />
             <img src="/assets/images/unhide-onhover.svg" height="40" width="40" />
           </button>

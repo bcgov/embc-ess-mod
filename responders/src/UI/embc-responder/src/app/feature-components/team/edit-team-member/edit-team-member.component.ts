@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -20,11 +26,25 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-edit-team-member',
-    templateUrl: './edit-team-member.component.html',
-    styleUrls: ['./edit-team-member.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, AlertComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, AppLoaderComponent, MatSelect, MatOption, MatButton]
+  selector: 'app-edit-team-member',
+  templateUrl: './edit-team-member.component.html',
+  styleUrls: ['./edit-team-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AlertComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    AppLoaderComponent,
+    MatSelect,
+    MatOption,
+    MatButton
+  ]
 })
 export class EditTeamMemberComponent implements OnInit {
   editForm: UntypedFormGroup;

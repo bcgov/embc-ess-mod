@@ -8,11 +8,11 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-billeting-delivery',
-    templateUrl: './billeting-delivery.component.html',
-    styleUrls: ['./billeting-delivery.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective]
+  selector: 'app-billeting-delivery',
+  templateUrl: './billeting-delivery.component.html',
+  styleUrls: ['./billeting-delivery.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective]
 })
 export class BilletingDeliveryComponent implements OnInit, OnChanges {
   @Input() supportDeliveryForm: UntypedFormGroup;

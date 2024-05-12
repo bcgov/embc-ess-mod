@@ -31,7 +31,7 @@ describe('EvacueeDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -39,20 +39,20 @@ describe('EvacueeDetailsComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         EvacueeDetailsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         },
         {
-            provide: EvacueeDetailsService,
-            useClass: MockEvacueeDetailsService
+          provide: EvacueeDetailsService,
+          useClass: MockEvacueeDetailsService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

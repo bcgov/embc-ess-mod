@@ -14,15 +14,15 @@ describe('EnvironmentBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule, EnvironmentBannerComponent],
-    providers: [
+      imports: [HttpClientTestingModule, RouterTestingModule, EnvironmentBannerComponent],
+      providers: [
         EnvironmentBannerComponent,
         {
-            provide: EnvironmentBannerService,
-            useClass: MockEnvironmentBannerService
+          provide: EnvironmentBannerService,
+          useClass: MockEnvironmentBannerService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -5,11 +5,11 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-file-search-form',
-    templateUrl: './file-search-form.component.html',
-    styleUrls: ['./file-search-form.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
+  selector: 'app-file-search-form',
+  templateUrl: './file-search-form.component.html',
+  styleUrls: ['./file-search-form.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
 export class FileSearchFormComponent implements OnInit {
   @Input() fileSearchForm: FormGroup<{ essFileNumber: FormControl<string> }>;

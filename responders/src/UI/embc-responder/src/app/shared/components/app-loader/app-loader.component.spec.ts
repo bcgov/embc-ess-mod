@@ -8,8 +8,8 @@ describe('AppLoaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [AppLoaderComponent]
-}).compileComponents();
+      imports: [AppLoaderComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -17,11 +17,11 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-assigned-community-list',
-    templateUrl: './assigned-community-list.component.html',
-    styleUrls: ['./assigned-community-list.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, MatButton, AssignedCommunityTableComponent]
+  selector: 'app-assigned-community-list',
+  templateUrl: './assigned-community-list.component.html',
+  styleUrls: ['./assigned-community-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, MatButton, AssignedCommunityTableComponent]
 })
 export class AssignedCommunityListComponent implements OnInit {
   filterTerm: TableFilterValueModel;

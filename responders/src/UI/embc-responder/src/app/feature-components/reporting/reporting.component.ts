@@ -21,11 +21,27 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-reporting',
-    templateUrl: './reporting.component.html',
-    styleUrls: ['./reporting.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatError, MatSelect, MatButton, OverlayLoaderComponent, AsyncPipe]
+  selector: 'app-reporting',
+  templateUrl: './reporting.component.html',
+  styleUrls: ['./reporting.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+    MatSelect,
+    MatButton,
+    OverlayLoaderComponent,
+    AsyncPipe
+  ]
 })
 export class ReportingComponent implements OnInit, OnDestroy {
   reportForm: UntypedFormGroup;

@@ -15,11 +15,24 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-evacuee-details',
-    templateUrl: './evacuee-details.component.html',
-    styleUrls: ['./evacuee-details.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatError, IMaskDirective, MatCard, MatCardContent, MatButton]
+  selector: 'app-evacuee-details',
+  templateUrl: './evacuee-details.component.html',
+  styleUrls: ['./evacuee-details.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
+    MatError,
+    IMaskDirective,
+    MatCard,
+    MatCardContent,
+    MatButton
+  ]
 })
 export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   evacueeDetailsForm: UntypedFormGroup;

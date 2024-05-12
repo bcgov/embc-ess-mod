@@ -32,11 +32,24 @@ import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@ang
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-ess-file-supports',
-    templateUrl: './ess-file-supports.component.html',
-    styleUrls: ['./ess-file-supports.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatFormField, MatLabel, MatSelect, MatOption, NgClass, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
+  selector: 'app-ess-file-supports',
+  templateUrl: './ess-file-supports.component.html',
+  styleUrls: ['./ess-file-supports.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    NgClass,
+    MatPaginator,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

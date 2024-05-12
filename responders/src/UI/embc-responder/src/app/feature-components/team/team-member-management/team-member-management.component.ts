@@ -5,11 +5,11 @@ import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
-    selector: 'app-team-member-management',
-    templateUrl: './team-member-management.component.html',
-    styleUrls: ['./team-member-management.component.scss'],
-    standalone: true,
-    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
+  selector: 'app-team-member-management',
+  templateUrl: './team-member-management.component.html',
+  styleUrls: ['./team-member-management.component.scss'],
+  standalone: true,
+  imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
 })
 export class TeamMemberManagementComponent {
   /**

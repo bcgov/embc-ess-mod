@@ -125,35 +125,35 @@ describe('EssFilesResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         HttpClientTestingModule,
         RouterTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
         RouterTestingModule,
         EssFilesResultsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         EssFilesResultsComponent,
         {
-            provide: EvacueeSearchService,
-            useClass: MockEvacueeSearchService
+          provide: EvacueeSearchService,
+          useClass: MockEvacueeSearchService
         },
         {
-            provide: EvacueeSessionService,
-            useClass: MockEvacueeSessionService
+          provide: EvacueeSessionService,
+          useClass: MockEvacueeSessionService
         },
         {
-            provide: EssFileSecurityPhraseService,
-            useClass: MockEssFileSecurityPhraseService
+          provide: EssFileSecurityPhraseService,
+          useClass: MockEssFileSecurityPhraseService
         },
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: EssFilesResultsService,
-            useClass: MockEssFilesResultsService
+          provide: EssFilesResultsService,
+          useClass: MockEssFilesResultsService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

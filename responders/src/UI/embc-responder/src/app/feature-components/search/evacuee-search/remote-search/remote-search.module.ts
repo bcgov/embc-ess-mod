@@ -6,8 +6,7 @@ import { RemoteSearchComponent } from './remote-search.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, RemoteSearchRoutingModule, ReactiveFormsModule, RemoteSearchComponent]
+  imports: [CommonModule, RemoteSearchRoutingModule, ReactiveFormsModule, RemoteSearchComponent]
 })
 export class RemoteSearchModule {}

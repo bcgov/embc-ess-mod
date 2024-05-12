@@ -5,15 +5,7 @@ import { IMaskModule } from 'angular-imask';
 import { EvacueeNameSearchRoutingModule } from './evacuee-name-search-routing.module';
 import { EvacueeNameSearchComponent } from './evacuee-name-search.component';
 
-
-
 @NgModule({
-    imports: [
-    CommonModule,
-    EvacueeNameSearchRoutingModule,
-    ReactiveFormsModule,
-    IMaskModule,
-    EvacueeNameSearchComponent
-]
+  imports: [CommonModule, EvacueeNameSearchRoutingModule, ReactiveFormsModule, IMaskModule, EvacueeNameSearchComponent]
 })
 export class EvacueeNameSearchModule {}

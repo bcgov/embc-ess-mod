@@ -11,101 +11,103 @@
     <div class="col-md-12">
       <p>
         <span class="bold p-margin"
-          >{{ supportList?.length }} support@if (supportList?.length !== 1) {
-          <span>s</span>
-          }&nbsp;</span
-          >
+          >{{ supportList?.length }} support
           @if (supportList?.length !== 1) {
-            <span>have</span>
+            <span>s</span>
           }
-          @if (supportList?.length === 1) {
-            <span>has</span>
-          }
-          been recorded for
-          <b
-            >ESS File #
-            {{
+          &nbsp;</span
+        >
+        @if (supportList?.length !== 1) {
+          <span>have</span>
+        }
+        @if (supportList?.length === 1) {
+          <span>has</span>
+        }
+        been recorded for
+        <b
+          >ESS File #
+          {{
             evacueeSessionService?.isPaperBased
-            ? evacueeSessionService?.evacFile?.manualFileId
-            : evacueeSessionService?.evacFile?.id
-            }}</b
-            >
-            within the ERA Tool.
-          </p>
+              ? evacueeSessionService?.evacFile?.manualFileId
+              : evacueeSessionService?.evacFile?.id
+          }}</b
+        >
+        within the ERA Tool.
+      </p>
+    </div>
+  </div>
+
+  @if (supportList?.length === 0) {
+    <div class="row row-padding">
+      <div class="col-md-6">
+        <button
+          class="button-p add-support add-button"
+          mat-button
+          (click)="addSupports()"
+          [disabled]="isAddSupportsDisabled()"
+        >
+          + Add Supports
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (supportList?.length !== 0) {
+    <div>
+      <div class="row row-padding">
+        <div class="col-md-2">
+          <button
+            class="button-p button-width add-button"
+            mat-button
+            (click)="addSupports()"
+            [disabled]="isAddSupportsDisabled()"
+          >
+            Add Supports
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button
+            class="button-p button-width process-button"
+            mat-button
+            (click)="process()"
+            [disabled]="referralService.getDraftSupport().length === 0"
+          >
+            Process Draft Support/s
+          </button>
+        </div>
+        @for (filter of filtersToLoad?.loadDropdownFilters; track filter) {
+          <div class="col-md-3">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ filter?.label.description }}</mat-label>
+              <mat-select #matRef id="{{ filter?.type }}" (selectionChange)="selected($event, filter?.type)">
+                <mat-option value="">{{ filter?.label.description }}</mat-option>
+                @for (val of filter?.values; track val) {
+                  <mat-option [value]="val">
+                    @if (val?.description !== undefined) {
+                      <div>
+                        {{ val?.description }}
+                      </div>
+                    } @else {
+                      {{ val }}
+                    }
+                    <ng-template #value>{{ val }}</ng-template>
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        }
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <app-supports-table
+            [supportList]="supportList"
+            [filterTerm]="filterTerm"
+            [showLoader]="showLoader"
+            (clickedRow)="openSupportDetails($event)"
+          ></app-supports-table>
         </div>
       </div>
-
-      @if (supportList?.length === 0) {
-        <div class="row row-padding">
-          <div class="col-md-6">
-            <button
-              class="button-p add-support add-button"
-              mat-button
-              (click)="addSupports()"
-              [disabled]="isAddSupportsDisabled()"
-              >
-              + Add Supports
-            </button>
-          </div>
-        </div>
-      }
-
-      @if (supportList?.length !== 0) {
-        <div>
-          <div class="row row-padding">
-            <div class="col-md-2">
-              <button
-                class="button-p button-width add-button"
-                mat-button
-                (click)="addSupports()"
-                [disabled]="isAddSupportsDisabled()"
-                >
-                Add Supports
-              </button>
-            </div>
-            <div class="col-md-3">
-              <button
-                class="button-p button-width process-button"
-                mat-button
-                (click)="process()"
-                [disabled]="referralService.getDraftSupport().length === 0"
-                >
-                Process Draft Support/s
-              </button>
-            </div>
-            @for (filter of filtersToLoad?.loadDropdownFilters; track filter) {
-              <div class="col-md-3">
-                <mat-form-field appearance="outline">
-                  <mat-label>{{ filter?.label.description }}</mat-label>
-                  <mat-select #matRef id="{{ filter?.type }}" (selectionChange)="selected($event, filter?.type)">
-                    <mat-option value="">{{ filter?.label.description }}</mat-option>
-                    @for (val of filter?.values; track val) {
-                      <mat-option [value]="val">
-                        @if (val?.description !== undefined) {
-                          <div>
-                            {{ val?.description }}
-                          </div>
-                        } @else {
-                          {{ val }}
-                        }
-                        <ng-template #value>{{ val }}</ng-template>
-                      </mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            }
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <app-supports-table
-                [supportList]="supportList"
-                [filterTerm]="filterTerm"
-                [showLoader]="showLoader"
-                (clickedRow)="openSupportDetails($event)"
-              ></app-supports-table>
-            </div>
-          </div>
-        </div>
-      }
     </div>
+  }
+</div>

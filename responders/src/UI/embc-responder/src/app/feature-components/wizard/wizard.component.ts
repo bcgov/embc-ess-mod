@@ -14,11 +14,20 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
  * Defines navigation rules within and outside the wizard
  */
 @Component({
-    selector: 'app-wizard',
-    templateUrl: './wizard.component.html',
-    styleUrls: ['./wizard.component.scss'],
-    standalone: true,
-    imports: [MatSidenavContainer, MatSidenav, MatAnchor, RouterLinkActive, RouterLink, MatButton, MatSidenavContent, RouterOutlet]
+  selector: 'app-wizard',
+  templateUrl: './wizard.component.html',
+  styleUrls: ['./wizard.component.scss'],
+  standalone: true,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    MatAnchor,
+    RouterLinkActive,
+    RouterLink,
+    MatButton,
+    MatSidenavContent,
+    RouterOutlet
+  ]
 })
 export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();

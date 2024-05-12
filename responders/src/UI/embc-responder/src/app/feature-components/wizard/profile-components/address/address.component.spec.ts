@@ -28,46 +28,34 @@ import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
-    selector: 'app-bc-address', template: '',
-    standalone: true,
-    imports: [RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule]
+  selector: 'app-bc-address',
+  template: '',
+  standalone: true,
+  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class BcAddressStubComponent {}
 
 @Component({
-    selector: 'app-can-address', template: '',
-    standalone: true,
-    imports: [RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule]
+  selector: 'app-can-address',
+  template: '',
+  standalone: true,
+  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class CanadaAddressStubComponent {}
 
 @Component({
-    selector: 'app-usa-address', template: '',
-    standalone: true,
-    imports: [RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule]
+  selector: 'app-usa-address',
+  template: '',
+  standalone: true,
+  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class UsaAddressStubComponent {}
 
 @Component({
-    selector: 'app-other-address', template: '',
-    standalone: true,
-    imports: [RouterTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MaterialModule]
+  selector: 'app-other-address',
+  template: '',
+  standalone: true,
+  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class OtherAddressStubComponent {}
 
@@ -80,7 +68,7 @@ describe('AddressComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -92,24 +80,24 @@ describe('AddressComponent', () => {
         CanadaAddressStubComponent,
         UsaAddressStubComponent,
         OtherAddressStubComponent
-    ],
-    providers: [
+      ],
+      providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         },
         {
-            provide: LocationsService,
-            useClass: MockLocationService
+          provide: LocationsService,
+          useClass: MockLocationService
         },
         {
-            provide: AddressService,
-            useClass: MockAddressService
+          provide: AddressService,
+          useClass: MockAddressService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

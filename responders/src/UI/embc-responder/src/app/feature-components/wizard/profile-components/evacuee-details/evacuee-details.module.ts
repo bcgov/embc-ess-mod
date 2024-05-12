@@ -5,8 +5,7 @@ import { IMaskModule } from 'angular-imask';
 import { EvacueeDetailsRoutingModule } from './evacuee-details-routing.module';
 import { EvacueeDetailsComponent } from './evacuee-details.component';
 
-
 @NgModule({
-    imports: [CommonModule, EvacueeDetailsRoutingModule, ReactiveFormsModule, IMaskModule, EvacueeDetailsComponent]
+  imports: [CommonModule, EvacueeDetailsRoutingModule, ReactiveFormsModule, IMaskModule, EvacueeDetailsComponent]
 })
 export class EvacueeDetailsModule {}

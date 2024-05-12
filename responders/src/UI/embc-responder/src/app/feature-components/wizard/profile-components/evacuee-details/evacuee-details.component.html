@@ -69,65 +69,56 @@
                     }
                   </mat-select>
                   @if (detailsFormControl.gender.invalid && detailsFormControl.gender.hasError('whitespaceError')) {
-                    <mat-error
-                      >
-                      Gender is required</mat-error
-                      >
-                    }
-                  </mat-form-field>
+                    <mat-error> Gender is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field type="date" appearance="outline">
+                  <mat-label>Date of Birth</mat-label>
+                  <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy" [imask]="dateMask" required />
+                </mat-form-field>
+              </div>
+              @if (evacueeDetailsService?.showLockIcon) {
+                <div class="col-md-1">
+                  <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
+                </div>
+              }
+            </div>
+
+            @if (evacueeDetailsService?.showUnlockLink) {
+              <div class="row">
+                <div class="col-md-3">
+                  <button class="btn unlock-link" (click)="editLockedFields()">Edit locked fields</button>
                 </div>
               </div>
+            }
+          </form>
+        </div>
+        <div class="col-md-4">
+          <mat-card class="tips-card">
+            <mat-card-content>
+              <div>
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+                <span class="tips-heading"><b>Tip: </b>Editable Details</span>
+              </div>
+              <p id="tips-text" [innerHTML]="tipText"></p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
 
-              <div class="row">
-                <div class="col-md-4">
-                  <mat-form-field type="date" appearance="outline">
-                    <mat-label>Date of Birth</mat-label>
-                    <input
-                      formControlName="dateOfBirth"
-                      matInput
-                      placeholder="mm/dd/yyyy"
-                      [imask]="dateMask"
-                      required
-                      />
-                    </mat-form-field>
-                  </div>
-                  @if (evacueeDetailsService?.showLockIcon) {
-                    <div class="col-md-1">
-                      <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
-                    </div>
-                  }
-                </div>
-
-                @if (evacueeDetailsService?.showUnlockLink) {
-                  <div class="row">
-                    <div class="col-md-3">
-                      <button class="btn unlock-link" (click)="editLockedFields()">Edit locked fields</button>
-                    </div>
-                  </div>
-                }
-              </form>
-            </div>
-            <div class="col-md-4">
-              <mat-card class="tips-card">
-                <mat-card-content>
-                  <div>
-                    <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-                    <span class="tips-heading"><b>Tip: </b>Editable Details</span>
-                  </div>
-                  <p id="tips-text" [innerHTML]="tipText"></p>
-                </mat-card-content>
-              </mat-card>
-            </div>
-          </div>
-
-          <div class="row button-padding">
-            <div class="col-md-6">
-              <button class="button-s back" mat-button (click)="back()">Back</button>
-            </div>
-            <div class="col-md-6">
-              <button class="button-p next" mat-button (click)="next()">Next</button>
-            </div>
-          </div>
+      <div class="row button-padding">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </div>
+  </div>
+</div>

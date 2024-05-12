@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-    imports: [
+  imports: [
     CommonModule,
     MatFormFieldModule,
     MatButtonModule,
@@ -23,6 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
     SecurityQuestionsRoutingModule,
     ReactiveFormsModule,
     SecurityQuestionsComponent
-]
+  ]
 })
 export class SecurityQuestionsModule {}

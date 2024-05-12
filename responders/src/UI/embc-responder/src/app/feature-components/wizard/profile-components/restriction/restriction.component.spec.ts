@@ -30,17 +30,24 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule, RestrictionComponent],
-    providers: [
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MaterialModule,
+        RestrictionComponent
+      ],
+      providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         { provide: RestrictionService, useClass: MockRestrictionService },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

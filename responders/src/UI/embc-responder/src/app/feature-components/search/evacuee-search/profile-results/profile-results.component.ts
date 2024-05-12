@@ -27,11 +27,21 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-profile-results',
-    templateUrl: './profile-results.component.html',
-    styleUrls: ['./profile-results.component.scss'],
-    standalone: true,
-    imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe, MaskFullAddressPipe]
+  selector: 'app-profile-results',
+  templateUrl: './profile-results.component.html',
+  styleUrls: ['./profile-results.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    NgClass,
+    MatCardContent,
+    MatPaginator,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

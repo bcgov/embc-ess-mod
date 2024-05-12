@@ -10,11 +10,22 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-can-address',
-    templateUrl: './can-address.component.html',
-    styleUrls: ['./can-address.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatAutocompleteTrigger, MatAutocomplete, MatOption, AsyncPipe]
+  selector: 'app-can-address',
+  templateUrl: './can-address.component.html',
+  styleUrls: ['./can-address.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe
+  ]
 })
 export class CanAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

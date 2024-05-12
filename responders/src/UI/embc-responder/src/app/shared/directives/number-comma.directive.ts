@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Directive({
-    selector: '[appNumberComma]',
-    standalone: true
+  selector: '[appNumberComma]',
+  standalone: true
 })
 export class NumberCommaDirective implements OnInit, OnDestroy {
   private subscription: Subscription;

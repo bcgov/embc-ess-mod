@@ -10,8 +10,8 @@ describe('SecurityQuestionCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, FormsModule, SecurityQuestionCardComponent]
-}).compileComponents();
+      imports: [ReactiveFormsModule, FormsModule, SecurityQuestionCardComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

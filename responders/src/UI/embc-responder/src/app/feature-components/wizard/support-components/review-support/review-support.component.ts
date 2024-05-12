@@ -38,11 +38,20 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgStyle, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-review-support',
-    templateUrl: './review-support.component.html',
-    styleUrls: ['./review-support.component.scss'],
-    standalone: true,
-    imports: [NgStyle, MatCard, MatCardContent, MatCheckbox, AppLoaderComponent, DecimalPipe, DatePipe, MaskFullAddressPipe]
+  selector: 'app-review-support',
+  templateUrl: './review-support.component.html',
+  styleUrls: ['./review-support.component.scss'],
+  standalone: true,
+  imports: [
+    NgStyle,
+    MatCard,
+    MatCardContent,
+    MatCheckbox,
+    AppLoaderComponent,
+    DecimalPipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class ReviewSupportComponent implements OnInit {
   certificationAccepted = false;

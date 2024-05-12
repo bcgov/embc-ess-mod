@@ -10,11 +10,11 @@ import { FileSearchFormComponent } from '../../../../shared/forms/file-search-fo
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-remote-search',
-    templateUrl: './remote-search.component.html',
-    styleUrls: ['./remote-search.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FileSearchFormComponent, MatButton, AppLoaderComponent]
+  selector: 'app-remote-search',
+  templateUrl: './remote-search.component.html',
+  styleUrls: ['./remote-search.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, FileSearchFormComponent, MatButton, AppLoaderComponent]
 })
 export class RemoteSearchComponent implements OnInit {
   fileSearchForm: FormGroup<{ essFileNumber: FormControl<string> }>;

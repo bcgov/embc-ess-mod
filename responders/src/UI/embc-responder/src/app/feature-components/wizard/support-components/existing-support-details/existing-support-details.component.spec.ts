@@ -38,7 +38,7 @@ describe('ExistingSupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         HttpClientTestingModule,
         MatDialogModule,
@@ -46,31 +46,31 @@ describe('ExistingSupportDetailsComponent', () => {
         CustomPipeModule,
         SharedModule,
         RouterTestingModule.withRoutes([
-            {
-                path: 'ess-wizard/add-supports/details',
-                component: SupportDetailsComponent
-            }
+          {
+            path: 'ess-wizard/add-supports/details',
+            component: SupportDetailsComponent
+          }
         ]),
         ExistingSupportDetailsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         ExistingSupportDetailsComponent,
         DatePipe,
         {
-            provide: StepSupportsService,
-            useClass: MockStepSupportsService
+          provide: StepSupportsService,
+          useClass: MockStepSupportsService
         },
         {
-            provide: StepEssFileService,
-            useClass: MockStepEssFileService
+          provide: StepEssFileService,
+          useClass: MockStepEssFileService
         },
         {
-            provide: LoadEvacueeListService,
-            useClass: MockEvacueeListService
+          provide: LoadEvacueeListService,
+          useClass: MockEvacueeListService
         },
         { provide: computeInterfaceToken, useValue: {} }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -4,11 +4,11 @@ import { DatePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-time-out-dialog',
-    templateUrl: './time-out-dialog.component.html',
-    styleUrls: ['./time-out-dialog.component.scss'],
-    standalone: true,
-    imports: [MatButton, DatePipe]
+  selector: 'app-time-out-dialog',
+  templateUrl: './time-out-dialog.component.html',
+  styleUrls: ['./time-out-dialog.component.scss'],
+  standalone: true,
+  imports: [MatButton, DatePipe]
 })
 export class TimeOutDialogComponent implements OnInit {
   @Input() idle: Idle;

@@ -17,11 +17,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
-    selector: 'app-add-community',
-    templateUrl: './add-community.component.html',
-    styleUrls: ['./add-community.component.scss'],
-    standalone: true,
-    imports: [AlertComponent, MatCard, MatCardContent, SearchFilterComponent, AssignedCommunityTableComponent, MatButton]
+  selector: 'app-add-community',
+  templateUrl: './add-community.component.html',
+  styleUrls: ['./add-community.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, MatCard, MatCardContent, SearchFilterComponent, AssignedCommunityTableComponent, MatButton]
 })
 export class AddCommunityComponent implements OnInit {
   communities: TeamCommunityModel[];

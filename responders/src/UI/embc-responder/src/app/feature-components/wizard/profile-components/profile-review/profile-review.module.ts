@@ -6,14 +6,7 @@ import { ProfileReviewComponent } from './profile-review.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
-
 @NgModule({
-    imports: [
-    CommonModule,
-    ProfileReviewRoutingModule,
-    ReactiveFormsModule,
-    ProfileReviewComponent
-]
+  imports: [CommonModule, ProfileReviewRoutingModule, ReactiveFormsModule, ProfileReviewComponent]
 })
 export class ProfileReviewModule {}

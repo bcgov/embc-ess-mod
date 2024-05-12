@@ -8,11 +8,12 @@ import { SecurityQuestionCardComponent } from './security-question-card/security
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [
+  imports: [
     CommonModule,
     ProfileSecurityQuestionsComponentRoutingModule,
     ReactiveFormsModule,
-    ProfileSecurityQuestionsComponent, SecurityQuestionCardComponent
-]
+    ProfileSecurityQuestionsComponent,
+    SecurityQuestionCardComponent
+  ]
 })
 export class ProfileSecurityQuestionsModule {}

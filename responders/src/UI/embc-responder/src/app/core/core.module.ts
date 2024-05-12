@@ -8,7 +8,13 @@ import { MarkdownModule } from 'ngx-markdown';
 import { HttpClient } from '@angular/common/http';
 
 @NgModule({
-    imports: [CommonModule, MarkdownModule.forRoot({ loader: HttpClient }), HeaderComponent, FooterComponent, EnvironmentBannerComponent],
-    exports: [HeaderComponent, FooterComponent, EnvironmentBannerComponent]
+  imports: [
+    CommonModule,
+    MarkdownModule.forRoot({ loader: HttpClient }),
+    HeaderComponent,
+    FooterComponent,
+    EnvironmentBannerComponent
+  ],
+  exports: [HeaderComponent, FooterComponent, EnvironmentBannerComponent]
 })
 export class CoreModule {}

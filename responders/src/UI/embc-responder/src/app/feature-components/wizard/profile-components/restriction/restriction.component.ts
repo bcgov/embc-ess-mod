@@ -10,11 +10,11 @@ import { MatError } from '@angular/material/form-field';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
-    selector: 'app-restriction',
-    templateUrl: './restriction.component.html',
-    styleUrls: ['./restriction.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton]
+  selector: 'app-restriction',
+  templateUrl: './restriction.component.html',
+  styleUrls: ['./restriction.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton]
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;

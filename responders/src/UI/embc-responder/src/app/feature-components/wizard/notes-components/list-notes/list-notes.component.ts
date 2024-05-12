@@ -26,12 +26,12 @@ import { MatIconButton } from '@angular/material/button';
 import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-list-notes',
-    templateUrl: './list-notes.component.html',
-    styleUrls: ['./list-notes.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
+  selector: 'app-list-notes',
+  templateUrl: './list-notes.component.html',
+  styleUrls: ['./list-notes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
 })
 export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

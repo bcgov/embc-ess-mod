@@ -10,8 +10,8 @@ describe('SupplierExistComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, SupplierExistComponent]
-}).compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, SupplierExistComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

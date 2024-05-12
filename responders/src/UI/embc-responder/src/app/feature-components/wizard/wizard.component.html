@@ -22,7 +22,7 @@
             routerLinkActive="active-side-item"
             [routerLink]="menu?.route"
             [state]="{ step: menu?.step, title: menu?.title }"
-            >
+          >
             <div (click)="goToStep(menu?.isLocked, $event, menu?.route)" class="row outer-div">
               <div class="col-md-3 img-align-col">
                 <img
@@ -30,39 +30,39 @@
                   src="{{ menu?.img?.imgSrc }}"
                   width="{{ menu?.img?.width }}"
                   height="{{ menu?.img?.height }}"
-                  />
-                  <img
-                    class="img-align"
-                    src="{{ menu?.img?.altSrc }}"
-                    width="{{ menu?.img?.width }}"
-                    height="{{ menu?.img?.height }}"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <p class="menu-p">
-                      <b>{{ menu?.step }}</b>
-                    </p>
-                    <p class="menu-p">{{ menu?.title }}</p>
-                  </div>
-                  @if (menu?.isLocked) {
-                    <div class="col-md-3 img-lock-col">
-                      <img class="img-lock" src="/assets/images/lock.svg" width="10" height="12" />
-                    </div>
-                  }
+                />
+                <img
+                  class="img-align"
+                  src="{{ menu?.img?.altSrc }}"
+                  width="{{ menu?.img?.width }}"
+                  height="{{ menu?.img?.height }}"
+                />
+              </div>
+              <div class="col-md-6">
+                <p class="menu-p">
+                  <b>{{ menu?.step }}</b>
+                </p>
+                <p class="menu-p">{{ menu?.title }}</p>
+              </div>
+              @if (menu?.isLocked) {
+                <div class="col-md-3 img-lock-col">
+                  <img class="img-lock" src="/assets/images/lock.svg" width="10" height="12" />
                 </div>
-              </a>
+              }
             </div>
-          }
-          <div class="row button-container">
-            <div class="col-md-12">
-              <button class="exit-button" mat-stroked-button (click)="exit()">Exit Wizard</button>
-            </div>
-          </div>
-        </mat-sidenav>
+          </a>
+        </div>
+      }
+      <div class="row button-container">
+        <div class="col-md-12">
+          <button class="exit-button" mat-stroked-button (click)="exit()">Exit Wizard</button>
+        </div>
+      </div>
+    </mat-sidenav>
 
-        <mat-sidenav-content class="wizard-content">
-          <!-- <app-environment-banner></app-environment-banner> -->
-          <router-outlet></router-outlet>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
-    </div>
+    <mat-sidenav-content class="wizard-content">
+      <!-- <app-environment-banner></app-environment-banner> -->
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

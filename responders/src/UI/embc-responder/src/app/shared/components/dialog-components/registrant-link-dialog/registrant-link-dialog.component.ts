@@ -6,11 +6,11 @@ import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-registrant-link-dialog',
-    templateUrl: './registrant-link-dialog.component.html',
-    styleUrls: ['./registrant-link-dialog.component.scss'],
-    standalone: true,
-    imports: [MatButton, DatePipe]
+  selector: 'app-registrant-link-dialog',
+  templateUrl: './registrant-link-dialog.component.html',
+  styleUrls: ['./registrant-link-dialog.component.scss'],
+  standalone: true,
+  imports: [MatButton, DatePipe]
 })
 export class RegistrantLinkDialogComponent implements OnInit {
   @Input() content: DialogContent;

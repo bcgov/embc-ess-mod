@@ -33,30 +33,30 @@ describe('HouseholdMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         MatDialogModule,
         RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
         HouseholdMemberComponent
-    ],
-    providers: [
+      ],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         },
         {
-            provide: HouseholdMemberService,
-            useClass: MockHouseholdMemberService
+          provide: HouseholdMemberService,
+          useClass: MockHouseholdMemberService
         },
         {
-            provide: EssfileDashboardService,
-            useClass: MockEssfileDashboardService
+          provide: EssfileDashboardService,
+          useClass: MockEssfileDashboardService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

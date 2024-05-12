@@ -18,7 +18,7 @@ describe('SelectSupportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -26,16 +26,16 @@ describe('SelectSupportComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         SelectSupportComponent
-    ],
-    providers: [
+      ],
+      providers: [
         DatePipe,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

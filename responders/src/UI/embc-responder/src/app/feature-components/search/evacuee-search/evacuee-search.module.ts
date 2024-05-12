@@ -7,13 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { SearchOptionsComponent } from './search-options/search-options.component';
 
-
 @NgModule({
-    imports: [
+  imports: [
     CommonModule,
     EvacueeSearchRoutingModule,
     ReactiveFormsModule,
-    EvacueeSearchComponent, SearchOptionsComponent
-]
+    EvacueeSearchComponent,
+    SearchOptionsComponent
+  ]
 })
 export class EvacueeSearchModule {}

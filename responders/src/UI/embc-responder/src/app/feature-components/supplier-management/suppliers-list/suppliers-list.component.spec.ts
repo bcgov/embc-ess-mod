@@ -14,7 +14,7 @@ describe('ListSuppliersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -22,8 +22,8 @@ describe('ListSuppliersComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         SuppliersListComponent
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

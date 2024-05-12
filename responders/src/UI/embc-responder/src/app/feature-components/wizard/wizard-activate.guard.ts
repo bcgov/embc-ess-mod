@@ -9,7 +9,7 @@ import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.se
 import { WizardAdapterService } from './wizard-adapter.service';
 
 @Injectable({ providedIn: 'root' })
-export class WizardActivateGuard  {
+export class WizardActivateGuard {
   constructor(
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,

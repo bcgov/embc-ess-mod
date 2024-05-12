@@ -25,13 +25,12 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 
-
 @Component({
-    selector: 'app-view-supports',
-    templateUrl: './view-supports.component.html',
-    styleUrls: ['./view-supports.component.scss'],
-    standalone: true,
-    imports: [MatButton, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
+  selector: 'app-view-supports',
+  templateUrl: './view-supports.component.html',
+  styleUrls: ['./view-supports.component.scss'],
+  standalone: true,
+  imports: [MatButton, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
 })
 export class ViewSupportsComponent implements OnInit, OnDestroy {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;

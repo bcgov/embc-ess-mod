@@ -16,13 +16,23 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
-
 @Component({
-    selector: 'app-security-questions',
-    templateUrl: './security-questions.component.html',
-    styleUrls: ['./security-questions.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatInput, MatButton, MaskTextPipe]
+  selector: 'app-security-questions',
+  templateUrl: './security-questions.component.html',
+  styleUrls: ['./security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatInput,
+    MatButton,
+    MaskTextPipe
+  ]
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   parentForm: UntypedFormGroup = null;

@@ -1,5 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import {
   EvacuationFileHouseholdMember,
   HouseholdMemberType,
@@ -17,11 +23,24 @@ import { NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-household-member',
-    templateUrl: './household-member.component.html',
-    styleUrls: ['./household-member.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription, NgClass, AppLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe]
+  selector: 'app-household-member',
+  templateUrl: './household-member.component.html',
+  styleUrls: ['./household-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    NgClass,
+    AppLoaderComponent,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class HouseholdMemberComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;

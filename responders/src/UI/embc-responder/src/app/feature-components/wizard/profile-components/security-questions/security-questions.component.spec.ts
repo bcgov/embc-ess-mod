@@ -17,7 +17,7 @@ describe('SecurityQuestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -25,16 +25,16 @@ describe('SecurityQuestionsComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         SecurityQuestionsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

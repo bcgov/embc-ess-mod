@@ -4,13 +4,12 @@ import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { ReviewSupportService } from 'src/app/feature-components/wizard/support-components/review-support/review-support.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
 @Component({
-    selector: 'app-process-supports-dialog',
-    templateUrl: './process-supports-dialog.component.html',
-    styleUrls: ['./process-supports-dialog.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatCheckbox]
+  selector: 'app-process-supports-dialog',
+  templateUrl: './process-supports-dialog.component.html',
+  styleUrls: ['./process-supports-dialog.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatCheckbox]
 })
 export class ProcessSupportsDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();

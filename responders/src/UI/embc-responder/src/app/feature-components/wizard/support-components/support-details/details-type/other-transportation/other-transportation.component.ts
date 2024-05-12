@@ -7,11 +7,20 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-other-transportation',
-    templateUrl: './other-transportation.component.html',
-    styleUrls: ['./other-transportation.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, NumberCommaDirective, MatPrefix]
+  selector: 'app-other-transportation',
+  templateUrl: './other-transportation.component.html',
+  styleUrls: ['./other-transportation.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    NumberCommaDirective,
+    MatPrefix
+  ]
 })
 export class OtherTransportationComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

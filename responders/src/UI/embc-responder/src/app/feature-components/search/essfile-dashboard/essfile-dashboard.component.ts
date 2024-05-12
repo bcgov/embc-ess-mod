@@ -18,11 +18,27 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { NgIf, NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-essfile-dashboard',
-    templateUrl: './essfile-dashboard.component.html',
-    styleUrls: ['./essfile-dashboard.component.scss'],
-    standalone: true,
-    imports: [NgIf, NgClass, MatButton, MatSidenavContainer, MatSidenav, MatAnchor, RouterLinkActive, RouterLink, MatSidenavContent, RouterOutlet, HouseholdMemberComponent, OverlayLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe]
+  selector: 'app-essfile-dashboard',
+  templateUrl: './essfile-dashboard.component.html',
+  styleUrls: ['./essfile-dashboard.component.scss'],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgClass,
+    MatButton,
+    MatSidenavContainer,
+    MatSidenav,
+    MatAnchor,
+    RouterLinkActive,
+    RouterLink,
+    MatSidenavContent,
+    RouterOutlet,
+    HouseholdMemberComponent,
+    OverlayLoaderComponent,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class EssfileDashboardComponent implements OnInit {
   essFile: EvacuationFileModel;

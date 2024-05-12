@@ -8,11 +8,11 @@ import { AnimalsComponent } from '../animals/animals.component';
 import { HouseholdMembersComponent } from '../household-members/household-members.component';
 
 @Component({
-    selector: 'app-household-members-pets',
-    templateUrl: './household-members-pets.component.html',
-    styleUrls: ['./household-members-pets.component.scss'],
-    standalone: true,
-    imports: [HouseholdMembersComponent, AnimalsComponent, MatButton]
+  selector: 'app-household-members-pets',
+  templateUrl: './household-members-pets.component.html',
+  styleUrls: ['./household-members-pets.component.scss'],
+  standalone: true,
+  imports: [HouseholdMembersComponent, AnimalsComponent, MatButton]
 })
 export class HouseholdMembersPetsComponent implements OnInit, OnDestroy {
   petsValid = false;

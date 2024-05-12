@@ -11,11 +11,11 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-notes',
-    templateUrl: './notes.component.html',
-    styleUrls: ['./notes.component.scss'],
-    standalone: true,
-    imports: [MatButton, AppLoaderComponent, AddNotesComponent, ListNotesComponent, MatCard, MatCardContent]
+  selector: 'app-notes',
+  templateUrl: './notes.component.html',
+  styleUrls: ['./notes.component.scss'],
+  standalone: true,
+  imports: [MatButton, AppLoaderComponent, AddNotesComponent, ListNotesComponent, MatCard, MatCardContent]
 })
 export class NotesComponent implements OnInit {
   notesList: Array<Note>;

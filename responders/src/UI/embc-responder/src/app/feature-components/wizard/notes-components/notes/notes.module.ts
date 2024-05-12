@@ -10,6 +10,13 @@ import { ListNotesComponent } from '../list-notes/list-notes.component';
 import { AddNotesComponent } from '../add-notes/add-notes.component';
 
 @NgModule({
-    imports: [CommonModule, NotesRoutingModule, ReactiveFormsModule, NotesComponent, ListNotesComponent, AddNotesComponent]
+  imports: [
+    CommonModule,
+    NotesRoutingModule,
+    ReactiveFormsModule,
+    NotesComponent,
+    ListNotesComponent,
+    AddNotesComponent
+  ]
 })
 export class NotesModule {}

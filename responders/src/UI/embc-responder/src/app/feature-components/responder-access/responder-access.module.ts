@@ -7,6 +7,6 @@ import { ResponderAccessComponent } from './responder-access.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
-    imports: [CommonModule, ResponderAccessRoutingModule, MatSidenavModule, ResponderAccessComponent]
+  imports: [CommonModule, ResponderAccessRoutingModule, MatSidenavModule, ResponderAccessComponent]
 })
 export class ResponderAccessModule {}

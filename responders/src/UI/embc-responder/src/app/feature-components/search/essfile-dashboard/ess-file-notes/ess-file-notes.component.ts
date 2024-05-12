@@ -10,11 +10,11 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-ess-file-notes',
-    templateUrl: './ess-file-notes.component.html',
-    styleUrls: ['./ess-file-notes.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatPaginator, AsyncPipe, DatePipe]
+  selector: 'app-ess-file-notes',
+  templateUrl: './ess-file-notes.component.html',
+  styleUrls: ['./ess-file-notes.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatPaginator, AsyncPipe, DatePipe]
 })
 export class EssFileNotesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

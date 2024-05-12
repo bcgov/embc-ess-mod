@@ -6,8 +6,7 @@ import { CaseNoteSearchComponent } from './case-note-search.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, CaseNoteSearchRoutingModule, ReactiveFormsModule, CaseNoteSearchComponent]
+  imports: [CommonModule, CaseNoteSearchRoutingModule, ReactiveFormsModule, CaseNoteSearchComponent]
 })
 export class CaseNoteSearchModule {}

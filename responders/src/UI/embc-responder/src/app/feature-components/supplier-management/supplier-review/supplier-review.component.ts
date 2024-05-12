@@ -13,11 +13,11 @@ import { UpperCasePipe } from '@angular/common';
 import { MatCard } from '@angular/material/card';
 
 @Component({
-    selector: 'app-supplier-review',
-    templateUrl: './supplier-review.component.html',
-    styleUrls: ['./supplier-review.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
+  selector: 'app-supplier-review',
+  templateUrl: './supplier-review.component.html',
+  styleUrls: ['./supplier-review.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
 })
 export class SupplierReviewComponent {
   selectedSupplier: SupplierModel;

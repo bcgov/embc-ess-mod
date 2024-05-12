@@ -14,15 +14,15 @@ describe('ZeroFileResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, ZeroFileResultComponent],
-    providers: [
+      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, ZeroFileResultComponent],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

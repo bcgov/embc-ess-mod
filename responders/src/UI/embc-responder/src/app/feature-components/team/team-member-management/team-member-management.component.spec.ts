@@ -8,8 +8,8 @@ describe('TeamMemberManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [TeamMemberManagementComponent]
-}).compileComponents();
+      imports: [TeamMemberManagementComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

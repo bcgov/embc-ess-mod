@@ -1,6 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuation-file-search-result.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
@@ -15,11 +21,24 @@ import { NgClass, NgStyle, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-possible-matched-essfiles',
-    templateUrl: './possible-matched-essfiles.component.html',
-    styleUrls: ['./possible-matched-essfiles.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, AppLoaderComponent, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, NgClass, MatExpansionPanelDescription, NgStyle, DatePipe, MaskEvacuatedAddressPipe]
+  selector: 'app-possible-matched-essfiles',
+  templateUrl: './possible-matched-essfiles.component.html',
+  styleUrls: ['./possible-matched-essfiles.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    NgClass,
+    MatExpansionPanelDescription,
+    NgStyle,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;

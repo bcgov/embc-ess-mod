@@ -19,7 +19,7 @@ describe('NeedsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -27,19 +27,19 @@ describe('NeedsComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         NeedsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         },
         {
-            provide: StepEssFileService,
-            useClass: MockStepEssFileService
+          provide: StepEssFileService,
+          useClass: MockStepEssFileService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

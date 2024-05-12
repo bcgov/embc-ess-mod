@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'nightsArray',
-    standalone: true
+  name: 'nightsArray',
+  standalone: true
 })
 export class NumberOfNightsPipe implements PipeTransform {
   transform(value): Array<number> {

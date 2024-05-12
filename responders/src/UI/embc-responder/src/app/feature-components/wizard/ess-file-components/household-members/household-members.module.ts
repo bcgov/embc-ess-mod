@@ -6,9 +6,8 @@ import { HouseholdMembersComponent } from './household-members.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, HouseholdMembersRoutingModule, ReactiveFormsModule, HouseholdMembersComponent],
-    exports: [HouseholdMembersComponent]
+  imports: [CommonModule, HouseholdMembersRoutingModule, ReactiveFormsModule, HouseholdMembersComponent],
+  exports: [HouseholdMembersComponent]
 })
 export class HouseholdMembersModule {}

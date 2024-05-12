@@ -6,8 +6,7 @@ import { NeedsComponent } from './needs.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, NeedsRoutingModule, ReactiveFormsModule, NeedsComponent]
+  imports: [CommonModule, NeedsRoutingModule, ReactiveFormsModule, NeedsComponent]
 })
 export class NeedsModule {}

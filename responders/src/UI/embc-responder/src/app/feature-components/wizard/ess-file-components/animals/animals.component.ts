@@ -1,5 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
@@ -12,17 +19,48 @@ import { MatDialog } from '@angular/material/dialog';
 import { Pet } from 'src/app/core/api/models';
 import { WizardService } from '../../wizard.service';
 import { PetFormComponent } from '../../../../shared/forms/pet-form/pet-form.component';
-import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
 import { NgClass } from '@angular/common';
 
 @Component({
-    selector: 'app-animals',
-    templateUrl: './animals.component.html',
-    styleUrls: ['./animals.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, PetFormComponent]
+  selector: 'app-animals',
+  templateUrl: './animals.component.html',
+  styleUrls: ['./animals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatButton,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    NgClass,
+    MatIconButton,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    PetFormComponent
+  ]
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
   @Output() validPetsIndicator: any = new EventEmitter();

@@ -11,9 +11,9 @@ describe('UserProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule, ViewUserProfileComponent],
-    providers: [DatePipe]
-}).compileComponents();
+      imports: [HttpClientTestingModule, RouterTestingModule, ViewUserProfileComponent],
+      providers: [DatePipe]
+    }).compileComponents();
   });
 
   beforeEach(() => {

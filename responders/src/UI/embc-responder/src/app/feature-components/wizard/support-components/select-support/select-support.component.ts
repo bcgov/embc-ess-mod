@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Code, SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -14,11 +21,22 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-select-support',
-    templateUrl: './select-support.component.html',
-    styleUrls: ['./select-support.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatButton, MatCard, MatCardContent]
+  selector: 'app-select-support',
+  templateUrl: './select-support.component.html',
+  styleUrls: ['./select-support.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatButton,
+    MatCard,
+    MatCardContent
+  ]
 })
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];

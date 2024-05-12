@@ -14,7 +14,7 @@ describe('EditTeamMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -22,9 +22,9 @@ describe('EditTeamMemberComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         EditTeamMemberComponent
-    ],
-    providers: [UntypedFormBuilder]
-}).compileComponents();
+      ],
+      providers: [UntypedFormBuilder]
+    }).compileComponents();
   });
 
   beforeEach(() => {

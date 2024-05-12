@@ -8,8 +8,8 @@ describe('PetFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [PetFormComponent]
-}).compileComponents();
+      imports: [PetFormComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -14,7 +14,7 @@ describe('TeamMemberDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -22,8 +22,8 @@ describe('TeamMemberDetailComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         TeamMemberDetailComponent
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

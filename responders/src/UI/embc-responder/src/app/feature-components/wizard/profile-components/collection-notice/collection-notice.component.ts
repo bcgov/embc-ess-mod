@@ -9,11 +9,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
  * Displays the collection notice
  */
 @Component({
-    selector: 'app-collection-notice',
-    templateUrl: './collection-notice.component.html',
-    styleUrls: ['./collection-notice.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatButton]
+  selector: 'app-collection-notice',
+  templateUrl: './collection-notice.component.html',
+  styleUrls: ['./collection-notice.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatButton]
 })
 export class CollectionNoticeComponent implements OnInit, OnDestroy {
   tabMetaData: TabModel;

@@ -32,17 +32,22 @@ describe('StepEvacueeProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [RouterTestingModule.withRoutes([]), MatDialogModule, HttpClientTestingModule, StepEvacueeProfileComponent],
-    providers: [
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        MatDialogModule,
+        HttpClientTestingModule,
+        StepEvacueeProfileComponent
+      ],
+      providers: [
         WizardDataService,
         { provide: Router, useValue: routerMock },
         {
-            provide: StepEvacueeProfileService,
-            useClass: MockStepEvacueeProfileService
+          provide: StepEvacueeProfileService,
+          useClass: MockStepEvacueeProfileService
         },
         { provide: computeInterfaceToken, useValue: {} }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

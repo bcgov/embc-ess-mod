@@ -11,9 +11,9 @@ describe('AddNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, AddNotesComponent],
-    providers: [UntypedFormBuilder]
-}).compileComponents();
+      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, AddNotesComponent],
+      providers: [UntypedFormBuilder]
+    }).compileComponents();
   });
 
   beforeEach(() => {

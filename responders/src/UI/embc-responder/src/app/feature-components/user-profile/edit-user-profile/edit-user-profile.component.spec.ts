@@ -11,9 +11,9 @@ describe('EditUserProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule, EditUserProfileComponent],
-    providers: [UntypedFormBuilder]
-}).compileComponents();
+      imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule, EditUserProfileComponent],
+      providers: [UntypedFormBuilder]
+    }).compileComponents();
   });
 
   beforeEach(() => {

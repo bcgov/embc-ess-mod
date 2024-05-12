@@ -6,11 +6,11 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
-    selector: 'app-step-supports',
-    templateUrl: './step-supports.component.html',
-    styleUrls: ['./step-supports.component.scss'],
-    standalone: true,
-    imports: [AlertComponent, RouterOutlet]
+  selector: 'app-step-supports',
+  templateUrl: './step-supports.component.html',
+  styleUrls: ['./step-supports.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, RouterOutlet]
 })
 export class StepSupportsComponent implements OnInit {
   stepName: string;

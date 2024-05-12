@@ -22,15 +22,12 @@
             @if (
               securityPhraseFormControl.phraseAnswer.invalid &&
               securityPhraseFormControl.phraseAnswer.hasError('whitespaceError')
-              ) {
-              <mat-error
-                >
-                Security Phrase cannot be blank</mat-error
-                >
-              }
-            </mat-form-field>
-          </div>
+            ) {
+              <mat-error> Security Phrase cannot be blank</mat-error>
+            }
+          </mat-form-field>
         </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

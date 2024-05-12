@@ -9,7 +9,7 @@
         mat-button
         routerLinkActive="active-list-item"
         [routerLink]="'/responder-access/responder-dashboard'"
-        >
+      >
         Dashboard
       </a>
     }
@@ -19,12 +19,12 @@
         class="top-nav"
         mat-button
         routerLinkActive="active-list-item"
-      [routerLink]="
-        userService.currentProfile.taskNumber === null || userService.currentProfile.taskNumber === ''
-          ? '/responder-access/search'
-          : '/responder-access/search/evacuee'
-      "
-        >
+        [routerLink]="
+          userService.currentProfile.taskNumber === null || userService.currentProfile.taskNumber === ''
+            ? '/responder-access/search'
+            : '/responder-access/search/evacuee'
+        "
+      >
         Evacuee Search & Registration
       </a>
     }
@@ -35,19 +35,13 @@
         mat-button
         routerLinkActive="active-list-item"
         [routerLink]="'/responder-access/responder-management'"
-        >
+      >
         Responder Management
       </a>
     }
     <span class="divider"></span>
     @if (hasPermission('suppliers')) {
-      <a
-        class="top-nav"
-        mat-button
-        [routerLink]="'/responder-access/supplier-management'"
-        >
-        Supplier Management
-      </a>
+      <a class="top-nav" mat-button [routerLink]="'/responder-access/supplier-management'"> Supplier Management </a>
     }
     <span class="divider"></span>
     @if (hasPermission('assignedCommunities')) {
@@ -56,15 +50,13 @@
         mat-button
         routerLinkActive="active-list-item"
         [routerLink]="'/responder-access/community-management'"
-        >
+      >
         Community Management
       </a>
     }
     <span class="divider"></span>
     @if (hasPermission('reports')) {
-      <a class="top-nav" mat-button [routerLink]="'/responder-access/reporting'">
-        Reporting
-      </a>
+      <a class="top-nav" mat-button [routerLink]="'/responder-access/reporting'"> Reporting </a>
     }
   </div>
 </mat-toolbar>

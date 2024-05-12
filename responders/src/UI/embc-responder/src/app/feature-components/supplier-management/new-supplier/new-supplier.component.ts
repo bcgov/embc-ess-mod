@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
@@ -14,11 +21,23 @@ import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-addre
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-new-supplier',
-    templateUrl: './new-supplier.component.html',
-    styleUrls: ['./new-supplier.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, BcAddressComponent, MatFormField, MatLabel, MatInput, MatError, IMaskDirective, MatButton]
+  selector: 'app-new-supplier',
+  templateUrl: './new-supplier.component.html',
+  styleUrls: ['./new-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    BcAddressComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    IMaskDirective,
+    MatButton
+  ]
 })
 export class NewSupplierComponent implements OnInit {
   newForm: UntypedFormGroup;

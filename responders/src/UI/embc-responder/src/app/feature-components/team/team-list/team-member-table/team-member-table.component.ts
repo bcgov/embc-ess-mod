@@ -11,7 +11,19 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange, MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -20,11 +32,28 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { NgClass } from '@angular/common';
 
 @Component({
-    selector: 'app-team-member-table',
-    templateUrl: './team-member-table.component.html',
-    styleUrls: ['./team-member-table.component.scss'],
-    standalone: true,
-    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatSlideToggle, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
+  selector: 'app-team-member-table',
+  templateUrl: './team-member-table.component.html',
+  styleUrls: ['./team-member-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    NgClass,
+    MatSlideToggle,
+    AppLoaderComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator
+  ]
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

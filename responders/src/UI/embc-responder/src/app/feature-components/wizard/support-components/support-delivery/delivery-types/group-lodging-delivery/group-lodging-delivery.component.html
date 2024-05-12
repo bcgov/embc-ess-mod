@@ -19,99 +19,82 @@
         @if (
           supportDeliveryFormControl?.hostName.invalid &&
           supportDeliveryFormControl?.hostName.hasError('whitespaceError')
-          ) {
-          <mat-error
-            class="custom-mat-error"
-            >
-            Lodging Facility Name is required</mat-error
-            >
+        ) {
+          <mat-error class="custom-mat-error"> Lodging Facility Name is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Address of Group Lodging Facility</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input formControlName="hostAddress" maxlength="255" matInput placeholder="Enter Address" required />
+        @if (
+          supportDeliveryFormControl?.hostAddress.invalid &&
+          supportDeliveryFormControl?.hostAddress.hasError('whitespaceError')
+        ) {
+          <mat-error class="custom-mat-error"> Lodging Facility Address is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input
+          maxlength="100"
+          type="text"
+          formControlName="hostCity"
+          matInput
+          placeholder="Enter City"
+          [matAutocomplete]="auto"
+          required
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="cityDisplayFn"
+          (optionSelected)="getCommunityCode($event.option.value)"
+        >
+          @for (option of filteredOptions | async; track option) {
+            <mat-option [value]="option" [id]="option.name">
+              {{ option.name }}
+            </mat-option>
           }
-        </mat-form-field>
-      </div>
+        </mat-autocomplete>
+        @if (
+          supportDeliveryFormControl?.hostCity.invalid && supportDeliveryFormControl?.hostCity.hasError('required')
+        ) {
+          <mat-error> City is required</mat-error>
+        }
+        @if (validateCity()) {
+          <mat-error> City is invalid</mat-error>
+        }
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <p class="bold">Address of Group Lodging Facility</p>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Point of Contact for Group Lodging Facility</p>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-5">
-        <mat-form-field appearance="outline">
-          <mat-label>Address</mat-label>
-          <input formControlName="hostAddress" maxlength="255" matInput placeholder="Enter Address" required />
-          @if (
-            supportDeliveryFormControl?.hostAddress.invalid &&
-            supportDeliveryFormControl?.hostAddress.hasError('whitespaceError')
-            ) {
-            <mat-error
-              class="custom-mat-error"
-              >
-              Lodging Facility Address is required</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5">
-          <mat-form-field appearance="outline">
-            <mat-label>City</mat-label>
-            <input
-              maxlength="100"
-              type="text"
-              formControlName="hostCity"
-              matInput
-              placeholder="Enter City"
-              [matAutocomplete]="auto"
-              required
-              />
-              <mat-autocomplete
-                #auto="matAutocomplete"
-                [displayWith]="cityDisplayFn"
-                (optionSelected)="getCommunityCode($event.option.value)"
-                >
-                @for (option of filteredOptions | async; track option) {
-                  <mat-option [value]="option" [id]="option.name">
-                    {{ option.name }}
-                  </mat-option>
-                }
-              </mat-autocomplete>
-              @if (
-                supportDeliveryFormControl?.hostCity.invalid && supportDeliveryFormControl?.hostCity.hasError('required')
-                ) {
-                <mat-error
-                  >
-                  City is required</mat-error
-                  >
-              }
-              @if (validateCity()) {
-                <mat-error> City is invalid</mat-error>
-              }
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <p class="bold">Point of Contact for Group Lodging Facility</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-5">
-            <mat-form-field appearance="outline">
-              <mat-label>Telephone</mat-label>
-              <input
-                formControlName="hostPhone"
-                maxlength="100"
-                matInput
-                placeholder="Telephone"
-                [imask]="phoneMask"
-                />
-                <!-- <mat-error
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone</mat-label>
+        <input formControlName="hostPhone" maxlength="100" matInput placeholder="Telephone" [imask]="phoneMask" />
+        <!-- <mat-error
           *ngIf="
             supportDeliveryFormControl.hostPhone.invalid &&
             supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
@@ -119,16 +102,13 @@
                 >
                 Telephone is required</mat-error
                 > -->
-                @if (
-                  supportDeliveryFormControl.hostPhone.invalid &&
-                  supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
-                  ) {
-                  <mat-error
-                    >
-                    Telephone must have 10 digits</mat-error
-                    >
-                }
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
+        @if (
+          supportDeliveryFormControl.hostPhone.invalid &&
+          supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
+        ) {
+          <mat-error> Telephone must have 10 digits</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+</div>

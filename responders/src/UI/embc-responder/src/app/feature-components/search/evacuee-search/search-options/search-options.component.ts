@@ -12,11 +12,11 @@ import { NgClass } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-search-options',
-    templateUrl: './search-options.component.html',
-    styleUrls: ['./search-options.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, NgClass, MatButton]
+  selector: 'app-search-options',
+  templateUrl: './search-options.component.html',
+  styleUrls: ['./search-options.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, NgClass, MatButton]
 })
 export class SearchOptionsComponent implements OnInit {
   selectedPathway: SelectedPathType;

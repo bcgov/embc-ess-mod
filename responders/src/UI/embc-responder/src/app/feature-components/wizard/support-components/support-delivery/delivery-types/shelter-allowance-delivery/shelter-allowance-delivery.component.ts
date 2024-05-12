@@ -8,11 +8,11 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-shelter-allowance-delivery',
-    templateUrl: './shelter-allowance-delivery.component.html',
-    styleUrls: ['./shelter-allowance-delivery.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective]
+  selector: 'app-shelter-allowance-delivery',
+  templateUrl: './shelter-allowance-delivery.component.html',
+  styleUrls: ['./shelter-allowance-delivery.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective]
 })
 export class ShelterAllowanceDeliveryComponent implements OnInit, OnChanges {
   @Input() supportDeliveryForm: UntypedFormGroup;

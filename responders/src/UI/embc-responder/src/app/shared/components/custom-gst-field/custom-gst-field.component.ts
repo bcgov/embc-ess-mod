@@ -5,11 +5,11 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-custom-gst-field',
-    templateUrl: './custom-gst-field.component.html',
-    styleUrls: ['./custom-gst-field.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
+  selector: 'app-custom-gst-field',
+  templateUrl: './custom-gst-field.component.html',
+  styleUrls: ['./custom-gst-field.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
 export class CustomGstFieldComponent implements OnInit {
   @Input() gstFormGroup: UntypedFormGroup;

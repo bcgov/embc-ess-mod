@@ -3,59 +3,59 @@
     <div class="col-md-12">
       <a (click)="back()"
         ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
-        >
-      </div>
+      >
     </div>
+  </div>
 
-    <div class="heading-container row-padding">
-      <div class="row">
-        <div class="col-md-8">
-          <span class="wizard-tab-heading">Support Details</span>
-        </div>
-        @if (hideRateSheet()) {
-          <div class="col-md-4">
-            <img src="/assets/images/rate-card.svg" width="23" height="23" />
-            <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
-          </div>
-        }
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <span class="wizard-support-type">{{ stepSupportsService?.supportTypeToAdd?.description }}</span>
-        </div>
-      </div>
-    </div>
-
+  <div class="heading-container row-padding">
     <div class="row">
-      <div class="col-lg-8">
-        <mat-card class="support-time-box">
-          <mat-card-content>
-            <div class="row row-padding">
-              <div class="col-md-12">
-                <p class="time-heading">Task Number Details</p>
-              </div>
-            </div>
+      <div class="col-md-8">
+        <span class="wizard-tab-heading">Support Details</span>
+      </div>
+      @if (hideRateSheet()) {
+        <div class="col-md-4">
+          <img src="/assets/images/rate-card.svg" width="23" height="23" />
+          <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
+        </div>
+      }
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-support-type">{{ stepSupportsService?.supportTypeToAdd?.description }}</span>
+      </div>
+    </div>
+  </div>
 
-            <div class="row row-padding">
-              <div class="col-md-4">
-                <p>Task Number Start Date & Time:</p>
-              </div>
-              <div class="col-md-4">
-                <p class="bold">
-                  {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
-                  at
-                  {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
-                </p>
-              </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <mat-card class="support-time-box">
+        <mat-card-content>
+          <div class="row row-padding">
+            <div class="col-md-12">
+              <p class="time-heading">Task Number Details</p>
             </div>
+          </div>
 
-            <div class="row row-padding">
-              <div class="col-md-4">
-                <p>Task Number End Date & Time:</p>
-              </div>
-              <div class="col-md-4">
-                <p
-                  class="bold"
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number Start Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p class="bold">
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number End Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p
+                class="bold"
                 [ngStyle]="{
                   color: validTaskDate(
                     evacueeSessionService?.evacFile?.task?.from,
@@ -64,499 +64,453 @@
                     ? 'black'
                     : 'red'
                 }"
-                  >
-                  {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
-                  at
-                  {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
-                </p>
+              >
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="row-padding">
+        <form [formGroup]="supportDetailsForm">
+          @if (evacueeSessionService?.isPaperBased) {
+            <div class="row">
+              <div class="col-md-12 paper-details">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Support Number:</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p>Please enter the support number as it appears on the paper referral.</p>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                      <input
+                        formControlName="paperSupportNumber"
+                        matInput
+                        type="text"
+                        maxlength="10"
+                        (change)="checkReferralNumber($event)"
+                        required
+                      />
+                      <span matPrefix>R</span>
+                      @if (
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError('whitespaceError')
+                      ) {
+                        <mat-error> Support Number is required</mat-error>
+                      }
+                      @if (
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError('minlength')
+                      ) {
+                        <mat-error> Support Number must be 6 to 10 digits in length</mat-error>
+                      }
+                      @if (
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError('pattern')
+                      ) {
+                        <mat-error> Only digits allowed</mat-error>
+                      }
+                      @if (
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError('userNameExists')
+                      ) {
+                        <mat-error>
+                          Paper Referral Number already exists for the same Support type:
+                          {{ stepSupportsService?.supportTypeToAdd?.description }}</mat-error
+                        >
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color">
+                    </app-loader>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Issued By:</p>
+                  </div>
+                </div>
+                <div class="row" formGroupName="paperIssuedBy">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Interviewer first name</mat-label>
+                      <input matInput type="text" formControlName="firstName" required />
+                      @if (
+                        supportDetailsFormControl?.paperIssuedBy?.get('firstName').invalid &&
+                        supportDetailsFormControl?.paperIssuedBy?.get('firstName').hasError('whitespaceError')
+                      ) {
+                        <mat-error> Interviewer first name is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Initial of their last name</mat-label>
+                      <input matInput type="text" formControlName="lastNameInitial" maxlength="1" required />
+                      @if (
+                        supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').invalid &&
+                        supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').hasError('whitespaceError')
+                      ) {
+                        <mat-error> Initial is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Support Completed On:</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        [matDatepicker]="paperPicker"
+                        [matDatepickerFilter]="paperCompletedDateFilter"
+                        formControlName="paperCompletedOn"
+                        placeholder="Support Completed On"
+                        required
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="paperPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #paperPicker></mat-datepicker>
+                      @if (
+                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
+                        supportDetailsFormControl?.paperCompletedOn?.hasError('invalidDate')
+                      ) {
+                        <mat-error> Please enter a valid date</mat-error>
+                      }
+                      @if (
+                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
+                        supportDetailsFormControl?.paperCompletedOn?.hasError('required')
+                      ) {
+                        <mat-error> Completed on date is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+          }
 
-        <div class="row-padding">
-          <form [formGroup]="supportDetailsForm">
-            @if (evacueeSessionService?.isPaperBased) {
+          <div class="row">
+            <div class="col-md-12 add-detail">
               <div class="row">
-                <div class="col-md-12 paper-details">
+                <div class="col-md-12">
+                  <p class="time-heading requiredField">Support Period:</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
                   <div class="row">
-                    <div class="col-md-12">
-                      <p class="time-heading requiredField">Paper Support Number:</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <p>Please enter the support number as it appears on the paper referral.</p>
-                    </div>
-                  </div>
-                  <div class="row align-items-center">
-                    <div class="col-md-8">
-                      <mat-form-field appearance="outline">
-                        <input
-                          formControlName="paperSupportNumber"
-                          matInput
-                          type="text"
-                          maxlength="10"
-                          (change)="checkReferralNumber($event)"
-                          required
-                          />
-                          <span matPrefix>R</span>
-                          @if (
-                            supportDetailsFormControl?.paperSupportNumber.invalid &&
-                            supportDetailsFormControl?.paperSupportNumber.hasError('whitespaceError')
-                            ) {
-                            <mat-error
-                              >
-                              Support Number is required</mat-error
-                              >
-                          }
-                          @if (
-                            supportDetailsFormControl?.paperSupportNumber.invalid &&
-                            supportDetailsFormControl?.paperSupportNumber.hasError('minlength')
-                            ) {
-                            <mat-error
-                              >
-                              Support Number must be 6 to 10 digits in length</mat-error
-                              >
-                            }
+                    <div class="col-lg-6">
+                      <p>Valid From:</p>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Valid From Date</mat-label>
+                            <input
+                              matInput
+                              [matDatepickerFilter]="validDateFilter"
+                              formControlName="fromDate"
+                              [matDatepicker]="picker"
+                              (dateChange)="updateToDate($event)"
+                              required
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+
                             @if (
-                              supportDetailsFormControl?.paperSupportNumber.invalid &&
-                              supportDetailsFormControl?.paperSupportNumber.hasError('pattern')
-                              ) {
-                              <mat-error
-                                >
-                                Only digits allowed</mat-error
-                                >
-                              }
-                              @if (
-                                supportDetailsFormControl?.paperSupportNumber.invalid &&
-                                supportDetailsFormControl?.paperSupportNumber.hasError('userNameExists')
-                                ) {
-                                <mat-error
-                                  >
-                                  Paper Referral Number already exists for the same Support type:
-                                  {{ stepSupportsService?.supportTypeToAdd?.description }}</mat-error
-                                  >
-                                }
-                              </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-12">
-                              <p class="time-heading requiredField">Paper Issued By:</p>
-                            </div>
-                          </div>
-                          <div class="row" formGroupName="paperIssuedBy">
-                            <div class="col-md-4">
-                              <mat-form-field appearance="outline">
-                                <mat-label>Interviewer first name</mat-label>
-                                <input matInput type="text" formControlName="firstName" required />
-                                @if (
-                                  supportDetailsFormControl?.paperIssuedBy?.get('firstName').invalid &&
-                                  supportDetailsFormControl?.paperIssuedBy?.get('firstName').hasError('whitespaceError')
-                                  ) {
-                                  <mat-error
-                                    >
-                                    Interviewer first name is required</mat-error
-                                    >
-                                  }
-                                </mat-form-field>
-                              </div>
-                              <div class="col-md-4">
-                                <mat-form-field appearance="outline">
-                                  <mat-label>Initial of their last name</mat-label>
-                                  <input matInput type="text" formControlName="lastNameInitial" maxlength="1" required />
-                                  @if (
-                                    supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').invalid &&
-                                    supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').hasError('whitespaceError')
-                                    ) {
-                                    <mat-error
-                                      >
-                                      Initial is required</mat-error
-                                      >
-                                    }
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <p class="time-heading requiredField">Paper Support Completed On:</p>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-4">
-                                  <mat-form-field appearance="outline">
-                                    <input
-                                      matInput
-                                      [matDatepicker]="paperPicker"
-                                      [matDatepickerFilter]="paperCompletedDateFilter"
-                                      formControlName="paperCompletedOn"
-                                      placeholder="Support Completed On"
-                                      required
-                                      />
-                                      <mat-datepicker-toggle matSuffix [for]="paperPicker"></mat-datepicker-toggle>
-                                      <mat-datepicker #paperPicker></mat-datepicker>
-                                      @if (
-                                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
-                                        supportDetailsFormControl?.paperCompletedOn?.hasError('invalidDate')
-                                        ) {
-                                        <mat-error
-                                          >
-                                          Please enter a valid date</mat-error
-                                          >
-                                      }
-                                      @if (
-                                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
-                                        supportDetailsFormControl?.paperCompletedOn?.hasError('required')
-                                        ) {
-                                        <mat-error
-                                          >
-                                          Completed on date is required</mat-error
-                                          >
-                                        }
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                              supportDetailsFormControl.fromDate.invalid &&
+                              supportDetailsFormControl.fromDate.hasError('invalidDate')
+                            ) {
+                              <mat-error> Please enter a valid date</mat-error>
                             }
 
-                            <div class="row">
-                              <div class="col-md-12 add-detail">
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <p class="time-heading requiredField">Support Period:</p>
-                                  </div>
-                                </div>
+                            @if (
+                              supportDetailsFormControl.fromDate.invalid &&
+                              supportDetailsFormControl.fromDate.hasError('required')
+                            ) {
+                              <mat-error> From Date is required</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Valid From Time</mat-label>
+                            <input
+                              type="time"
+                              formControlName="fromTime"
+                              matInput
+                              placeholder="Valid From Time"
+                              required
+                            />
+                            @if (
+                              supportDetailsFormControl.fromTime.invalid &&
+                              supportDetailsFormControl.fromTime.hasError('required')
+                            ) {
+                              <mat-error> From Time is required</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
 
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    <div class="row">
-                                      <div class="col-lg-6">
-                                        <p>Valid From:</p>
-                                        <div class="row">
-                                          <div class="col-md-6">
-                                            <mat-form-field appearance="outline">
-                                              <mat-label>Valid From Date</mat-label>
-                                              <input
-                                                matInput
-                                                [matDatepickerFilter]="validDateFilter"
-                                                formControlName="fromDate"
-                                                [matDatepicker]="picker"
-                                                (dateChange)="updateToDate($event)"
-                                                required
-                                                />
-                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                                <mat-datepicker #picker></mat-datepicker>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Number of Days</mat-label>
+                            <mat-select formControlName="noOfDays" required>
+                              @for (no of noOfDaysList; track no) {
+                                <mat-option [value]="no">
+                                  {{ no }}
+                                </mat-option>
+                              }
+                            </mat-select>
+                            @if (
+                              supportDetailsFormControl.noOfDays.invalid &&
+                              supportDetailsFormControl.noOfDays.hasError('required')
+                            ) {
+                              <mat-error> Required</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
 
-                                                @if (
-                                                  supportDetailsFormControl.fromDate.invalid &&
-                                                  supportDetailsFormControl.fromDate.hasError('invalidDate')
-                                                  ) {
-                                                  <mat-error
-                                                    >
-                                                    Please enter a valid date</mat-error
-                                                    >
-                                                }
+                      <div class="row">
+                        <div class="col-md-6">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Valid To Date</mat-label>
+                            <input
+                              matInput
+                              formControlName="toDate"
+                              [matDatepicker]="toDatepicker"
+                              [matDatepickerFilter]="validDateFilter"
+                              (dateChange)="updateNoOfDays($event)"
+                              required
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #toDatepicker></mat-datepicker>
 
-                                                @if (
-                                                  supportDetailsFormControl.fromDate.invalid &&
-                                                  supportDetailsFormControl.fromDate.hasError('required')
-                                                  ) {
-                                                  <mat-error
-                                                    >
-                                                    From Date is required</mat-error
-                                                    >
-                                                  }
-                                                </mat-form-field>
-                                              </div>
-                                              <div class="col-md-6">
-                                                <mat-form-field appearance="outline">
-                                                  <mat-label>Valid From Time</mat-label>
-                                                  <input
-                                                    type="time"
-                                                    formControlName="fromTime"
-                                                    matInput
-                                                    placeholder="Valid From Time"
-                                                    required
-                                                    />
-                                                    @if (
-                                                      supportDetailsFormControl.fromTime.invalid &&
-                                                      supportDetailsFormControl.fromTime.hasError('required')
-                                                      ) {
-                                                      <mat-error
-                                                        >
-                                                        From Time is required</mat-error
-                                                        >
-                                                    }
-                                                  </mat-form-field>
-                                                </div>
-                                              </div>
+                            @if (
+                              supportDetailsFormControl.toDate.invalid &&
+                              supportDetailsFormControl.toDate.hasError('invalidDate')
+                            ) {
+                              <mat-error> Please enter a valid date</mat-error>
+                            }
 
-                                              <div class="row">
-                                                <div class="col-md-6">
-                                                  <mat-form-field appearance="outline">
-                                                    <mat-label>Number of Days</mat-label>
-                                                    <mat-select formControlName="noOfDays" required>
-                                                      @for (no of noOfDaysList; track no) {
-                                                        <mat-option [value]="no">
-                                                          {{ no }}
-                                                        </mat-option>
-                                                      }
-                                                    </mat-select>
-                                                    @if (
-                                                      supportDetailsFormControl.noOfDays.invalid &&
-                                                      supportDetailsFormControl.noOfDays.hasError('required')
-                                                      ) {
-                                                      <mat-error
-                                                        >
-                                                        Required</mat-error
-                                                        >
-                                                      }
-                                                    </mat-form-field>
-                                                  </div>
-                                                </div>
+                            @if (
+                              supportDetailsFormControl.toDate.invalid &&
+                              supportDetailsFormControl.toDate.hasError('required')
+                            ) {
+                              <mat-error> To Date is required</mat-error>
+                            }
+                          </mat-form-field>
 
-                                                <div class="row">
-                                                  <div class="col-md-6">
-                                                    <mat-form-field appearance="outline">
-                                                      <mat-label>Valid To Date</mat-label>
-                                                      <input
-                                                        matInput
-                                                        formControlName="toDate"
-                                                        [matDatepicker]="toDatepicker"
-                                                        [matDatepickerFilter]="validDateFilter"
-                                                        (dateChange)="updateNoOfDays($event)"
-                                                        required
-                                                        />
-                                                        <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
-                                                        <mat-datepicker #toDatepicker></mat-datepicker>
+                          @if (!checkDateRange()) {
+                            <mat-error class="custom-mat-error">
+                              Valid To Date cannot be greater then the 30 days from the Valid From Date</mat-error
+                            >
+                          }
+                        </div>
+                        <div class="col-md-6">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Valid To Time</mat-label>
+                            <input type="time" formControlName="toTime" matInput placeholder="Valid To Time" required />
+                            @if (
+                              supportDetailsFormControl.toTime.invalid &&
+                              supportDetailsFormControl.toTime.hasError('required')
+                            ) {
+                              <mat-error> To Time Required</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    @if (cloneFlag) {
+                      <div class="col-lg-6">
+                        <div class="original-period-container">
+                          <div class="original-period-content">
+                            <p><b>Original Support Period:</b></p>
+                            <p>
+                              Valid From:
+                              <b>{{ originalSupport?.from | date: 'dd-MMM-yyyy' }}</b>
+                            </p>
+                            <p>
+                              Valid To:
+                              <b>{{ originalSupport?.to | date: 'dd-MMM-yyyy' }}</b>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
 
-                                                        @if (
-                                                          supportDetailsFormControl.toDate.invalid &&
-                                                          supportDetailsFormControl.toDate.hasError('invalidDate')
-                                                          ) {
-                                                          <mat-error
-                                                            >
-                                                            Please enter a valid date</mat-error
-                                                            >
-                                                        }
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p class="time-heading requiredField">
+                        Which people in your household require
+                        <span class="bold">{{ stepSupportsService?.supportTypeToAdd?.description }} ?</span>
+                      </p>
+                    </div>
+                  </div>
 
-                                                        @if (
-                                                          supportDetailsFormControl.toDate.invalid &&
-                                                          supportDetailsFormControl.toDate.hasError('required')
-                                                          ) {
-                                                          <mat-error
-                                                            >
-                                                            To Date is required</mat-error
-                                                            >
-                                                          }
-                                                        </mat-form-field>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <mat-checkbox
+                        id="allMembers"
+                        [checked]="isChecked()"
+                        [indeterminate]="isIndeterminate()"
+                        (change)="$event ? selectAll($event) : null"
+                        ><span class="bold">All household members</span></mat-checkbox
+                      >
+                    </div>
+                  </div>
+                  @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-checkbox
+                          (click)="$event.stopPropagation()"
+                          (change)="$event ? onChange($event, member) : null"
+                          [checked]="exists(member)"
+                        >
+                          {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}</mat-checkbox
+                        >
+                      </div>
+                    </div>
+                  }
+                  @if (
+                    supportDetailsFormControl.members.invalid &&
+                    supportDetailsFormControl.members.hasError('noSelection')
+                  ) {
+                    <mat-error class="custom-mat-error"> Required</mat-error>
+                  }
 
-                                                        @if (!checkDateRange()) {
-                                                          <mat-error class="custom-mat-error">
-                                                            Valid To Date cannot be greater then the 30 days from the Valid From Date</mat-error
-                                                            >
-                                                          }
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                          <mat-form-field appearance="outline">
-                                                            <mat-label>Valid To Time</mat-label>
-                                                            <input type="time" formControlName="toTime" matInput placeholder="Valid To Time" required />
-                                                            @if (
-                                                              supportDetailsFormControl.toTime.invalid &&
-                                                              supportDetailsFormControl.toTime.hasError('required')
-                                                              ) {
-                                                              <mat-error
-                                                                >
-                                                                To Time Required</mat-error
-                                                                >
-                                                              }
-                                                            </mat-form-field>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                      @if (cloneFlag) {
-                                                        <div class="col-lg-6">
-                                                          <div class="original-period-container">
-                                                            <div class="original-period-content">
-                                                              <p><b>Original Support Period:</b></p>
-                                                              <p>
-                                                                Valid From:
-                                                                <b>{{ originalSupport?.from | date: 'dd-MMM-yyyy' }}</b>
-                                                              </p>
-                                                              <p>
-                                                                Valid To:
-                                                                <b>{{ originalSupport?.to | date: 'dd-MMM-yyyy' }}</b>
-                                                              </p>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                      }
-                                                    </div>
+                  <div>
+                    @switch (stepSupportsService?.supportTypeToAdd?.value) {
+                      <!-- Shelter-Allowance -->
+                      @case ('Lodging_Allowance') {
+                        <div>
+                          <app-shelter-allowance
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [selectedHouseholdMembers]="supportDetailsForm.get('members').value"
+                          ></app-shelter-allowance>
+                        </div>
+                      }
+                      <!--Restaurant Meals-->
+                      @case ('Food_Restaurant') {
+                        <div>
+                          <app-food-meals
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                          ></app-food-meals>
+                        </div>
+                      }
+                      <!--Groceries-->
+                      @case ('Food_Groceries') {
+                        <div>
+                          <app-food-groceries
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                          ></app-food-groceries>
+                        </div>
+                      }
+                      <!--Taxi-->
+                      @case ('Transportation_Taxi') {
+                        <div>
+                          <app-taxi-transportation [supportDetailsForm]="supportDetailsForm"></app-taxi-transportation>
+                        </div>
+                      }
+                      <!--Transport-Other-->
+                      @case ('Transportation_Other') {
+                        <div>
+                          <app-other-transportation
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-other-transportation>
+                        </div>
+                      }
+                      <!--Lodging-Hotel/Motel-->
+                      @case ('Lodging_Hotel') {
+                        <div>
+                          <app-lodging-hotel-motel
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-hotel-motel>
+                        </div>
+                      }
+                      <!--Lodging-Billeting-->
+                      @case ('Lodging_Billeting') {
+                        <div>
+                          <app-lodging-billeting
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-billeting>
+                        </div>
+                      }
+                      <!--Group Lodging-->
+                      @case ('Lodging_Group') {
+                        <div>
+                          <app-lodging-group
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-group>
+                        </div>
+                      }
+                      <!--Incidentals-->
+                      @case ('Incidentals') {
+                        <div>
+                          <app-incidentals
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-incidentals>
+                        </div>
+                      }
+                      <!--Clothing-->
+                      @case ('Clothing') {
+                        <div>
+                          <app-clothing
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-clothing>
+                        </div>
+                      }
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-                                                    <div class="row">
-                                                      <div class="col-md-12">
-                                                        <p class="time-heading requiredField">
-                                                          Which people in your household require
-                                                          <span class="bold">{{ stepSupportsService?.supportTypeToAdd?.description }} ?</span>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                      <div class="col-md-12">
-                                                        <mat-checkbox
-                                                          id="allMembers"
-                                                          [checked]="isChecked()"
-                                                          [indeterminate]="isIndeterminate()"
-                                                          (change)="$event ? selectAll($event) : null"
-                                                          ><span class="bold">All household members</span></mat-checkbox
-                                                          >
-                                                        </div>
-                                                      </div>
-                                                      @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
-                                                        <div
-                                                          class="row"
-                                                          >
-                                                          <div class="col-md-12">
-                                                            <mat-checkbox
-                                                              (click)="$event.stopPropagation()"
-                                                              (change)="$event ? onChange($event, member) : null"
-                                                              [checked]="exists(member)"
-                                                              >
-                                                              {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}</mat-checkbox
-                                                              >
-                                                            </div>
-                                                          </div>
-                                                        }
-                                                        @if (
-                                                          supportDetailsFormControl.members.invalid &&
-                                                          supportDetailsFormControl.members.hasError('noSelection')
-                                                          ) {
-                                                          <mat-error
-                                                            class="custom-mat-error"
-                                                            >
-                                                            Required</mat-error
-                                                            >
-                                                          }
-
-                                                          <div>
-                                                            @switch (stepSupportsService?.supportTypeToAdd?.value) {
-                                                              <!-- Shelter-Allowance -->
-                                                              @case ('Lodging_Allowance') {
-                                                                <div>
-                                                                  <app-shelter-allowance
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                    [selectedHouseholdMembers]="supportDetailsForm.get('members').value"
-                                                                  ></app-shelter-allowance>
-                                                                </div>
-                                                              }
-                                                              <!--Restaurant Meals-->
-                                                              @case ('Food_Restaurant') {
-                                                                <div>
-                                                                  <app-food-meals
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                    [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                                                                  ></app-food-meals>
-                                                                </div>
-                                                              }
-                                                              <!--Groceries-->
-                                                              @case ('Food_Groceries') {
-                                                                <div>
-                                                                  <app-food-groceries
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                    [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                                                                  ></app-food-groceries>
-                                                                </div>
-                                                              }
-                                                              <!--Taxi-->
-                                                              @case ('Transportation_Taxi') {
-                                                                <div>
-                                                                  <app-taxi-transportation [supportDetailsForm]="supportDetailsForm"></app-taxi-transportation>
-                                                                </div>
-                                                              }
-                                                              <!--Transport-Other-->
-                                                              @case ('Transportation_Other') {
-                                                                <div>
-                                                                  <app-other-transportation [supportDetailsForm]="supportDetailsForm"></app-other-transportation>
-                                                                </div>
-                                                              }
-                                                              <!--Lodging-Hotel/Motel-->
-                                                              @case ('Lodging_Hotel') {
-                                                                <div>
-                                                                  <app-lodging-hotel-motel
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                  ></app-lodging-hotel-motel>
-                                                                </div>
-                                                              }
-                                                              <!--Lodging-Billeting-->
-                                                              @case ('Lodging_Billeting') {
-                                                                <div>
-                                                                  <app-lodging-billeting
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                  ></app-lodging-billeting>
-                                                                </div>
-                                                              }
-                                                              <!--Group Lodging-->
-                                                              @case ('Lodging_Group') {
-                                                                <div>
-                                                                  <app-lodging-group
-                                                                    [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                  ></app-lodging-group>
-                                                                </div>
-                                                              }
-                                                              <!--Incidentals-->
-                                                              @case ('Incidentals') {
-                                                                <div>
-                                                                  <app-incidentals
-                                                                    [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                  ></app-incidentals>
-                                                                </div>
-                                                              }
-                                                              <!--Clothing-->
-                                                              @case ('Clothing') {
-                                                                <div>
-                                                                  <app-clothing
-                                                                    [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                                                                    [supportDetailsForm]="supportDetailsForm"
-                                                                  ></app-clothing>
-                                                                </div>
-                                                              }
-                                                            }
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </form>
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div class="row button-row">
-                                            @if (editFlag) {
-                                              <div class="col-md-6">
-                                                <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
-                                              </div>
-                                            }
-                                            @if (!editFlag) {
-                                              <div class="col-md-6">
-                                                <button class="button-s" mat-button (click)="back()">Cancel</button>
-                                              </div>
-                                            }
-                                            <div class="col-md-6 button-col">
-                                              <button class="button-p" mat-button (click)="validateDelivery()">Next - Support Delivery</button>
-                                            </div>
-                                          </div>
-                                        </div>
+  <div class="row button-row">
+    @if (editFlag) {
+      <div class="col-md-6">
+        <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
+      </div>
+    }
+    @if (!editFlag) {
+      <div class="col-md-6">
+        <button class="button-s" mat-button (click)="back()">Cancel</button>
+      </div>
+    }
+    <div class="col-md-6 button-col">
+      <button class="button-p" mat-button (click)="validateDelivery()">Next - Support Delivery</button>
+    </div>
+  </div>
+</div>

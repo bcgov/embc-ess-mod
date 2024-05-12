@@ -10,13 +10,13 @@ import { AnimalsModule } from '../animals/animals.module';
 import { HouseholdMembersModule } from '../household-members/household-members.module';
 
 @NgModule({
-    imports: [
+  imports: [
     CommonModule,
     HouseholdMembersPetsRoutingModule,
     ReactiveFormsModule,
     HouseholdMembersModule,
     AnimalsModule,
     HouseholdMembersPetsComponent
-]
+  ]
 })
 export class HouseholdMembersPetsModule {}

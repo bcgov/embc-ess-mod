@@ -20,11 +20,11 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-team-list',
-    templateUrl: './team-list.component.html',
-    styleUrls: ['./team-list.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, TeamMemberTableComponent]
+  selector: 'app-team-list',
+  templateUrl: './team-list.component.html',
+  styleUrls: ['./team-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, TeamMemberTableComponent]
 })
 export class TeamListComponent implements OnInit {
   filterTerm: TableFilterValueModel;

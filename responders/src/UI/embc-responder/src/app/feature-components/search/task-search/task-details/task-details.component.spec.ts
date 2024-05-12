@@ -20,23 +20,23 @@ describe('TaskDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, TaskDetailsComponent],
-    providers: [
+      imports: [RouterTestingModule, HttpClientTestingModule, TaskDetailsComponent],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: TaskSearchService,
-            useClass: MockTaskSearchService
+          provide: TaskSearchService,
+          useClass: MockTaskSearchService
         },
         {
-            provide: AlertService,
-            useClass: MockAlertService
+          provide: AlertService,
+          useClass: MockAlertService
         },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

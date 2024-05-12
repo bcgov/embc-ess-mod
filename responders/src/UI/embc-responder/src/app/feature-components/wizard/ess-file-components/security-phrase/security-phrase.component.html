@@ -11,9 +11,7 @@
     <div class="col-12 content-container">
       <div class="row">
         @if (essFileNumber === null || essFileNumber === undefined || editedSecurityPhrase) {
-          <div
-            class="col-8"
-            >
+          <div class="col-8">
             <p>
               The security phrase is to ensure an Emergency Support Services (ESS) Responder can verbally verify your
               identity with your registration.
@@ -21,8 +19,8 @@
             <p>
               Enter a
               <strong>memorable security phrase that is over 6 characters in length.</strong>
-              You may include numbers and letters. Do not include any special characters. The security phrase is not case
-              sensitive.
+              You may include numbers and letters. Do not include any special characters. The security phrase is not
+              case sensitive.
             </p>
             <p>Your security phrase should never include your email address.</p>
             <form [formGroup]="securityForm">
@@ -33,25 +31,17 @@
                   @if (
                     securityFormControl?.securityPhrase?.hasError('required') ||
                     securityFormControl?.securityPhrase?.hasError('whitespaceError')
-                    ) {
-                    <mat-error
-                      >
-                      Phrase is required.
-                    </mat-error>
+                  ) {
+                    <mat-error> Phrase is required. </mat-error>
                   }
                   @if (
                     securityFormControl?.securityPhrase?.hasError('minlength') ||
                     securityFormControl?.securityPhrase?.hasError('maxlength')
-                    ) {
-                    <mat-error
-                      >
-                      Phrase must be between 6 and 50 characters long.
-                    </mat-error>
+                  ) {
+                    <mat-error> Phrase must be between 6 and 50 characters long. </mat-error>
                   }
                   @if (securityFormControl?.securityPhrase?.hasError('pattern')) {
-                    <mat-error>
-                      Phrase cannot contain special characters.
-                    </mat-error>
+                    <mat-error> Phrase cannot contain special characters. </mat-error>
                   }
                 </mat-form-field>
               </div>
@@ -76,7 +66,6 @@
           </div>
         }
 
-
         <div class="col-md-4">
           <mat-card class="tips-card">
             <mat-card-content>
@@ -87,8 +76,8 @@
 
               <p class="tips-info">
                 If you have been evacuated, please share your security phrase with your listed household members. This
-                will allow an Emergency Support Services (ESS) Responder to assist each household member registered under
-                the same file.
+                will allow an Emergency Support Services (ESS) Responder to assist each household member registered
+                under the same file.
               </p>
             </mat-card-content>
           </mat-card>

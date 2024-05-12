@@ -1,7 +1,7 @@
 import { IMask, IMaskFactory } from 'angular-imask';
 import { DashboardBanner, DialogContent } from '../models/dialog-content.model';
 
-export const phoneMask = "000-000-0000";
+export const phoneMask = '000-000-0000';
 
 export const dateMask: Parameters<IMaskFactory['create']>[1] = {
   mask: 'mm/dd/yyyy',

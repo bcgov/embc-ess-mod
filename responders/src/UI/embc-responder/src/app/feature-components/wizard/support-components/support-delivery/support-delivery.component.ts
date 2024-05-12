@@ -20,13 +20,12 @@ import { SupportEtransferComponent } from './support-etransfer/support-etransfer
 import { SupportReferralComponent } from './support-referral/support-referral.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
-
 @Component({
-    selector: 'app-support-delivery',
-    templateUrl: './support-delivery.component.html',
-    styleUrls: ['./support-delivery.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, SupportReferralComponent, SupportEtransferComponent, MatButton]
+  selector: 'app-support-delivery',
+  templateUrl: './support-delivery.component.html',
+  styleUrls: ['./support-delivery.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SupportReferralComponent, SupportEtransferComponent, MatButton]
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: UntypedFormGroup;

@@ -17,7 +17,7 @@ describe('AnimalsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -25,15 +25,15 @@ describe('AnimalsComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         AnimalsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

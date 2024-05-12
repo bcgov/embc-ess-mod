@@ -23,15 +23,15 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot(), OutageComponent],
-    providers: [
+      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot(), OutageComponent],
+      providers: [
         OutageComponent,
         {
-            provide: OutageService,
-            useClass: MockOutageService
+          provide: OutageService,
+          useClass: MockOutageService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

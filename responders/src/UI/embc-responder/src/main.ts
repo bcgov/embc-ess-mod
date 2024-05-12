@@ -23,26 +23,33 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(BrowserModule, AppRoutingModule, CoreModule, OAuthModule.forRoot({
-            resourceServer: {
-                customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/configuration'),
-                sendAccessToken: true
-            }
-        }), ApiModule.forRoot({ rootUrl: '' }), NgIdleKeepaliveModule.forRoot(), ErrorHandlingModule.forRoot()),
-        DatePipe,
-        {
-            provide: computeInterfaceToken,
-            useClass: ComputeFeaturesService,
-            multi: true
-        },
-        {
-            provide: computeInterfaceToken,
-            useClass: ComputeWizardService,
-            multi: true
-        },
-        provideAnimations(),
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-})
-  .catch((err) => console.error(err));
+  providers: [
+    importProvidersFrom(
+      BrowserModule,
+      AppRoutingModule,
+      CoreModule,
+      OAuthModule.forRoot({
+        resourceServer: {
+          customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/configuration'),
+          sendAccessToken: true
+        }
+      }),
+      ApiModule.forRoot({ rootUrl: '' }),
+      NgIdleKeepaliveModule.forRoot(),
+      ErrorHandlingModule.forRoot()
+    ),
+    DatePipe,
+    {
+      provide: computeInterfaceToken,
+      useClass: ComputeFeaturesService,
+      multi: true
+    },
+    {
+      provide: computeInterfaceToken,
+      useClass: ComputeWizardService,
+      multi: true
+    },
+    provideAnimations(),
+    provideHttpClient(withInterceptorsFromDi())
+  ]
+}).catch((err) => console.error(err));

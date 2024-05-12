@@ -42,7 +42,7 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         MatDialogModule,
         HttpClientTestingModule,
         CustomPipeModule,
@@ -50,32 +50,32 @@ describe('EvacueeProfileDashboardComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
         EvacueeProfileDashboardComponent
-    ],
-    providers: [
+      ],
+      providers: [
         EvacueeProfileDashboardComponent,
         {
-            provide: EvacueeProfileDashboardService,
-            useClass: MockEvacueeProfileDashboardService
+          provide: EvacueeProfileDashboardService,
+          useClass: MockEvacueeProfileDashboardService
         },
         {
-            provide: EvacueeSearchService,
-            useClass: MockEvacueeSearchService
+          provide: EvacueeSearchService,
+          useClass: MockEvacueeSearchService
         },
         {
-            provide: EvacueeProfileService,
-            useClass: MockEvacueeProfileService
+          provide: EvacueeProfileService,
+          useClass: MockEvacueeProfileService
         },
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -5,11 +5,11 @@ import { DatePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-outage-dialog',
-    templateUrl: './outage-dialog.component.html',
-    styleUrls: ['./outage-dialog.component.scss'],
-    standalone: true,
-    imports: [MatIconButton, MatDialogContent, MatDialogActions, DatePipe]
+  selector: 'app-outage-dialog',
+  templateUrl: './outage-dialog.component.html',
+  styleUrls: ['./outage-dialog.component.scss'],
+  standalone: true,
+  imports: [MatIconButton, MatDialogContent, MatDialogActions, DatePipe]
 })
 export class OutageDialogComponent {
   constructor(

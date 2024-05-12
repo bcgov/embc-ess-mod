@@ -12,9 +12,9 @@ describe('CollectionNoticeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, CollectionNoticeComponent],
-    providers: [{ provide: computeInterfaceToken, useValue: {} }]
-}).compileComponents();
+      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, CollectionNoticeComponent],
+      providers: [{ provide: computeInterfaceToken, useValue: {} }]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
@@ -18,11 +24,24 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-add-team-member',
-    templateUrl: './add-team-member.component.html',
-    styleUrls: ['./add-team-member.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, AppLoaderComponent, MatSelect, MatOption, MatButton]
+  selector: 'app-add-team-member',
+  templateUrl: './add-team-member.component.html',
+  styleUrls: ['./add-team-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    AppLoaderComponent,
+    MatSelect,
+    MatOption,
+    MatButton
+  ]
 })
 export class AddTeamMemberComponent implements OnInit {
   addForm: UntypedFormGroup;

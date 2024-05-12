@@ -22,11 +22,24 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-food-groceries',
-    templateUrl: './food-groceries.component.html',
-    styleUrls: ['./food-groceries.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe, NumberArrayPipe]
+  selector: 'app-food-groceries',
+  templateUrl: './food-groceries.component.html',
+  styleUrls: ['./food-groceries.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatInput,
+    NumberCommaDirective,
+    MatPrefix,
+    DecimalPipe,
+    NumberArrayPipe
+  ]
 })
 export class FoodGroceriesComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

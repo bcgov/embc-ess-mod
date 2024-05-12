@@ -34,7 +34,7 @@
                   class="primary-radio-group"
                   formControlName="requiresShelterType"
                   aria-label="Select an option"
-                  >
+                >
                   <label for="shelterAllowance">
                     <mat-radio-button
                       id="shelterAllowance"
@@ -100,45 +100,45 @@
               <span>
                 <a class="status-info" (click)="openIncidentalsDialog()">
                   <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28"
-                  /></a>
-                </span>
-              </label>
-            </div>
+                /></a>
+              </span>
+            </label>
           </div>
-
-          <div class="row">
-            <div class="col-12">
-              <mat-checkbox
-                id="transportation"
-                formControlName="requiresTransportation"
-                class="primary-checkbox"
-              ></mat-checkbox>
-              <label class="tab-subtitle" for="transportation">
-                <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="40px" />
-                Transportation
-              </label>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-12">
-              <mat-checkbox id="noneeds" formControlName="requiresNothing" class="primary-checkbox"></mat-checkbox>
-              <label class="tab-subtitle" for="noneeds">
-                <img src="../../../../../assets/images/wizard/no-needs.svg" width="40px" height="40px" />
-                I can meet my basic needs. I do not require assistance.
-              </label>
-            </div>
-          </div>
-        </form>
+        </div>
 
         <div class="row">
-          <div class="col-md-6">
-            <button class="button-s back" mat-button (click)="back()">Back</button>
+          <div class="col-12">
+            <mat-checkbox
+              id="transportation"
+              formControlName="requiresTransportation"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="transportation">
+              <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="40px" />
+              Transportation
+            </label>
           </div>
-          <div class="col-md-6">
-            <button class="button-p next" mat-button (click)="next()">Next</button>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox id="noneeds" formControlName="requiresNothing" class="primary-checkbox"></mat-checkbox>
+            <label class="tab-subtitle" for="noneeds">
+              <img src="../../../../../assets/images/wizard/no-needs.svg" width="40px" height="40px" />
+              I can meet my basic needs. I do not require assistance.
+            </label>
           </div>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </div>
   </div>
+</div>

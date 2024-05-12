@@ -16,38 +16,32 @@
           }
         </mat-select>
         @if (referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')) {
-          <mat-error
-            >
-            Number of Nights is required</mat-error
-            >
-          }
-        </mat-form-field>
-      </div>
+          <mat-error> Number of Nights is required</mat-error>
+        }
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <p class="time-heading requiredField">Number of Rooms</p>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Rooms</p>
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <mat-form-field appearance="outline">
-          <mat-label>Number of Rooms</mat-label>
-          <mat-select formControlName="noOfRooms" required>
-            @for (no of noOfRooms; track no) {
-              <mat-option [value]="no">
-                {{ no }}
-              </mat-option>
-            }
-          </mat-select>
-          @if (referralFormControl?.noOfRooms.invalid && referralFormControl?.noOfRooms.hasError('required')) {
-            <mat-error
-              >
-              Number of Rooms is required</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
-    </form>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Number of Rooms</mat-label>
+        <mat-select formControlName="noOfRooms" required>
+          @for (no of noOfRooms; track no) {
+            <mat-option [value]="no">
+              {{ no }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (referralFormControl?.noOfRooms.invalid && referralFormControl?.noOfRooms.hasError('required')) {
+          <mat-error> Number of Rooms is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+</form>

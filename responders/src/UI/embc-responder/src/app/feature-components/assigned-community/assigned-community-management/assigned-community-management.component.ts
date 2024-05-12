@@ -3,11 +3,11 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-assigned-community-management',
-    templateUrl: './assigned-community-management.component.html',
-    styleUrls: ['./assigned-community-management.component.scss'],
-    standalone: true,
-    imports: [RouterOutlet]
+  selector: 'app-assigned-community-management',
+  templateUrl: './assigned-community-management.component.html',
+  styleUrls: ['./assigned-community-management.component.scss'],
+  standalone: true,
+  imports: [RouterOutlet]
 })
 export class AssignedCommunityManagementComponent implements OnDestroy {
   constructor(private cacheService: CacheService) {}

@@ -8,8 +8,8 @@ describe('SearchFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [SearchFilterComponent]
-}).compileComponents();
+      imports: [SearchFilterComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

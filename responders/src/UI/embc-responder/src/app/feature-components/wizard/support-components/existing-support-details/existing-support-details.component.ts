@@ -43,11 +43,19 @@ import { OverlayLoaderComponent } from '../../../../shared/components/overlay-lo
 import { NgClass, UpperCasePipe, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-existing-support-details',
-    templateUrl: './existing-support-details.component.html',
-    styleUrls: ['./existing-support-details.component.scss'],
-    standalone: true,
-    imports: [NgClass, OverlayLoaderComponent, UpperCasePipe, DecimalPipe, DatePipe, MaskEvacuatedAddressPipe, SupplierContactPipe]
+  selector: 'app-existing-support-details',
+  templateUrl: './existing-support-details.component.html',
+  styleUrls: ['./existing-support-details.component.scss'],
+  standalone: true,
+  imports: [
+    NgClass,
+    OverlayLoaderComponent,
+    UpperCasePipe,
+    DecimalPipe,
+    DatePipe,
+    MaskEvacuatedAddressPipe,
+    SupplierContactPipe
+  ]
 })
 export class ExistingSupportDetailsComponent implements OnInit {
   selectedSupport: Support;

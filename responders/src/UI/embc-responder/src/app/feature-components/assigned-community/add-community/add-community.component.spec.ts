@@ -10,8 +10,8 @@ describe('AddCommunityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule, AddCommunityComponent]
-}).compileComponents();
+      imports: [HttpClientTestingModule, RouterTestingModule, AddCommunityComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

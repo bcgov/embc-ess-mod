@@ -7,11 +7,11 @@ import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-security-question-card',
-    templateUrl: './security-question-card.component.html',
-    styleUrls: ['./security-question-card.component.scss'],
-    standalone: true,
-    imports: [MatCard, FormsModule, ReactiveFormsModule, MatCardContent, MatFormField, MatInput, MatError]
+  selector: 'app-security-question-card',
+  templateUrl: './security-question-card.component.html',
+  styleUrls: ['./security-question-card.component.scss'],
+  standalone: true,
+  imports: [MatCard, FormsModule, ReactiveFormsModule, MatCardContent, MatFormField, MatInput, MatError]
 })
 export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;

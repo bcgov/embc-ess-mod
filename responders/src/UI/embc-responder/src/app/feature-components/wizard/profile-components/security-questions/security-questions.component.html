@@ -13,10 +13,8 @@
         stepEvacueeProfileService?.editQuestions ||
         !stepEvacueeProfileService?.savedQuestions ||
         stepEvacueeProfileService?.savedQuestions.length < 1
-        ) {
-        <div
-          class="row"
-          >
+      ) {
+        <div class="row">
           <div class="col-12">
             <p>
               You will be asked to answer your questions should you meet with an Emergency Support Services (ESS)
@@ -31,7 +29,8 @@
             </p>
             <p>Select <span class="bold">three security questions</span> from the list of options below.</p>
             <p>
-              Note: Your answers need to be greater than two characters and should not include any special characters.<br />
+              Note: Your answers need to be greater than two characters and should not include any special
+              characters.<br />
               You may include numbers and letters. Your security answers are not case sensitive.
             </p>
             <form [formGroup]="parentForm">
@@ -42,22 +41,16 @@
                       <mat-label>Security Question 1</mat-label>
                       <mat-select formControlName="question1">
                         @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
-                          <mat-option
-                            [value]="question"
-                            >
+                          <mat-option [value]="question">
                             {{ question }}
                           </mat-option>
                         }
                       </mat-select>
                       @if (questionFormControl?.question1?.hasError('required')) {
-                        <mat-error>
-                          Security Question is required.
-                        </mat-error>
+                        <mat-error> Security Question is required. </mat-error>
                       }
                       @if (questionFormControl?.question1?.hasError('notUnique')) {
-                        <mat-error>
-                          Security Questions must all be different.
-                        </mat-error>
+                        <mat-error> Security Questions must all be different. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -68,25 +61,17 @@
                       @if (
                         questionFormControl?.answer1?.hasError('required') ||
                         questionFormControl?.answer1?.hasError('whitespaceError')
-                        ) {
-                        <mat-error
-                          >
-                          Answer is required.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
                       }
                       @if (
                         questionFormControl?.answer1?.hasError('minlength') ||
                         questionFormControl?.answer1?.hasError('maxlength')
-                        ) {
-                        <mat-error
-                          >
-                          Answer must be between 3 and 50 characters long.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
                       }
                       @if (questionFormControl?.answer1?.hasError('pattern')) {
-                        <mat-error>
-                          Answer cannot contain special characters.
-                        </mat-error>
+                        <mat-error> Answer cannot contain special characters. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -97,22 +82,16 @@
                       <mat-label>Security Question 2</mat-label>
                       <mat-select formControlName="question2">
                         @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
-                          <mat-option
-                            [value]="question"
-                            >
+                          <mat-option [value]="question">
                             {{ question }}
                           </mat-option>
                         }
                       </mat-select>
                       @if (questionFormControl?.question2?.hasError('required')) {
-                        <mat-error>
-                          Security Question is required.
-                        </mat-error>
+                        <mat-error> Security Question is required. </mat-error>
                       }
                       @if (questionFormControl?.question2?.hasError('notUnique')) {
-                        <mat-error>
-                          Security Questions must all be different.
-                        </mat-error>
+                        <mat-error> Security Questions must all be different. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -123,25 +102,17 @@
                       @if (
                         questionFormControl?.answer2?.hasError('required') ||
                         questionFormControl?.answer2?.hasError('whitespaceError')
-                        ) {
-                        <mat-error
-                          >
-                          Answer is required.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
                       }
                       @if (
                         questionFormControl?.answer2?.hasError('minlength') ||
                         questionFormControl?.answer2?.hasError('maxlength')
-                        ) {
-                        <mat-error
-                          >
-                          Answer must be between 3 and 50 characters long.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
                       }
                       @if (questionFormControl?.answer2?.hasError('pattern')) {
-                        <mat-error>
-                          Answer cannot contain special characters.
-                        </mat-error>
+                        <mat-error> Answer cannot contain special characters. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -152,22 +123,16 @@
                       <mat-label>Security Question 3</mat-label>
                       <mat-select formControlName="question3">
                         @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
-                          <mat-option
-                            [value]="question"
-                            >
+                          <mat-option [value]="question">
                             {{ question }}
                           </mat-option>
                         }
                       </mat-select>
                       @if (questionFormControl?.question3?.hasError('required')) {
-                        <mat-error>
-                          Security Question is required.
-                        </mat-error>
+                        <mat-error> Security Question is required. </mat-error>
                       }
                       @if (questionFormControl?.question3?.hasError('notUnique')) {
-                        <mat-error>
-                          Security Questions must all be different.
-                        </mat-error>
+                        <mat-error> Security Questions must all be different. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -178,25 +143,17 @@
                       @if (
                         questionFormControl?.answer3?.hasError('required') ||
                         questionFormControl?.answer3?.hasError('whitespaceError')
-                        ) {
-                        <mat-error
-                          >
-                          Answer is required.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
                       }
                       @if (
                         questionFormControl?.answer3?.hasError('minlength') ||
                         questionFormControl?.answer3?.hasError('maxlength')
-                        ) {
-                        <mat-error
-                          >
-                          Answer must be between 3 and 50 characters long.
-                        </mat-error>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
                       }
                       @if (questionFormControl?.answer3?.hasError('pattern')) {
-                        <mat-error>
-                          Answer cannot contain special characters.
-                        </mat-error>
+                        <mat-error> Answer cannot contain special characters. </mat-error>
                       }
                     </mat-form-field>
                   </div>
@@ -213,55 +170,43 @@
                 </mat-checkbox>
               </div>
             </div> -->
-          </form>
-        </div>
-      </div>
-    }
-
-    @if (!stepEvacueeProfileService?.editQuestions && stepEvacueeProfileService?.savedQuestions?.length > 0) {
-      <div
-        class="readonly-questions"
-        >
-        @for (question of stepEvacueeProfileService?.savedQuestions; track question; let i = $index) {
-          <div class="row bottom-space">
-            <div class="col-5">
-              {{ question.question }}
-            </div>
-            <div class="col-5">
-              {{ question.answer | maskText }}
-            </div>
+            </form>
           </div>
-        }
-      </div>
-    }
+        </div>
+      }
 
-    @if (stepEvacueeProfileService?.savedQuestions?.length > 0) {
-      <div class="row edit-toggle bottom-space-large">
-        @if (!stepEvacueeProfileService?.editQuestions) {
-          <button
-            class="btn btn-link col-12"
-            (click)="toggleEditQuestions(true)"
-            >
-            Add new security questions
-          </button>
-        }
-        @if (stepEvacueeProfileService?.editQuestions) {
-          <button
-            class="btn btn-link col-12"
-            (click)="toggleEditQuestions(false)"
-            >
-            Cancel
-          </button>
-        }
-      </div>
-    }
+      @if (!stepEvacueeProfileService?.editQuestions && stepEvacueeProfileService?.savedQuestions?.length > 0) {
+        <div class="readonly-questions">
+          @for (question of stepEvacueeProfileService?.savedQuestions; track question; let i = $index) {
+            <div class="row bottom-space">
+              <div class="col-5">
+                {{ question.question }}
+              </div>
+              <div class="col-5">
+                {{ question.answer | maskText }}
+              </div>
+            </div>
+          }
+        </div>
+      }
 
-    <div class="row nav-buttons">
-      <div class="col-12">
-        <button class="button-s back" mat-button (click)="back()">Back</button>
-        <button class="button-p next" mat-button (click)="next()">Next</button>
+      @if (stepEvacueeProfileService?.savedQuestions?.length > 0) {
+        <div class="row edit-toggle bottom-space-large">
+          @if (!stepEvacueeProfileService?.editQuestions) {
+            <button class="btn btn-link col-12" (click)="toggleEditQuestions(true)">Add new security questions</button>
+          }
+          @if (stepEvacueeProfileService?.editQuestions) {
+            <button class="btn btn-link col-12" (click)="toggleEditQuestions(false)">Cancel</button>
+          }
+        </div>
+      }
+
+      <div class="row nav-buttons">
+        <div class="col-12">
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+          <button class="button-p next" mat-button (click)="next()">Next</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

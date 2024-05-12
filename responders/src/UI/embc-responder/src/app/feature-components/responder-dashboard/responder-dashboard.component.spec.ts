@@ -19,29 +19,29 @@ describe('ResponderDashboardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule.withRoutes([
-        // {
-        //   path: 'responder-access/search',
-        //   component: TaskSearchComponent
-        // }
-        // {
-        //   path: 'responder-access/search/evacuee',
-        //   component: EvacueeSearchComponent
-        // }
+          // {
+          //   path: 'responder-access/search',
+          //   component: TaskSearchComponent
+          // }
+          // {
+          //   path: 'responder-access/search/evacuee',
+          //   component: EvacueeSearchComponent
+          // }
         ]),
         HttpClientTestingModule,
         ResponderDashboardComponent
-    ],
-    providers: [
+      ],
+      providers: [
         ResponderDashboardComponent,
         //{ provide: Router, useValue: routerMock },
         {
-            provide: UserService,
-            useClass: MockUserService
+          provide: UserService,
+          useClass: MockUserService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

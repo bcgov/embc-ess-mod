@@ -4,13 +4,12 @@ import { LoggedInUserProfile, UserService } from 'src/app/core/services/user.ser
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
-
 @Component({
-    selector: 'app-responder-dashboard',
-    templateUrl: './responder-dashboard.component.html',
-    styleUrls: ['./responder-dashboard.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatButton]
+  selector: 'app-responder-dashboard',
+  templateUrl: './responder-dashboard.component.html',
+  styleUrls: ['./responder-dashboard.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatButton]
 })
 export class ResponderDashboardComponent implements OnInit {
   public get profile(): LoggedInUserProfile {

@@ -6,16 +6,42 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
-import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-ess-file-details',
-    templateUrl: './ess-file-details.component.html',
-    styleUrls: ['./ess-file-details.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, DatePipe, MaskEvacuatedAddressPipe]
+  selector: 'app-ess-file-details',
+  templateUrl: './ess-file-details.component.html',
+  styleUrls: ['./ess-file-details.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class EssFileDetailsComponent implements OnInit {
   noAssistanceRequiredMessage = globalConst.noAssistanceRequired;

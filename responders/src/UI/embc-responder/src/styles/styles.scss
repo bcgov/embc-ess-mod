@@ -28,7 +28,6 @@ $custom-typography: mat.define-typography-config(
 
 @include mat.all-component-typographies($custom-typography);
 
-
 :root {
   --size-1: 8px;
 
@@ -166,7 +165,8 @@ footer nav {
   color: #ffffff !important;
 }
 
-.mat-mdc-icon-button svg, .mat-mdc-icon-button img {
+.mat-mdc-icon-button svg,
+.mat-mdc-icon-button img {
   width: inherit;
   height: inherit;
 }
@@ -178,7 +178,6 @@ button {
 button:focus {
   outline: 0px !important;
 }
-
 
 .close-image,
 .edit-image,

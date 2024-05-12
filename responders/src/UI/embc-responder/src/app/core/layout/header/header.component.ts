@@ -8,11 +8,11 @@ import { MatButton } from '@angular/material/button';
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: true,
-    imports: [MatToolbar, MatToolbarRow, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [MatToolbar, MatToolbarRow, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class HeaderComponent implements OnInit {
   public get profile(): LoggedInUserProfile {

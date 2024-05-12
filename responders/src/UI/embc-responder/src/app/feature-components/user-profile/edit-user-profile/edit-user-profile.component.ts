@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserProfile } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -16,11 +23,23 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-edit-user-profile',
-    templateUrl: './edit-user-profile.component.html',
-    styleUrls: ['./edit-user-profile.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, IMaskDirective, MatButton, AppLoaderComponent]
+  selector: 'app-edit-user-profile',
+  templateUrl: './edit-user-profile.component.html',
+  styleUrls: ['./edit-user-profile.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    IMaskDirective,
+    MatButton,
+    AppLoaderComponent
+  ]
 })
 export class EditUserProfileComponent implements OnInit {
   editForm: UntypedFormGroup;

@@ -16,4 +16,3 @@ import { ComputeFeaturesService } from './core/services/compute/computeFeatures.
 import { ComputeWizardService } from './core/services/compute/computeWizard.service';
 
 export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
-

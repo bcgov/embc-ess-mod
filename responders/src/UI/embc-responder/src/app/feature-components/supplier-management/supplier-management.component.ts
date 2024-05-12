@@ -6,11 +6,11 @@ import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
-    selector: 'app-supplier-management',
-    templateUrl: './supplier-management.component.html',
-    styleUrls: ['./supplier-management.component.scss'],
-    standalone: true,
-    imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
+  selector: 'app-supplier-management',
+  templateUrl: './supplier-management.component.html',
+  styleUrls: ['./supplier-management.component.scss'],
+  standalone: true,
+  imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
 })
 export class SupplierManagementComponent implements OnInit {
   /**

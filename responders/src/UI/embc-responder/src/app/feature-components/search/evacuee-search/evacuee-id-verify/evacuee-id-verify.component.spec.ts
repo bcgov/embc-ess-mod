@@ -33,28 +33,28 @@ describe('EvacueeIdVerifyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         HttpClientTestingModule,
         RouterTestingModule,
         ReactiveFormsModule,
         MaterialModule,
         BrowserAnimationsModule,
         EvacueeIdVerifyComponent
-    ],
-    providers: [
+      ],
+      providers: [
         EvacueeIdVerifyComponent,
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

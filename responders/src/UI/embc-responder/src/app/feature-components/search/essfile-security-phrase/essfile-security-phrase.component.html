@@ -39,49 +39,49 @@
               <img width="20px" height="20px" src="/assets/images/wrong-answer.svg" />
               <span class="incorrect">
                 Incorrect answer. You have {{ attemptsRemaning }} attempts remaining. Please try again.</span
-                >
-              </div>
-            }
-            <div class="row double-space">
-              <div class="col-md-8">
-                <button class="button-s submit button-space" type="button" mat-button (click)="goBack()">Back</button>
-                <button
-                  class="button-p submit"
-                  type="button"
-                  mat-button
-                  (click)="next()"
-                  [disabled]="showLoader || !securityPhraseForm.valid"
-                  >
-                  Continue
-                  <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
-                </button>
-              </div>
+              >
             </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    }
+          }
+          <div class="row double-space">
+            <div class="col-md-8">
+              <button class="button-s submit button-space" type="button" mat-button (click)="goBack()">Back</button>
+              <button
+                class="button-p submit"
+                type="button"
+                mat-button
+                (click)="next()"
+                [disabled]="showLoader || !securityPhraseForm.valid"
+              >
+                Continue
+                <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
 
-    @if (attemptsRemaning === 0) {
-      <div class="col-md-12">
-        <mat-card>
-          <mat-card-content>
-            <p class="heading">The evacuee was unable to answer the security phrase correctly.</p>
-            <p class="paragraph-space">
-              If the evacuee also has a <b>profile</b>, go back to the search results page and try to access their
-              profile.
-            </p>
-            <p>Please start a new Evacuee Registration if you cannot access the evacuee's ESS File or Profile.</p>
-            <div class="row">
-              <div class="col-md-8">
-                <button class="button-s submit button-space" type="button" mat-button (click)="goBack()">Back</button>
-                <button class="button-p submit" type="button" mat-button (click)="goToEvacRegistration()">
-                  New Evacuee Registration
-                </button>
-              </div>
+  @if (attemptsRemaning === 0) {
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <p class="heading">The evacuee was unable to answer the security phrase correctly.</p>
+          <p class="paragraph-space">
+            If the evacuee also has a <b>profile</b>, go back to the search results page and try to access their
+            profile.
+          </p>
+          <p>Please start a new Evacuee Registration if you cannot access the evacuee's ESS File or Profile.</p>
+          <div class="row">
+            <div class="col-md-8">
+              <button class="button-s submit button-space" type="button" mat-button (click)="goBack()">Back</button>
+              <button class="button-p submit" type="button" mat-button (click)="goToEvacRegistration()">
+                New Evacuee Registration
+              </button>
             </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    }
-  </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

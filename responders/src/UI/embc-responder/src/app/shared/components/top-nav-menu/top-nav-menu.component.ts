@@ -8,11 +8,11 @@ import { MatIconButton, MatAnchor } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
-    selector: 'app-top-nav-menu',
-    templateUrl: './top-nav-menu.component.html',
-    styleUrls: ['./top-nav-menu.component.scss'],
-    standalone: true,
-    imports: [MatToolbar, MatIconButton, MatIcon, MatAnchor, RouterLinkActive, RouterLink]
+  selector: 'app-top-nav-menu',
+  templateUrl: './top-nav-menu.component.html',
+  styleUrls: ['./top-nav-menu.component.scss'],
+  standalone: true,
+  imports: [MatToolbar, MatIconButton, MatIcon, MatAnchor, RouterLinkActive, RouterLink]
 })
 export class TopNavMenuComponent implements OnInit {
   @Output() public sidenavToggle = new EventEmitter();

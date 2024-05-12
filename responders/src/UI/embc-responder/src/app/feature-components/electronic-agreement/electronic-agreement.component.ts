@@ -9,11 +9,11 @@ import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-electronic-agreement',
-    templateUrl: './electronic-agreement.component.html',
-    styleUrls: ['./electronic-agreement.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatCheckbox, MatButton]
+  selector: 'app-electronic-agreement',
+  templateUrl: './electronic-agreement.component.html',
+  styleUrls: ['./electronic-agreement.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatCheckbox, MatButton]
 })
 export class ElectronicAgreementComponent implements OnInit {
   agreementAccepted = false;

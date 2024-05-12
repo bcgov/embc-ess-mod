@@ -6,8 +6,7 @@ import { EvacueeIdVerifyComponent } from './evacuee-id-verify.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, EvacueeIdVerifyRoutingModule, ReactiveFormsModule, EvacueeIdVerifyComponent]
+  imports: [CommonModule, EvacueeIdVerifyRoutingModule, ReactiveFormsModule, EvacueeIdVerifyComponent]
 })
 export class EvacueeIdVerifyModule {}

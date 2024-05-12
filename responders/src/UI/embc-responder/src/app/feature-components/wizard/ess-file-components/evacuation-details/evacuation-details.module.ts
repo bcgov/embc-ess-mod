@@ -6,14 +6,7 @@ import { EvacuationDetailsComponent } from './evacuation-details.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
-
 @NgModule({
-    imports: [
-    CommonModule,
-    EvacuationDetailsRoutingModule,
-    ReactiveFormsModule,
-    EvacuationDetailsComponent
-]
+  imports: [CommonModule, EvacuationDetailsRoutingModule, ReactiveFormsModule, EvacuationDetailsComponent]
 })
 export class EvacuationDetailsModule {}

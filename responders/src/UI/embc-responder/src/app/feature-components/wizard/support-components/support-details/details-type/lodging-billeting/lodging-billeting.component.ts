@@ -7,11 +7,20 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-lodging-billeting',
-    templateUrl: './lodging-billeting.component.html',
-    styleUrls: ['./lodging-billeting.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, NumberOfNightsPipe]
+  selector: 'app-lodging-billeting',
+  templateUrl: './lodging-billeting.component.html',
+  styleUrls: ['./lodging-billeting.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    NumberOfNightsPipe
+  ]
 })
 export class LodgingBilletingComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

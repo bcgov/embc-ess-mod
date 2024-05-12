@@ -12,9 +12,9 @@ describe('ReviewSupportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, ReviewSupportComponent],
-    providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }]
-}).compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, ReviewSupportComponent],
+      providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }]
+    }).compileComponents();
   });
 
   beforeEach(() => {

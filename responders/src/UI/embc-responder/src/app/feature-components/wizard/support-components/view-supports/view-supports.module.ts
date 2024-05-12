@@ -6,8 +6,7 @@ import { ViewSupportsComponent } from './view-supports.component';
 
 import { SupportsTableComponent } from './supports-table/supports-table.component';
 
-
 @NgModule({
-    imports: [CommonModule, ViewSupportsRoutingModule, ViewSupportsComponent, SupportsTableComponent]
+  imports: [CommonModule, ViewSupportsRoutingModule, ViewSupportsComponent, SupportsTableComponent]
 })
 export class ViewSupportsModule {}

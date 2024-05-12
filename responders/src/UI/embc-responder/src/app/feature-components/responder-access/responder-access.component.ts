@@ -5,11 +5,18 @@ import { ToggleSideNavComponent } from '../../shared/components/toggle-side-nav/
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 
 @Component({
-    selector: 'app-responder-access',
-    templateUrl: './responder-access.component.html',
-    styleUrls: ['./responder-access.component.scss'],
-    standalone: true,
-    imports: [MatSidenavContainer, MatSidenav, ToggleSideNavComponent, MatSidenavContent, TopNavMenuComponent, RouterOutlet]
+  selector: 'app-responder-access',
+  templateUrl: './responder-access.component.html',
+  styleUrls: ['./responder-access.component.scss'],
+  standalone: true,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    ToggleSideNavComponent,
+    MatSidenavContent,
+    TopNavMenuComponent,
+    RouterOutlet
+  ]
 })
 export class ResponderAccessComponent implements OnInit {
   constructor() {}

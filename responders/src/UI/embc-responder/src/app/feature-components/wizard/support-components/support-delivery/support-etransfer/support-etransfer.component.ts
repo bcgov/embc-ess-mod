@@ -20,11 +20,23 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-support-etransfer',
-    templateUrl: './support-etransfer.component.html',
-    styleUrls: ['./support-etransfer.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, MatError, MatLabel, MatInput, MatCheckbox, IMaskDirective, TitleCasePipe]
+  selector: 'app-support-etransfer',
+  templateUrl: './support-etransfer.component.html',
+  styleUrls: ['./support-etransfer.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatLabel,
+    MatInput,
+    MatCheckbox,
+    IMaskDirective,
+    TitleCasePipe
+  ]
 })
 export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() supportDeliveryForm: UntypedFormGroup;

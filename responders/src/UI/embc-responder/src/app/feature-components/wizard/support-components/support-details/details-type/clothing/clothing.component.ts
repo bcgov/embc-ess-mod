@@ -20,11 +20,22 @@ import { DecimalPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
-    selector: 'app-clothing',
-    templateUrl: './clothing.component.html',
-    styleUrls: ['./clothing.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatFormField, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe]
+  selector: 'app-clothing',
+  templateUrl: './clothing.component.html',
+  styleUrls: ['./clothing.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatFormField,
+    MatInput,
+    NumberCommaDirective,
+    MatPrefix,
+    DecimalPipe
+  ]
 })
 export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

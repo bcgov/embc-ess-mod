@@ -14,16 +14,16 @@ describe('CaseNoteSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, CaseNoteSearchComponent],
-    providers: [
+      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, CaseNoteSearchComponent],
+      providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: OptionInjectionService,
-            useClass: MockOptionInjectionService
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CaseNoteSearchComponent);
     component = fixture.componentInstance;

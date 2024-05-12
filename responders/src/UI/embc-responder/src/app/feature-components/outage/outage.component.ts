@@ -5,11 +5,11 @@ import { OutageService } from './outage.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-outage',
-    templateUrl: './outage.component.html',
-    styleUrls: ['./outage.component.scss'],
-    standalone: true,
-    imports: [DatePipe]
+  selector: 'app-outage',
+  templateUrl: './outage.component.html',
+  styleUrls: ['./outage.component.scss'],
+  standalone: true,
+  imports: [DatePipe]
 })
 export class OutageComponent implements OnInit {
   public outageType: string;

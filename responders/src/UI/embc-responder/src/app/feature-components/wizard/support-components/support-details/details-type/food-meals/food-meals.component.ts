@@ -9,11 +9,22 @@ import { NgClass, DecimalPipe } from '@angular/common';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-food-meals',
-    templateUrl: './food-meals.component.html',
-    styleUrls: ['./food-meals.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, NgClass, MatLabel, MatSelect, MatOption, MatError, DecimalPipe, NumberOfMealsPipe]
+  selector: 'app-food-meals',
+  templateUrl: './food-meals.component.html',
+  styleUrls: ['./food-meals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    NgClass,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    DecimalPipe,
+    NumberOfMealsPipe
+  ]
 })
 export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

@@ -7,6 +7,6 @@ import { RestrictionComponent } from './restriction.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [CommonModule, RestrictionRoutingModule, ReactiveFormsModule, RestrictionComponent]
+  imports: [CommonModule, RestrictionRoutingModule, ReactiveFormsModule, RestrictionComponent]
 })
 export class RestrictionModule {}

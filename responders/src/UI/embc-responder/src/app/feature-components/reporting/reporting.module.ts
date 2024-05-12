@@ -4,10 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ReportingRoutingModule } from './reporting-routing.module';
 import { ReportingComponent } from './reporting.component';
 
-
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [CommonModule, ReportingRoutingModule, ReactiveFormsModule, ReportingComponent]
+  imports: [CommonModule, ReportingRoutingModule, ReactiveFormsModule, ReportingComponent]
 })
 export class ReportingModule {}

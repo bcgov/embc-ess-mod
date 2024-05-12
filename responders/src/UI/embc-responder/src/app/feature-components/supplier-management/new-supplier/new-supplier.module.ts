@@ -5,9 +5,7 @@ import { IMaskModule } from 'angular-imask';
 import { NewSupplierRoutingModule } from './new-supplier-routing.module';
 import { NewSupplierComponent } from './new-supplier.component';
 
-
-
 @NgModule({
-    imports: [CommonModule, NewSupplierRoutingModule, ReactiveFormsModule, IMaskModule, NewSupplierComponent]
+  imports: [CommonModule, NewSupplierRoutingModule, ReactiveFormsModule, IMaskModule, NewSupplierComponent]
 })
 export class NewSupplierModule {}

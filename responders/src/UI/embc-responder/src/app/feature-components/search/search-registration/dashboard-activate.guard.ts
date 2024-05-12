@@ -8,7 +8,7 @@ import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardActivateGuard  {
+export class DashboardActivateGuard {
   constructor(
     private evacueeSearchService: EvacueeSearchService,
     private appBaseService: AppBaseService,

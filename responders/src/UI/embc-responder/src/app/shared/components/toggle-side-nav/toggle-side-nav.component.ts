@@ -4,11 +4,11 @@ import { RouterLinkActive, RouterLink } from '@angular/router';
 import { MatNavList, MatListItem } from '@angular/material/list';
 
 @Component({
-    selector: 'app-toggle-side-nav',
-    templateUrl: './toggle-side-nav.component.html',
-    styleUrls: ['./toggle-side-nav.component.scss'],
-    standalone: true,
-    imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, MatDivider]
+  selector: 'app-toggle-side-nav',
+  templateUrl: './toggle-side-nav.component.html',
+  styleUrls: ['./toggle-side-nav.component.scss'],
+  standalone: true,
+  imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, MatDivider]
 })
 export class ToggleSideNavComponent implements OnInit {
   @Output() public sidenavClose = new EventEmitter();

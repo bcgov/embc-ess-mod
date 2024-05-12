@@ -6,8 +6,7 @@ import { ResponderDashboardComponent } from './responder-dashboard.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @NgModule({
-    imports: [CommonModule, ResponderDashboardRoutingModule, ResponderDashboardComponent]
+  imports: [CommonModule, ResponderDashboardRoutingModule, ResponderDashboardComponent]
 })
 export class ResponderDashboardModule {}

@@ -28,11 +28,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgClass, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-ess-files-results',
-    templateUrl: './ess-files-results.component.html',
-    styleUrls: ['./ess-files-results.component.scss'],
-    standalone: true,
-    imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
+  selector: 'app-ess-files-results',
+  templateUrl: './ess-files-results.component.html',
+  styleUrls: ['./ess-files-results.component.scss'],
+  standalone: true,
+  imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
 })
 export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;

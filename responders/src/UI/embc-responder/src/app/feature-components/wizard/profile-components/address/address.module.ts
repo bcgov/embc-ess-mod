@@ -6,8 +6,7 @@ import { AddressComponent } from './address.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, AddressRoutingModule, ReactiveFormsModule, AddressComponent]
+  imports: [CommonModule, AddressRoutingModule, ReactiveFormsModule, AddressComponent]
 })
 export class AddressModule {}

@@ -14,7 +14,7 @@ describe('EditSupplierComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -22,8 +22,8 @@ describe('EditSupplierComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         EditSupplierComponent
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

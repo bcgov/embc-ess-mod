@@ -1,5 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -28,11 +35,25 @@ import { DatePipe } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
-    selector: 'app-profile-review',
-    templateUrl: './profile-review.component.html',
-    styleUrls: ['./profile-review.component.scss'],
-    standalone: true,
-    imports: [MatCheckbox, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatFormField, MatLabel, MatInput, MatButton, AppLoaderComponent, DatePipe, MaskTextPipe]
+  selector: 'app-profile-review',
+  templateUrl: './profile-review.component.html',
+  styleUrls: ['./profile-review.component.scss'],
+  standalone: true,
+  imports: [
+    MatCheckbox,
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+    AppLoaderComponent,
+    DatePipe,
+    MaskTextPipe
+  ]
 })
 export class ProfileReviewComponent implements OnInit, OnDestroy {
   verifiedProfileGroup: UntypedFormGroup = null;

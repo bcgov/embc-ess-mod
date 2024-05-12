@@ -6,8 +6,7 @@ import { TaskSearchComponent } from './task-search.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 @NgModule({
-    imports: [CommonModule, TaskSearchRoutingModule, ReactiveFormsModule, TaskSearchComponent]
+  imports: [CommonModule, TaskSearchRoutingModule, ReactiveFormsModule, TaskSearchComponent]
 })
 export class TaskSearchModule {}

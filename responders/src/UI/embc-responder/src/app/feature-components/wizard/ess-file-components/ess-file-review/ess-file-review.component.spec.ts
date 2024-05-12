@@ -18,7 +18,7 @@ describe('EssFileReviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -27,15 +27,15 @@ describe('EssFileReviewComponent', () => {
         BrowserAnimationsModule,
         CustomPipeModule,
         EssFileReviewComponent
-    ],
-    providers: [
+      ],
+      providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

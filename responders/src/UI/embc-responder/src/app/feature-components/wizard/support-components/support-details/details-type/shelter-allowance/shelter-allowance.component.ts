@@ -10,11 +10,22 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-shelter-allowance',
-    templateUrl: './shelter-allowance.component.html',
-    styleUrls: ['./shelter-allowance.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatCheckbox, DecimalPipe, NumberOfNightsPipe]
+  selector: 'app-shelter-allowance',
+  templateUrl: './shelter-allowance.component.html',
+  styleUrls: ['./shelter-allowance.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatCheckbox,
+    DecimalPipe,
+    NumberOfNightsPipe
+  ]
 })
 export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

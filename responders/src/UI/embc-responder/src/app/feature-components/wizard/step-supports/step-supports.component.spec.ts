@@ -18,7 +18,7 @@ describe('StepSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -26,16 +26,16 @@ describe('StepSupportsComponent', () => {
         MaterialModule,
         BrowserAnimationsModule,
         StepSupportsComponent
-    ],
-    providers: [
+      ],
+      providers: [
         DatePipe,
         { provide: computeInterfaceToken, useValue: {} },
         {
-            provide: AppBaseService,
-            useClass: MockAppBaseService
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

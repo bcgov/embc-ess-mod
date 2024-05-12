@@ -16,17 +16,14 @@
           }
         </mat-select>
         @if (referralFormControl?.noOfNights.invalid && referralFormControl?.noOfNights.hasError('required')) {
-          <mat-error
-            >
-            Number of Nights is required</mat-error
-            >
-          }
-        </mat-form-field>
-      </div>
+          <mat-error> Number of Nights is required</mat-error>
+        }
+      </mat-form-field>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <p>NOTE: Please complete Billeting Invoice for host family</p>
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>NOTE: Please complete Billeting Invoice for host family</p>
     </div>
-  </form>
+  </div>
+</form>

@@ -18,11 +18,11 @@ import { SecurityPhraseCardComponent } from './security-phrase-card/security-phr
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-essfile-security-phrase',
-    templateUrl: './essfile-security-phrase.component.html',
-    styleUrls: ['./essfile-security-phrase.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
+  selector: 'app-essfile-security-phrase',
+  templateUrl: './essfile-security-phrase.component.html',
+  styleUrls: ['./essfile-security-phrase.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: UntypedFormGroup;

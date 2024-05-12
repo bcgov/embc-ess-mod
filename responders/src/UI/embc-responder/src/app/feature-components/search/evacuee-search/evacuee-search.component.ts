@@ -11,13 +11,12 @@ import { ComputeRulesService } from 'src/app/core/services/computeRules.service'
 import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
 import { SearchOptionsComponent } from './search-options/search-options.component';
 
-
 @Component({
-    selector: 'app-evacuee-search',
-    templateUrl: './evacuee-search.component.html',
-    styleUrls: ['./evacuee-search.component.scss'],
-    standalone: true,
-    imports: [SearchOptionsComponent, OverlayLoaderComponent]
+  selector: 'app-evacuee-search',
+  templateUrl: './evacuee-search.component.html',
+  styleUrls: ['./evacuee-search.component.scss'],
+  standalone: true,
+  imports: [SearchOptionsComponent, OverlayLoaderComponent]
 })
 export class EvacueeSearchComponent implements OnInit {
   isLoading = true;

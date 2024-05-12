@@ -21,7 +21,7 @@ import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective
 import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
 
 @NgModule({
-    imports: [
+  imports: [
     CommonModule,
     SupportDetailsRoutingModule,
     ReactiveFormsModule,
@@ -38,7 +38,7 @@ import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance
     ClothingComponent,
     IncidentalsComponent,
     ShelterAllowanceGroupComponent
-],
-    providers: [DatePipe]
+  ],
+  providers: [DatePipe]
 })
 export class SupportDetailsModule {}

@@ -18,30 +18,30 @@ describe('TaskSearchComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule.withRoutes([
-            {
-                path: 'responder-access/search/task-details',
-                component: TaskDetailsComponent
-            }
+          {
+            path: 'responder-access/search/task-details',
+            component: TaskDetailsComponent
+          }
         ]),
         HttpClientTestingModule,
         ReactiveFormsModule,
         TaskSearchComponent
-    ],
-    providers: [
+      ],
+      providers: [
         TaskSearchComponent,
         {
-            provide: TaskSearchService,
-            useClass: MockTaskSearchService
+          provide: TaskSearchService,
+          useClass: MockTaskSearchService
         },
         {
-            provide: AlertService,
-            useClass: MockAlertService
+          provide: AlertService,
+          useClass: MockAlertService
         },
         UntypedFormBuilder
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

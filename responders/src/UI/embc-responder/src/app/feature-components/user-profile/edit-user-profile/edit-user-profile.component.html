@@ -15,10 +15,7 @@
               <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
 
               @if (editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')) {
-                <mat-error
-                  >
-                  First Name is required
-                </mat-error>
+                <mat-error> First Name is required </mat-error>
               }
             </mat-form-field>
           </div>
@@ -30,9 +27,7 @@
               <mat-label>Last Name</mat-label>
               <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
               @if (editFormControl.lastName.invalid && editFormControl.lastName.hasError('whitespaceError')) {
-                <mat-error>
-                  Last Name is required
-                </mat-error>
+                <mat-error> Last Name is required </mat-error>
               }
             </mat-form-field>
           </div>
@@ -83,9 +78,7 @@
               <mat-label>Email Address</mat-label>
               <input formControlName="email" maxlength="254" matInput placeholder="Email Address" />
               @if (editFormControl.email.invalid && editFormControl.email.hasError('email')) {
-                <mat-error>
-                  Invalid email
-                </mat-error>
+                <mat-error> Invalid email </mat-error>
               }
             </mat-form-field>
           </div>
@@ -95,31 +88,24 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <mat-label>Contact Number</mat-label>
-              <input
-                formControlName="phone"
-                matInput
-                placeholder="Contact Number"
-                [imask]="phoneMask"
-                />
-                @if (editFormControl.phone.invalid && editFormControl.phone.hasError('incorrectLength')) {
-                  <mat-error>
-                    Telephone number must have 10 digits
-                  </mat-error>
-                }
-              </mat-form-field>
-            </div>
+              <input formControlName="phone" matInput placeholder="Contact Number" [imask]="phoneMask" />
+              @if (editFormControl.phone.invalid && editFormControl.phone.hasError('incorrectLength')) {
+                <mat-error> Telephone number must have 10 digits </mat-error>
+              }
+            </mat-form-field>
           </div>
         </div>
-      </form>
-      <div>
-        <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
-        <button class="button-p width-button" [disabled]="!editForm.valid || !isSubmitted" mat-button (click)="save()">
-          Save
-          <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color">
-          </app-loader>
-        </button>
       </div>
-      <br />
-      <br />
-    </mat-card-content>
-  </mat-card>
+    </form>
+    <div>
+      <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
+      <button class="button-p width-button" [disabled]="!editForm.valid || !isSubmitted" mat-button (click)="save()">
+        Save
+        <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color">
+        </app-loader>
+      </button>
+    </div>
+    <br />
+    <br />
+  </mat-card-content>
+</mat-card>

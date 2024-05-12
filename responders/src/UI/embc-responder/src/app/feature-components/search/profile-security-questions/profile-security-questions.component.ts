@@ -16,13 +16,20 @@ import { MatButton } from '@angular/material/button';
 import { SecurityQuestionCardComponent } from './security-question-card/security-question-card.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
-
 @Component({
-    selector: 'app-profile-security-questions',
-    templateUrl: './profile-security-questions.component.html',
-    styleUrls: ['./profile-security-questions.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, SecurityQuestionCardComponent, MatButton, AppLoaderComponent]
+  selector: 'app-profile-security-questions',
+  templateUrl: './profile-security-questions.component.html',
+  styleUrls: ['./profile-security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    SecurityQuestionCardComponent,
+    MatButton,
+    AppLoaderComponent
+  ]
 })
 export class ProfileSecurityQuestionsComponent implements OnInit {
   securityQuestionsForm: UntypedFormGroup;

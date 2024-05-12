@@ -16,11 +16,11 @@ import { DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-team-member-detail',
-    templateUrl: './team-member-detail.component.html',
-    styleUrls: ['./team-member-detail.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, MatButton, DatePipe]
+  selector: 'app-team-member-detail',
+  templateUrl: './team-member-detail.component.html',
+  styleUrls: ['./team-member-detail.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatButton, DatePipe]
 })
 export class TeamMemberDetailComponent {
   teamMember: TeamMemberModel;

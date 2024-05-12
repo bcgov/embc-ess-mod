@@ -5,11 +5,11 @@ import { DatePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-outage-banner',
-    templateUrl: './outage-banner.component.html',
-    styleUrls: ['./outage-banner.component.scss'],
-    standalone: true,
-    imports: [MatIconButton, DatePipe]
+  selector: 'app-outage-banner',
+  templateUrl: './outage-banner.component.html',
+  styleUrls: ['./outage-banner.component.scss'],
+  standalone: true,
+  imports: [MatIconButton, DatePipe]
 })
 export class OutageBannerComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(true);

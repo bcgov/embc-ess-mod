@@ -3,215 +3,197 @@
     <div class="col-md-12">
       <a (click)="back()"
         ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
-        >
-      </div>
+      >
     </div>
+  </div>
 
-    <div class="heading-container row-padding">
-      <div class="row">
-        <div class="col-md-8">
-          <span class="wizard-tab-heading">Support Details</span>
-        </div>
-        @if (hideRateSheet()) {
-          <div class="col-md-4">
-            <img src="/assets/images/rate-card.svg" width="23" height="23" />
-            <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
-          </div>
-        }
+  <div class="heading-container row-padding">
+    <div class="row">
+      <div class="col-md-8">
+        <span class="wizard-tab-heading">Support Details</span>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <span class="wizard-support-type">{{ stepSupportsService?.supportTypeToAdd?.description }}</span>
+      @if (hideRateSheet()) {
+        <div class="col-md-4">
+          <img src="/assets/images/rate-card.svg" width="23" height="23" />
+          <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
         </div>
-      </div>
+      }
     </div>
-
     <div class="row">
       <div class="col-md-12">
-        <p>
-          This support can be provisioned to the evacuee by means of a
-          <b>referral</b> or <b>e-Transfer.</b>
-        </p>
+        <span class="wizard-support-type">{{ stepSupportsService?.supportTypeToAdd?.description }}</span>
       </div>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <p class="question-heading requiredField">Select Support Delivery Method</p>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        This support can be provisioned to the evacuee by means of a
+        <b>referral</b> or <b>e-Transfer.</b>
+      </p>
     </div>
+  </div>
 
-    <div class="row pb-4">
-      <div class="col-md-4">
-        <mat-card
-          id="referralCard"
-          class="support-delivery-card"
-          [class.selected]="selectedSupportMethod === supportMethod.Referral"
-          [class.disabled]="cloneFlag"
-          (click)="setSupportMethod(supportMethod.Referral)"
-          >
-          <mat-card-content>
-            @if (selectedSupportMethod === supportMethod.Referral) {
-              <div class="selected-icon-container">
-                <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-              </div>
-            }
-            <div class="support-delivery-card-header">
-              <div class="row">
-                <div class="col subtitle-name">
-                  <div class="subtitle-icon-container">
-                    <img src="/assets/images/referral.svg" height="70" width="55" />
-                  </div>
-                  <p>Referral</p>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="question-heading requiredField">Select Support Delivery Method</p>
+    </div>
+  </div>
+
+  <div class="row pb-4">
+    <div class="col-md-4">
+      <mat-card
+        id="referralCard"
+        class="support-delivery-card"
+        [class.selected]="selectedSupportMethod === supportMethod.Referral"
+        [class.disabled]="cloneFlag"
+        (click)="setSupportMethod(supportMethod.Referral)"
+      >
+        <mat-card-content>
+          @if (selectedSupportMethod === supportMethod.Referral) {
+            <div class="selected-icon-container">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+            </div>
+          }
+          <div class="support-delivery-card-header">
+            <div class="row">
+              <div class="col subtitle-name">
+                <div class="subtitle-icon-container">
+                  <img src="/assets/images/referral.svg" height="70" width="55" />
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <p>Immediate support provision to an authorized supplier</p>
-                </div>
+                <p>Referral</p>
               </div>
             </div>
-
-            @if (cloneFlag && selectedSupportMethod === supportMethod.ETransfer) {
-              <div
-                class="referral-ineligible"
-                >
-                <p>Changing Support Delivery Method Not Available for Remote Extensions</p>
+            <div class="row">
+              <div class="col">
+                <p>Immediate support provision to an authorized supplier</p>
               </div>
-            } @else {
-              <p><b>Requirements:</b></p>
-              <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
-              None
-            }
+            </div>
+          </div>
 
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <div class="col-md-4">
-        <mat-card
-          id="interacCard"
-          class="support-delivery-card"
+          @if (cloneFlag && selectedSupportMethod === supportMethod.ETransfer) {
+            <div class="referral-ineligible">
+              <p>Changing Support Delivery Method Not Available for Remote Extensions</p>
+            </div>
+          } @else {
+            <p><b>Requirements:</b></p>
+            <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
+            None
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card
+        id="interacCard"
+        class="support-delivery-card"
         [class.disabled]="
           appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available || cloneFlag
         "
-          [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
-          (click)="setSupportMethod(supportMethod.ETransfer)"
-          >
-          <mat-card-content>
-            @if (selectedSupportMethod === supportMethod.ETransfer) {
-              <div class="selected-icon-container">
-                <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-                <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
-              </div>
-            }
-            <div class="support-delivery-card-header">
-              <div class="row">
-                <div class="col subtitle-name">
-                  <div class="subtitle-icon-container">
-                    <img src="/assets/images/interac.svg" height="70" width="100" />
-                  </div>
-                  <p>Interac e-Transfer</p>
+        [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
+        (click)="setSupportMethod(supportMethod.ETransfer)"
+      >
+        <mat-card-content>
+          @if (selectedSupportMethod === supportMethod.ETransfer) {
+            <div class="selected-icon-container">
+              <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
+              <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+            </div>
+          }
+          <div class="support-delivery-card-header">
+            <div class="row">
+              <div class="col subtitle-name">
+                <div class="subtitle-icon-container">
+                  <img src="/assets/images/interac.svg" height="70" width="100" />
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <p>Money in bank account</p>
-                </div>
+                <p>Interac e-Transfer</p>
               </div>
             </div>
-
-            @if (cloneFlag && selectedSupportMethod === supportMethod.Referral) {
-              <div
-                class="etransfer-ineligible"
-                >
-                <p>Changing Support Delivery Method Not Available for Remote Extensions</p>
+            <div class="row">
+              <div class="col">
+                <p>Money in bank account</p>
               </div>
-            } @else {
-              @if (appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available) {
-                <div
-                  class="etransfer-ineligible"
-                  >
-                  @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible) {
-                    <p>
-                      Evacuee Ineligible
-                    </p>
-                  }
-                  @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.unavailable) {
-                    <p>
-                      Not Available
-                    </p>
-                  }
-                  @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.notAllowed) {
-                    <p>
-                      Not Available for this Support Type
-                    </p>
-                  }
-                  @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.overLimitIneligible) {
-                    <p>
-                      Not Available - Amount exceeds $10,000
-                    </p>
-                  }
-                </div>
-              }
-              @if (
-                appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.available ||
-                appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible
-                ) {
-                <div
-                  class="requirements"
-                  >
-                  <p><b>Requirements:</b></p>
-                  @for (req of appBaseService?.etransferProperties?.etransferRequirement; track req) {
-                    <div>
-                      @if (req.status) {
-                        <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
-                      }
-                      @if (!req.status) {
-                        <img src="/assets/images/wizard/ineligible.svg" height="10" width="10" />
-                      }
-                      {{ req.statement }}
-                    </div>
-                  }
-                </div>
-              }
+            </div>
+          </div>
+
+          @if (cloneFlag && selectedSupportMethod === supportMethod.Referral) {
+            <div class="etransfer-ineligible">
+              <p>Changing Support Delivery Method Not Available for Remote Extensions</p>
+            </div>
+          } @else {
+            @if (appBaseService?.etransferProperties?.etransferStatus !== eTransferStatus.available) {
+              <div class="etransfer-ineligible">
+                @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible) {
+                  <p>Evacuee Ineligible</p>
+                }
+                @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.unavailable) {
+                  <p>Not Available</p>
+                }
+                @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.notAllowed) {
+                  <p>Not Available for this Support Type</p>
+                }
+                @if (appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.overLimitIneligible) {
+                  <p>Not Available - Amount exceeds $10,000</p>
+                }
+              </div>
             }
-
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <!--Dynamic form-->
-    @if (selectedSupportMethod === supportMethod.Referral) {
-      <app-support-referral
-        [referralDeliveryForm]="supportDeliveryForm"
-        [editFlag]="editFlag"
-        [cloneFlag]="cloneFlag"
-      ></app-support-referral>
-    }
-    @if (selectedSupportMethod === supportMethod.ETransfer) {
-      <app-support-etransfer
-        [supportDeliveryForm]="supportDeliveryForm"
-        [editFlag]="editFlag"
-        [cloneFlag]="cloneFlag"
-      ></app-support-etransfer>
-    }
-
-    <div class="row">
-      <div class="col-md-6">
-        <button class="button-s back" mat-button (click)="backToDetails()">Back - Support Details</button>
-      </div>
-      @if (!editFlag) {
-        <div class="col-md-6">
-          <button class="button-p next" mat-button (click)="next()">Next - Save Support</button>
-        </div>
-      }
-
-      @if (editFlag) {
-        <div class="col-md-6">
-          <button class="button-p next" mat-button (click)="saveEdits()">Save Changes</button>
-        </div>
-      }
+            @if (
+              appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.available ||
+              appBaseService?.etransferProperties?.etransferStatus === eTransferStatus.inEligible
+            ) {
+              <div class="requirements">
+                <p><b>Requirements:</b></p>
+                @for (req of appBaseService?.etransferProperties?.etransferRequirement; track req) {
+                  <div>
+                    @if (req.status) {
+                      <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
+                    }
+                    @if (!req.status) {
+                      <img src="/assets/images/wizard/ineligible.svg" height="10" width="10" />
+                    }
+                    {{ req.statement }}
+                  </div>
+                }
+              </div>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
+
+  <!--Dynamic form-->
+  @if (selectedSupportMethod === supportMethod.Referral) {
+    <app-support-referral
+      [referralDeliveryForm]="supportDeliveryForm"
+      [editFlag]="editFlag"
+      [cloneFlag]="cloneFlag"
+    ></app-support-referral>
+  }
+  @if (selectedSupportMethod === supportMethod.ETransfer) {
+    <app-support-etransfer
+      [supportDeliveryForm]="supportDeliveryForm"
+      [editFlag]="editFlag"
+      [cloneFlag]="cloneFlag"
+    ></app-support-etransfer>
+  }
+
+  <div class="row">
+    <div class="col-md-6">
+      <button class="button-s back" mat-button (click)="backToDetails()">Back - Support Details</button>
+    </div>
+    @if (!editFlag) {
+      <div class="col-md-6">
+        <button class="button-p next" mat-button (click)="next()">Next - Save Support</button>
+      </div>
+    }
+
+    @if (editFlag) {
+      <div class="col-md-6">
+        <button class="button-p next" mat-button (click)="saveEdits()">Save Changes</button>
+      </div>
+    }
+  </div>
+</div>

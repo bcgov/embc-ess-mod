@@ -19,11 +19,20 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatError, MatPrefix } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-incidentals',
-    templateUrl: './incidentals.component.html',
-    styleUrls: ['./incidentals.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError, NumberCommaDirective, MatPrefix, DecimalPipe]
+  selector: 'app-incidentals',
+  templateUrl: './incidentals.component.html',
+  styleUrls: ['./incidentals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatError,
+    NumberCommaDirective,
+    MatPrefix,
+    DecimalPipe
+  ]
 })
 export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

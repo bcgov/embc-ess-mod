@@ -10,8 +10,8 @@ describe('DataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterTestingModule, HttpClientTestingModule, AssignedCommunityTableComponent]
-}).compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, AssignedCommunityTableComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -10,11 +10,22 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-usa-address',
-    templateUrl: './usa-address.component.html',
-    styleUrls: ['./usa-address.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatAutocompleteTrigger, MatAutocomplete, MatOption, AsyncPipe]
+  selector: 'app-usa-address',
+  templateUrl: './usa-address.component.html',
+  styleUrls: ['./usa-address.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe
+  ]
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

@@ -17,11 +17,30 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { NgFor, NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-address',
-    templateUrl: './address.component.html',
-    styleUrls: ['./address.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, NgIf, MatError, BcAddressComponent, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, CanAddressComponent, UsaAddressComponent, OtherAddressComponent, MatButton, AsyncPipe]
+  selector: 'app-address',
+  templateUrl: './address.component.html',
+  styleUrls: ['./address.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    NgFor,
+    MatRadioButton,
+    NgIf,
+    MatError,
+    BcAddressComponent,
+    MatFormField,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    CanAddressComponent,
+    UsaAddressComponent,
+    OtherAddressComponent,
+    MatButton,
+    AsyncPipe
+  ]
 })
 export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   primaryAddressForm: UntypedFormGroup;

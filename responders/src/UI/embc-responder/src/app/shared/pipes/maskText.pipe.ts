@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'maskText',
-    standalone: true
+  name: 'maskText',
+  standalone: true
 })
 export class MaskTextPipe implements PipeTransform {
   transform(value): string {

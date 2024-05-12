@@ -1,5 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { MatInput } from '@angular/material/input';
@@ -18,11 +28,11 @@ export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-bcsc-invite-dialog',
-    templateUrl: './bcsc-invite-dialog.component.html',
-    styleUrls: ['./bcsc-invite-dialog.component.scss'],
-    standalone: true,
-    imports: [NgTemplateOutlet, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
+  selector: 'app-bcsc-invite-dialog',
+  templateUrl: './bcsc-invite-dialog.component.html',
+  styleUrls: ['./bcsc-invite-dialog.component.scss'],
+  standalone: true,
+  imports: [NgTemplateOutlet, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
 export class BcscInviteDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();

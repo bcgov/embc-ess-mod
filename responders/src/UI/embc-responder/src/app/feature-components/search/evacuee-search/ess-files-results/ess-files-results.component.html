@@ -2,11 +2,11 @@
   <div>
     <mat-card
       class="result-card"
-    [ngClass]="{
-      'outer-card': !fileResult?.isRestricted,
-      'restricted-card': fileResult?.isRestricted
-    }"
-      >
+      [ngClass]="{
+        'outer-card': !fileResult?.isRestricted,
+        'restricted-card': fileResult?.isRestricted
+      }"
+    >
       <mat-card-content>
         <div class="row result-heading-background">
           <div class="col-md-9">
@@ -15,27 +15,33 @@
                 @if (fileResult?.status === 'Active') {
                   <a class="file-active highlight" (click)="openESSFile(fileResult)">
                     ESS File:<b>{{ fileResult?.manualFileId || fileResult?.id }}</b>
-                    <span class="status-align"><img src="/assets/images/active-flag.svg" height="40" width="33" /></span>
+                    <span class="status-align"
+                      ><img src="/assets/images/active-flag.svg" height="40" width="33"
+                    /></span>
                   </a>
                 }
                 @if (fileResult?.status === 'Pending') {
                   <a class="file-pending highlight" (click)="openESSFile(fileResult)"
                     >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-                    ><span class="status-align"><img src="/assets/images/pending-flag.svg" height="40" width="33" /></span>
+                    ><span class="status-align"
+                      ><img src="/assets/images/pending-flag.svg" height="40" width="33"
+                    /></span>
                   </a>
                 }
                 @if (fileResult?.status === 'Completed') {
-                  <a
-                    class="file-complete highlight"
-                    (click)="openESSFile(fileResult)"
+                  <a class="file-complete highlight" (click)="openESSFile(fileResult)"
                     >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-                    ><span class="status-align"><img src="/assets/images/complete-flag.svg" height="40" width="33" /></span>
+                    ><span class="status-align"
+                      ><img src="/assets/images/complete-flag.svg" height="40" width="33"
+                    /></span>
                   </a>
                 }
                 @if (fileResult?.status === 'Expired') {
                   <a class="file-expired highlight" (click)="openESSFile(fileResult)"
                     >ESS File: <b>{{ fileResult?.manualFileId || fileResult?.id }}</b
-                    ><span class="status-align"><img src="/assets/images/expired-flag.svg" height="40" width="33" /></span>
+                    ><span class="status-align"
+                      ><img src="/assets/images/expired-flag.svg" height="40" width="33"
+                    /></span>
                   </a>
                 }
               </div>
@@ -44,111 +50,109 @@
               <div class="col-md-12">
                 <p class="result-subHeading">
                   Task #
-                  <b
-                    >@if (fileResult?.taskId !== null) {
-                    <span>{{ fileResult?.taskId }}</span>
-                  } @else {
-                    Not yet assigned
-                    }</b
-                    >
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12 metaData-align">
-                  <p>
-                    Restricted File:
-                    <b>{{ fileResult?.isRestricted ? 'Yes' : 'No' }}</b>
-                  </p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12 metaData-align">
-                  <p>
-                    ESS File Created:
-                    <b>{{ fileResult?.createdOn | date: 'dd-MMM-yyyy' }}</b>
-                  </p>
-                </div>
+                  <b>
+                    @if (fileResult?.taskId !== null) {
+                      <span>{{ fileResult?.taskId }}</span>
+                    } @else {
+                      Not yet assigned
+                    }
+                  </b>
+                </p>
               </div>
             </div>
           </div>
-          <br />
-          <div class="row search-data">
-            <div class="col-md-5">
-              <div class="row">
-                <div class="col-md-1 image-col">
-                  <img src="/assets/images/location-pointer.svg" height="34" width="21" />
-                </div>
-                <div class="col-md-10">
-                  <p class="p-custom section-heading">Evacuated From Address:</p>
-                  <p class="p-custom">
-                    <b>{{ fileResult?.evacuatedFrom?.addressLine1 }}</b>
-                  </p>
-                  @if (fileResult?.evacuatedFrom?.addressLine2 !== null) {
-                    <p class="p-custom">
-                      <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
-                    </p>
-                  }
-                  <p class="p-custom">
-                    <b>
-                      @if (fileResult?.evacuatedFrom?.city !== null) {
-                        <span>{{ fileResult?.evacuatedFrom?.city }},</span>
-                      }
-                      @if (fileResult?.evacuatedFrom?.communityCode !== null) {
-                        <span
-                          >{{ communityName(fileResult?.evacuatedFrom) }},</span
-                          >
-                        }
-                        @if (fileResult?.evacuatedFrom?.postalCode !== null) {
-                          <span>
-                            {{ fileResult?.evacuatedFrom?.postalCode }}
-                          </span>
-                        }
-                      </b>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-1 vertical-line">
-                <img src="/assets/images/vertical-line.svg" height="136" width="2" />
-              </div>
-              <div class="col-md-1 horizontal-line">
-                <hr />
-              </div>
-              <div class="col-md-6">
-                <div class="row">
-                  <div class="col-md-1 image-col">
-                    <img src="/assets/images/house.svg" height="35" width="36" />
-                  </div>
-                  <div class="col-md-10">
-                    <p class="p-custom section-heading members-margin">Household Members:</p>
-                    @for (members of fileResult?.householdMembers; track members) {
-                      <span>
-                        <p
-                  [ngClass]="{
-                    'member-match': members?.isSearchMatch,
-                    'p-custom members-margin': !members?.isSearchMatch
-                  }"
-                          >
-                          {{ members?.lastName | uppercase }}, {{ members?.firstName }}
-                          <span class="member-type">({{ getMemberType(members?.type, members?.isMainApplicant) }})</span>
-                        </p>
-                      </span>
-                    }
-                  </div>
-                </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-12 metaData-align">
+                <p>
+                  Restricted File:
+                  <b>{{ fileResult?.isRestricted ? 'Yes' : 'No' }}</b>
+                </p>
               </div>
             </div>
-            @if (fileResult?.isRestricted) {
-              <div class="row restricted-div search-data">
-                <span class="restricted-text">RESTRICTED FILE</span>
+            <div class="row">
+              <div class="col-md-12 metaData-align">
+                <p>
+                  ESS File Created:
+                  <b>{{ fileResult?.createdOn | date: 'dd-MMM-yyyy' }}</b>
+                </p>
               </div>
-            }
-          </mat-card-content>
-        </mat-card>
+            </div>
+          </div>
+        </div>
         <br />
-      </div>
-    }
-    <mat-paginator class="custom-paginator" [pageSizeOptions]="[3]"></mat-paginator>
+        <div class="row search-data">
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-1 image-col">
+                <img src="/assets/images/location-pointer.svg" height="34" width="21" />
+              </div>
+              <div class="col-md-10">
+                <p class="p-custom section-heading">Evacuated From Address:</p>
+                <p class="p-custom">
+                  <b>{{ fileResult?.evacuatedFrom?.addressLine1 }}</b>
+                </p>
+                @if (fileResult?.evacuatedFrom?.addressLine2 !== null) {
+                  <p class="p-custom">
+                    <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
+                  </p>
+                }
+                <p class="p-custom">
+                  <b>
+                    @if (fileResult?.evacuatedFrom?.city !== null) {
+                      <span>{{ fileResult?.evacuatedFrom?.city }},</span>
+                    }
+                    @if (fileResult?.evacuatedFrom?.communityCode !== null) {
+                      <span>{{ communityName(fileResult?.evacuatedFrom) }},</span>
+                    }
+                    @if (fileResult?.evacuatedFrom?.postalCode !== null) {
+                      <span>
+                        {{ fileResult?.evacuatedFrom?.postalCode }}
+                      </span>
+                    }
+                  </b>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 vertical-line">
+            <img src="/assets/images/vertical-line.svg" height="136" width="2" />
+          </div>
+          <div class="col-md-1 horizontal-line">
+            <hr />
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-1 image-col">
+                <img src="/assets/images/house.svg" height="35" width="36" />
+              </div>
+              <div class="col-md-10">
+                <p class="p-custom section-heading members-margin">Household Members:</p>
+                @for (members of fileResult?.householdMembers; track members) {
+                  <span>
+                    <p
+                      [ngClass]="{
+                        'member-match': members?.isSearchMatch,
+                        'p-custom members-margin': !members?.isSearchMatch
+                      }"
+                    >
+                      {{ members?.lastName | uppercase }}, {{ members?.firstName }}
+                      <span class="member-type">({{ getMemberType(members?.type, members?.isMainApplicant) }})</span>
+                    </p>
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        @if (fileResult?.isRestricted) {
+          <div class="row restricted-div search-data">
+            <span class="restricted-text">RESTRICTED FILE</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+    <br />
+  </div>
+}
+<mat-paginator class="custom-paginator" [pageSizeOptions]="[3]"></mat-paginator>

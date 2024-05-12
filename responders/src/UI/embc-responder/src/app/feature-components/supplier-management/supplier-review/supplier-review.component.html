@@ -17,14 +17,10 @@
     <div class="row">
       <div class="col-md-12">
         @if (reviewAction !== 'add-existing') {
-          <p class="details-subtitle">
-            Please review all of the information below before submitting.
-          </p>
+          <p class="details-subtitle">Please review all of the information below before submitting.</p>
         }
         @if (reviewAction === 'add-existing') {
-          <p class="bold">
-            Please review all of the information below prior to saving the supplier.
-          </p>
+          <p class="bold">Please review all of the information below prior to saving the supplier.</p>
         }
       </div>
     </div>
@@ -89,24 +85,14 @@
         <button class="button-s button-width button-margin" mat-button (click)="back()">Back</button>
 
         @if (reviewAction !== 'add-existing') {
-          <button
-            class="button-p button-width"
-            mat-button
-            [disabled]="isSubmitted"
-            (click)="save()"
-            >
+          <button class="button-p button-width" mat-button [disabled]="isSubmitted" (click)="save()">
             Save Supplier
             <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>
         }
 
         @if (reviewAction === 'add-existing') {
-          <button
-            class="button-p button-width"
-            mat-button
-            [disabled]="isSubmitted"
-            (click)="addExisting()"
-            >
+          <button class="button-p button-width" mat-button [disabled]="isSubmitted" (click)="addExisting()">
             Save & Add Supplier
             <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>

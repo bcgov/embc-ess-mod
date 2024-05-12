@@ -20,11 +20,12 @@ import { EnvironmentBannerComponent } from './core/layout/environment-banner/env
 import { NgStyle, AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

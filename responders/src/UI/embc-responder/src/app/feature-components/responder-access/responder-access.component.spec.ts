@@ -9,8 +9,8 @@ describe('ResponderAccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, ResponderAccessComponent]
-}).compileComponents();
+      imports: [HttpClientTestingModule, ResponderAccessComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -19,11 +19,25 @@ import { MatButton } from '@angular/material/button';
 import { NgStyle, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-evacuee-profile-dashboard',
-    templateUrl: './evacuee-profile-dashboard.component.html',
-    styleUrls: ['./evacuee-profile-dashboard.component.scss'],
-    standalone: true,
-    imports: [NgStyle, MatButton, MatCard, MatCardContent, AppLoaderComponent, MatRadioButton, MatchedEssfilesComponent, PossibleMatchedEssfilesComponent, OverlayLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe, MaskFullAddressPipe]
+  selector: 'app-evacuee-profile-dashboard',
+  templateUrl: './evacuee-profile-dashboard.component.html',
+  styleUrls: ['./evacuee-profile-dashboard.component.scss'],
+  standalone: true,
+  imports: [
+    NgStyle,
+    MatButton,
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatRadioButton,
+    MatchedEssfilesComponent,
+    PossibleMatchedEssfilesComponent,
+    OverlayLoaderComponent,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;

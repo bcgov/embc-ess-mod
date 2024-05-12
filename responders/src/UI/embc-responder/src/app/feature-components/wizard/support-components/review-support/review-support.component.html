@@ -3,497 +3,485 @@
     <div class="col-md-12">
       <a (click)="back()"
         ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a
-        >
-      </div>
+      >
     </div>
+  </div>
 
-    <div class="row">
+  <div class="row">
+    <div class="col-md-12 bottom-padding">
+      <p class="review-heading">Review & Process Supports</p>
+      <p>
+        Please confirm that all details you entered are correct by reading through the summary below and having your
+        supervisor sign off on your work.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    @for (support of draftSupports; track support) {
       <div class="col-md-12 bottom-padding">
-        <p class="review-heading">Review & Process Supports</p>
-        <p>
-          Please confirm that all details you entered are correct by reading through the summary below and having your
-          supervisor sign off on your work.
-        </p>
-      </div>
-    </div>
-
-    <div class="row">
-      @for (support of draftSupports; track support) {
-        <div class="col-md-12 bottom-padding">
-          <!-- Groceries Label -->
-          @if (support.subCategory === 'Food_Groceries') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
-              Food - Groceries
-            </label>
-          }
-          <!-- Restaurant Label -->
-          @if (support.subCategory === 'Food_Restaurant') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
-              Food - Restaurant Meals
-            </label>
-          }
-          <!-- LodgingHotel Label -->
-          @if (support.subCategory === 'Lodging_Hotel') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
-              Shelter - Hotel/Motel/Campground
-            </label>
-          }
-          <!-- Lodging Billeting Label -->
-          @if (support.subCategory === 'Lodging_Billeting') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
-              Shelter - Billeting
-            </label>
-          }
-          <!-- Lodging Shelter Allowance -->
-          @if (support.subCategory === 'Lodging_Allowance') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
-              Shelter Allowance
-            </label>
-          }
-          <!-- Lodging Group Label -->
-          @if (support.subCategory === 'Lodging_Group') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
-              Shelter - Group Lodging
-            </label>
-          }
-          <!-- Transportation Taxi Label -->
-          @if (support.subCategory === 'Transportation_Taxi') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
-              Transport - Taxi
-            </label>
-          }
-          <!-- Transportation Other Label -->
-          @if (support.subCategory === 'Transportation_Other') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
-              Transport - Other
-            </label>
-          }
-          <!-- Clothing Label -->
-          @if (support.category === 'Clothing') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-clothing.svg" width="40px" height="42px" />
-              Clothing
-            </label>
-          }
-          <!-- Incidental Label -->
-          @if (support.category === 'Incidentals') {
-            <label class="supports-title">
-              <img src="../../../../../assets/images/wizard/needs-incidentals.svg" width="40px" height="42px" />
-              Incidentals
-            </label>
-          }
-          @if (evacueeSessionService.isPaperBased) {
-            <div class="row">
-              <div class="col-md-12 paper-referral-number"># {{ getReferral(support)?.manualReferralId }}</div>
-            </div>
-          }
+        <!-- Groceries Label -->
+        @if (support.subCategory === 'Food_Groceries') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
+            Food - Groceries
+          </label>
+        }
+        <!-- Restaurant Label -->
+        @if (support.subCategory === 'Food_Restaurant') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
+            Food - Restaurant Meals
+          </label>
+        }
+        <!-- LodgingHotel Label -->
+        @if (support.subCategory === 'Lodging_Hotel') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
+            Shelter - Hotel/Motel/Campground
+          </label>
+        }
+        <!-- Lodging Billeting Label -->
+        @if (support.subCategory === 'Lodging_Billeting') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
+            Shelter - Billeting
+          </label>
+        }
+        <!-- Lodging Shelter Allowance -->
+        @if (support.subCategory === 'Lodging_Allowance') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
+            Shelter Allowance
+          </label>
+        }
+        <!-- Lodging Group Label -->
+        @if (support.subCategory === 'Lodging_Group') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
+            Shelter - Group Lodging
+          </label>
+        }
+        <!-- Transportation Taxi Label -->
+        @if (support.subCategory === 'Transportation_Taxi') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
+            Transport - Taxi
+          </label>
+        }
+        <!-- Transportation Other Label -->
+        @if (support.subCategory === 'Transportation_Other') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
+            Transport - Other
+          </label>
+        }
+        <!-- Clothing Label -->
+        @if (support.category === 'Clothing') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-clothing.svg" width="40px" height="42px" />
+            Clothing
+          </label>
+        }
+        <!-- Incidental Label -->
+        @if (support.category === 'Incidentals') {
+          <label class="supports-title">
+            <img src="../../../../../assets/images/wizard/needs-incidentals.svg" width="40px" height="42px" />
+            Incidentals
+          </label>
+        }
+        @if (evacueeSessionService.isPaperBased) {
           <div class="row">
-            <div class="col-md-8 support-padding">
-              <div>
-                <p class="support-subtitle">Support Details</p>
-                <div class="row row-padding">
-                  <div class="col-md-4 box-text-color">Valid From:</div>
-                  <div class="col-md-4 bold">
-                    {{ support?.from | date: 'dd-MMM-yyyy' }} at
-                    {{ support?.from | date: 'hh:mm a' }}
-                  </div>
-                </div>
-                <div class="row row-padding">
-                  <div class="col-md-4 box-text-color">Valid To:</div>
-                  <div
-                    class="col-md-4 bold"
-                [ngStyle]="{
-                  color: validReferralDate(support?.from, support?.to) ? 'black' : 'red'
-                }"
-                    >
-                    {{ support?.to | date: 'dd-MMM-yyyy' }} at
-                    {{ support?.to | date: 'hh:mm a' }}
-                  </div>
-                </div>
-                <div class="row row-padding">
-                  <div class="col-md-4 box-text-color">Support Provided For:</div>
-                  <div class="col-md-4 bold">
-                    @for (member of support?.includedHouseholdMembers; track member) {
-                      <p>
-                        {{ getMemberFullName(member) }}
-                      </p>
-                    }
-                  </div>
-                </div>
-                <!-- Groceries -->
-                @if (support.subCategory === 'Food_Groceries') {
-                  <div class="row row-padding">
-                    <div class="col-md-4 box-text-color"># of Days for Meals:</div>
-                    <div class="col-md-4 bold">
-                      {{ getGroceryReferral(support)?.numberOfDays }}
-                    </div>
-                  </div>
-                  <div class="row row-padding">
-                    <div class="col-md-4 total-amount-label">Total Amount:</div>
-                    <div class="col-md-2 bold total-amount-number">
-                      ${{ getGroceryReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
-                    </div>
-                  </div>
-                  @if (!checkGroceryMaxRate(support)) {
-                    <div class="row row-padding">
-                      <div class="col warning">
-                        <img
-                          src="../../../../../assets/images/warning-red.svg"
-                          width="25px"
-                          height="27px"
-                          class="warning-icon"
-                          />
-                          @if (evacueeSessionService.isPaperBased) {
-                            <span>
-                              Total monetary value exceeds the recommended ESS rate</span
-                              >
-                          }
-                          @if (!evacueeSessionService.isPaperBased) {
-                            <span>
-                              Authorization to exceed recommended ESS rate provided by:
-                              <strong>{{ getGroceryReferral(support)?.approverName }}</strong></span
-                              >
-                            }
-                          </div>
-                        </div>
-                      }
-                    }
-                    <!-- Restaurants -->
-                    @if (support.subCategory === 'Food_Restaurant') {
-                      <div class="row row-padding">
-                        <div class="col-md-4"># Breakfasts per person:</div>
-                        <div class="col-md-4 bold">
-                          {{ getMealReferral(support)?.numberOfBreakfastsPerPerson }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4"># Lunches per person:</div>
-                        <div class="col-md-4 bold">
-                          {{ getMealReferral(support)?.numberOfLunchesPerPerson }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4"># Dinners per person:</div>
-                        <div class="col-md-4 bold">
-                          {{ getMealReferral(support)?.numberOfDinnersPerPerson }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 total-amount-label">Total Amount:</div>
-                        <div class="col-md-2 bold total-amount-number">${{ getMealReferral(support)?.totalAmount }}</div>
-                      </div>
-                    }
-                    <!-- Lodging - Group -->
-                    @if (support.subCategory === 'Lodging_Allowance') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color"># Nights:</div>
-                        <div class="col-md-4 bold">
-                          {{ getShelterAllowanceReferral(support)?.numberOfNights }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color">Total Amount:</div>
-                        <div class="col-md-4 bold total-amount-number">
-                          ${{ getShelterAllowanceReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Logding - Hotel -->
-                    @if (support.subCategory === 'Lodging_Hotel') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color"># Nights:</div>
-                        <div class="col-md-4 bold">
-                          {{ getHotelReferral(support)?.numberOfNights }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color"># Rooms:</div>
-                        <div class="col-md-4 bold">
-                          {{ getHotelReferral(support)?.numberOfRooms }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Lodging - Billeting -->
-                    @if (support.subCategory === 'Lodging_Billeting') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color"># Nights:</div>
-                        <div class="col-md-4 bold">
-                          {{ getBilletingReferral(support)?.numberOfNights }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Lodging - Group -->
-                    @if (support.subCategory === 'Lodging_Group') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color"># Nights:</div>
-                        <div class="col-md-4 bold">
-                          {{ getGroupReferral(support)?.numberOfNights }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Transport Taxi -->
-                    @if (support.subCategory === 'Transportation_Taxi') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color">From (Address):</div>
-                        <div class="col-md-4 bold">
-                          {{ getTaxiReferral(support)?.fromAddress }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color">To (Address):</div>
-                        <div class="col-md-4 bold">
-                          {{ getTaxiReferral(support)?.toAddress }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Transport Other -->
-                    @if (support.subCategory === 'Transportation_Other') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color">Mode of Transport:</div>
-                        <div class="col-md-4 bold">
-                          {{ getOtherReferral(support)?.transportMode }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 total-amount-label">Total Amount:</div>
-                        <div class="col-md-2 bold total-amount-number">
-                          ${{ getOtherReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
-                        </div>
-                      </div>
-                    }
-                    <!-- Clothing -->
-                    @if (support.category === 'Clothing') {
-                      <div class="row row-padding">
-                        <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
-                        <div class="col-md-4 bold">
-                          {{ getClothingReferral(support)?.extremeWinterConditions }}
-                        </div>
-                      </div>
-                      <div class="row row-padding">
-                        <div class="col-md-4 total-amount-label">Total Amount:</div>
-                        <div class="col-md-4 bold total-amount-number">
-                          ${{ getClothingReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
-                        </div>
-                      </div>
-                      @if (!checkClothingMaxRate(support)) {
-                        <div class="row row-padding">
-                          <div class="col warning">
-                            <img
-                              src="../../../../../assets/images/warning-red.svg"
-                              width="25px"
-                              height="27px"
-                              class="warning-icon"
-                              />
-                              @if (evacueeSessionService.isPaperBased) {
-                                <span>
-                                  Total monetary value exceeds the recommended ESS rate</span
-                                  >
-                              }
-                              @if (!evacueeSessionService.isPaperBased) {
-                                <span>
-                                  Authorization to exceed recommended ESS rate provided by:
-                                  <strong>{{ getClothingReferral(support)?.approverName }}</strong></span
-                                  >
-                                }
-                              </div>
-                            </div>
-                          }
-                        }
-                        <!-- Incidentals -->
-                        @if (support.category === 'Incidentals') {
-                          <div class="row row-padding">
-                            <div class="col-md-4 box-text-color">List of Approved Items:</div>
-                            <div class="col-md-4 bold">
-                              {{ getIncidentalReferral(support)?.approvedItems }}
-                            </div>
-                          </div>
-                          <div class="row row-padding">
-                            <div class="col-md-4 total-amount-label">Total Amount:</div>
-                            <div class="col-md-4 bold total-amount-number">
-                              ${{ getIncidentalReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
-                            </div>
-                          </div>
-                          @if (!checkIncidentalMaxRate(support)) {
-                            <div class="row row-padding">
-                              <div class="col warning">
-                                <img
-                                  src="../../../../../assets/images/warning-red.svg"
-                                  width="25px"
-                                  height="27px"
-                                  class="warning-icon"
-                                  />
-                                  @if (evacueeSessionService.isPaperBased) {
-                                    <span>
-                                      Total monetary value exceeds the recommended ESS rate</span
-                                      >
-                                  }
-                                  @if (!evacueeSessionService.isPaperBased) {
-                                    <span>
-                                      Authorization to exceed recommended ESS rate provided by:
-                                      <strong>{{ getIncidentalReferral(support)?.approverName }}</strong></span
-                                      >
-                                    }
-                                  </div>
-                                </div>
-                              }
-                            }
-                          </div>
-                        </div>
-                        @if (
-                          support.subCategory !== 'Lodging_Group' &&
-                          support.subCategory !== 'Lodging_Billeting' &&
-                          support.subCategory !== 'Lodging_Allowance' &&
-                          support.method !== supportMethod.ETransfer
-                          ) {
-                          <div
-                            class="col-md-4"
-                            >
-                            <mat-card class="support-card">
-                              <mat-card-content>
-                                <span class="support-subtitle">Support Delivery</span>
-                                <p class="no-margin">
-                                  <b>{{ getReferral(support)?.supplierName }}</b>
-                                </p>
-                                <p [innerHTML]="getSupplierAddress(support) | maskFullAddress"></p>
-                                <p class="no-margin"><b>Supplier Notes</b></p>
-                                <p>{{ getReferral(support)?.supplierNotes }}</p>
-                              </mat-card-content>
-                            </mat-card>
-                          </div>
-                        }
-                        <!-- Lodging-Billeting Support Delivery -->
-                        @if (support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer) {
-                          <div
-                            class="col-md-4"
-                            >
-                            <mat-card class="support-card">
-                              <mat-card-content>
-                                <span class="support-subtitle">Support Delivery</span>
-                                <p class="no-margin">
-                                  <b>{{ getBilletingReferral(support)?.hostName }}</b>
-                                </p>
-                                <p class="no-margin">
-                                  {{ getBilletingReferral(support)?.hostAddress }}
-                                </p>
-                                <p>{{ getBilletingReferral(support)?.hostCity }}</p>
-                                <p class="no-margin"><b>Supplier Notes</b></p>
-                                <p>{{ getReferral(support)?.supplierNotes }}</p>
-                              </mat-card-content>
-                            </mat-card>
-                          </div>
-                        }
-                        <!-- Shelter Allowance Support Delivery -->
-                        @if (support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer) {
-                          <div
-                            class="col-md-4"
-                            >
-                            <mat-card class="support-card">
-                              <mat-card-content>
-                                <span class="support-subtitle">Support Delivery</span>
-                                <p class="no-margin">
-                                  <b>{{ getReferral(support)?.issuedToPersonName }}</b>
-                                </p>
-                                <p class="no-margin">
-                                  {{ getShelterAllowanceReferral(support)?.contactEmail }}
-                                </p>
-                                <p>{{ getShelterAllowanceReferral(support)?.contactPhone }}</p>
-                              </mat-card-content>
-                            </mat-card>
-                          </div>
-                        }
-                        <!-- Lodging-Group Support Delivery -->
-                        @if (support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer) {
-                          <div
-                            class="col-md-4"
-                            >
-                            <mat-card class="support-card">
-                              <mat-card-content>
-                                <span class="support-subtitle">Support Delivery</span>
-                                <p class="no-margin">
-                                  <b>{{ getGroupReferral(support)?.facilityName }}</b>
-                                </p>
-                                <p class="no-margin">
-                                  {{ getGroupReferral(support)?.facilityAddress }}
-                                </p>
-                                <p>
-                                  {{ getGroupReferral(support)?.facilityCity }}
-                                </p>
-                                <p class="no-margin"><b>Supplier Notes</b></p>
-                                <p>{{ getReferral(support)?.supplierNotes }}</p>
-                              </mat-card-content>
-                            </mat-card>
-                          </div>
-                        }
-                        @if (support.method === supportMethod.ETransfer) {
-                          <div class="col-md-4">
-                            <mat-card class="support-card">
-                              <mat-card-content>
-                                <span class="support-subtitle">Support Delivery - <b>e-Transfer</b></span>
-                                <p class="no-margin"><b>e-Transfer Recipient</b></p>
-                                <p>
-                                  {{
-                                  appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
-                                  }},
-                                  {{ appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName }}
-                                </p>
-                                <p class="no-margin"><b>Notification Preference</b></p>
-                                <p>{{ getNotificationPreference(getInterac(support)) }}</p>
-                                @if (getInterac(support)?.notificationEmail) {
-                                  <div>
-                                    <p class="no-margin"><b>Email Address</b></p>
-                                    <p>{{ getInterac(support)?.notificationEmail }}</p>
-                                  </div>
-                                }
-                                @if (getInterac(support)?.notificationMobile) {
-                                  <div>
-                                    <p class="no-margin"><b>Mobile Number</b></p>
-                                    <p>{{ getInterac(support)?.notificationMobile }}</p>
-                                  </div>
-                                }
-                              </mat-card-content>
-                            </mat-card>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  }
-                </div>
-
-                @if (!evacueeSessionService.isPaperBased) {
-                  <div class="row">
-                    <div class="col-md-8 accept-box">
-                      <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)"
-                        >I certify that a supervisor or ESSD has checked my work and approved the above supports for distribution to the
-                        evacuee.
-                      </mat-checkbox>
-                    </div>
-                  </div>
-                }
-
-                @if (!evacueeSessionService.isPaperBased && showErrorMsg) {
-                  <div class="row">
-                    <div class="col-md-8 bold accept-box warning">
-                      <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" />
-                      Some required fields have not been completed.
-                    </div>
-                  </div>
-                }
-
-                <div class="row buttons-section">
-                  <div class="col-md-12">
-                    <button class="button-s button-width button-margin" (click)="back()">Cancel</button>
-                    <button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
-                      Process Support/s
-                      <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
-                    </button>
-                  </div>
+            <div class="col-md-12 paper-referral-number"># {{ getReferral(support)?.manualReferralId }}</div>
+          </div>
+        }
+        <div class="row">
+          <div class="col-md-8 support-padding">
+            <div>
+              <p class="support-subtitle">Support Details</p>
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Valid From:</div>
+                <div class="col-md-4 bold">
+                  {{ support?.from | date: 'dd-MMM-yyyy' }} at
+                  {{ support?.from | date: 'hh:mm a' }}
                 </div>
               </div>
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Valid To:</div>
+                <div
+                  class="col-md-4 bold"
+                  [ngStyle]="{
+                    color: validReferralDate(support?.from, support?.to) ? 'black' : 'red'
+                  }"
+                >
+                  {{ support?.to | date: 'dd-MMM-yyyy' }} at
+                  {{ support?.to | date: 'hh:mm a' }}
+                </div>
+              </div>
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Support Provided For:</div>
+                <div class="col-md-4 bold">
+                  @for (member of support?.includedHouseholdMembers; track member) {
+                    <p>
+                      {{ getMemberFullName(member) }}
+                    </p>
+                  }
+                </div>
+              </div>
+              <!-- Groceries -->
+              @if (support.subCategory === 'Food_Groceries') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># of Days for Meals:</div>
+                  <div class="col-md-4 bold">
+                    {{ getGroceryReferral(support)?.numberOfDays }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">
+                    ${{ getGroceryReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  </div>
+                </div>
+                @if (!checkGroceryMaxRate(support)) {
+                  <div class="row row-padding">
+                    <div class="col warning">
+                      <img
+                        src="../../../../../assets/images/warning-red.svg"
+                        width="25px"
+                        height="27px"
+                        class="warning-icon"
+                      />
+                      @if (evacueeSessionService.isPaperBased) {
+                        <span> Total monetary value exceeds the recommended ESS rate</span>
+                      }
+                      @if (!evacueeSessionService.isPaperBased) {
+                        <span>
+                          Authorization to exceed recommended ESS rate provided by:
+                          <strong>{{ getGroceryReferral(support)?.approverName }}</strong></span
+                        >
+                      }
+                    </div>
+                  </div>
+                }
+              }
+              <!-- Restaurants -->
+              @if (support.subCategory === 'Food_Restaurant') {
+                <div class="row row-padding">
+                  <div class="col-md-4"># Breakfasts per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfBreakfastsPerPerson }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4"># Lunches per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfLunchesPerPerson }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4"># Dinners per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfDinnersPerPerson }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">${{ getMealReferral(support)?.totalAmount }}</div>
+                </div>
+              }
+              <!-- Lodging - Group -->
+              @if (support.subCategory === 'Lodging_Allowance') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getShelterAllowanceReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">Total Amount:</div>
+                  <div class="col-md-4 bold total-amount-number">
+                    ${{ getShelterAllowanceReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  </div>
+                </div>
+              }
+              <!-- Logding - Hotel -->
+              @if (support.subCategory === 'Lodging_Hotel') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getHotelReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Rooms:</div>
+                  <div class="col-md-4 bold">
+                    {{ getHotelReferral(support)?.numberOfRooms }}
+                  </div>
+                </div>
+              }
+              <!-- Lodging - Billeting -->
+              @if (support.subCategory === 'Lodging_Billeting') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getBilletingReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              }
+              <!-- Lodging - Group -->
+              @if (support.subCategory === 'Lodging_Group') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getGroupReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              }
+              <!-- Transport Taxi -->
+              @if (support.subCategory === 'Transportation_Taxi') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">From (Address):</div>
+                  <div class="col-md-4 bold">
+                    {{ getTaxiReferral(support)?.fromAddress }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">To (Address):</div>
+                  <div class="col-md-4 bold">
+                    {{ getTaxiReferral(support)?.toAddress }}
+                  </div>
+                </div>
+              }
+              <!-- Transport Other -->
+              @if (support.subCategory === 'Transportation_Other') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">Mode of Transport:</div>
+                  <div class="col-md-4 bold">
+                    {{ getOtherReferral(support)?.transportMode }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">
+                    ${{ getOtherReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  </div>
+                </div>
+              }
+              <!-- Clothing -->
+              @if (support.category === 'Clothing') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
+                  <div class="col-md-4 bold">
+                    {{ getClothingReferral(support)?.extremeWinterConditions }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-4 bold total-amount-number">
+                    ${{ getClothingReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  </div>
+                </div>
+                @if (!checkClothingMaxRate(support)) {
+                  <div class="row row-padding">
+                    <div class="col warning">
+                      <img
+                        src="../../../../../assets/images/warning-red.svg"
+                        width="25px"
+                        height="27px"
+                        class="warning-icon"
+                      />
+                      @if (evacueeSessionService.isPaperBased) {
+                        <span> Total monetary value exceeds the recommended ESS rate</span>
+                      }
+                      @if (!evacueeSessionService.isPaperBased) {
+                        <span>
+                          Authorization to exceed recommended ESS rate provided by:
+                          <strong>{{ getClothingReferral(support)?.approverName }}</strong></span
+                        >
+                      }
+                    </div>
+                  </div>
+                }
+              }
+              <!-- Incidentals -->
+              @if (support.category === 'Incidentals') {
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">List of Approved Items:</div>
+                  <div class="col-md-4 bold">
+                    {{ getIncidentalReferral(support)?.approvedItems }}
+                  </div>
+                </div>
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-4 bold total-amount-number">
+                    ${{ getIncidentalReferral(support)?.totalAmount | number: '1.2-2' : 'en-CA' }}
+                  </div>
+                </div>
+                @if (!checkIncidentalMaxRate(support)) {
+                  <div class="row row-padding">
+                    <div class="col warning">
+                      <img
+                        src="../../../../../assets/images/warning-red.svg"
+                        width="25px"
+                        height="27px"
+                        class="warning-icon"
+                      />
+                      @if (evacueeSessionService.isPaperBased) {
+                        <span> Total monetary value exceeds the recommended ESS rate</span>
+                      }
+                      @if (!evacueeSessionService.isPaperBased) {
+                        <span>
+                          Authorization to exceed recommended ESS rate provided by:
+                          <strong>{{ getIncidentalReferral(support)?.approverName }}</strong></span
+                        >
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          @if (
+            support.subCategory !== 'Lodging_Group' &&
+            support.subCategory !== 'Lodging_Billeting' &&
+            support.subCategory !== 'Lodging_Allowance' &&
+            support.method !== supportMethod.ETransfer
+          ) {
+            <div class="col-md-4">
+              <mat-card class="support-card">
+                <mat-card-content>
+                  <span class="support-subtitle">Support Delivery</span>
+                  <p class="no-margin">
+                    <b>{{ getReferral(support)?.supplierName }}</b>
+                  </p>
+                  <p [innerHTML]="getSupplierAddress(support) | maskFullAddress"></p>
+                  <p class="no-margin"><b>Supplier Notes</b></p>
+                  <p>{{ getReferral(support)?.supplierNotes }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+          <!-- Lodging-Billeting Support Delivery -->
+          @if (support.subCategory === 'Lodging_Billeting' && support.method !== supportMethod.ETransfer) {
+            <div class="col-md-4">
+              <mat-card class="support-card">
+                <mat-card-content>
+                  <span class="support-subtitle">Support Delivery</span>
+                  <p class="no-margin">
+                    <b>{{ getBilletingReferral(support)?.hostName }}</b>
+                  </p>
+                  <p class="no-margin">
+                    {{ getBilletingReferral(support)?.hostAddress }}
+                  </p>
+                  <p>{{ getBilletingReferral(support)?.hostCity }}</p>
+                  <p class="no-margin"><b>Supplier Notes</b></p>
+                  <p>{{ getReferral(support)?.supplierNotes }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+          <!-- Shelter Allowance Support Delivery -->
+          @if (support.subCategory === 'Lodging_Allowance' && support.method !== supportMethod.ETransfer) {
+            <div class="col-md-4">
+              <mat-card class="support-card">
+                <mat-card-content>
+                  <span class="support-subtitle">Support Delivery</span>
+                  <p class="no-margin">
+                    <b>{{ getReferral(support)?.issuedToPersonName }}</b>
+                  </p>
+                  <p class="no-margin">
+                    {{ getShelterAllowanceReferral(support)?.contactEmail }}
+                  </p>
+                  <p>{{ getShelterAllowanceReferral(support)?.contactPhone }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+          <!-- Lodging-Group Support Delivery -->
+          @if (support.subCategory === 'Lodging_Group' && support.method !== supportMethod.ETransfer) {
+            <div class="col-md-4">
+              <mat-card class="support-card">
+                <mat-card-content>
+                  <span class="support-subtitle">Support Delivery</span>
+                  <p class="no-margin">
+                    <b>{{ getGroupReferral(support)?.facilityName }}</b>
+                  </p>
+                  <p class="no-margin">
+                    {{ getGroupReferral(support)?.facilityAddress }}
+                  </p>
+                  <p>
+                    {{ getGroupReferral(support)?.facilityCity }}
+                  </p>
+                  <p class="no-margin"><b>Supplier Notes</b></p>
+                  <p>{{ getReferral(support)?.supplierNotes }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+          @if (support.method === supportMethod.ETransfer) {
+            <div class="col-md-4">
+              <mat-card class="support-card">
+                <mat-card-content>
+                  <span class="support-subtitle">Support Delivery - <b>e-Transfer</b></span>
+                  <p class="no-margin"><b>e-Transfer Recipient</b></p>
+                  <p>
+                    {{
+                      appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+                    }},
+                    {{
+                      appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName
+                    }}
+                  </p>
+                  <p class="no-margin"><b>Notification Preference</b></p>
+                  <p>{{ getNotificationPreference(getInterac(support)) }}</p>
+                  @if (getInterac(support)?.notificationEmail) {
+                    <div>
+                      <p class="no-margin"><b>Email Address</b></p>
+                      <p>{{ getInterac(support)?.notificationEmail }}</p>
+                    </div>
+                  }
+                  @if (getInterac(support)?.notificationMobile) {
+                    <div>
+                      <p class="no-margin"><b>Mobile Number</b></p>
+                      <p>{{ getInterac(support)?.notificationMobile }}</p>
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!evacueeSessionService.isPaperBased) {
+    <div class="row">
+      <div class="col-md-8 accept-box">
+        <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)"
+          >I certify that a supervisor or ESSD has checked my work and approved the above supports for distribution to
+          the evacuee.
+        </mat-checkbox>
+      </div>
+    </div>
+  }
+
+  @if (!evacueeSessionService.isPaperBased && showErrorMsg) {
+    <div class="row">
+      <div class="col-md-8 bold accept-box warning">
+        <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" />
+        Some required fields have not been completed.
+      </div>
+    </div>
+  }
+
+  <div class="row buttons-section">
+    <div class="col-md-12">
+      <button class="button-s button-width button-margin" (click)="back()">Cancel</button>
+      <button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
+        Process Support/s
+        <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+      </button>
+    </div>
+  </div>
+</div>

@@ -5,8 +5,8 @@ import { Community, LocationsService } from 'src/app/core/services/locations.ser
 import * as _ from 'lodash';
 
 @Pipe({
-    name: 'maskFullAddress',
-    standalone: true
+  name: 'maskFullAddress',
+  standalone: true
 })
 export class MaskFullAddressPipe implements PipeTransform {
   constructor(

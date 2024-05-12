@@ -18,9 +18,7 @@
           matInput
         ></textarea>
         @if (verifiedFormControl?.note.hasError('whitespaceError')) {
-          <mat-error>
-            You cannot save a blank note
-          </mat-error>
+          <mat-error> You cannot save a blank note </mat-error>
         }
       </mat-form-field>
     </form>

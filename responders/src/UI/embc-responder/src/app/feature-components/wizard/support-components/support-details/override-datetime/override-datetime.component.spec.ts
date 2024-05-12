@@ -9,9 +9,9 @@ describe('OverrideDatetimeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, OverrideDatetimeComponent],
-    providers: [UntypedFormBuilder]
-}).compileComponents();
+      imports: [ReactiveFormsModule, OverrideDatetimeComponent],
+      providers: [UntypedFormBuilder]
+    }).compileComponents();
   });
 
   beforeEach(() => {

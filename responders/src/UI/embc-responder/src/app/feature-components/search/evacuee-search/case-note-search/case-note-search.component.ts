@@ -10,11 +10,11 @@ import { FileSearchFormComponent } from '../../../../shared/forms/file-search-fo
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-case-note-search',
-    templateUrl: './case-note-search.component.html',
-    styleUrls: ['./case-note-search.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, FileSearchFormComponent, MatButton, AppLoaderComponent]
+  selector: 'app-case-note-search',
+  templateUrl: './case-note-search.component.html',
+  styleUrls: ['./case-note-search.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, FileSearchFormComponent, MatButton, AppLoaderComponent]
 })
 export class CaseNoteSearchComponent implements OnInit {
   fileSearchForm: FormGroup<{ essFileNumber: FormControl<string> }>;

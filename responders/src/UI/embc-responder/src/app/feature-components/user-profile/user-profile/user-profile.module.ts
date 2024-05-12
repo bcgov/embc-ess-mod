@@ -4,7 +4,7 @@ import { UserProfileComponent } from './user-profile.component';
 import { UserProfileRoutingModule } from './user-profile-routing.module';
 
 @NgModule({
-    imports: [CommonModule, UserProfileRoutingModule, UserProfileComponent],
-    providers: [DatePipe]
+  imports: [CommonModule, UserProfileRoutingModule, UserProfileComponent],
+  providers: [DatePipe]
 })
 export class UserProfileModule {}

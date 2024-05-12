@@ -1,6 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -23,13 +30,30 @@ import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
 
-
 @Component({
-    selector: 'app-evacuation-details',
-    templateUrl: './evacuation-details.component.html',
-    styleUrls: ['./evacuation-details.component.scss'],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatRadioGroup, MatRadioButton, BcAddressComponent, MatCard, MatCardContent, MatButton, MaskEvacuatedAddressPipe]
+  selector: 'app-evacuation-details',
+  templateUrl: './evacuation-details.component.html',
+  styleUrls: ['./evacuation-details.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    MatRadioGroup,
+    MatRadioButton,
+    BcAddressComponent,
+    MatCard,
+    MatCardContent,
+    MatButton,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: UntypedFormGroup;

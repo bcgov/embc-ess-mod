@@ -16,96 +16,83 @@
                   <mat-label>Last Name</mat-label>
                   <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
                   @if (contactFormControl.lastName.invalid && contactFormControl.lastName.hasError('whitespaceError')) {
-                    <mat-error
-                      >
-                      Last Name is required</mat-error
-                      >
-                    }
-                  </mat-form-field>
-                </div>
+                    <mat-error> Last Name is required</mat-error>
+                  }
+                </mat-form-field>
               </div>
-
-              <div class="row">
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>First Name</mat-label>
-                    <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
-                    @if (
-                      contactFormControl.firstName.invalid && contactFormControl.firstName.hasError('whitespaceError')
-                      ) {
-                      <mat-error
-                        >
-                        First Name is required</mat-error
-                        >
-                      }
-                    </mat-form-field>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-4">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Contact Telephone Number</mat-label>
-                      <input
-                        formControlName="phone"
-                        matInput
-                        placeholder="Contact Telephone Number"
-                        [imask]="phoneMask"
-                        required
-                        />
-                        @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')) {
-                          <mat-error>
-                            Telephone Number is required</mat-error
-                            >
-                        }
-                        @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')) {
-                          <mat-error
-                            >
-                            Telephone number must have 10 digits</mat-error
-                            >
-                          }
-                        </mat-form-field>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Email Address</mat-label>
-                          <input formControlName="email" matInput placeholder="Email Address" />
-                          @if (contactFormControl.email.invalid && contactFormControl.email.hasError('email')) {
-                            <mat-error
-                              >Invalid email</mat-error
-                              >
-                            }
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </ng-container>
-                  </form>
-                  <div class="row">
-                    <div class="col-md-3">
-                      <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
-                    </div>
-                    <div class="col-md-3">
-                      <button class="button-p button-width" mat-button [disabled]="!newForm.valid" (click)="next()">Next</button>
-                    </div>
-                  </div>
-                </mat-card-content>
-              </mat-card>
             </div>
-            <div class="col-md-4">
-              <mat-card class="tips-card">
-                <mat-card-content>
-                  <div>
-                    <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-                    <span class="tips-heading"><b>Tips: </b>Contact Person</span>
-                  </div>
-                  <p class="tips-info">
-                    The supplier contact person may be asked for additional information and/ or clarification regarding an invoice/
-                    receipt reimbursement submission.
-                  </p>
-                </mat-card-content>
-              </mat-card>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
+                  <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
+                  @if (
+                    contactFormControl.firstName.invalid && contactFormControl.firstName.hasError('whitespaceError')
+                  ) {
+                    <mat-error> First Name is required</mat-error>
+                  }
+                </mat-form-field>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Contact Telephone Number</mat-label>
+                  <input
+                    formControlName="phone"
+                    matInput
+                    placeholder="Contact Telephone Number"
+                    [imask]="phoneMask"
+                    required
+                  />
+                  @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')) {
+                    <mat-error> Telephone Number is required</mat-error>
+                  }
+                  @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')) {
+                    <mat-error> Telephone number must have 10 digits</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Email Address</mat-label>
+                  <input formControlName="email" matInput placeholder="Email Address" />
+                  @if (contactFormControl.email.invalid && contactFormControl.email.hasError('email')) {
+                    <mat-error>Invalid email</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+        </form>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
           </div>
+          <div class="col-md-3">
+            <button class="button-p button-width" mat-button [disabled]="!newForm.valid" (click)="next()">Next</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-md-4">
+    <mat-card class="tips-card">
+      <mat-card-content>
+        <div>
+          <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+          <span class="tips-heading"><b>Tips: </b>Contact Person</span>
+        </div>
+        <p class="tips-info">
+          The supplier contact person may be asked for additional information and/ or clarification regarding an
+          invoice/ receipt reimbursement submission.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

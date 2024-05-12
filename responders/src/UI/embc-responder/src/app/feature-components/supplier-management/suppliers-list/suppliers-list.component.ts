@@ -21,11 +21,11 @@ import { SearchFilterComponent } from '../../../shared/components/search-filter/
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'app-suppliers-list',
-    templateUrl: './suppliers-list.component.html',
-    styleUrls: ['./suppliers-list.component.scss'],
-    standalone: true,
-    imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, OverlayLoaderComponent]
+  selector: 'app-suppliers-list',
+  templateUrl: './suppliers-list.component.html',
+  styleUrls: ['./suppliers-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, OverlayLoaderComponent]
 })
 export class SuppliersListComponent implements OnInit {
   primarySupplierFilterTerm: TableFilterValueModel;

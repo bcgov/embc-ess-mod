@@ -9,35 +9,27 @@
       <mat-form-field appearance="outline">
         <mat-label>From</mat-label>
         <input formControlName="fromAddress" matInput placeholder="From" maxlength="50" required />
-        @if (
-          referralFormControl?.fromAddress.invalid && referralFormControl?.fromAddress.hasError('whitespaceError')
-          ) {
-          <mat-error
-            >
-            From Address is required</mat-error
-            >
-          }
-        </mat-form-field>
-      </div>
+        @if (referralFormControl?.fromAddress.invalid && referralFormControl?.fromAddress.hasError('whitespaceError')) {
+          <mat-error> From Address is required</mat-error>
+        }
+      </mat-form-field>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <p class="time-heading requiredField">To (address)</p>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">To (address)</p>
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <mat-form-field appearance="outline">
-          <mat-label>To</mat-label>
-          <input formControlName="toAddress" matInput placeholder="To" maxlength="50" required />
-          @if (referralFormControl?.toAddress.invalid && referralFormControl?.toAddress.hasError('required')) {
-            <mat-error
-              >
-              To Address is required</mat-error
-              >
-            }
-          </mat-form-field>
-        </div>
-      </div>
-    </form>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input formControlName="toAddress" matInput placeholder="To" maxlength="50" required />
+        @if (referralFormControl?.toAddress.invalid && referralFormControl?.toAddress.hasError('required')) {
+          <mat-error> To Address is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+</form>

@@ -10,8 +10,8 @@ describe('CanAddressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, MatAutocompleteModule, CanAddressComponent]
-}).compileComponents();
+      imports: [HttpClientTestingModule, MatAutocompleteModule, CanAddressComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
