@@ -72,18 +72,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "embc-responder:build"
+            "buildTarget": "embc-responder:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "embc-responder:build:production"
+              "buildTarget": "embc-responder:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "embc-responder:build"
+            "buildTarget": "embc-responder:build"
           }
         },
         "test": {
