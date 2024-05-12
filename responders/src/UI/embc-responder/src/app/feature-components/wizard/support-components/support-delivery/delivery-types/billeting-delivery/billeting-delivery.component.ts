@@ -1,12 +1,18 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { IMaskDirective } from 'angular-imask';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-billeting-delivery',
-  templateUrl: './billeting-delivery.component.html',
-  styleUrls: ['./billeting-delivery.component.scss']
+    selector: 'app-billeting-delivery',
+    templateUrl: './billeting-delivery.component.html',
+    styleUrls: ['./billeting-delivery.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, IMaskDirective]
 })
 export class BilletingDeliveryComponent implements OnInit, OnChanges {
   @Input() supportDeliveryForm: UntypedFormGroup;

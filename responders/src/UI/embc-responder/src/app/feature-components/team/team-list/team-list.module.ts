@@ -8,7 +8,6 @@ import { MaterialModule } from '../../../material.module';
 import { TeamMemberTableComponent } from './team-member-table/team-member-table.component';
 
 @NgModule({
-  declarations: [TeamListComponent, TeamMemberTableComponent],
-  imports: [CommonModule, TeamListRoutingModule, SharedModule, MaterialModule]
+    imports: [CommonModule, TeamListRoutingModule, SharedModule, MaterialModule, TeamListComponent, TeamMemberTableComponent]
 })
 export class TeamListModule {}

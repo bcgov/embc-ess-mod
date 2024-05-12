@@ -9,14 +9,14 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [ProfileReviewComponent],
-  imports: [
-    CommonModule,
-    ProfileReviewRoutingModule,
-    MaterialModule,
-    CustomPipeModule,
-    SharedModule,
-    ReactiveFormsModule
-  ]
+    imports: [
+        CommonModule,
+        ProfileReviewRoutingModule,
+        MaterialModule,
+        CustomPipeModule,
+        SharedModule,
+        ReactiveFormsModule,
+        ProfileReviewComponent
+    ]
 })
 export class ProfileReviewModule {}

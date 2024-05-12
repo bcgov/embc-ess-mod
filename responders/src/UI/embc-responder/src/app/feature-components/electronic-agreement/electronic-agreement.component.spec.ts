@@ -9,9 +9,8 @@ describe('ElectronicAgreementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ElectronicAgreementComponent],
-      imports: [RouterTestingModule]
-    }).compileComponents();
+    imports: [RouterTestingModule, ElectronicAgreementComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

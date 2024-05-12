@@ -24,11 +24,15 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EssFilesResultsService } from './ess-files-results.service';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgFor, NgClass, NgIf, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-ess-files-results',
-  templateUrl: './ess-files-results.component.html',
-  styleUrls: ['./ess-files-results.component.scss']
+    selector: 'app-ess-files-results',
+    templateUrl: './ess-files-results.component.html',
+    styleUrls: ['./ess-files-results.component.scss'],
+    standalone: true,
+    imports: [NgFor, MatCard, NgClass, MatCardContent, NgIf, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
 })
 export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;

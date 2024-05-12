@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [StepEvacueeProfileComponent],
-  imports: [CommonModule, StepEvacueeProfileRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, StepEvacueeProfileRoutingModule, MaterialModule, SharedModule, StepEvacueeProfileComponent]
 })
 export class StepEvacueeProfileModule {}

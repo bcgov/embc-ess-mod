@@ -27,35 +27,35 @@ describe('WizardComponent-Test for New Registration', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [WizardComponent],
-      imports: [
+    imports: [
         MatDialogModule,
         RouterTestingModule.withRoutes([
-          {
-            path: 'ess-wizard/evacuee-profile',
-            component: StepEvacueeProfileComponent
-          },
-          {
-            path: 'ess-wizard/ess-file',
-            component: StepEssFileComponent
-          }
+            {
+                path: 'ess-wizard/evacuee-profile',
+                component: StepEvacueeProfileComponent
+            },
+            {
+                path: 'ess-wizard/ess-file',
+                component: StepEssFileComponent
+            }
         ]),
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
-      providers: [
+        ReactiveFormsModule,
+        WizardComponent
+    ],
+    providers: [
         WizardComponent,
         WizardDataService,
         DatePipe,
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         {
-          provide: WizardService,
-          useClass: MockWizardService
+            provide: WizardService,
+            useClass: MockWizardService
         },
         { provide: computeInterfaceToken, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

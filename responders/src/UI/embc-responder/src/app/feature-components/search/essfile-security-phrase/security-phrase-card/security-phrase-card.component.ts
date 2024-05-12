@@ -1,11 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GetSecurityPhraseResponse } from 'src/app/core/api/models';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-security-phrase-card',
-  templateUrl: './security-phrase-card.component.html',
-  styleUrls: ['./security-phrase-card.component.scss']
+    selector: 'app-security-phrase-card',
+    templateUrl: './security-phrase-card.component.html',
+    styleUrls: ['./security-phrase-card.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, NgIf, MatError]
 })
 export class SecurityPhraseCardComponent implements OnInit {
   @Input() phrase: GetSecurityPhraseResponse;

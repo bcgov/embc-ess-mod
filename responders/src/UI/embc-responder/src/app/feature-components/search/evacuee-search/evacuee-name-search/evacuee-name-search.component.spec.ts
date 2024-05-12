@@ -34,21 +34,20 @@ describe('EvacueeNameSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeNameSearchComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, EvacueeNameSearchComponent],
+    providers: [
         EvacueeNameSearchComponent,
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         },
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,8 +8,8 @@ describe('SupplierManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SupplierManagementComponent]
-    }).compileComponents();
+    imports: [SupplierManagementComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

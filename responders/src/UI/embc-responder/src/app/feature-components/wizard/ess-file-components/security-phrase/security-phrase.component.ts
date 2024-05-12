@@ -6,15 +6,22 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-security-phrase',
-  templateUrl: './security-phrase.component.html',
-  styleUrls: ['./security-phrase.component.scss']
+    selector: 'app-security-phrase',
+    templateUrl: './security-phrase.component.html',
+    styleUrls: ['./security-phrase.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatCard, MatCardContent, MaskTextPipe]
 })
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
   securityForm: UntypedFormGroup = null;

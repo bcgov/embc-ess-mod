@@ -10,9 +10,8 @@ describe('EssFileSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [EssFileSupportsComponent]
-    }).compileComponents();
+    imports: [RouterTestingModule, HttpClientTestingModule, EssFileSupportsComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

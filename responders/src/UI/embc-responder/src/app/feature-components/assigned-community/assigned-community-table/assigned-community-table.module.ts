@@ -6,8 +6,7 @@ import { MaterialModule } from '../../../material.module';
 import { AssignedCommunityTableComponent } from './assigned-community-table.component';
 
 @NgModule({
-  declarations: [AssignedCommunityTableComponent],
-  imports: [CommonModule, SharedModule, MaterialModule],
-  exports: [AssignedCommunityTableComponent]
+    imports: [CommonModule, SharedModule, MaterialModule, AssignedCommunityTableComponent],
+    exports: [AssignedCommunityTableComponent]
 })
 export class AssignedCommunityTableModule {}

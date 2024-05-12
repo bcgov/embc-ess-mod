@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [RestrictionComponent],
-  imports: [CommonModule, RestrictionRoutingModule, MaterialModule, ReactiveFormsModule]
+    imports: [CommonModule, RestrictionRoutingModule, MaterialModule, ReactiveFormsModule, RestrictionComponent]
 })
 export class RestrictionModule {}

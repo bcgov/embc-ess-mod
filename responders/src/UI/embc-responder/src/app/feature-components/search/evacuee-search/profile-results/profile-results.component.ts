@@ -22,11 +22,16 @@ import { ProfileSecurityQuestionsService } from '../../profile-security-question
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ProfileResultsService } from './profile-results.service';
+import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pipe';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgFor, NgClass, NgIf, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-profile-results',
-  templateUrl: './profile-results.component.html',
-  styleUrls: ['./profile-results.component.scss']
+    selector: 'app-profile-results',
+    templateUrl: './profile-results.component.html',
+    styleUrls: ['./profile-results.component.scss'],
+    standalone: true,
+    imports: [NgFor, MatCard, NgClass, MatCardContent, NgIf, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe, MaskFullAddressPipe]
 })
 export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

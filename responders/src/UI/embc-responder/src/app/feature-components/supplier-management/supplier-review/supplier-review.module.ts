@@ -8,7 +8,6 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [SupplierReviewComponent],
-  imports: [CommonModule, SupplierReviewRoutingModule, MaterialModule, CustomPipeModule, SharedModule]
+    imports: [CommonModule, SupplierReviewRoutingModule, MaterialModule, CustomPipeModule, SharedModule, SupplierReviewComponent]
 })
 export class SupplierReviewModule {}

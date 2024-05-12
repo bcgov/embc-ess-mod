@@ -7,7 +7,6 @@ import { EvacueeDetailsComponent } from './evacuee-details.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [EvacueeDetailsComponent],
-  imports: [CommonModule, EvacueeDetailsRoutingModule, MaterialModule, ReactiveFormsModule, IMaskModule]
+    imports: [CommonModule, EvacueeDetailsRoutingModule, MaterialModule, ReactiveFormsModule, IMaskModule, EvacueeDetailsComponent]
 })
 export class EvacueeDetailsModule {}

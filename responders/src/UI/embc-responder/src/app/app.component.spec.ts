@@ -45,10 +45,20 @@ import { SupplierService } from './core/services/suppliers.service';
 import { MockSupplierService } from './unit-tests/mockSuppliers.service';
 //import { MockEventRouter } from './unit-tests/mockEventRouter.service';
 
-@Component({ selector: 'app-environment-banner', template: '' })
+@Component({
+    selector: 'app-environment-banner', template: '',
+    standalone: true,
+    imports: [HttpClientTestingModule,
+        MatDialogModule]
+})
 class EnvironmentBannerStubComponent {}
 
-@Component({ selector: 'app-outage-banner', template: '' })
+@Component({
+    selector: 'app-outage-banner', template: '',
+    standalone: true,
+    imports: [HttpClientTestingModule,
+        MatDialogModule]
+})
 class OutageBannerStubComponent {}
 
 // export class MockEventRouter {
@@ -79,74 +89,75 @@ describe('AppComponent', () => {
   //const mockOutageSubscription: Subscription = of(true).subscribe();
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule.withRoutes([
-          { path: 'outage', component: OutageComponent },
-          {
-            path: 'electronic-agreement',
-            component: ElectronicAgreementComponent
-          },
-          {
-            path: 'responder-access',
-            component: ResponderAccessComponent
-          }
+            { path: 'outage', component: OutageComponent },
+            {
+                path: 'electronic-agreement',
+                component: ElectronicAgreementComponent
+            },
+            {
+                path: 'responder-access',
+                component: ResponderAccessComponent
+            }
         ]),
         HttpClientTestingModule,
         OAuthModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
-        MatDialogModule
-      ],
-      declarations: [AppComponent, EnvironmentBannerStubComponent, OutageBannerStubComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
+        MatDialogModule,
+        EnvironmentBannerStubComponent, OutageBannerStubComponent
+    ],
+    declarations: [AppComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    providers: [
         AppComponent,
         { provide: Router, useValue: routerMock },
         {
-          provide: TimeoutService,
-          useClass: MockTimeoutService
+            provide: TimeoutService,
+            useClass: MockTimeoutService
         },
         {
-          provide: EnvironmentBannerService,
-          useClass: MockEnvironmentBannerService
+            provide: EnvironmentBannerService,
+            useClass: MockEnvironmentBannerService
         },
         {
-          provide: OutageService,
-          useClass: MockOutageService
+            provide: OutageService,
+            useClass: MockOutageService
         },
         {
-          provide: ConfigService,
-          useClass: MockConfigService
+            provide: ConfigService,
+            useClass: MockConfigService
         },
         {
-          provide: AuthenticationService,
-          useClass: MockAuthService
+            provide: AuthenticationService,
+            useClass: MockAuthService
         },
         {
-          provide: AlertService,
-          useClass: MockAlertService
+            provide: AlertService,
+            useClass: MockAlertService
         },
         {
-          provide: UserService,
-          useClass: MockUserService
+            provide: UserService,
+            useClass: MockUserService
         },
         {
-          provide: LocationsService,
-          useClass: MockLocationService
+            provide: LocationsService,
+            useClass: MockLocationService
         },
         {
-          provide: LoadTeamListService,
-          useClass: MockTeamListService
+            provide: LoadTeamListService,
+            useClass: MockTeamListService
         },
         {
-          provide: LoadEvacueeListService,
-          useClass: MockEvacueeListService
+            provide: LoadEvacueeListService,
+            useClass: MockEvacueeListService
         },
         {
-          provide: SupplierService,
-          useClass: MockSupplierService
+            provide: SupplierService,
+            useClass: MockSupplierService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

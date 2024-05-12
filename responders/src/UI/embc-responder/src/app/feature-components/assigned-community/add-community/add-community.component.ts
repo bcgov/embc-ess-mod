@@ -10,11 +10,18 @@ import { AssignedCommunityListDataService } from 'src/app/feature-components/ass
 import { AddCommunityService } from './add-community.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { MatButton } from '@angular/material/button';
+import { AssignedCommunityTableComponent } from '../assigned-community-table/assigned-community-table.component';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
-  selector: 'app-add-community',
-  templateUrl: './add-community.component.html',
-  styleUrls: ['./add-community.component.scss']
+    selector: 'app-add-community',
+    templateUrl: './add-community.component.html',
+    styleUrls: ['./add-community.component.scss'],
+    standalone: true,
+    imports: [AlertComponent, MatCard, MatCardContent, SearchFilterComponent, AssignedCommunityTableComponent, MatButton]
 })
 export class AddCommunityComponent implements OnInit {
   communities: TeamCommunityModel[];

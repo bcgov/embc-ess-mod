@@ -1,13 +1,16 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { ReviewSupportService } from 'src/app/feature-components/wizard/support-components/review-support/review-support.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-process-supports-dialog',
-  templateUrl: './process-supports-dialog.component.html',
-  styleUrls: ['./process-supports-dialog.component.scss']
+    selector: 'app-process-supports-dialog',
+    templateUrl: './process-supports-dialog.component.html',
+    styleUrls: ['./process-supports-dialog.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatCheckbox]
 })
 export class ProcessSupportsDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();

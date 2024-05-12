@@ -8,11 +8,22 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
+import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
+import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
+import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles/possible-matched-essfiles.component';
+import { MatchedEssfilesComponent } from './matched-essfiles/matched-essfiles.component';
+import { MatRadioButton } from '@angular/material/radio';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgStyle, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-evacuee-profile-dashboard',
-  templateUrl: './evacuee-profile-dashboard.component.html',
-  styleUrls: ['./evacuee-profile-dashboard.component.scss']
+    selector: 'app-evacuee-profile-dashboard',
+    templateUrl: './evacuee-profile-dashboard.component.html',
+    styleUrls: ['./evacuee-profile-dashboard.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgStyle, MatButton, MatCard, MatCardContent, AppLoaderComponent, MatRadioButton, MatchedEssfilesComponent, PossibleMatchedEssfilesComponent, OverlayLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe, MaskFullAddressPipe]
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;

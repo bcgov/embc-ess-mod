@@ -6,7 +6,6 @@ import { SupplierManagementComponent } from './supplier-management.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [SupplierManagementComponent],
-  imports: [CommonModule, SupplierManagementRoutingModule, MaterialModule]
+    imports: [CommonModule, SupplierManagementRoutingModule, MaterialModule, SupplierManagementComponent]
 })
 export class SupplierManagementModule {}

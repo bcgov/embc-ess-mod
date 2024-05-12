@@ -6,7 +6,6 @@ import { StepSupportsComponent } from './step-supports.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [StepSupportsComponent],
-  imports: [CommonModule, StepSupportsRoutingModule, SharedModule]
+    imports: [CommonModule, StepSupportsRoutingModule, SharedModule, StepSupportsComponent]
 })
 export class StepSupportsModule {}

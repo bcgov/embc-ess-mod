@@ -18,24 +18,24 @@ describe('EvacuationDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacuationDetailsComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
+        BrowserAnimationsModule,
+        EvacuationDetailsComponent
+    ],
+    providers: [
         DatePipe,
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

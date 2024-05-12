@@ -14,10 +14,9 @@ describe('ViewSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
-      declarations: [ViewSupportsComponent],
-      providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }]
-    }).compileComponents();
+    imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, ViewSupportsComponent],
+    providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }]
+}).compileComponents();
   });
 
   beforeEach(() => {

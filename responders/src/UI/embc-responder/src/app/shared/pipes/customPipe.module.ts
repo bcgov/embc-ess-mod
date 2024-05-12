@@ -11,28 +11,25 @@ import { NumberOfMealsPipe } from './numberOfMeals.pipe';
 import { FlatDateFormatPipe } from './flatDateFormat.pipe';
 
 @NgModule({
-  declarations: [
-    EnumToArrayPipe,
-    MaskEvacuatedAddressPipe,
-    MaskTextPipe,
-    MaskFullAddressPipe,
-    NumberArrayPipe,
-    NumberOfNightsPipe,
-    SupplierContactPipe,
-    NumberOfMealsPipe,
-    FlatDateFormatPipe
-  ],
-  imports: [CommonModule],
-  exports: [
-    EnumToArrayPipe,
-    MaskEvacuatedAddressPipe,
-    MaskTextPipe,
-    MaskFullAddressPipe,
-    NumberArrayPipe,
-    NumberOfNightsPipe,
-    SupplierContactPipe,
-    NumberOfMealsPipe,
-    FlatDateFormatPipe
-  ]
+    imports: [CommonModule, EnumToArrayPipe,
+        MaskEvacuatedAddressPipe,
+        MaskTextPipe,
+        MaskFullAddressPipe,
+        NumberArrayPipe,
+        NumberOfNightsPipe,
+        SupplierContactPipe,
+        NumberOfMealsPipe,
+        FlatDateFormatPipe],
+    exports: [
+        EnumToArrayPipe,
+        MaskEvacuatedAddressPipe,
+        MaskTextPipe,
+        MaskFullAddressPipe,
+        NumberArrayPipe,
+        NumberOfNightsPipe,
+        SupplierContactPipe,
+        NumberOfMealsPipe,
+        FlatDateFormatPipe
+    ]
 })
 export class CustomPipeModule {}

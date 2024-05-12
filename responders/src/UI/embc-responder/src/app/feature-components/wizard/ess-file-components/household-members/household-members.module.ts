@@ -8,8 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [HouseholdMembersComponent],
-  imports: [CommonModule, HouseholdMembersRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule],
-  exports: [HouseholdMembersComponent]
+    imports: [CommonModule, HouseholdMembersRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, HouseholdMembersComponent],
+    exports: [HouseholdMembersComponent]
 })
 export class HouseholdMembersModule {}

@@ -8,7 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { SuppliersTableComponent } from './suppliers-table/suppliers-table.component';
 
 @NgModule({
-  declarations: [SuppliersListComponent, SuppliersTableComponent],
-  imports: [CommonModule, ListSuppliersRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, ListSuppliersRoutingModule, MaterialModule, SharedModule, SuppliersListComponent, SuppliersTableComponent]
 })
 export class SuppliersListModule {}

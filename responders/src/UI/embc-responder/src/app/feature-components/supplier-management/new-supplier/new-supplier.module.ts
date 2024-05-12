@@ -8,7 +8,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [NewSupplierComponent],
-  imports: [CommonModule, NewSupplierRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, IMaskModule]
+    imports: [CommonModule, NewSupplierRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, IMaskModule, NewSupplierComponent]
 })
 export class NewSupplierModule {}

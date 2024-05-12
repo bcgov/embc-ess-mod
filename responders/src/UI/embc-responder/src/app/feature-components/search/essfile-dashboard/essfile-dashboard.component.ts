@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { Community } from 'src/app/core/services/locations.service';
@@ -11,11 +11,18 @@ import { DashboardBanner } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
+import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
+import { HouseholdMemberComponent } from './household-member/household-member.component';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { NgIf, NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-essfile-dashboard',
-  templateUrl: './essfile-dashboard.component.html',
-  styleUrls: ['./essfile-dashboard.component.scss']
+    selector: 'app-essfile-dashboard',
+    templateUrl: './essfile-dashboard.component.html',
+    styleUrls: ['./essfile-dashboard.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgClass, MatButton, MatSidenavContainer, MatSidenav, MatAnchor, RouterLinkActive, RouterLink, MatSidenavContent, RouterOutlet, HouseholdMemberComponent, OverlayLoaderComponent, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class EssfileDashboardComponent implements OnInit {
   essFile: EvacuationFileModel;

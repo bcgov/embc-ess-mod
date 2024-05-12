@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -9,11 +9,20 @@ import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AddTeamMemberService } from './add-team-member.service';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-add-team-member',
-  templateUrl: './add-team-member.component.html',
-  styleUrls: ['./add-team-member.component.scss']
+    selector: 'app-add-team-member',
+    templateUrl: './add-team-member.component.html',
+    styleUrls: ['./add-team-member.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, AppLoaderComponent, MatSelect, MatOption, NgFor, MatButton]
 })
 export class AddTeamMemberComponent implements OnInit {
   addForm: UntypedFormGroup;

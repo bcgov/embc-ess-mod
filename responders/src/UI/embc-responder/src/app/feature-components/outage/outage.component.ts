@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OutageInformation } from 'src/app/core/api/models';
 import { OutageService } from './outage.service';
+import { NgIf, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-outage',
-  templateUrl: './outage.component.html',
-  styleUrls: ['./outage.component.scss']
+    selector: 'app-outage',
+    templateUrl: './outage.component.html',
+    styleUrls: ['./outage.component.scss'],
+    standalone: true,
+    imports: [NgIf, DatePipe]
 })
 export class OutageComponent implements OnInit {
   public outageType: string;

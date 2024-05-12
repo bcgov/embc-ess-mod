@@ -63,29 +63,28 @@ describe('MatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MatchedEssfilesComponent],
-      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, CustomPipeModule],
-      providers: [
+    imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, CustomPipeModule, MatchedEssfilesComponent],
+    providers: [
         MatchedEssfilesComponent,
         {
-          provide: EvacueeSearchService,
-          useClass: MockEvacueeSearchService
+            provide: EvacueeSearchService,
+            useClass: MockEvacueeSearchService
         },
         {
-          provide: EvacueeSessionService,
-          useClass: MockEvacueeSessionService
+            provide: EvacueeSessionService,
+            useClass: MockEvacueeSessionService
         },
         {
-          provide: EvacueeProfileService,
-          useClass: MockEvacueeProfileService
+            provide: EvacueeProfileService,
+            useClass: MockEvacueeProfileService
         },
         {
-          provide: UserService,
-          useClass: MockUserService
+            provide: UserService,
+            useClass: MockUserService
         },
         { provide: computeInterfaceToken, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,7 +8,6 @@ import { MaterialModule } from '../../../material.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
-  declarations: [EditTeamMemberComponent],
-  imports: [CommonModule, ReactiveFormsModule, EditTeamMemberRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, ReactiveFormsModule, EditTeamMemberRoutingModule, MaterialModule, SharedModule, EditTeamMemberComponent]
 })
 export class EditTeamMemberModule {}

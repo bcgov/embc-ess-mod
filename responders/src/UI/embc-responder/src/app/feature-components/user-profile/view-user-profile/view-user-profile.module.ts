@@ -6,8 +6,7 @@ import { ViewUserProfileComponent } from './view-user-profile.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [ViewUserProfileComponent],
-  imports: [CommonModule, ViewUserProfileRoutingModule, MaterialModule],
-  providers: [DatePipe]
+    imports: [CommonModule, ViewUserProfileRoutingModule, MaterialModule, ViewUserProfileComponent],
+    providers: [DatePipe]
 })
 export class ViewUserProfileModule {}

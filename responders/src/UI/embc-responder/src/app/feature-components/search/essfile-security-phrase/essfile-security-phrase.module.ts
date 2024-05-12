@@ -8,13 +8,13 @@ import { SecurityPhraseCardComponent } from './security-phrase-card/security-phr
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [EssfileSecurityPhraseComponent, SecurityPhraseCardComponent],
-  imports: [
-    CommonModule,
-    EssfileSecurityPhraseComponentRoutingModule,
-    MaterialModule,
-    SharedModule,
-    ReactiveFormsModule
-  ]
+    imports: [
+        CommonModule,
+        EssfileSecurityPhraseComponentRoutingModule,
+        MaterialModule,
+        SharedModule,
+        ReactiveFormsModule,
+        EssfileSecurityPhraseComponent, SecurityPhraseCardComponent
+    ]
 })
 export class EssfileSecurityPhraseModule {}

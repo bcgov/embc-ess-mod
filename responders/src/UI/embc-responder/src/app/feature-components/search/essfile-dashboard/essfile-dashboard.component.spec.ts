@@ -36,30 +36,30 @@ describe('EssfileDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         MatDialogModule,
         RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [EssfileDashboardComponent],
-      providers: [
+        BrowserAnimationsModule,
+        EssfileDashboardComponent
+    ],
+    providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         },
         {
-          provide: EssfileDashboardService,
-          useClass: MockEssfileDashboardService
+            provide: EssfileDashboardService,
+            useClass: MockEssfileDashboardService
         },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

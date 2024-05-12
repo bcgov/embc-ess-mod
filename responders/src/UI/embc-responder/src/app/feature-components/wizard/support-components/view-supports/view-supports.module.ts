@@ -8,7 +8,6 @@ import { SupportsTableComponent } from './supports-table/supports-table.componen
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [ViewSupportsComponent, SupportsTableComponent],
-  imports: [CommonModule, ViewSupportsRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, ViewSupportsRoutingModule, MaterialModule, SharedModule, ViewSupportsComponent, SupportsTableComponent]
 })
 export class ViewSupportsModule {}

@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -15,11 +15,21 @@ import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { BcAddressComponent } from '../../../../shared/forms/address-forms/bc-address/bc-address.component';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-evacuation-details',
-  templateUrl: './evacuation-details.component.html',
-  styleUrls: ['./evacuation-details.component.scss']
+    selector: 'app-evacuation-details',
+    templateUrl: './evacuation-details.component.html',
+    styleUrls: ['./evacuation-details.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatRadioGroup, MatRadioButton, BcAddressComponent, NgFor, MatCard, MatCardContent, MatButton, MaskEvacuatedAddressPipe]
 })
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: UntypedFormGroup;

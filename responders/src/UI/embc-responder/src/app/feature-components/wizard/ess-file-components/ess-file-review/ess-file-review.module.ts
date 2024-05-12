@@ -8,7 +8,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [EssFileReviewComponent],
-  imports: [CommonModule, CustomPipeModule, MaterialModule, SharedModule, EssFileReviewRoutingModule]
+    imports: [CommonModule, CustomPipeModule, MaterialModule, SharedModule, EssFileReviewRoutingModule, EssFileReviewComponent]
 })
 export class EssFileReviewModule {}

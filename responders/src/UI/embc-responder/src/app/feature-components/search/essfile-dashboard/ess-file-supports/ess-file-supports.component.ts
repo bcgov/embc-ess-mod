@@ -26,11 +26,17 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { EssFileSupportsService } from './ess-file-supports.service';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { NgFor, NgIf, NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-ess-file-supports',
-  templateUrl: './ess-file-supports.component.html',
-  styleUrls: ['./ess-file-supports.component.scss']
+    selector: 'app-ess-file-supports',
+    templateUrl: './ess-file-supports.component.html',
+    styleUrls: ['./ess-file-supports.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, NgFor, MatFormField, MatLabel, MatSelect, MatOption, NgIf, NgClass, MatPaginator, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe]
 })
 export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

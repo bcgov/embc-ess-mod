@@ -2,11 +2,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
+import { MatButton } from '@angular/material/button';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-registrant-link-dialog',
-  templateUrl: './registrant-link-dialog.component.html',
-  styleUrls: ['./registrant-link-dialog.component.scss']
+    selector: 'app-registrant-link-dialog',
+    templateUrl: './registrant-link-dialog.component.html',
+    styleUrls: ['./registrant-link-dialog.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, MatButton, DatePipe]
 })
 export class RegistrantLinkDialogComponent implements OnInit {
   @Input() content: DialogContent;

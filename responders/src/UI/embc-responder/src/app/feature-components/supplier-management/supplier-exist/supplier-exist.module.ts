@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
-  declarations: [SupplierExistComponent],
-  imports: [CommonModule, SupplierExistRoutingModule, MaterialModule, CustomPipeModule]
+    imports: [CommonModule, SupplierExistRoutingModule, MaterialModule, CustomPipeModule, SupplierExistComponent]
 })
 export class SupplierExistModule {}

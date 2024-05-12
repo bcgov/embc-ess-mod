@@ -8,16 +8,23 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
+import { MatInput } from '@angular/material/input';
+import { MatError, MatFormField, MatPrefix } from '@angular/material/form-field';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
-  selector: 'app-clothing',
-  templateUrl: './clothing.component.html',
-  styleUrls: ['./clothing.component.scss']
+    selector: 'app-clothing',
+    templateUrl: './clothing.component.html',
+    styleUrls: ['./clothing.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, NgIf, MatError, MatFormField, MatInput, NumberCommaDirective, MatPrefix, DecimalPipe]
 })
 export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;

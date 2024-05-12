@@ -8,7 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { HouseholdMemberComponent } from './household-member/household-member.component';
 
 @NgModule({
-  declarations: [EssfileDashboardComponent, HouseholdMemberComponent],
-  imports: [CommonModule, EssfileDashboardRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, EssfileDashboardRoutingModule, MaterialModule, SharedModule, EssfileDashboardComponent, HouseholdMemberComponent]
 })
 export class EssfileDashboardModule {}

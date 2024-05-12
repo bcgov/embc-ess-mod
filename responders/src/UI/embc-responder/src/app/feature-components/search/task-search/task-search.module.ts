@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [TaskSearchComponent],
-  imports: [CommonModule, TaskSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
+    imports: [CommonModule, TaskSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, TaskSearchComponent]
 })
 export class TaskSearchModule {}

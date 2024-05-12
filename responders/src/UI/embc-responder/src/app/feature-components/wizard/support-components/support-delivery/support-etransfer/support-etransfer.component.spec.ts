@@ -17,11 +17,10 @@ describe('SupportEtransferComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule, MaterialModule, BrowserAnimationsModule],
-      declarations: [SupportEtransferComponent],
-      providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
+    imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule, MaterialModule, BrowserAnimationsModule, SupportEtransferComponent],
+    providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+}).compileComponents();
   });
 
   beforeEach(() => {

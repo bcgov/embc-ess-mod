@@ -8,8 +8,8 @@ describe('AccessDeniedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AccessDeniedComponent]
-    }).compileComponents();
+    imports: [AccessDeniedComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

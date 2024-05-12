@@ -6,7 +6,6 @@ import { EssFileOverviewComponent } from './ess-file-overview.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [EssFileOverviewComponent],
-  imports: [CommonModule, EssFileOverviewRoutingModule, MaterialModule]
+    imports: [CommonModule, EssFileOverviewRoutingModule, MaterialModule, EssFileOverviewComponent]
 })
 export class EssFileOverviewModule {}

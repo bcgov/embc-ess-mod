@@ -15,17 +15,17 @@ describe('SupplierReviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
         BrowserAnimationsModule,
-        CustomPipeModule
-      ],
-      declarations: [SupplierReviewComponent]
-    }).compileComponents();
+        CustomPipeModule,
+        SupplierReviewComponent
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

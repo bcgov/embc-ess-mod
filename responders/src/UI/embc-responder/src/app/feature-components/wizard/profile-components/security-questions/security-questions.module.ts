@@ -13,17 +13,17 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [SecurityQuestionsComponent],
-  imports: [
-    CommonModule,
-    CustomPipeModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    SecurityQuestionsRoutingModule,
-    ReactiveFormsModule
-  ]
+    imports: [
+        CommonModule,
+        CustomPipeModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        SecurityQuestionsRoutingModule,
+        ReactiveFormsModule,
+        SecurityQuestionsComponent
+    ]
 })
 export class SecurityQuestionsModule {}

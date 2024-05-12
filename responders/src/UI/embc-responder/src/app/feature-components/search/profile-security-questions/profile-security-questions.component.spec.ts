@@ -17,23 +17,23 @@ describe('ProfileSecurityQuestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileSecurityQuestionsComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
+        BrowserAnimationsModule,
+        ProfileSecurityQuestionsComponent
+    ],
+    providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

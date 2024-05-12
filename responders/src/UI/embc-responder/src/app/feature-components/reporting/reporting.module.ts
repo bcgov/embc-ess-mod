@@ -8,7 +8,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ReportingComponent],
-  imports: [CommonModule, ReportingRoutingModule, MaterialModule, SharedModule, ReactiveFormsModule]
+    imports: [CommonModule, ReportingRoutingModule, MaterialModule, SharedModule, ReactiveFormsModule, ReportingComponent]
 })
 export class ReportingModule {}

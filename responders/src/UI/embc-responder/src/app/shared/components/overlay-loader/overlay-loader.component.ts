@@ -1,11 +1,14 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Component, DoCheck, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AppLoaderComponent } from '../app-loader/app-loader.component';
 
 @Component({
-  selector: 'app-overlay-loader',
-  templateUrl: './overlay-loader.component.html',
-  styleUrls: ['./overlay-loader.component.scss']
+    selector: 'app-overlay-loader',
+    templateUrl: './overlay-loader.component.html',
+    styleUrls: ['./overlay-loader.component.scss'],
+    standalone: true,
+    imports: [AppLoaderComponent]
 })
 export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
   @Input() showLoader: boolean;

@@ -1,8 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { SupportReprintReason } from 'src/app/core/api/models';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { EnumToArrayPipe } from '../../../pipes/EnumToArray.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 interface ReprintOutput {
   reason?: string;
@@ -10,9 +16,11 @@ interface ReprintOutput {
 }
 
 @Component({
-  selector: 'app-reprint-referral-dialog',
-  templateUrl: './reprint-referral-dialog.component.html',
-  styleUrls: ['./reprint-referral-dialog.component.scss']
+    selector: 'app-reprint-referral-dialog',
+    templateUrl: './reprint-referral-dialog.component.html',
+    styleUrls: ['./reprint-referral-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatCheckbox, MatButton, EnumToArrayPipe]
 })
 export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;

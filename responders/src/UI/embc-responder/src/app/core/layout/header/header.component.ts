@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedInUserProfile, UserService } from '../../services/user.service';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, MatToolbarRow, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class HeaderComponent implements OnInit {
   public get profile(): LoggedInUserProfile {

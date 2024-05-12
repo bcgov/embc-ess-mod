@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatAccordion } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileStatus, MemberRole } from 'src/app/core/api/models';
 import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
@@ -14,11 +14,17 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgIf, NgFor, NgClass, NgStyle, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-matched-essfiles',
-  templateUrl: './matched-essfiles.component.html',
-  styleUrls: ['./matched-essfiles.component.scss']
+    selector: 'app-matched-essfiles',
+    templateUrl: './matched-essfiles.component.html',
+    styleUrls: ['./matched-essfiles.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, NgIf, AppLoaderComponent, MatAccordion, NgFor, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, NgClass, MatExpansionPanelDescription, NgStyle, DatePipe, MaskEvacuatedAddressPipe]
 })
 export class MatchedEssfilesComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;

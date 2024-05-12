@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [TaskDetailsComponent],
-  imports: [CommonModule, TaskDetailsRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, TaskDetailsRoutingModule, MaterialModule, SharedModule, TaskDetailsComponent]
 })
 export class TaskDetailsModule {}

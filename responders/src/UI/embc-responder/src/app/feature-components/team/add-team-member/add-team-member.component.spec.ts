@@ -14,17 +14,17 @@ describe('AddTeamMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddTeamMemberComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      providers: [UntypedFormBuilder]
-    }).compileComponents();
+        BrowserAnimationsModule,
+        AddTeamMemberComponent
+    ],
+    providers: [UntypedFormBuilder]
+}).compileComponents();
   });
 
   beforeEach(() => {

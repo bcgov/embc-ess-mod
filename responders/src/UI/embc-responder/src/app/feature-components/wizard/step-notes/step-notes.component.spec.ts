@@ -10,9 +10,8 @@ describe('StepNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [StepNotesComponent]
-    }).compileComponents();
+    imports: [RouterTestingModule, HttpClientTestingModule, StepNotesComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

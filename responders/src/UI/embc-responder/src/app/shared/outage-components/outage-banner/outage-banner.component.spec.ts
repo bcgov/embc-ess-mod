@@ -16,16 +16,15 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
-      declarations: [OutageBannerComponent],
-      providers: [
+    imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot(), OutageBannerComponent],
+    providers: [
         OutageBannerComponent,
         {
-          provide: OutageService,
-          useClass: MockOutageService
+            provide: OutageService,
+            useClass: MockOutageService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

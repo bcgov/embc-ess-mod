@@ -5,11 +5,17 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberReviewService } from './team-member-review.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-team-member-review',
-  templateUrl: './team-member-review.component.html',
-  styleUrls: ['./team-member-review.component.scss']
+    selector: 'app-team-member-review',
+    templateUrl: './team-member-review.component.html',
+    styleUrls: ['./team-member-review.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, AlertComponent, MatButton, AppLoaderComponent]
 })
 export class TeamMemberReviewComponent {
   teamMember: TeamMember;

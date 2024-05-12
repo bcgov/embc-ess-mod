@@ -8,8 +8,8 @@ describe('ToggleSideNavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ToggleSideNavComponent]
-    }).compileComponents();
+    imports: [ToggleSideNavComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

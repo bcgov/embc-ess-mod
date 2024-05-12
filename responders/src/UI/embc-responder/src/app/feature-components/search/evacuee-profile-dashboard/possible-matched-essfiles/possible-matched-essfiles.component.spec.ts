@@ -12,10 +12,9 @@ describe('PossibleMatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule],
-      declarations: [PossibleMatchedEssfilesComponent],
-      providers: [{ provide: computeInterfaceToken, useValue: {} }]
-    }).compileComponents();
+    imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule, PossibleMatchedEssfilesComponent],
+    providers: [{ provide: computeInterfaceToken, useValue: {} }]
+}).compileComponents();
   });
 
   beforeEach(() => {

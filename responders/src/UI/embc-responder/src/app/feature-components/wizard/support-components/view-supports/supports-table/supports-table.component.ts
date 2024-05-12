@@ -11,8 +11,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   Support,
   Referral,
@@ -31,11 +31,15 @@ import {
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import * as globalConst from '../../../../../core/services/global-constants';
+import { AppLoaderComponent } from '../../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-supports-table',
-  templateUrl: './supports-table.component.html',
-  styleUrls: ['./supports-table.component.scss']
+    selector: 'app-supports-table',
+    templateUrl: './supports-table.component.html',
+    styleUrls: ['./supports-table.component.scss'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, AppLoaderComponent, MatPaginator, DecimalPipe, DatePipe]
 })
 export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

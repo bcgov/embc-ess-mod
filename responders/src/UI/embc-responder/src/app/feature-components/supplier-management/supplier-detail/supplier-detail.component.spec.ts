@@ -53,60 +53,60 @@ describe('SupplierDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         MatDialogModule,
         HttpClientTestingModule,
         CustomPipeModule,
         RouterTestingModule.withRoutes([
-          { path: 'suppliers-list', component: SupplierManagementComponent },
-          {
-            path: 'edit-supplier',
-            component: EditSupplierComponent
-          }
-        ])
-      ],
-      declarations: [SupplierDetailComponent],
-      providers: [
+            { path: 'suppliers-list', component: SupplierManagementComponent },
+            {
+                path: 'edit-supplier',
+                component: EditSupplierComponent
+            }
+        ]),
+        SupplierDetailComponent
+    ],
+    providers: [
         SupplierDetailComponent,
         UntypedFormBuilder,
         {
-          provide: UserService,
-          useClass: MockUserService
+            provide: UserService,
+            useClass: MockUserService
         },
         {
-          provide: SupplierListDataService,
-          useClass: MockSupplierListDataService
+            provide: SupplierListDataService,
+            useClass: MockSupplierListDataService
         },
         {
-          provide: SupplierDetailService,
-          useClass: MockSupplierDetailService
+            provide: SupplierDetailService,
+            useClass: MockSupplierDetailService
         },
         {
-          provide: EditSupplierService,
-          useClass: MockEditSupplierService
+            provide: EditSupplierService,
+            useClass: MockEditSupplierService
         },
         {
-          provide: AlertService,
-          useClass: MockAlertService
+            provide: AlertService,
+            useClass: MockAlertService
         },
         {
-          provide: UserService,
-          useClass: MockUserService
+            provide: UserService,
+            useClass: MockUserService
         },
         {
-          provide: LocationsService,
-          useClass: MockLocationService
+            provide: LocationsService,
+            useClass: MockLocationService
         },
         {
-          provide: SupplierService,
-          useClass: MockSupplierService
+            provide: SupplierService,
+            useClass: MockSupplierService
         },
         {
-          provide: Router,
-          useValue: routerMock
+            provide: Router,
+            useValue: routerMock
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

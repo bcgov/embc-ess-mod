@@ -26,13 +26,12 @@ describe('ListNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, BrowserAnimationsModule],
-      declarations: [ListNotesComponent],
-      providers: [
+    imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule, BrowserAnimationsModule, ListNotesComponent],
+    providers: [
         { provide: StepNotesService, useClass: MockStepNotesService },
         { provide: UserService, useClass: MockUserService }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -15,16 +15,15 @@ describe('EssFileOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule],
-      declarations: [EssFileOverviewComponent],
-      providers: [
+    imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, EssFileOverviewComponent],
+    providers: [
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         },
         { provide: computeInterfaceToken, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

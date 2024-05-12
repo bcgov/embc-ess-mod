@@ -14,16 +14,16 @@ describe('TeamListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [TeamListComponent]
-    }).compileComponents();
+        BrowserAnimationsModule,
+        TeamListComponent
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -5,7 +5,6 @@ import { SearchWrapperRoutingModule } from './search-wrapper-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [SearchWrapperComponent],
-  imports: [CommonModule, SearchWrapperRoutingModule, SharedModule]
+    imports: [CommonModule, SearchWrapperRoutingModule, SharedModule, SearchWrapperComponent]
 })
 export class SearchWrapperModule {}

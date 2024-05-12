@@ -31,28 +31,28 @@ describe('EvacueeDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [EvacueeDetailsComponent],
-      providers: [
+        BrowserAnimationsModule,
+        EvacueeDetailsComponent
+    ],
+    providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         },
         {
-          provide: EvacueeDetailsService,
-          useClass: MockEvacueeDetailsService
+            provide: EvacueeDetailsService,
+            useClass: MockEvacueeDetailsService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

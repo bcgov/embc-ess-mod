@@ -37,33 +37,33 @@ describe('ContactComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [ContactComponent],
-      providers: [
+        BrowserAnimationsModule,
+        ContactComponent
+    ],
+    providers: [
         UntypedFormBuilder,
         ContactService,
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         },
         {
-          provide: StepEvacueeProfileService,
-          useClass: MockStepEvacueeProfileService
+            provide: StepEvacueeProfileService,
+            useClass: MockStepEvacueeProfileService
         },
         {
-          provide: EvacueeSessionService,
-          useClass: MockEvacueeSessionService
+            provide: EvacueeSessionService,
+            useClass: MockEvacueeSessionService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

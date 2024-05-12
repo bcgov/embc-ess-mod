@@ -1,12 +1,19 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { NumberOfMealsPipe } from '../../../../../../shared/pipes/numberOfMeals.pipe';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { NgClass, NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-food-meals',
-  templateUrl: './food-meals.component.html',
-  styleUrls: ['./food-meals.component.scss']
+    selector: 'app-food-meals',
+    templateUrl: './food-meals.component.html',
+    styleUrls: ['./food-meals.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, NgClass, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, DecimalPipe, NumberOfMealsPipe]
 })
 export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [SelectSupportComponent],
-  imports: [CommonModule, SelectSupportRoutingModule, MaterialModule, ReactiveFormsModule]
+    imports: [CommonModule, SelectSupportRoutingModule, MaterialModule, ReactiveFormsModule, SelectSupportComponent]
 })
 export class SelectSupportModule {}

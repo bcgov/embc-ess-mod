@@ -1,13 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UntypedFormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { LocationsService, StateProvince } from '../../../../core/services/locations.service';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-usa-address',
-  templateUrl: './usa-address.component.html',
-  styleUrls: ['./usa-address.component.scss']
+    selector: 'app-usa-address',
+    templateUrl: './usa-address.component.html',
+    styleUrls: ['./usa-address.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, AsyncPipe]
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;

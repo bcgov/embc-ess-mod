@@ -164,25 +164,24 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, CustomPipeModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule],
-      declarations: [EssFileDetailsComponent],
-      providers: [
+    imports: [RouterTestingModule, CustomPipeModule, HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, EssFileDetailsComponent],
+    providers: [
         EssFileDetailsComponent,
         {
-          provide: EssfileDashboardService,
-          useClass: MockEssfileDashboardService
+            provide: EssfileDashboardService,
+            useClass: MockEssfileDashboardService
         },
         {
-          provide: Router,
-          useValue: routerMock
+            provide: Router,
+            useValue: routerMock
         },
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         },
         { provide: computeInterfaceToken, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

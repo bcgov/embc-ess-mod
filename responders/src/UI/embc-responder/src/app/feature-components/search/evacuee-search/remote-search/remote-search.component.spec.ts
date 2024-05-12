@@ -14,17 +14,16 @@ describe('RemoteSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule],
-      declarations: [RemoteSearchComponent],
-      providers: [
+    imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, RemoteSearchComponent],
+    providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

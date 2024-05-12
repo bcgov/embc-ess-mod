@@ -37,11 +37,17 @@ import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe
 import { AppBaseService } from '../../../../core/services/helper/appBase.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
 import { CloneSupportDetailsService } from './clone-support-details.service';
+import { SupplierContactPipe } from '../../../../shared/pipes/supplierContact.pipe';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { OverlayLoaderComponent } from '../../../../shared/components/overlay-loader/overlay-loader.component';
+import { NgIf, NgClass, NgFor, UpperCasePipe, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-existing-support-details',
-  templateUrl: './existing-support-details.component.html',
-  styleUrls: ['./existing-support-details.component.scss']
+    selector: 'app-existing-support-details',
+    templateUrl: './existing-support-details.component.html',
+    styleUrls: ['./existing-support-details.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgClass, NgFor, OverlayLoaderComponent, UpperCasePipe, DecimalPipe, DatePipe, MaskEvacuatedAddressPipe, SupplierContactPipe]
 })
 export class ExistingSupportDetailsComponent implements OnInit {
   selectedSupport: Support;

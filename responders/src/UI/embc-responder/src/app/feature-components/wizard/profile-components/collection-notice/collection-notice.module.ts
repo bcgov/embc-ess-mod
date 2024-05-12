@@ -6,7 +6,6 @@ import { CollectionNoticeComponent } from './collection-notice.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [CollectionNoticeComponent],
-  imports: [CommonModule, CollectionNoticeRoutingModule, MaterialModule]
+    imports: [CommonModule, CollectionNoticeRoutingModule, MaterialModule, CollectionNoticeComponent]
 })
 export class CollectionNoticeModule {}

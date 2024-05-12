@@ -8,13 +8,12 @@ describe('ErrorDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ErrorDialogComponent],
-      imports: [MatDialogModule],
-      providers: [
+    imports: [MatDialogModule, ErrorDialogComponent],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: MatDialogRef, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

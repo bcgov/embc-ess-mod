@@ -20,11 +20,18 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
+import { SupportsTableComponent } from './supports-table/supports-table.component';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-view-supports',
-  templateUrl: './view-supports.component.html',
-  styleUrls: ['./view-supports.component.scss']
+    selector: 'app-view-supports',
+    templateUrl: './view-supports.component.html',
+    styleUrls: ['./view-supports.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, NgFor, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
 })
 export class ViewSupportsComponent implements OnInit, OnDestroy {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;

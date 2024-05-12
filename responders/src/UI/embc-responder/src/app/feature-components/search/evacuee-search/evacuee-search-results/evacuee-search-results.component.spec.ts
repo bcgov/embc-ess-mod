@@ -31,7 +31,14 @@ import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { Component } from '@angular/core';
 
-@Component({ selector: 'app-zero-file-result', template: '' })
+@Component({
+    selector: 'app-zero-file-result', template: '',
+    standalone: true,
+    imports: [HttpClientTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        RouterTestingModule]
+})
 class ZeroFileResultStubComponent {}
 
 describe('EvacueeSearchResultsComponent', () => {
@@ -45,36 +52,36 @@ describe('EvacueeSearchResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeSearchResultsComponent, ZeroFileResultStubComponent],
-      imports: [
+    imports: [
         HttpClientTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule
-      ],
-      providers: [
+        RouterTestingModule,
+        EvacueeSearchResultsComponent, ZeroFileResultStubComponent
+    ],
+    providers: [
         EvacueeSearchResultsComponent,
         { provide: EvacueeSearchService, useClass: MockEvacueeSearchService },
         {
-          provide: EvacueeSearchResultsService,
-          useClass: MockEvacueeSearchResultsService
+            provide: EvacueeSearchResultsService,
+            useClass: MockEvacueeSearchResultsService
         },
         {
-          provide: EvacueeProfileService,
-          useClass: MockEvacueeProfileService
+            provide: EvacueeProfileService,
+            useClass: MockEvacueeProfileService
         },
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: OptionInjectionService,
-          useClass: MockOptionInjectionService
+            provide: OptionInjectionService,
+            useClass: MockOptionInjectionService
         },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

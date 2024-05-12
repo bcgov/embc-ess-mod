@@ -8,7 +8,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
-  declarations: [EssFileDetailsComponent],
-  imports: [CommonModule, EssFileDetailsRoutingModule, MaterialModule, SharedModule, CustomPipeModule]
+    imports: [CommonModule, EssFileDetailsRoutingModule, MaterialModule, SharedModule, CustomPipeModule, EssFileDetailsComponent]
 })
 export class EssFileDetailsModule {}

@@ -21,29 +21,27 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
 
 @NgModule({
-  declarations: [
-    SupportDetailsComponent,
-    OverrideDatetimeComponent,
-    FoodMealsComponent,
-    FoodGroceriesComponent,
-    TaxiTransportationComponent,
-    OtherTransportationComponent,
-    LodgingHotelMotelComponent,
-    LodgingBilletingComponent,
-    LodgingGroupComponent,
-    ClothingComponent,
-    IncidentalsComponent,
-    ShelterAllowanceGroupComponent
-  ],
-  imports: [
-    CommonModule,
-    SupportDetailsRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    CustomPipeModule,
-    CustomDirectiveModule,
-    SharedModule
-  ],
-  providers: [DatePipe]
+    imports: [
+        CommonModule,
+        SupportDetailsRoutingModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        CustomPipeModule,
+        CustomDirectiveModule,
+        SharedModule,
+        SupportDetailsComponent,
+        OverrideDatetimeComponent,
+        FoodMealsComponent,
+        FoodGroceriesComponent,
+        TaxiTransportationComponent,
+        OtherTransportationComponent,
+        LodgingHotelMotelComponent,
+        LodgingBilletingComponent,
+        LodgingGroupComponent,
+        ClothingComponent,
+        IncidentalsComponent,
+        ShelterAllowanceGroupComponent
+    ],
+    providers: [DatePipe]
 })
 export class SupportDetailsModule {}

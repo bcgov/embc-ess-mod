@@ -1,16 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from './task-search.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-task-search',
-  templateUrl: './task-search.component.html',
-  styleUrls: ['./task-search.component.scss']
+    selector: 'app-task-search',
+    templateUrl: './task-search.component.html',
+    styleUrls: ['./task-search.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, AlertComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatButton, AppLoaderComponent]
 })
 export class TaskSearchComponent implements OnInit {
   taskSearchForm: UntypedFormGroup;

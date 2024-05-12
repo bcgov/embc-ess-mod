@@ -9,9 +9,8 @@ describe('SecurityPhraseCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SecurityPhraseCardComponent],
-      imports: [ReactiveFormsModule, FormsModule]
-    }).compileComponents();
+    imports: [ReactiveFormsModule, FormsModule, SecurityPhraseCardComponent]
+}).compileComponents();
   });
 
   beforeEach(() => {

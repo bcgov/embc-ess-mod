@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSlideToggleChange, MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatSort, Sort, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -20,11 +20,15 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { SupplierListItem } from 'src/app/core/api/models';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgFor, NgIf, NgClass, UpperCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-suppliers-table',
-  templateUrl: './suppliers-table.component.html',
-  styleUrls: ['./suppliers-table.component.scss']
+    selector: 'app-suppliers-table',
+    templateUrl: './suppliers-table.component.html',
+    styleUrls: ['./suppliers-table.component.scss'],
+    standalone: true,
+    imports: [MatTable, MatSort, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, NgIf, MatCellDef, MatCell, MatSlideToggle, NgClass, AppLoaderComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, UpperCasePipe]
 })
 export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -21,24 +21,23 @@ describe('SearchOptionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [SearchOptionsComponent],
-      providers: [
+    imports: [HttpClientTestingModule, RouterTestingModule, SearchOptionsComponent],
+    providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
-          provide: AppBaseService,
-          useClass: MockAppBaseService
+            provide: AppBaseService,
+            useClass: MockAppBaseService
         },
         {
-          provide: EvacueeSessionService,
-          useClass: MockEvacueeSessionService
+            provide: EvacueeSessionService,
+            useClass: MockEvacueeSessionService
         },
         {
-          provide: UserService,
-          useClass: MockUserService
+            provide: UserService,
+            useClass: MockUserService
         }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [StepNotesComponent],
-  imports: [CommonModule, StepNotesRoutingModule, MaterialModule, SharedModule]
+    imports: [CommonModule, StepNotesRoutingModule, MaterialModule, SharedModule, StepNotesComponent]
 })
 export class StepNotesModule {}

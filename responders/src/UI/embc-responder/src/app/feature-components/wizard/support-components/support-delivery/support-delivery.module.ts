@@ -14,22 +14,20 @@ import { SupportReferralComponent } from './support-referral/support-referral.co
 import { SupportEtransferComponent } from './support-etransfer/support-etransfer.component';
 
 @NgModule({
-  declarations: [
-    SupportDeliveryComponent,
-    BilletingDeliveryComponent,
-    ShelterAllowanceDeliveryComponent,
-    GroupLodgingDeliveryComponent,
-    SupportReferralComponent,
-    SupportEtransferComponent
-  ],
-  imports: [
-    CommonModule,
-    SupportDeliveryRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    CustomPipeModule,
-    SharedModule,
-    IMaskModule
-  ]
+    imports: [
+        CommonModule,
+        SupportDeliveryRoutingModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        CustomPipeModule,
+        SharedModule,
+        IMaskModule,
+        SupportDeliveryComponent,
+        BilletingDeliveryComponent,
+        ShelterAllowanceDeliveryComponent,
+        GroupLodgingDeliveryComponent,
+        SupportReferralComponent,
+        SupportEtransferComponent
+    ]
 })
 export class SupportDeliveryModule {}

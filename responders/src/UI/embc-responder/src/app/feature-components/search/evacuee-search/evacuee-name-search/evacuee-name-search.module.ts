@@ -8,14 +8,14 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [EvacueeNameSearchComponent],
-  imports: [
-    CommonModule,
-    EvacueeNameSearchRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule,
-    IMaskModule
-  ]
+    imports: [
+        CommonModule,
+        EvacueeNameSearchRoutingModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        SharedModule,
+        IMaskModule,
+        EvacueeNameSearchComponent
+    ]
 })
 export class EvacueeNameSearchModule {}

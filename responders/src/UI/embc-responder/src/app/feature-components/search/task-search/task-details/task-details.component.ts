@@ -7,11 +7,17 @@ import { TaskSearchService } from '../task-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-task-details',
-  templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss']
+    selector: 'app-task-details',
+    templateUrl: './task-details.component.html',
+    styleUrls: ['./task-details.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
 })
 export class TaskDetailsComponent implements OnInit {
   essTask: EssTaskModel;

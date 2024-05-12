@@ -110,35 +110,35 @@ describe('ProfileResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileResultsComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         HttpClientTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        RouterTestingModule
-      ],
-      providers: [
+        RouterTestingModule,
+        ProfileResultsComponent
+    ],
+    providers: [
         ProfileResultsComponent,
         {
-          provide: EvacueeSearchService,
-          useClass: MockEvacueeSearchService
+            provide: EvacueeSearchService,
+            useClass: MockEvacueeSearchService
         },
         {
-          provide: EvacueeSessionService,
-          useClass: MockEvacueeSessionService
+            provide: EvacueeSessionService,
+            useClass: MockEvacueeSessionService
         },
         {
-          provide: ProfileSecurityQuestionsService,
-          useClass: MockProfileSecurityQuestionsService
+            provide: ProfileSecurityQuestionsService,
+            useClass: MockProfileSecurityQuestionsService
         },
         {
-          provide: EvacueeSearchResultsService,
-          useClass: MockEvacueeSearchResultsService
+            provide: EvacueeSearchResultsService,
+            useClass: MockEvacueeSearchResultsService
         },
         { provide: computeInterfaceToken, useValue: {} }
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

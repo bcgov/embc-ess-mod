@@ -1,10 +1,15 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-taxi-transportation',
-  templateUrl: './taxi-transportation.component.html',
-  styleUrls: ['./taxi-transportation.component.scss']
+    selector: 'app-taxi-transportation',
+    templateUrl: './taxi-transportation.component.html',
+    styleUrls: ['./taxi-transportation.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError]
 })
 export class TaxiTransportationComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;

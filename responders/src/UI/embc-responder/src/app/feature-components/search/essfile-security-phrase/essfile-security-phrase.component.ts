@@ -8,15 +8,21 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { SecurityPhraseCardComponent } from './security-phrase-card/security-phrase-card.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-essfile-security-phrase',
-  templateUrl: './essfile-security-phrase.component.html',
-  styleUrls: ['./essfile-security-phrase.component.scss']
+    selector: 'app-essfile-security-phrase',
+    templateUrl: './essfile-security-phrase.component.html',
+    styleUrls: ['./essfile-security-phrase.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: UntypedFormGroup;

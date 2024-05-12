@@ -2,11 +2,19 @@ import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { MatOption } from '@angular/material/core';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-search-filter',
-  templateUrl: './search-filter.component.html',
-  styleUrls: ['./search-filter.component.scss']
+    selector: 'app-search-filter',
+    templateUrl: './search-filter.component.html',
+    styleUrls: ['./search-filter.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, NgIf, NgFor, MatSelect, MatOption]
 })
 export class SearchFilterComponent implements OnInit {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;

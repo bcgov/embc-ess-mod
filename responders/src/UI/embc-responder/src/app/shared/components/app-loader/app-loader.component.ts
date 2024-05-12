@@ -1,9 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf, NgStyle } from '@angular/common';
 
 @Component({
-  selector: 'app-loader',
-  templateUrl: './app-loader.component.html',
-  styleUrls: ['./app-loader.component.scss']
+    selector: 'app-loader',
+    templateUrl: './app-loader.component.html',
+    styleUrls: ['./app-loader.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner, NgStyle]
 })
 export class AppLoaderComponent implements OnInit {
   @Input() showLoader: boolean;

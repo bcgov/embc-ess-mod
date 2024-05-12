@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [EvacueeIdVerifyComponent],
-  imports: [CommonModule, EvacueeIdVerifyRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
+    imports: [CommonModule, EvacueeIdVerifyRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, EvacueeIdVerifyComponent]
 })
 export class EvacueeIdVerifyModule {}

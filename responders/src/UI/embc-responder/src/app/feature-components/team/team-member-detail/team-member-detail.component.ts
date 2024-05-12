@@ -11,11 +11,16 @@ import { TeamMemberDetailsService } from './team-member-details.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamMemberModel } from '../../../core/models/team-member.model';
+import { MatButton } from '@angular/material/button';
+import { NgIf, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-  selector: 'app-team-member-detail',
-  templateUrl: './team-member-detail.component.html',
-  styleUrls: ['./team-member-detail.component.scss']
+    selector: 'app-team-member-detail',
+    templateUrl: './team-member-detail.component.html',
+    styleUrls: ['./team-member-detail.component.scss'],
+    standalone: true,
+    imports: [MatCard, MatCardContent, NgIf, MatButton, DatePipe]
 })
 export class TeamMemberDetailComponent {
   teamMember: TeamMemberModel;

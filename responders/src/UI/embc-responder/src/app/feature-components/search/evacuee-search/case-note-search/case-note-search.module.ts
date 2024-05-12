@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [CaseNoteSearchComponent],
-  imports: [CommonModule, CaseNoteSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule]
+    imports: [CommonModule, CaseNoteSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, CaseNoteSearchComponent]
 })
 export class CaseNoteSearchModule {}

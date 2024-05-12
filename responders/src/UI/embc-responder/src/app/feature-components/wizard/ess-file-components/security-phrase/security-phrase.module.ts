@@ -10,16 +10,16 @@ import { MatInputModule } from '@angular/material/input';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
-  declarations: [SecurityPhraseComponent],
-  imports: [
-    CommonModule,
-    SecurityPhraseRoutingModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    CustomPipeModule
-  ]
+    imports: [
+        CommonModule,
+        SecurityPhraseRoutingModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        CustomPipeModule,
+        SecurityPhraseComponent
+    ]
 })
 export class SecurityPhraseModule {}

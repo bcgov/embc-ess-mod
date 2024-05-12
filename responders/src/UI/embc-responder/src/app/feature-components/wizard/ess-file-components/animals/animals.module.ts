@@ -8,8 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [AnimalsComponent],
-  imports: [CommonModule, AnimalsRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule],
-  exports: [AnimalsComponent]
+    imports: [CommonModule, AnimalsRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, AnimalsComponent],
+    exports: [AnimalsComponent]
 })
 export class AnimalsModule {}

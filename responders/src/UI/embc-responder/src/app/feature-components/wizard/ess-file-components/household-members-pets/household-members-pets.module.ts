@@ -10,15 +10,15 @@ import { AnimalsModule } from '../animals/animals.module';
 import { HouseholdMembersModule } from '../household-members/household-members.module';
 
 @NgModule({
-  declarations: [HouseholdMembersPetsComponent],
-  imports: [
-    CommonModule,
-    HouseholdMembersPetsRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    SharedModule,
-    HouseholdMembersModule,
-    AnimalsModule
-  ]
+    imports: [
+        CommonModule,
+        HouseholdMembersPetsRoutingModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        SharedModule,
+        HouseholdMembersModule,
+        AnimalsModule,
+        HouseholdMembersPetsComponent
+    ]
 })
 export class HouseholdMembersPetsModule {}

@@ -14,16 +14,16 @@ describe('ListSuppliersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [SuppliersListComponent]
-    }).compileComponents();
+        BrowserAnimationsModule,
+        SuppliersListComponent
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -7,7 +7,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
-  declarations: [ResponderAccessComponent],
-  imports: [CommonModule, ResponderAccessRoutingModule, SharedModule, MatSidenavModule]
+    imports: [CommonModule, ResponderAccessRoutingModule, SharedModule, MatSidenavModule, ResponderAccessComponent]
 })
 export class ResponderAccessModule {}

@@ -8,14 +8,14 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [EditUserProfileComponent],
-  imports: [
-    CommonModule,
-    EditUserProfileRoutingModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    SharedModule,
-    IMaskModule
-  ]
+    imports: [
+        CommonModule,
+        EditUserProfileRoutingModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        SharedModule,
+        IMaskModule,
+        EditUserProfileComponent
+    ]
 })
 export class EditUserProfileModule {}
