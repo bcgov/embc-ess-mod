@@ -3,11 +3,11 @@ import { CommonModule, DatePipe } from '@angular/common';
 
 import { SupportDetailsRoutingModule } from './support-details-routing.module';
 import { SupportDetailsComponent } from './support-details.component';
-import { MaterialModule } from 'src/app/material.module';
+
 import { OverrideDatetimeComponent } from './override-datetime/override-datetime.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FoodMealsComponent } from './details-type/food-meals/food-meals.component';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+
 import { FoodGroceriesComponent } from './details-type/food-groceries/food-groceries.component';
 import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
 import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
@@ -17,31 +17,28 @@ import { LodgingGroupComponent } from './details-type/lodging-group/lodging-grou
 import { ClothingComponent } from './details-type/clothing/clothing.component';
 import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
 import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective.module';
-import { SharedModule } from 'src/app/shared/shared.module';
+
 import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
 
 @NgModule({
     imports: [
-        CommonModule,
-        SupportDetailsRoutingModule,
-        MaterialModule,
-        ReactiveFormsModule,
-        CustomPipeModule,
-        CustomDirectiveModule,
-        SharedModule,
-        SupportDetailsComponent,
-        OverrideDatetimeComponent,
-        FoodMealsComponent,
-        FoodGroceriesComponent,
-        TaxiTransportationComponent,
-        OtherTransportationComponent,
-        LodgingHotelMotelComponent,
-        LodgingBilletingComponent,
-        LodgingGroupComponent,
-        ClothingComponent,
-        IncidentalsComponent,
-        ShelterAllowanceGroupComponent
-    ],
+    CommonModule,
+    SupportDetailsRoutingModule,
+    ReactiveFormsModule,
+    CustomDirectiveModule,
+    SupportDetailsComponent,
+    OverrideDatetimeComponent,
+    FoodMealsComponent,
+    FoodGroceriesComponent,
+    TaxiTransportationComponent,
+    OtherTransportationComponent,
+    LodgingHotelMotelComponent,
+    LodgingBilletingComponent,
+    LodgingGroupComponent,
+    ClothingComponent,
+    IncidentalsComponent,
+    ShelterAllowanceGroupComponent
+],
     providers: [DatePipe]
 })
 export class SupportDetailsModule {}

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { ReportingRoutingModule } from './reporting-routing.module';
 import { ReportingComponent } from './reporting.component';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { MaterialModule } from 'src/app/material.module';
+
+
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [CommonModule, ReportingRoutingModule, MaterialModule, SharedModule, ReactiveFormsModule, ReportingComponent]
+    imports: [CommonModule, ReportingRoutingModule, ReactiveFormsModule, ReportingComponent]
 })
 export class ReportingModule {}

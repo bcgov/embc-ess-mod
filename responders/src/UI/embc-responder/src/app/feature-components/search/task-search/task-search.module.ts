@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { TaskSearchRoutingModule } from './task-search-routing.module';
 import { TaskSearchComponent } from './task-search.component';
-import { MaterialModule } from 'src/app/material.module';
+
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/shared/shared.module';
+
 
 @NgModule({
-    imports: [CommonModule, TaskSearchRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, TaskSearchComponent]
+    imports: [CommonModule, TaskSearchRoutingModule, ReactiveFormsModule, TaskSearchComponent]
 })
 export class TaskSearchModule {}

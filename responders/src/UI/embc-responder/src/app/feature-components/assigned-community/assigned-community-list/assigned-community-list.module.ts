@@ -3,18 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { AssignedCommunityListRoutingModule } from './assigned-community-list-routing.module';
 import { AssignedCommunityListComponent } from './assigned-community-list.component';
-import { SharedModule } from '../../../shared/shared.module';
-import { MaterialModule } from '../../../material.module';
-import { AssignedCommunityTableModule } from '../assigned-community-table/assigned-community-table.module';
+
+
+
 
 @NgModule({
     imports: [
-        CommonModule,
-        AssignedCommunityListRoutingModule,
-        SharedModule,
-        MaterialModule,
-        AssignedCommunityTableModule,
-        AssignedCommunityListComponent
-    ]
+    CommonModule,
+    AssignedCommunityListRoutingModule,
+    AssignedCommunityListComponent
+]
 })
 export class AssignedCommunityListModule {}

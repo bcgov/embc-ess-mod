@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { TeamMemberManagementRoutingModule } from './team-member-management-routing.module';
 import { TeamMemberManagementComponent } from './team-member-management.component';
-import { MaterialModule } from 'src/app/material.module';
+
 
 @NgModule({
-    imports: [CommonModule, TeamMemberManagementRoutingModule, MaterialModule, TeamMemberManagementComponent]
+    imports: [CommonModule, TeamMemberManagementRoutingModule, TeamMemberManagementComponent]
 })
 export class TeamMemberManagementModule {}

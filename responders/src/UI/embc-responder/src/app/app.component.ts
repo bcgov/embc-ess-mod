@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
     this.outageService.startOutageInterval();
   }
 
-  public closeOutageBanner($event: boolean): void {
+  public closeOutageBanner($event: any): void {
     this.outageService.setShowOutageBanner($event);
     this.outageService.closeBannerbyUser = !$event;
   }

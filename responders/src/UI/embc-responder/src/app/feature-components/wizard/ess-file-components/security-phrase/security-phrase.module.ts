@@ -7,19 +7,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+
 
 @NgModule({
     imports: [
-        CommonModule,
-        SecurityPhraseRoutingModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        CustomPipeModule,
-        SecurityPhraseComponent
-    ]
+    CommonModule,
+    SecurityPhraseRoutingModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    SecurityPhraseComponent
+]
 })
 export class SecurityPhraseModule {}

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { WizardRoutingModule } from './wizard-routing.module';
 import { WizardComponent } from './wizard.component';
-import { MaterialModule } from 'src/app/material.module';
-import { SharedModule } from 'src/app/shared/shared.module';
+
+
 import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
-    imports: [CommonModule, CoreModule, WizardRoutingModule, MaterialModule, SharedModule, WizardComponent]
+    imports: [CommonModule, CoreModule, WizardRoutingModule, WizardComponent]
 })
 export class WizardModule {}

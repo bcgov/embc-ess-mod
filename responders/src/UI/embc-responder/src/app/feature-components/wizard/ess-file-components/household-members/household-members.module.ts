@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 
 import { HouseholdMembersRoutingModule } from './household-members-routing.module';
 import { HouseholdMembersComponent } from './household-members.component';
-import { MaterialModule } from 'src/app/material.module';
+
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/shared/shared.module';
+
 
 @NgModule({
-    imports: [CommonModule, HouseholdMembersRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule, HouseholdMembersComponent],
+    imports: [CommonModule, HouseholdMembersRoutingModule, ReactiveFormsModule, HouseholdMembersComponent],
     exports: [HouseholdMembersComponent]
 })
 export class HouseholdMembersModule {}
