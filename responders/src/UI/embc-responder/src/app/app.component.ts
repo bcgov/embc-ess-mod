@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { LocationsService } from './core/services/locations.service';
@@ -14,11 +14,17 @@ import { EnvironmentBannerService } from './core/layout/environment-banner/envir
 import { Subscription } from 'rxjs';
 import { LoadEvacueeListService } from './core/services/load-evacuee-list.service';
 import { SupplierService } from './core/services/suppliers.service';
+import { FooterComponent } from './core/layout/footer/footer.component';
+import { HeaderComponent } from './core/layout/header/header.component';
+import { EnvironmentBannerComponent } from './core/layout/environment-banner/environment-banner.component';
+import { NgIf, NgStyle, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [NgIf, EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

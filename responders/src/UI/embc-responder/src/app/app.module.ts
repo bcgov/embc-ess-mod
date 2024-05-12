@@ -16,38 +16,4 @@ import { ComputeFeaturesService } from './core/services/compute/computeFeatures.
 import { ComputeWizardService } from './core/services/compute/computeWizard.service';
 
 export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    CoreModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    OAuthModule.forRoot({
-        resourceServer: {
-            customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/configuration'),
-            sendAccessToken: true
-        }
-    }),
-    ApiModule.forRoot({ rootUrl: '' }),
-    NgIdleKeepaliveModule.forRoot(),
-    ErrorHandlingModule.forRoot()
-],
-  providers: [
-    DatePipe,
-    {
-      provide: computeInterfaceToken,
-      useClass: ComputeFeaturesService,
-      multi: true
-    },
-    {
-      provide: computeInterfaceToken,
-      useClass: ComputeWizardService,
-      multi: true
-    }
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
-export class AppModule {}
+

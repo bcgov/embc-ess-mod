@@ -105,9 +105,9 @@ describe('AppComponent', () => {
         OAuthModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
         MatDialogModule,
-        EnvironmentBannerStubComponent, OutageBannerStubComponent
+        EnvironmentBannerStubComponent, OutageBannerStubComponent,
+        AppComponent
     ],
-    declarations: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
     providers: [
         AppComponent,

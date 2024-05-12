@@ -1,13 +1,48 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, InjectionToken, importProvidersFrom } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { AppModule } from './app/app.module';
+import { computeInterfaceToken } from './app/app.module';
 import { environment } from './environments/environment';
+import { AppComponent } from './app/app.component';
+import { ErrorHandlingModule } from './app/shared/error-handling/error-handing.module';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { ApiModule } from './app/core/api/api.module';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { CoreModule } from './app/core/core.module';
+import { AppRoutingModule } from './app/app-routing.module';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { ComputeWizardService } from './app/core/services/compute/computeWizard.service';
+import { ComputeFeaturesService } from './app/core/services/compute/computeFeatures.service';
+import { Compute } from './app/core/interfaces/compute';
+import { DatePipe } from '@angular/common';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, {
+    providers: [
+        importProvidersFrom(BrowserModule, AppRoutingModule, CoreModule, OAuthModule.forRoot({
+            resourceServer: {
+                customUrlValidation: (url) => url.startsWith('/api') && !url.endsWith('/configuration'),
+                sendAccessToken: true
+            }
+        }), ApiModule.forRoot({ rootUrl: '' }), NgIdleKeepaliveModule.forRoot(), ErrorHandlingModule.forRoot()),
+        DatePipe,
+        {
+            provide: computeInterfaceToken,
+            useClass: ComputeFeaturesService,
+            multi: true
+        },
+        {
+            provide: computeInterfaceToken,
+            useClass: ComputeWizardService,
+            multi: true
+        },
+        provideAnimations(),
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
   .catch((err) => console.error(err));
