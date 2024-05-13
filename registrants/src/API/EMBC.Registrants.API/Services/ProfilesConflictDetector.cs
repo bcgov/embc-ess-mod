@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 using EMBC.Registrants.API.Controllers;
 
-namespace EMBC.Registrants.API.Services
+namespace EMBC.Registrants.API.Services;
+
+public static class ProfilesConflictDetector
 {
-    public static class ProfilesConflictDetector
+    public static IEnumerable<ProfileDataConflict> DetectConflicts(Profile source, Profile target)
     {
-        public static IEnumerable<ProfileDataConflict> DetectConflicts(Profile source, Profile target)
+        if (source?.PersonalDetails != null && target?.PersonalDetails != null)
         {
-            if (source == null || target == null) yield break;
-            if (source.PersonalDetails != null && !source.PersonalDetails.DateofBirthEquals(target.PersonalDetails))
+            if (!source.PersonalDetails.DateofBirthEquals(target.PersonalDetails))
             {
                 yield return new DateOfBirthDataConflict
                 {
@@ -18,7 +19,7 @@ namespace EMBC.Registrants.API.Services
                     ConflictingValue = target.PersonalDetails?.DateOfBirth
                 };
             }
-            if (source.PersonalDetails != null && !source.PersonalDetails.NameEquals(target.PersonalDetails))
+            if (!source.PersonalDetails.NameEquals(target.PersonalDetails))
             {
                 yield return new NameDataConflict
                 {
@@ -26,38 +27,32 @@ namespace EMBC.Registrants.API.Services
                     ConflictingValue = new ProfileName { FirstName = target.PersonalDetails?.FirstName, LastName = target.PersonalDetails?.LastName },
                 };
             }
-            if (source.PrimaryAddress != null && !source.PrimaryAddress.AddressEquals(target.PrimaryAddress))
-            {
-                yield return new AddressDataConflict
-                {
-                    OriginalValue = source.PrimaryAddress,
-                    ConflictingValue = target.PrimaryAddress,
-                };
-            }
         }
-
-        private static bool AddressEquals(this Address address, Address other) =>
-            (address == null && other == null) ||
-            (address != null &&
-            address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
-            address.PostalCode.RemoveWhitespace().StringSafeEquals(other?.PostalCode.RemoveWhitespace()) &&
-            address.StateProvince.StringSafeEquals(other?.StateProvince));
-
-        private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
-            personDetails != null &&
-            personDetails.FirstName.StringSafeEquals(other?.FirstName) &&
-            personDetails.LastName.StringSafeEquals(other?.LastName);
-
-        private static bool DateofBirthEquals(this PersonDetails personDetails, PersonDetails other) =>
-            personDetails?.DateOfBirth == other?.DateOfBirth;
-
-        private static bool StringSafeEquals(this string s, string other) =>
-            string.Equals((s ?? string.Empty).Trim(), (other ?? string.Empty).Trim(), StringComparison.InvariantCultureIgnoreCase);
-        public static string RemoveWhitespace(this string input)
+        if (source?.PrimaryAddress != null && target?.PrimaryAddress != null && !source.PrimaryAddress.AddressEquals(target.PrimaryAddress))
         {
-            return new string(input.ToCharArray()
-                .Where(c => !char.IsWhiteSpace(c))
-                .ToArray());
+            yield return new AddressDataConflict
+            {
+                OriginalValue = source.PrimaryAddress,
+                ConflictingValue = target.PrimaryAddress,
+            };
         }
     }
+
+    private static bool AddressEquals(this Address address, Address other) =>
+        address.AddressLine1.StringSafeEquals(other.AddressLine1) &&
+        address.PostalCode.StringSafeEquals(other.PostalCode) &&
+        address.StateProvince.StringSafeEquals(other.StateProvince);
+
+    private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
+        personDetails.FirstName.StringSafeEquals(other?.FirstName) &&
+        personDetails.LastName.StringSafeEquals(other?.LastName);
+
+    private static bool DateofBirthEquals(this PersonDetails personDetails, PersonDetails other) =>
+        personDetails?.DateOfBirth == other?.DateOfBirth;
+
+    private static bool StringSafeEquals(this string? s, string? other) =>
+        string.Equals(s?.RemoveWhitespace(), other?.RemoveWhitespace(), StringComparison.InvariantCultureIgnoreCase);
+
+    private static string RemoveWhitespace(this string? s) =>
+        string.IsNullOrWhiteSpace(s) ? null : Regex.Replace(s, "\\s+", string.Empty);
 }
