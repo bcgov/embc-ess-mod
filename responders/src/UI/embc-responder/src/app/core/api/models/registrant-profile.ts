@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { ContactDetails } from './contact-details';
-import { PersonDetails } from './person-details';
-import { SecurityQuestion } from './security-question';
+import { Address } from '../models/address';
+import { ContactDetails } from '../models/contact-details';
+import { PersonDetails } from '../models/person-details';
+import { SecurityQuestion } from '../models/security-question';
 
 /**
  * Registrant profile
@@ -12,7 +12,7 @@ export interface RegistrantProfile {
   authenticatedUser?: boolean;
   contactDetails: ContactDetails;
   createdOn?: string;
-  id?: null | string;
+  id?: string | null;
   isMailingAddressSameAsPrimaryAddress?: boolean;
   isMinor?: boolean;
   mailingAddress: Address;

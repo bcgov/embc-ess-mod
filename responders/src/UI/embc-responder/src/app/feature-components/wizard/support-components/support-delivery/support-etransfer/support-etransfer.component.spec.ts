@@ -16,12 +16,7 @@ describe('SupportEtransferComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        SupportEtransferComponent
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, SupportEtransferComponent],
       providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

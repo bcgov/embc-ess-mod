@@ -15,12 +15,7 @@ describe('SupportReferralComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        SupportReferralComponent
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, SupportReferralComponent],
       providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])]
     }).compileComponents();
   });

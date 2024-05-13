@@ -163,12 +163,7 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        EssFileDetailsComponent
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, EssFileDetailsComponent],
       providers: [
         EssFileDetailsComponent,
         {

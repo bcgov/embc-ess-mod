@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { MemberLabel } from './member-label';
+import { MemberLabel } from '../models/member-label';
 
 /**
  * label code and description

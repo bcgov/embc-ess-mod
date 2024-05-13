@@ -32,12 +32,7 @@ describe('EvacueeIdVerifyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        EvacueeIdVerifyComponent
-      ],
+      imports: [HttpClientTestingModule, ReactiveFormsModule, BrowserAnimationsModule, EvacueeIdVerifyComponent],
       providers: [
         EvacueeIdVerifyComponent,
         UntypedFormBuilder,

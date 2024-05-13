@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { EvacuationFileSearchResultHouseholdMember } from './evacuation-file-search-result-household-member';
-import { EvacuationFileStatus } from './evacuation-file-status';
+import { Address } from '../models/address';
+import { EvacuationFileSearchResultHouseholdMember } from '../models/evacuation-file-search-result-household-member';
+import { EvacuationFileStatus } from '../models/evacuation-file-status';
 export interface EvacuationFileSearchResult {
   createdOn?: string;
   evacuatedFrom?: Address;
@@ -14,8 +14,8 @@ export interface EvacuationFileSearchResult {
   manualFileId?: string;
   modifiedOn?: string;
   status?: EvacuationFileStatus;
-  taskEndDate?: null | string;
+  taskEndDate?: string | null;
   taskId?: string;
   taskLocationCommunityCode?: string;
-  taskStartDate?: null | string;
+  taskStartDate?: string | null;
 }
