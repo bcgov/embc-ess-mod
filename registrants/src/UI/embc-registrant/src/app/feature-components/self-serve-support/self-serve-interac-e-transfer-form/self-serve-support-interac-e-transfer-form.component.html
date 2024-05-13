@@ -1,4 +1,4 @@
-<p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
+<p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
 @if (eTransferDetailsForm) {
   <form class="eTransfer-form">
     <mat-card appearance="outlined">
@@ -6,9 +6,9 @@
         <div style="display: flex; flex-direction: column; width: 100%">
           <div class="container-with-logo">
             <div>
-              <p class="card-heading">e-Transfer Details *</p>
+              <p class="card-heading requiredField">e-Transfer Details</p>
               <div class="card-question">
-                <label> e-Transfer Recipient</label>
+                <label> e-Transfer <b>Recipient</b></label>
               </div>
               <mat-form-field>
                 <mat-label>Full Name</mat-label>
@@ -18,7 +18,10 @@
                   [formControl]="eTransferDetailsForm.controls.recipientName"
                   required
                 />
-                @if (eTransferDetailsForm.controls.recipientName.hasError('required')) {
+                @if (
+                  eTransferDetailsForm.controls.recipientName.hasError('required') ||
+                  eTransferDetailsForm.controls.recipientName.hasError('whitespaceError')
+                ) {
                   <mat-error>e-Transfer Recipient is required</mat-error>
                 }
               </mat-form-field>
@@ -27,7 +30,7 @@
               <img src="../../../assets/images/interac-e-transfer-logo.png" alt="Interac e-transfer Logo" />
             </div>
           </div>
-          <div class="card-question">How would you prefer to be notified of your e-Transfer?</div>
+          <div class="card-question">How would you prefer to be <b>notified</b> of your e-Transfer?</div>
           <mat-form-field appearance="outline">
             <mat-select
               [formControl]="eTransferDetailsForm.controls.notificationPreference"
@@ -69,7 +72,7 @@
                   }
                 </mat-form-field>
               } @else {
-                <span style="margin: 12px">
+                <span style="margin: 12px; width: 400px">
                   <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
                 </span>
               }
@@ -123,7 +126,7 @@
                   }
                 </mat-form-field>
               } @else {
-                <span style="margin: 12px">
+                <span style="margin: 12px; width: 400px">
                   <b>{{ profileDataService.getProfile().contactDetails.phone }}</b>
                 </span>
               }
