@@ -67,5 +67,13 @@ namespace EMBC.ESS.Resources.Metadata
         {
             return mapper.Map<IEnumerable<StateProvince>>(await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync());
         }
+
+        public async Task<IReadOnlyDictionary<int, string>> GetAuditAccessReasons()
+        {
+            var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
+            var optionSet = (OptionSetMetadata)optionSetDefinitions.SingleOrDefault(t => t.Name == "era_fileaccessreason");
+
+            return optionSet?.Options.ToDictionary(o => o.Value.Value, o => o.Label.UserLocalizedLabel.Label) ?? new Dictionary<int, string>();
+        }
     }
 }

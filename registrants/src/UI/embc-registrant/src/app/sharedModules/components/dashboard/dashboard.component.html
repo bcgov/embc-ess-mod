@@ -45,8 +45,7 @@
                   </p>
                   <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
                 </div>
-              }
-              @if ((evacuationFilesDataService.allSupportsSelfServe$ | async) === false) {
+              } @else if ((evacuationFilesDataService.allSupportsSelfServe$ | async) === false) {
                 <div class="col-md-12">
                   <p class="top-detail">
                     <b>No Further Action Required. You do not need to meet with a responder at a reception centre.</b>

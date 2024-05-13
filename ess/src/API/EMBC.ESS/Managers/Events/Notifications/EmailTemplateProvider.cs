@@ -20,6 +20,8 @@ namespace EMBC.ESS.Managers.Events.Notifications
                   SubmissionTemplateType.NewEvacuationFileSubmission => await GetNewTemplate(),
                   SubmissionTemplateType.NewProfileRegistration => await GetRegisterNewTemplate(),
                   SubmissionTemplateType.InviteProfile => await GetInviteTemplate(),
+                  SubmissionTemplateType.ETransferConfirmation => await GetETransferConfirmationTemplate(),
+
                   _ => throw new NotImplementedException($"No template found for {template}")
               };
 
@@ -44,6 +46,14 @@ namespace EMBC.ESS.Managers.Events.Notifications
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
+        private async Task<EmailTemplate> GetETransferConfirmationTemplate()
+        {
+            return new EmailTemplate
+            {
+                Subject = "Confirmation of e-Transfer for Emergency Support Services (ESS)",
+                Content = await LoadTemplate("ETransferConfirmationTemplate")
+            };
+        }
         private async Task<EmailTemplate> GetInviteTemplate()
         {
             return new EmailTemplate

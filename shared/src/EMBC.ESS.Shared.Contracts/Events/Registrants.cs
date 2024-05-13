@@ -49,6 +49,14 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string LoggedInUserId { get; set; }
     }
 
+    public class RecordAuditAccessCommand : Command
+    {
+        public string TeamMemberId { get; set; }
+        public string? RegistrantId { get; set; }
+        public string? EvacuationFileNumber { get; set; }
+        public int AccessReasonId { get; set; }
+    }
+
     public class RegistrantProfile
     {
         public string Id { get; set; }

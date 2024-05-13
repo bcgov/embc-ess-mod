@@ -21,8 +21,6 @@ export enum ActionPermission {
   canViewSummaryReports,
   canViewDetailedReports,
 
-  canViewCompletedESSFiles,
-
   canHideUnhideNotes,
   canSeeHiddenNotes,
   canSignIntoRemoteExtensions
@@ -87,10 +85,6 @@ export class AuthorizationService {
       {
         claimType: ClaimType.action,
         claimValue: ActionPermission.canViewSummaryReports
-      },
-      {
-        claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewCompletedESSFiles
       },
       { claimType: ClaimType.module, claimValue: ModulePermission.team },
       { claimType: ClaimType.module, claimValue: ModulePermission.suppliers },

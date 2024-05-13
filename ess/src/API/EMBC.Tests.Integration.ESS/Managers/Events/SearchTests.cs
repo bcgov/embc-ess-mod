@@ -10,9 +10,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
     {
         private readonly EventsManager manager;
 
-        private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
-        private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
-
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
         public SearchTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
@@ -145,20 +142,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var files = (await manager.Handle(new EvacuationFilesQuery { ManualFileId = TestData.PaperEvacuationFilePaperId })).Items;
             files.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Search_RegistrantsWith_Tier1User()
-        {
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, InStatuses = tier1FileStatuses });
-            searchResults.EvacuationFiles.ShouldNotContain(e => e.Status == EvacuationFileStatus.Completed);
-        }
-
-        [Fact]
-        public async Task Search_RegistrantsWith_Tier2User()
-        {
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, InStatuses = tier2andAboveFileStatuses });
-            searchResults.EvacuationFiles.ShouldContain(e => e.Status == EvacuationFileStatus.Completed);
         }
     }
 }

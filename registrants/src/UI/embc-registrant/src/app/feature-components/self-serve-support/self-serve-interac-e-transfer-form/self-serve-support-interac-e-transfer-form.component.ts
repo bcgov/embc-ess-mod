@@ -57,7 +57,8 @@ export class SelfServeSupportInteracETransfterFormComponent {
         if (
           [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
             eTransferDetails.notificationPreference
-          )
+          ) &&
+          this.eTransferDetailsForm.controls.useEmailOnFile.value === false
         ) {
           this.eTransferDetailsForm.controls.eTransferEmail.enable({ emitEvent: false });
           this.eTransferDetailsForm.controls.confirmEmail.enable({ emitEvent: false });
@@ -69,7 +70,8 @@ export class SelfServeSupportInteracETransfterFormComponent {
         if (
           [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
             eTransferDetails.notificationPreference
-          )
+          ) &&
+          this.eTransferDetailsForm.controls.useMobileOnFile.value === false
         ) {
           this.eTransferDetailsForm.controls.eTransferMobile.enable({ emitEvent: false });
           this.eTransferDetailsForm.controls.confirmMobile.enable({ emitEvent: false });

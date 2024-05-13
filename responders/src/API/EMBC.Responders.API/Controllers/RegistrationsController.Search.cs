@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
@@ -22,8 +21,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
         {
-            var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var searchResults = await evacuationSearchService.SearchEvacuations(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, searchParameters.ManualFileId, userRole);
+            var searchResults = await evacuationSearchService.SearchEvacuations(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, searchParameters.ManualFileId);
 
             return Ok(searchResults);
         }
@@ -32,8 +30,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RegistrantProfileSearchResult>>> SearchMatchingRegistrants([FromQuery] SearchParameters searchParameters)
         {
-            var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
+            var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth);
 
             return Ok(results);
         }
@@ -42,8 +39,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<EvacuationFileSearchResult>>> SearchMatchingEvacuationFiles([FromQuery] SearchParameters searchParameters)
         {
-            var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var results = await evacuationSearchService.SearchEvacuationFileMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
+            var results = await evacuationSearchService.SearchEvacuationFileMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth);
             return Ok(results);
         }
     }

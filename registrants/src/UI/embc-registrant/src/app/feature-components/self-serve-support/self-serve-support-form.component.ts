@@ -70,7 +70,7 @@ import {
   styleUrl: './self-serve-support-form.component.scss'
 })
 export class SelfServeSupportFormComponent implements OnInit {
-  isLinear = false;
+  isLinear = true;
   SelfServeSupportType = SelfServeSupportType;
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
