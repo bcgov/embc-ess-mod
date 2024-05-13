@@ -27,11 +27,12 @@ import {
   SupportDayMeals
 } from 'src/app/core/api/models';
 import * as moment from 'moment';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-self-serve-support-details-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatCheckboxModule, MatCardModule, MatRadioModule, MatFormFieldModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCheckboxModule, MatCardModule, MatRadioModule, MatFormFieldModule],
   templateUrl: './self-serve-support-details-form.component.html',
   styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-details-form.component.scss']
 })

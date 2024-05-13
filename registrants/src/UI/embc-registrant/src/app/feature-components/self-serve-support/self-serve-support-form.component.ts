@@ -47,6 +47,7 @@ import {
   GotoStepType,
   SelfServeSupportReviewComponent
 } from './self-serve-support-review/self-serve-support-review.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   standalone: true,
@@ -54,6 +55,7 @@ import {
   templateUrl: './self-serve-support-form.component.html',
   imports: [
     MatStepperModule,
+    MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
     MatRadioModule,

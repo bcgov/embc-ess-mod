@@ -12,8 +12,6 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
-@import '@angular/material/theming';
-
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
@@ -23,6 +21,9 @@
     /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
     /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
+
+// Include mat.core only once
+@include mat.core();
 
 $custom-typography: mat.define-typography-config(
   $font-family: $font-family-sans-serif,
