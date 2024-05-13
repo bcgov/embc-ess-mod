@@ -18,8 +18,4 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
     RouterOutlet
   ]
 })
-export class ResponderAccessComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+export class ResponderAccessComponent {}

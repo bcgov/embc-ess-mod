@@ -33,7 +33,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
   standalone: true,
   imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
 })
-export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListNotesComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() notesList: Array<Note>;
   @Output() hideUnhideToggle = new EventEmitter<Note>();
@@ -47,8 +47,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
     private userService: UserService,
     private stepNotesService: StepNotesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.notesList) {

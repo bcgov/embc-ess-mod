@@ -10,7 +10,6 @@ import {
 } from '@angular/core/testing';
 
 import { EvacueeDetailsComponent } from './evacuee-details.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
@@ -22,6 +21,7 @@ import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { EvacueeDetailsService } from './evacuee-details.service';
 import { MockEvacueeDetailsService } from 'src/app/unit-tests/mockEvacueeDetails.service';
 import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeDetailsComponent', () => {
   let component: EvacueeDetailsComponent;
@@ -32,7 +32,6 @@ describe('EvacueeDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -50,7 +49,8 @@ describe('EvacueeDetailsComponent', () => {
         {
           provide: EvacueeDetailsService,
           useClass: MockEvacueeDetailsService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

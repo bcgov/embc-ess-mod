@@ -12,7 +12,7 @@ import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
   standalone: true,
   imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, MatTabNavPanel, RouterOutlet]
 })
-export class SupplierManagementComponent implements OnInit {
+export class SupplierManagementComponent {
   /**
    * Team Management wrapper component to enable routing via tabs
    */
@@ -26,8 +26,4 @@ export class SupplierManagementComponent implements OnInit {
       route: 'add-supplier'
     }
   ];
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

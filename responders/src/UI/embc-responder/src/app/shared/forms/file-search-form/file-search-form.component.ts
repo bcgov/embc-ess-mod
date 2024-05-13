@@ -11,14 +11,10 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
-export class FileSearchFormComponent implements OnInit {
+export class FileSearchFormComponent {
   @Input() fileSearchForm: FormGroup<{ essFileNumber: FormControl<string> }>;
-
-  constructor() {}
 
   get fileSearchFormControl(): { [key: string]: AbstractControl } {
     return this.fileSearchForm?.controls;
   }
-
-  ngOnInit(): void {}
 }

@@ -22,7 +22,7 @@ import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/f
     MatPrefix
   ]
 })
-export class OtherTransportationComponent implements OnInit, OnChanges, AfterViewInit {
+export class OtherTransportationComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   referralForm: UntypedFormGroup;
 
@@ -37,8 +37,6 @@ export class OtherTransportationComponent implements OnInit, OnChanges, AfterVie
       this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

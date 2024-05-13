@@ -10,12 +10,8 @@ import { MatNavList, MatListItem } from '@angular/material/list';
   standalone: true,
   imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, MatDivider]
 })
-export class ToggleSideNavComponent implements OnInit {
+export class ToggleSideNavComponent {
   @Output() public sidenavClose = new EventEmitter();
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   onSideNavClose(): void {
     this.sidenavClose.emit();

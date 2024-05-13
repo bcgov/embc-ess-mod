@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectSupportComponent } from './select-support.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +10,7 @@ import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { DatePipe } from '@angular/common';
+import { provideRouter } from '@angular/router';
 
 describe('SelectSupportComponent', () => {
   let component: SelectSupportComponent;
@@ -19,7 +19,6 @@ describe('SelectSupportComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -33,7 +32,8 @@ describe('SelectSupportComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

@@ -12,7 +12,6 @@ import {
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { CommunityType, EvacuationFileStatus, HouseholdMemberType, RegistrantStatus } from 'src/app/core/api/models';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
@@ -26,6 +25,7 @@ import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-s
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 import { ProfileResultsComponent } from './profile-results.component';
+import { provideRouter } from '@angular/router';
 
 describe('ProfileResultsComponent', () => {
   let component: ProfileResultsComponent;
@@ -110,14 +110,7 @@ describe('ProfileResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        RouterTestingModule,
-        ProfileResultsComponent
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, ProfileResultsComponent],
       providers: [
         ProfileResultsComponent,
         {
@@ -136,7 +129,8 @@ describe('ProfileResultsComponent', () => {
           provide: EvacueeSearchResultsService,
           useClass: MockEvacueeSearchResultsService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   });

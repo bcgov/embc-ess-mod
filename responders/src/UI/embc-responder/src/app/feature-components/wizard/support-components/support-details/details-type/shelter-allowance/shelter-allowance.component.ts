@@ -27,7 +27,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     NumberOfNightsPipe
   ]
 })
-export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterViewInit {
+export class ShelterAllowanceGroupComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
   referralForm: UntypedFormGroup;
@@ -100,7 +100,6 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
 
     this.checkOverlimit(this.totalAmount);
   }
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

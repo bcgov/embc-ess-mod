@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MaterialModule } from 'src/app/material.module';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 import { SupplierReviewComponent } from './supplier-review.component';
+import { provideRouter } from '@angular/router';
 
 describe('SupplierReviewComponent', () => {
   let component: SupplierReviewComponent;
@@ -16,7 +16,6 @@ describe('SupplierReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -24,7 +23,8 @@ describe('SupplierReviewComponent', () => {
         BrowserAnimationsModule,
         CustomPipeModule,
         SupplierReviewComponent
-      ]
+      ],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SupportEtransferComponent } from './support-etransfer.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UntypedFormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('SupportEtransferComponent', () => {
   let component: SupportEtransferComponent;
@@ -19,13 +19,12 @@ describe('SupportEtransferComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         MatDialogModule,
         MaterialModule,
         BrowserAnimationsModule,
         SupportEtransferComponent
       ],
-      providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }],
+      providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });

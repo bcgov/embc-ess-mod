@@ -6,8 +6,4 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./access-denied.component.scss'],
   standalone: true
 })
-export class AccessDeniedComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+export class AccessDeniedComponent {}

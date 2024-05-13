@@ -1,8 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { SupplierExistComponent } from './supplier-exist.component';
+import { provideRouter } from '@angular/router';
 
 describe('SupplierExistComponent', () => {
   let component: SupplierExistComponent;
@@ -10,7 +10,8 @@ describe('SupplierExistComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, SupplierExistComponent]
+      imports: [HttpClientTestingModule, SupplierExistComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

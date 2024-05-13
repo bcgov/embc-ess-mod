@@ -11,7 +11,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
-export class TaxiTransportationComponent implements OnInit, OnChanges, AfterViewInit {
+export class TaxiTransportationComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   referralForm: UntypedFormGroup;
 
@@ -26,8 +26,6 @@ export class TaxiTransportationComponent implements OnInit, OnChanges, AfterView
       this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

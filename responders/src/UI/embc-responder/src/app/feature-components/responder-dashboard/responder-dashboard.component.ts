@@ -11,7 +11,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   standalone: true,
   imports: [MatCard, MatCardContent, MatButton]
 })
-export class ResponderDashboardComponent implements OnInit {
+export class ResponderDashboardComponent {
   public get profile(): LoggedInUserProfile {
     return this.userService.currentProfile;
   }
@@ -20,8 +20,6 @@ export class ResponderDashboardComponent implements OnInit {
     private router: Router,
     private userService: UserService
   ) {}
-
-  ngOnInit(): void {}
 
   signinTask(): void {
     this.router.navigate(['/responder-access/search']);

@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { UserProfileComponent } from './user-profile.component';
+import { provideRouter } from '@angular/router';
 
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
@@ -11,8 +11,8 @@ describe('UserProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, UserProfileComponent],
-      providers: [DatePipe]
+      imports: [HttpClientTestingModule, UserProfileComponent],
+      providers: [DatePipe, provideRouter([])]
     }).compileComponents();
   });
 

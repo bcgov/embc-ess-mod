@@ -19,7 +19,7 @@ import { NgTemplateOutlet } from '@angular/common';
   standalone: true,
   imports: [NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
 })
-export class TaskDetailsComponent implements OnInit {
+export class TaskDetailsComponent {
   essTask: EssTaskModel;
   taskNumber: string;
   showLoader = false;
@@ -41,8 +41,6 @@ export class TaskDetailsComponent implements OnInit {
       }
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to task search page

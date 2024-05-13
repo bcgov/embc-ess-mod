@@ -14,12 +14,10 @@ import { MatToolbar } from '@angular/material/toolbar';
   standalone: true,
   imports: [MatToolbar, MatIconButton, MatIcon, MatAnchor, RouterLinkActive, RouterLink]
 })
-export class TopNavMenuComponent implements OnInit {
+export class TopNavMenuComponent {
   @Output() public sidenavToggle = new EventEmitter();
 
   constructor(public userService: UserService) {}
-
-  ngOnInit(): void {}
 
   onToggle(): void {
     this.sidenavToggle.emit();

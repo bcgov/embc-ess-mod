@@ -14,7 +14,7 @@ import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
   standalone: true,
   imports: [MatToolbar, MatToolbarRow, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   public get profile(): LoggedInUserProfile {
     return this.userService.currentProfile;
   }
@@ -42,8 +42,6 @@ export class HeaderComponent implements OnInit {
     private authService: AuthenticationService,
     private userService: UserService
   ) {}
-
-  public ngOnInit(): void {}
 
   public homeButton(): void {
     if (this.router.url !== '/outage' && this.router.url !== '/access-denied') {

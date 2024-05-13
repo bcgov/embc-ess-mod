@@ -8,11 +8,9 @@ import { MatButton } from '@angular/material/button';
   standalone: true,
   imports: [MatButton]
 })
-export class StatusDefinitionDialogComponent implements OnInit {
+export class StatusDefinitionDialogComponent {
   @Output() outputEvent = new EventEmitter<string>();
   constructor() {}
-
-  ngOnInit(): void {}
 
   close(): void {
     this.outputEvent.emit('close');

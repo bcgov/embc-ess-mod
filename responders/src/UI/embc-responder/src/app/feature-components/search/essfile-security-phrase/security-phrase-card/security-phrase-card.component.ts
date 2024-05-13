@@ -13,13 +13,9 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   standalone: true,
   imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError]
 })
-export class SecurityPhraseCardComponent implements OnInit {
+export class SecurityPhraseCardComponent {
   @Input() phrase: GetSecurityPhraseResponse;
   @Input() parentForm: UntypedFormGroup;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   /**
    * Return form control

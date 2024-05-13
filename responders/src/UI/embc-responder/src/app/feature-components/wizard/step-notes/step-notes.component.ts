@@ -9,7 +9,7 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
   standalone: true,
   imports: [AlertComponent, RouterOutlet]
 })
-export class StepNotesComponent implements OnInit {
+export class StepNotesComponent {
   stepName: string;
 
   constructor(private router: Router) {
@@ -23,6 +23,4 @@ export class StepNotesComponent implements OnInit {
       }
     }
   }
-
-  ngOnInit(): void {}
 }

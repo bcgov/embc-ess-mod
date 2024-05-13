@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Injectable } from '@angular/core';
 import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';

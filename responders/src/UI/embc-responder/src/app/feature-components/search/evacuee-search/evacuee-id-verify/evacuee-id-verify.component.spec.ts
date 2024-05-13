@@ -13,7 +13,6 @@ import {
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
@@ -24,6 +23,7 @@ import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.s
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { EvacueeIdVerifyComponent } from './evacuee-id-verify.component';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeIdVerifyComponent', () => {
   let component: EvacueeIdVerifyComponent;
@@ -35,7 +35,6 @@ describe('EvacueeIdVerifyComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule,
         ReactiveFormsModule,
         MaterialModule,
         BrowserAnimationsModule,
@@ -52,7 +51,8 @@ describe('EvacueeIdVerifyComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

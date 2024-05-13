@@ -11,7 +11,6 @@ import {
 
 import { HouseholdMemberComponent } from './household-member.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
@@ -24,6 +23,7 @@ import { MockEssfileDashboardService } from 'src/app/unit-tests/mockEssfileDashb
 import { MockHouseholdMemberService } from 'src/app/unit-tests/mockHouseholdMember.service';
 import { Router } from '@angular/router';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { provideRouter } from '@angular/router';
 
 describe('HouseholdMemberComponent', () => {
   let component: HouseholdMemberComponent;
@@ -35,7 +35,6 @@ describe('HouseholdMemberComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
@@ -54,7 +53,8 @@ describe('HouseholdMemberComponent', () => {
         {
           provide: EssfileDashboardService,
           useClass: MockEssfileDashboardService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

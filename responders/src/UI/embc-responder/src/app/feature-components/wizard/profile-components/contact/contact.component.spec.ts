@@ -10,7 +10,6 @@ import {
 } from '@angular/core/testing';
 
 import { ContactComponent } from './contact.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
@@ -26,6 +25,7 @@ import { Router } from '@angular/router';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { ContactService } from './contact.service';
+import { provideRouter } from '@angular/router';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;
@@ -38,7 +38,6 @@ describe('ContactComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -61,7 +60,8 @@ describe('ContactComponent', () => {
         {
           provide: EvacueeSessionService,
           useClass: MockEvacueeSessionService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

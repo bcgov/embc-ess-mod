@@ -22,7 +22,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     NumberOfNightsPipe
   ]
 })
-export class LodgingGroupComponent implements OnInit, OnChanges, AfterViewInit {
+export class LodgingGroupComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
   referralForm: UntypedFormGroup;
@@ -44,8 +44,6 @@ export class LodgingGroupComponent implements OnInit, OnChanges, AfterViewInit {
       this.referralForm.get('noOfNights').patchValue(this.noOfDays);
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

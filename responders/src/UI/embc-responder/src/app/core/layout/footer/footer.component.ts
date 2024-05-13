@@ -13,15 +13,11 @@ import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
   standalone: true,
   imports: [MatToolbar, MatToolbarRow]
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   constructor(
     private httpClient: HttpClient,
     private dialog: MatDialog
   ) {}
-
-  ngOnInit(): void {
-    // this.appVersion = environment.version;
-  }
 
   openVersionsModal(): void {
     this.httpClient.get('version').subscribe((response) => {

@@ -1,5 +1,4 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { SearchWrapperComponent } from './search-wrapper.component';
@@ -10,6 +9,7 @@ import { Router } from '@angular/router';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
+import { provideRouter } from '@angular/router';
 
 describe('SearchWrapperComponent', () => {
   let component: SearchWrapperComponent;
@@ -19,7 +19,7 @@ describe('SearchWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, SearchWrapperComponent],
+      imports: [HttpClientTestingModule, ReactiveFormsModule, SearchWrapperComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -29,7 +29,8 @@ describe('SearchWrapperComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

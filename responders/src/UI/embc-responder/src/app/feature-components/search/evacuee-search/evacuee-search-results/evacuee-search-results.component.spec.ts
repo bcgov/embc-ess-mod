@@ -11,7 +11,6 @@ import {
 
 import { EvacueeSearchResultsComponent } from './evacuee-search-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
@@ -30,12 +29,13 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { Component } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
 @Component({
   selector: 'app-zero-file-result',
   template: '',
   standalone: true,
-  imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, RouterTestingModule]
+  imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule]
 })
 class ZeroFileResultStubComponent {}
 
@@ -55,7 +55,6 @@ describe('EvacueeSearchResultsComponent', () => {
         MatDialogModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule,
         EvacueeSearchResultsComponent,
         ZeroFileResultStubComponent
       ],
@@ -78,7 +77,8 @@ describe('EvacueeSearchResultsComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

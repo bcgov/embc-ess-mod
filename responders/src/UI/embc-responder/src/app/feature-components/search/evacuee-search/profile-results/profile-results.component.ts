@@ -43,7 +43,7 @@ import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@ang
     MaskFullAddressPipe
   ]
 })
-export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
+export class ProfileResultsComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResultModel>;
   matchedRegistrants = new MatTableDataSource();
@@ -73,8 +73,6 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
     this.matchedRegistrants.paginator = this.paginator;
     this.cd.detectChanges();
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to next step based on user verified status

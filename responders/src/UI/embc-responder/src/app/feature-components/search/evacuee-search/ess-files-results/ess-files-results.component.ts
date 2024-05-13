@@ -34,7 +34,7 @@ import { NgClass, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
   standalone: true,
   imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
 })
-export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class EssFilesResultsComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();
@@ -66,8 +66,6 @@ export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewIni
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to next step based on user verified status

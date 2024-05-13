@@ -10,7 +10,6 @@ import {
 } from '@angular/core/testing';
 
 import { AddressComponent } from './address.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
@@ -26,12 +25,13 @@ import { Router } from '@angular/router';
 import { _MatRadioButtonBase } from '@angular/material/radio';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 @Component({
   selector: 'app-bc-address',
   template: '',
   standalone: true,
-  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class BcAddressStubComponent {}
 
@@ -39,7 +39,7 @@ class BcAddressStubComponent {}
   selector: 'app-can-address',
   template: '',
   standalone: true,
-  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class CanadaAddressStubComponent {}
 
@@ -47,7 +47,7 @@ class CanadaAddressStubComponent {}
   selector: 'app-usa-address',
   template: '',
   standalone: true,
-  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class UsaAddressStubComponent {}
 
@@ -55,7 +55,7 @@ class UsaAddressStubComponent {}
   selector: 'app-other-address',
   template: '',
   standalone: true,
-  imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
 })
 class OtherAddressStubComponent {}
 
@@ -69,7 +69,6 @@ describe('AddressComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -95,7 +94,8 @@ describe('AddressComponent', () => {
         {
           provide: AddressService,
           useClass: MockAddressService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

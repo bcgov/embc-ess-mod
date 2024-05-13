@@ -15,7 +15,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   standalone: true,
   imports: [MatCard, MatCardContent, MatCheckbox, MatButton]
 })
-export class ElectronicAgreementComponent implements OnInit {
+export class ElectronicAgreementComponent {
   agreementAccepted = false;
 
   constructor(
@@ -24,8 +24,6 @@ export class ElectronicAgreementComponent implements OnInit {
     private alertService: AlertService,
     private userService: UserService
   ) {}
-
-  ngOnInit(): void {}
 
   submitEAA(): void {
     this.eaaService.signAgreement().subscribe({

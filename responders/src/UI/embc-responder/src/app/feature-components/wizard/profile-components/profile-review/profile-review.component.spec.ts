@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileReviewComponent } from './profile-review.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -12,6 +11,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { DatePipe } from '@angular/common';
+import { provideRouter } from '@angular/router';
 
 describe('ProfileReviewComponent', () => {
   let component: ProfileReviewComponent;
@@ -20,7 +20,6 @@ describe('ProfileReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
@@ -36,7 +35,8 @@ describe('ProfileReviewComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

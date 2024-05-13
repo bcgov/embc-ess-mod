@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepEssFileComponent } from './step-ess-file.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
@@ -11,6 +10,7 @@ import { StepEssFileService } from './step-ess-file.service';
 import { MockStepEssFileService } from 'src/app/unit-tests/mockStepEssFile.service';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 describe('StepEssFileComponent', () => {
   let component: StepEssFileComponent;
@@ -27,13 +27,7 @@ describe('StepEssFileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        StepEssFileComponent
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, ReactiveFormsModule, StepEssFileComponent],
       providers: [
         UntypedFormBuilder,
         WizardDataService,
@@ -42,7 +36,8 @@ describe('StepEssFileComponent', () => {
           provide: StepEssFileService,
           useClass: MockStepEssFileService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   });

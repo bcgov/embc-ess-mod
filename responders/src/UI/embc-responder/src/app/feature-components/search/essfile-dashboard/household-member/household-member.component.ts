@@ -42,7 +42,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     DatePipe
   ]
 })
-export class HouseholdMemberComponent implements OnInit {
+export class HouseholdMemberComponent {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() essFile: EvacuationFileModel;
   currentlyOpenedItemIndex = -1;
@@ -56,8 +56,6 @@ export class HouseholdMemberComponent implements OnInit {
     private appBaseService: AppBaseService,
     private householdMemberService: HouseholdMemberService
   ) {}
-
-  ngOnInit(): void {}
 
   /**
    * Sets expanded input value for panel

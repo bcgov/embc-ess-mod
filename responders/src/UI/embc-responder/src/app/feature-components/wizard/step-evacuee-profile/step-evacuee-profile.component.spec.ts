@@ -1,7 +1,6 @@
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { StepEvacueeProfileComponent } from './step-evacuee-profile.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
@@ -14,6 +13,7 @@ import { of } from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('StepEvacueeProfileComponent', () => {
   let component: StepEvacueeProfileComponent;
@@ -32,12 +32,7 @@ describe('StepEvacueeProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        MatDialogModule,
-        HttpClientTestingModule,
-        StepEvacueeProfileComponent
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, StepEvacueeProfileComponent],
       providers: [
         WizardDataService,
         { provide: Router, useValue: routerMock },
@@ -45,7 +40,8 @@ describe('StepEvacueeProfileComponent', () => {
           provide: StepEvacueeProfileService,
           useClass: MockStepEvacueeProfileService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   }));

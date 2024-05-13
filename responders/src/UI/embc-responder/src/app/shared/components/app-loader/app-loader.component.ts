@@ -9,15 +9,11 @@ import { NgStyle } from '@angular/common';
   standalone: true,
   imports: [MatProgressSpinnerModule, NgStyle]
 })
-export class AppLoaderComponent implements OnInit {
+export class AppLoaderComponent {
   @Input() showLoader: boolean;
   @Input() strokeWidth: number;
   @Input() diameter: number;
   @Input() color: string;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   get spinnerColor(): { color: string } {
     return { color: this.color };

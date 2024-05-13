@@ -75,7 +75,6 @@ export class EvacueeProfileService {
         firstName: evacueeSearchParameters?.firstName,
         lastName: evacueeSearchParameters?.lastName,
         dateOfBirth: evacueeSearchParameters?.dateOfBirth,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         ManualFileId: evacueeSearchParameters?.paperFileNumber
       })
       .pipe(

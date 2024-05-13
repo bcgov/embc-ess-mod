@@ -1,7 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { MemberRole } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -15,6 +14,7 @@ import { MockUserService } from 'src/app/unit-tests/mockUser.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 import { MatchedEssfilesComponent } from './matched-essfiles.component';
+import { provideRouter } from '@angular/router';
 
 describe('MatchedEssfilesComponent', () => {
   let component: MatchedEssfilesComponent;
@@ -63,13 +63,7 @@ describe('MatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        RouterTestingModule,
-        HttpClientTestingModule,
-        CustomPipeModule,
-        MatchedEssfilesComponent
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, CustomPipeModule, MatchedEssfilesComponent],
       providers: [
         MatchedEssfilesComponent,
         {
@@ -88,7 +82,8 @@ describe('MatchedEssfilesComponent', () => {
           provide: UserService,
           useClass: MockUserService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   });

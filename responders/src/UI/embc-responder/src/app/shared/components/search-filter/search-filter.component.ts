@@ -16,15 +16,11 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
   standalone: true,
   imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatSelect, MatOption]
 })
-export class SearchFilterComponent implements OnInit {
+export class SearchFilterComponent {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;
   @Output() filterEvent = new EventEmitter<TableFilterValueModel>();
   @Input() filtersToLoad: TableFilterModel;
   searchTerm: string;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   selected(event: MatSelectChange, filterType: string): void {
     this.resetTextField();

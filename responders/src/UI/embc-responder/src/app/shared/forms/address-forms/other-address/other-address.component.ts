@@ -11,12 +11,8 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
-export class OtherAddressComponent implements OnInit {
+export class OtherAddressComponent {
   @Input() addressForm: UntypedFormGroup;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;

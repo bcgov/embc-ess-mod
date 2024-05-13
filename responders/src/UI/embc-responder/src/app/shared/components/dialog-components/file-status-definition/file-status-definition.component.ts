@@ -9,12 +9,9 @@ import { MatButton } from '@angular/material/button';
   standalone: true,
   imports: [MatButton]
 })
-export class FileStatusDefinitionComponent implements OnInit {
+export class FileStatusDefinitionComponent {
   @Input() content: string;
   @Output() outputEvent = new EventEmitter<string>();
-  constructor() {}
-
-  ngOnInit(): void {}
 
   close(): void {
     this.outputEvent.emit('close');

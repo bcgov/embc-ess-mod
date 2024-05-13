@@ -8,8 +8,4 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet]
 })
-export class SearchRegistrationComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+export class SearchRegistrationComponent {}

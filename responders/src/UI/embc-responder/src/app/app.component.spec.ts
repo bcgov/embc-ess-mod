@@ -8,7 +8,6 @@ import {
   discardPeriodicTasks,
   fakeAsync
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -43,6 +42,7 @@ import { LoadEvacueeListService } from './core/services/load-evacuee-list.servic
 import { MockEvacueeListService } from './unit-tests/mockEvacueeList.service';
 import { SupplierService } from './core/services/suppliers.service';
 import { MockSupplierService } from './unit-tests/mockSuppliers.service';
+import { provideRouter } from '@angular/router';
 //import { MockEventRouter } from './unit-tests/mockEventRouter.service';
 
 @Component({
@@ -90,17 +90,6 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([
-          { path: 'outage', component: OutageComponent },
-          {
-            path: 'electronic-agreement',
-            component: ElectronicAgreementComponent
-          },
-          {
-            path: 'responder-access',
-            component: ResponderAccessComponent
-          }
-        ]),
         HttpClientTestingModule,
         OAuthModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
@@ -111,6 +100,17 @@ describe('AppComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        provideRouter([
+          { path: 'outage', component: OutageComponent },
+          {
+            path: 'electronic-agreement',
+            component: ElectronicAgreementComponent
+          },
+          {
+            path: 'responder-access',
+            component: ResponderAccessComponent
+          }
+        ]),
         AppComponent,
         { provide: Router, useValue: routerMock },
         {

@@ -12,14 +12,10 @@ import { DatePipe } from '@angular/common';
   standalone: true,
   imports: [MatButton, DatePipe]
 })
-export class RegistrantLinkDialogComponent implements OnInit {
+export class RegistrantLinkDialogComponent {
   @Input() content: DialogContent;
   @Input() profileData: MultipleLinkRegistrantModel;
   @Output() outputEvent = new EventEmitter<string>();
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');

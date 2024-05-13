@@ -10,12 +10,10 @@ import { EvacueeSearchService } from '../evacuee-search.service';
   standalone: true,
   imports: []
 })
-export class ZeroFileResultComponent implements OnInit {
+export class ZeroFileResultComponent {
   readonly selectedPathType = SelectedPathType;
   constructor(
     public evacueeSearchService: EvacueeSearchService,
     public optionInjectionService: OptionInjectionService
   ) {}
-
-  ngOnInit(): void {}
 }

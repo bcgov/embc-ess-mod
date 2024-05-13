@@ -11,12 +11,8 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
-export class CustomGstFieldComponent implements OnInit {
+export class CustomGstFieldComponent {
   @Input() gstFormGroup: UntypedFormGroup;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   get gstFormControl(): { [key: string]: AbstractControl } {
     return this.gstFormGroup.controls;

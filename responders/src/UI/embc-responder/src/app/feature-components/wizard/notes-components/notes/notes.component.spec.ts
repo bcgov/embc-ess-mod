@@ -10,16 +10,16 @@ import {
 
 import { NotesComponent } from './notes.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import { MockStepNotesService } from 'src/app/unit-tests/mockStepNotes.service';
 import { Component } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
 @Component({
   selector: 'app-list-notes',
   template: '',
   standalone: true,
-  imports: [HttpClientTestingModule, RouterTestingModule]
+  imports: [HttpClientTestingModule]
 })
 class ListNotesStubComponent {}
 
@@ -27,7 +27,7 @@ class ListNotesStubComponent {}
   selector: 'app-add-notes',
   template: '',
   standalone: true,
-  imports: [HttpClientTestingModule, RouterTestingModule]
+  imports: [HttpClientTestingModule]
 })
 class AddNotesStubComponent {}
 
@@ -38,14 +38,8 @@ describe('NotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        NotesComponent,
-        ListNotesStubComponent,
-        AddNotesStubComponent
-      ],
-      providers: [{ provide: StepNotesService, useClass: MockStepNotesService }]
+      imports: [HttpClientTestingModule, NotesComponent, ListNotesStubComponent, AddNotesStubComponent],
+      providers: [{ provide: StepNotesService, useClass: MockStepNotesService }, provideRouter([])]
     }).compileComponents();
   });
 

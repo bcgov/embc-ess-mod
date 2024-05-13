@@ -40,7 +40,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MaskEvacuatedAddressPipe
   ]
 })
-export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
+export class PossibleMatchedEssfilesComponent implements OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() evacueeProfile: RegistrantProfileModel;
   currentlyOpenedItemIndex = -1;
@@ -55,8 +55,6 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
     private router: Router,
     private possibleMatchedEssfilesService: PossibleMatchedEssfilesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.evacueeProfile) {

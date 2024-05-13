@@ -39,7 +39,7 @@ import { DatePipe } from '@angular/common';
     MaskEvacuatedAddressPipe
   ]
 })
-export class ViewAssessmentDialogComponent implements OnInit {
+export class ViewAssessmentDialogComponent {
   @Input() content: DialogContent;
   @Input() profileData: EvacuationFileModel;
   @Output() outputEvent = new EventEmitter<string>();
@@ -51,8 +51,6 @@ export class ViewAssessmentDialogComponent implements OnInit {
     public evacueeSessionService: EvacueeSessionService,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
-
-  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');
