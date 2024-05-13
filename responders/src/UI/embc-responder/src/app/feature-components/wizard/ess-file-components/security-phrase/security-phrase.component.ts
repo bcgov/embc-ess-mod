@@ -21,6 +21,7 @@ import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-security-phrase',
@@ -33,6 +34,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     MatFormField,
     MatLabel,
     MatInput,
+    MatButtonModule,
     MatError,
     MatCard,
     MatCardContent,

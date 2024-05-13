@@ -17,6 +17,7 @@ import { ComputeWizardService } from './app/core/services/compute/computeWizard.
 import { ComputeFeaturesService } from './app/core/services/compute/computeFeatures.service';
 import { Compute } from './app/core/interfaces/compute';
 import { DatePipe } from '@angular/common';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 if (environment.production) {
   enableProdMode();
@@ -50,6 +51,7 @@ bootstrapApplication(AppComponent, {
       multi: true
     },
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideNativeDateAdapter()
   ]
 }).catch((err) => console.error(err));
