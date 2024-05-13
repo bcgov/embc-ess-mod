@@ -30,6 +30,9 @@ export class EvacuationFileDataService {
   allSupportsSelfServe: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public allSupportsSelfServe$: Observable<boolean> = this.allSupportsSelfServe.asObservable();
 
+  hasMultipleActiveFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public hasMultipleActiveFiles$: Observable<boolean> = this.hasMultipleActiveFiles.asObservable();
+
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
   private essFileIdVal: string;
@@ -168,6 +171,25 @@ export class EvacuationFileDataService {
       }
     });
     this.allSupportsSelfServe.next(true);
+  }
+
+  public getHasMultipleActiveFiles(): Observable<boolean> {
+    return this.hasMultipleActiveFiles$;
+  }
+
+  public setHasMultipleActiveFiles(evacuationFiles: Array<EvacuationFileModel>): void {
+    let totalActiveFiles = 0;
+    evacuationFiles.forEach((item) => {
+      if (item.status === EvacuationFileStatus.Active) {
+        totalActiveFiles += 1;
+      }
+    });
+
+    if (totalActiveFiles > 1) {
+      this.hasMultipleActiveFiles.next(true);
+    } else {
+      this.hasMultipleActiveFiles.next(false);
+    }
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
