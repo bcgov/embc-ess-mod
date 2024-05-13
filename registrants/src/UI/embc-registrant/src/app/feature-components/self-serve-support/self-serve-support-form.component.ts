@@ -193,7 +193,7 @@ export class SelfServeSupportFormComponent implements OnInit {
     ]),
     useEmailOnFile: new FormControl(false),
     useMobileOnFile: new FormControl(false),
-    recipientName: new FormControl()
+    recipientName: new FormControl('', [Validators.required, this.customValidation.whitespaceValidator()])
   });
 
   reviewAcknowledgeForm = new FormGroup({
