@@ -16,8 +16,6 @@ import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
-import { _MatRadioButtonBase } from '@angular/material/radio';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { MockStepEvacueeProfileService } from 'src/app/unit-tests/mockStepEvacueeProfile.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,7 +39,6 @@ describe('ContactComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         ContactComponent
       ],
@@ -92,7 +89,7 @@ describe('ContactComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    component.hideContact({ source: {} as _MatRadioButtonBase, value: false });
+    component.hideContact({ source: {} as any, value: false });
     fixture.detectChanges();
     const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');
@@ -104,7 +101,7 @@ describe('ContactComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    component.hideContact({ source: {} as _MatRadioButtonBase, value: true });
+    component.hideContact({ source: {} as any, value: true });
     fixture.detectChanges();
     const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');

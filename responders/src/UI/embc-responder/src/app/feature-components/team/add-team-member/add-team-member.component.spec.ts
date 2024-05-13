@@ -4,7 +4,6 @@ import { AddTeamMemberComponent } from './add-team-member.component';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
@@ -18,7 +17,6 @@ describe('AddTeamMemberComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         AddTeamMemberComponent
       ],

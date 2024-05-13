@@ -4,7 +4,6 @@ import { BcAddressComponent } from './bc-address.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -21,7 +20,6 @@ describe('BcAddressComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         BcAddressComponent
       ],

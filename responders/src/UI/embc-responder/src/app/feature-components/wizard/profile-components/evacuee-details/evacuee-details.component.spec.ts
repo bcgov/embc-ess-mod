@@ -14,7 +14,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
@@ -35,7 +34,6 @@ describe('EvacueeDetailsComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         EvacueeDetailsComponent
       ],

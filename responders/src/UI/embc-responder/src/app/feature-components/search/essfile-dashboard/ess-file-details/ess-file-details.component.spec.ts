@@ -1,7 +1,6 @@
 import { ComponentFixture, inject, TestBed, tick } from '@angular/core/testing';
 
 import { EssFileDetailsComponent } from './ess-file-details.component';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockEssfileDashboardService } from 'src/app/unit-tests/mockEssfileDashboard.service';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
@@ -165,7 +164,6 @@ describe('EssFileDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CustomPipeModule,
         HttpClientTestingModule,
         MatDialogModule,
         ReactiveFormsModule,

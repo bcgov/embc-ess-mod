@@ -12,7 +12,6 @@ import {
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -45,7 +44,6 @@ describe('EvacueeProfileDashboardComponent', () => {
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
-        CustomPipeModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
         EvacueeProfileDashboardComponent

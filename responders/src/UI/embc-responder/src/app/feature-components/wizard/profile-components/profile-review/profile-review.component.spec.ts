@@ -4,12 +4,10 @@ import { ProfileReviewComponent } from './profile-review.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { DatePipe } from '@angular/common';
 import { provideRouter } from '@angular/router';
 
@@ -23,9 +21,7 @@ describe('ProfileReviewComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
-        CustomPipeModule,
         ProfileReviewComponent
       ],
       providers: [

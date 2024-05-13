@@ -6,7 +6,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { UntypedFormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
-import { MaterialModule } from 'src/app/material.module';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { provideRouter } from '@angular/router';
 
@@ -19,7 +18,6 @@ describe('SupportReferralComponent', () => {
       imports: [
         HttpClientTestingModule,
         MatDialogModule,
-        MaterialModule,
         BrowserAnimationsModule,
         SupportReferralComponent
       ],

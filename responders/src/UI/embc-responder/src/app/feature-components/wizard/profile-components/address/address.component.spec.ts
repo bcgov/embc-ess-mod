@@ -16,13 +16,11 @@ import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { MockLocationService } from 'src/app/unit-tests/mockLocation.service';
 import { AddressService } from './address.service';
 import { MockAddressService } from 'src/app/unit-tests/mockAddress.service';
 import { Router } from '@angular/router';
-import { _MatRadioButtonBase } from '@angular/material/radio';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -31,7 +29,7 @@ import { provideRouter } from '@angular/router';
   selector: 'app-bc-address',
   template: '',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
 })
 class BcAddressStubComponent {}
 
@@ -39,7 +37,7 @@ class BcAddressStubComponent {}
   selector: 'app-can-address',
   template: '',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
 })
 class CanadaAddressStubComponent {}
 
@@ -47,7 +45,7 @@ class CanadaAddressStubComponent {}
   selector: 'app-usa-address',
   template: '',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
 })
 class UsaAddressStubComponent {}
 
@@ -55,7 +53,7 @@ class UsaAddressStubComponent {}
   selector: 'app-other-address',
   template: '',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule]
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
 })
 class OtherAddressStubComponent {}
 
@@ -72,7 +70,6 @@ describe('AddressComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         AddressComponent,
         BcAddressStubComponent,
@@ -325,7 +322,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.sameAsPrimary({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
@@ -349,7 +346,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.mailingAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
@@ -373,7 +370,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.primaryAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;

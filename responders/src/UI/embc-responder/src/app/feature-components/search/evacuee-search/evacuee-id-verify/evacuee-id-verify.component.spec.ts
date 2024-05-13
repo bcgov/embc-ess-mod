@@ -17,7 +17,6 @@ import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { MaterialModule } from 'src/app/material.module';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
@@ -36,7 +35,6 @@ describe('EvacueeIdVerifyComponent', () => {
       imports: [
         HttpClientTestingModule,
         ReactiveFormsModule,
-        MaterialModule,
         BrowserAnimationsModule,
         EvacueeIdVerifyComponent
       ],

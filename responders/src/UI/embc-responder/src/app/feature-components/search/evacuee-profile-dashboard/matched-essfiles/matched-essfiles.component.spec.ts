@@ -6,7 +6,6 @@ import { MemberRole } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { MockEvacueeProfileService } from 'src/app/unit-tests/mockEvacueeProfile.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
@@ -63,7 +62,7 @@ describe('MatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, CustomPipeModule, MatchedEssfilesComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, MatchedEssfilesComponent],
       providers: [
         MatchedEssfilesComponent,
         {

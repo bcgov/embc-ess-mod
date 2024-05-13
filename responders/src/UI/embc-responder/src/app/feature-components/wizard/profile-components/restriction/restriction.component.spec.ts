@@ -17,7 +17,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RestrictionService } from './restriction.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
-import { MaterialModule } from 'src/app/material.module';
 import { MockRestrictionService } from 'src/app/unit-tests/mockRestriction.service';
 import { Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
@@ -30,7 +29,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule, RestrictionComponent],
+      imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, RestrictionComponent],
       providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },

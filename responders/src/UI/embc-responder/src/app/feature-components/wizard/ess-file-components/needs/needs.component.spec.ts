@@ -5,7 +5,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { MaterialModule } from 'src/app/material.module';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 
 import { NeedsComponent } from './needs.component';
@@ -23,7 +22,6 @@ describe('NeedsComponent', () => {
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
         BrowserAnimationsModule,
         NeedsComponent
       ],

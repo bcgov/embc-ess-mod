@@ -16,7 +16,6 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { MockEditSupplierService } from 'src/app/unit-tests/mockEditSupplier.service';
 import { MockLocationService } from 'src/app/unit-tests/mockLocation.service';
@@ -53,7 +52,7 @@ describe('SupplierDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, CustomPipeModule, SupplierDetailComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, SupplierDetailComponent],
       providers: [
         provideRouter([
           { path: 'suppliers-list', component: SupplierManagementComponent },

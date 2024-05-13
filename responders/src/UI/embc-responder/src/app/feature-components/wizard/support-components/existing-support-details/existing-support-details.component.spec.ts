@@ -11,7 +11,6 @@ import {
 import { ExistingSupportDetailsComponent } from './existing-support-details.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { DatePipe } from '@angular/common';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import { MockStepSupportsService } from 'src/app/unit-tests/mockStepSupport.service';
@@ -22,12 +21,10 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { MockEvacueeListService } from 'src/app/unit-tests/mockEvacueeList.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { ViewSupportsComponent } from '../view-supports/view-supports.component';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { SupportDetailsComponent } from '../support-details/support-details.component';
 import { computeInterfaceToken } from 'src/app/app.module';
-import { provideRouter } from '@angular/router';
 
 describe('ExistingSupportDetailsComponent', () => {
   let component: ExistingSupportDetailsComponent;
@@ -38,15 +35,7 @@ describe('ExistingSupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        CustomPipeModule,
-        SharedModule,
-
-        ExistingSupportDetailsComponent
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, ExistingSupportDetailsComponent],
       providers: [
         ExistingSupportDetailsComponent,
         DatePipe,

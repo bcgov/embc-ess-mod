@@ -6,7 +6,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { UntypedFormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
-import { MaterialModule } from 'src/app/material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { provideRouter } from '@angular/router';
@@ -20,7 +19,6 @@ describe('SupportEtransferComponent', () => {
       imports: [
         HttpClientTestingModule,
         MatDialogModule,
-        MaterialModule,
         BrowserAnimationsModule,
         SupportEtransferComponent
       ],

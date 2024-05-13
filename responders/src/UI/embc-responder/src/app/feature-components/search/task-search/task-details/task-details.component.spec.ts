@@ -55,7 +55,6 @@ describe('TaskDetailsComponent', () => {
     spyOn(router, 'navigate').and.stub();
 
     fixture.detectChanges();
-    component.ngOnInit();
     component.signInTask();
     expect(router.navigate).toHaveBeenCalled();
   }));
