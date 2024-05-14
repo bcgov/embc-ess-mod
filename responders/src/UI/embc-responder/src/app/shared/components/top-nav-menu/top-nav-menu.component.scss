@@ -17,8 +17,16 @@ a:focus {
   display: none;
 }
 
-@media (max-width: 640px) {
+.desktop-menu {
+  display: block;
+}
+
+@media (max-width: 1024px) {
   .mobile-menu {
     display: block;
+  }
+
+  .desktop-menu {
+    display: none;
   }
 }

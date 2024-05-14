@@ -2,7 +2,7 @@
   <button mat-icon-button class="mobile-menu" (click)="onToggle()">
     <mat-icon>menu</mat-icon>
   </button>
-  <div fxShow="true" fxHide.lt-md>
+  <div class="desktop-menu">
     @if (hasPermission('dashboard')) {
       <a
         class="top-nav"
