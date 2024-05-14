@@ -28,6 +28,54 @@ $custom-typography: mat.define-typography-config(
 
 @include mat.all-component-typographies($custom-typography);
 
+// based on the indigo color palette
+// chagne dthe accent color to use the primary color of ess
+$ess-color-palette: (
+  50: #e8eaf6,
+  100: #c5cae9,
+  200: #169bd5,
+  300: #b9e1f2,
+  400: #b9e1f2,
+  500: #169bd5,
+  600: #0c7fc4,
+  700: #0c7fc4,
+  800: #0c7fc4,
+  900: #0c7fc4,
+  A100 : #b9e1f2,
+  A200 : #b9e1f2,
+  A400 : #169bd5,
+  A700 : #0c7fc4,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #ffffff,
+        A700 : #169bd5,
+    )
+);
+
+$ess-primary: mat.define-palette($ess-color-palette, 500);
+$ess-accent: mat.define-palette($ess-color-palette, A400, A200, A700);
+
+$ess-theme: mat.define-light-theme((
+ color: (
+  primary: $ess-primary,
+  accent: $ess-accent,
+ ),
+));
+
+@include mat.all-component-themes($ess-theme);
+
+
 :root {
   --size-1: 8px;
 
@@ -196,7 +244,8 @@ button:focus {
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image:hover {
   img:first-of-type {
     display: none;
   }
@@ -269,16 +318,6 @@ mat-card {
   position: relative !important;
 }
 
-.mat-mdc-checkbox.mat-accent {
-  --mdc-checkbox-selected-focus-icon-color: #169bd5;
-  --mdc-checkbox-selected-hover-icon-color: #169bd5;
-  --mdc-checkbox-selected-icon-color: #169bd5;
-  --mdc-checkbox-selected-pressed-icon-color: #169bd5;
-  --mdc-checkbox-selected-focus-state-layer-color: #169bd5;
-  --mdc-checkbox-selected-hover-state-layer-color: #169bd5;
-  --mdc-checkbox-selected-pressed-state-layer-color: #169bd5;
-}
-
 /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
@@ -294,14 +333,6 @@ mat-card {
 /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 .mat-checkbox-layout {
   white-space: normal !important;
-}
-
-.mat-mdc-radio-button.mat-accent {
-  --mdc-radio-selected-focus-icon-color: #169bd5;
-  --mdc-radio-selected-hover-icon-color: #169bd5;
-  --mdc-radio-selected-icon-color: #169bd5;
-  --mdc-radio-selected-pressed-icon-color: #169bd5;
-  --mat-radio-checked-ripple-color: #169bd5;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */

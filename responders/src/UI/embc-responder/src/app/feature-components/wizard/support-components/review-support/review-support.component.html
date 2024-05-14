@@ -477,8 +477,8 @@
 
   <div class="row buttons-section">
     <div class="col-md-12">
-      <button class="button-s button-width button-margin" (click)="back()">Cancel</button>
-      <button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
+      <button mat-button class="button-s button-width button-margin" (click)="back()">Cancel</button>
+      <button mat-button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
         Process Support/s
         <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
       </button>

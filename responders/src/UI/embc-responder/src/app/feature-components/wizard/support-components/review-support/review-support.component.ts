@@ -36,6 +36,7 @@ import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pi
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgStyle, DecimalPipe, DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-review-support',
@@ -47,6 +48,7 @@ import { NgStyle, DecimalPipe, DatePipe } from '@angular/common';
     MatCard,
     MatCardContent,
     MatCheckbox,
+    MatButtonModule,
     AppLoaderComponent,
     DecimalPipe,
     DatePipe,

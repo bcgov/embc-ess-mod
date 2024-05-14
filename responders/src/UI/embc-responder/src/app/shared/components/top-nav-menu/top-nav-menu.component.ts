@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ClaimType, ModulePermission } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { RouterLinkActive, RouterLink } from '@angular/router';

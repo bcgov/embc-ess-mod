@@ -24,6 +24,7 @@ import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuated
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { NgClass, NgStyle, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -35,6 +36,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatCardContent,
     AppLoaderComponent,
     MatAccordion,
+    MatButtonModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
