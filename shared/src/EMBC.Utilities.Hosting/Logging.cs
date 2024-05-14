@@ -38,7 +38,7 @@ namespace EMBC.Utilities.Hosting
             var splunkToken = hostBuilderContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
             if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
             {
-                Log.Warning($"Logs will NOT be forwarded to Splunk: check SPLUNK_TOKEN and SPLUNK_URL env vars");
+                Log.Warning("Logs will NOT be forwarded to Splunk: check SPLUNK_TOKEN and SPLUNK_URL env vars");
             }
             else
             {
@@ -53,7 +53,7 @@ namespace EMBC.Utilities.Hosting
                         },
                         renderTemplate: false);
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
-                Log.Information($"Logs will be forwarded to Splunk");
+                Log.Information("Logs will be forwarded to Splunk");
             }
         }
 

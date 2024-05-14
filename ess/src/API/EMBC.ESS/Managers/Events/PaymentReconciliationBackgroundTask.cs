@@ -6,20 +6,18 @@ using EMBC.Utilities.Hosting;
 
 namespace EMBC.ESS.Managers.Events;
 
-public class PendingSupportsProcessingBackgroundTask(EventsManager eventsManager) : IBackgroundTask
+public class PaymentReconciliationBackgroundTask(EventsManager eventsManager) : IBackgroundTask
 {
-    private readonly EventsManager eventsManager = eventsManager;
-
     public string Schedule => "";
 
     public int DegreeOfParallelism => 1;
 
     public TimeSpan InitialDelay => TimeSpan.FromSeconds(30);
 
-    public TimeSpan InactivityTimeout => TimeSpan.FromSeconds(60);
+    public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await eventsManager.Handle(new ProcessPendingSupportsCommand());
+        await eventsManager.Handle(new ReconcilePaymentsCommand());
     }
 }

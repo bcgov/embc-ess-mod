@@ -1,16 +1,15 @@
 {
-  "profiles": {
-    "EMBC.ESS.Host": {
-      "commandName": "Project",
-      "launchBrowser": false,
-      "applicationUrl": "https://localhost:2020",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "https://localhost:2020",
-        "DOTNET_gcServer": "1",
-        "backgroundTask__enabled": "false"
-      }
+    "profiles": {
+        "EMBC.ESS.Host": {
+            "commandName": "Project",
+            "launchBrowser": false,
+            "applicationUrl": "https://localhost:2020",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DOTNET_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:2020",
+                "backgroundTask__enabled": "false"
+            }
+        }
     }
-  }
 }
