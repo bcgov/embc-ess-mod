@@ -23,7 +23,7 @@ import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.ser
 import { MatDialog } from '@angular/material/dialog';
 import { EligibleSelfServeTotalAmountZeroDialogComponent } from './self-serve-support-total-amount-zero-dialog/self-serve-support-total-amount-zero.component';
 import { AppLoaderComponent } from 'src/app/core/components/app-loader/app-loader.component';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ProfileDataService } from '../profile/profile-data.service';
@@ -44,7 +44,7 @@ import {
 import { SelfServeSupportDetailsFormComponent } from './self-serve-support-details-form/self-serve-support-details-form.component';
 import { SelfServeSupportInteracETransfterFormComponent } from './self-serve-interac-e-transfer-form/self-serve-support-interac-e-transfer-form.component';
 import {
-  GotoStepType,
+  StepType,
   SelfServeSupportReviewComponent
 } from './self-serve-support-review/self-serve-support-review.component';
 
@@ -86,6 +86,9 @@ export class SelfServeSupportFormComponent implements OnInit {
   submitSupportError = false;
   loaderColor = '#169bd5';
 
+  isEditSupportDetailsFromReview = false;
+  isEditETransferFromReview = false;
+
   supportDraftForm = new FormGroup<DraftSupportForm>({
     shelterAllowance: new FormGroup<SelfServeShelerAllowanceSupportForm>({
       totalAmount: new FormControl<number>(0),
@@ -93,7 +96,16 @@ export class SelfServeSupportFormComponent implements OnInit {
       nights: new FormArray<FormGroup<SupportDateForm>>([])
     }),
     food: new FormGroup<SelfServeFoodSupportForm>({
-      fundsFor: new FormControl<FundsFor>(null, Validators.required),
+      fundsFor: new FormControl<FundsFor>(
+        null,
+        this.customValidation.conditionalValidation(
+          () =>
+            this.draftSupports.items.findIndex(
+              (s) => s.type === SelfServeSupportType.FoodGroceries || s.type === SelfServeSupportType.FoodRestaurant
+            ) !== -1,
+          Validators.required
+        )
+      ),
       restaurant: new FormGroup<SelfServeFoodRestaurantSupportForm>({
         includedHouseholdMembers: new FormArray([]),
         mealTypes: new FormArray([]),
@@ -245,18 +257,10 @@ export class SelfServeSupportFormComponent implements OnInit {
   gotoETransfterStep(formGroup: FormGroup) {
     formGroup.markAllAsTouched();
     if (!this.essFileId || formGroup.invalid) return;
-    this.showButtonLoader = true;
-    this.calculateTotalsError = false;
+
     this.calculateSelfServeSupportsTotalAmount().subscribe({
-      next: (res) => {
-        this.showButtonLoader = false;
-        const selfServeSupportsTotalAmount = res.reduce((prev, curr) => prev + curr.totalAmount, 0);
-
-        this.supportDraftForm.controls.totals.setValue(selfServeSupportsTotalAmount);
-
-        if (selfServeSupportsTotalAmount === 0)
-          this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
-        else this.stepper.next();
+      next: (selfServeSupportsTotalAmount) => {
+        if (selfServeSupportsTotalAmount && selfServeSupportsTotalAmount > 0) this.stepper.next();
       },
       error: (err) => {
         this.calculateTotalsError = true;
@@ -271,14 +275,66 @@ export class SelfServeSupportFormComponent implements OnInit {
     this.stepper.next();
   }
 
-  gotoStep(step: GotoStepType) {
+  copySupportDetailsFormValue: any;
+  copyETransferDetailsFormValue: any;
+
+  gotoStepFromReview(step: StepType) {
     switch (step) {
       case 'supportDetails':
+        this.copySupportDetailsFormValue = this.supportDraftForm.getRawValue();
+        this.isEditSupportDetailsFromReview = true;
         this.stepper.selectedIndex = 0;
         break;
       case 'eTransfer':
+        this.copyETransferDetailsFormValue= this.eTransferDetailsForm.getRawValue();
+        this.isEditETransferFromReview = true;
         this.stepper.selectedIndex = 1;
         break;
+      default:
+        break;
+    }
+  }
+
+  cancelEdits(step: StepType, formGroup: FormGroup) {
+    switch (step) {
+      case 'supportDetails':
+        formGroup.setValue(this.copySupportDetailsFormValue);
+        break;
+
+      case 'eTransfer':
+        formGroup.setValue(this.copyETransferDetailsFormValue);
+        break;
+
+      default:
+        break;
+    }
+
+    this.stepper.selectedIndex = 2;
+  }
+
+  goBackToReview(currentStep: StepType, formGroup: FormGroup) {
+    formGroup.markAllAsTouched();
+    if (!this.essFileId || formGroup.invalid) return;
+
+    switch (currentStep) {
+      case 'supportDetails':
+        this.calculateSelfServeSupportsTotalAmount().subscribe({
+          next: (selfServeSupportsTotalAmount) => {
+            if (selfServeSupportsTotalAmount && selfServeSupportsTotalAmount > 0) {
+              this.isEditSupportDetailsFromReview = false;
+              this.stepper.selectedIndex = 2;
+            }
+          },
+          error: (err) => {
+            this.calculateTotalsError = true;
+            this.showButtonLoader = false;
+          }
+        });
+        break;
+      case 'eTransfer':
+        this.stepper.selectedIndex = 2;
+        break;
+
       default:
         break;
     }
@@ -442,6 +498,9 @@ export class SelfServeSupportFormComponent implements OnInit {
   }
 
   calculateSelfServeSupportsTotalAmount() {
+    this.showButtonLoader = true;
+    this.calculateTotalsError = false;
+
     const selfServeRequestPayload = this.getPayloadData();
 
     return this.supportService
@@ -477,6 +536,17 @@ export class SelfServeSupportFormComponent implements OnInit {
                 break;
             }
           });
+        }),
+        map((res) => {
+          this.showButtonLoader = false;
+          const selfServeSupportsTotalAmount = res.reduce((prev, curr) => prev + curr.totalAmount, 0);
+
+          this.supportDraftForm.controls.totals.setValue(selfServeSupportsTotalAmount);
+
+          if (selfServeSupportsTotalAmount === 0)
+            this.dialog.open(EligibleSelfServeTotalAmountZeroDialogComponent, {}).afterClosed().subscribe();
+
+          return selfServeSupportsTotalAmount;
         })
       );
   }
@@ -497,18 +567,26 @@ export class SelfServeSupportFormComponent implements OnInit {
 
     switch (eTransferFormDetailsValue.notificationPreference) {
       case ETransferNotificationPreference.Email:
-        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.eTransferEmail;
+        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.useEmailOnFile
+          ? this.profileDataService.getProfile().contactDetails.email
+          : eTransferFormDetailsValue.eTransferEmail;
         break;
 
       case ETransferNotificationPreference.Mobile:
-        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.eTransferMobile;
+        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.useMobileOnFile
+          ? this.profileDataService.getProfile().contactDetails.phone
+          : eTransferFormDetailsValue.eTransferMobile;
         if (eTransferFormDetailsValue.contactEmail)
           eTransferDetails.contactEmail = eTransferFormDetailsValue.contactEmail;
         break;
 
       case ETransferNotificationPreference.EmailAndMobile:
-        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.eTransferEmail;
-        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.eTransferMobile;
+        eTransferDetails.eTransferEmail = eTransferFormDetailsValue.useEmailOnFile
+          ? this.profileDataService.getProfile().contactDetails.email
+          : eTransferFormDetailsValue.eTransferEmail;
+        eTransferDetails.eTransferMobile = eTransferFormDetailsValue.useMobileOnFile
+          ? this.profileDataService.getProfile().contactDetails.phone
+          : eTransferFormDetailsValue.eTransferMobile;
         break;
 
       default:

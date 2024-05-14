@@ -9,8 +9,9 @@ import { ETransferNotificationPreference } from 'src/app/core/model/e-transfer-n
 import { DraftSupports, SelfServeShelterAllowanceSupport, SelfServeSupportType } from 'src/app/core/api/models';
 import * as moment from 'moment';
 import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
+import { ProfileDataService } from '../../profile/profile-data.service';
 
-export type GotoStepType = 'supportDetails' | 'eTransfer';
+export type StepType = 'supportDetails' | 'eTransfer';
 
 @Component({
   selector: 'app-self-serve-support-review',
@@ -54,10 +55,11 @@ export class SelfServeSupportReviewComponent {
     return this.evacuationFileDataService.selfServeEligibilityCheck;
   }
 
-  @Output() gotoStep: EventEmitter<GotoStepType> = new EventEmitter<GotoStepType>();
+  @Output() gotoStep: EventEmitter<StepType> = new EventEmitter<StepType>();
 
   constructor(
     private needsAssessmentService: NeedsAssessmentService,
-    private evacuationFileDataService: EvacuationFileDataService
+    private evacuationFileDataService: EvacuationFileDataService,
+    public profileDataService: ProfileDataService
   ) {}
 }
