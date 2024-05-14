@@ -286,7 +286,7 @@ export class SelfServeSupportFormComponent implements OnInit {
         this.stepper.selectedIndex = 0;
         break;
       case 'eTransfer':
-        this.copyETransferDetailsFormValue= this.eTransferDetailsForm.getRawValue();
+        this.copyETransferDetailsFormValue = this.eTransferDetailsForm.getRawValue();
         this.isEditETransferFromReview = true;
         this.stepper.selectedIndex = 1;
         break;
