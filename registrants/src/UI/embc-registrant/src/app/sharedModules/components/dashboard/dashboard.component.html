@@ -31,42 +31,50 @@
                   </button>
                 </div>
               </div>
+            } @else if (evacuationFilesDataService.hasPendingEssFiles$ | async) {
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b
+                    >Please connect with an Emergency Support Services Responder or proceed to your closest Reception
+                    Centre.</b
+                  >
+                </p>
+                <p>
+                  <b>Please remember to bring government-issued identification with you if you have it.</b>
+                </p>
+                <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
+              </div>
+            } @else if (evacuationFilesDataService.allSupportsSelfServe$ | async) {
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b>No Further Action Required. You do not need to meet with a responder at a reception centre.</b>
+                </p>
+                <p>
+                  <b>
+                    While most e-Transfers are processed immediately, there are instances where processing delays can
+                    occur. If your e-Transfer is not received within 24 hours, please contact 1-800-585-9559. For
+                    information about evacuation orders and alerts, please visit your Local Emergency Programs website
+                    or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.</b
+                  >
+                </p>
+              </div>
+            } @else if (evacuationFilesDataService.hasMultipleActiveFiles$ | async) {
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b>Are you still on evacuation order and require additional supports?</b>
+                </p>
+                <p>
+                  For information about evacuation orders and alerts, please visit your Local Emergency Programs website
+                  or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.
+                </p>
+              </div>
             } @else {
-              @if (evacuationFilesDataService.hasPendingEssFiles$ | async) {
-                <div class="col-md-12">
-                  <p class="top-detail">
-                    <b
-                      >Please connect with an Emergency Support Services Responder or proceed to your closest Reception
-                      Centre.</b
-                    >
-                  </p>
-                  <p>
-                    <b>Please remember to bring government-issued identification with you if you have it.</b>
-                  </p>
-                  <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
-                </div>
-              } @else if ((evacuationFilesDataService.allSupportsSelfServe$ | async) === false) {
-                <div class="col-md-12">
-                  <p class="top-detail">
-                    <b>No Further Action Required. You do not need to meet with a responder at a reception centre.</b>
-                  </p>
-                  <p>
-                    <b>
-                      While most e-Transfers are processed immediately, there are instances where processing delays can
-                      occur. If your e-Transfer is not received within 24 hours, please contact 1-800-585-9559. For
-                      information about evacuation orders and alerts, please visit your Local Emergency Programs website
-                      or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.</b
-                    >
-                  </p>
-                </div>
-              } @else if ((evacuationFilesDataService.hasPendingEssFiles$ | async) === false) {
-                <div class="col-md-12">
-                  <p class="top-detail">
-                    <b>Are you still on evacuation order and require additional supports?</b>
-                  </p>
-                  <p>Please connect with your Local Emergency Program for assistance.</p>
-                </div>
-              }
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b>Are you still on evacuation order and require additional supports?</b>
+                </p>
+                <p>Please connect with your Local Emergency Program for assistance.</p>
+              </div>
             }
           </mat-card-content>
         </mat-card>
