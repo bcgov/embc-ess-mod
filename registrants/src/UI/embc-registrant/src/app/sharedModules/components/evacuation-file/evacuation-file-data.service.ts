@@ -141,12 +141,7 @@ export class EvacuationFileDataService {
   }
 
   public setHasPendingEssFiles(evacuationFiles: Array<EvacuationFileModel>): void {
-    let totalPendingFiles = 0;
-    evacuationFiles.forEach((item) => {
-      if (item.status === EvacuationFileStatus.Pending) {
-        totalPendingFiles += 1;
-      }
-    });
+    const totalPendingFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Pending).length;
 
     if (totalPendingFiles > 0) {
       this.hasPendingEssFiles.next(true);
@@ -178,12 +173,7 @@ export class EvacuationFileDataService {
   }
 
   public setHasMultipleActiveFiles(evacuationFiles: Array<EvacuationFileModel>): void {
-    let totalActiveFiles = 0;
-    evacuationFiles.forEach((item) => {
-      if (item.status === EvacuationFileStatus.Active) {
-        totalActiveFiles += 1;
-      }
-    });
+    const totalActiveFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Active).length;
 
     if (totalActiveFiles > 1) {
       this.hasMultipleActiveFiles.next(true);
