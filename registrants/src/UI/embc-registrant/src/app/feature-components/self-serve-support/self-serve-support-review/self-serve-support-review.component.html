@@ -88,7 +88,11 @@
           <div style="display: flex">
             <div style="width: 240px">e-Transfer Notification:</div>
             <div style="width: 160px">
-              <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+              @if (eTransferDetailsForm.controls.useEmailOnFile.value) {
+                <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
+              } @else {
+                <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+              }
             </div>
           </div>
         }
@@ -96,27 +100,41 @@
           <div style="display: flex">
             <div style="width: 240px">e-Transfer Notification:</div>
             <div style="width: 160px">
-              <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+              @if (eTransferDetailsForm.controls.useMobileOnFile.value) {
+                <b> {{ profileDataService.getProfile().contactDetails.phone }}</b>
+              } @else {
+                <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+              }
             </div>
           </div>
-          <div style="display: flex">
-            <div style="width: 240px">Contact Email Address</div>
-            <div style="width: 160px">
-              <b>{{ eTransferDetailsForm.controls.contactEmail.value }}</b>
+          @if (!profileDataService.getProfile().contactDetails.email) {
+            <div style="display: flex">
+              <div style="width: 240px">Contact Email Address</div>
+              <div style="width: 160px">
+                <b>{{ eTransferDetailsForm.controls.contactEmail.value }}</b>
+              </div>
             </div>
-          </div>
+          }
         }
         @case (ETransferNotificationPreference.EmailAndMobile) {
           <div style="display: flex">
             <div style="width: 240px">e-Transfer Notification:</div>
             <div style="width: 160px">
-              <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+              @if (eTransferDetailsForm.controls.useMobileOnFile.value) {
+                <b> {{ profileDataService.getProfile().contactDetails.phone }}</b>
+              } @else {
+                <b>{{ eTransferDetailsForm.controls.eTransferMobile.value }}</b>
+              }
             </div>
           </div>
           <div style="display: flex">
             <div style="width: 240px">&nbsp;</div>
             <div style="width: 160px">
-              <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+              @if (eTransferDetailsForm.controls.useEmailOnFile.value) {
+                <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
+              } @else {
+                <b>{{ eTransferDetailsForm.controls.eTransferEmail.value }}</b>
+              }
             </div>
           </div>
         }
