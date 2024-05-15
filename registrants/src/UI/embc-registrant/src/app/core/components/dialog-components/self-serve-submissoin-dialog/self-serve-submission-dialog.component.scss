@@ -6,3 +6,12 @@
 :host p {
   margin-bottom: var(--size-2);
 }
+
+:host a {
+  text-decoration: none;
+}
+
+:host a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

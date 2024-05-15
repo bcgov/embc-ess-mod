@@ -33,7 +33,7 @@ import {
   SelfServeShelerAllowanceSupportForm,
   SupportDateForm,
   SelfServeFoodSupportForm,
-  FundsFor,
+  SelfServeFoodFundsFor,
   SelfServeFoodRestaurantSupportForm,
   SelfServeClothingSupportForm,
   SupportPersonForm,
@@ -96,7 +96,7 @@ export class SelfServeSupportFormComponent implements OnInit {
       nights: new FormArray<FormGroup<SupportDateForm>>([])
     }),
     food: new FormGroup<SelfServeFoodSupportForm>({
-      fundsFor: new FormControl<FundsFor>(
+      fundsFor: new FormControl<SelfServeFoodFundsFor>(
         null,
         this.customValidation.conditionalValidation(
           () =>
@@ -332,6 +332,7 @@ export class SelfServeSupportFormComponent implements OnInit {
         });
         break;
       case 'eTransfer':
+        this.isEditETransferFromReview = false;
         this.stepper.selectedIndex = 2;
         break;
 

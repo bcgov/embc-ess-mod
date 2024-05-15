@@ -31,7 +31,7 @@ export interface SelfServeSupportDayMealForm extends Omit<SupportDayFormControl,
   dinner: FormControl<boolean>;
 }
 
-export type FundsFor = SelfServeSupportType.FoodGroceries | SelfServeSupportType.FoodRestaurant | null;
+export type SelfServeFoodFundsFor = SelfServeSupportType.FoodGroceries | SelfServeSupportType.FoodRestaurant | null;
 
 export interface SelfServeFoodRestaurantSupportForm {
   includedHouseholdMembers: FormArray<FormGroup<SupportPersonForm>>;
@@ -46,7 +46,7 @@ export interface SelfServeFoodGroceriesSupportForm {
 }
 
 export interface SelfServeFoodSupportForm {
-  fundsFor: FormControl<FundsFor>;
+  fundsFor: FormControl<SelfServeFoodFundsFor>;
   restaurant: FormGroup<SelfServeFoodRestaurantSupportForm>;
   groceries: FormGroup<SelfServeFoodGroceriesSupportForm>;
 }
