@@ -30,6 +30,9 @@ export class EvacuationFileDataService {
   allSupportsSelfServe: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public allSupportsSelfServe$: Observable<boolean> = this.allSupportsSelfServe.asObservable();
 
+  hasMultipleActiveFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public hasMultipleActiveFiles$: Observable<boolean> = this.hasMultipleActiveFiles.asObservable();
+
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
   private essFileIdVal: string;
@@ -138,12 +141,7 @@ export class EvacuationFileDataService {
   }
 
   public setHasPendingEssFiles(evacuationFiles: Array<EvacuationFileModel>): void {
-    let totalPendingFiles = 0;
-    evacuationFiles.forEach((item) => {
-      if (item.status === EvacuationFileStatus.Pending) {
-        totalPendingFiles += 1;
-      }
-    });
+    const totalPendingFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Pending).length;
 
     if (totalPendingFiles > 0) {
       this.hasPendingEssFiles.next(true);
@@ -168,6 +166,20 @@ export class EvacuationFileDataService {
       }
     });
     this.allSupportsSelfServe.next(true);
+  }
+
+  public getHasMultipleActiveFiles(): Observable<boolean> {
+    return this.hasMultipleActiveFiles$;
+  }
+
+  public setHasMultipleActiveFiles(evacuationFiles: Array<EvacuationFileModel>): void {
+    const totalActiveFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Active).length;
+
+    if (totalActiveFiles > 1) {
+      this.hasMultipleActiveFiles.next(true);
+    } else {
+      this.hasMultipleActiveFiles.next(false);
+    }
   }
 
   public createEvacuationFileDTO(): EvacuationFile {

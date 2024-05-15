@@ -34,17 +34,18 @@
           ></app-self-serve-support-details-form>
         }
         <div class="self-serve-support-actions-container">
-          <button type="button" mat-button class="button-s" (click)="gotoEligibilityConfirmation()">
-            Go Back & Edit
-          </button>
-          @if (draftSupports.items?.length > 0) {
+          @if (isEditSupportDetailsFromReview) {
+            <button type="button" mat-button class="button-s" (click)="cancelEdits('supportDetails', supportDraftForm)">
+              Cancel
+            </button>
             <button
               type="button"
               mat-button
-              class="button-p button-with-loader"
-              (click)="gotoETransfterStep(supportDraftForm)"
+              class="button-p"
+              style="min-width: 240px"
+              (click)="goBackToReview('supportDetails', supportDraftForm)"
             >
-              Next - e-Transfer Details
+              Save
               @if (showButtonLoader) {
                 <app-loader
                   class="spinner"
@@ -56,6 +57,30 @@
                 </app-loader>
               }
             </button>
+          } @else {
+            <button type="button" mat-button class="button-s" (click)="gotoEligibilityConfirmation()">
+              Go Back & Edit
+            </button>
+            @if (draftSupports.items?.length > 0) {
+              <button
+                type="button"
+                mat-button
+                class="button-p button-with-loader"
+                (click)="gotoETransfterStep(supportDraftForm)"
+              >
+                Next - e-Transfer Details
+                @if (showButtonLoader) {
+                  <app-loader
+                    class="spinner"
+                    [strokeWidth]="5"
+                    [diameter]="30"
+                    [color]="loaderColor"
+                    [showLoader]="showButtonLoader"
+                  >
+                  </app-loader>
+                }
+              </button>
+            }
           }
         </div>
       </mat-step>
@@ -68,15 +93,18 @@
           </app-self-serve-support-interac-e-transfer-form>
         }
         <div class="self-serve-support-actions-container">
-          <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
-          @if (draftSupports.items?.length > 0) {
+          @if (isEditETransferFromReview) {
+            <button type="button" mat-button class="button-s" (click)="cancelEdits('eTransfer', eTransferDetailsForm)">
+              Cancel
+            </button>
             <button
               type="button"
               mat-button
-              class="button-p button-with-loader"
-              (click)="gotoReviewStep(eTransferDetailsForm)"
+              class="button-p"
+              style="min-width: 240px"
+              (click)="goBackToReview('eTransfer', eTransferDetailsForm)"
             >
-              Next - Review
+              Save
               @if (showButtonLoader) {
                 <app-loader
                   class="spinner"
@@ -88,6 +116,28 @@
                 </app-loader>
               }
             </button>
+          } @else {
+            <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
+            @if (draftSupports.items?.length > 0) {
+              <button
+                type="button"
+                mat-button
+                class="button-p button-with-loader"
+                (click)="gotoReviewStep(eTransferDetailsForm)"
+              >
+                Next - Review & Submit
+                @if (showButtonLoader) {
+                  <app-loader
+                    class="spinner"
+                    [strokeWidth]="5"
+                    [diameter]="30"
+                    [color]="loaderColor"
+                    [showLoader]="showButtonLoader"
+                  >
+                  </app-loader>
+                }
+              </button>
+            }
           }
         </div>
       </mat-step>
@@ -101,7 +151,7 @@
             [eTransferDetailsForm]="eTransferDetailsForm"
             [reviewAcknowledgeForm]="reviewAcknowledgeForm"
             [draftSupports]="draftSupports"
-            (gotoStep)="gotoStep($event)"
+            (gotoStep)="gotoStepFromReview($event)"
           >
           </app-self-serve-support-review>
         }

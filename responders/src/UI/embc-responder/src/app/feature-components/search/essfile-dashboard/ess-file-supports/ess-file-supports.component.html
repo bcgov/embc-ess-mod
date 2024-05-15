@@ -54,17 +54,16 @@
             <div class="col">
               <p
                 *ngIf="support?.subCategory !== 'Lodging_Billeting' && support?.subCategory !== 'Lodging_Group'"
-                class="bold supplier-align"
+                class="supplier-align"
               >
-                {{
+                <b>{{
                   getReferral(support)?.method === supportMethod.Referral
                     ? getReferral(support)?.supplierName
                     : getReferral(support)?.method === supportMethod.ETransfer
-                      ? support?.isSelfServe
-                        ? 'e-Transfer (Self-serve)'
-                        : 'e-Transfer'
+                      ? 'e-Transfer'
                       : ''
-                }}
+                }}</b>
+                <i *ngIf="support?.isSelfServe"> (Self-Serve) </i>
               </p>
 
               <p *ngIf="support?.subCategory === 'Lodging_Billeting'" class="bold supplier-align">

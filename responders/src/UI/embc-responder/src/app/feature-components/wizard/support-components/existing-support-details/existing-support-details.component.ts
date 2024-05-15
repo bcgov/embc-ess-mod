@@ -366,15 +366,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       ?.description;
   }
 
-  getMethodTextToDisplay(enumToText: string, isSelfServe: boolean): string {
-    let isSelfServeValue = '';
-    if (isSelfServe) {
-      isSelfServeValue = ' (Self-serve)';
-    }
-    return (
-      this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description +
-      isSelfServeValue
-    );
+  getMethodTextToDisplay(enumToText: string): string {
+    return this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description;
   }
 
   getNotificationPref(): string {
