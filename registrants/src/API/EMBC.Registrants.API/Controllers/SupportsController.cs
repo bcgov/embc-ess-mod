@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,12 +20,14 @@ namespace EMBC.Registrants.API.Controllers;
 [Authorize]
 public class SupportsController(IMessagingClient messagingClient, IMapper mapper) : ControllerBase
 {
+    private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
     /// <summary>
     /// Checks if a file is eligible for self-serve supports
     /// </summary>
-    /// <param name="evacuationFileId">The file id to check</param>
+    /// <param name="evacuationFileId"></param>
     /// <param name="ct"></param>
-    /// <returns>A decision if the file is eligibile or not</returns>
+    /// <returns>Eligiility results</returns>
     [HttpGet("eligible")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -31,8 +35,17 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
     [Authorize]
     public async Task<ActionResult<EligibilityCheck>> CheckSelfServeEligibility(string evacuationFileId, CancellationToken ct)
     {
-        await messagingClient.Send(new CheckEligibileForSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
-        var eligilityCheck = (await messagingClient.Send(new EligibilityCheckQuery { EvacuationFileId = evacuationFileId }, ct)).Eligibility;
+        await messagingClient.Send(new CheckEligibileForSelfServeCommand
+        {
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId
+        }, ct);
+        var eligilityCheck = (await messagingClient.Send(new EligibilityCheckQuery
+        {
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId
+        }, ct)).Eligibility;
+
         return Ok(new EligibilityCheck
         {
             EvacuationFileId = evacuationFileId,
@@ -43,38 +56,77 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
         });
     }
 
+    /// <summary>
+    /// Calculate self serve supports for a file
+    /// </summary>
+    /// <param name="evacuationFileId"></param>
+    /// <param name="ct"></param>
+    /// <returns>Self serve support details</returns>
     [HttpGet("draft")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<DraftSupports>> GetDraftSupports(string evacuationFileId, CancellationToken ct)
     {
-        var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId }, ct);
+        var response = await messagingClient.Send(new DraftSelfServeSupportQuery
+        {
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId
+        }, ct);
 
         return Ok(mapper.Map<DraftSupports>(response));
     }
 
+    /// <summary>
+    /// Calculate the self serve supports amounts for a file
+    /// </summary>
+    /// <param name="evacuationFileId"></param>
+    /// <param name="supports"></param>
+    /// <param name="ct"></param>
+    /// <returns>Self serve support details</returns>
     [HttpPost("draft")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<SelfServeSupport>>> CalculateAmounts(string evacuationFileId, IEnumerable<SelfServeSupport> supports, CancellationToken ct)
     {
-        var response = await messagingClient.Send(new DraftSelfServeSupportQuery { EvacuationFileId = evacuationFileId, Items = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(supports) }, ct);
+        var response = await messagingClient.Send(new DraftSelfServeSupportQuery
+        {
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId,
+            Items = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(supports)
+        }, ct);
 
         return Ok(mapper.Map<IEnumerable<SelfServeSupport>>(response.Items));
     }
 
+    /// <summary>
+    /// Opt out of self serve supports
+    /// </summary>
+    /// <param name="evacuationFileId"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
     [HttpPost("optout")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> OptOut(string evacuationFileId, CancellationToken ct)
     {
-        await messagingClient.Send(new OptOutSelfServeCommand { EvacuationFileId = evacuationFileId }, ct);
+        await messagingClient.Send(new OptOutSelfServeCommand
+        {
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId
+        }, ct);
         return Ok();
     }
 
+    /// <summary>
+    /// Submit self serve supports
+    /// </summary>
+    /// <param name="evacuationFileId"></param>
+    /// <param name="request"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,7 +136,8 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
         if (evacuationFileId != request.EvacuationFileId) return TypedResults.BadRequest(evacuationFileId);
         await messagingClient.Send(new ProcessSelfServeSupportsCommand
         {
-            EvacuationFileId = evacuationFileId,
+            RegistrantUserId = currentUserId,
+            EvacuationFileNumber = evacuationFileId,
             Supports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupport>>(request.Supports),
             ETransferDetails = mapper.Map<ESS.Shared.Contracts.Events.SelfServe.ETransferDetails>(request.ETransferDetails)
         }, ct);

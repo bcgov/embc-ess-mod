@@ -68,7 +68,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_DuplicateSupport_False()
     {
-        var (file, _) = await CreateTestSubjects();
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId);
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
@@ -82,7 +82,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
-        var (file, _) = await CreateTestSubjects();
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId);
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
@@ -129,10 +129,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         supports.Supports.ShouldNotBeEmpty();
     }
 
-    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(
-        int numberOfHoldholdMembers = 5,
-        bool? eligibleAddress = true,
-        IEnumerable<IdentifiedNeed>? needs = null)
+    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(string? taskNumber = null, int numberOfHoldholdMembers = 5, bool? eligibleAddress = true, IEnumerable<IdentifiedNeed>? needs = null)
     {
         var registrant = TestHelper.CreateRegistrantProfile();
         if (eligibleAddress == null)
@@ -143,7 +140,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
             registrant.HomeAddress = TestHelper.CreateSelfServeIneligibleAddress();
 
         registrant.Id = await SaveRegistrant(registrant);
-        var file = TestHelper.CreateNewTestEvacuationFile(registrant, null);
+        var file = TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber);
         file.PrimaryRegistrantId = registrant.Id;
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(numberOfHoldholdMembers).ToList();
         file.NeedsAssessment.Needs = needs ?? [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
