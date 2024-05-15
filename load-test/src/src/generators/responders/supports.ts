@@ -1,6 +1,23 @@
 import * as faker from 'faker/locale/en_CA';
-import { ClothingSupport, EvacuationFile, FoodGroceriesSupport, FoodRestaurantSupport, IncidentalsSupport, Interac, LodgingBilletingSupport, LodgingGroupSupport, LodgingHotelSupport, ProcessDigitalSupportsRequest, Referral, Supplier, Support, SupportCategory, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherSupport, TransportationTaxiSupport } from '../../api/responders/models';
-
+import { ClothingSupport } from '../../api/responders/models/clothing-support';
+import { EvacuationFile } from '../../api/responders/models/evacuation-file';
+import { FoodGroceriesSupport } from '../../api/responders/models/food-groceries-support';
+import { FoodRestaurantSupport } from '../../api/responders/models/food-restaurant-support';
+import { IncidentalsSupport } from '../../api/responders/models/incidentals-support';
+import { Interac } from '../../api/responders/models/interac';
+import { LodgingBilletingSupport } from '../../api/responders/models/lodging-billeting-support';
+import { LodgingGroupSupport } from '../../api/responders/models/lodging-group-support';
+import { LodgingHotelSupport } from '../../api/responders/models/lodging-hotel-support';
+import { ProcessDigitalSupportsRequest } from '../../api/responders/models/process-digital-supports-request';
+import { Referral } from '../../api/responders/models/referral';
+import { Supplier } from '../../api/responders/models/supplier';
+import { Support } from '../../api/responders/models/support';
+import { SupportCategory } from '../../api/responders/models/support-category';
+import { SupportMethod } from '../../api/responders/models/support-method';
+import { SupportStatus } from '../../api/responders/models/support-status';
+import { SupportSubCategory } from '../../api/responders/models/support-sub-category';
+import { TransportationOtherSupport } from '../../api/responders/models/transportation-other-support';
+import { TransportationTaxiSupport } from '../../api/responders/models/transportation-taxi-support';
 import { addDays, getRandomInt } from '../../utilities';
 
 export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier>): ProcessDigitalSupportsRequest {

@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { AuditAccessRequest } from '../models/audit-access-request';
 import { EvacuationFile } from '../models/evacuation-file';
 import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
@@ -493,6 +494,55 @@ export class RegistrationsService extends BaseService {
   }): Observable<void> {
 
     return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsAuditRegistrantAccess
+   */
+  static readonly RegistrationsAuditRegistrantAccessPath = '/api/Registrations/registrants/{registrantId}/access';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsAuditRegistrantAccess()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsAuditRegistrantAccess$Response(params: {
+    registrantId: string;
+    body: AuditAccessRequest
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsAuditRegistrantAccessPath, 'post');
+    if (params) {
+      rb.path('registrantId', params.registrantId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsAuditRegistrantAccess$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsAuditRegistrantAccess(params: {
+    registrantId: string;
+    body: AuditAccessRequest
+  }): Observable<void> {
+
+    return this.registrationsAuditRegistrantAccess$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
@@ -1211,6 +1261,55 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsAuditFileAcccess
+   */
+  static readonly RegistrationsAuditFileAcccessPath = '/api/Registrations/files/{fileId}/access';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsAuditFileAcccess()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsAuditFileAcccess$Response(params: {
+    fileId: string;
+    body: AuditAccessRequest
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsAuditFileAcccessPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsAuditFileAcccess$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsAuditFileAcccess(params: {
+    fileId: string;
+    body: AuditAccessRequest
+  }): Observable<void> {
+
+    return this.registrationsAuditFileAcccess$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
