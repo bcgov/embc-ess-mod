@@ -3,9 +3,9 @@
 import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface FoodGroceriesSupport extends Support {
-  category?: SupportCategory;
-  numberOfDays?: number;
-  subCategory?: SupportSubCategory;
-  totalAmount?: number;
-}
+export type FoodGroceriesSupport = Support & {
+'category'?: SupportCategory;
+'subCategory'?: SupportSubCategory;
+'numberOfDays'?: number;
+'totalAmount'?: number;
+};

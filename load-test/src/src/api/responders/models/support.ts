@@ -14,6 +14,7 @@ export interface Support {
   from: string;
   id?: null | string;
   includedHouseholdMembers: Array<string>;
+  isSelfServe?: boolean;
   issuedBy?: null | string;
   issuedByTeam?: null | string;
   issuedOn?: null | string;

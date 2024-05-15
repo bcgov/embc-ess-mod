@@ -36,18 +36,15 @@ module.exports = function (env) {
     plugins: [
       new webpack.NormalModuleReplacementPlugin(/(.*)-APP_TARGET(\.*)/, function (resource) { resource.request = resource.request.replace(/-APP_TARGET/, `-${appTarget}`); }),
       new CleanWebpackPlugin(),
-      // Copy assets to the destination folder
-      // see `src/post-file-test.ts` for an test example using an asset
-      // new CopyPlugin({
-      //   patterns: [{ 
-      //     from: path.resolve(__dirname, 'assets'), 
-      //     noErrorOnMissing: true 
-      //   }],
-      // }),
     ],
     optimization: {
       // Don't minimize, as it's not used in the browser
       minimize: false,
     },
+    performance: {
+      hints: false,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000
+    }
   }
 }

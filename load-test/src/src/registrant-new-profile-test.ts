@@ -1,6 +1,5 @@
 import { Options } from 'k6/options';
-export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
-export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
+export { RegistrantNewRegistration } from './registrant-portal-scripts';
 import { getExecutionType, getSummaryRes, registrant_thresholds } from './utilities';
 
 let execution_type = getExecutionType();

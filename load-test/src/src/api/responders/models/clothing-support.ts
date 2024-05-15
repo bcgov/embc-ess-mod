@@ -3,10 +3,10 @@
 import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface ClothingSupport extends Support {
-  approverName?: string;
-  category: SupportCategory;
-  extremeWinterConditions?: boolean;
-  subCategory: SupportSubCategory;
-  totalAmount: number;
-}
+export type ClothingSupport = Support & {
+'extremeWinterConditions'?: boolean;
+'category': SupportCategory;
+'subCategory': SupportSubCategory;
+'totalAmount': number;
+'approverName'?: string;
+};
