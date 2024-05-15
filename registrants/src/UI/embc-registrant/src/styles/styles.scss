@@ -375,6 +375,11 @@ mat-form-field {
   }
 }
 
+.mat-mdc-checkbox.ng-invalid.ng-touched {
+  --mdc-checkbox-unselected-icon-color: red;
+  --mdc-checkbox-unselected-hover-icon-color: red;
+}
+
 .requiredField::after {
   content: '*';
   color: red;

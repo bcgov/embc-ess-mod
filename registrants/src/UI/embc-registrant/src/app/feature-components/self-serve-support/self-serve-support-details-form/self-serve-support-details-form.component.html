@@ -59,8 +59,20 @@
                 style="display: flex; flex-direction: column"
                 [formControl]="supportDraftForm.controls.food.controls.fundsFor"
               >
-                <mat-radio-button [value]="SelfServeSupportType.FoodGroceries"> Groceries </mat-radio-button>
-                <mat-radio-button [value]="SelfServeSupportType.FoodRestaurant"> Restaurant Meals </mat-radio-button>
+                <mat-radio-button [value]="SelfServeSupportType.FoodGroceries">
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+                    <b>Groceries</b>
+                  } @else {
+                    Groceries
+                  }
+                </mat-radio-button>
+                <mat-radio-button [value]="SelfServeSupportType.FoodRestaurant">
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+                    <b>Restaurant Meals</b>
+                  } @else {
+                    Restaurant Meals
+                  }
+                </mat-radio-button>
               </mat-radio-group>
             </div>
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
@@ -102,7 +114,7 @@
             }
 
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
-              <label>Which people in your household require <b>Restaurant Meals</b>? </label>
+              <label>Which <b>people</b> in your household require <b>Restaurant Meals</b>? </label>
               <div style="display: flex; flex-direction: column">
                 @for (
                   person of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.includedHouseholdMembers
@@ -116,7 +128,13 @@
                   </div>
                 }
               </div>
-              <label>What <b>meals</b> are required for your household?</label>
+              <div>
+                <label>What <b>meals</b> are required for your household? </label>
+
+                <button type="button" mat-icon-button class="status-info" (click)="openRestaurantMealsInfoDialog()">
+                  <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                </button>
+              </div>
               <div>
                 <table>
                   <tr class="header-row">
@@ -165,7 +183,9 @@
           </div>
           <div class="note-box">
             Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and <b>$25.50</b> for
-            dinner per person per day. Groceries are provided at a daily rate of <b>$22.50 per person</b> per day.
+            dinner per person per day.
+            <br />
+            Groceries are provided at a daily rate of <b>$22.50 per person</b> per day.
           </div>
         </mat-card-content>
       </mat-card>
