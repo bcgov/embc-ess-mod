@@ -17,5 +17,24 @@
     "given_name": "BCSC",
     "display_name": "BCSC TEST",
     "family_name": "TEST"
+  },
+  {
+    "sub": "EVAC-1-0",
+    "userName": "EVAC-1-0",
+    "password": "autotest-1-0",
+    "aud": "bcsc.aud",
+    "birthdate": "1926-09-13",
+    "address": {
+      "street_address": "159 Smith Valley Suite 378",
+      "country": "CA",
+      "formatted": "159 Smith Valley Suite 378\nFraser Valley, BC  V6R6V6",
+      "locality": "Fraser Valley",
+      "region": "BC",
+      "postal_code": "V6R6V6"
+    },
+    "iss": "https://idtest.gov.bc.ca/oauth2/",
+    "given_name": "autotest-EVAC",
+    "display_name": "autotest-EVAC 1-0",
+    "family_name": "1-0"
   }
 ]

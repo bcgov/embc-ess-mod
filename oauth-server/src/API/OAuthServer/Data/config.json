@@ -60,7 +60,7 @@
       ]
     },
     {
-      "ClientId": "test-client",
+      "ClientId": "dev-test-client",
       "ClientSecrets": [
         {
           "Value": "EjuRF+sIxWuqxAgN+XgG157CmIANcfYcpv09mI2dg70="
