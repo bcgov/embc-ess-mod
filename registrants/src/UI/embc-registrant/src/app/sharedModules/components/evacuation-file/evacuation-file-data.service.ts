@@ -6,7 +6,8 @@ import {
   EvacuationFile,
   EvacuationFileStatus,
   NeedsAssessment,
-  Support
+  Support,
+  SupportMethod
 } from 'src/app/core/api/models';
 import { EvacuationsService, ProfileService, SupportsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
@@ -160,11 +161,12 @@ export class EvacuationFileDataService {
       return;
     }
     essFileData.supports.forEach((item: Support) => {
-      if (item.isSelfServe !== true) {
+      if (item.isSelfServe !== true || item.method === SupportMethod.Referral) {
         this.allSupportsSelfServe.next(false);
         return;
       }
     });
+
     this.allSupportsSelfServe.next(true);
   }
 
@@ -177,9 +179,18 @@ export class EvacuationFileDataService {
 
     if (totalActiveFiles > 1) {
       this.hasMultipleActiveFiles.next(true);
-    } else {
-      this.hasMultipleActiveFiles.next(false);
+    } else if (totalActiveFiles === 1) {
+      let essFileData = evacuationFiles.find((item) => item.status === EvacuationFileStatus.Active);
+      if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+        this.hasMultipleActiveFiles.next(false);
+        return;
+      }
+      if (essFileData.supports.length > 0) {
+        this.hasMultipleActiveFiles.next(true);
+        return;
+      }
     }
+    this.hasMultipleActiveFiles.next(false);
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
