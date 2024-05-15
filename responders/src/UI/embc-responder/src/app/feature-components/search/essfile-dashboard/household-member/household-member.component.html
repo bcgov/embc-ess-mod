@@ -83,7 +83,7 @@
               </div>
               @if (essfileDashboardService?.displayMemberButton === 'view-profile') {
                 <div class="row button-div">
-                  <button class="button-p proceed-button" (click)="viewProfile(member)">View Profile</button>
+                  <button mat-button class="button-p proceed-button" (click)="viewProfile(member)">View Profile</button>
                 </div>
               }
               @if (essfileDashboardService?.displayMemberButton === 'create-profile') {

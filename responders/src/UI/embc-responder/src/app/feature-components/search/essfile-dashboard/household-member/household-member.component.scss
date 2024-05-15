@@ -38,6 +38,7 @@ mat-expansion-panel {
 
 ::ng-deep .mat-expansion-panel-header {
   height: 60px;
+  --mat-expansion-header-collapsed-state-height: 60px;
 }
 
 .expansion-divider {

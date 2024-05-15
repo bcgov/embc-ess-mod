@@ -21,6 +21,7 @@ import { HouseholdMemberService } from './household-member.service';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
 import { NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-household-member',
@@ -31,6 +32,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatCard,
     MatCardContent,
     MatAccordion,
+    MatButtonModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
