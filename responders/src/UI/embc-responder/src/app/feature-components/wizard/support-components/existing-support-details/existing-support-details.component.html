@@ -502,8 +502,9 @@
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Method:</div>
-    <div class="col-md-4 bold">
-      {{ getMethodTextToDisplay(selectedSupport?.method, selectedSupport?.isSelfServe) }}
+    <div class="col-md-4">
+      <b>{{ getMethodTextToDisplay(selectedSupport?.method) }} </b>
+      <i *ngIf="selectedSupport?.isSelfServe"> (Self-Serve) </i>
     </div>
   </div>
 
