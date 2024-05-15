@@ -75,6 +75,7 @@ namespace OAuthServer
         public string family_name { get; set; }
 
         public Claim[] Claims => new[]           {
+            new Claim("userInfo", JsonConvert.SerializeObject(new BcscTestUserInfo(this))),
             new Claim("display_name", display_name),
             new Claim(JwtClaimTypes.GivenName, given_name),
             new Claim(JwtClaimTypes.FamilyName, family_name),
@@ -83,6 +84,24 @@ namespace OAuthServer
             new Claim("aud", aud),
             new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(address), IdentityServerConstants.ClaimValueTypes.Json)
         };
+    }
+
+    public class BcscTestUserInfo
+    {
+        public BcscTestUserAddress address { get; set; }
+        public string birthdate { get; set; }
+        public string given_name { get; set; }
+        public string display_name { get; set; }
+        public string family_name { get; set; }
+
+        public BcscTestUserInfo(BcscTestUser user)
+        {
+            this.address = user.address;
+            this.birthdate = user.birthdate;
+            this.given_name = user.given_name;
+            this.display_name = user.display_name;
+            this.family_name = user.family_name;
+        }
     }
 
     public class BcscTestUserAddress
