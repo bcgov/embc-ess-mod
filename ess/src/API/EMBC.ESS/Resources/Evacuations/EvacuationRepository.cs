@@ -383,7 +383,6 @@ public class EvacuationRepository : IEvacuationRepository
             .Expand(f => f.era_CurrentNeedsAssessmentid)
             .Expand(f => f.era_Registrant)
             .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
-            .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
             .Expand(f => f.era_era_evacuationfile_era_essfilenote_ESSFileID)
             .Expand(f => f.era_TaskId)
             .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
