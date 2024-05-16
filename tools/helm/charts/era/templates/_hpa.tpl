@@ -10,7 +10,7 @@ spec:
   scaleTargetRef:
     kind: Deployment
     name: {{ .name }}
-    apiVersion: apps.openshift.io/v1
+    apiVersion: apps/v1
   minReplicas: {{ .Values.scaling.minReplicas }}
   maxReplicas: {{ .Values.scaling.maxReplicas }}
   metrics:
