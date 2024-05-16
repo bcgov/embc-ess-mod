@@ -32,30 +32,30 @@ let responder_scenario: Scenario = {
 export const options: Options = {
     scenarios: {
         /*---Registrant---*/
-        anonymousRegistration: {
-            exec: 'RegistrantAnonymousRegistration',
-            ...registrant_scenario
-        },
+        // anonymousRegistration: {
+        //     exec: 'RegistrantAnonymousRegistration',
+        //     ...registrant_scenario
+        // },
         newRegistration: {
             exec: 'RegistrantNewRegistration',
             ...registrant_scenario
         },
-        existingProfileRegistration: {
-            exec: 'RegistrantExistingProfileRegistration',
-            startTime: '2m',
-            ...registrant_scenario
-        },
+        // existingProfileRegistration: {
+        //     exec: 'RegistrantExistingProfileRegistration',
+        //     startTime: '2m',
+        //     ...registrant_scenario
+        // },
 
 
         /*---Responder---*/
-        ResponderNewRegistration: {
-            exec: 'ResponderNewRegistration',
-            ...responder_scenario
-        },
-        ResponderExistingRegistration: {
-            exec: 'ResponderExistingRegistration',
-            ...responder_scenario
-        },
+        // ResponderNewRegistration: {
+        //     exec: 'ResponderNewRegistration',
+        //     ...responder_scenario
+        // },
+        // ResponderExistingRegistration: {
+        //     exec: 'ResponderExistingRegistration',
+        //     ...responder_scenario
+        // },
     },
 
     thresholds: {

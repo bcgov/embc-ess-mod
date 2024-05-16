@@ -1,5 +1,7 @@
 import { fail } from 'k6';
 import { Rate, Trend } from 'k6/metrics';
+import { DraftSupports, SubmitSupportsRequest } from './api/registrants/models';
+import { StrictHttpResponse } from './api/registrants/strict-http-response';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
 import { generateAnonymousRegistration } from './generators/registrants/registration';
@@ -20,6 +22,8 @@ const submitFailRate = new Rate('reg_failed_form_submits');
 const submitFile = new Trend('reg_submit_file');
 const submitAnonymous = new Trend('reg_submit_anonymous');
 const submitProfile = new Trend('reg_submit_profile');
+const submitSupportsDraft = new Trend('reg_submit_supports_draft');
+const submitSupports = new Trend('reg_submit_support');
 const loadHTMLTime = new Trend('res_load_html_time');
 const loadAuthToken = new Trend('reg_load_auth_token');
 const loadConfig = new Trend('reg_load_configuration');
@@ -34,6 +38,7 @@ const loadEvacuations = new Trend('reg_load_evacuations');
 const loadConflicts = new Trend('reg_load_conflicts');
 const loadEnumCodes = new Trend('reg_load_enum_codes');
 const loadEligible = new Trend('reg_load_eligible');
+const loadSupportsDraft = new Trend('reg_load_supports_draft');
 
 const getAuthToken = () => {
   let curr_vu = __VU - 1; //VU's begin at 1, not 0
@@ -119,8 +124,8 @@ const getConflicts = (token: any) => {
   return testHttp.get(urls.conflicts, formFailRate, loadConflicts, token);
 }
 
-const createProfile = (token: any, communities: any, security_questions: any) => {
-  const profile = generateProfile(communities, security_questions);
+const createProfile = (token: any, communities: any, security_questions: any, selfServe: boolean = false) => {
+  const profile = generateProfile(communities, security_questions, selfServe);
   return testHttp.post(urls.current_profile, profile, submitFailRate, submitProfile, token);
 }
 
@@ -132,6 +137,52 @@ const submitEvacuationFile = (token: any, profile: any, communities: any, selfSe
 const getIsEligible = (token: any, referenceNumber: any) => {
   let urlInfo = { url: `${urls.submit.url}/${referenceNumber}/Supports/eligible`, name: "Eligibility" };
   return testHttp.get(urlInfo, formFailRate, loadEligible, token);
+}
+
+const getSupportDraft = (token: any, referenceNumber: any) => {
+  let urlInfo = { url: `${urls.submit.url}/${referenceNumber}/Supports/draft`, name: "Supoprt draft" };
+  return testHttp.get(urlInfo, formFailRate, loadSupportsDraft, token) as StrictHttpResponse<DraftSupports>;
+}
+
+const saveSupportDraft = (token: any, referenceNumber: any, data: any) => {
+  let urlInfo = { url: `${urls.submit.url}/${referenceNumber}/Supports/draft`, name: "Supoprt draft" };
+
+  let objectOrder = {
+    '$type': null,
+  };
+  let payload: any[] = [];
+  data.items.forEach((item: any) => {
+    payload.push(Object.assign(objectOrder, item));
+  });
+
+  return testHttp.post(urlInfo, payload, formFailRate, submitSupportsDraft, token);
+}
+
+const saveSupports = (token: any, referenceNumber: any, supports: any, profile: any) => {
+  let urlInfo = { url: `${urls.submit.url}/${referenceNumber}/Supports`, name: "Supoprt draft" };
+
+  let objectOrder = {
+    '$type': null,
+  };
+  let orderedSupports: any[] = [];
+  supports.forEach((support: any) => {
+    orderedSupports.push(Object.assign(objectOrder, support));
+  });
+
+  let data: SubmitSupportsRequest = {
+    evacuationFileId: referenceNumber,
+    supports: orderedSupports,
+    eTransferDetails: {
+      recipientName: `${profile.personalDetails.firstName} ${profile.personalDetails.lastName}`,
+      eTransferEmail: profile.contactDetails.email
+    }
+  };
+  return testHttp.post(urlInfo, data, formFailRate, submitSupports, token);
+}
+
+const optOut = (token: any, referenceNumber: any) => {
+  let urlInfo = { url: `${urls.submit.url}/${referenceNumber}/Supports/optout`, name: "Supoprt draft" };
+  return testHttp.post(urlInfo, {}, formFailRate, submitSupportsDraft, token);
 }
 
 export function RegistrantAnonymousRegistration() {
@@ -147,17 +198,16 @@ export function RegistrantAnonymousRegistration() {
 };
 
 export function RegistrantNewRegistration() {
-  navigate(); //open browser and navigate to portal
+  let selfServe = true;
+  navigate();
   getStartPage();
 
   /**Load Meta Data */
   getConfiguration();
-  //get env info
   let communities = getCommunities();
-  // if (communities) return;
   getProvinces();
   getCountries();
-  let security_questions = getSecurityQuestions();
+  getSecurityQuestions();
   getOpenIdConfiguration();
   getEnumCodes("SupportStatus");
   getEnumCodes("SupportCategory");
@@ -165,26 +215,27 @@ export function RegistrantNewRegistration() {
   /**End Load Meta Data */
 
   navigate(); //Login
-  //Technically the portal loads all that meta data again when you are returned to the portal page after the login page
   let token = getAuthToken();
+  //Technically the portal loads all that meta data again when you are returned to the portal page after the login page
   // console.log(token);
   let profile_exists = getCurrentProfileExists(token);
-
-  // navigate();
+  navigate();
 
   if (profile_exists == false) {
     //New Profile
     console.log(`Registrants - ${getIterationName()}: creating new profile`)
     let security_questions = getSecurityQuestions();
     fillInForm();
-    createProfile(token, communities, security_questions);
+    createProfile(token, communities, security_questions, selfServe);
   }
   else {
     console.log(`Registrants - ${getIterationName()}: using existing profile`);
     let conflicts = getConflicts(token);
-    console.log("conflicts:");
-    console.log(conflicts);
-    if (conflicts) navigate();
+    if (conflicts && conflicts.length) {
+      console.log(`Registrants - ${getIterationName()}: conflicts:`);
+      console.log(conflicts);
+      navigate();
+    }
     //should update current profile???...
   }
 
@@ -192,29 +243,25 @@ export function RegistrantNewRegistration() {
   getCurrentEvacuations(token);
   fillInForm();
 
-  let selfServe = true;
   let fileRef = submitEvacuationFile(token, profile, communities, selfServe);
   console.log(fileRef)
   let eligibility = getIsEligible(token, fileRef.referenceNumber);
-  console.log(eligibility)
   if (eligibility && eligibility.isEligable) {
-    //can either proceed with e-transfer, or opt-out
-
-    //if E-transfer
-    //get draft - 
-    //https://dev-era-evacuees.apps.silver.devops.gov.bc.ca/api/Evacuations/169465/Supports/draft
-
-    //click next and post to draft - 
-    //https://dev-era-evacuees.apps.silver.devops.gov.bc.ca/api/Evacuations/169465/Supports/draft
-    // [{"$type":"SelfServeClothingSupport","type":"Clothing","totalAmount":150,"includedHouseholdMembers":["15171876-2379-4287-82ec-569e9488ce50"]}]
-
-    // another POST - https://dev-era-evacuees.apps.silver.devops.gov.bc.ca/api/Evacuations/169465/Supports
-    // {"evacuationFileId":"169465","supports":[{"$type":"SelfServeClothingSupport","type":"Clothing","totalAmount":150,"includedHouseholdMembers":["15171876-2379-4287-82ec-569e9488ce50"]}],"eTransferDetails":{"recipientName":"EVAC THREE","eTransferEmail":"mr.anderson@gmail.com.test"}}
-
-
-
-    //else Opt-out - POST
-    //https://dev-era-evacuees.apps.silver.devops.gov.bc.ca/api/Evacuations/169467/Supports/optout
+    console.log(`Registrants - ${getIterationName()}: Eligible for self serve!`);
+    let should_opt_out = false;
+    if (should_opt_out) {
+      optOut(token, fileRef.referenceNumber);
+    }
+    else {
+      let supportInfo = getSupportDraft(token, fileRef.referenceNumber);
+      navigate();
+      let supports = saveSupportDraft(token, fileRef.referenceNumber, supportInfo);
+      saveSupports(token, fileRef.referenceNumber, supports, profile);
+      console.log(`Registrants - ${getIterationName()}: Self serve complete!`);
+    }
+  }
+  else {
+    console.log(`Registrants - ${getIterationName()}: Not eligible for self serve`);
   }
 
   getCurrentEvacuations(token);

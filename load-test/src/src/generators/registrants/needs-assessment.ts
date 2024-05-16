@@ -27,13 +27,19 @@ export function generateNeedsAssessment(registrantDetails: PersonDetails, selfSe
         pets.push(generatePet(petTypes[i]));
     }
 
-    let needs_count = getRandomInt(1, 5);
     let need_options = Object.values(IdentifiedNeed);
+    //Transportation isn't selectable in the portal, so don't include it...
+    let transportation_index = need_options.findIndex(opt => opt == IdentifiedNeed.Tranportation);
+    if (transportation_index >= 0) need_options.splice(transportation_index, 1);
+
     //can only choose one of shelter allowance or referral, so randomly remove one as a choosable option
-    let allowance_or_referral = faker.datatype.boolean();
-    if (allowance_or_referral) need_options.splice(0, 1);
+    //self serve is not allowed if shelter referral
+    let shelter_allowance = faker.datatype.boolean() || selfServe;
+    let shelter_referral_index = need_options.findIndex(opt => opt == IdentifiedNeed.ShelterReferral);
+    if (shelter_allowance) need_options.splice(shelter_referral_index, 1);
     else need_options.splice(1, 1);
 
+    let needs_count = getRandomInt(1, need_options.length);
     let needs: Array<IdentifiedNeed> = [];
     for (let i = 0; i < needs_count; ++i) {
         needs.push(need_options.splice(getRandomInt(0, need_options.length - 1), 1)[0]);
