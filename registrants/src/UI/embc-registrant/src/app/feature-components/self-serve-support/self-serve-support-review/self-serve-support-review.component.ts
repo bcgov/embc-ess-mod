@@ -10,13 +10,14 @@ import { DraftSupports, SelfServeShelterAllowanceSupport, SelfServeSupportType }
 import * as moment from 'moment';
 import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { ProfileDataService } from '../../profile/profile-data.service';
+import { MatButtonModule } from '@angular/material/button';
 
 export type StepType = 'supportDetails' | 'eTransfer';
 
 @Component({
   selector: 'app-self-serve-support-review',
   standalone: true,
-  imports: [MatFormFieldModule, MatCheckboxModule, MatCardModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatButtonModule, MatCheckboxModule, MatCardModule, ReactiveFormsModule],
   templateUrl: './self-serve-support-review.component.html',
   styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-review.component.scss']
 })
