@@ -1,5 +1,9 @@
-import * as faker from 'faker/locale/en_CA';
-import { PersonDetails, NeedsAssessment, InsuranceOption, NeedsAssessmentType, Pet, EvacuationFileHouseholdMember } from '../../api/responders/models';
+import { EvacuationFileHouseholdMember } from '../../api/responders/models/evacuation-file-household-member';
+import { InsuranceOption } from '../../api/responders/models/insurance-option';
+import { NeedsAssessment } from '../../api/responders/models/needs-assessment';
+import { NeedsAssessmentType } from '../../api/responders/models/needs-assessment-type';
+import { PersonDetails } from '../../api/responders/models/person-details';
+import { Pet } from '../../api/responders/models/pet';
 import { getRandomInt } from '../../utilities';
 import { generateHouseholdMember } from './household-member';
 import { generatePet } from './pet';
@@ -25,18 +29,9 @@ export function generateNeedsAssessment(registrantDetails: PersonDetails, regist
 
     return {
         id: null,
-        canProvideClothing: faker.datatype.boolean(),
-        canProvideFood: faker.datatype.boolean(),
-        canProvideIncidentals: faker.datatype.boolean(),
-        canProvideLodging: faker.datatype.boolean(),
-        canProvideTransportation: faker.datatype.boolean(),
-        householdMembers: householdMembers,
-        havePetsFood: faker.datatype.boolean(),
-        haveMedicalSupplies: faker.datatype.boolean(),
-        haveSpecialDiet: faker.datatype.boolean(),
-        specialDietDetails: "test",
         insurance: InsuranceOption.No,
+        householdMembers: householdMembers,
         pets: pets,
-        type: NeedsAssessmentType.Preliminary
+        type: NeedsAssessmentType.Preliminary,
     };
 }

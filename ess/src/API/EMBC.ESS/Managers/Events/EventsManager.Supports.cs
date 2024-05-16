@@ -32,7 +32,7 @@ public partial class EventsManager
 
         foreach (var support in cmd.Supports)
         {
-            support.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
+            support.CreatedBy = new TeamMember { Id = requestingUser.Id };
             support.CreatedOn = DateTime.UtcNow;
         }
 
@@ -64,7 +64,7 @@ public partial class EventsManager
 
         foreach (var referral in cmd.Supports)
         {
-            referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
+            referral.CreatedBy = new TeamMember { Id = requestingUser.Id };
             referral.CreatedOn = DateTime.UtcNow;
         }
 
@@ -80,34 +80,37 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(ProcessSelfServeSupportsCommand cmd)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
-        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileNumber} latest needs assessment doesn't have a valid eligibility check");
 
         var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(cmd.Supports, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
 
         var supports = ((GenerateSelfServeETransferSupportsResponse)await supportingEngine.Generate(
-            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, response.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, response.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.To.Value))).Supports;
         var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
         {
-            FileId = cmd.EvacuationFileId,
+            FileId = cmd.EvacuationFileNumber,
             Supports = supports
         });
         if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
+        // Create a needs assessment and associate with the task
+        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
+        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+
+        // Process the supports
         await supportingEngine.Process(new ProcessDigitalSupportsRequest
         {
-            FileId = cmd.EvacuationFileId,
+            FileId = cmd.EvacuationFileNumber,
             Supports = supports,
             RequestingUserId = null,
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
-   
-        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
-        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
 
-        bool emailSent = await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, file.PrimaryRegistrantUserId, supports);
+        await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, supports);
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
@@ -154,7 +157,7 @@ public partial class EventsManager
 
         //get requesting user
         if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-        var requestingUser = mapper.Map<Shared.Contracts.Events.TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).SingleOrDefault());
+        var requestingUser = mapper.Map<TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).SingleOrDefault());
         if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
         //load the file
@@ -216,7 +219,7 @@ public partial class EventsManager
             PrintRequest = new ReferralPrintRequest
             {
                 FileId = cmd.FileId,
-                SupportIds = new[] { cmd.SupportId },
+                SupportIds = [cmd.SupportId],
                 IncludeSummary = cmd.IncludeSummary,
                 RequestingUserId = requestingUser.Id,
                 Type = ReferralPrintType.Reprint,
@@ -334,14 +337,19 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(OptOutSelfServeCommand cmd)
     {
-        await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileId });
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (file.PrimaryRegistrantId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+
+        await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileNumber });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
-        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligible for self serve");
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
+        if (file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileNumber} is not eligible for self serve");
 
         var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskNumber, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
         if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskNumber);
@@ -373,13 +381,15 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task<string> Handle(CheckEligibileForSelfServeCommand cmd)
     {
-        var ct = CancellationToken.None;
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
-        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
+        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileNumber), default)).Eligibility;
 
         var response = await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
-            EvacuationFileNumber = cmd.EvacuationFileId,
+            EvacuationFileNumber = cmd.EvacuationFileNumber,
             Eligible = eligibilityResult.Eligible,
             TaskNumber = eligibilityResult.TaskNumber,
             HomeAddressReferenceId = eligibilityResult.HomeAddressReferenceId,
@@ -393,8 +403,9 @@ public partial class EventsManager
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
+        if (file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         var eligibility = file.NeedsAssessment.EligibilityCheck?.Eligible == true
             ? new SupportEligibility
@@ -415,62 +426,51 @@ public partial class EventsManager
         };
     }
 
-    private async Task<bool> SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, string primaryRegistrantUserId, IEnumerable<Shared.Contracts.Events.Support> supports)
+    private async System.Threading.Tasks.Task SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, IEnumerable<Shared.Contracts.Events.Support> supports)
     {
-        decimal totalAmount = 0, clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId })).Items.SingleOrDefault() ?? throw new InvalidOperationException($"registrants {primaryRegistrantId} not found");
+        decimal clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
 
         foreach (var item in supports)
         {
             switch (item)
             {
-            case Shared.Contracts.Events.ClothingSupport clothingSupport:
-                clothingAmount += clothingSupport.TotalAmount;
-                break;
-            case Shared.Contracts.Events.FoodGroceriesSupport groceriesSupport:
-                groceryAmount += groceriesSupport.TotalAmount;
-                break;
-            case Shared.Contracts.Events.FoodRestaurantSupport restaurantSupport:
-                restaurantAmount += restaurantSupport.TotalAmount;
-                break;
-            case Shared.Contracts.Events.IncidentalsSupport incidentalsSupport:
-                incidentalsAmount += incidentalsSupport.TotalAmount;
-                break;
-            case Shared.Contracts.Events.ShelterAllowanceSupport shelterSupport:
-                shelterAllowanceAmount += shelterSupport.TotalAmount;
-                break;
+                case Shared.Contracts.Events.ClothingSupport clothingSupport:
+                    clothingAmount += clothingSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.FoodGroceriesSupport groceriesSupport:
+                    groceryAmount += groceriesSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.FoodRestaurantSupport restaurantSupport:
+                    restaurantAmount += restaurantSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.IncidentalsSupport incidentalsSupport:
+                    incidentalsAmount += incidentalsSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.ShelterAllowanceSupport shelterSupport:
+                    shelterAllowanceAmount += shelterSupport.TotalAmount;
+                    break;
             }
         }
-        totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+        var totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
 
-        string email = "";
-        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId, UserId = primaryRegistrantUserId })).Items.SingleOrDefault();
-
-        if ((evacuee == null) || string.IsNullOrWhiteSpace(evacuee.Email))
-        {
-            email = eTransferDetails.ETransferEmail;
-        }
-        else
-            email = evacuee.Email;
-
-        if (!string.IsNullOrWhiteSpace(email))
-        {
-            await SendEmailNotification(
-                SubmissionTemplateType.ETransferConfirmation,
-                email: email,
-                name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: new[]
-                {
-                    KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
-                    KeyValuePair.Create("clothingAmount", (clothingAmount > 0) ? clothingAmount.ToString("0.00") : null),
-                    KeyValuePair.Create("incidentalsAmount", (incidentalsAmount > 0) ? incidentalsAmount.ToString("0.00") : null),
-                    KeyValuePair.Create("groceryAmount", (groceryAmount > 0) ? groceryAmount.ToString("0.00") : null),
-                    KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
-                    KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
-                    KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
-                    KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
-                });
-            return true;
-        }
-        return false;
+        await SendEmailNotification(
+            SubmissionTemplateType.ETransferConfirmation,
+            evacuee.Email ?? eTransferDetails.ContactEmail,
+            $"{evacuee.LastName}, {evacuee.FirstName}",
+            [
+                KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
+                KeyValuePair.Create("clothingAmount", (clothingAmount > 0) ? clothingAmount.ToString("0.00") : null),
+                KeyValuePair.Create("incidentalsAmount", (incidentalsAmount > 0) ? incidentalsAmount.ToString("0.00") : null),
+                KeyValuePair.Create("groceryAmount", (groceryAmount > 0) ? groceryAmount.ToString("0.00") : null),
+                KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
+                KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
+                KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
+                KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
+            ]);
     }
 }

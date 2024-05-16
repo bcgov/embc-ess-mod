@@ -4,28 +4,22 @@ using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Hosting;
 
-namespace EMBC.ESS.Managers.Events
+namespace EMBC.ESS.Managers.Events;
+
+public class PendingSupportsProcessingBackgroundTask(EventsManager eventsManager) : IBackgroundTask
 {
-    public class PendingSupportsProcessingBackgroundTask : IBackgroundTask
+    private readonly EventsManager eventsManager = eventsManager;
+
+    public string Schedule => "";
+
+    public int DegreeOfParallelism => 1;
+
+    public TimeSpan InitialDelay => TimeSpan.FromSeconds(30);
+
+    public TimeSpan InactivityTimeout => TimeSpan.FromSeconds(60);
+
+    public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        private readonly EventsManager eventsManager;
-
-        public string Schedule => "0 * * * * *";
-
-        public int DegreeOfParallelism => 1;
-
-        public TimeSpan InitialDelay => TimeSpan.FromSeconds(30);
-
-        public TimeSpan InactivityTimeout => TimeSpan.FromSeconds(60);
-
-        public PendingSupportsProcessingBackgroundTask(EventsManager eventsManager)
-        {
-            this.eventsManager = eventsManager;
-        }
-
-        public async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            await eventsManager.Handle(new ProcessPendingSupportsCommand());
-        }
+        await eventsManager.Handle(new ProcessPendingSupportsCommand());
     }
 }

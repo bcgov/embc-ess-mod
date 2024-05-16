@@ -6,7 +6,8 @@ import {
   EvacuationFile,
   EvacuationFileStatus,
   NeedsAssessment,
-  Support
+  Support,
+  SupportMethod
 } from 'src/app/core/api/models';
 import { EvacuationsService, ProfileService, SupportsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
@@ -159,12 +160,14 @@ export class EvacuationFileDataService {
       this.allSupportsSelfServe.next(false);
       return;
     }
-    essFileData.supports.forEach((item: Support) => {
-      if (item.isSelfServe !== true) {
+    for (let i = 0; i < essFileData.supports.length; i++) {
+      const item: Support = essFileData.supports[i];
+      if (item.isSelfServe !== true || item.method === SupportMethod.Referral) {
         this.allSupportsSelfServe.next(false);
         return;
       }
-    });
+    }
+
     this.allSupportsSelfServe.next(true);
   }
 
@@ -175,11 +178,18 @@ export class EvacuationFileDataService {
   public setHasMultipleActiveFiles(evacuationFiles: Array<EvacuationFileModel>): void {
     const totalActiveFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Active).length;
 
-    if (totalActiveFiles > 1) {
-      this.hasMultipleActiveFiles.next(true);
-    } else {
-      this.hasMultipleActiveFiles.next(false);
+    if (totalActiveFiles > 0) {
+      let essFileData = evacuationFiles.find((item) => item.status === EvacuationFileStatus.Active);
+      if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+        this.hasMultipleActiveFiles.next(false);
+        return;
+      }
+      if (essFileData.supports.length > 0) {
+        this.hasMultipleActiveFiles.next(true);
+        return;
+      }
     }
+    this.hasMultipleActiveFiles.next(false);
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
