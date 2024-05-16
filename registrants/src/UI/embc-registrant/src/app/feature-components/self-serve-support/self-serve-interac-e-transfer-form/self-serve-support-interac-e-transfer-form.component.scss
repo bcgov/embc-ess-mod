@@ -1,5 +1,7 @@
 .eTransfer-form mat-form-field {
-  width: 400px;
+  min-width: 240px;
+  max-width: 400px;
+  flex: 1;
 }
 
 .container-with-logo {
@@ -12,4 +14,10 @@
 .card-question {
   font-size: var(--size-2);
   margin-bottom: var(--size-2);
+}
+
+@media screen and (min-width: 600px) {
+  mat-form-field {
+    width: 400px;
+  }
 }

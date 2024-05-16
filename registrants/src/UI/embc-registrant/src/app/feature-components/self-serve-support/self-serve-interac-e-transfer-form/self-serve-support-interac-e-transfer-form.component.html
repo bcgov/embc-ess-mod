@@ -3,10 +3,18 @@
   <form class="eTransfer-form">
     <mat-card appearance="outlined">
       <mat-card-content>
+        <div style="display: flex; justify-content: space-between; width: 100%">
+          <p class="card-heading requiredField">Interac e-Transfer<sup>TM</sup> Details</p>
+          <img
+            width="100"
+            height="100"
+            src="../../../assets/images/interac-e-transfer-logo-without-text.png"
+            alt="Interac e-transfer Logo"
+          />
+        </div>
         <div style="display: flex; flex-direction: column; width: 100%">
           <div class="container-with-logo">
             <div>
-              <p class="card-heading requiredField">Interac e-Transfer<sup>TM</sup> Details</p>
               <div class="card-question">
                 <label>Interac e-Transfer <b>Recipient</b></label>
               </div>
@@ -25,15 +33,6 @@
                   <mat-error>e-Transfer Recipient is required</mat-error>
                 }
               </mat-form-field>
-            </div>
-            <div>
-              <img
-                style="padding: 50px"
-                width="200"
-                height="200"
-                src="../../../assets/images/interac-e-transfer-logo-without-text.png"
-                alt="Interac e-transfer Logo"
-              />
             </div>
           </div>
           <div class="card-question requiredField">How would you prefer to be <b>notified</b> of your transfer?</div>

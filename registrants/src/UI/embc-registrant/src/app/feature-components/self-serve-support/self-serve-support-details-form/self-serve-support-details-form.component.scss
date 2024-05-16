@@ -15,7 +15,7 @@ hr {
 }
 
 table {
-  min-width: 400px;
+  min-width: 240px;
 }
 
 th {
@@ -24,7 +24,7 @@ th {
 }
 
 td {
-  width: 150px;
+  min-width: 60px;
   word-break: break-word;
   padding: var(--size-1);
 }
@@ -35,8 +35,15 @@ tr.header-row {
 }
 
 .note-box {
-  flex: 1 0 300px;
+  flex: 0.3 0 240px;
   max-width: 400px;
   height: min-content;
   padding: var(--size-2);
+}
+
+.question-box {
+  flex: 1 0 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2);
 }
