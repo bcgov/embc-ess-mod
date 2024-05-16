@@ -255,7 +255,6 @@ namespace EMBC.ESS.Resources.Supports
 
             IQueryable<era_evacueesupport> supportsQuery = ctx.era_evacueesupports
               .Expand(s => s.era_EvacuationFileId)
-              .Expand(s => s.era_EvacuationFileId)
               .Expand(s => s.era_era_householdmember_era_evacueesupport)
               .Expand(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport)
               .Expand(s => s.era_era_etransfertransaction_era_evacueesuppo)
