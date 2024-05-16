@@ -582,7 +582,7 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Security Phrase</div>
+          <div class="col-md-6 card-heading">Security Word</div>
           @if (allowEdit) {
             <div class="col-md-2">
               <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
@@ -595,7 +595,7 @@
         <hr />
 
         <div class="row info-detail">
-          <div class="col-md-3">Security Phrase</div>
+          <div class="col-md-3">Security Word</div>
           <div class="col-md-3">
             {{ (formCreationService.secretForm$ | async)?.value?.secretPhrase }}
           </div>
