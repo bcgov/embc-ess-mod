@@ -279,6 +279,8 @@ export class SelfServeSupportFormComponent implements OnInit {
   copyETransferDetailsFormValue: any;
 
   gotoStepFromReview(step: StepType) {
+    this.reviewAcknowledgeForm.markAsUntouched();
+
     switch (step) {
       case 'supportDetails':
         this.copySupportDetailsFormValue = this.supportDraftForm.getRawValue();
