@@ -96,6 +96,11 @@ public partial class EventsManager
         });
         if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
+        // Create a needs assessment and associate with the task
+        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
+        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+
+        // Process the supports
         await supportingEngine.Process(new ProcessDigitalSupportsRequest
         {
             FileId = cmd.EvacuationFileNumber,
@@ -104,9 +109,6 @@ public partial class EventsManager
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
-
-        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
-        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
 
         await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, supports);
     }
