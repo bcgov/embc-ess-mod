@@ -280,7 +280,7 @@ export class SelfServeSupportFormComponent implements OnInit {
 
   gotoStepFromReview(step: StepType) {
     this.reviewAcknowledgeForm.markAsUntouched();
-    
+
     switch (step) {
       case 'supportDetails':
         this.copySupportDetailsFormValue = this.supportDraftForm.getRawValue();
