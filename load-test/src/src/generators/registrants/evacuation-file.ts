@@ -5,7 +5,7 @@ import { generateNeedsAssessment } from './needs-assessment';
 
 export function generateEvacuationFile(registrantDetails: PersonDetails, communities: Array<CommunityCode>, selfServe: boolean = false): EvacuationFile {
     return {
-        evacuatedFromAddress: generateAddress(communities),
+        evacuatedFromAddress: generateAddress(communities, selfServe),
         isRestricted: faker.datatype.boolean(),
         needsAssessment: generateNeedsAssessment(registrantDetails, selfServe),
         secretPhrase: "autotest-load",

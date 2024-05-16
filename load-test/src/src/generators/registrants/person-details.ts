@@ -19,7 +19,7 @@ export function generateNewPersonDetails(): PersonDetails {
 /** Generates consistent person details for the current vu and interation */
 export function getPersonDetailsForIteration(): PersonDetails {
     let genders = ['Female', 'Male', 'X'];
-    let month = (__VU % 12) + 1;
+    let month = ((__VU - 1) % 12) + 1;
     let year = 1900 + (__ITER % 99);
     let maxDay = getDaysInMonth(month, year);
     let day = (__ITER % maxDay) + 1;
