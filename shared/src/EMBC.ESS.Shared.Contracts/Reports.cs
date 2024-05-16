@@ -14,8 +14,9 @@ namespace EMBC.ESS.Shared.Contracts.Reports
 
     public class ReportQueryResult
     {
-        public string ContentType { get; set; }
-        public byte[] Content { get; set; }
+        public bool Ready { get; set; }
+        public string? ContentType { get; set; }
+        public byte[]? Content { get; set; }
     }
 
     public class RequestEvacueeReportCommand : Command

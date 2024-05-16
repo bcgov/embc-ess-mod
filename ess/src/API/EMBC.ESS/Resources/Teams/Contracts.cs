@@ -71,25 +71,7 @@ public class TeamMember
 
 public interface IUserRepository
 {
-    Task<UserQueryResponse> Query(UserQuery query, CancellationToken ct = default);
-
     Task RecordAccessAudit(AccessAuditEntry auditEntry, CancellationToken ct = default);
-}
-
-public record UserQuery
-{
-    public string ByBceidUserId { get; set; }
-}
-
-public record UserQueryResponse
-{
-    public IEnumerable<User> Items { get; set; } = [];
-}
-
-public record User
-{
-    public string Id { get; set; }
-    public string? OrgId { get; set; }
 }
 
 public record AccessAuditEntry
