@@ -68,12 +68,6 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                      var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
                      var userInfo = ctx.Principal.FindFirstValue("userInfo");
                      logger.LogDebug("{0}", userInfo);
-                 },
-                 OnAuthenticationFailed = async ctx =>
-                 {
-                     await Task.CompletedTask;
-                     var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                     logger.LogError(ctx.Exception, "JWT authantication failed");
                  }
              };
          })
