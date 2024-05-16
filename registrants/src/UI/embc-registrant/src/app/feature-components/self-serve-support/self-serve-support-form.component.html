@@ -68,7 +68,7 @@
                 class="button-p button-with-loader"
                 (click)="gotoETransfterStep(supportDraftForm)"
               >
-                Next - e-Transfer Details
+                Next - Transfer Details
                 @if (showButtonLoader) {
                   <app-loader
                     class="spinner"
@@ -85,7 +85,7 @@
         </div>
       </mat-step>
       <mat-step [stepControl]="eTransferDetailsForm">
-        <ng-template matStepLabel>e-Transfer Details</ng-template>
+        <ng-template matStepLabel>Transfer Details</ng-template>
         <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
 
         @if (eTransferDetailsForm) {
@@ -156,10 +156,18 @@
           </app-self-serve-support-review>
         }
         <div class="self-serve-support-actions-container">
-          <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
+          <button
+            type="button"
+            mat-button
+            class="button-s"
+            matStepperPrevious
+            (click)="reviewAcknowledgeForm.markAsUntouched()"
+          >
+            Go Back & Edit
+          </button>
           @if (draftSupports.items?.length > 0) {
             <button type="button" mat-button class="button-p button-with-loader" (click)="submit()">
-              Next- Submit
+              Next - Submit
               @if (showButtonLoader) {
                 <app-loader
                   class="spinner"

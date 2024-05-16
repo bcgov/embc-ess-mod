@@ -18,7 +18,7 @@ export type StepType = 'supportDetails' | 'eTransfer';
   standalone: true,
   imports: [MatFormFieldModule, MatCheckboxModule, MatCardModule, ReactiveFormsModule],
   templateUrl: './self-serve-support-review.component.html',
-  styleUrls: ['../self-serve-support-form.component.scss']
+  styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-review.component.scss']
 })
 export class SelfServeSupportReviewComponent {
   SelfServeSupportType = SelfServeSupportType;

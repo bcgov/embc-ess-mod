@@ -15,8 +15,8 @@
         @switch (support.type) {
           @case (SelfServeSupportType.ShelterAllowance) {
             <div style="display: flex">
-              <div style="width: 240px">Shelter Allowance</div>
-              <div style="width: 160px">
+              <div class="field-label">Shelter Allowance</div>
+              <div class="field-value">
                 <b>$ {{ supportDraftForm.controls.shelterAllowance.controls.totalAmount.value }}</b>
               </div>
             </div>
@@ -24,8 +24,8 @@
           @case (SelfServeSupportType.FoodGroceries) {
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
               <div style="display: flex">
-                <div style="width: 240px">Grocery</div>
-                <div style="width: 160px">
+                <div class="field-label">Grocery</div>
+                <div class="field-value">
                   <b>$ {{ supportDraftForm.controls.food.controls.groceries.controls.totalAmount.value }}</b>
                 </div>
               </div>
@@ -34,8 +34,8 @@
           @case (SelfServeSupportType.FoodRestaurant) {
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
               <div style="display: flex">
-                <div style="width: 240px">Restaurant</div>
-                <div style="width: 160px">
+                <div class="field-label">Restaurant</div>
+                <div class="field-value">
                   <b>$ {{ supportDraftForm.controls.food.controls.restaurant.controls.totalAmount.value }}</b>
                 </div>
               </div>
@@ -43,16 +43,16 @@
           }
           @case (SelfServeSupportType.Clothing) {
             <div style="display: flex">
-              <div style="width: 240px">Clothing</div>
-              <div style="width: 160px">
+              <div class="field-label">Clothing</div>
+              <div class="field-value">
                 <b>$ {{ supportDraftForm.controls.clothing.controls.totalAmount.value }}</b>
               </div>
             </div>
           }
           @case (SelfServeSupportType.Incidentals) {
             <div style="display: flex">
-              <div style="width: 240px">Incidentals</div>
-              <div style="width: 160px">
+              <div class="field-label">Incidentals</div>
+              <div class="field-value">
                 <b>$ {{ supportDraftForm.controls.incidents.controls.totalAmount.value }}</b>
               </div>
             </div>
@@ -61,14 +61,14 @@
       }
 
       <div style="display: flex">
-        <div style="width: 240px"><b>Total Amount</b></div>
-        <div style="width: 160px">
+        <div class="field-label"><b>Total Amount</b></div>
+        <div class="field-value">
           <b>$ {{ supportDraftForm.controls.totals.value }}</b>
         </div>
       </div>
 
       <div style="display: flex; justify-content: space-between">
-        <p class="card-heading">e-Transfer Recipient Details</p>
+        <p class="card-heading">Interac e-Transfer<sup>TM</sup> Recipient Details</p>
         <button class="edit-image" mat-icon-button aria-label="Edit" (click)="gotoStep.emit('eTransfer')">
           <img src="/assets/images/edit.svg" height="35" width="35" />
           <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -77,8 +77,8 @@
       <hr />
 
       <div style="display: flex">
-        <div style="width: 240px">e-Transfer Recipient:</div>
-        <div style="width: 160px">
+        <div class="field-label">Recipient:</div>
+        <div class="field-value">
           <b>{{ eTransferDetailsForm.controls.recipientName.value }}</b>
         </div>
       </div>
@@ -86,8 +86,8 @@
       @switch (eTransferDetailsForm.controls.notificationPreference.value) {
         @case (ETransferNotificationPreference.Email) {
           <div style="display: flex">
-            <div style="width: 240px">e-Transfer Notification:</div>
-            <div style="width: 160px">
+            <div class="field-label">Notification Preference:</div>
+            <div class="field-value">
               @if (eTransferDetailsForm.controls.useEmailOnFile.value) {
                 <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
               } @else {
@@ -98,8 +98,8 @@
         }
         @case (ETransferNotificationPreference.Mobile) {
           <div style="display: flex">
-            <div style="width: 240px">e-Transfer Notification:</div>
-            <div style="width: 160px">
+            <div class="field-label">e-Transfer Notification:</div>
+            <div class="field-value">
               @if (eTransferDetailsForm.controls.useMobileOnFile.value) {
                 <b> {{ profileDataService.getProfile().contactDetails.phone }}</b>
               } @else {
@@ -109,8 +109,8 @@
           </div>
           @if (!profileDataService.getProfile().contactDetails.email) {
             <div style="display: flex">
-              <div style="width: 240px">Contact Email Address</div>
-              <div style="width: 160px">
+              <div class="field-label">Contact Email Address</div>
+              <div class="field-value">
                 <b>{{ eTransferDetailsForm.controls.contactEmail.value }}</b>
               </div>
             </div>
@@ -118,8 +118,8 @@
         }
         @case (ETransferNotificationPreference.EmailAndMobile) {
           <div style="display: flex">
-            <div style="width: 240px">e-Transfer Notification:</div>
-            <div style="width: 160px">
+            <div class="field-label">e-Transfer Notification:</div>
+            <div class="field-value">
               @if (eTransferDetailsForm.controls.useMobileOnFile.value) {
                 <b> {{ profileDataService.getProfile().contactDetails.phone }}</b>
               } @else {
@@ -128,8 +128,8 @@
             </div>
           </div>
           <div style="display: flex">
-            <div style="width: 240px">&nbsp;</div>
-            <div style="width: 160px">
+            <div class="field-label">&nbsp;</div>
+            <div class="field-value">
               @if (eTransferDetailsForm.controls.useEmailOnFile.value) {
                 <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
               } @else {
@@ -189,6 +189,8 @@
 
       <div
         style="
+          display: flex;
+          flex-wrap: wrap;
           text-align: center;
           border: 4px solid orange;
           padding: var(--size-2);
@@ -197,12 +199,25 @@
           font-size: 20px;
         "
       >
-        <p>
-          If you haven't set up auto-deposit for Interac e-Transfer, the security answer for the e-transfer will be your
-          ESS File Number, which is <b>{{ essFileId }}</b
-          >.
-        </p>
-        <p>You can find your ESS File number under the Current Events tab of your ERA profile.</p>
+        <div
+          style="display: flex; flex-direction: column; flex: 1 0 160px; align-items: center; justify-content: center"
+        >
+          <p>
+            If you haven't set up Autodeposit for Interac e-Transfer, the security answer for the e-transfer will be
+            your ESS File Number, which is <b>{{ essFileId }}</b
+            >.
+          </p>
+          <p>You can find your ESS File number under the Current Events tab of your ERA profile.</p>
+        </div>
+        <div>
+          <img
+            style="padding: 50px"
+            width="200"
+            height="200"
+            src="../../../assets/images/interac-e-transfer-logo-without-text.png"
+            alt="Interac e-transfer Logo"
+          />
+        </div>
       </div>
     </div>
   </mat-card-content>

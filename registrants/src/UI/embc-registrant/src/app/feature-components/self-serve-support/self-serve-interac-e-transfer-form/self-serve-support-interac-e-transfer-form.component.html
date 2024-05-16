@@ -6,9 +6,9 @@
         <div style="display: flex; flex-direction: column; width: 100%">
           <div class="container-with-logo">
             <div>
-              <p class="card-heading requiredField">e-Transfer Details</p>
+              <p class="card-heading requiredField">Interac e-Transfer<sup>TM</sup> Details</p>
               <div class="card-question">
-                <label> e-Transfer <b>Recipient</b></label>
+                <label>Interac e-Transfer <b>Recipient</b></label>
               </div>
               <mat-form-field>
                 <mat-label>Full Name</mat-label>
@@ -27,10 +27,16 @@
               </mat-form-field>
             </div>
             <div>
-              <img src="../../../assets/images/interac-e-transfer-logo.png" alt="Interac e-transfer Logo" />
+              <img
+                style="padding: 50px"
+                width="200"
+                height="200"
+                src="../../../assets/images/interac-e-transfer-logo-without-text.png"
+                alt="Interac e-transfer Logo"
+              />
             </div>
           </div>
-          <div class="card-question requiredField">How would you prefer to be <b>notified</b> of your e-Transfer?</div>
+          <div class="card-question requiredField">How would you prefer to be <b>notified</b> of your transfer?</div>
           <mat-form-field appearance="outline">
             <mat-select
               [formControl]="eTransferDetailsForm.controls.notificationPreference"

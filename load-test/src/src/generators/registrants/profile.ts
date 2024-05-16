@@ -4,7 +4,7 @@ import { generateAddress } from './address';
 import { getPersonDetailsForIteration } from './person-details';
 import { generateSecurityQuestions } from './security-question';
 
-export function generateProfile(communities: Array<CommunityCode>, questions: string[]): Profile {
+export function generateProfile(communities: Array<CommunityCode>, questions: string[], selfServe: boolean = false): Profile {
     return {
         contactDetails: {
             email: "autotest." + faker.internet.email(),
@@ -12,8 +12,8 @@ export function generateProfile(communities: Array<CommunityCode>, questions: st
         },
         isMailingAddressSameAsPrimaryAddress: false,
         personalDetails: getPersonDetailsForIteration(),
-        primaryAddress: generateAddress(communities),
-        mailingAddress: generateAddress(communities),
+        primaryAddress: generateAddress(communities, selfServe),
+        mailingAddress: generateAddress(communities, selfServe),
         restrictedAccess: faker.datatype.boolean(),
         securityQuestions: generateSecurityQuestions(questions),
     };
