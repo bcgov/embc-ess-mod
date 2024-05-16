@@ -423,10 +423,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact]
         public async Task CheckEligibility_Created()
         {
-            var eligibilityId = await manager.Handle(new CheckEligibileForSelfServeCommand { EvacuationFileId = TestData.EvacuationFileId });
+            var eligibilityId = await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = TestData.ContactUserId, EvacuationFileNumber = TestData.EvacuationFileId });
             eligibilityId.ShouldNotBeNull();
 
-            var eligibility = await manager.Handle(new EligibilityCheckQuery { EvacuationFileId = TestData.EvacuationFileId });
+            var eligibility = await manager.Handle(new EligibilityCheckQuery { RegistrantUserId = TestData.ContactUserId, EvacuationFileNumber = TestData.EvacuationFileId });
             eligibility.ShouldNotBeNull();
         }
 
@@ -441,7 +441,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5);
             file.NeedsAssessment.Needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
             file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-            await manager.Handle(new CheckEligibileForSelfServeCommand { EvacuationFileId = file.Id });
+            await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
             file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
 
             var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
@@ -450,7 +450,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var supportDays = (new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) });
             var etransferDetails = new ETransferDetails
             {
-                ContactEmail = registrant.Email,
+                ContactEmail = registrant.Email ?? "test@test.gov.bc.ca",
                 ETransferEmail = registrant.Email,
                 ETransferMobile = registrant.Phone,
                 RecipientName = $"{registrant.FirstName} {registrant.LastName}"
@@ -468,7 +468,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 Supports = supports,
                 ETransferDetails = etransferDetails,
-                EvacuationFileId = file.Id,
+                EvacuationFileNumber = file.Id,
             });
 
             var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
