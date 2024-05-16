@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DraftSupportForm,
   SelfServeClothingSupportForm,
@@ -27,11 +29,12 @@ import {
   SupportDayMeals
 } from 'src/app/core/api/models';
 import * as moment from 'moment';
+import { SelfServeSupportRestaurantMealsInfoDialogComponent } from '../self-serve-support-restaurant-meals-info-dialog/self-serve-support-restaurant-meals-info-dialog.component';
 
 @Component({
   selector: 'app-self-serve-support-details-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatCheckboxModule, MatCardModule, MatRadioModule, MatFormFieldModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCheckboxModule, MatCardModule, MatRadioModule, MatFormFieldModule],
   templateUrl: './self-serve-support-details-form.component.html',
   styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-details-form.component.scss']
 })
@@ -86,6 +89,8 @@ export class SelfServeSupportDetailsFormComponent {
   get draftSupports() {
     return this._draftSupports;
   }
+
+  constructor(private dialog: MatDialog) {}
 
   private createSelfServeShelterAllowanceSupportForm(
     selfServeSupport: SelfServeShelterAllowanceSupport,
@@ -302,5 +307,15 @@ export class SelfServeSupportDetailsFormComponent {
   getPersonName(id: string) {
     const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
     return `${personDetails?.firstName ?? ''}`;
+  }
+
+  openRestaurantMealsInfoDialog() {
+    this.dialog
+      .open(SelfServeSupportRestaurantMealsInfoDialogComponent, {
+        data: {},
+        maxWidth: '400px'
+      })
+      .afterClosed()
+      .subscribe();
   }
 }
