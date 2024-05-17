@@ -181,7 +181,6 @@ public record OidcOptions
     public string Idp { get; set; }
 }
 
-[KnownType(typeof(CommunityCode))]
 public record Code
 {
     public string Type { get; set; }
@@ -191,10 +190,15 @@ public record Code
     public bool IsActive { get; set; }
 }
 
-public record CommunityCode : Code
+public record CommunityCode
 {
     public CommunityType CommunityType { get; set; }
     public string DistrictName { get; set; }
+    public string Value { get; set; }
+    public string Description { get; set; }
+    public bool IsActive { get; set; }
+    public string StateProvinceCode { get; set; }
+    public string CountryCode { get; set; }
 }
 
 public record OutageInformation
@@ -271,12 +275,10 @@ public class ConfigurationMapping : Profile
             ;
 
         CreateMap<Community, CommunityCode>()
-            .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(Community)))
             .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
             .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
             .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
             .ForMember(d => d.CommunityType, opts => opts.MapFrom(s => s.Type))
-            .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.StateProvinceCode, Type = nameof(StateProvince), ParentCode = new Code { Value = s.CountryCode, Type = nameof(Country) } }))
             ;
 
         CreateMap<ESS.Shared.Contracts.Metadata.OutageInformation, OutageInformation>()
