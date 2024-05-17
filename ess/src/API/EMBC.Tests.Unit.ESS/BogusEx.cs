@@ -8,7 +8,7 @@ namespace EMBC.Tests.Unit.ESS;
 
 public static class BogusExtensions
 {
-    public static Faker<EvacuationFile> WithFileRules(this Faker<EvacuationFile> faker, RegistrantProfile? primaryRegistrant = null)
+    public static Faker<EvacuationFile> WithFileRules(this Faker<EvacuationFile> faker, RegistrantProfile? primaryRegistrant = null, int minNumberOfHoldholdMembers = 0)
     {
         if (primaryRegistrant == null) primaryRegistrant = new Faker<RegistrantProfile>("en_CA").WithRegistrantRules().Generate();
         return faker
@@ -17,7 +17,7 @@ public static class BogusExtensions
             .RuleFor(f => f.HouseholdMembers, f =>
             {
                 var hmFaker = new Faker<HouseholdMember>("en_CA");
-                return hmFaker.WithHouseholdMemberRules().GenerateBetween(0, 19).Prepend(hmFaker.WithHouseholdMemberRules(primaryRegistrant).Generate());
+                return hmFaker.WithHouseholdMemberRules().GenerateBetween(Math.Min(minNumberOfHoldholdMembers, 19), 19).Prepend(hmFaker.WithHouseholdMemberRules(primaryRegistrant).Generate());
             })
             .RuleFor(f => f.NeedsAssessment, (f, o) => new NeedsAssessment
             {

@@ -16,7 +16,8 @@ import { NeedsAssessmentService } from '../../needs-assessment/needs-assessment.
   selector: 'app-self-serve-confirm',
   templateUrl: './self-serve-support-confirm.component.html',
   imports: [MatCardModule, MatButtonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  styleUrls: ['../self-serve-support-form.component.scss']
 })
 export class SelfServeSupportConfirmComponent {
   essFileId = this.needsAssessmentService.getVerifiedEvacuationFileNo();

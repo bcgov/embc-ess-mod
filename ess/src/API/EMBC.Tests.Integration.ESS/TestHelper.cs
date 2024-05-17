@@ -12,9 +12,9 @@ namespace EMBC.Tests.Integration.ESS
     {
         public static string GenerateNewUniqueId(string prefix) => prefix + Guid.NewGuid().ToString().Substring(0, 4);
 
-        public static EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant, string? taskNumber)
+        public static EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant, string? taskNumber, int minNumberOfHoldholdMembers = 0)
         {
-            var file = new Faker<EvacuationFile>("en_CA").WithFileRules(registrant).Generate();
+            var file = new Faker<EvacuationFile>("en_CA").WithFileRules(registrant, minNumberOfHoldholdMembers).Generate();
             file.Id = null;
             file.RelatedTask = null;
             if (taskNumber != null) file.RelatedTask = new IncidentTask { Id = taskNumber };
