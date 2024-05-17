@@ -1,21 +1,17 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Reflection;
-using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Telemetry;
-using IdentityModel.AspNetCore.OAuth2Introspection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -50,7 +46,8 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
              configuration.GetSection("auth:jwt").Bind(options);
              options.TokenValidationParameters = new TokenValidationParameters
              {
-                 ValidateAudience = false
+                 ValidateAudience = false,
+                 NameClaimType = JwtRegisteredClaimNames.Sub,
              };
 
              // if token does not contain a dot, it is a reference token, forward to introspection auth scheme
@@ -60,39 +57,14 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                  if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ")) return null;
                  return authHeader.Substring("Bearer ".Length).Trim().Contains('.') ? null : "introspection";
              };
-             options.Events = new JwtBearerEvents
-             {
-                 OnTokenValidated = async ctx =>
-                 {
-                     await Task.CompletedTask;
-                     var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                     var userInfo = ctx.Principal.FindFirstValue("userInfo");
-                     logger.LogDebug("{0}", userInfo);
-                 }
-             };
          })
          //reference tokens handling
          .AddOAuth2Introspection("introspection", options =>
          {
              options.EnableCaching = true;
              options.CacheDuration = TimeSpan.FromMinutes(20);
+             options.NameClaimType = JwtRegisteredClaimNames.Sub;
              configuration.GetSection("auth:introspection").Bind(options);
-             options.Events = new OAuth2IntrospectionEvents
-             {
-                 OnTokenValidated = async ctx =>
-                 {
-                     await Task.CompletedTask;
-                     var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<OAuth2IntrospectionEvents>();
-                     var userInfo = ctx.Principal?.FindFirst("userInfo");
-                     logger.LogDebug("{0}", userInfo);
-                 },
-                 OnAuthenticationFailed = async ctx =>
-                 {
-                     await Task.CompletedTask;
-                     var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                     logger.LogError(ctx.Result?.Failure, "Introspection authantication failed");
-                 }
-             };
          });
 
         services.AddAuthorization(options =>

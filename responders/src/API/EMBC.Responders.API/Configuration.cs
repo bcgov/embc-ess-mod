@@ -66,6 +66,7 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                 ClockSkew = TimeSpan.FromSeconds(60),
                 ValidateActor = true,
                 ValidateIssuerSigningKey = true,
+                NameClaimType = "bceid_username"
             };
 
             configurationServices.Configuration.GetSection("jwt").Bind(options);
