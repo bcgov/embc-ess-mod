@@ -2,7 +2,7 @@
   <mat-toolbar class="bg-primary-nav header-toolbar">
     <mat-toolbar-row>
       <div class="row row-align">
-        <div class="col-md-2">
+        <div class="col-sm-12 col-md-2">
           <a (click)="homeButton()">
             <img
               class="img-fluid d-none d-md-block"
@@ -21,16 +21,16 @@
           </a>
         </div>
 
-        <div class="col-md-1 divider-col">
+        <div class="col-md-1 d-none d-md-block divider-col">
           <div class="divider"></div>
         </div>
 
-        <div class="col-md-5 app-heading">
+        <div class="col-sm-12 col-md-5 app-heading">
           <span class="heading-text1">Evacuee Registration & Assistance</span>
           <span class="heading-text2">(ERA)</span>
         </div>
 
-        <div class="col-md-4 menu-responsive">
+        <div class="col-sm-12 col-md-4">
           @if (
             showLoginMatMenu &&
             (formCreationService.personalDetailsForm$ | async)?.value?.lastName &&
