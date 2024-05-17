@@ -77,7 +77,7 @@
 </div>
 <div class="container" style="padding-bottom: 50px">
   <app-alert></app-alert>
-  <nav mat-tab-nav-bar [tabPanel]="tabPanel" dynamicHeight>
+  <nav mat-tab-nav-bar mat-stretch-tabs="false" [tabPanel]="tabPanel" dynamicHeight>
     @for (tabItem of tabs; track tabItem) {
       <a mat-tab-link [routerLink]="tabItem.route" routerLinkActive="active-tab">
         <img class="inactive-curr" [src]="tabItem.inactiveImage" height="15" width="15" />

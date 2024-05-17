@@ -1,59 +1,61 @@
-table {
-  width: 100%;
-}
+:host {
+  table {
+    width: 100%;
+  }
 
-th {
-  font-size: 16px;
-  background-color: rgba(113, 113, 113, 1);
-  color: white;
-}
+  th {
+    font-size: 16px;
+    background-color: rgba(113, 113, 113, 1);
+    color: white;
+  }
 
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
 
-tr:hover {
-  background-color: #e1e1e1;
-  cursor: pointer;
-}
+  tr:hover {
+    background-color: #e1e1e1;
+    cursor: pointer;
+  }
 
-.active {
-  color: #3c9d0f;
-}
-.draft {
-  color: #f28200;
-}
-.void {
-  color: #696969;
-}
-.expired {
-  color: rgba(201, 0, 0, 1);
-}
-.pending-approval {
-  color: #1eaeaa;
-}
-.under-review {
-  color: #1eaeaa;
-}
-.approved {
-  color: #1f00b5;
-}
-.paid {
-  color: #169bd5;
-}
-.cancelled {
-  color: #db1087;
-}
-.warning {
-  color: red;
-}
+  .active {
+    color: #3c9d0f;
+  }
+  .draft {
+    color: #f28200;
+  }
+  .void {
+    color: #696969;
+  }
+  .expired {
+    color: rgba(201, 0, 0, 1);
+  }
+  .pending-approval {
+    color: #1eaeaa;
+  }
+  .under-review {
+    color: #1eaeaa;
+  }
+  .approved {
+    color: #1f00b5;
+  }
+  .paid {
+    color: #169bd5;
+  }
+  .cancelled {
+    color: #db1087;
+  }
+  .warning {
+    color: red;
+  }
 
-th {
-  font-size: 16px !important;
-  background-color: rgba(113, 113, 113, 1);
-  color: white !important;
-}
+  th {
+    font-size: 16px !important;
+    background-color: rgba(113, 113, 113, 1);
+    color: white !important;
+  }
 
-::ng-deep .arrow-color .mat-sort-header-arrow {
-  color: #ffff !important;
+  ::ng-deep .arrow-color .mat-sort-header-arrow {
+    color: #ffff !important;
+  }
 }

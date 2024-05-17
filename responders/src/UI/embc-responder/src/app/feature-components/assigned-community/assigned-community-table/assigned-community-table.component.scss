@@ -1,41 +1,43 @@
-table {
-  width: 100%;
-}
+:host {
+  table {
+    width: 100%;
+  }
 
-th {
-  font-size: 16px !important;
-  background-color: rgba(113, 113, 113, 1);
-  color: white !important;
-}
+  th {
+    font-size: 16px !important;
+    background-color: rgba(113, 113, 113, 1);
+    color: white !important;
+  }
 
-::ng-deep .arrow-color .mat-sort-header-arrow {
-  color: #ffff !important;
-}
+  ::ng-deep .arrow-color .mat-sort-header-arrow {
+    color: #ffff !important;
+  }
 
-.tooltip-red {
-  background: #b71c1c !important;
-  font-size: 14px;
-}
+  .tooltip-red {
+    background: #b71c1c !important;
+    font-size: 14px;
+  }
 
-/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-.mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-bar {
-  background-color: rgba(37, 168, 0, 1) !important;
-}
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  .mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: rgba(37, 168, 0, 1) !important;
+  }
 
-/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-.mat-slide-toggle-bar {
-  background-color: rgba(210, 0, 0, 1) !important;
-}
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  .mat-slide-toggle-bar {
+    background-color: rgba(210, 0, 0, 1) !important;
+  }
 
-/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
-.mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-thumb {
-  background-color: white !important;
-}
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  .mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: white !important;
+  }
 
-.active-style {
-  color: rgba(37, 168, 0, 1) !important;
-}
+  .active-style {
+    color: rgba(37, 168, 0, 1) !important;
+  }
 
-.inactive-style {
-  color: rgba(210, 0, 0, 1) !important;
+  .inactive-style {
+    color: rgba(210, 0, 0, 1) !important;
+  }
 }

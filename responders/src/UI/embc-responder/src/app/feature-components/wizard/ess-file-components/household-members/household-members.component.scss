@@ -1,277 +1,279 @@
-.content-container {
-  padding-top: 24px;
-  padding-bottom: 24px;
-}
-
-.tab-subtitle {
-  font-size: 21px;
-  color: #234075;
-}
-
-.responder-instruction {
-  background-color: rgba(35, 64, 117, 1);
-  color: white;
-  text-align: center;
-  padding: 1em;
-}
-
-.no-margin {
-  margin: 0;
-}
-
-.notes {
-  color: #797979;
-}
-
-.primary-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
-
-.cancel-button {
-  float: right;
-  width: 30%;
-}
-
-.family-button {
-  float: left;
-  border: 2px solid rgba(35, 64, 117, 1) !important;
-  color: rgba(35, 64, 117, 1);
-  background-color: #ffffff !important;
-  font-size: 16px;
-  height: 55px;
-}
-
-.family-button:hover {
-  color: white;
-  background-color: rgba(35, 64, 117, 1) !important;
-}
-
-.save-button {
-  @extend .family-button;
-  width: 30%;
-}
-
-.add-members {
-  margin: 20px 0px;
-}
-
-.table-header {
-  background-color: rgba(113, 113, 113, 1) !important;
-}
-
-.header-cell {
-  color: white !important;
-  font-size: 15px;
-  padding-left: 10px !important;
-}
-
-.table-outline {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin-bottom: 18px;
-}
-
-::ng-deep th.mat-mdc-header-cell,
-td.mat-mdc-cell,
-td.mat-mdc-footer-cell {
-  border-bottom-width: 0px !important;
-  border-bottom-style: none !important;
-}
-
-/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
-::ng-deep .mat-checkbox-inner-container {
-  background-color: white;
-}
-
-::ng-deep mat-row,
-mat-header-row,
-mat-footer-row {
-  align-items: inherit !important;
-}
-
-mat-row:nth-child(even) {
-  background-color: rgb(242, 242, 242);
-}
-
-.selection-header {
-  padding-top: 20px;
-}
-
-.cell-selection {
-  padding-top: 25px;
-}
-
-.cell-member-details {
-  flex: 1 0 60%;
-  display: block;
-  padding-top: 20px;
-}
-
-.cell-button {
-  flex: 0 0 160px;
-}
-
-.table-members-details {
-  width: 100%;
-  display: table-cell;
-  vertical-align: middle;
-  padding: 0px 0px 20px 0px;
-
-  th {
-    padding-right: 20px;
-    text-indent: 20px;
-    font-weight: 400;
+:host {
+  .content-container {
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
 
-  .right-tr {
-    padding-left: 5vw;
-  }
-}
-
-.mobile-table-members {
-  @extend .table-members-details;
-  display: none;
-}
-
-.member-name {
-  display: contents;
-  font-size: 18px;
-  color: #234075;
-  font-weight: 700;
-}
-
-.main-applicant::after {
-  content: '  (Main Applicant)';
-  font-weight: 400;
-}
-
-.next {
-  float: right;
-  width: 40%;
-}
-
-.back {
-  width: 40%;
-}
-
-.mobile-label {
-  display: none;
-}
-
-.edit-image img:last-child {
-  display: none;
-}
-
-.edit-image:hover img:last-child {
-  display: block;
-}
-
-.edit-image:hover img:first-child {
-  display: none;
-}
-
-.delete-image img:last-child {
-  display: none;
-}
-
-.delete-image:hover img:last-child {
-  display: block;
-}
-
-.delete-image:hover img:first-child {
-  display: none;
-}
-
-.tips-info {
-  color: white;
-  padding: 8px;
-  margin-top: 20px !important;
-}
-
-.tips-heading {
-  color: white;
-  font-size: 21px;
-  margin-left: 5px;
-}
-
-.tips-card {
-  background-color: rgba(35, 64, 117, 1);
-}
-
-.description-div {
-  padding-left: 0px;
-  padding-bottom: 20px;
-}
-
-.duplicate-warning {
-  color: #f44336;
-  font-size: 75%;
-  margin-left: 10px;
-  margin-bottom: 20px;
-}
-
-.break-margin {
-  margin-top: 10px;
-  margin-bottom: 30px;
-}
-
-@media (max-width: 1400px) {
-  .cell-member-details {
-    flex: 0 0 70%;
+  .tab-subtitle {
+    font-size: 21px;
+    color: #234075;
   }
 
-  .cell-button {
-    flex: 0 0 15%;
-  }
-}
-
-@media (max-width: 1360px) {
-  .table-members-details {
-    display: none;
+  .responder-instruction {
+    background-color: rgba(35, 64, 117, 1);
+    color: white;
+    text-align: center;
+    padding: 1em;
   }
 
-  .mobile-table-members {
-    display: block;
-
-    td {
-      padding-right: 10px;
-      text-indent: 10px;
-      overflow-wrap: anywhere;
-      word-break: break-all;
-    }
+  .no-margin {
+    margin: 0;
   }
 
-  .member-name {
-    overflow-wrap: anywhere;
-    word-break: break-all;
+  .notes {
+    color: #797979;
   }
 
-  .cell-button {
-    display: none;
+  .primary-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
   }
-}
 
-.button-justify {
-  justify-content: start;
-  padding-bottom: 20px;
-}
-
-@media (max-width: 920px) {
   .cancel-button {
-    width: 100%;
-    margin-bottom: 10px;
+    float: right;
+    width: 30%;
+  }
+
+  .family-button {
+    float: left;
+    border: 2px solid rgba(35, 64, 117, 1) !important;
+    color: rgba(35, 64, 117, 1);
+    background-color: #ffffff !important;
+    font-size: 16px;
+    height: 55px;
+  }
+
+  .family-button:hover {
+    color: white;
+    background-color: rgba(35, 64, 117, 1) !important;
   }
 
   .save-button {
-    width: 100% !important;
+    @extend .family-button;
+    width: 30%;
   }
 
-  tr {
-    display: grid;
+  .add-members {
+    margin: 20px 0px;
   }
 
-  td {
-    padding-left: 10px;
+  .table-header {
+    background-color: rgba(113, 113, 113, 1) !important;
+  }
+
+  .header-cell {
+    color: white !important;
+    font-size: 15px;
+    padding-left: 10px !important;
+  }
+
+  .table-outline {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    margin-bottom: 18px;
+  }
+
+  ::ng-deep th.mat-mdc-header-cell,
+  td.mat-mdc-cell,
+  td.mat-mdc-footer-cell {
+    border-bottom-width: 0px !important;
+    border-bottom-style: none !important;
+  }
+
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
+  ::ng-deep .mat-checkbox-inner-container {
+    background-color: white;
+  }
+
+  ::ng-deep mat-row,
+  mat-header-row,
+  mat-footer-row {
+    align-items: inherit !important;
+  }
+
+  mat-row:nth-child(even) {
+    background-color: rgb(242, 242, 242);
+  }
+
+  .selection-header {
+    padding-top: 20px;
+  }
+
+  .cell-selection {
+    padding-top: 25px;
+  }
+
+  .cell-member-details {
+    flex: 1 0 60%;
+    display: block;
+    padding-top: 20px;
+  }
+
+  .cell-button {
+    flex: 0 0 160px;
+  }
+
+  .table-members-details {
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0px 0px 20px 0px;
+
+    th {
+      padding-right: 20px;
+      text-indent: 20px;
+      font-weight: 400;
+    }
+
+    .right-tr {
+      padding-left: 5vw;
+    }
+  }
+
+  .mobile-table-members {
+    @extend .table-members-details;
+    display: none;
+  }
+
+  .member-name {
+    display: contents;
+    font-size: 18px;
+    color: #234075;
+    font-weight: 700;
+  }
+
+  .main-applicant::after {
+    content: '  (Main Applicant)';
+    font-weight: 400;
+  }
+
+  .next {
+    float: right;
+    width: 40%;
+  }
+
+  .back {
+    width: 40%;
+  }
+
+  .mobile-label {
+    display: none;
+  }
+
+  .edit-image img:last-child {
+    display: none;
+  }
+
+  .edit-image:hover img:last-child {
+    display: block;
+  }
+
+  .edit-image:hover img:first-child {
+    display: none;
+  }
+
+  .delete-image img:last-child {
+    display: none;
+  }
+
+  .delete-image:hover img:last-child {
+    display: block;
+  }
+
+  .delete-image:hover img:first-child {
+    display: none;
+  }
+
+  .tips-info {
+    color: white;
+    padding: 8px;
+    margin-top: 20px !important;
+  }
+
+  .tips-heading {
+    color: white;
+    font-size: 21px;
+    margin-left: 5px;
+  }
+
+  .tips-card {
+    background-color: rgba(35, 64, 117, 1);
+  }
+
+  .description-div {
+    padding-left: 0px;
+    padding-bottom: 20px;
+  }
+
+  .duplicate-warning {
+    color: #f44336;
+    font-size: 75%;
+    margin-left: 10px;
+    margin-bottom: 20px;
+  }
+
+  .break-margin {
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 1400px) {
+    .cell-member-details {
+      flex: 0 0 70%;
+    }
+
+    .cell-button {
+      flex: 0 0 15%;
+    }
+  }
+
+  @media (max-width: 1360px) {
+    .table-members-details {
+      display: none;
+    }
+
+    .mobile-table-members {
+      display: block;
+
+      td {
+        padding-right: 10px;
+        text-indent: 10px;
+        overflow-wrap: anywhere;
+        word-break: break-all;
+      }
+    }
+
+    .member-name {
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    }
+
+    .cell-button {
+      display: none;
+    }
+  }
+
+  .button-justify {
+    justify-content: start;
+    padding-bottom: 20px;
+  }
+
+  @media (max-width: 920px) {
+    .cancel-button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .save-button {
+      width: 100% !important;
+    }
+
+    tr {
+      display: grid;
+    }
+
+    td {
+      padding-left: 10px;
+    }
   }
 }

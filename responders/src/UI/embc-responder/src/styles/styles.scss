@@ -379,13 +379,21 @@ mat-form-field {
   }
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-.mat-tab-label,
+.mat-mdc-tab-nav-bar .mat-mdc-tab-link-container {
+  --mat-tab-header-divider-height: 1px;
+  --mat-tab-header-divider-color: rgba(221, 221, 221, 1);
+}
+
+.mat-mdc-tab-label,
 .mat-mdc-tab-link {
+  --mat-tab-header-label-text-size: 16px;
+  --mat-tab-header-label-text-tracking: normal;
+
   color: #333333 !important;
   font-size: 16px;
   background-color: rgba(221, 221, 221, 1) !important;
   text-decoration: none;
+  letter-spacing: normal;
 }
 
 .mat-mdc-tab-group.mat-primary .mat-ink-bar,

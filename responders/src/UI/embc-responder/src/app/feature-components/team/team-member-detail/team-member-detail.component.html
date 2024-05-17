@@ -71,13 +71,13 @@
       <br />
 
       <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-2">
           @if (hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4') {
             <button class="button-s" mat-button (click)="deleteUser()">Delete User</button>
           }
         </div>
 
-        <div class="col-md-1">
+        <div class="col-md-2">
           @if (isEditAllowed(teamMember)) {
             <button class="button-p" mat-button (click)="editUser()">Edit User Details</button>
           }
