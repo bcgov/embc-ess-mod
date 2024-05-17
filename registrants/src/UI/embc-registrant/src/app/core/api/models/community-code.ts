@@ -1,8 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Code } from '../models/code';
 import { CommunityType } from '../models/community-type';
-export type CommunityCode = Code & {
+export interface CommunityCode {
   communityType?: CommunityType;
+  countryCode?: string | null;
+  description?: string | null;
   districtName?: string | null;
-};
+  isActive?: boolean;
+  stateProvinceCode?: string | null;
+  value?: string | null;
+}
