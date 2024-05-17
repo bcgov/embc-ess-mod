@@ -431,18 +431,28 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
+        public async Task DraftSelfServeSupport_File_Returned()
+        {
+            var (file, registrant) = await CreateTestSubjects();
+
+            var response = await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
+            response.Items.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task DraftSelfServeSupport_Changes_Returned()
+        {
+            var (file, registrant) = await CreateTestSubjects();
+
+            var draftSupports = (await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id })).Items;
+            var response = await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id, Items = draftSupports });
+            response.Items.ShouldNotBeEmpty();
+        }
+
+        [Fact]
         public async Task ProcessSelfServeSupports_Supports_SupportsCreated()
         {
-            var registrant = TestHelper.CreateRegistrantProfile();
-            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
-            registrant.Id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
-
-            var file = CreateNewTestEvacuationFile(registrant);
-            file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5);
-            file.NeedsAssessment.Needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
-            file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-            await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
-            file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+            var (file, registrant) = await CreateTestSubjects();
 
             var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             var fromDay = DateOnly.FromDateTime(from);
@@ -473,6 +483,22 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
             updatedFile.Supports.Count().ShouldBe(supports.Length);
+        }
+
+        private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects()
+        {
+            var registrant = TestHelper.CreateRegistrantProfile();
+            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
+            registrant.Id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var file = CreateNewTestEvacuationFile(registrant);
+            file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5);
+            file.NeedsAssessment.Needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+            file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
+            file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+
+            return (file, registrant);
         }
     }
 }

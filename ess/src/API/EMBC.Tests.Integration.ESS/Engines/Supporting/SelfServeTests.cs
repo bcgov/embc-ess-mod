@@ -117,10 +117,10 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     public async Task GenerateSelfServeSupports_ShelterAllowance_Generated()
     {
         var (file, _) = await CreateTestSubjects();
-        var task = await GetTask("1234");
+        var task = await GetTask(TestData.SelfServeActiveTaskId);
         var supports = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
-                [IdentifiedNeed.ShelterAllowance],
+                [SelfServeSupportType.ShelterAllowance],
                 DateTime.Now.ToPST(),
                 DateTime.Now.ToPST().AddHours(72),
                 task.StartDate.ToPST(),

@@ -70,8 +70,8 @@ namespace EMBC.ESS.Resources.Tasks
 
             await Parallel.ForEachAsync(tasks, ct, async (t, ct1) =>
             {
-                var allowedSupports = (await essContext.era_selfservesupportlimitses.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
-                t.era_era_task_era_selfservesupportlimits_Task = new System.Collections.ObjectModel.Collection<era_selfservesupportlimits>(allowedSupports);
+                var selfServeSupports = (await essContext.era_selfservesupportlimitses.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
+                t.era_era_task_era_selfservesupportlimits_Task = new System.Collections.ObjectModel.Collection<era_selfservesupportlimits>(selfServeSupports);
             });
 
             return tasks;
