@@ -140,7 +140,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
             registrant.HomeAddress = TestHelper.CreateSelfServeIneligibleAddress();
 
         registrant.Id = await SaveRegistrant(registrant);
-        var file = TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber);
+        var file = TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber, numberOfHoldholdMembers);
         file.PrimaryRegistrantId = registrant.Id;
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(numberOfHoldholdMembers).ToList();
         file.NeedsAssessment.Needs = needs ?? [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];

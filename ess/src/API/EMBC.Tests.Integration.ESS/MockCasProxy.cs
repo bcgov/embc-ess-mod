@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
+using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 
 namespace EMBC.Tests.Integration.ESS
@@ -11,12 +12,14 @@ namespace EMBC.Tests.Integration.ESS
         private readonly ConcurrentDictionary<string, GetSupplierResponse> Suppliers;
         private readonly ConcurrentDictionary<string, InvoiceItem> InvoiceItems;
         private readonly ConcurrentDictionary<string, Invoice> Invoices;
+        private readonly IMapper mapper;
 
-        public MockCasProxy()
+        public MockCasProxy(IMapper mapper)
         {
             Suppliers = new ConcurrentDictionary<string, GetSupplierResponse>();
             InvoiceItems = new ConcurrentDictionary<string, InvoiceItem>();
             Invoices = new ConcurrentDictionary<string, Invoice>();
+            this.mapper = mapper;
         }
 
         public async Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice, CancellationToken ct)
@@ -37,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS
             if (string.IsNullOrWhiteSpace(getRequest.PostalCode)) throw new ArgumentNullException(nameof(getRequest.PostalCode));
             if (string.IsNullOrWhiteSpace(getRequest.SupplierName)) throw new ArgumentNullException(nameof(getRequest.SupplierName));
 
-            var supplier = Suppliers.FirstOrDefault(s => s.Value.Suppliername.Equals(getRequest.SupplierName, StringComparison.OrdinalIgnoreCase)).Value;
+            var supplier = mapper.Map<GetSupplierResponse>(Suppliers.FirstOrDefault(s => s.Value.Suppliername.Equals(getRequest.SupplierName, StringComparison.OrdinalIgnoreCase)).Value);
             if (supplier != null)
             {
                 supplier.SupplierAddress = supplier.SupplierAddress.Where(a => a.PostalCode != null && a.PostalCode.Equals(getRequest.PostalCode, StringComparison.OrdinalIgnoreCase)).ToArray();
@@ -169,5 +172,13 @@ namespace EMBC.Tests.Integration.ESS
         public const string Negotiable = "NEGOTIABLE";
         public const string Reconciled = "RECONCILED";
         public const string Voided = "VOIDED";
+    }
+
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
+            CreateMap<GetSupplierResponse, GetSupplierResponse>();
+        }
     }
 }

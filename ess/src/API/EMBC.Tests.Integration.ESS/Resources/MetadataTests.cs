@@ -38,5 +38,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var values = await metadataRepository.GetAuditAccessReasons();
             values.ShouldNotBeEmpty();
         }
+
+        [Fact]
+        public async Task CanQueryCommunities()
+        {
+            var values = await metadataRepository.GetCommunities();
+            values.ShouldNotBeEmpty();
+        }
     }
 }
