@@ -119,7 +119,9 @@
           </div>
           @if (isDisplayedProceedESSFile(file?.manualFileId)) {
             <div class="row button-div">
-              <button mat-button class="button-p proceed-button" (click)="goToESSFile(file?.id)">Proceed to ESS File</button>
+              <button mat-button class="button-p proceed-button" (click)="goToESSFile(file?.id)">
+                Proceed to ESS File
+              </button>
             </div>
           }
         </mat-expansion-panel>

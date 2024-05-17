@@ -41,40 +41,41 @@ $ess-color-palette: (
   700: #0c7fc4,
   800: #0c7fc4,
   900: #0c7fc4,
-  A100 : #b9e1f2,
-  A200 : #b9e1f2,
-  A400 : #169bd5,
-  A700 : #0c7fc4,
-    contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #ffffff,
-        500 : #ffffff,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #ffffff,
-        A700 : #169bd5,
-    )
+  A100: #b9e1f2,
+  A200: #b9e1f2,
+  A400: #169bd5,
+  A700: #0c7fc4,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #169bd5
+  )
 );
 
 $ess-primary: mat.define-palette($ess-color-palette, 500);
 $ess-accent: mat.define-palette($ess-color-palette, A400, A200, A700);
 
-$ess-theme: mat.define-light-theme((
- color: (
-  primary: $ess-primary,
-  accent: $ess-accent,
- ),
-));
+$ess-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $ess-primary,
+      accent: $ess-accent
+    )
+  )
+);
 
 @include mat.all-component-themes($ess-theme);
-
 
 :root {
   --size-1: 8px;
