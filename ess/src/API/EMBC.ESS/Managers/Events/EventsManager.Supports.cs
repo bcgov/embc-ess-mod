@@ -456,6 +456,9 @@ public partial class EventsManager
     private async System.Threading.Tasks.Task SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, IEnumerable<Shared.Contracts.Events.Support> supports)
     {
         var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId })).Items.SingleOrDefault() ?? throw new InvalidOperationException($"registrants {primaryRegistrantId} not found");
+        var emailAddress = evacuee.Email ?? eTransferDetails.ContactEmail;
+        if (string.IsNullOrWhiteSpace(emailAddress)) return;
+
         decimal clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
 
         foreach (var item in supports)
@@ -487,7 +490,7 @@ public partial class EventsManager
 
         await SendEmailNotification(
             SubmissionTemplateType.ETransferConfirmation,
-            evacuee.Email ?? eTransferDetails.ContactEmail,
+            emailAddress,
             $"{evacuee.LastName}, {evacuee.FirstName}",
             [
                 KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
