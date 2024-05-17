@@ -339,7 +339,7 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
-        if (file.PrimaryRegistrantId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileNumber });
     }
@@ -358,7 +358,8 @@ public partial class EventsManager
         if (query.Items == null)
         {
             //generate the supports based on the file
-            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
+                FilterSupportTypes(file.NeedsAssessment.Needs, task.EnabledSupports.Select(s => s.SupportType).ToList()),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
@@ -377,6 +378,32 @@ public partial class EventsManager
             Items = supports,
             HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(file.NeedsAssessment.HouseholdMembers)
         };
+    }
+
+    private static IEnumerable<SelfServeSupportType> FilterSupportTypes(IEnumerable<Resources.Evacuations.IdentifiedNeed> needs, IEnumerable<Resources.Tasks.SupportType> enabledSupportTypes)
+    {
+        foreach (var need in needs)
+        {
+            switch (need)
+            {
+                case Resources.Evacuations.IdentifiedNeed.ShelterAllowance when enabledSupportTypes.Contains(Resources.Tasks.SupportType.ShelterAllowance):
+                    yield return SelfServeSupportType.ShelterAllowance;
+                    break;
+
+                case Resources.Evacuations.IdentifiedNeed.Food:
+                    if (enabledSupportTypes.Contains(Resources.Tasks.SupportType.FoodGroceries)) yield return SelfServeSupportType.FoodGroceries;
+                    if (enabledSupportTypes.Contains(Resources.Tasks.SupportType.FoodRestaurant)) yield return SelfServeSupportType.FoodRestaurant;
+                    break;
+
+                case Resources.Evacuations.IdentifiedNeed.Incidentals when enabledSupportTypes.Contains(Resources.Tasks.SupportType.Incidentals):
+                    yield return SelfServeSupportType.Incidentals;
+                    break;
+
+                case Resources.Evacuations.IdentifiedNeed.Clothing when enabledSupportTypes.Contains(Resources.Tasks.SupportType.Clothing):
+                    yield return SelfServeSupportType.Clothing;
+                    break;
+            }
+        }
     }
 
     public async System.Threading.Tasks.Task<string> Handle(CheckEligibileForSelfServeCommand cmd)

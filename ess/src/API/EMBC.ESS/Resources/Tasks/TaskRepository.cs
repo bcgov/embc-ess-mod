@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Caching;
 
 namespace EMBC.ESS.Resources.Tasks
@@ -21,32 +23,25 @@ namespace EMBC.ESS.Resources.Tasks
             this.cache = cache;
         }
 
-        public async Task<TaskQueryResult> QueryTask(TaskQuery query)
+        public async Task<TaskQueryResult> QueryTask(TaskQuery query, CancellationToken ct = default)
         {
             return query.GetType().Name switch
             {
-                nameof(TaskQuery) => await HandleQuery(query),
+                nameof(TaskQuery) => await HandleQuery(query, ct),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        private async Task<TaskQueryResult> HandleQuery(TaskQuery queryRequest)
+        private async Task<TaskQueryResult> HandleQuery(TaskQuery queryRequest, CancellationToken ct)
         {
             if (queryRequest.ById == null) throw new ArgumentNullException(nameof(queryRequest.ById), "Only task query by id is supported");
             var tasks = await cache.GetOrSet($"tasks:{queryRequest.ById}", async () =>
             {
-                var tasks = mapper.Map<IEnumerable<EssTask>>(await
-                    essContext.era_tasks
-                    .Expand(c => c.era_JurisdictionID)
-                    .Where(t => t.era_name == queryRequest.ById)
-                    .GetAllPagesAsync());
+                var tasks = mapper.Map<IEnumerable<EssTask>>(await QueryTasks(queryRequest, ct));
                 var autoApproveEnabled = await AutoApprovalEnabled();
-                foreach (var task in tasks)
-                {
-                    task.AutoApprovedEnabled = autoApproveEnabled;
-                }
+                foreach (var task in tasks) task.AutoApprovedEnabled = autoApproveEnabled;
                 return tasks;
-            }, TimeSpan.FromMinutes(1));
+            }, TimeSpan.FromSeconds(30));
 
             if (queryRequest.ByStatus.Any()) tasks = tasks.Where(t => queryRequest.ByStatus.Any(s => s == t.Status));
 
@@ -62,6 +57,24 @@ namespace EMBC.ESS.Resources.Tasks
             return configValue != null
                 && !string.IsNullOrEmpty(configValue.era_value)
                 && configValue.era_value.Equals("Yes", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private async Task<IEnumerable<era_task>> QueryTasks(TaskQuery query, CancellationToken ct)
+        {
+            var tasks = (await
+                   essContext.era_tasks
+                   .Expand(t => t.era_JurisdictionID)
+                   .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
+                   .Where(t => t.era_name == query.ById)
+                   .GetAllPagesAsync(ct)).ToList();
+
+            await Parallel.ForEachAsync(tasks, ct, async (t, ct1) =>
+            {
+                var selfServeSupports = (await essContext.era_selfservesupportlimitses.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
+                t.era_era_task_era_selfservesupportlimits_Task = new System.Collections.ObjectModel.Collection<era_selfservesupportlimits>(selfServeSupports);
+            });
+
+            return tasks;
         }
     }
 }

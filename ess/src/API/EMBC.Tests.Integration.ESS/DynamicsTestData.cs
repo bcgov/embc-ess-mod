@@ -19,6 +19,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_essteamuser team2Tier1Member;
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
+        private readonly string selfServeActiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
@@ -48,6 +49,7 @@ namespace EMBC.Tests.Integration.ESS
         public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
         public string InactiveTaskCommunity => inactiveTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
+        public string SelfServeActiveTaskId => selfServeActiveTaskId;
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
@@ -89,6 +91,7 @@ namespace EMBC.Tests.Integration.ESS
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
+            this.selfServeActiveTaskId = "1234";
 
             this.team1 = GetOrCreateTeam(essContext, testPrefix + "-team1");
 

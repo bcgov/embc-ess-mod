@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
@@ -43,7 +42,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         private async Task<GenerateResponse> Handle(GenerateSelfServeSupports req, CancellationToken ct)
         {
             var householdMembers = req.HouseholdMembersIds.ToArray();
-            var supports = req.Needs.Select(n => CreateSupportsForNeed(n, req.SupportPeriodFrom, req.SupportPeriodTo, householdMembers)).SelectMany(s => s).ToList();
+            var supports = req.SupportTypes.Select(n => CreateSupportsForNeed(n, req.SupportPeriodFrom, req.SupportPeriodTo, householdMembers)).ToList();
             return await Task.FromResult(new GenerateSelfServeSupportsResponse(supports));
         }
 
@@ -56,15 +55,16 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             }
         }
 
-        private static IEnumerable<SelfServeSupport> CreateSupportsForNeed(IdentifiedNeed need, DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
-            need switch
+        private static SelfServeSupport CreateSupportsForNeed(SelfServeSupportType type, DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
+            type switch
             {
-                IdentifiedNeed.Food => [CreateSelfServeFoodGroceriesSupport(from, to, householdMembers), CreateSelfServeFoodRestaurantSupport(from, to, householdMembers)],
-                IdentifiedNeed.Incidentals => [CreateIncidentalsSupport(householdMembers)],
-                IdentifiedNeed.Clothing => [CreateClothingSupport(householdMembers)],
-                IdentifiedNeed.ShelterAllowance => [CreateShelterAllowanceSupport(from, to, householdMembers)],
+                SelfServeSupportType.FoodGroceries => CreateSelfServeFoodGroceriesSupport(from, to, householdMembers),
+                SelfServeSupportType.FoodRestaurant => CreateSelfServeFoodRestaurantSupport(from, to, householdMembers),
+                SelfServeSupportType.Incidentals => CreateIncidentalsSupport(householdMembers),
+                SelfServeSupportType.Clothing => CreateClothingSupport(householdMembers),
+                SelfServeSupportType.ShelterAllowance => CreateShelterAllowanceSupport(from, to, householdMembers),
 
-                _ => throw new NotImplementedException($"{need}")
+                _ => throw new NotImplementedException($"{type}")
             };
 
         private static SelfServeClothingSupport CreateClothingSupport(IEnumerable<SelfServeHouseholdMember> householdMembers)
