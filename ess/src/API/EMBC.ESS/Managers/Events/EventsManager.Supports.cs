@@ -339,7 +339,7 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
-        if (file.PrimaryRegistrantId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileNumber });
     }
