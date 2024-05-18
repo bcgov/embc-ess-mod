@@ -43,12 +43,10 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
   }
   updateTotalAmount() {
     this.nofNight = this.referralForm.get('noOfNights').value;
-    this.totalAmount =
-        this.nofNight * globalConst.shelterAllowanceRate.rate;
+    this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rate;
 
-      if (this.totalAmount < 0)
-        this.totalAmount = 0;
-    
+    if (this.totalAmount < 0) this.totalAmount = 0;
+
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
 
     this.checkOverlimit(this.totalAmount);

@@ -162,7 +162,7 @@ export const duplicateSupportMessage: DialogContent = {
 
 export const needsShelterAllowanceMessage: DialogContent = {
   title: 'Shelter',
-  text: '<p>A shelter allowance of $200 per night per household.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+  text: '<p>A shelter allowance of $200 per night per household.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
 };
 
 export const needsShelterReferralMessage: DialogContent = {
