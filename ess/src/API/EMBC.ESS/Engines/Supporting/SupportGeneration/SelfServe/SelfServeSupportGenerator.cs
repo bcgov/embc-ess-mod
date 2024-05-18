@@ -30,7 +30,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
                     SelfServeFoodGroceriesSupport s => CalculateSelfServeSupportAmount(s),
                     SelfServeFoodRestaurantSupport s => CalculateSelfServeSupportAmount(s),
                     SelfServeIncidentalsSupport s => CalculateSelfServeSupportAmount(s),
-                    SelfServeShelterAllowanceSupport s => CalculateSelfServeSupportAmount(s, req.HouseholdMembersIds),
+                    SelfServeShelterAllowanceSupport s => CalculateSelfServeSupportAmount(s),
 
                     _ => throw new NotImplementedException($"{item.GetType().Name}")
                 };
@@ -101,25 +101,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
-            support.TotalAmount = CalculateSelfServeSupportAmount(support, householdMembers);
+            support.TotalAmount = CalculateSelfServeSupportAmount(support);
             return support;
         }
 
-        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support, IEnumerable<SelfServeHouseholdMember> householdMembers)
-        {
-            var hmList = householdMembers.ToList();
-            var numberOfNights = support.Nights.Count();
-
-            if (hmList.Count == 0 || numberOfNights == 0) return 0d;
-
-            var numberOfAdults = hmList.Count(hm => !hm.IsMinor);
-            var numberOfMinors = hmList.Count(hm => hm.IsMinor);
-
-            //compensate for first adult
-            if (numberOfAdults >= 1) numberOfAdults--;
-
-            return (30d + numberOfAdults * 10d + numberOfMinors * 5d) * numberOfNights;
-        }
+        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support) => 200d * support.Nights.Count();
 
         private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {

@@ -41,7 +41,7 @@ public class SelfServeSupportGenerationTests
         var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        support.TotalAmount.ShouldBe(210d);
+        support.TotalAmount.ShouldBe(600d);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class SelfServeSupportGenerationTests
         var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, householdMembersWithMinors);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        support.TotalAmount.ShouldBe(195d);
+        support.TotalAmount.ShouldBe(600d);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class SelfServeSupportGenerationTests
         var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, []);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe([]);
-        support.TotalAmount.ShouldBe(0d);
+        support.TotalAmount.ShouldBe(600d);
     }
 
     [Fact]
