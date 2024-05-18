@@ -62,7 +62,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Food]);
 
-        await RunEligibilityTest(file.Id, false, "Evacuee requested referrals");
+        await RunEligibilityTest(file.Id, false, "Evacuee requested support referrals");
     }
 
     [Fact]

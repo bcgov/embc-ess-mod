@@ -242,7 +242,7 @@ namespace EMBC.Tests.Integration.ESS
             return member;
         }
 
-        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate)
+        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate, bool? selfServe = null)
         {
             var task = new era_task
             {
@@ -250,6 +250,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_name = taskId,
                 era_taskstartdate = startDate,
                 era_currentdateandtime = startDate.AddDays(3),
+                era_selfservetoggle = selfServe
             };
             essContext.AddToera_tasks(task);
 
@@ -260,6 +261,20 @@ namespace EMBC.Tests.Integration.ESS
                 task._era_jurisdictionid_value = jurisdiction.era_jurisdictionid;
             }
 
+            if (selfServe == true)
+            {
+                int[] supportTypes = [174360000, 174360005, 174360006, 174360008];
+
+                foreach (var supportType in supportTypes)
+                {
+                    var limit = new era_selfservesupportlimits
+                    {
+                        era_supporttypeoption = supportType
+                    };
+                    essContext.AddToera_selfservesupportlimitses(limit);
+                    essContext.AddLink(limit, nameof(era_selfservesupportlimits.era_Task), task);
+                }
+            }
             return task;
         }
 

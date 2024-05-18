@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Spatial;
@@ -10,7 +11,7 @@ using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Engines.Supporting.SupportProcessing;
 
-internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextFactory, ILocationService locationService) : ISupportProcessingStrategy
+internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContextFactory, ILocationService locationService) : ISupportProcessingStrategy
 {
     private const int LocationAccuracyThreshold = 90;
     private const int MaximumNumberOfHouseholdMember = 5;
@@ -68,32 +69,34 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
 
         // check the task is enabled for self-serve
         var task = await ctx.era_tasks
+            .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
             .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
 
         if (task == null) return NotEligible($"Task {taskNumber} was not found or not active in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
         await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
+        var enabledSupports = GetEnabledSupportTypesForTask(task).ToArray();
+        if (enabledSupports.Length == 0) return NotEligible("Task has no supports enabled for self serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+
         // calculate support eligibility period
         var eligibleFrom = DateTimeOffset.UtcNow;
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
         if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
 
-        // check if requested supports include referrals
-        var requestedReferralSupports = MapReferralSupportTypesFromNeed(needsAssessment).ToArray();
-        if (requestedReferralSupports.Length > 0) return NotEligible("Evacuee requested referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
-
         // check if requested e-transfer supports are enabled for self-serve
-        var requestedETransferSupports = MapETransferSupportTypesFromNeeds(needsAssessment).ToArray();
-        if (requestedETransferSupports.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
-        var allowedSupports = (await ctx.era_selfservesupportlimitses
-            .Where(sl => sl._era_task_value == task.era_taskid).GetAllPagesAsync())
-            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
-        if (allowedSupports.Length == 0) return NotEligible("Task has no supports enabled for selfe serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
-        if (!Array.TrueForAll(requestedETransferSupports, rs => allowedSupports.Contains(rs))) return NotEligible("Requested supports are not allowed", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        var needs = GetIdentifiedNeeds(needsAssessment).ToArray();
+        if (needs.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+
+        // check if requested supports include referrals
+        if (needs.Contains(IdentifiedNeed.ShelterReferral)) return NotEligible("Evacuee requested support referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+
+        // check for disabled supports
+        var disabledSupportsForNeeds = MapNotEligibleSupports(needs, enabledSupports).ToArray();
+        if (disabledSupportsForNeeds.Length != 0) return NotEligible($"Requested supports are not enabled: {string.Join(",", disabledSupportsForNeeds)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
-        var similarSupportTypes = requestedETransferSupports.SelectMany(t => SimilarSupportTypes(t)).Cast<int>().ToList();
+        var similarSupportTypes = needs.SelectMany(t => MapNeedToSupportType(t)).Cast<int>().ToList();
         foreach (var hm in needsAssessment.era_era_householdmember_era_needassessment)
         {
             var supports = (await ctx.era_evacueesupports
@@ -113,32 +116,68 @@ internal class SelfServeSupportProcessingStrategy(IEssContextFactory essContextF
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo);
     }
 
-    private static IEnumerable<SupportType> MapETransferSupportTypesFromNeeds(era_needassessment needsAssessment)
+    private static IEnumerable<IdentifiedNeed> GetIdentifiedNeeds(era_needassessment needsAssessment)
     {
-        if (needsAssessment.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Incidentals;
-        if (needsAssessment.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return SupportType.Clothing;
-        if (needsAssessment.era_canevacueeprovidefood.GetValueOrDefault(0) == (int)NeedTrueFalse.False)
+        if (needsAssessment.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return IdentifiedNeed.Incidentals;
+        if (needsAssessment.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return IdentifiedNeed.Clothing;
+        if (needsAssessment.era_canevacueeprovidefood.GetValueOrDefault(0) == (int)NeedTrueFalse.False) yield return IdentifiedNeed.Food;
+        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) yield return IdentifiedNeed.ShelterAllowance;
+        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return IdentifiedNeed.ShelterReferral;
+    }
+
+    private static IEnumerable<SupportType> MapNotEligibleSupports(IdentifiedNeed[] needs, SupportType[] enabledSupports)
+    {
+        foreach (var need in needs)
         {
-            yield return SupportType.FoodGroceries;
-            yield return SupportType.FoodRestaurant;
+            switch (need)
+            {
+                case IdentifiedNeed.ShelterAllowance when !enabledSupports.Contains(SupportType.ShelterAllowance):
+                    yield return SupportType.ShelterAllowance;
+                    break;
+
+                case IdentifiedNeed.Incidentals when !enabledSupports.Contains(SupportType.Incidentals):
+                    yield return SupportType.Incidentals;
+                    break;
+
+                case IdentifiedNeed.Clothing when !enabledSupports.Contains(SupportType.Clothing):
+                    yield return SupportType.Clothing;
+                    break;
+
+                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodGroceries):
+                    if (!enabledSupports.Contains(SupportType.FoodRestaurant)) yield return SupportType.FoodRestaurant;
+                    break;
+
+                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodGroceries) && enabledSupports.Contains(SupportType.FoodRestaurant):
+                    yield return SupportType.FoodRestaurant;
+                    break;
+
+                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodRestaurant) && enabledSupports.Contains(SupportType.FoodGroceries):
+                    yield return SupportType.FoodGroceries;
+                    break;
+
+                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodRestaurant) && !enabledSupports.Contains(SupportType.FoodGroceries):
+                    yield return SupportType.FoodGroceries;
+                    yield return SupportType.FoodRestaurant;
+                    break;
+            }
         }
-        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) yield return SupportType.ShelterAllowance;
     }
 
-    private static IEnumerable<SupportType> MapReferralSupportTypesFromNeed(era_needassessment needsAssessment)
+    private static IEnumerable<SupportType> GetEnabledSupportTypesForTask(era_task task)
     {
-        if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return SupportType.ShelterAllowance;
+        return task.era_era_task_era_selfservesupportlimits_Task.Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
     }
 
-    private static SupportType[] SimilarSupportTypes(SupportType type) =>
-        type switch
-        {
-            SupportType.FoodGroceries or SupportType.FoodRestaurant => [SupportType.FoodGroceries, SupportType.FoodRestaurant],
-            SupportType.ShelterAllowance or SupportType.ShelterGroup or SupportType.ShelterBilleting or SupportType.ShelterHotel => [SupportType.ShelterGroup, SupportType.ShelterAllowance, SupportType.ShelterHotel, SupportType.ShelterBilleting],
-            SupportType.TransportationOther or SupportType.TransportationOther => [SupportType.TransportationOther, SupportType.TransporationTaxi],
-
-            _ => [type]
-        };
+    private static SupportType[] MapNeedToSupportType(IdentifiedNeed need) =>
+     need switch
+     {
+         IdentifiedNeed.Food => [SupportType.FoodGroceries, SupportType.FoodRestaurant],
+         IdentifiedNeed.ShelterAllowance or IdentifiedNeed.ShelterReferral => [SupportType.ShelterGroup, SupportType.ShelterAllowance, SupportType.ShelterHotel, SupportType.ShelterBilleting],
+         IdentifiedNeed.Transportation => [SupportType.TransporationTaxi, SupportType.TransportationOther],
+         IdentifiedNeed.Incidentals => [SupportType.Incidentals],
+         IdentifiedNeed.Clothing => [SupportType.Clothing],
+         _ => throw new NotImplementedException()
+     };
 
     private async Task<string?> GetTaskNumberForAddress(era_bcscaddress address, CancellationToken ct)
     {
