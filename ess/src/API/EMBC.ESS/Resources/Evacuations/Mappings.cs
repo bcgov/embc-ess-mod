@@ -189,6 +189,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForSourceMember(s => s.HomeAddressReferenceId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.EvacuationFileNumber, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Eligible, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.EligibleSupports, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_iseligible, opts => opts.MapFrom(s => s.Eligible ? Eligible.Yes : Eligible.No))
                 .ForMember(d => d.era_reason, opts => opts.MapFrom(s => s.Reason))
                 .ForMember(d => d.era_eligibilityperiodfrom, opts => opts.MapFrom(s => s.From))
@@ -200,6 +201,9 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_name))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_eligibilityperiodfrom.HasValue ? s.era_eligibilityperiodfrom.Value.DateTime.ToUniversalTime() : (DateTime?)null))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_eligibilityperiodto.HasValue ? s.era_eligibilityperiodto.Value.DateTime.ToUniversalTime() : (DateTime?)null))
+                .ForMember(d => d.EligibleSupports, opts => opts.MapFrom((s, _, _, ctx) => s.era_eligibilitycheck_era_selfservesupport == null
+                    ? Array.Empty<SelfServeSupportType>()
+                    : ctx.Mapper.Map<IEnumerable<SelfServeSupportType>>(s.era_eligibilitycheck_era_selfservesupport.Select(ss => ss.era_supporttypeoption))))
                 ;
         }
     }

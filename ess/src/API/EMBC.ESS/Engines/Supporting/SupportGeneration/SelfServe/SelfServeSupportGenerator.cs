@@ -46,11 +46,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             return await Task.FromResult(new GenerateSelfServeSupportsResponse(supports));
         }
 
-        private static IEnumerable<DateTime> CreateSupportDays(DateTime from, DateTime to)
+        private static IEnumerable<DateOnly> CreateSupportDays(DateTime from, DateTime to)
         {
-            while (from < to)
+            while (from.Date < to.Date)
             {
-                yield return from;
+                yield return DateOnly.FromDateTime(from.Date);
                 from = from.AddDays(1);
             }
         }
@@ -97,7 +97,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeShelterAllowanceSupport
             {
-                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                Nights = CreateSupportDays(from, to).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
@@ -111,7 +111,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeFoodGroceriesSupport
             {
-                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                Nights = CreateSupportDays(from, to).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
