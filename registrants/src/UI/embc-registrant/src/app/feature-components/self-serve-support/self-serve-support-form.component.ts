@@ -84,7 +84,7 @@ export class SelfServeSupportFormComponent implements OnInit {
   draftSupportError = false;
   calculateTotalsError = false;
   submitSupportError = false;
-  loaderColor = '#169bd5';
+  loaderColor = '#fff';
 
   isEditSupportDetailsFromReview = false;
   isEditETransferFromReview = false;
@@ -555,6 +555,8 @@ export class SelfServeSupportFormComponent implements OnInit {
   }
 
   submit() {
+    if (this.showButtonLoader) return;
+
     this.supportDraftForm.markAllAsTouched();
     this.eTransferDetailsForm.markAllAsTouched();
     this.reviewAcknowledgeForm.markAllAsTouched();

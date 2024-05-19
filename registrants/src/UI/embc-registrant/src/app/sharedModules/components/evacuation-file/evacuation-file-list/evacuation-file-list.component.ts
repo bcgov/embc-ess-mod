@@ -97,7 +97,7 @@ export class EvacuationFileListComponent implements OnInit {
         if (value === 'confirm') {
           this.formCreationService.clearNeedsAssessmentData();
           this.evacuationFileDataService.clearESSFileData();
-          this.router.navigate(['/verified-registration/confirm-restriction']);
+          this.router.navigate(['/verified-registration/needs-assessment']);
         }
       });
   }
