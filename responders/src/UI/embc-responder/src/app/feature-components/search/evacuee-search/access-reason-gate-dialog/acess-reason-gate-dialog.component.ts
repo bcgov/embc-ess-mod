@@ -113,42 +113,40 @@ export class AccessReasonGateDialogComponent {
 
     if (this.accessReasonControl.invalid) return;
 
-    if (this.accessReasonControl.value !== null) {
-      if (this.dialogData.accessEntity === 'profile') {
-        this.showButtonLoader = true;
+    if (this.dialogData.accessEntity === 'profile') {
+      this.showButtonLoader = true;
 
-        this.registrationsService
-          .registrationsAuditRegistrantAccess({
-            body: { accessReasonId: this.accessReasonControl.value },
-            registrantId: this.dialogData.entityId
-          })
-          .subscribe({
-            next: () => {
-              this.showButtonLoader = false;
-              this.dialog.close(true);
-            },
-            complete: () => {
-              this.showButtonLoader = false;
-            }
-          });
-      } else if (this.dialogData.accessEntity === 'essFile') {
-        this.showButtonLoader = true;
+      this.registrationsService
+        .registrationsAuditRegistrantAccess({
+          body: { accessReasonId: this.accessReasonControl.value },
+          registrantId: this.dialogData.entityId
+        })
+        .subscribe({
+          next: () => {
+            this.showButtonLoader = false;
+            this.dialog.close(true);
+          },
+          complete: () => {
+            this.showButtonLoader = false;
+          }
+        });
+    } else if (this.dialogData.accessEntity === 'essFile') {
+      this.showButtonLoader = true;
 
-        this.registrationsService
-          .registrationsAuditFileAcccess({
-            body: { accessReasonId: this.accessReasonControl.value },
-            fileId: this.dialogData.entityId
-          })
-          .subscribe({
-            next: () => {
-              this.showButtonLoader = false;
-              this.dialog.close(true);
-            },
-            complete: () => {
-              this.showButtonLoader = false;
-            }
-          });
-      }
+      this.registrationsService
+        .registrationsAuditFileAcccess({
+          body: { accessReasonId: this.accessReasonControl.value },
+          fileId: this.dialogData.entityId
+        })
+        .subscribe({
+          next: () => {
+            this.showButtonLoader = false;
+            this.dialog.close(true);
+          },
+          complete: () => {
+            this.showButtonLoader = false;
+          }
+        });
     }
   }
 }
