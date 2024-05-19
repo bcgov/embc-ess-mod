@@ -18,7 +18,7 @@ export interface AccessReasonData {
 }
 
 @Component({
-  selector: 'app-access-reason-dialog',
+  selector: 'app-access-reason-gate-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -58,6 +58,8 @@ export class AccessReasonGateDialogComponent {
   ) {}
 
   proceed() {
+    if (this.showButtonLoader) return;
+
     this.accessReasonControl.markAsTouched();
 
     if (this.accessReasonControl.invalid) return;
