@@ -12,7 +12,7 @@ import { ConfigurationService } from '../api/services';
 export class ConfigService {
   public config?: Configuration = null;
 
-  private _accessReasons: Array<[string, string]>;
+  private accessReasons: Array<[string, string]>;
 
   constructor(private configurationService: ConfigurationService) {}
 
@@ -53,11 +53,11 @@ export class ConfigService {
   }
 
   getAccessReasons() {
-    if (this._accessReasons) return of(this._accessReasons);
+    if (this.accessReasons) return of(this.accessReasons);
 
     return this.configurationService.configurationGetAuditOptions({}).pipe(
       map((res) => Object.entries(res)),
-      tap((res) => (this._accessReasons = res))
+      tap((res) => (this.accessReasons = res))
     );
   }
 }
