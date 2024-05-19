@@ -156,6 +156,27 @@ button:focus {
   outline: 0px !important;
 }
 
+.close-image,
+.edit-image {
+  img:last-of-type {
+    display: none;
+  }
+}
+
+.close-image:hover,
+.edit-image:hover {
+  img:last-of-type {
+    display: inline;
+  }
+}
+
+.close-image:hover,
+.edit-image:hover {
+  img:first-of-type {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 833px) {
   .button-yellow {
     width: 100% !important;
