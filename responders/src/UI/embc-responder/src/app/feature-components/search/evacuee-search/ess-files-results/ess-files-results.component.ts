@@ -28,7 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   AccessReasonData,
   AccessReasonGateDialogComponent
-} from '../access-reason-gate-dialog/acess-reason-gate-dialog.component';
+} from '../access-reason-gate-dialog/access-reason-gate-dialog.component';
 
 @Component({
   selector: 'app-ess-files-results',
