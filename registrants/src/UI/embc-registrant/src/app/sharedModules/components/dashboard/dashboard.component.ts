@@ -116,6 +116,6 @@ export class DashboardComponent implements OnInit {
   }
 
   startAssessment(): void {
-    this.router.navigate(['/verified-registration/confirm-restriction']);
+    this.router.navigate(['/verified-registration/needs-assessment']);
   }
 }

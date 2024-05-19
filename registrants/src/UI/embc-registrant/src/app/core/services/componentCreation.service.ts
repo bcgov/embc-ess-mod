@@ -53,7 +53,7 @@ export class ComponentCreationService {
     {
       component: 'evac-address',
       nextButtonLabel: 'Next - Household Information',
-      backButtonLabel: 'Go Back & Edit',
+      backButtonLabel: 'Cancel & Go Back to My Profile',
       isLast: false,
       loadWrapperButton: false,
       lastStep: -1,
