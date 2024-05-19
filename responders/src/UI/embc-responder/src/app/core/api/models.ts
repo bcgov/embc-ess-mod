@@ -18,6 +18,7 @@ export { GetSecurityQuestionsResponse } from './models/get-security-questions-re
 export { VerifySecurityQuestionsResponse } from './models/verify-security-questions-response';
 export { VerifySecurityQuestionsRequest } from './models/verify-security-questions-request';
 export { InviteRequest } from './models/invite-request';
+export { AuditAccessRequest } from './models/audit-access-request';
 export { EvacuationFile } from './models/evacuation-file';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';

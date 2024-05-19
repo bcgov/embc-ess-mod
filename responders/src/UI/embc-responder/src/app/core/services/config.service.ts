@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { lastValueFrom, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { lastValueFrom, Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Configuration, OutageInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
@@ -11,6 +11,8 @@ import { ConfigurationService } from '../api/services';
 })
 export class ConfigService {
   public config?: Configuration = null;
+
+  private accessReasons: Array<[string, string]>;
 
   constructor(private configurationService: ConfigurationService) {}
 
@@ -48,5 +50,14 @@ export class ConfigService {
 
   public getOutageConfig(): Observable<OutageInformation> {
     return this.configurationService.configurationGetOutageInfo();
+  }
+
+  getAccessReasons() {
+    if (this.accessReasons) return of(this.accessReasons);
+
+    return this.configurationService.configurationGetAuditOptions({}).pipe(
+      map((res) => Object.entries(res)),
+      tap((res) => (this.accessReasons = res))
+    );
   }
 }
