@@ -70,7 +70,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_DuplicateSupport_False()
     {
-        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
@@ -86,13 +86,13 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
 
-        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Incidentals,FoodGroceries,ShelterAllowance");
+        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,FoodGroceries,ShelterAllowance");
     }
 
     [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
-        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {

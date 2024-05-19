@@ -93,8 +93,8 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (needs.Contains(IdentifiedNeed.ShelterReferral)) return NotEligible("Evacuee requested support referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
 
         // check for disabled supports
-        var disabledSupportsForNeeds = MapNotEligibleSupports(needs, enabledSupports).ToArray();
-        if (disabledSupportsForNeeds.Length != 0) return NotEligible($"Requested supports are not enabled: {string.Join(",", disabledSupportsForNeeds)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        var (eligibleSupports, ineligibleSupports) = GenerateSelfServeSupportTypesEligibility(needs, enabledSupports);
+        if (ineligibleSupports.Any()) return NotEligible($"Requested supports are not enabled: {string.Join(",", ineligibleSupports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
         var similarSupportTypes = needs.SelectMany(t => MapNeedToSupportType(t)).Cast<int>().ToList();
@@ -114,7 +114,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // return eligibility results
-        return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo, []);
+        return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo, eligibleSupports);
     }
 
     private static IEnumerable<IdentifiedNeed> GetIdentifiedNeeds(era_needassessment needsAssessment)
@@ -126,42 +126,63 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (needsAssessment.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) yield return IdentifiedNeed.ShelterReferral;
     }
 
-    private static IEnumerable<SupportType> MapNotEligibleSupports(IdentifiedNeed[] needs, SupportType[] enabledSupports)
+    private static (IEnumerable<SelfServeSupportType> eligibleSupports, IEnumerable<SelfServeSupportType> ineligibleSupports) GenerateSelfServeSupportTypesEligibility(IdentifiedNeed[] needs, SupportType[] enabledSupports)
     {
+        var eligibleSupports = new List<SelfServeSupportType>();
+        var ineligibleSupports = new List<SelfServeSupportType>();
+
         foreach (var need in needs)
         {
             switch (need)
             {
-                case IdentifiedNeed.ShelterAllowance when !enabledSupports.Contains(SupportType.ShelterAllowance):
-                    yield return SupportType.ShelterAllowance;
+                case IdentifiedNeed.ShelterAllowance:
+                    if (enabledSupports.Contains(SupportType.ShelterAllowance))
+                        eligibleSupports.Add(SelfServeSupportType.ShelterAllowance);
+                    else
+                        ineligibleSupports.Add(SelfServeSupportType.ShelterAllowance);
                     break;
 
-                case IdentifiedNeed.Incidentals when !enabledSupports.Contains(SupportType.Incidentals):
-                    yield return SupportType.Incidentals;
+                case IdentifiedNeed.Incidentals:
+                    if (enabledSupports.Contains(SupportType.Incidentals))
+                        eligibleSupports.Add(SelfServeSupportType.Incidentals);
+                    else
+                        ineligibleSupports.Add(SelfServeSupportType.Incidentals);
                     break;
 
                 case IdentifiedNeed.Clothing when !enabledSupports.Contains(SupportType.Clothing):
-                    yield return SupportType.Clothing;
+                    if (enabledSupports.Contains(SupportType.Clothing))
+                        eligibleSupports.Add(SelfServeSupportType.Clothing);
+                    else
+                        ineligibleSupports.Add(SelfServeSupportType.Clothing);
                     break;
 
-                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodGroceries):
-                    if (!enabledSupports.Contains(SupportType.FoodRestaurant)) yield return SupportType.FoodRestaurant;
-                    break;
-
-                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodGroceries) && enabledSupports.Contains(SupportType.FoodRestaurant):
-                    yield return SupportType.FoodRestaurant;
-                    break;
-
-                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodRestaurant) && enabledSupports.Contains(SupportType.FoodGroceries):
-                    yield return SupportType.FoodGroceries;
-                    break;
-
-                case IdentifiedNeed.Food when !enabledSupports.Contains(SupportType.FoodRestaurant) && !enabledSupports.Contains(SupportType.FoodGroceries):
-                    yield return SupportType.FoodGroceries;
-                    yield return SupportType.FoodRestaurant;
+                case IdentifiedNeed.Food:
+                    if (!enabledSupports.Contains(SupportType.FoodGroceries) && !enabledSupports.Contains(SupportType.FoodRestaurant))
+                    {
+                        // both support types are disabled
+                        ineligibleSupports.AddRange([SelfServeSupportType.FoodGroceries, SelfServeSupportType.FoodRestaurant]);
+                    }
+                    else if (!enabledSupports.Contains(SupportType.FoodGroceries) && enabledSupports.Contains(SupportType.FoodRestaurant))
+                    {
+                        // groceries support type is disabled and restaurant is enabled
+                        ineligibleSupports.Add(SelfServeSupportType.FoodGroceries);
+                        eligibleSupports.Add(SelfServeSupportType.FoodRestaurant);
+                    }
+                    else if (!enabledSupports.Contains(SupportType.FoodRestaurant) && enabledSupports.Contains(SupportType.FoodGroceries))
+                    {
+                        // restaurant support type is disabled and groceries is enabled
+                        ineligibleSupports.Add(SelfServeSupportType.FoodRestaurant);
+                        eligibleSupports.Add(SelfServeSupportType.FoodGroceries);
+                    }
+                    else
+                    {
+                        // both support types are enabled
+                        eligibleSupports.AddRange([SelfServeSupportType.FoodGroceries, SelfServeSupportType.FoodRestaurant]);
+                    }
                     break;
             }
         }
+        return (eligibleSupports, ineligibleSupports);
     }
 
     private static IEnumerable<SupportType> GetEnabledSupportTypesForTask(era_task task)

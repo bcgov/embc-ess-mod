@@ -82,7 +82,7 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
-        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
         if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileNumber} latest needs assessment doesn't have a valid eligibility check");
 
         var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(cmd.Supports, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
@@ -138,10 +138,7 @@ public partial class EventsManager
 
         var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
         {
-            Items = new[]
-            {
-               new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }
-            }
+            Items = [new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }]
         })).Ids.SingleOrDefault();
         return id;
     }
@@ -339,7 +336,7 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
-        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileNumber });
     }
@@ -359,7 +356,7 @@ public partial class EventsManager
         {
             //generate the supports based on the file
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
-                FilterSupportTypes(file.NeedsAssessment.Needs, task.EnabledSupports.Select(s => s.SupportType).ToList()),
+                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.EligibleSupports),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
@@ -380,37 +377,11 @@ public partial class EventsManager
         };
     }
 
-    private static IEnumerable<SelfServeSupportType> FilterSupportTypes(IEnumerable<Resources.Evacuations.IdentifiedNeed> needs, IEnumerable<Resources.Tasks.SupportType> enabledSupportTypes)
-    {
-        foreach (var need in needs)
-        {
-            switch (need)
-            {
-                case Resources.Evacuations.IdentifiedNeed.ShelterAllowance when enabledSupportTypes.Contains(Resources.Tasks.SupportType.ShelterAllowance):
-                    yield return SelfServeSupportType.ShelterAllowance;
-                    break;
-
-                case Resources.Evacuations.IdentifiedNeed.Food:
-                    if (enabledSupportTypes.Contains(Resources.Tasks.SupportType.FoodGroceries)) yield return SelfServeSupportType.FoodGroceries;
-                    if (enabledSupportTypes.Contains(Resources.Tasks.SupportType.FoodRestaurant)) yield return SelfServeSupportType.FoodRestaurant;
-                    break;
-
-                case Resources.Evacuations.IdentifiedNeed.Incidentals when enabledSupportTypes.Contains(Resources.Tasks.SupportType.Incidentals):
-                    yield return SelfServeSupportType.Incidentals;
-                    break;
-
-                case Resources.Evacuations.IdentifiedNeed.Clothing when enabledSupportTypes.Contains(Resources.Tasks.SupportType.Clothing):
-                    yield return SelfServeSupportType.Clothing;
-                    break;
-            }
-        }
-    }
-
     public async System.Threading.Tasks.Task<string> Handle(CheckEligibileForSelfServeCommand cmd)
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
-        if (file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileNumber), default)).Eligibility;
 
@@ -426,6 +397,13 @@ public partial class EventsManager
             EligibleSupports = mapper.Map<IEnumerable<Resources.Evacuations.SelfServeSupportType>>(eligibilityResult.eligibleSupportTypes)
         });
 
+        if (eligibilityResult.Eligible && !eligibilityResult.eligibleSupportTypes.Any())
+        {
+            // no supports are required, associate the file to the task
+            file.TaskId = eligibilityResult.TaskNumber;
+            await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+        }
+
         return cmd.EvacuationFileNumber;
     }
 
@@ -433,7 +411,7 @@ public partial class EventsManager
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
-        if (file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (string.IsNullOrEmpty(query.RegistrantUserId) || file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         var eligibility = file.NeedsAssessment.EligibilityCheck?.Eligible == true
             ? new SupportEligibility

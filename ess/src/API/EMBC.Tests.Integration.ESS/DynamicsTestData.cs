@@ -34,7 +34,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_country canada;
         private readonly era_provinceterritories bc;
 
-        private static int[] selfServeSupportTypes = [174360006, 174360000, 174360001, 174360005, 174360009];
+        private static int[] selfServeSupportTypes = [174360000, 174360001, 174360005, 174360006, 174360009];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
@@ -114,7 +114,7 @@ namespace EMBC.Tests.Integration.ESS
 
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
             if (essContext.era_tasks.Where(t => t.era_name == selfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, selfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes);
-            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes.Take(2).ToArray());
+            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, [174360001, 174360005]);
 
             this.testContact = essContext.contacts.Where(c => c.era_bcservicescardid == this.testPrefix + "-userId").SingleOrDefault() ?? CreateContact(essContext);
 
