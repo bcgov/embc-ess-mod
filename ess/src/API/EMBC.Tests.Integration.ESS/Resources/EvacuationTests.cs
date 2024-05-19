@@ -258,7 +258,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task AddEligibilityCheck_Eligible_Added()
         {
             var fileId = TestData.EvacuationFileId;
-            var taskNumber = TestData.ActiveTaskId;
+            var taskNumber = TestData.SelfServeActiveTaskId;
             var from = DateTimeOffset.Now;
             var to = from.AddHours(72);
             var cmd = new AddEligibilityCheck
@@ -268,8 +268,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 TaskNumber = taskNumber,
                 From = from,
                 To = to,
-                Reason = null,
+                Reason = "Test",
                 HomeAddressReferenceId = null,
+                EligibleSupports = [SelfServeSupportType.ShelterAllowance, SelfServeSupportType.Clothing, SelfServeSupportType.Incidentals, SelfServeSupportType.FoodRestaurant, SelfServeSupportType.FoodGroceries]
             };
 
             var response = await evacuationRepository.Manage(cmd);
@@ -282,6 +283,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             eligibility.TaskNumber.ShouldBe(taskNumber);
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
+            eligibility.EligibleSupports.Order().ShouldBe(cmd.EligibleSupports.Order());
         }
 
         [Fact]

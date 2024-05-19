@@ -71,6 +71,7 @@ public record AddEligibilityCheck : ManageEvacuationFileCommand
     public string? Reason { get; set; }
     public DateTimeOffset? From { get; set; }
     public DateTimeOffset? To { get; set; }
+    public IEnumerable<SelfServeSupportType> EligibleSupports { get; set; } = [];
 }
 
 public record OptoutSelfServe : ManageEvacuationFileCommand
@@ -171,6 +172,7 @@ public record SelfServeEligibilityCheck
     public string? TaskNumber { get; set; }
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
+    public IEnumerable<SelfServeSupportType> EligibleSupports { get; set; } = [];
 }
 
 public enum NoteType
@@ -202,8 +204,6 @@ public enum IdentifiedNeed
     Clothing
 }
 
-#pragma warning disable CA1008 // Enums should have zero value
-
 public enum EraTwoOptions
 {
     Yes = 174360000,
@@ -219,4 +219,11 @@ public enum EvacuationFileStatus
     Archived = 174360004
 }
 
-#pragma warning restore CA1008 // Enums should have zero value
+public enum SelfServeSupportType
+{
+    FoodGroceries = 174360000,
+    FoodRestaurant = 174360001,
+    Incidentals = 174360005,
+    Clothing = 174360006,
+    ShelterAllowance = 174360009
+}

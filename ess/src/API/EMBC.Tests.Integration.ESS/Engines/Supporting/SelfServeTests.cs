@@ -4,6 +4,7 @@ using System.Linq;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -51,10 +52,11 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
-    public async Task ValidateEligibility_NoNeeds_False()
+    public async Task ValidateEligibility_NoNeeds_True()
     {
         var (file, _) = await CreateTestSubjects(needs: [], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
-        await RunEligibilityTest(file.Id, false, "Evacuee didn't identify any needs");
+        var eligibility = await RunEligibilityTest(file.Id, true, null);
+        eligibility.eligibleSupportTypes.ShouldBeEmpty();
     }
 
     [Fact]
@@ -113,7 +115,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects();
         var task = await GetTask(TestData.SelfServeActiveTaskId);
-        var supports = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
+        var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
                 [SelfServeSupportType.ShelterAllowance],
                 DateTime.Now.ToPST(),
@@ -121,7 +123,11 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
-        supports.Supports.ShouldNotBeEmpty();
+        var supports = response.Supports;
+        supports.ShouldNotBeEmpty();
+        var support = supports.Where(s => s is SelfServeShelterAllowanceSupport).ShouldHaveSingleItem().ShouldBeOfType<SelfServeShelterAllowanceSupport>();
+        support.Nights.Count().ShouldBe(3);
+        support.IncludedHouseholdMembers.Order().ShouldBe(file.NeedsAssessment.HouseholdMembers.Select(hm => hm.Id).Order());
     }
 
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)

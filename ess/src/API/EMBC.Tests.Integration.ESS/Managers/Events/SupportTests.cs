@@ -457,7 +457,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             var fromDay = DateOnly.FromDateTime(from);
             var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
-            var supportDays = (new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) });
+            var supportDays = new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) };
             var etransferDetails = new ETransferDetails
             {
                 ContactEmail = registrant.Email ?? "test@test.gov.bc.ca",
@@ -468,10 +468,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var supports = new SelfServeSupport[]
             {
-                new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
-                new SelfServeClothingSupport{ TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
-                new SelfServeFoodGroceriesSupport{ TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
-                new SelfServeShelterAllowanceSupport{ TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeFoodGroceriesSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+                new SelfServeShelterAllowanceSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
             };
 
             await manager.Handle(new ProcessSelfServeSupportsCommand
@@ -483,6 +483,67 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
             updatedFile.Supports.Count().ShouldBe(supports.Length);
+            updatedFile.HouseholdMembers.Count().ShouldBe(file.HouseholdMembers.Count());
+            updatedFile.RelatedTask.Id.ShouldBe(file.RelatedTask.Id);
+        }
+
+        [Fact]
+        public async Task ProcessSelfServeSupports_DuplicateHouseholdMember_SupportsCreated()
+        {
+            var registrant = TestHelper.CreateRegistrantProfile();
+            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
+            registrant.Id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var file = CreateNewTestEvacuationFile(registrant);
+            var primaryHouseholdMember = file.HouseholdMembers.Single(hm => hm.IsPrimaryRegistrant);
+            var duplicateHouseholdMember = new HouseholdMember
+            {
+                IsPrimaryRegistrant = false,
+                FirstName = primaryHouseholdMember.FirstName,
+                LastName = primaryHouseholdMember.LastName,
+                DateOfBirth = primaryHouseholdMember.DateOfBirth,
+                IsMinor = primaryHouseholdMember.IsMinor,
+                Gender = primaryHouseholdMember.Gender,
+            };
+
+            file.HouseholdMembers = [primaryHouseholdMember, duplicateHouseholdMember];
+            file.NeedsAssessment.HouseholdMembers = file.HouseholdMembers;
+            file.NeedsAssessment.Needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+            file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
+            file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+
+            var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            var fromDay = DateOnly.FromDateTime(from);
+            var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
+            var supportDays = new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) };
+            var etransferDetails = new ETransferDetails
+            {
+                ContactEmail = registrant.Email ?? "test@test.gov.bc.ca",
+                ETransferEmail = registrant.Email,
+                ETransferMobile = registrant.Phone,
+                RecipientName = $"{registrant.FirstName} {registrant.LastName}"
+            };
+
+            var supports = new SelfServeSupport[]
+            {
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeFoodGroceriesSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+                new SelfServeShelterAllowanceSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+            };
+
+            await manager.Handle(new ProcessSelfServeSupportsCommand
+            {
+                Supports = supports,
+                ETransferDetails = etransferDetails,
+                EvacuationFileNumber = file.Id,
+            });
+
+            var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+            updatedFile.Supports.Count().ShouldBe(supports.Length);
+            updatedFile.HouseholdMembers.Count().ShouldBe(file.HouseholdMembers.Count());
+            updatedFile.RelatedTask.Id.ShouldBe(file.RelatedTask.Id);
         }
 
         private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects()

@@ -414,7 +414,7 @@ public partial class EventsManager
 
         var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileNumber), default)).Eligibility;
 
-        var response = await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
+        await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
             EvacuationFileNumber = cmd.EvacuationFileNumber,
             Eligible = eligibilityResult.Eligible,
@@ -422,10 +422,11 @@ public partial class EventsManager
             HomeAddressReferenceId = eligibilityResult.HomeAddressReferenceId,
             From = eligibilityResult.From,
             To = eligibilityResult.To,
-            Reason = eligibilityResult.Reason
+            Reason = eligibilityResult.Reason,
+            EligibleSupports = mapper.Map<IEnumerable<Resources.Evacuations.SelfServeSupportType>>(eligibilityResult.eligibleSupportTypes)
         });
 
-        return response.Id;
+        return cmd.EvacuationFileNumber;
     }
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)

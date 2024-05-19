@@ -84,9 +84,10 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
         if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
 
-        // check if requested e-transfer supports are enabled for self-serve
         var needs = GetIdentifiedNeeds(needsAssessment).ToArray();
-        if (needs.Length == 0) return NotEligible("Evacuee didn't identify any needs", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+
+        // check if any needs were requested
+        if (needs.Length == 0) return Eligible(taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid.Value, from: eligibleFrom, to: eligibleTo, eligibleSupportTypes: []);
 
         // check if requested supports include referrals
         if (needs.Contains(IdentifiedNeed.ShelterReferral)) return NotEligible("Evacuee requested support referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
@@ -113,7 +114,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // return eligibility results
-        return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo);
+        return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo, []);
     }
 
     private static IEnumerable<IdentifiedNeed> GetIdentifiedNeeds(era_needassessment needsAssessment)
@@ -176,6 +177,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
          IdentifiedNeed.Transportation => [SupportType.TransporationTaxi, SupportType.TransportationOther],
          IdentifiedNeed.Incidentals => [SupportType.Incidentals],
          IdentifiedNeed.Clothing => [SupportType.Clothing],
+
          _ => throw new NotImplementedException()
      };
 
@@ -187,11 +189,17 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
     }
 
-    private static SelfServeSupportEligibility NotEligible(string reason, string? taskNumber = null, Guid? referencedHomeAddressId = null, DateTimeOffset? from = null, DateTimeOffset? to = null) =>
-        new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), from, to);
+    private static SelfServeSupportEligibility NotEligible(
+        string reason,
+        string? taskNumber = null,
+        Guid? referencedHomeAddressId = null,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null,
+        IEnumerable<SelfServeSupportType>? eligibleSupportTypes = null) =>
+        new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), from, to, eligibleSupportTypes ?? []);
 
-    private static SelfServeSupportEligibility Eligible(string taskNumber, Guid referencedHomeAddressId, DateTimeOffset from, DateTimeOffset to) =>
-        new SelfServeSupportEligibility(true, null, taskNumber, referencedHomeAddressId.ToString(), from, to);
+    private static SelfServeSupportEligibility Eligible(string taskNumber, Guid referencedHomeAddressId, DateTimeOffset from, DateTimeOffset to, IEnumerable<SelfServeSupportType> eligibleSupportTypes) =>
+        new SelfServeSupportEligibility(true, null, taskNumber, referencedHomeAddressId.ToString(), from, to, eligibleSupportTypes);
 
     private enum NeedTrueFalse
     {
