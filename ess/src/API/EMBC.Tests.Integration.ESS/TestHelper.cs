@@ -132,5 +132,16 @@ namespace EMBC.Tests.Integration.ESS
                 Country = "CA"
             };
         }
+
+        public static Address CreatePartialSelfServeEligibleAddress()
+        {
+            return new Address
+            {
+                AddressLine1 = "150 ALEXANDER ST",
+                City = "Vancouver",
+                StateProvince = "BC",
+                Country = "CA"
+            };
+        }
     }
 }

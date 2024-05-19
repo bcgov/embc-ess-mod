@@ -20,6 +20,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
         private readonly string selfServeActiveTaskId;
+        private readonly string partialSelfServeActiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
@@ -32,6 +33,8 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_supplier inactiveSupplier;
         private readonly era_country canada;
         private readonly era_provinceterritories bc;
+
+        private static int[] selfServeSupportTypes = [174360006, 174360000, 174360001, 174360005, 174360009];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
@@ -50,6 +53,7 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveTaskId => inactiveTaskId;
         public string InactiveTaskCommunity => inactiveTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string SelfServeActiveTaskId => selfServeActiveTaskId;
+        public string PartialSelfServeActiveTaskId => partialSelfServeActiveTaskId;
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
@@ -91,7 +95,8 @@ namespace EMBC.Tests.Integration.ESS
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
-            this.selfServeActiveTaskId = "1234";
+            this.selfServeActiveTaskId = testPrefix + "-selfserve-task";
+            this.partialSelfServeActiveTaskId = testPrefix + "-partial-selfserve-task";
 
             this.team1 = GetOrCreateTeam(essContext, testPrefix + "-team1");
 
@@ -108,6 +113,8 @@ namespace EMBC.Tests.Integration.ESS
             this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, activeTaskId, DateTime.UtcNow);
 
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
+            if (essContext.era_tasks.Where(t => t.era_name == selfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, selfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes);
+            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes.Take(2).ToArray());
 
             this.testContact = essContext.contacts.Where(c => c.era_bcservicescardid == this.testPrefix + "-userId").SingleOrDefault() ?? CreateContact(essContext);
 
@@ -242,14 +249,20 @@ namespace EMBC.Tests.Integration.ESS
             return member;
         }
 
-        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate)
+        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate, int[]? selfServeSupportTypes = null)
         {
+            var from = startDate;
+            var to = startDate.AddHours(72);
+            var selfServe = selfServeSupportTypes != null;
+
             var task = new era_task
             {
                 era_taskid = Guid.NewGuid(),
                 era_name = taskId,
-                era_taskstartdate = startDate,
-                era_currentdateandtime = startDate.AddDays(3),
+                era_taskstartdate = from,
+                era_currentdateandtime = to,
+                era_selfservetoggle = selfServe,
+                era_taskdetails = "autotest",
             };
             essContext.AddToera_tasks(task);
 
@@ -260,6 +273,21 @@ namespace EMBC.Tests.Integration.ESS
                 task._era_jurisdictionid_value = jurisdiction.era_jurisdictionid;
             }
 
+            if (selfServe)
+            {
+                task.era_createselfservesupportlimits = true;
+
+                foreach (var supportType in selfServeSupportTypes!)
+                {
+                    var limit = new era_selfservesupportlimits
+                    {
+                        era_supporttypeoption = supportType,
+                        era_selfservesupportlimitsid = Guid.NewGuid(),
+                    };
+                    essContext.AddToera_selfservesupportlimitses(limit);
+                    essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_Task), task);
+                }
+            }
             return task;
         }
 
@@ -369,7 +397,7 @@ namespace EMBC.Tests.Integration.ESS
         private void CreateEvacueeSupports(EssContext essContext, era_evacuationfile file, contact contact, era_essteamuser creator, string prefix)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
-            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
+            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008, 174360009 };
 
             var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
