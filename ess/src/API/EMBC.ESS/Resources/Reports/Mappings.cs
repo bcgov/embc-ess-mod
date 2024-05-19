@@ -80,7 +80,8 @@ namespace EMBC.ESS.Resources.Reports
                     case (int)SupportType.Lodging_Hotel:
                     case (int)SupportType.Lodging_Billeting:
                     case (int)SupportType.Lodging_Group:
-                        res = "Lodging";
+                    case (int)SupportType.Lodging_Shelter:
+                        res = "Shelter";
                         break;
 
                     case (int)SupportType.Incidentals:
@@ -125,6 +126,10 @@ namespace EMBC.ESS.Resources.Reports
 
                     case (int)SupportType.Lodging_Group:
                         res = "Group";
+                        break;
+
+                    case (int)SupportType.Lodging_Shelter:
+                        res = "Shelter Allowance";
                         break;
 
                     case (int)SupportType.Transportation_Taxi:
