@@ -19,7 +19,8 @@ import { AlertComponent } from '../../core/components/alert/alert.component';
 import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
-import { EligibilityCheck } from 'src/app/core/api/models';
+import { DraftSupports, EligibilityCheck } from 'src/app/core/api/models';
+import { SupportsService } from 'src/app/core/api/services';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -61,7 +62,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     private route: ActivatedRoute,
     private alertService: AlertService,
     private nonVerifiedRegistrationService: NonVerifiedRegistrationService,
-    private evacuationFileDataService: EvacuationFileDataService
+    private evacuationFileDataService: EvacuationFileDataService,
+    private supportsService: SupportsService
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation !== null) {
@@ -230,17 +232,26 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   mapAndNavigate() {
+    let evacuationFileId: string;
+    let eligibilityCheck: EligibilityCheck;
+
     this.evacuationFileDataService
       .createEvacuationFile()
       .pipe(
-        tap((evacuationFileId) => this.needsAssessmentService.setVerifiedEvacuationFileNo(evacuationFileId)),
-        switchMap((evacuationFileId) =>
-          this.evacuationFileDataService.checkEligibleForSelfServeSupport({ evacuationFileId })
-        )
+        tap((fileId) => {
+          evacuationFileId = fileId;
+          this.needsAssessmentService.setVerifiedEvacuationFileNo(evacuationFileId);
+        }),
+        switchMap(() => this.evacuationFileDataService.checkEligibleForSelfServeSupport({ evacuationFileId })),
+        switchMap((check: EligibilityCheck) => {
+          eligibilityCheck = check;
+          return this.supportsService.supportsGetDraftSupports({ evacuationFileId });
+        })
       )
       .subscribe({
-        next: (value: EligibilityCheck) => {
-          if (value.isEligable) this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
+        next: (draftSupports: DraftSupports) => {
+          if (eligibilityCheck?.isEligable && draftSupports?.items?.length > 0)
+            this.router.navigate(['/verified-registration/eligible-self-serve/confirm']);
           else this.router.navigate(['/verified-registration/dashboard']);
         },
         error: (error: any) => {
