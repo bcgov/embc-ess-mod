@@ -22,7 +22,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_EligibleFile_True()
     {
-        var (file, _) = await CreateTestSubjects();
+        var (file, _) = await CreateTestSubjects(homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var eligibility = await RunEligibilityTest(file.Id, true, null);
         eligibility.From.ShouldNotBeNull();
         eligibility.To.ShouldNotBeNull();
@@ -32,35 +32,35 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_MoreThan5HouseholdMembers_False()
     {
-        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 6);
+        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 6, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         await RunEligibilityTest(file.Id, false, "File has more than 5 household members");
     }
 
     [Fact]
     public async Task ValidateEligibility_NotEligibleAddress_False()
     {
-        var (file, _) = await CreateTestSubjects(eligibleAddress: false);
+        var (file, _) = await CreateTestSubjects(homeAddress: TestHelper.CreateSelfServeIneligibleAddress());
         await RunEligibilityTest(file.Id, false, "No suitable task found for home address");
     }
 
     [Fact]
     public async Task ValidateEligibility_NotHomeAddress_False()
     {
-        var (file, _) = await CreateTestSubjects(eligibleAddress: null);
+        var (file, _) = await CreateTestSubjects(homeAddress: null);
         await RunEligibilityTest(file.Id, false, "Registarnt has no home address");
     }
 
     [Fact]
     public async Task ValidateEligibility_NoNeeds_False()
     {
-        var (file, _) = await CreateTestSubjects(needs: []);
+        var (file, _) = await CreateTestSubjects(needs: [], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         await RunEligibilityTest(file.Id, false, "Evacuee didn't identify any needs");
     }
 
     [Fact]
     public async Task ValidateEligibility_ShelterReferral_False()
     {
-        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Food]);
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
 
         await RunEligibilityTest(file.Id, false, "Evacuee requested support referrals");
     }
@@ -68,7 +68,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     [Fact]
     public async Task ValidateEligibility_DuplicateSupport_False()
     {
-        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId);
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
@@ -80,9 +80,17 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
+    public async Task ValidateEligibility_PartialEnabledSupports_False()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
+
+        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Incidentals,FoodGroceries,ShelterAllowance");
+    }
+
+    [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
-        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId);
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
@@ -98,19 +106,6 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await SaveSupports(file.Id, previousSupports);
 
         await RunEligibilityTest(file.Id, true, null);
-    }
-
-    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
-    {
-        var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
-        eligibilityResponse.ShouldNotBeNull();
-        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedResult, eligibilityResponse.Eligibility.Reason);
-        if (string.IsNullOrEmpty(reason))
-            eligibilityResponse.Eligibility.Reason.ShouldBeNullOrEmpty();
-        else
-            eligibilityResponse.Eligibility.Reason.ShouldContain(reason);
-
-        return eligibilityResponse.Eligibility;
     }
 
     [Fact]
@@ -129,15 +124,23 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         supports.Supports.ShouldNotBeEmpty();
     }
 
-    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(string? taskNumber = null, int numberOfHoldholdMembers = 5, bool? eligibleAddress = true, IEnumerable<IdentifiedNeed>? needs = null)
+    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
+    {
+        var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
+        eligibilityResponse.ShouldNotBeNull();
+        eligibilityResponse.Eligibility.Eligible.ShouldBe(expectedResult, eligibilityResponse.Eligibility.Reason);
+        if (string.IsNullOrEmpty(reason))
+            eligibilityResponse.Eligibility.Reason.ShouldBeNullOrEmpty();
+        else
+            eligibilityResponse.Eligibility.Reason.ShouldContain(reason);
+
+        return eligibilityResponse.Eligibility;
+    }
+
+    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(string? taskNumber = null, int numberOfHoldholdMembers = 5, Address? homeAddress = null, IEnumerable<IdentifiedNeed>? needs = null)
     {
         var registrant = TestHelper.CreateRegistrantProfile();
-        if (eligibleAddress == null)
-            registrant.HomeAddress = null;
-        else if (eligibleAddress.Value)
-            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
-        else
-            registrant.HomeAddress = TestHelper.CreateSelfServeIneligibleAddress();
+        registrant.HomeAddress = homeAddress;
 
         registrant.Id = await SaveRegistrant(registrant);
         var file = TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber, numberOfHoldholdMembers);
