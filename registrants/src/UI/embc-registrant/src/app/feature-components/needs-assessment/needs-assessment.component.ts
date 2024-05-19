@@ -144,7 +144,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       if (this.currentFlow === 'non-verified-registration') {
         this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
       } else {
-        this.router.navigate(['/verified-registration/confirm-restriction']);
+        this.router.navigate(['/verified-registration/dashboard']);
       }
     }
   }
