@@ -15,13 +15,9 @@
             <label class="tab-subtitle">Restriction</label>
             <div class="row">
               <div class="col-4">Consent to Share Registration Status</div>
-              <div class="col-8 bold" *ngIf="!stepEvacueeProfileService?.restrictedAccess; else notRestricted">
-                  Yes
-              </div>
+              <div class="col-8 bold" *ngIf="!stepEvacueeProfileService?.restrictedAccess; else notRestricted">Yes</div>
               <ng-template #notRestricted>
-                <div class="col-8 bold">
-                  No
-              </div>
+                <div class="col-8 bold">No</div>
               </ng-template>
             </div>
           </div>
