@@ -2,7 +2,7 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="wizard-tab-heading requiredField"> Security Phrase </span>
+        <span class="wizard-tab-heading requiredField"> Security Word </span>
       </div>
     </div>
   </div>
@@ -15,23 +15,23 @@
           *ngIf="essFileNumber === null || essFileNumber === undefined || editedSecurityPhrase; else editEssFile"
         >
           <p>
-            The security phrase is to ensure an Emergency Support Services (ESS) Responder can verbally verify your
+            The security word is to ensure an Emergency Support Services (ESS) Responder can verbally verify your
             identity with your registration.
           </p>
 
           <p>
             Enter a
-            <strong>memorable security phrase that is over 6 characters in length.</strong>
-            You may include numbers and letters. Do not include any special characters. The security phrase is not case
+            <strong>memorable security word that is over 6 characters in length.</strong>
+            You may include numbers and letters. Do not include any special characters. The security word is not case
             sensitive.
           </p>
 
-          <p>Your security phrase should never include your email address.</p>
+          <p>Your security word should never include your email address.</p>
 
           <form [formGroup]="securityForm">
             <div class="row">
               <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Security Phrase</mat-label>
+                <mat-label>Security Word</mat-label>
 
                 <input matInput maxlength="50" autocomplete="off" formControlName="securityPhrase" />
 
@@ -66,14 +66,14 @@
         <ng-template #editEssFile>
           <div class="col-8">
             <div class="row">
-              <div class="col-md-6"><p>Security Phrase</p></div>
+              <div class="col-md-6"><p>Security Word</p></div>
               <div class="col-md-6">
                 <p>{{ stepEssFileService?.securityPhrase | maskText }}</p>
               </div>
             </div>
 
             <div class="row edit-phrase-row">
-              <button class="btn edit-phrase" (click)="editSecurityPhrase()">Add new security phrase</button>
+              <button class="btn edit-phrase" (click)="editSecurityPhrase()">Add new security word</button>
             </div>
           </div>
         </ng-template>
@@ -82,11 +82,11 @@
           <mat-card class="tips-card">
             <div>
               <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-              <span class="tips-heading"> <span class="bold">Tip:</span> Security Phrase </span>
+              <span class="tips-heading"> <span class="bold">Tip:</span> Security Word </span>
             </div>
 
             <p class="tips-info">
-              If you have been evacuated, please share your security phrase with your listed household members. This
+              If you have been evacuated, please share your security word with your listed household members. This
               will allow an Emergency Support Services (ESS) Responder to assist each household member registered under
               the same file.
             </p>

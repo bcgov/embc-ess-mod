@@ -62,10 +62,10 @@ describe('StepEssFileComponent', () => {
     expect(testMockComponent.tabs).toBeDefined();
   });
 
-  it('should load ess file with security phrase for digital flow', () => {
+  it('should load ess file with security word for digital flow', () => {
     stepEssFileService.essTabsValue = stepEssFileService.essFileTabs;
     const expectedTab = {
-      label: 'Security Phrase',
+      label: 'Security Word',
       route: 'security-phrase',
       name: 'security-phrase',
       status: 'not-started',
@@ -81,7 +81,7 @@ describe('StepEssFileComponent', () => {
   it('should load ess file without security questions for paper based', () => {
     stepEssFileService.essTabsValue = stepEssFileService.paperEssFileTabs;
     const expectedTab = {
-      label: 'Security Phrase',
+      label: 'Security Word',
       route: 'security-phrase',
       name: 'security-phrase',
       status: 'not-started',

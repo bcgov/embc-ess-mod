@@ -75,7 +75,7 @@ export class StepEssFileService {
   // Needs tab
   private needs: Set<IdentifiedNeed> = new Set<IdentifiedNeed>();
 
-  // Security Phrase tab
+  // Security Word tab
   private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
   private originalPhraseVal: string;
@@ -372,7 +372,7 @@ export class StepEssFileService {
     );
   }
 
-  // Security Phrase tab
+  // Security Word tab
   public get bypassPhrase(): boolean {
     return this.bypassPhraseVal;
   }
@@ -600,7 +600,7 @@ export class StepEssFileService {
     // Needs tab
     this.needs.clear();
 
-    // Security Phrase tab
+    // Security Word tab
     this.bypassPhrase = undefined;
     this.securityPhrase = undefined;
     this.originalSecurityPhrase = undefined;
@@ -671,7 +671,7 @@ export class StepEssFileService {
     this.needs = new Set(essNeeds.needs);
     this.reqiresNothing = essNeeds.needs?.length === 0;
 
-    // Security Phrase tab
+    // Security Word tab
     this.securityPhrase = essFile.securityPhrase;
     this.originalSecurityPhrase = essFile.securityPhrase;
     this.editedSecurityPhrase = essFile.securityPhraseEdited;

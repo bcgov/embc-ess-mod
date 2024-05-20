@@ -189,7 +189,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/household-members-pets'
     },
     {
-      label: 'Security Phrase',
+      label: 'Security Word',
       route: 'security-phrase',
       name: 'security-phrase',
       status: 'not-started',
