@@ -44,7 +44,7 @@ internal class SelfServeEtransferGenerator(IMapper mapper) : ISupportGenerationS
                 ReceivingRegistrantId = r.RegistrantId,
             };
 
-            supports.Add(support);
+            if (support.IncludedHouseholdMembers.Any()) supports.Add(support);
         }
 
         return new GenerateSelfServeETransferSupportsResponse(supports);
