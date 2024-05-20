@@ -59,7 +59,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Go back to the Security Phrase tab
+   * Go back to the Security Word tab
    */
   back(): void {
     this.router.navigate([this.tabMetaData?.previous]);

@@ -1082,7 +1082,7 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsGetSecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
-   * get the security phrase of an evacuation file.
+   * get the security word of an evacuation file.
    *
    *
    *
@@ -1118,7 +1118,7 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * get the security phrase of an evacuation file.
+   * get the security word of an evacuation file.
    *
    *
    *
@@ -1144,7 +1144,7 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsVerifySecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
-   * verify an evacuation file's security phrase.
+   * verify an evacuation file's security word.
    *
    *
    *
@@ -1160,7 +1160,7 @@ export class RegistrationsService extends BaseService {
     fileId: string;
 
     /**
-     * security phrase to verify
+     * security word to verify
      */
     body: VerifySecurityPhraseRequest;
   }): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
@@ -1186,7 +1186,7 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * verify an evacuation file's security phrase.
+   * verify an evacuation file's security word.
    *
    *
    *
@@ -1202,7 +1202,7 @@ export class RegistrationsService extends BaseService {
     fileId: string;
 
     /**
-     * security phrase to verify
+     * security word to verify
      */
     body: VerifySecurityPhraseRequest;
   }): Observable<VerifySecurityPhraseResponse> {

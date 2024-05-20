@@ -526,8 +526,8 @@ export const supportReprintReasonsError =
   'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const communityTypesError = 'Unable to retrieve community types at this time. Please try again later';
 export const identifiedNeedsError = 'Unable to retrieve identified needs at this time. Please try again later';
-export const securityPhraseError = 'Unable to retrieve security phrase at this time. Please try again later';
-export const verifySecurityPhraseError = 'Unable to verify security phrase at this time. Please try again later';
+export const securityPhraseError = 'Unable to retrieve security word at this time. Please try again later';
+export const verifySecurityPhraseError = 'Unable to verify security word at this time. Please try again later';
 export const linkProfileError = 'Unable to link to ESS File. Please try again later';
 export const securityQuestionsError = 'Unable to retrieve security questions at this time. Please try again later';
 export const verifySecurityQuestionError = 'Unable to verify security questions at this time. Please try again later';

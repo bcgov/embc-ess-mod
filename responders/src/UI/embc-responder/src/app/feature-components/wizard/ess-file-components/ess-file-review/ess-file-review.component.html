@@ -231,18 +231,18 @@
         <div *ngIf="!evacueeSessionService?.isPaperBased" class="row">
           <div class="col-12">
             <div class="review-panel data-panel">
-              <label class="tab-subtitle">Security Phrase</label>
+              <label class="tab-subtitle">Security Word</label>
 
               <div class="row" *ngIf="wizardType === 'new-ess-file' && stepEssFileService?.bypassPhrase">
                 <div class="col-8">
                   <mat-checkbox [checked]="true" [disabled]="true">
-                    Bypass security phrase for manual entry of paper ESS file.
+                    Bypass security word for manual entry of paper ESS file.
                   </mat-checkbox>
                 </div>
               </div>
 
               <div class="row" *ngIf="!stepEssFileService?.bypassPhrase || wizardType !== 'new-ess-file'">
-                <div class="col-4">Security Phrase</div>
+                <div class="col-4">Security Word</div>
                 <div class="col-8 bold">
                   {{ stepEssFileService?.securityPhrase | maskText }}
                 </div>

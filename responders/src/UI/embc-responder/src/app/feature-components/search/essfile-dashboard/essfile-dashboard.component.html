@@ -48,19 +48,6 @@
 
     <div class="row">
       <div class="col-md-12">
-        <span class="field-label">Restriction Status: </span>
-        <span
-          [ngClass]="{
-            'not-restricted-field': !essFile?.isRestricted,
-            'restricted-field': essFile?.isRestricted
-          }"
-          >{{ essFile?.isRestricted ? 'Restricted' : 'Unrestricted' }}</span
-        >
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
         <span class="field-label">Main Applicant:</span>
         <span class="bold" *ngIf="essFile?.primaryRegistrantLastName || essFile?.primaryRegistrantFirstName">
           {{ essFile?.primaryRegistrantLastName | uppercase }},
