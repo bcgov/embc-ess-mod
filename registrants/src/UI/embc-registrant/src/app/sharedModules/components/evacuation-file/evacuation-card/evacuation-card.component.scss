@@ -50,6 +50,22 @@
   max-width: 100%;
 }
 
+.data-column-1 {
+  width: 30%;
+}
+
+.data-column-2 {
+  width: 20%;
+}
+
+.data-column-3 {
+  width: 20%;
+}
+
+.data-column-4 {
+  width: 20%;
+}
+
 @media only screen and (max-width: 420px), (min-device-width: 400px) and (max-device-width: 1000px) {
   /* Force table to not be like tables anymore */
   table,
@@ -99,5 +115,9 @@
   }
   td:nth-of-type(4):before {
     content: 'Status';
+  }
+
+  .data-column-1, .data-column-2 , .data-column-3, .data-column-4 {
+    width: auto;
   }
 }
