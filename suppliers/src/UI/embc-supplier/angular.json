@@ -20,7 +20,7 @@
             "outputPath": "dist/embc-supplier",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
@@ -62,33 +62,33 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "embc-supplier:build"
+            "browserTarget": "embc-supplier:build"
           },
           "configurations": {
             "local": {
               "proxyConfig": "proxy.conf.local.json",
-              "buildTarget": "embc-supplier:build:local"
+              "browserTarget": "embc-supplier:build:local"
             },
             "dev": {
               "proxyConfig": "proxy.conf.json",
-              "buildTarget": "embc-supplier:build:local"
+              "browserTarget": "embc-supplier:build:local"
             },
             "production": {
-              "buildTarget": "embc-supplier:build:production"
+              "browserTarget": "embc-supplier:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "embc-supplier:build"
+            "browserTarget": "embc-supplier:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
