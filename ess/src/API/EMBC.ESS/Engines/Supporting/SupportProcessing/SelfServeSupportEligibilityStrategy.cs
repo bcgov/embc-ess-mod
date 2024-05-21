@@ -165,13 +165,11 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
                     else if (!enabledSupports.Contains(SupportType.FoodGroceries) && enabledSupports.Contains(SupportType.FoodRestaurant))
                     {
                         // groceries support type is disabled and restaurant is enabled
-                        ineligibleSupports.Add(SelfServeSupportType.FoodGroceries);
                         eligibleSupports.Add(SelfServeSupportType.FoodRestaurant);
                     }
                     else if (!enabledSupports.Contains(SupportType.FoodRestaurant) && enabledSupports.Contains(SupportType.FoodGroceries))
                     {
                         // restaurant support type is disabled and groceries is enabled
-                        ineligibleSupports.Add(SelfServeSupportType.FoodRestaurant);
                         eligibleSupports.Add(SelfServeSupportType.FoodGroceries);
                     }
                     else
