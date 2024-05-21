@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogContent } from '../../model/dialog-content.model';
 import { InformationDialogComponent } from '../../components/dialog/information-dialog.component';
 
