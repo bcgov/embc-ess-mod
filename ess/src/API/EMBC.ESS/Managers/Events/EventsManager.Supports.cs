@@ -346,7 +346,7 @@ public partial class EventsManager
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
         if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
         if (file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
-        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileNumber} is not eligible for self serve");
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessValidationException($"File {query.EvacuationFileNumber} is not eligible for self serve");
 
         var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskNumber, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
         if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskNumber);

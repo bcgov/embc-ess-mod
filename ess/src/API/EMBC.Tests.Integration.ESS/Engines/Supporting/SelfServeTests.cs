@@ -90,6 +90,15 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
+    public async Task ValidateEligibility_PartialEnabledSupports_True()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
+
+        var eligibility = await RunEligibilityTest(file.Id, true, null);
+        eligibility.eligibleSupportTypes.ShouldHaveSingleItem().ShouldBe(SelfServeSupportType.FoodRestaurant);
+    }
+
+    [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
         var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
