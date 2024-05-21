@@ -35,16 +35,9 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
     private async Task<SelfServeSupportEligibility> ValidateEligibility(ValidateSelfServeSupportsEligibility request, CancellationToken ct)
     {
         var ctx = essContextFactory.Create();
-        var file = await ctx.era_evacuationfiles
-            .Expand(f => f.era_CurrentNeedsAssessmentid)
-            .Expand(f => f.era_CurrentNeedsAssessmentid.era_TaskNumber)
-            .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
-            .Expand(f => f.era_Registrant)
-            .Expand(f => f.era_Registrant.era_BCSCAddress)
-            .Where(f => f.era_name == request.EvacuationFileId).SingleOrDefaultAsync();
 
+        var file = await GetFile(ctx, request.EvacuationFileId, ct);
         if (file == null) throw new InvalidOperationException($"File {request.EvacuationFileId} not found");
-        await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
 
         var registrant = file.era_Registrant;
         if (registrant == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no primary registrant");
@@ -68,13 +61,10 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // check the task is enabled for self-serve
-        var task = await ctx.era_tasks
-            .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
-            .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
 
+        var task = await GetTask(ctx, taskNumber, ct);
         if (task == null) return NotEligible($"Task {taskNumber} was not found or not active in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
-        await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
         var enabledSupports = GetEnabledSupportTypesForTask(task).ToArray();
         if (enabledSupports.Length == 0) return NotEligible("Task has no supports enabled for self serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
@@ -206,6 +196,32 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         return features
             .FirstOrDefault(p => p.Any(a => a.Name == "PRODUCTION" && a.Value == (isProduction ? "Yes" : "No")) && p.Any(a => a.Name == "ESS_STATUS" && a.Value == "Active"))
             ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
+    }
+
+    private async Task<era_evacuationfile?> GetFile(EssContext ctx, string evacuationFileNumber, CancellationToken ct)
+    {
+        var file = await ctx.era_evacuationfiles
+            .Expand(f => f.era_CurrentNeedsAssessmentid)
+            .Expand(f => f.era_CurrentNeedsAssessmentid.era_TaskNumber)
+            .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
+            .Expand(f => f.era_Registrant)
+            .Expand(f => f.era_Registrant.era_BCSCAddress)
+            .Where(f => f.era_name == evacuationFileNumber).SingleOrDefaultAsync(ct);
+
+        if (file != null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
+
+        return file;
+    }
+
+    private async Task<era_task?> GetTask(EssContext ctx, string taskNumber, CancellationToken ct)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var task = await ctx.era_tasks
+          .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
+          .Where(t => t.era_name == taskNumber && t.statuscode == 1 && t.era_taskstartdate <= now && t.era_taskenddate > now).SingleOrDefaultAsync(ct);
+        if (task != null) await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
+
+        return task;
     }
 
     private static SelfServeSupportEligibility NotEligible(
