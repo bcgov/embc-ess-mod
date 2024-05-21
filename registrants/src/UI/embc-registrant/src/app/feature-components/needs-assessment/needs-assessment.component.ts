@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
-import { combineLatest, forkJoin, Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { RegistrationResult } from '../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -245,7 +245,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
         switchMap(() => this.evacuationFileDataService.checkEligibleForSelfServeSupport({ evacuationFileId })),
         switchMap((check: EligibilityCheck) => {
           eligibilityCheck = check;
-          return this.supportsService.supportsGetDraftSupports({ evacuationFileId });
+          if (eligibilityCheck?.isEligable) return this.supportsService.supportsGetDraftSupports({ evacuationFileId });
+          else return of(null);
         })
       )
       .subscribe({
