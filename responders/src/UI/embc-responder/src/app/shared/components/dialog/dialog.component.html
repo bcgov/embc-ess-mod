@@ -1,6 +1,6 @@
 <div class="row justify-content-between">
   <div class="col-md-10">
-    <h1 class="mat-title" *ngIf="data?.content?.title" mat-dialog-title [innerHTML]="data?.content?.title"></h1>
+    <h1 class="mat-title" style="font-weight: bold;" *ngIf="data?.content?.title" mat-dialog-title [innerHTML]="data?.content?.title"></h1>
   </div>
   <div class="col-md-2">
     <button class="close-image close-button-style" mat-icon-button aria-label="Close" (click)="buttonAction('close')">
