@@ -86,7 +86,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
 
-        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,FoodGroceries,ShelterAllowance");
+        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,ShelterAllowance");
     }
 
     [Fact]
