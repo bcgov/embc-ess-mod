@@ -61,7 +61,7 @@ public class SelfServeSupportGenerationTests
         var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, []);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe([]);
-        support.TotalAmount.ShouldBe(600d);
+        support.TotalAmount.ShouldBe(0d);
     }
 
     [Fact]

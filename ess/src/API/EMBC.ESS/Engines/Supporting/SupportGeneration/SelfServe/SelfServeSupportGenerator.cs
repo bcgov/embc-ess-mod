@@ -105,7 +105,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
             return support;
         }
 
-        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support) => 200d * support.Nights.Count();
+        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support) => support.IncludedHouseholdMembers.Count() > 0 ? 200d * support.Nights.Count() : 0d;
 
         private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
