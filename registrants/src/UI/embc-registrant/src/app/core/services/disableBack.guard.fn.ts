@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../components/dialog/dialog.component';
 import * as globalConst from '../services/globalConstants';
 import { InformationDialogComponent } from '../components/dialog-components/information-dialog/information-dialog.component';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanDeactivateFn, RouterStateSnapshot } from '@angular/router';
 import { Observable, map, of } from 'rxjs';
 
 /**
@@ -13,7 +13,7 @@ import { Observable, map, of } from 'rxjs';
  *
  * @returns A function that can be used as a route guard, which will display a dialog if the user tries to navigate to a disallowed route.
  */
-export function disableGaurdFn(disAllowedRoutes?: Array<string>) {
+export function disableGaurdFn(disAllowedRoutes?: Array<string>): CanDeactivateFn<any> {
   return function canDeactivate(
     _component: any,
     _currentRoute: ActivatedRouteSnapshot,
