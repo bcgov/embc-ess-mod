@@ -62,26 +62,26 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "embc-supplier:build"
+            "buildTarget": "embc-supplier:build"
           },
           "configurations": {
             "local": {
               "proxyConfig": "proxy.conf.local.json",
-              "browserTarget": "embc-supplier:build:local"
+              "buildTarget": "embc-supplier:build:local"
             },
             "dev": {
               "proxyConfig": "proxy.conf.json",
-              "browserTarget": "embc-supplier:build:local"
+              "buildTarget": "embc-supplier:build:local"
             },
             "production": {
-              "browserTarget": "embc-supplier:build:production"
+              "buildTarget": "embc-supplier:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "embc-supplier:build"
+            "buildTarget": "embc-supplier:build"
           }
         },
         "test": {
