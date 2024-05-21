@@ -15,16 +15,16 @@
           </thead>
           <tbody>
             <tr>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-1">
                 {{ evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy' }}
               </td>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-2">
                 {{ evacuationFileCard?.isPaper ? evacuationFileCard?.manualFileId : evacuationFileCard?.fileId }}
               </td>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-3">
                 {{ evacuationFileCard?.supports.length === 0 ? 'No' : 'Yes' }}
               </td>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-4">
                 <img src="{{ imageIcon }}" height="13" width="13" />
                 {{ evacuationFileCard?.status }}
               </td>
