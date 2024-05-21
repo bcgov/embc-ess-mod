@@ -14,10 +14,17 @@ import { ToastsComponent } from './components/toasts/toasts.component';
 import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive';
 import { WarningModalComponent } from './components/warningModal/warningModal.component';
 import { BannerComponent } from './components/banner/banner.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, MatDialogModule, NgbModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    NgbModule,
+    MatToolbarModule
+  ],
   declarations: [
     AlertComponent,
     BannerComponent,
@@ -38,6 +45,7 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
     CaptchaComponent,
     DecimalCurrencyDirective,
     DragDropDirective,
+    MatToolbarModule,
     FileUploadComponent,
     GSTCodeDirective,
     LoaderComponent,
@@ -46,4 +54,4 @@ import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/lega
     ToastsComponent
   ]
 })
-export class CoreModule {}
+export class CoreModule { }
