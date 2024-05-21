@@ -149,7 +149,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
                         ineligibleSupports.Add(SelfServeSupportType.Incidentals);
                     break;
 
-                case IdentifiedNeed.Clothing when !enabledSupports.Contains(SupportType.Clothing):
+                case IdentifiedNeed.Clothing:
                     if (enabledSupports.Contains(SupportType.Clothing))
                         eligibleSupports.Add(SelfServeSupportType.Clothing);
                     else

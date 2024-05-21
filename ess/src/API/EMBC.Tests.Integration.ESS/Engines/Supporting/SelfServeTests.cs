@@ -86,7 +86,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
 
-        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,FoodGroceries,ShelterAllowance");
+        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,ShelterAllowance");
     }
 
     [Fact]
@@ -124,13 +124,14 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects();
         var task = await GetTask(TestData.SelfServeActiveTaskId);
+        var now = DateTime.UtcNow.ToPST();
         var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
                 [SelfServeSupportType.ShelterAllowance],
-                DateTime.Now.ToPST(),
-                DateTime.Now.ToPST().AddHours(72),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
+                now,
+                now.AddHours(72),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
         var supports = response.Supports;
         supports.ShouldNotBeEmpty();

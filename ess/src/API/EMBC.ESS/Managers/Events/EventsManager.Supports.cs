@@ -97,8 +97,7 @@ public partial class EventsManager
         if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
         // Create a needs assessment and associate with the task
-        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
-        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+        await evacuationRepository.Manage(new Resources.Evacuations.AssignFileToTask { EvacuationFileNumber = file.Id, TaskNumber = file.NeedsAssessment.EligibilityCheck.TaskNumber });
 
         // Process the supports
         await supportingEngine.Process(new ProcessDigitalSupportsRequest
@@ -400,8 +399,7 @@ public partial class EventsManager
         if (eligibilityResult.Eligible && !eligibilityResult.eligibleSupportTypes.Any())
         {
             // no supports are required, associate the file to the task
-            file.TaskId = eligibilityResult.TaskNumber;
-            await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+            await evacuationRepository.Manage(new Resources.Evacuations.AssignFileToTask { EvacuationFileNumber = file.Id, TaskNumber = eligibilityResult.TaskNumber });
         }
 
         return cmd.EvacuationFileNumber;

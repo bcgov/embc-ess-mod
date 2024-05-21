@@ -4,7 +4,8 @@ namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {
-        public static DateTime UtcNowWithKind => DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+        private static string PSTTimeZoneName = GetPSTTimeZoneId();
+        private static TimeZoneInfo PSTTimeZone = TimeZoneInfo.FindSystemTimeZoneById(PSTTimeZoneName);
 
         public static DateTime ToPST(this DateTime date)
         {
@@ -19,7 +20,7 @@ namespace EMBC.Utilities.Extensions
             return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZoneId(), GetUTCTimeZone());
         }
 
-        public static TimeZoneInfo GetPstTimeZone() => TimeZoneInfo.FindSystemTimeZoneById(GetPSTTimeZoneId());
+        public static TimeZoneInfo GetPstTimeZone() => PSTTimeZone;
 
         private static string GetPSTTimeZoneId() => Environment.OSVersion.Platform switch
         {

@@ -32,6 +32,7 @@ public class EvacuationRepository : IEvacuationRepository
             SaveEvacuationFileNote c => await HandleSaveEvacuationFileNote(c, ct),
             AddEligibilityCheck c => await Handle(c, ct),
             OptoutSelfServe c => await Handle(c, ct),
+            AssignFileToTask c => await Handle(c, ct),
 
             _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
         };
@@ -518,5 +519,17 @@ public class EvacuationRepository : IEvacuationRepository
             await ctx.SaveChangesAsync(ct);
         }
         return new ManageEvacuationFileCommandResult { Id = check?.era_eligibilitycheckid?.ToString() };
+    }
+
+    private async Task<ManageEvacuationFileCommandResult> Handle(AssignFileToTask cmd, CancellationToken ct)
+    {
+        var ctx = essContextFactory.Create();
+        var file = await ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.era_name == cmd.EvacuationFileNumber).SingleOrDefaultAsync(ct);
+        if (file == null) throw new ArgumentException($"Evacuation file {cmd.EvacuationFileNumber} not found");
+
+        AssignToTask(ctx, file, cmd.TaskNumber);
+
+        await ctx.SaveChangesAsync(ct);
+        return new ManageEvacuationFileCommandResult { Id = cmd.EvacuationFileNumber };
     }
 }
