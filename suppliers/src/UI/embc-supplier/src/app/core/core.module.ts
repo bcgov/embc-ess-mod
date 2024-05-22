@@ -18,13 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatDialogModule,
-    NgbModule,
-    MatToolbarModule
-  ],
+  imports: [CommonModule, FormsModule, MatDialogModule, NgbModule, MatToolbarModule],
   declarations: [
     AlertComponent,
     BannerComponent,
@@ -54,4 +48,4 @@ import { MatDialogModule } from '@angular/material/dialog';
     ToastsComponent
   ]
 })
-export class CoreModule { }
+export class CoreModule {}

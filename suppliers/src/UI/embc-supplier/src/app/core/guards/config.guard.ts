@@ -9,7 +9,7 @@ import { ConfigService } from '../services/config.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigGuard  {
+export class ConfigGuard {
   public configResult: ServerConfig = new ServerConfig();
 
   constructor(

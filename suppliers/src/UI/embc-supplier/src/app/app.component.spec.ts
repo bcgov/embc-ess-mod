@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SupplierHttpService } from './core/services/supplierHttp.service';
@@ -10,7 +9,7 @@ import { OAuthLogger, OAuthService, UrlHelperService } from 'angular-oauth2-oidc
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule],
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
       declarations: [AppComponent],
       providers: [SupplierHttpService, AuthenticationService, OAuthService, UrlHelperService, OAuthLogger]
     }).compileComponents();

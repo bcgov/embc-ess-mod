@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -6,11 +6,9 @@ import { SafeHtml } from '@angular/platform-browser';
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss']
 })
-export class BannerComponent implements OnInit {
+export class BannerComponent {
   @Input() bannerMsg: string | SafeHtml;
   @Input() bannerType: string;
 
   constructor() {}
-
-  ngOnInit(): void {}
 }

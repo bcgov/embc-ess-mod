@@ -9,7 +9,7 @@ import { SupplierHttpService } from '../services/supplierHttp.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DevGuard  {
+export class DevGuard {
   public configResult: ServerConfig = new ServerConfig();
 
   constructor(
