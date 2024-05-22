@@ -44,6 +44,8 @@ export class SelfServeSupportDetailsFormComponent {
 
   showSelfServeShelterAllowanceSupport = false;
   showSelfServeFoodSupport = false;
+  hasSelfServeFoodGroceriesSupport = false;
+  hasSelfServiceFoodRestaurantSupport = false;
   showSelfServeClothingSupport = false;
   showSelfServeIncidentsSupport = false;
 
@@ -122,6 +124,7 @@ export class SelfServeSupportDetailsFormComponent {
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.showSelfServeFoodSupport = true;
+    this.hasSelfServeFoodGroceriesSupport = true;
   }
 
   private createSelfServeFoodRestaurantSupportForm(
@@ -260,6 +263,7 @@ export class SelfServeSupportDetailsFormComponent {
     this.foodRestaurantDates = [...dates];
 
     this.showSelfServeFoodSupport = true;
+    this.hasSelfServiceFoodRestaurantSupport = true;
   }
 
   private createSelfServeClothingSupportForm(
