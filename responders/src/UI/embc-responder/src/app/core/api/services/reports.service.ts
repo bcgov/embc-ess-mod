@@ -36,7 +36,7 @@ export class ReportsService extends BaseService {
   reportsGetEvacueeReport$Response(
     params?: ReportsGetEvacueeReport$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Blob>> {
+  ): Observable<StrictHttpResponse<void>> {
     return reportsGetEvacueeReport(this.http, this.rootUrl, params, context);
   }
 
@@ -46,9 +46,9 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetEvacueeReport(params?: ReportsGetEvacueeReport$Params, context?: HttpContext): Observable<Blob> {
+  reportsGetEvacueeReport(params?: ReportsGetEvacueeReport$Params, context?: HttpContext): Observable<void> {
     return this.reportsGetEvacueeReport$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
@@ -92,7 +92,7 @@ export class ReportsService extends BaseService {
   reportsGetSupportReport$Response(
     params?: ReportsGetSupportReport$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Blob>> {
+  ): Observable<StrictHttpResponse<void>> {
     return reportsGetSupportReport(this.http, this.rootUrl, params, context);
   }
 
@@ -102,9 +102,9 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetSupportReport(params?: ReportsGetSupportReport$Params, context?: HttpContext): Observable<Blob> {
+  reportsGetSupportReport(params?: ReportsGetSupportReport$Params, context?: HttpContext): Observable<void> {
     return this.reportsGetSupportReport$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

@@ -15,16 +15,16 @@ export function reportsGetSupportReport(
   rootUrl: string,
   params?: ReportsGetSupportReport$Params,
   context?: HttpContext
-): Observable<StrictHttpResponse<Blob>> {
+): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, reportsGetSupportReport.PATH, 'get');
   if (params) {
     rb.query('reportRequestId', params.reportRequestId, {});
   }
 
-  return http.request(rb.build({ responseType: 'blob', accept: 'application/octet-stream', context })).pipe(
+  return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Blob>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
