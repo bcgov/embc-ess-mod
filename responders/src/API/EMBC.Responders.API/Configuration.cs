@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
@@ -9,147 +8,125 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using NSwag;
+using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 
-namespace EMBC.Responders.API;
-
-public class Configuration : IConfigureComponentServices, IConfigureComponentPipeline
+namespace EMBC.Responders.API
 {
-    public void ConfigureServices(ConfigurationServices configurationServices)
+    public class Configuration : IConfigureComponentServices, IConfigureComponentPipeline
     {
-        var services = configurationServices.Services;
-
-        services.AddAuthentication(options =>
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                RequireSignedTokens = true,
-                RequireAudience = true,
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.FromSeconds(60),
-                NameClaimType = ClaimTypes.Upn,
-                RoleClaimType = ClaimTypes.Role,
-                ValidateActor = true,
-                ValidateIssuerSigningKey = true,
-            };
+            var services = configurationServices.Services;
 
-            configurationServices.Configuration.GetSection("jwt").Bind(options);
-
-            options.Events = new JwtBearerEvents
+            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
             {
-                OnAuthenticationFailed = async c =>
+                options.Path = "/api/openapi/{documentName}/openapi.json";
+                options.DocumentName = "Responders Portal API";
+                options.PostProcess = (document, req) =>
                 {
-                    await Task.CompletedTask;
-                    var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                    logger.LogError(c.Exception, "Error authenticating token");
-                },
-                OnTokenValidated = async c =>
-                {
-                    var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-
-                    var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                    c.Principal = await userService.GetPrincipal(c.Principal);
-                    logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
-                }
-            };
-            options.Validate();
-        });
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
-            {
-                policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .RequireClaim("user_role")
-                    .RequireClaim("user_team");
-            });
-            options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
-        });
-
-        services.AddSwaggerGen(opts =>
-        {
-            opts.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Responders Portal API",
-                Version = "v1"
+                    document.Info.Title = "Responders Portal API";
+                };
             });
 
-            opts.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+            services.Configure<SwaggerUiSettings>(options =>
             {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                Description = "JWT Authorization header using the Bearer scheme."
+                options.Path = "/api/openapi";
+                options.DocumentTitle = "responders Portal API Documentation";
+                options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
             });
-            opts.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
+
+            services.AddOpenApiDocument(document =>
             {
-                new OpenApiSecurityScheme
+                document.AddSecurity("bearer token", Array.Empty<string>(), new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
-                },
-                new string[] {}
+                    Type = OpenApiSecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "paste token here",
+                    In = OpenApiSecurityApiKeyLocation.Header
+                });
+
+                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    RequireSignedTokens = true,
+                    RequireAudience = true,
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(60),
+                    NameClaimType = ClaimTypes.Upn,
+                    RoleClaimType = ClaimTypes.Role,
+                    ValidateActor = true,
+                    ValidateIssuerSigningKey = true,
+                };
+
+                configurationServices.Configuration.GetSection("jwt").Bind(options);
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = async c =>
+                    {
+                        await Task.CompletedTask;
+                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                        logger.LogError(c.Exception, $"Error authenticating token");
+                    },
+                    OnTokenValidated = async c =>
+                    {
+                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+
+                        var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        c.Principal = await userService.GetPrincipal(c.Principal);
+                        logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
+                    }
+                };
+                options.Validate();
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .RequireClaim("user_role")
+                        .RequireClaim("user_team");
+                });
+                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
+            });
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
+        }
+
+        public void ConfigurePipeline(PipelineServices services)
+        {
+            var app = services.Application;
+            var env = services.Environment;
+
+            if (services.Environment.IsDevelopment())
+            {
+                IdentityModelEventSource.ShowPII = true;
             }
-        });
-            opts.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? $"{apiDesc.ActionDescriptor.RouteValues["controller"]}{methodInfo.Name}" : null);
-            opts.OperationFilter<ContentTypeOperationFilter>();
-            opts.UseOneOfForPolymorphism();
-            opts.UseAllOfForInheritance();
-        });
 
-        services.AddTransient<IUserService, UserService>();
-        services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
-    }
-
-    public void ConfigurePipeline(PipelineServices services)
-    {
-        var app = services.Application;
-        var env = services.Environment;
-
-        if (services.Environment.IsDevelopment())
-        {
-            IdentityModelEventSource.ShowPII = true;
-        }
-
-        if (!env.IsProduction())
-        {
-            app.UseSwagger(opts =>
+            if (!env.IsProduction())
             {
-                opts.RouteTemplate = "api/openapi/{documentName}/openapi.json";
-            });
-            app.UseSwaggerUI(opts =>
-            {
-                opts.SwaggerEndpoint("v1/openapi.json", "Responders portal API");
-                opts.RoutePrefix = "api/openapi";
-            });
+                app.UseOpenApi();
+                app.UseSwaggerUi();
+            }
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
-        app.UseAuthentication();
-        app.UseAuthorization();
-    }
-}
-
-internal class ContentTypeOperationFilter : IOperationFilter
-{
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
-    {
-        foreach (var (_, response) in operation.Responses)
-        {
-            if (response.Content.ContainsKey("text/plain"))
-                response.Content.Remove("text/plain");
-            if (response.Content.ContainsKey("text/json"))
-                response.Content.Remove("text/json");
-        }
-        app.UseAuthentication();
-        app.UseAuthorization();
-    
     }
 }
