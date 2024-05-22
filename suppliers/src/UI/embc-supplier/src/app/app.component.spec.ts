@@ -1,16 +1,15 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SupplierHttpService } from './core/services/supplierHttp.service';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthenticationService } from './core/services/authentication.service';
 import { OAuthLogger, OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
+import { AppComponent } from './app.component';
+import { AuthenticationService } from './core/services/authentication.service';
+import { SupplierHttpService } from './core/services/supplierHttp.service';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, OAuthModule.forRoot()],
-      declarations: [AppComponent],
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, OAuthModule.forRoot(), AppComponent],
       providers: [SupplierHttpService, AuthenticationService, OAuthService, UrlHelperService, OAuthLogger]
     }).compileComponents();
   }));

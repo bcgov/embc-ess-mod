@@ -44,12 +44,12 @@ enum CAPTCHA_STATE {
 }
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'captcha',
-    templateUrl: './captcha.component.html',
-    styleUrls: ['./captcha.component.scss'],
-    standalone: true,
-    imports: [FormsModule, NgClass]
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'captcha',
+  templateUrl: './captcha.component.html',
+  styleUrls: ['./captcha.component.scss'],
+  standalone: true,
+  imports: [FormsModule, NgClass]
 })
 export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('image') imageContainer: ElementRef;
