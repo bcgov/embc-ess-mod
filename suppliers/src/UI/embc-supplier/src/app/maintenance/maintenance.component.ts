@@ -1,13 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
+import { Component, Input } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConfigGuard } from '../core/guards/config.guard';
+import { BannerComponent } from '../core/components/banner/banner.component';
 
 @Component({
   selector: 'app-maintenance',
   templateUrl: './maintenance.component.html',
-  styleUrls: ['./maintenance.component.scss']
+  styleUrls: ['./maintenance.component.scss'],
+  standalone: true,
+  imports: [BannerComponent]
 })
-export class MaintenanceComponent implements OnInit {
+export class MaintenanceComponent {
   @Input() bannerMsg: SafeHtml =
     'The ERA Supplier Portal is currently undergoing maintenance and will be back as soon as possible.';
 
@@ -21,6 +24,4 @@ export class MaintenanceComponent implements OnInit {
       this.bannerMsg = this.sanitizer.bypassSecurityTrustHtml(configResult.maintMsg);
     }
   }
-
-  ngOnInit(): void {}
 }

@@ -58,8 +58,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'top',
-      relativeLinkResolution: 'legacy'
+      scrollPositionRestoration: 'top'
     })
   ],
   exports: [RouterModule]

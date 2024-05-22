@@ -42,21 +42,22 @@
                   formControlName="supplierLegalName"
                   required
                 />
-                <div
-                  *ngIf="
-                    control.supplierLegalName?.invalid &&
-                    (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)
-                  "
-                  class="text-danger"
-                >
-                  <div *ngIf="control.supplierLegalName?.errors.whitespaceError">Supplier Legal name is required</div>
-                </div>
+                @if (
+                  control.supplierLegalName?.invalid &&
+                  (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)
+                ) {
+                  <div class="text-danger">
+                    @if (control.supplierLegalName?.errors.whitespaceError) {
+                      <div>Supplier Legal name is required</div>
+                    }
+                  </div>
+                }
               </div>
               <!-- <div class="col-lg-6">
-                  <div class="form-label-group">
-                    <input type="email" id="inputEmail" class="requiredField form-control form-control-lg" placeholder="Email address" required="" autofocus="">
-                    <label for="inputEmail">Email address</label>
-                  </div>
+                <div class="form-label-group">
+                  <input type="email" id="inputEmail" class="requiredField form-control form-control-lg" placeholder="Email address" required="" autofocus="">
+                  <label for="inputEmail">Email address</label>
+                </div>
               </div> -->
             </div>
 
@@ -70,14 +71,13 @@
                   id="supplierName"
                   required
                 />
-                <div
-                  *ngIf="
-                    control.supplierName?.invalid && (control.supplierName?.dirty || control.supplierName?.touched)
-                  "
-                  class="text-danger"
-                >
-                  <div *ngIf="control.supplierName?.errors.whitespaceError">Supplier name is required</div>
-                </div>
+                @if (control.supplierName?.invalid && (control.supplierName?.dirty || control.supplierName?.touched)) {
+                  <div class="text-danger">
+                    @if (control.supplierName?.errors.whitespaceError) {
+                      <div>Supplier name is required</div>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
@@ -99,13 +99,16 @@
                   id="gstNumber"
                   required
                 />
-                <div
-                  *ngIf="control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)"
-                  class="text-danger"
-                >
-                  <div *ngIf="control.gstNumber?.errors.required">GST number is required</div>
-                  <div *ngIf="control.gstNumber?.errors.minlength">GST number is incomplete</div>
-                </div>
+                @if (control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)) {
+                  <div class="text-danger">
+                    @if (control.gstNumber?.errors.required) {
+                      <div>GST number is required</div>
+                    }
+                    @if (control.gstNumber?.errors.minlength) {
+                      <div>GST number is incomplete</div>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
@@ -123,15 +126,16 @@
                     id="address1"
                     required
                   />
-                  <div
-                    *ngIf="
-                      control.address['controls'].address1?.invalid &&
-                      (control.address['controls'].address1?.dirty || control.address['controls'].address1?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.address['controls'].address1?.errors.whitespaceError">Address is required</div>
-                  </div>
+                  @if (
+                    control.address['controls'].address1?.invalid &&
+                    (control.address['controls'].address1?.dirty || control.address['controls'].address1?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.address['controls'].address1?.errors.whitespaceError) {
+                        <div>Address is required</div>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
 
@@ -157,15 +161,16 @@
                     autocomplete="doNotAutoComplete"
                     [editable]="false"
                   />
-                  <div
-                    *ngIf="
-                      control.address['controls'].city?.invalid &&
-                      (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.address['controls'].city?.errors.required">City is required or invalid</div>
-                  </div>
+                  @if (
+                    control.address['controls'].city?.invalid &&
+                    (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.address['controls'].city?.errors.required) {
+                        <div>City is required or invalid</div>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
 
@@ -193,16 +198,19 @@
                     required
                   />
                   <!--[pattern]="globalConst.postalPattern"-->
-                  <div
-                    *ngIf="
-                      control.address['controls'].postalCode?.invalid &&
-                      (control.address['controls'].postalCode?.dirty || control.address['controls'].postalCode?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.address['controls'].postalCode?.errors.required">Postal Code is required</div>
-                    <div *ngIf="control.address['controls'].postalCode?.errors.pattern">Invalid postal code</div>
-                  </div>
+                  @if (
+                    control.address['controls'].postalCode?.invalid &&
+                    (control.address['controls'].postalCode?.dirty || control.address['controls'].postalCode?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.address['controls'].postalCode?.errors.required) {
+                        <div>Postal Code is required</div>
+                      }
+                      @if (control.address['controls'].postalCode?.errors.pattern) {
+                        <div>Invalid postal code</div>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
 
@@ -235,18 +243,17 @@
                     id="firstName"
                     required
                   />
-                  <div
-                    *ngIf="
-                      control.contactPerson['controls'].firstName?.invalid &&
-                      (control.contactPerson['controls'].firstName?.dirty ||
-                        control.contactPerson['controls'].firstName?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.whitespaceError">
-                      First Name is required
+                  @if (
+                    control.contactPerson['controls'].firstName?.invalid &&
+                    (control.contactPerson['controls'].firstName?.dirty ||
+                      control.contactPerson['controls'].firstName?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.contactPerson['controls'].firstName?.errors.whitespaceError) {
+                        <div>First Name is required</div>
+                      }
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
 
@@ -260,18 +267,17 @@
                     id="lastName"
                     required
                   />
-                  <div
-                    *ngIf="
-                      control.contactPerson['controls'].lastName?.invalid &&
-                      (control.contactPerson['controls'].lastName?.dirty ||
-                        control.contactPerson['controls'].lastName?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.whitespaceError">
-                      Last Name is required
+                  @if (
+                    control.contactPerson['controls'].lastName?.invalid &&
+                    (control.contactPerson['controls'].lastName?.dirty ||
+                      control.contactPerson['controls'].lastName?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.contactPerson['controls'].lastName?.errors.whitespaceError) {
+                        <div>Last Name is required</div>
+                      }
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
 
@@ -279,9 +285,9 @@
                 <div class="form-group col-lg-6">
                   <label for="email">Email Address</label>
                   <input type="email" class="form-control form-control-lg" formControlName="email" id="email" />
-                  <div *ngIf="control.contactPerson['controls'].email?.errors?.email" class="text-danger">
-                    Email is not valid
-                  </div>
+                  @if (control.contactPerson['controls'].email?.errors?.email) {
+                    <div class="text-danger">Email is not valid</div>
+                  }
                 </div>
               </div>
 
@@ -297,19 +303,19 @@
                     id="phone"
                     required
                   />
-                  <div
-                    *ngIf="
-                      control.contactPerson['controls'].phone?.invalid &&
-                      (control.contactPerson['controls'].phone?.dirty ||
-                        control.contactPerson['controls'].phone?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.contactPerson['controls'].phone?.errors.required">Phone Number is required</div>
-                    <div *ngIf="control.contactPerson['controls'].phone?.errors.minlength">
-                      Phone number must have 10 digits
+                  @if (
+                    control.contactPerson['controls'].phone?.invalid &&
+                    (control.contactPerson['controls'].phone?.dirty || control.contactPerson['controls'].phone?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.contactPerson['controls'].phone?.errors.required) {
+                        <div>Phone Number is required</div>
+                      }
+                      @if (control.contactPerson['controls'].phone?.errors.minlength) {
+                        <div>Phone number must have 10 digits</div>
+                      }
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
 
@@ -324,17 +330,16 @@
                     id="fax"
                     placeholder="999-999-9999"
                   />
-                  <div
-                    *ngIf="
-                      control.contactPerson['controls'].fax?.invalid &&
-                      (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)
-                    "
-                    class="text-danger"
-                  >
-                    <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">
-                      Fax number must have 10 digits
+                  @if (
+                    control.contactPerson['controls'].fax?.invalid &&
+                    (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)
+                  ) {
+                    <div class="text-danger">
+                      @if (control.contactPerson['controls'].fax?.errors.minlength) {
+                        <div>Fax number must have 10 digits</div>
+                      }
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
             </div>
@@ -352,284 +357,291 @@
                 </label>
               </div>
 
-              <div *ngIf="remitDiv">
-                <p>Please enter the legal business name and address of the business we need to remit payment to.</p>
-                <div class="row">
-                  <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessName"><b>Legal Business Name</b></label>
-                    <input
-                      type="text"
-                      class="form-control form-control-lg"
-                      id="businessName"
-                      formControlName="businessName"
-                    />
-                    <div
-                      *ngIf="
+              @if (remitDiv) {
+                <div>
+                  <p>Please enter the legal business name and address of the business we need to remit payment to.</p>
+                  <div class="row">
+                    <div class="form-group col-lg-6">
+                      <label class="requiredField" for="businessName"><b>Legal Business Name</b></label>
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="businessName"
+                        formControlName="businessName"
+                      />
+                      @if (
                         control.businessName?.invalid && (control.businessName?.dirty || control.businessName?.touched)
-                      "
-                      class="text-danger"
-                    >
-                      <div *ngIf="control.businessName?.errors.whitespaceError">Legal Business Name is required</div>
+                      ) {
+                        <div class="text-danger">
+                          @if (control.businessName?.errors.whitespaceError) {
+                            <div>Legal Business Name is required</div>
+                          }
+                        </div>
+                      }
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
-                  <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessCountry"
-                      ><b>What Country Is This Supplier Located In?</b>
-                    </label>
-                    <input
-                      id="businessCountry"
-                      type="text"
-                      class="form-control form-control-lg"
-                      formControlName="businessCountry"
-                      [ngbTypeahead]="searchCountry"
-                      [resultFormatter]="countryFormatter"
-                      [inputFormatter]="countryFormatter"
-                      autocomplete="doNotAutoComplete"
-                      (selectItem)="remitVisibility($event.item.name)"
-                      [editable]="false"
-                    />
-                    <div
-                      *ngIf="
+                  <div class="row">
+                    <div class="form-group col-lg-6">
+                      <label class="requiredField" for="businessCountry"
+                        ><b>What Country Is This Supplier Located In?</b>
+                      </label>
+                      <input
+                        id="businessCountry"
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="businessCountry"
+                        [ngbTypeahead]="searchCountry"
+                        [resultFormatter]="countryFormatter"
+                        [inputFormatter]="countryFormatter"
+                        autocomplete="doNotAutoComplete"
+                        (selectItem)="remitVisibility($event.item.name)"
+                        [editable]="false"
+                      />
+                      @if (
                         control.businessCountry?.invalid &&
                         (control.businessCountry?.dirty || control.businessCountry?.touched)
-                      "
-                      class="text-danger"
-                    >
-                      <div *ngIf="control.businessCountry?.errors.required">Country required or invalid</div>
+                      ) {
+                        <div class="text-danger">
+                          @if (control.businessCountry?.errors.required) {
+                            <div>Country required or invalid</div>
+                          }
+                        </div>
+                      }
                     </div>
                   </div>
+                  @if (selectedRemitCountry === 'Canada') {
+                    <div>
+                      <b>Is This Supplier Located in BC?</b>
+                      <div class="form-group form-check">
+                        <input
+                          class="form-check-input"
+                          formControlName="supplierBC"
+                          type="radio"
+                          id="yes"
+                          value="yes"
+                          (change)="locatedChange($event)"
+                        />
+                        <label class="form-check-label" for="yes"> Yes </label>
+                      </div>
+                      <div class="form-group form-check">
+                        <input
+                          class="form-check-input"
+                          formControlName="supplierBC"
+                          type="radio"
+                          id="no"
+                          value="no"
+                          (change)="locatedChange($event)"
+                        />
+                        <label class="form-check-label" for="no"> No </label>
+                      </div>
+                    </div>
+                  }
+                  @if (addressDiv) {
+                    <div formGroupName="remittanceAddress">
+                      <p style="font-weight: bold">Supplier Remittance Address</p>
+                      <div class="row">
+                        <div class="form-group col-lg-6">
+                          <label class="requiredField" for="address1">Address Line 1</label>
+                          <input
+                            type="text"
+                            class="form-control form-control-lg"
+                            formControlName="address1"
+                            id="address1"
+                          />
+                          @if (
+                            control.remittanceAddress['controls'].address1?.invalid &&
+                            (control.remittanceAddress['controls'].address1?.dirty ||
+                              control.remittanceAddress['controls'].address1?.touched)
+                          ) {
+                            <div class="text-danger">
+                              @if (control.remittanceAddress['controls'].address1?.errors.whitespaceError) {
+                                <div>Address is required</div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-lg-6">
+                          <label for="address2">Address Line 2</label>
+                          <input
+                            type="text"
+                            class="form-control form-control-lg"
+                            formControlName="address2"
+                            id="address2"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-lg-4">
+                          <label class="requiredField" for="city">City</label>
+                          <input type="text" class="form-control form-control-lg" formControlName="city" id="city" />
+                          @if (
+                            control.remittanceAddress['controls'].city?.invalid &&
+                            (control.remittanceAddress['controls'].city?.dirty ||
+                              control.remittanceAddress['controls'].city?.touched)
+                          ) {
+                            <div class="text-danger">
+                              @if (control.remittanceAddress['controls'].city?.errors.required) {
+                                <div>City is required</div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      @if (selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label for="region">Region/Province/State</label>
+                            <input
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="region"
+                              id="region"
+                            />
+                          </div>
+                        </div>
+                      }
+                      @if (selectedRemitCountry === 'United States of America') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label class="requiredField" for="state">State</label>
+                            <input
+                              id="state"
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="state"
+                              [ngbTypeahead]="searchState"
+                              [resultFormatter]="stateFormatter"
+                              [inputFormatter]="stateFormatter"
+                              autocomplete="doNotAutoComplete"
+                              [editable]="false"
+                            />
+                            @if (
+                              control.remittanceAddress['controls'].state?.invalid &&
+                              (control.remittanceAddress['controls'].state?.dirty ||
+                                control.remittanceAddress['controls'].state?.touched)
+                            ) {
+                              <div class="text-danger">
+                                @if (control.remittanceAddress['controls'].state?.errors.required) {
+                                  <div>State is required or invalid</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                      @if (selectedRemitCountry === 'Canada' && locatedInBC === 'no') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label class="requiredField" for="province">Province</label>
+                            <input
+                              id="province"
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="province"
+                              [ngbTypeahead]="searchProvince"
+                              [resultFormatter]="cityFormatter"
+                              [inputFormatter]="cityFormatter"
+                              autocomplete="doNotAutoComplete"
+                              [editable]="false"
+                            />
+                            @if (
+                              control.remittanceAddress['controls'].province?.invalid &&
+                              (control.remittanceAddress['controls'].province?.dirty ||
+                                control.remittanceAddress['controls'].province?.touched)
+                            ) {
+                              <div class="text-danger">
+                                @if (control.remittanceAddress['controls'].province?.errors.required) {
+                                  <div>Province is required or invalid</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                      @if (selectedRemitCountry === 'Canada') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label class="requiredField" for="postalCode">Postal Code</label>
+                            <input
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="postalCode"
+                              id="postalCode"
+                            />
+                            @if (
+                              control.remittanceAddress['controls'].postalCode?.invalid &&
+                              (control.remittanceAddress['controls'].postalCode?.dirty ||
+                                control.remittanceAddress['controls'].postalCode?.touched)
+                            ) {
+                              <div class="text-danger">
+                                @if (control.remittanceAddress['controls'].postalCode?.errors.required) {
+                                  <div>Postal Code is required</div>
+                                }
+                                @if (control.remittanceAddress['controls'].postalCode?.errors.pattern) {
+                                  <div>Invalid postal code</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                      @if (selectedRemitCountry === 'United States of America') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label class="requiredField" for="zipCode">Zip Code</label>
+                            <input
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="zipCode"
+                              id="zipCode"
+                            />
+                            @if (
+                              control.remittanceAddress['controls'].zipCode?.invalid &&
+                              (control.remittanceAddress['controls'].zipCode?.dirty ||
+                                control.remittanceAddress['controls'].zipCode?.touched)
+                            ) {
+                              <div class="text-danger">
+                                @if (control.remittanceAddress['controls'].zipCode?.errors.required) {
+                                  <div>Zip Code is required</div>
+                                }
+                                @if (control.remittanceAddress['controls'].zipCode?.errors.pattern) {
+                                  <div>Invalid Zip Code</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                      @if (selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada') {
+                        <div class="row">
+                          <div class="form-group col-lg-4">
+                            <label class="requiredField" for="otherCode">Postal/Zip Code</label>
+                            <input
+                              type="text"
+                              class="form-control form-control-lg"
+                              formControlName="otherCode"
+                              id="otherCode"
+                            />
+                            @if (
+                              control.remittanceAddress['controls'].otherCode?.invalid &&
+                              (control.remittanceAddress['controls'].otherCode?.dirty ||
+                                control.remittanceAddress['controls'].otherCode?.touched)
+                            ) {
+                              <div class="text-danger">
+                                @if (control.remittanceAddress['controls'].otherCode?.errors.required) {
+                                  <div>Postal/Zip Code is required</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
                 </div>
-
-                <div *ngIf="selectedRemitCountry === 'Canada'">
-                  <b>Is This Supplier Located in BC?</b>
-                  <div class="form-group form-check">
-                    <input
-                      class="form-check-input"
-                      formControlName="supplierBC"
-                      type="radio"
-                      id="yes"
-                      value="yes"
-                      (change)="locatedChange($event)"
-                    />
-                    <label class="form-check-label" for="yes"> Yes </label>
-                  </div>
-                  <div class="form-group form-check">
-                    <input
-                      class="form-check-input"
-                      formControlName="supplierBC"
-                      type="radio"
-                      id="no"
-                      value="no"
-                      (change)="locatedChange($event)"
-                    />
-                    <label class="form-check-label" for="no"> No </label>
-                  </div>
-                </div>
-
-                <div *ngIf="addressDiv" formGroupName="remittanceAddress">
-                  <p style="font-weight: bold">Supplier Remittance Address</p>
-
-                  <div class="row">
-                    <div class="form-group col-lg-6">
-                      <label class="requiredField" for="address1">Address Line 1</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="address1"
-                        id="address1"
-                      />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].address1?.invalid &&
-                          (control.remittanceAddress['controls'].address1?.dirty ||
-                            control.remittanceAddress['controls'].address1?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.whitespaceError">
-                          Address is required
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="form-group col-lg-6">
-                      <label for="address2">Address Line 2</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="address2"
-                        id="address2"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="city">City</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="city" id="city" />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].city?.invalid &&
-                          (control.remittanceAddress['controls'].city?.dirty ||
-                            control.remittanceAddress['controls'].city?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].city?.errors.required">City is required</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
-                    class="row"
-                  >
-                    <div class="form-group col-lg-4">
-                      <label for="region">Region/Province/State</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="region" id="region" />
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedRemitCountry === 'United States of America'" class="row">
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="state">State</label>
-                      <input
-                        id="state"
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="state"
-                        [ngbTypeahead]="searchState"
-                        [resultFormatter]="stateFormatter"
-                        [inputFormatter]="stateFormatter"
-                        autocomplete="doNotAutoComplete"
-                        [editable]="false"
-                      />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].state?.invalid &&
-                          (control.remittanceAddress['controls'].state?.dirty ||
-                            control.remittanceAddress['controls'].state?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].state?.errors.required">
-                          State is required or invalid
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedRemitCountry === 'Canada' && locatedInBC === 'no'" class="row">
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="province">Province</label>
-                      <input
-                        id="province"
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="province"
-                        [ngbTypeahead]="searchProvince"
-                        [resultFormatter]="cityFormatter"
-                        [inputFormatter]="cityFormatter"
-                        autocomplete="doNotAutoComplete"
-                        [editable]="false"
-                      />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].province?.invalid &&
-                          (control.remittanceAddress['controls'].province?.dirty ||
-                            control.remittanceAddress['controls'].province?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].province?.errors.required">
-                          Province is required or invalid
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedRemitCountry === 'Canada'" class="row">
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="postalCode">Postal Code</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="postalCode"
-                        id="postalCode"
-                      />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].postalCode?.invalid &&
-                          (control.remittanceAddress['controls'].postalCode?.dirty ||
-                            control.remittanceAddress['controls'].postalCode?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.required">
-                          Postal Code is required
-                        </div>
-                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.pattern">
-                          Invalid postal code
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedRemitCountry === 'United States of America'" class="row">
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="zipCode">Zip Code</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="zipCode" id="zipCode" />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].zipCode?.invalid &&
-                          (control.remittanceAddress['controls'].zipCode?.dirty ||
-                            control.remittanceAddress['controls'].zipCode?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.required">
-                          Zip Code is required
-                        </div>
-                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.pattern">
-                          Invalid Zip Code
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
-                    class="row"
-                  >
-                    <div class="form-group col-lg-4">
-                      <label class="requiredField" for="otherCode">Postal/Zip Code</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        formControlName="otherCode"
-                        id="otherCode"
-                      />
-                      <div
-                        *ngIf="
-                          control.remittanceAddress['controls'].otherCode?.invalid &&
-                          (control.remittanceAddress['controls'].otherCode?.dirty ||
-                            control.remittanceAddress['controls'].otherCode?.touched)
-                        "
-                        class="text-danger"
-                      >
-                        <div *ngIf="control.remittanceAddress['controls'].otherCode?.errors.required">
-                          Postal/Zip Code is required
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              }
             </div>
 
             <div class="formHeading">Submit your Invoice and/or Receipts</div>
@@ -661,102 +673,109 @@
                 <label class="form-check-label" for="receipt"> Receipts </label>
               </div>
 
-              <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
-                <div class="box">
-                  <div class="row tips-section">
-                    <p><b>Important Tips:</b></p>
-                    <ul>
-                      <li>Please include an electronic copy of each referral associated to this invoice submission.</li>
-                      <li>
-                        If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
-                        page.
-                      </li>
-                      <li>Please complete all information regarding each referral separately.</li>
-                      <li>
-                        If a referral references more than 1 support or service provided, please separate the costs
-                        associated with each by clicking the "Add another line item" button.
-                      </li>
-                      <li>
-                        If you have receipts associated with a referral, please remember to attach them under that
-                        relevant referral.
-                      </li>
-                    </ul>
+              @if (supplierForm.get('supplierSubmissionType').value === 'invoice') {
+                <div>
+                  <div class="box">
+                    <div class="row tips-section">
+                      <p><b>Important Tips:</b></p>
+                      <ul>
+                        <li>
+                          Please include an electronic copy of each referral associated to this invoice submission.
+                        </li>
+                        <li>
+                          If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
+                          page.
+                        </li>
+                        <li>Please complete all information regarding each referral separately.</li>
+                        <li>
+                          If a referral references more than 1 support or service provided, please separate the costs
+                          associated with each by clicking the "Add another line item" button.
+                        </li>
+                        <li>
+                          If you have receipts associated with a referral, please remember to attach them under that
+                          relevant referral.
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-                <div formArrayName="invoices">
-                  <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice
-                      [index]="i"
-                      [invoiceForm]="invoic"
-                      [formGroupName]="i"
-                      [formArraySize]="invoices.controls.length"
-                      (indexToRemove)="deleteInvoice($event)"
-                    ></app-invoice>
+                  <div formArrayName="invoices">
+                    @for (invoic of invoices.controls; track invoic; let i = $index) {
+                      <div>
+                        <app-invoice
+                          [index]="i"
+                          [invoiceForm]="invoic"
+                          [formGroupName]="i"
+                          [formArraySize]="invoices.controls.length"
+                          (indexToRemove)="deleteInvoice($event)"
+                        ></app-invoice>
+                      </div>
+                    }
                   </div>
+                  <br />
+                  <div class="row" style="justify-content: space-between">
+                    <div style="padding-left: 13px">
+                      <button type="button" (click)="addInvoiceTemplate()" class="btn primary-button">
+                        Add Another Invoice
+                      </button>
+                    </div>
+                    <div style="padding-right: 13px">
+                      <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
+                        I am Done! Next
+                      </button>
+                    </div>
+                  </div>
+                  <br />
                 </div>
+              }
 
-                <br />
-                <div class="row" style="justify-content: space-between">
-                  <div style="padding-left: 13px">
-                    <button type="button" (click)="addInvoiceTemplate()" class="btn primary-button">
-                      Add Another Invoice
-                    </button>
+              @if (supplierForm.get('supplierSubmissionType').value === 'receipt') {
+                <div>
+                  <div class="box">
+                    <div class="row tips-section">
+                      <p><b>Important Tips:</b></p>
+                      <ul>
+                        <li>Please list all receipts associated with a single referral number only.</li>
+                        <li>
+                          If you have receipts against more than 1 referral, click "Add another referral" at the bottom
+                          of this page.
+                        </li>
+                        <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
+                        <li>
+                          If a receipt references more than 1 support or service provided, please separate the costs
+                          associated with each by clicking the "Add another line item to this receipt" link.
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div style="padding-right: 13px">
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
-                      I am Done! Next
-                    </button>
+                  <div formArrayName="receipts">
+                    @for (receipt of receipts.controls; track receipt; let i = $index) {
+                      <div>
+                        <app-receipt
+                          [index]="i"
+                          [receiptForm]="receipt"
+                          [formGroupName]="i"
+                          [formArraySize]="receipts.controls.length"
+                          (indexToRemove)="deleteReceipt($event)"
+                        ></app-receipt>
+                      </div>
+                    }
                   </div>
+                  <br />
+                  <div class="row" style="justify-content: space-between">
+                    <div style="padding-left: 13px">
+                      <button type="button" (click)="addReceiptTemplate()" class="btn primary-button">
+                        Add Another Referral
+                      </button>
+                    </div>
+                    <div style="padding-right: 13px">
+                      <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
+                        I am Done! Next
+                      </button>
+                    </div>
+                  </div>
+                  <br />
                 </div>
-                <br />
-              </div>
-
-              <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
-                <div class="box">
-                  <div class="row tips-section">
-                    <p><b>Important Tips:</b></p>
-                    <ul>
-                      <li>Please list all receipts associated with a single referral number only.</li>
-                      <li>
-                        If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
-                        this page.
-                      </li>
-                      <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
-                      <li>
-                        If a receipt references more than 1 support or service provided, please separate the costs
-                        associated with each by clicking the "Add another line item to this receipt" link.
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div formArrayName="receipts">
-                  <div *ngFor="let receipt of receipts.controls; let i = index">
-                    <app-receipt
-                      [index]="i"
-                      [receiptForm]="receipt"
-                      [formGroupName]="i"
-                      [formArraySize]="receipts.controls.length"
-                      (indexToRemove)="deleteReceipt($event)"
-                    ></app-receipt>
-                  </div>
-                </div>
-
-                <br />
-                <div class="row" style="justify-content: space-between">
-                  <div style="padding-left: 13px">
-                    <button type="button" (click)="addReceiptTemplate()" class="btn primary-button">
-                      Add Another Referral
-                    </button>
-                  </div>
-                  <div style="padding-right: 13px">
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn secondary-button">
-                      I am Done! Next
-                    </button>
-                  </div>
-                </div>
-                <br />
-              </div>
+              }
             </div>
 
             <!-- {{supplierForm.value | json}} -->

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { SupplierHttpService } from '../services/supplierHttp.service';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { ConfigService } from '../services/config.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigGuard implements CanActivate {
+export class ConfigGuard {
   public configResult: ServerConfig = new ServerConfig();
 
   constructor(

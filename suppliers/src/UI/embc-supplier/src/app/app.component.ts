@@ -1,17 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SupplierHttpService } from './core/services/supplierHttp.service';
-import { SupplierService } from './core/services/supplier.service';
-import { ConfigGuard } from './core/guards/config.guard';
-import { map } from 'rxjs/operators';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { BannerComponent } from './core/components/banner/banner.component';
+import { FooterComponent } from './core/layout/footer/footer.component';
+import { HeaderComponent } from './core/layout/header/header.component';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SupplierService } from './core/services/supplier.service';
+import { SupplierHttpService } from './core/services/supplierHttp.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [BannerComponent, FooterComponent, HeaderComponent, RouterOutlet]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'embc-supplier';

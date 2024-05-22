@@ -1,15 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './fonts';
-$bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
-@import '~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
+// $bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
+// @import '@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
 @import './defaults.scss';
 @import './variables';
 
-@import '~@bcgov/bootstrap-theme/dist/scss/common';
+// @import '~@bcgov/bootstrap-theme/dist/scss/common';
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 //@import './floating-labels.scss';
 
 // monospace font used for fixed-size text blocks (eg, referral comments)
@@ -47,6 +47,11 @@ body {
   // background: linear-gradient(theme-color(info) 5%, white);
   // background-repeat: no-repeat;
   // background-attachment: fixed;
+}
+
+main {
+  padding-bottom: 40px;
+  padding-top: 20px;
 }
 
 .input-symbol-dollar {

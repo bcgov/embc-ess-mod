@@ -1,13 +1,24 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
+import {
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  UntypedFormArray,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { FileUploadComponent } from '../../../core/components/fileUpload/fileUpload.component';
+import { ReferralComponent } from '../referral/referral.component';
 
 @Component({
   selector: 'app-receipt',
   templateUrl: './receipt.component.html',
-  styleUrls: ['./receipt.component.scss']
+  styleUrls: ['./receipt.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, ReferralComponent, FileUploadComponent]
 })
 export class ReceiptComponent implements OnInit {
   @Input() formGroupName: number;
