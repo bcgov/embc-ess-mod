@@ -22,7 +22,13 @@
     >
     </app-loader>
   } @else {
-    <mat-horizontal-stepper class="stepper-style" [linear]="isLinear" #stepper labelPosition="bottom">
+    <mat-horizontal-stepper
+      style="margin-bottom: var(--size-2)"
+      class="stepper-style"
+      [linear]="isLinear"
+      #stepper
+      labelPosition="bottom"
+    >
       <mat-step [stepControl]="supportDraftForm">
         <ng-template matStepLabel>Support Details</ng-template>
         <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
