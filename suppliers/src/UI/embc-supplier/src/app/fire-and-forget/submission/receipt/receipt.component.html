@@ -12,42 +12,45 @@
               [formControlName]="'referralNumber'"
               required
             />
-            <div
-              *ngIf="
-                receiptControl.referralNumber?.invalid &&
-                (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)
-              "
-              class="text-white"
-            >
-              <div *ngIf="receiptControl.referralNumber?.errors.required" style="color: red">
-                Referral Number is required
+            @if (
+              receiptControl.referralNumber?.invalid &&
+              (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)
+            ) {
+              <div class="text-white">
+                @if (receiptControl.referralNumber?.errors.required) {
+                  <div style="color: red">Referral Number is required</div>
+                }
+                @if (receiptControl.referralNumber?.errors.duplicateReferral) {
+                  <div style="color: red">Referral Number is duplicate</div>
+                }
               </div>
-              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral" style="color: red">
-                Referral Number is duplicate
-              </div>
-            </div>
+            }
           </div>
         </div>
 
-        <div *ngIf="formArraySize > 1" class="col-auto">
-          <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
-        </div>
+        @if (formArraySize > 1) {
+          <div class="col-auto">
+            <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
+          </div>
+        }
       </div>
     </div>
 
     <div class="form-body">
       <div formArrayName="referrals">
-        <div *ngFor="let referral of referrals.controls; let j = index">
-          <app-referral
-            [index]="j"
-            [referralForm]="referral"
-            [formGroupName]="j"
-            [invoiceCurrentIndex]="index"
-            [formArraySize]="referrals.controls.length"
-            [component]="component"
-            (referralToRemove)="removeReferral($event)"
-          ></app-referral>
-        </div>
+        @for (referral of referrals.controls; track referral; let j = $index) {
+          <div>
+            <app-referral
+              [index]="j"
+              [referralForm]="referral"
+              [formGroupName]="j"
+              [invoiceCurrentIndex]="index"
+              [formArraySize]="referrals.controls.length"
+              [component]="component"
+              (referralToRemove)="removeReferral($event)"
+            ></app-referral>
+          </div>
+        }
       </div>
 
       <div class="row">
@@ -69,9 +72,9 @@
               (deleteFile)="deleteReferralFormControl($event)"
             >
             </app-file-upload>
-            <div *ngIf="!checkAttachmentLength(receiptControl.referralAttachments.value)" style="color: red">
-              Attachment is required
-            </div>
+            @if (!checkAttachmentLength(receiptControl.referralAttachments.value)) {
+              <div style="color: red">Attachment is required</div>
+            }
           </div>
         </div>
         <div class="col-md-6">
@@ -83,29 +86,31 @@
               (deleteFile)="deleteReceiptFormControl($event)"
             >
             </app-file-upload>
-            <div *ngIf="!checkAttachmentLength(receiptControl.receiptAttachments.value)" style="color: red">
-              Attachment is required
-            </div>
+            @if (!checkAttachmentLength(receiptControl.receiptAttachments.value)) {
+              <div style="color: red">Attachment is required</div>
+            }
           </div>
         </div>
       </div>
 
-      <div *ngIf="referrals.controls.length > 0" class="row">
-        <div class="col-12 form-inline" style="justify-content: flex-end">
-          Total Amount &nbsp;&nbsp;
-          <span class="input-symbol-dollar total-dollar-line"
-            ><input
-              type="number"
-              id="receiptTotalAmount"
-              [formControlName]="'receiptTotalAmount'"
-              class="form-control form-control-lg"
-              readonly
-          /></span>
+      @if (referrals.controls.length > 0) {
+        <div class="row">
+          <div class="col-12 form-inline" style="justify-content: flex-end">
+            Total Amount &nbsp;&nbsp;
+            <span class="input-symbol-dollar total-dollar-line"
+              ><input
+                type="number"
+                id="receiptTotalAmount"
+                [formControlName]="'receiptTotalAmount'"
+                class="form-control form-control-lg"
+                readonly
+            /></span>
+          </div>
+          <div class="col-12 form-inline" style="justify-content: flex-end">
+            <p class="input-help">(inclusive of all taxes)</p>
+          </div>
         </div>
-        <div class="col-12 form-inline" style="justify-content: flex-end">
-          <p class="input-help">(inclusive of all taxes)</p>
-        </div>
-      </div>
+      }
     </div>
   </form>
 </div>

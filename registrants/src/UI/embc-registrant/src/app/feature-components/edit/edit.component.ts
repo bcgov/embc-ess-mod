@@ -153,7 +153,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.form$ = this.formCreationService.getRestrictionForm().subscribe((restriction) => {
           this.form = restriction;
         });
-        this.editHeading = 'Edit Restriction';
+        this.editHeading = 'Edit Consent to Share Registration Status';
         break;
       case 'personal-details':
         this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {

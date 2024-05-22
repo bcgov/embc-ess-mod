@@ -1,10 +1,11 @@
-<div
-  class="headerBanner"
-  [ngClass]="{
-    maintBanner: bannerType === 'Maintenance',
-    noticeBanner: bannerType === 'Notice'
-  }"
-  *ngIf="bannerMsg"
->
-  <div [innerHTML]="bannerMsg"></div>
-</div>
+@if (bannerMsg) {
+  <div
+    class="headerBanner"
+    [ngClass]="{
+      maintBanner: bannerType === 'Maintenance',
+      noticeBanner: bannerType === 'Notice'
+    }"
+  >
+    <div [innerHTML]="bannerMsg"></div>
+  </div>
+}

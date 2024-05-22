@@ -1,12 +1,12 @@
 {
   "/api/*": {
-    "target": "https://dev-suppliers.apps.silver.devops.gov.bc.ca/",
+    "target": "https://dev-era-suppliers.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/version": {
-    "target": "https://dev-era-suppliers.apps.silver.devops.gov.bc.ca/",
+    "target": "https://dev-era-suppliers.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

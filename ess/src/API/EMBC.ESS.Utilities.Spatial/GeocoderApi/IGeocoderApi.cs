@@ -63,36 +63,36 @@ namespace EMBC.ESS.Utilities.Spatial.GeocoderApi
 
     internal record FeatureProperties
     {
-        public string? accessNotes { get; set; }
-        public object? blockID { get; set; }
-        public string? changeDate { get; set; }
-        public object? civicNumber { get; set; }
-        public string? civicNumberSuffix { get; set; }
-        public string? electoralArea { get; set; }
-        public object[]? faults { get; set; }
+        // public string? accessNotes { get; set; }
+        //  public string? blockID { get; set; }
+        // public string? changeDate { get; set; }
+        // public string? civicNumber { get; set; }
+        // public string? civicNumberSuffix { get; set; }
+        // public string? electoralArea { get; set; }
+        // public object[]? faults { get; set; }
         public string? fullAddress { get; set; }
-        public string? fullSiteDescriptor { get; set; }
-        public string? isOfficial { get; set; }
-        public string? isStreetDirectionPrefix { get; set; }
-        public string? isStreetTypePrefix { get; set; }
-        public string? localityName { get; set; }
-        public string? localityType { get; set; }
-        public string? locationDescriptor { get; set; }
-        public string? locationPositionalAccuracy { get; set; }
-        public string? matchPrecision { get; set; }
-        public int? precisionPoints { get; set; }
-        public string? provinceCode { get; set; }
+        // public string? fullSiteDescriptor { get; set; }
+        // public string? isOfficial { get; set; }
+        // public string? isStreetDirectionPrefix { get; set; }
+        // public string? isStreetTypePrefix { get; set; }
+        // public string? localityName { get; set; }
+        // public string? localityType { get; set; }
+        // public string? locationDescriptor { get; set; }
+        // public string? locationPositionalAccuracy { get; set; }
+        // public string? matchPrecision { get; set; }
+        // public int? precisionPoints { get; set; }
+        // public string? provinceCode { get; set; }
         public double? score { get; set; }
-        public object? siteID { get; set; }
-        public string? siteName { get; set; }
-        public string? siteRetireDate { get; set; }
-        public string? siteStatus { get; set; }
-        public string? streetDirection { get; set; }
-        public string? streetName { get; set; }
-        public string? streetQualifier { get; set; }
-        public string? streetType { get; set; }
-        public string? unitDesignator { get; set; }
-        public object? unitNumber { get; set; }
-        public string? unitNumberSuffix { get; set; }
+        // public string? siteID { get; set; }
+        // public string? siteName { get; set; }
+        // public string? siteRetireDate { get; set; }
+        // public string? siteStatus { get; set; }
+        // public string? streetDirection { get; set; }
+        // public string? streetName { get; set; }
+        // public string? streetQualifier { get; set; }
+        // public string? streetType { get; set; }
+        // public string? unitDesignator { get; set; }
+        // public int? unitNumber { get; set; }
+        // public string? unitNumberSuffix { get; set; }
     }
 }

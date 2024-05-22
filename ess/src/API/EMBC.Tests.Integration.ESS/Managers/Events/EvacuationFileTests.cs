@@ -41,7 +41,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 VerifiedUser = false,
                 RestrictedAccess = false,
                 SecurityQuestions = securityQuestions,
-                FirstName = $"{testContextIdentifier}-PriRegTestFirst",
+                FirstName = $"autotest-{testContextIdentifier}-PriRegTestFirst",
                 LastName = $"{testContextIdentifier}-PriRegTestLast",
                 DateOfBirth = "2000/01/01",
                 Gender = "Female",
@@ -330,6 +330,20 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var pet = updatedFile.NeedsAssessment.Pets.ShouldHaveSingleItem();
             pet.Type.ShouldBe($"{TestData.TestPrefix}-dog");
             pet.Quantity.ShouldBe("2");
+        }
+
+        [Fact]
+        public async Task CanAuditEvacuationFileAccess()
+        {
+            await Should.NotThrowAsync(async () =>
+            {
+                await manager.Handle(new RecordAuditAccessCommand
+                {
+                    TeamMemberId = TestData.Tier4TeamMemberId,
+                    AccessReasonId = 174360000,
+                    EvacuationFileNumber = TestData.EvacuationFileId
+                });
+            });
         }
     }
 }

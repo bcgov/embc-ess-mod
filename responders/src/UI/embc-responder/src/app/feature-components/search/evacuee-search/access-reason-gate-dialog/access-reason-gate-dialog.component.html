@@ -1,0 +1,43 @@
+<div style="padding: 24px">
+  <div style="display: flex">
+    <p>
+      <b> Please specify the reason for accessing this {{ label[dialogData.accessEntity] }}.</b>
+      <br />
+      Please note, evacuee information shall only be accessed for the purposes of providing support to evacuees
+    </p>
+    <button class="close-image close-button-style" mat-icon-button aria-label="Close" mat-dialog-close>
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+
+  <mat-dialog-content style="padding: 24px">
+    <mat-radio-group
+      class="primary-radio-group"
+      style="display: flex; flex-direction: column"
+      [formControl]="accessReasonControl"
+    >
+      @for (reason of accessReasons$ | async; track reason) {
+        <mat-radio-button style="margin-bottom: 16px" [value]="reason[0]">
+          {{ reason[1] }}
+        </mat-radio-button>
+      }
+    </mat-radio-group>
+    @if (accessReasonControl.touched && accessReasonControl.invalid) {
+      <p style="color: red">Please select a reason before proceeding</p>
+    }
+    <app-loader class="spinner" [showLoader]="showLoader" [strokeWidth]="10" [diameter]="50" [color]="color">
+    </app-loader>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button cdkFocusInitial mat-button class="button-s" [mat-dialog-close]="false">Cancel</button>
+    <button mat-button class="button-p" (click)="proceed()">
+      Proceed to {{ buttonLabel[dialogData.accessEntity] }}
+      @if (showButtonLoader) {
+        <app-loader class="spinner" [showLoader]="showButtonLoader" [strokeWidth]="10" [diameter]="25" [color]="color">
+        </app-loader>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,11 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaintenanceComponent } from './maintenance.component';
+import { NgModule } from '@angular/core';
 import { MaintenanceRoutingModule } from '../maintenance/maintenance-routing.module';
-import { CoreModule } from '../core/core.module';
+import { MaintenanceComponent } from './maintenance.component';
 
 @NgModule({
-  declarations: [MaintenanceComponent],
-  imports: [CoreModule, CommonModule, MaintenanceRoutingModule]
+  imports: [CommonModule, MaintenanceRoutingModule, MaintenanceComponent]
 })
 export class MaintenanceModule {}

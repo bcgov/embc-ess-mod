@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
@@ -31,7 +32,7 @@ public partial class EventsManager
 
         foreach (var support in cmd.Supports)
         {
-            support.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
+            support.CreatedBy = new TeamMember { Id = requestingUser.Id };
             support.CreatedOn = DateTime.UtcNow;
         }
 
@@ -63,7 +64,7 @@ public partial class EventsManager
 
         foreach (var referral in cmd.Supports)
         {
-            referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
+            referral.CreatedBy = new TeamMember { Id = requestingUser.Id };
             referral.CreatedOn = DateTime.UtcNow;
         }
 
@@ -79,30 +80,36 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(ProcessSelfServeSupportsCommand cmd)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileId);
-        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileId} latest needs assessment doesn't have a valid eligibility check");
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessLogicException($"File {cmd.EvacuationFileNumber} latest needs assessment doesn't have a valid eligibility check");
+
+        var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new CalculateSelfServeSupports(cmd.Supports, file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
 
         var supports = ((GenerateSelfServeETransferSupportsResponse)await supportingEngine.Generate(
-            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, cmd.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.From.Value))).Supports;
+            new GenerateSelfServeETransferSupports(file.Id, file.PrimaryRegistrantId, response.Supports, cmd.ETransferDetails, file.NeedsAssessment.EligibilityCheck.From.Value, file.NeedsAssessment.EligibilityCheck.To.Value))).Supports;
         var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest
         {
-            FileId = cmd.EvacuationFileId,
+            FileId = cmd.EvacuationFileNumber,
             Supports = supports
         });
         if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
+        // Create a needs assessment and associate with the task
+        await evacuationRepository.Manage(new Resources.Evacuations.AssignFileToTask { EvacuationFileNumber = file.Id, TaskNumber = file.NeedsAssessment.EligibilityCheck.TaskNumber });
+
+        // Process the supports
         await supportingEngine.Process(new ProcessDigitalSupportsRequest
         {
-            FileId = cmd.EvacuationFileId,
+            FileId = cmd.EvacuationFileNumber,
             Supports = supports,
             RequestingUserId = null,
             IncludeSummaryInReferralsPrintout = false,
             PrintReferrals = false
         });
 
-        file.TaskId = file.NeedsAssessment.EligibilityCheck.TaskNumber;
-        await evacuationRepository.Manage(new Resources.Evacuations.SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+        await SendEmailConfirmation(cmd.ETransferDetails, file.PrimaryRegistrantId, supports);
     }
 
     public async Task<string> Handle(VoidSupportCommand cmd)
@@ -130,10 +137,7 @@ public partial class EventsManager
 
         var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
         {
-            Items = new[]
-            {
-               new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }
-            }
+            Items = [new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }]
         })).Ids.SingleOrDefault();
         return id;
     }
@@ -149,7 +153,7 @@ public partial class EventsManager
 
         //get requesting user
         if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-        var requestingUser = mapper.Map<Shared.Contracts.Events.TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).SingleOrDefault());
+        var requestingUser = mapper.Map<TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).SingleOrDefault());
         if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
         //load the file
@@ -211,7 +215,7 @@ public partial class EventsManager
             PrintRequest = new ReferralPrintRequest
             {
                 FileId = cmd.FileId,
-                SupportIds = new[] { cmd.SupportId },
+                SupportIds = [cmd.SupportId],
                 IncludeSummary = cmd.IncludeSummary,
                 RequestingUserId = requestingUser.Id,
                 Type = ReferralPrintType.Reprint,
@@ -329,14 +333,19 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task Handle(OptOutSelfServeCommand cmd)
     {
-        await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileId });
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+
+        await evacuationRepository.Manage(new Resources.Evacuations.OptoutSelfServe { EvacuationFileNumber = cmd.EvacuationFileNumber });
     }
 
     public async Task<DraftSelfServeSupportQueryResponse> Handle(DraftSelfServeSupportQuery query)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
-        if (file.NeedsAssessment.EligibilityCheck == null) throw new BusinessValidationException($"File {query.EvacuationFileId} is not eligible for self serve");
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
+        if (file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
+        if (file.NeedsAssessment.EligibilityCheck == null || !file.NeedsAssessment.EligibilityCheck.Eligible) throw new BusinessValidationException($"File {query.EvacuationFileNumber} is not eligible for self serve");
 
         var task = (await taskRepository.QueryTask(new TaskQuery { ById = file.NeedsAssessment.EligibilityCheck.TaskNumber, ByStatus = [Resources.Tasks.TaskStatus.Active] })).Items.SingleOrDefault() as EssTask;
         if (task == null) throw new NotFoundException("task not found", file.NeedsAssessment.EligibilityCheck.TaskNumber);
@@ -345,7 +354,8 @@ public partial class EventsManager
         if (query.Items == null)
         {
             //generate the supports based on the file
-            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(mapper.Map<IEnumerable<IdentifiedNeed>>(file.NeedsAssessment.Needs),
+            var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
+                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.EligibleSupports),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
@@ -368,28 +378,38 @@ public partial class EventsManager
 
     public async System.Threading.Tasks.Task<string> Handle(CheckEligibileForSelfServeCommand cmd)
     {
-        var ct = CancellationToken.None;
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", cmd.EvacuationFileNumber);
+        if (string.IsNullOrEmpty(cmd.RegistrantUserId) || file.PrimaryRegistrantUserId != cmd.RegistrantUserId) throw new InvalidOperationException($"Registrant {cmd.RegistrantUserId} does not match file {cmd.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
-        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileId), ct)).Eligibility;
+        var eligibilityResult = ((ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(cmd.EvacuationFileNumber), default)).Eligibility;
 
-        var response = await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
+        await evacuationRepository.Manage(new Resources.Evacuations.AddEligibilityCheck
         {
-            EvacuationFileNumber = cmd.EvacuationFileId,
+            EvacuationFileNumber = cmd.EvacuationFileNumber,
             Eligible = eligibilityResult.Eligible,
             TaskNumber = eligibilityResult.TaskNumber,
             HomeAddressReferenceId = eligibilityResult.HomeAddressReferenceId,
             From = eligibilityResult.From,
             To = eligibilityResult.To,
-            Reason = eligibilityResult.Reason
+            Reason = eligibilityResult.Reason,
+            EligibleSupports = mapper.Map<IEnumerable<Resources.Evacuations.SelfServeSupportType>>(eligibilityResult.eligibleSupportTypes)
         });
 
-        return response.Id;
+        if (eligibilityResult.Eligible && !eligibilityResult.eligibleSupportTypes.Any())
+        {
+            // no supports are required, associate the file to the task
+            await evacuationRepository.Manage(new Resources.Evacuations.AssignFileToTask { EvacuationFileNumber = file.Id, TaskNumber = eligibilityResult.TaskNumber });
+        }
+
+        return cmd.EvacuationFileNumber;
     }
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
     {
-        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileId })).Items.SingleOrDefault();
-        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileId);
+        var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
+        if (file == null) throw new NotFoundException("file not found", query.EvacuationFileNumber);
+        if (string.IsNullOrEmpty(query.RegistrantUserId) || file.PrimaryRegistrantUserId != query.RegistrantUserId) throw new InvalidOperationException($"Registrant {query.RegistrantUserId} does not match file {query.EvacuationFileNumber} primary registrant which is {file.PrimaryRegistrantUserId}");
 
         var eligibility = file.NeedsAssessment.EligibilityCheck?.Eligible == true
             ? new SupportEligibility
@@ -408,5 +428,56 @@ public partial class EventsManager
         {
             Eligibility = eligibility
         };
+    }
+
+    private async System.Threading.Tasks.Task SendEmailConfirmation(ETransferDetails eTransferDetails, string primaryRegistrantId, IEnumerable<Shared.Contracts.Events.Support> supports)
+    {
+        var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = primaryRegistrantId })).Items.SingleOrDefault() ?? throw new InvalidOperationException($"registrants {primaryRegistrantId} not found");
+        var emailAddress = evacuee.Email ?? eTransferDetails.ContactEmail;
+        if (string.IsNullOrWhiteSpace(emailAddress)) return;
+
+        decimal clothingAmount = 0, incidentalsAmount = 0, groceryAmount = 0, restaurantAmount = 0, shelterAllowanceAmount = 0;
+
+        foreach (var item in supports)
+        {
+            switch (item)
+            {
+                case Shared.Contracts.Events.ClothingSupport clothingSupport:
+                    clothingAmount += clothingSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.FoodGroceriesSupport groceriesSupport:
+                    groceryAmount += groceriesSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.FoodRestaurantSupport restaurantSupport:
+                    restaurantAmount += restaurantSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.IncidentalsSupport incidentalsSupport:
+                    incidentalsAmount += incidentalsSupport.TotalAmount;
+                    break;
+
+                case Shared.Contracts.Events.ShelterAllowanceSupport shelterSupport:
+                    shelterAllowanceAmount += shelterSupport.TotalAmount;
+                    break;
+            }
+        }
+        var totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+
+        await SendEmailNotification(
+            SubmissionTemplateType.ETransferConfirmation,
+            emailAddress,
+            $"{evacuee.LastName}, {evacuee.FirstName}",
+            [
+                KeyValuePair.Create("totalAmount", totalAmount.ToString("0.00")),
+                KeyValuePair.Create("clothingAmount", (clothingAmount > 0) ? clothingAmount.ToString("0.00") : null),
+                KeyValuePair.Create("incidentalsAmount", (incidentalsAmount > 0) ? incidentalsAmount.ToString("0.00") : null),
+                KeyValuePair.Create("groceryAmount", (groceryAmount > 0) ? groceryAmount.ToString("0.00") : null),
+                KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
+                KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
+                KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
+                KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
+            ]);
     }
 }

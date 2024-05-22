@@ -63,7 +63,7 @@ export const successfulBcscInvite: DialogContent = {
 
 export const shelterAllowanceNeedDialog: DialogContent = {
   title: 'Shelter',
-  text: 'A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).<br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+  text: 'A shelter allowance of $200 per night for your household.<br/><br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
 };
 
 export const shelterReferralNeedDialog: DialogContent = {
@@ -77,8 +77,8 @@ export const incidentalsNeedDialog: DialogContent = {
 };
 
 export const interacETransferDialog: DialogContent = {
-  title: 'Interac e-Transfers',
-  text: 'Please Note: While the majority of Interac e-Transfers are processed immediately, there are instances where processing delays may occur.'
+  title: 'Interac e-Transfer',
+  text: 'Please Note: While the majority of transfers are processed immediately, there are instances where processing delays may occur.'
 };
 
 export const interacOptOut: DialogContent = {

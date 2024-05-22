@@ -4,7 +4,7 @@
     @if (showSelfServeShelterAllowanceSupport) {
       <mat-card appearance="outlined">
         <mat-card-content>
-          <div style="display: flex; flex-direction: column; gap: var(--size-2)">
+          <div class="question-box">
             <p class="card-heading">Shelter Allowance</p>
             <div class="card-question">
               <label>Which <b>people</b> in your household require <b>Shelter Allowance</b>?</label>
@@ -37,10 +37,7 @@
               }
             </div>
           </div>
-          <div class="note-box">
-            Shelter Allowance is provided at <b>$30 per night</b> based on single occupancy, <b>$10</b> for each
-            additional adult and youth and <b>$5</b> for each additional child.
-          </div>
+          <div class="note-box">Shelter Allowance is provided at <b>$200 per night</b> per household.</div>
         </mat-card-content>
       </mat-card>
     }
@@ -48,7 +45,7 @@
     @if (showSelfServeFoodSupport) {
       <mat-card appearance="outlined">
         <mat-card-content>
-          <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: 30px">
+          <div class="question-box">
             <p class="card-heading requiredField">Food</p>
             <div class="card-question">
               <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
@@ -59,8 +56,32 @@
                 style="display: flex; flex-direction: column"
                 [formControl]="supportDraftForm.controls.food.controls.fundsFor"
               >
-                <mat-radio-button [value]="SelfServeSupportType.FoodGroceries"> Groceries </mat-radio-button>
-                <mat-radio-button [value]="SelfServeSupportType.FoodRestaurant"> Restaurant Meals </mat-radio-button>
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodGroceries"
+                  [disabled]="!hasSelfServeFoodGroceriesSupport"
+                >
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+                    <b>Groceries</b>
+                  } @else {
+                    Groceries
+                  }
+                  @if (!hasSelfServeFoodGroceriesSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
+                  }
+                </mat-radio-button>
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodRestaurant"
+                  [disabled]="!hasSelfServiceFoodRestaurantSupport"
+                >
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+                    <b>Restaurant Meals</b>
+                  } @else {
+                    Restaurant Meals
+                  }
+                  @if (!hasSelfServiceFoodRestaurantSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
+                  }
+                </mat-radio-button>
               </mat-radio-group>
             </div>
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
@@ -102,7 +123,7 @@
             }
 
             @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
-              <label>Which people in your household require <b>Restaurant Meals</b>? </label>
+              <label>Which <b>people</b> in your household require <b>Restaurant Meals</b>? </label>
               <div style="display: flex; flex-direction: column">
                 @for (
                   person of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.includedHouseholdMembers
@@ -116,7 +137,13 @@
                   </div>
                 }
               </div>
-              <label>What <b>meals</b> are required for your household?</label>
+              <div>
+                <label>What <b>meals</b> are required for your household? </label>
+
+                <button type="button" mat-icon-button class="status-info" (click)="openRestaurantMealsInfoDialog()">
+                  <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                </button>
+              </div>
               <div>
                 <table>
                   <tr class="header-row">
@@ -160,12 +187,14 @@
               supportDraftForm.controls?.food?.touched &&
               supportDraftForm.controls?.food?.controls?.fundsFor?.hasError('required')
             ) {
-              <mat-error>Food is required</mat-error>
+              <mat-error>Selection is required</mat-error>
             }
           </div>
           <div class="note-box">
             Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and <b>$25.50</b> for
-            dinner per person per day. Groceries are provided at a daily rate of <b>$22.50 per person</b> per day.
+            dinner per person per day.
+            <br />
+            Groceries are provided at a daily rate of <b>$22.50 per person</b> per day.
           </div>
         </mat-card-content>
       </mat-card>
@@ -174,10 +203,10 @@
     @if (showSelfServeClothingSupport) {
       <mat-card appearance="outlined">
         <mat-card-content>
-          <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: var(--size-2)">
+          <div class="question-box">
             <p class="card-heading">Clothing</p>
             <div class="card-question">
-              <label>Which people in your household require <b>Clothing</b>?</label>
+              <label>Which <b>people</b> in your household require <b>Clothing</b>?</label>
             </div>
             <div style="display: flex; flex-direction: column">
               @for (
@@ -200,10 +229,10 @@
     @if (showSelfServeIncidentsSupport) {
       <mat-card appearance="outlined">
         <mat-card-content>
-          <div style="flex: 1 0 450px; display: flex; flex-direction: column; gap: var(--size-2)">
+          <div class="question-box">
             <p class="card-heading">Incidentals</p>
             <div class="card-question">
-              <label>Which people in your household require <b>Incidentals</b>?</label>
+              <label>Which <b>people</b> in your household require <b>Incidentals</b>?</label>
             </div>
             <div style="display: flex; flex-direction: column">
               @for (

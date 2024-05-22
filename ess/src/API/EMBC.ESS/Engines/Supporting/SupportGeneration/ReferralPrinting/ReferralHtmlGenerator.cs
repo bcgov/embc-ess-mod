@@ -20,7 +20,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
             {
                 var incoming = (string)arguments[0];
-                output.WriteSafeString(incoming.ToUpperInvariant()[0]);
+                output.WriteSafeString(incoming?.ToUpperInvariant()[0]);
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
@@ -34,9 +34,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handleBars.RegisterHelper("upperCase", (output, context, arguments) =>
             {
                 var upperCaseString = (string)arguments[0];
-                output.WriteSafeString(upperCaseString.ToUpperInvariant());
+                output.WriteSafeString(upperCaseString?.ToUpperInvariant());
             });
-            handleBars.RegisterHelper("isDefined", (output, context, arguments) => arguments[0] != null);
 
             return handleBars;
         }
@@ -155,7 +154,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         private static Task<string> GetSupplierPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}SupplierPartial");
 
         private static Task<string> GetNotesPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}NotesPartial");
+
         private static Task<string> GetAdditionalInfoPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}AdditionalInfoPartial");
+
         private static Task<string> GetDeliverySummaryPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}DeliverySummaryPartial");
 
         private enum ReferalMainViews

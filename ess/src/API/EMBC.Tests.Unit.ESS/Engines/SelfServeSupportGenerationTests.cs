@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
-using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Transformation;
+using HandlebarsDotNet;
 using Shouldly;
 using Xunit;
 
@@ -35,10 +38,10 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task Generate_ShelterAllowance_Created()
     {
-        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance);
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        support.TotalAmount.ShouldBe(210d);
+        support.TotalAmount.ShouldBe(600d);
     }
 
     [Fact]
@@ -46,16 +49,16 @@ public class SelfServeSupportGenerationTests
     {
         var householdMembersWithMinors = householdMembers.ToList();
         householdMembersWithMinors[4] = new SelfServeHouseholdMember(householdMembersWithMinors[4].Id, true);
-        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance, householdMembersWithMinors);
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, householdMembersWithMinors);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
-        support.TotalAmount.ShouldBe(195d);
+        support.TotalAmount.ShouldBe(600d);
     }
 
     [Fact]
     public async Task Generate_ShelterAllowanceNoHouseholdMembers_Created()
     {
-        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(IdentifiedNeed.ShelterAllowance, []);
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, []);
         support.Nights.ShouldBe(expectedDays);
         support.IncludedHouseholdMembers.ShouldBe([]);
         support.TotalAmount.ShouldBe(0d);
@@ -64,7 +67,7 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task Generate_Incidentals_Created()
     {
-        var support = await GenerateSelfServeSupports<SelfServeIncidentalsSupport>(IdentifiedNeed.Incidentals);
+        var support = await GenerateSelfServeSupports<SelfServeIncidentalsSupport>(SelfServeSupportType.Incidentals);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
         support.TotalAmount.ShouldBe(250d);
     }
@@ -72,7 +75,7 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task Generate_Clothing_Created()
     {
-        var support = await GenerateSelfServeSupports<SelfServeClothingSupport>(IdentifiedNeed.Clothing);
+        var support = await GenerateSelfServeSupports<SelfServeClothingSupport>(SelfServeSupportType.Clothing);
         support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
         support.TotalAmount.ShouldBe(750d);
     }
@@ -80,7 +83,7 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task Generate_FoodGroceries_Created()
     {
-        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([IdentifiedNeed.Food], startDate, endDate, startDate, endDate, householdMembers), default);
+        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([SelfServeSupportType.FoodGroceries, SelfServeSupportType.FoodRestaurant], startDate, endDate, startDate, endDate, householdMembers), default);
         response.Supports.Count().ShouldBe(2);
 
         var groceries = (SelfServeFoodGroceriesSupport)response.Supports.Single(s => s is SelfServeFoodGroceriesSupport);
@@ -104,9 +107,76 @@ public class SelfServeSupportGenerationTests
         restaurant.TotalAmount.ShouldBe(795d);
     }
 
-    private async Task<T> GenerateSelfServeSupports<T>(IdentifiedNeed forNeed, IEnumerable<SelfServeHouseholdMember>? overrideHouseholdMembers = null) where T : SelfServeSupport
+    private async Task<T> GenerateSelfServeSupports<T>(SelfServeSupportType type, IEnumerable<SelfServeHouseholdMember>? overrideHouseholdMembers = null) where T : SelfServeSupport
     {
-        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([forNeed], startDate, endDate, startDate, endDate, overrideHouseholdMembers ?? this.householdMembers), default);
+        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([type], startDate, endDate, startDate, endDate, overrideHouseholdMembers ?? this.householdMembers), default);
         return response.Supports.ShouldHaveSingleItem().ShouldBeOfType<T>();
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodOnly()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "120"),
+                KeyValuePair.Create("groceryAmount", "30"),
+                KeyValuePair.Create("restaurantAmount", "90"),
+                KeyValuePair.Create("recipientName","John Doe - Food Only"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate = (EmailTemplate)await etp.Get(SubmissionTemplateType.ETransferConfirmation);
+
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
+        {
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodOnly.html", emailContent);
+    }
+
+    [Fact]
+    public async Task CreateSelfServeSupportsETransferEmailContentFoodExcluded()
+    {
+        IEnumerable<KeyValuePair<string, string>> tokens = new[]
+        {
+                KeyValuePair.Create("totalAmount", "160"),
+                KeyValuePair.Create("clothingAmount", "30"),
+                KeyValuePair.Create("incidentalsAmount", "90"),
+                KeyValuePair.Create("shelterAllowanceAmount", "40"),
+                KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+        };
+
+        EmailTemplateProvider etp = new EmailTemplateProvider();
+        var emailTemplate = (EmailTemplate)await etp.Get(SubmissionTemplateType.ETransferConfirmation);
+
+        string emailContent = "";
+        if (!string.IsNullOrWhiteSpace(emailTemplate.Content))
+        {
+            var transformationData = new TransformationData
+            {
+                Template = emailTemplate.Content,
+                Tokens = new Dictionary<string, string>(tokens)
+            };
+            var template = Handlebars.Compile(transformationData.Template);
+
+            var taskResult = await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
+            emailContent = taskResult.Content;
+        }
+
+        emailContent.ShouldNotBeNullOrEmpty();
+        await File.WriteAllTextAsync("./eTransferEmailConfirmationFoodExcluded.html", emailContent);
     }
 }

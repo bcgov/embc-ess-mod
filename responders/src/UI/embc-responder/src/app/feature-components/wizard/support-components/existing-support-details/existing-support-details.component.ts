@@ -380,15 +380,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       ?.description;
   }
 
-  getMethodTextToDisplay(enumToText: string, isSelfServe: boolean): string {
-    let isSelfServeValue = '';
-    if (isSelfServe) {
-      isSelfServeValue = ' (Self-serve)';
-    }
-    return (
-      this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description +
-      isSelfServeValue
-    );
+  getMethodTextToDisplay(enumToText: string): string {
+    return this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description;
   }
 
   getNotificationPref(): string {
@@ -416,5 +409,9 @@ export class ExistingSupportDetailsComponent implements OnInit {
     ).firstName;
 
     return firstName.toLocaleUpperCase() + ' ' + lastName.toUpperCase();
+  }
+
+  getFirstLastNameFormatted(firstName: string, lastName: string): string {
+    return lastName.toUpperCase() + ', ' + firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   }
 }

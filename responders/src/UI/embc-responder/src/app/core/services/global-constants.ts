@@ -60,9 +60,7 @@ export const billeting = {
 };
 
 export const shelterAllowanceRate = {
-  rate: 30,
-  adult: 10,
-  child: 5
+  rate: 200
 };
 
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -146,7 +144,8 @@ export const hotelRateSheet: DialogContent = {
 
 export const needsShelterAllowanceRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
-  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p> $30 per night (single occupancy)</p><p> + $10 for each additional adult</p><p> + $5 for each additional child</p></br>'
+  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p><span class="bold">$200 per night</span> per household</p>',
+  cancelButton: 'Close'
 };
 
 export const billetingRateSheet: DialogContent = {
@@ -187,7 +186,7 @@ export const duplicateSupportMessage: DialogContent = {
 
 export const needsShelterAllowanceMessage: DialogContent = {
   title: 'Shelter',
-  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
+  text: '<p>A shelter allowance of $200 per night per household.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
 };
 
 export const needsShelterReferralMessage: DialogContent = {
@@ -551,8 +550,8 @@ export const supportReprintReasonsError =
   'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const communityTypesError = 'Unable to retrieve community types at this time. Please try again later';
 export const identifiedNeedsError = 'Unable to retrieve identified needs at this time. Please try again later';
-export const securityPhraseError = 'Unable to retrieve security phrase at this time. Please try again later';
-export const verifySecurityPhraseError = 'Unable to verify security phrase at this time. Please try again later';
+export const securityPhraseError = 'Unable to retrieve security word at this time. Please try again later';
+export const verifySecurityPhraseError = 'Unable to verify security word at this time. Please try again later';
 export const linkProfileError = 'Unable to link to ESS File. Please try again later';
 export const securityQuestionsError = 'Unable to retrieve security questions at this time. Please try again later';
 export const verifySecurityQuestionError = 'Unable to verify security questions at this time. Please try again later';
@@ -631,7 +630,7 @@ export const caseNotesCompleteText: DashboardBanner = {
 
 export const shelterAllowanceNeedDialog: DialogContent = {
   title: 'Shelter',
-  text: 'A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child). <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+  text: '<p>A shelter allowance of $200 per night per household.</p> <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
 };
 
 export const shelterReferralNeedDialog: DialogContent = {

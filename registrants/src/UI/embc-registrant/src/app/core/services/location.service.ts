@@ -138,20 +138,19 @@ export class LocationService {
               code: c.value,
               name: c.description,
               districtName: c.districtName,
-              stateProvinceCode: c.parentCode.value,
-              countryCode: c.parentCode.parentCode.value,
-              type: c.communityType,
+              stateProvinceCode: c.stateProvinceCode,
+              countryCode: c.countryCode,
               isActive: c.isActive
             }))
           );
           this.setRegionalDistricts(results[0].map((comm) => comm.districtName));
 
           this.setStateProvinceList(
-            [...results[1]].map((sp) => ({
+            [...results[1]].map((sp: Code) => ({
               code: sp.value,
               name: sp.description,
-              countryCode: sp.parentCode.value,
-              isActive: sp.isActive
+              isActive: sp.isActive,
+              countryCode: sp.parentCode.value
             }))
           );
         })
@@ -246,9 +245,8 @@ export class LocationService {
             code: c.value,
             name: c.description,
             districtName: c.districtName,
-            stateProvinceCode: c.parentCode.value,
-            countryCode: c.parentCode.parentCode.value,
-            type: c.communityType,
+            stateProvinceCode: c.stateProvinceCode,
+            countryCode: c.countryCode,
             isActive: c.isActive
           }))
         );

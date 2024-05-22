@@ -79,7 +79,9 @@
                       </div>
                       @if (selectedSupport?.isSelfServe) {
                         <div class="col-md-4 bold header-width">
-                          <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
+                          <p>
+                            {{ getFirstLastNameFormatted(interac?.recipientFirstName, interac?.recipientLastName) }}
+                          </p>
                         </div>
                       } @else {
                         <div class="col-md-4 bold header-width">
@@ -164,7 +166,7 @@
                 </div>
                 @if (selectedSupport?.isSelfServe) {
                   <div class="col-md-4 bold">
-                    <p>{{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}</p>
+                    <p>{{ getFirstLastNameFormatted(interac?.recipientFirstName, interac?.recipientLastName) }}</p>
                   </div>
                 } @else {
                   <div class="col-md-4 bold">
@@ -531,8 +533,11 @@
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Method:</div>
-    <div class="col-md-4 bold">
-      {{ getMethodTextToDisplay(selectedSupport?.method, selectedSupport?.isSelfServe) }}
+    <div class="col-md-4">
+      <b>{{ getMethodTextToDisplay(selectedSupport?.method) }} </b>
+      @if (selectedSupport?.isSelfServe) {
+        <i> (Self-Serve) </i>
+      }
     </div>
   </div>
 

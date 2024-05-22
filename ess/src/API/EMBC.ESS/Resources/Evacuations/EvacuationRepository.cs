@@ -32,6 +32,7 @@ public class EvacuationRepository : IEvacuationRepository
             SaveEvacuationFileNote c => await HandleSaveEvacuationFileNote(c, ct),
             AddEligibilityCheck c => await Handle(c, ct),
             OptoutSelfServe c => await Handle(c, ct),
+            AssignFileToTask c => await Handle(c, ct),
 
             _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
         };
@@ -276,43 +277,46 @@ public class EvacuationRepository : IEvacuationRepository
     {
         ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
 
-        var loadTasks = new[]
-        {
-            ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct),
-            ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), ct),
-            ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId), ct),
-            ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct),
-            Task.Run(async () =>
-            {
-                if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
-                ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
-                if (file.era_CurrentNeedsAssessmentid.era_TaskNumber==null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), ct);
-                if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck==null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
-                if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
-                {
-                    ctx.AttachTo(nameof(EssContext.era_eligibilitychecks), file.era_CurrentNeedsAssessmentid.era_EligibilityCheck);
-                    await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_Task));
-                }
+        var loadTasks = new List<Task>();
 
-                var members = await ctx.era_householdmembers
-                    .Expand(m => m.era_Registrant)
-                    .Where(m => m._era_evacuationfileid_value == file.era_evacuationfileid)
-                    .GetAllPagesAsync(ct);
+        if (file.era_era_evacuationfile_era_animal_ESSFileid == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct));
+        if (file.era_era_evacuationfile_era_essfilenote_ESSFileID == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), ct));
+        if (file.era_TaskId == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId), ct));
+        if (file.era_Registrant == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_Registrant), ct));
+        if (file.era_era_evacuationfile_era_evacueesupport_ESSFileId == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct));
+        loadTasks.Add(LoadNeedsAssessment(ctx, file, ct));
 
-                file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(
-                    members.Where(m => m.era_Registrant == null || m.era_Registrant.statecode == (int)EntityState.Active).ToArray());
-
-                var naHouseholdMembers = (await ctx.era_era_householdmember_era_needassessmentset
-                    .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value)
-                    .GetAllPagesAsync(ct))
-                    .ToArray();
-
-                file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment = new Collection<era_householdmember>(
-                    file.era_era_evacuationfile_era_householdmember_EvacuationFileid
-                        .Where(m => naHouseholdMembers.Any(nam => nam.era_householdmemberid == m.era_householdmemberid)).ToArray());
-            })
-        };
         await Task.WhenAll(loadTasks);
+    }
+
+    private static async Task LoadNeedsAssessment(EssContext ctx, era_evacuationfile file, CancellationToken ct)
+    {
+        if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
+        ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
+        if (file.era_CurrentNeedsAssessmentid.era_TaskNumber == null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), ct);
+        if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck == null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
+        if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
+        {
+            ctx.AttachTo(nameof(EssContext.era_eligibilitychecks), file.era_CurrentNeedsAssessmentid.era_EligibilityCheck);
+            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_Task));
+            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_eligibilitycheck_era_selfservesupport));
+        }
+
+        var members = await ctx.era_householdmembers
+            .Expand(m => m.era_Registrant)
+            .Where(m => m._era_evacuationfileid_value == file.era_evacuationfileid)
+            .GetAllPagesAsync(ct);
+
+        file.era_era_evacuationfile_era_householdmember_EvacuationFileid =
+            new Collection<era_householdmember>(members.Where(m => m.era_Registrant == null || m.era_Registrant.statecode == (int)EntityState.Active).ToArray());
+
+        var naHouseholdMembers = (await ctx.era_era_householdmember_era_needassessmentset
+            .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value)
+            .GetAllPagesAsync(ct))
+            .ToArray();
+
+        file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment =
+            new Collection<era_householdmember>(file.era_era_evacuationfile_era_householdmember_EvacuationFileid.Where(m => naHouseholdMembers.Any(nam => nam.era_householdmemberid == m.era_householdmemberid)).ToArray());
     }
 
     private async Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query, CancellationToken ct)
@@ -339,6 +343,8 @@ public class EvacuationRepository : IEvacuationRepository
 
         //load the file details
         await Parallel.ForEachAsync(files, ct, async (f, ct) => await ParallelLoadEvacuationFileAsync(readCtx, f, ct));
+
+        readCtx.DetachAll();
 
         //map from Dynamics to DTOs
         return mapper.Map<IEnumerable<EvacuationFile>>(files, opt => opt.Items["MaskSecurityPhrase"] = query.MaskSecurityPhrase.ToString());
@@ -378,7 +384,14 @@ public class EvacuationRepository : IEvacuationRepository
 
         if (!shouldQueryFiles) return Array.Empty<era_evacuationfile>();
 
-        var filesQuery = ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.statecode == (int)EntityState.Active);
+        var filesQuery = ctx.era_evacuationfiles
+            .Expand(f => f.era_CurrentNeedsAssessmentid)
+            .Expand(f => f.era_Registrant)
+            .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
+            .Expand(f => f.era_era_evacuationfile_era_essfilenote_ESSFileID)
+            .Expand(f => f.era_TaskId)
+            .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+            .Where(f => f.statecode == (int)EntityState.Active);
 
         if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId);
         if (!string.IsNullOrEmpty(query.ManualFileId)) filesQuery = filesQuery.Where(f => f.era_paperbasedessfile == query.ManualFileId);
@@ -477,11 +490,19 @@ public class EvacuationRepository : IEvacuationRepository
         }
         if (command.TaskNumber != null)
         {
-            var task = await ctx.era_tasks.Where(t => t.era_name == command.TaskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
+            var task = await ctx.era_tasks
+                .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
+                .Where(t => t.era_name == command.TaskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
             if (task == null) throw new ArgumentException($"Task {command.TaskNumber} not found");
             ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_Task), task);
-        }
 
+            foreach (var supportType in command.EligibleSupports)
+            {
+                var supportLimit = task.era_era_task_era_selfservesupportlimits_Task.SingleOrDefault(sl => sl.era_supporttypeoption == (int)supportType && sl.statecode == 0);
+                if (supportLimit == null) throw new InvalidOperationException($"Eligibility has support type {supportType} which is not enabled for task {task.era_name}");
+                ctx.AddLink(eligibilityCheck, nameof(era_eligibilitycheck.era_eligibilitycheck_era_selfservesupport), supportLimit);
+            }
+        }
         await ctx.SaveChangesAsync(ct);
 
         return new ManageEvacuationFileCommandResult { Id = eligibilityCheck.era_eligibilitycheckid.ToString() };
@@ -498,5 +519,17 @@ public class EvacuationRepository : IEvacuationRepository
             await ctx.SaveChangesAsync(ct);
         }
         return new ManageEvacuationFileCommandResult { Id = check?.era_eligibilitycheckid?.ToString() };
+    }
+
+    private async Task<ManageEvacuationFileCommandResult> Handle(AssignFileToTask cmd, CancellationToken ct)
+    {
+        var ctx = essContextFactory.Create();
+        var file = await ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.era_name == cmd.EvacuationFileNumber).SingleOrDefaultAsync(ct);
+        if (file == null) throw new ArgumentException($"Evacuation file {cmd.EvacuationFileNumber} not found");
+
+        AssignToTask(ctx, file, cmd.TaskNumber);
+
+        await ctx.SaveChangesAsync(ct);
+        return new ManageEvacuationFileCommandResult { Id = cmd.EvacuationFileNumber };
     }
 }

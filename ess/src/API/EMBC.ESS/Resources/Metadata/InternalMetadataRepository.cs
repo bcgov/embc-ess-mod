@@ -22,20 +22,26 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            var jurisdictions = (await essContext.era_jurisdictions
-                        .Expand(j => j.era_RelatedProvinceState)
-                        .Expand(j => j.era_RegionalDistrict)
-                        .GetAllPagesAsync())
-                        .ToArray();
-
+            var jurisdictions = (await essContext.era_jurisdictions.GetAllPagesAsync()).ToArray();
             var stateProvinces = (await essContext.era_provinceterritorieses.GetAllPagesAsync()).ToArray();
+            var countries = (await essContext.era_countries.GetAllPagesAsync()).ToArray();
+            var districts = (await essContext.era_regionaldistricts.GetAllPagesAsync()).ToArray();
+            Parallel.ForEach(jurisdictions, (j) =>
+            {
+                j.era_RelatedProvinceState = stateProvinces.SingleOrDefault(p => j._era_relatedprovincestate_value == p.era_provinceterritoriesid);
+                j.era_RegionalDistrict = districts.SingleOrDefault(d => j._era_regionaldistrict_value == d.era_regionaldistrictid);
+            });
+            Parallel.ForEach(stateProvinces, (s) =>
+            {
+                s.era_RelatedCountry = countries.SingleOrDefault(c => s._era_relatedcountry_value == c.era_countryid);
+            });
 
             var communities = jurisdictions
                 .AsParallel()
                 .Select(j =>
                 {
                     var community = mapper.Map<Community>(j);
-                    community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.era_provinceterritoriesid == j._era_relatedprovincestate_value.Value)?.era_code;
+                    community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.era_provinceterritoriesid == j._era_relatedprovincestate_value.Value)?.era_RelatedCountry?.era_countrycode;
                     return community;
                 });
 
@@ -65,7 +71,22 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            return mapper.Map<IEnumerable<StateProvince>>(await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync());
+            var stateProvinces = (await essContext.era_provinceterritorieses.GetAllPagesAsync()).ToArray();
+            var countries = (await essContext.era_countries.GetAllPagesAsync()).ToArray();
+            Parallel.ForEach(stateProvinces, (s) =>
+            {
+                s.era_RelatedCountry = countries.SingleOrDefault(c => s._era_relatedcountry_value == c.era_countryid);
+            });
+
+            return mapper.Map<IEnumerable<StateProvince>>(stateProvinces);
+        }
+
+        public async Task<IReadOnlyDictionary<int, string>> GetAuditAccessReasons()
+        {
+            var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
+            var optionSet = (OptionSetMetadata)optionSetDefinitions.SingleOrDefault(t => t.Name == "era_fileaccessreason");
+
+            return optionSet?.Options.ToDictionary(o => o.Value.Value, o => o.Label.UserLocalizedLabel.Label) ?? new Dictionary<int, string>();
         }
     }
 }

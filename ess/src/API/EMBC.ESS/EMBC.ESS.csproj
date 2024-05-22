@@ -99,6 +99,7 @@
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationNotesPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationSupplierPartial.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\ETransferConfirmationTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />
@@ -106,11 +107,11 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.2.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
-        <ProjectReference Include="..\EMBC.ESS.Utilities.BceidWS\EMBC.ESS.Utilities.BceidWS.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Cas\EMBC.ESS.Utilities.Cas.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Spatial\EMBC.ESS.Utilities.Spatial.csproj" />
@@ -194,6 +195,7 @@
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationAdditionalInfoPartial.hbs" />
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationDeliverySummaryPartial.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\ETransferConfirmationTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />

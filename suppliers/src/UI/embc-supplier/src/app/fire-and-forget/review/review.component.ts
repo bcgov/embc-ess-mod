@@ -4,11 +4,17 @@ import { Router } from '@angular/router';
 import { SupplierHttpService } from '../../core/services/supplierHttp.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { AlertService } from '../../core/services/alert.service';
+import { LoaderComponent } from '../../core/components/loader/loader.component';
+import { AlertComponent } from '../../core/components/alert/alert.component';
+import { CaptchaComponent } from '../../core/components/captcha/captcha.component';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss']
+  styleUrls: ['./review.component.scss'],
+  standalone: true,
+  imports: [CaptchaComponent, AlertComponent, LoaderComponent, CurrencyPipe]
 })
 export class ReviewComponent implements OnInit {
   supplierSubmissionType: string;

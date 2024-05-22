@@ -67,22 +67,25 @@ footer nav {
   border-top: 2px solid #fcba19;
 }
 
-.mat-step-icon {
+.mat-step-header .mat-step-icon {
   height: 38px !important;
   width: 38px !important;
-  border: 4px solid #169bd5;
+  border: 4px solid #eee;
+  background-color: #ffffff !important;
+  color: #aaa !important;
 }
 
-.mat-step-header .mat-step-icon-selected,
-.mat-step-header .mat-step-icon {
+.mat-step-header .mat-step-icon-selected {
   background-color: #ffffff !important;
   color: #169bd5 !important;
+  border: 4px solid #169bd5;
 }
 
 .mat-step-header .mat-step-icon-state-edit,
 .mat-step-header .mat-step-icon-state-done {
   background-color: #169bd5 !important;
   color: #ffffff !important;
+  border: 4px solid #169bd5;
 }
 
 .mat-step-header .mat-step-label {
@@ -375,6 +378,17 @@ mat-form-field {
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
 .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
   background-color: #169bd5 !important;
+}
+
+.mat-mdc-radio-group.ng-invalid.ng-touched {
+  .mat-mdc-radio-button.mat-accent {
+    --mdc-radio-unselected-icon-color: red;
+  }
+}
+
+.mat-mdc-checkbox.ng-invalid.ng-touched {
+  --mdc-checkbox-unselected-icon-color: red;
+  --mdc-checkbox-unselected-hover-icon-color: red;
 }
 
 .requiredField::after {

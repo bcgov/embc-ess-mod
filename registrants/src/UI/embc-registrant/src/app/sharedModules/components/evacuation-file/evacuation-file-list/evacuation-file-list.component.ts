@@ -55,6 +55,7 @@ export class EvacuationFileListComponent implements OnInit {
           this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
           this.evacuationFileDataService.setAllSupportsSelfServe(this.primaryEssFile);
+          this.evacuationFileDataService.setHasMultipleActiveFiles(files);
           this.showLoading = false;
         },
         error: (error) => {
@@ -96,7 +97,7 @@ export class EvacuationFileListComponent implements OnInit {
         if (value === 'confirm') {
           this.formCreationService.clearNeedsAssessmentData();
           this.evacuationFileDataService.clearESSFileData();
-          this.router.navigate(['/verified-registration/confirm-restriction']);
+          this.router.navigate(['/verified-registration/needs-assessment']);
         }
       });
   }

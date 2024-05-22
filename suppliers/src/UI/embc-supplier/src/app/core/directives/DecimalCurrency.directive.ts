@@ -1,7 +1,8 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appDecimalCurrency]'
+  selector: '[appDecimalCurrency]',
+  standalone: true
 })
 export class DecimalCurrencyDirective {
   private regex = new RegExp(/^\d*\.?\d{0,2}$/g);

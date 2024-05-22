@@ -154,11 +154,20 @@ public record ValidateSelfServeSupportsEligibilityResponse(SelfServeSupportEligi
     public override bool IsValid => Eligibility.Eligible;
 }
 
-public record SelfServeSupportEligibility(bool Eligible, string? Reason, string? TaskNumber, string? HomeAddressReferenceId, DateTimeOffset? From, DateTimeOffset? To);
+public record SelfServeSupportEligibility(bool Eligible, string? Reason, string? TaskNumber, string? HomeAddressReferenceId, DateTimeOffset? From, DateTimeOffset? To, IEnumerable<SelfServeSupportType> eligibleSupportTypes);
 
-public record GenerateSelfServeSupports(IEnumerable<IdentifiedNeed> Needs, DateTime TaskStartDate, DateTime TaskEndDate, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
+public record GenerateSelfServeSupports(IEnumerable<SelfServeSupportType> SupportTypes, DateTime TaskStartDate, DateTime TaskEndDate, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 
 public record SelfServeHouseholdMember(string Id, bool IsMinor);
+
+public enum SelfServeSupportType
+{
+    ShelterAllowance,
+    FoodGroceries,
+    FoodRestaurant,
+    Incidentals,
+    Clothing
+}
 
 public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 

@@ -7,6 +7,7 @@ export interface EvacuationFileSummary {
   createdOn?: string;
   evacuatedFromAddress?: Address;
   evacuationFileDate?: string;
+  hasSupports?: boolean;
   id?: string;
   isPaper?: null | boolean;
   isPerliminary?: boolean;

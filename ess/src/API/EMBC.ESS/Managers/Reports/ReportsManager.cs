@@ -6,158 +6,154 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Reports;
-using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Reports;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Csv;
 using EMBC.Utilities.Messaging;
 
-namespace EMBC.ESS.Managers.Reports
+namespace EMBC.ESS.Managers.Reports;
+
+public class ReportsManager
 {
-    public class ReportsManager
+    private readonly IMapper mapper;
+    private readonly IReportRepository reportRepository;
+    private readonly IMetadataRepository metadataRepository;
+    private readonly ICache cache;
+    private readonly IMessagingClient messagingClient;
+
+    public ReportsManager(
+        IMapper mapper,
+        IReportRepository reportRepository,
+        IMetadataRepository metadataRepository,
+        ICache cache,
+        IMessagingClient messagingClient)
     {
-        private readonly IMapper mapper;
-        private readonly IReportRepository reportRepository;
-        private readonly IMetadataRepository metadataRepository;
-        private readonly ICache cache;
-        private readonly IMessagingClient messagingClient;
+        this.mapper = mapper;
+        this.reportRepository = reportRepository;
+        this.metadataRepository = metadataRepository;
+        this.cache = cache;
+        this.messagingClient = messagingClient;
+    }
 
-        public ReportsManager(
-            IMapper mapper,
-            IReportRepository reportRepository,
-            IMetadataRepository metadataRepository,
-            ICache cache,
-            IMessagingClient messagingClient)
+    private string ReportRequestKey(string requestId) => $"report_{requestId}";
+
+    public async Task<string> Handle(RequestEvacueeReportCommand cmd)
+    {
+        var requestId = Guid.NewGuid().ToString();
+
+        await messagingClient.Publish(new EvacueeReportRequested
         {
-            this.mapper = mapper;
-            this.reportRepository = reportRepository;
-            this.metadataRepository = metadataRepository;
-            this.cache = cache;
-            this.messagingClient = messagingClient;
-        }
+            ReportRequestId = requestId,
+            FileId = cmd.FileId,
+            TaskNumber = cmd.TaskNumber,
+            EvacuatedFrom = cmd.EvacuatedFrom,
+            EvacuatedTo = cmd.EvacuatedTo,
+            StartDate = cmd.From,
+            EndDate = cmd.To,
+            IncludePersonalInfo = cmd.IncludePersonalInfo
+        });
 
-        private string ReportRequestKey(string requestId) => $"report_{requestId}";
+        return requestId;
+    }
 
-        public async Task<string> Handle(RequestEvacueeReportCommand cmd)
+    public async Task Handle(EvacueeReportRequested evt)
+    {
+        var evacueeQuery = new ReportQuery
         {
-            var requestId = Guid.NewGuid().ToString();
+            FileId = evt.FileId,
+            TaskNumber = evt.TaskNumber,
+            EvacuatedFrom = evt.EvacuatedFrom,
+            EvacuatedTo = evt.EvacuatedTo,
+            StartDate = evt.StartDate,
+            EndDate = evt.EndDate,
+        };
 
-            await messagingClient.Publish(new EvacueeReportRequested
-            {
-                ReportRequestId = requestId,
-                FileId = cmd.FileId,
-                TaskNumber = cmd.TaskNumber,
-                EvacuatedFrom = cmd.EvacuatedFrom,
-                EvacuatedTo = cmd.EvacuatedTo,
-                StartDate = cmd.From,
-                EndDate = cmd.To,
-                IncludePersonalInfo = cmd.IncludePersonalInfo
-            });
+        var results = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;
+        var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = evt.IncludePersonalInfo.ToString());
 
-            return requestId;
-        }
+        var communities = await metadataRepository.GetCommunities();
+        evacueeQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedFrom)?.Name;
+        evacueeQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedTo)?.Name;
 
-        public async Task Handle(EvacueeReportRequested evt)
+        var csv = evacuees.ToCSV(evacueeQuery, "\"");
+
+        var content = Encoding.UTF8.GetBytes(csv);
+        var contentType = "text/csv";
+
+        var report = new ReportQueryResult
         {
-            var evacueeQuery = new ReportQuery
-            {
-                FileId = evt.FileId,
-                TaskNumber = evt.TaskNumber,
-                EvacuatedFrom = evt.EvacuatedFrom,
-                EvacuatedTo = evt.EvacuatedTo,
-                StartDate = evt.StartDate,
-                EndDate = evt.EndDate,
-            };
+            Ready = true,
+            Content = content,
+            ContentType = contentType
+        };
+        var cacheKey = ReportRequestKey(evt.ReportRequestId);
+        await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
+    }
 
-            var results = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;
-            var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = evt.IncludePersonalInfo.ToString());
+    public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
+    {
+        var cacheKey = ReportRequestKey(query.ReportRequestId);
+        var report = await cache.Get<ReportQueryResult>(cacheKey);
 
-            var communities = await metadataRepository.GetCommunities();
-            evacueeQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedFrom)?.Name;
-            evacueeQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedTo)?.Name;
+        return report ?? new ReportQueryResult { Ready = false };
+    }
 
-            var csv = evacuees.ToCSV(evacueeQuery, "\"");
+    public async Task<string> Handle(RequestSupportReportCommand cmd)
+    {
+        var requestId = Guid.NewGuid().ToString();
 
-            var content = Encoding.UTF8.GetBytes(csv);
-            var contentType = "text/csv";
-
-            var report = new ReportQueryResult
-            {
-                Content = content,
-                ContentType = contentType
-            };
-            var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
-        }
-
-        public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
+        await messagingClient.Publish(new SupportReportRequested
         {
-            var cacheKey = ReportRequestKey(query.ReportRequestId);
-            var report = await cache.Get<ReportQueryResult>(cacheKey);
+            ReportRequestId = requestId,
+            FileId = cmd.FileId,
+            TaskNumber = cmd.TaskNumber,
+            EvacuatedFrom = cmd.EvacuatedFrom,
+            EvacuatedTo = cmd.EvacuatedTo,
+            StartDate = cmd.From,
+            EndDate = cmd.To
+        });
 
-            if (report == null) throw new NotFoundException("Report is not ready", query.ReportRequestId);
+        return requestId;
+    }
 
-            return report;
-        }
-
-        public async Task<string> Handle(RequestSupportReportCommand cmd)
+    public async Task Handle(SupportReportRequested evt)
+    {
+        var supportQuery = new ReportQuery
         {
-            var requestId = Guid.NewGuid().ToString();
+            FileId = evt.FileId,
+            TaskNumber = evt.TaskNumber,
+            EvacuatedFrom = evt.EvacuatedFrom,
+            EvacuatedTo = evt.EvacuatedTo,
+            StartDate = evt.StartDate,
+            EndDate = evt.EndDate,
+        };
 
-            await messagingClient.Publish(new SupportReportRequested
-            {
-                ReportRequestId = requestId,
-                FileId = cmd.FileId,
-                TaskNumber = cmd.TaskNumber,
-                EvacuatedFrom = cmd.EvacuatedFrom,
-                EvacuatedTo = cmd.EvacuatedTo,
-                StartDate = cmd.From,
-                EndDate = cmd.To
-            });
+        var supports = (await reportRepository.QuerySupport(supportQuery)).Items;
 
-            return requestId;
-        }
+        var communities = await metadataRepository.GetCommunities();
+        supportQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedFrom)?.Name;
+        supportQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedTo)?.Name;
 
-        public async Task Handle(SupportReportRequested evt)
+        var csv = supports.ToCSV(supportQuery, "\"");
+
+        var content = Encoding.UTF8.GetBytes(csv);
+        var contentType = "text/csv";
+
+        var report = new ReportQueryResult
         {
-            var supportQuery = new ReportQuery
-            {
-                FileId = evt.FileId,
-                TaskNumber = evt.TaskNumber,
-                EvacuatedFrom = evt.EvacuatedFrom,
-                EvacuatedTo = evt.EvacuatedTo,
-                StartDate = evt.StartDate,
-                EndDate = evt.EndDate,
-            };
+            Ready = true,
+            Content = content,
+            ContentType = contentType
+        };
+        var cacheKey = ReportRequestKey(evt.ReportRequestId);
+        await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
+    }
 
-            var supports = (await reportRepository.QuerySupport(supportQuery)).Items;
+    public async Task<ReportQueryResult> Handle(SupportReportQuery query)
+    {
+        var cacheKey = ReportRequestKey(query.ReportRequestId);
+        var report = await cache.Get<ReportQueryResult>(cacheKey);
 
-            var communities = await metadataRepository.GetCommunities();
-            supportQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedFrom)?.Name;
-            supportQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedTo)?.Name;
-
-            var csv = supports.ToCSV(supportQuery, "\"");
-
-            var content = Encoding.UTF8.GetBytes(csv);
-            var contentType = "text/csv";
-
-            var report = new ReportQueryResult
-            {
-                Content = content,
-                ContentType = contentType
-            };
-            var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
-        }
-
-        public async Task<ReportQueryResult> Handle(SupportReportQuery query)
-        {
-            var cacheKey = ReportRequestKey(query.ReportRequestId);
-            var report = await cache.Get<ReportQueryResult>(cacheKey);
-
-            if (report == null) throw new NotFoundException("Report is not ready", query.ReportRequestId);
-
-            return report;
-        }
+        return report ?? new ReportQueryResult { Ready = false };
     }
 }

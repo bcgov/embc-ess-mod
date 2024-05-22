@@ -6,12 +6,14 @@ namespace EMBC.ESS.Shared.Contracts.Events.SelfServe;
 
 public record CheckEligibileForSelfServeCommand : Command
 {
-    public string EvacuationFileId { get; set; }
+    public string RegistrantUserId { get; set; }
+    public string EvacuationFileNumber { get; set; }
 }
 
 public record EligibilityCheckQuery : Query<EligibilityCheckQueryResponse>
 {
-    public string EvacuationFileId { get; set; }
+    public string RegistrantUserId { get; set; }
+    public string EvacuationFileNumber { get; set; }
 }
 
 public record EligibilityCheckQueryResponse
@@ -21,12 +23,14 @@ public record EligibilityCheckQueryResponse
 
 public record OptOutSelfServeCommand : Command
 {
-    public string EvacuationFileId { get; set; }
+    public string RegistrantUserId { get; set; }
+    public string EvacuationFileNumber { get; set; }
 }
 
 public record DraftSelfServeSupportQuery : Query<DraftSelfServeSupportQueryResponse>
 {
-    public string EvacuationFileId { get; set; }
+    public string RegistrantUserId { get; set; }
+    public string EvacuationFileNumber { get; set; }
     public IEnumerable<SelfServeSupport>? Items { get; set; }
 }
 
@@ -38,7 +42,8 @@ public record DraftSelfServeSupportQueryResponse
 
 public record ProcessSelfServeSupportsCommand : Command
 {
-    public string EvacuationFileId { get; set; }
+    public string RegistrantUserId { get; set; }
+    public string EvacuationFileNumber { get; set; }
     public IEnumerable<SelfServeSupport> Supports { get; set; } = [];
     public ETransferDetails ETransferDetails { get; set; }
 }

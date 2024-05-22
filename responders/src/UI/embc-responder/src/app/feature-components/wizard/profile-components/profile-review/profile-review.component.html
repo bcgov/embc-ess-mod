@@ -13,14 +13,13 @@
         <div class="col-12">
           <div class="review-panel">
             <label class="tab-subtitle">Restriction</label>
-
             <div class="row">
-              <div class="col-8">
-                <mat-checkbox [checked]="!stepEvacueeProfileService?.restrictedAccess" disabled>
-                  You have given your consent to have your registration status, location and contact information shared
-                  with friends and family who may ask about your wellbeing.
-                </mat-checkbox>
-              </div>
+              <div class="col-4">Consent to Share Registration Status</div>
+              @if (!stepEvacueeProfileService?.restrictedAccess) {
+                <div class="col-8 bold">Yes</div>
+              } @else {
+                <div class="col-8 bold">No</div>
+              }
             </div>
           </div>
         </div>

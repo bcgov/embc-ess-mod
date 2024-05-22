@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DraftSupportForm,
   SelfServeClothingSupportForm,
@@ -27,7 +29,7 @@ import {
   SupportDayMeals
 } from 'src/app/core/api/models';
 import * as moment from 'moment';
-import { MatButtonModule } from '@angular/material/button';
+import { SelfServeSupportRestaurantMealsInfoDialogComponent } from '../self-serve-support-restaurant-meals-info-dialog/self-serve-support-restaurant-meals-info-dialog.component';
 
 @Component({
   selector: 'app-self-serve-support-details-form',
@@ -42,6 +44,8 @@ export class SelfServeSupportDetailsFormComponent {
 
   showSelfServeShelterAllowanceSupport = false;
   showSelfServeFoodSupport = false;
+  hasSelfServeFoodGroceriesSupport = false;
+  hasSelfServiceFoodRestaurantSupport = false;
   showSelfServeClothingSupport = false;
   showSelfServeIncidentsSupport = false;
 
@@ -88,6 +92,8 @@ export class SelfServeSupportDetailsFormComponent {
     return this._draftSupports;
   }
 
+  constructor(private dialog: MatDialog) {}
+
   private createSelfServeShelterAllowanceSupportForm(
     selfServeSupport: SelfServeShelterAllowanceSupport,
     selfServeSupportFormGroup: FormGroup<SelfServeShelerAllowanceSupportForm>
@@ -118,6 +124,7 @@ export class SelfServeSupportDetailsFormComponent {
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
     this.showSelfServeFoodSupport = true;
+    this.hasSelfServeFoodGroceriesSupport = true;
   }
 
   private createSelfServeFoodRestaurantSupportForm(
@@ -210,9 +217,42 @@ export class SelfServeSupportDetailsFormComponent {
       next: (includedHouseholdMembers) => {
         if (includedHouseholdMembers.every((m) => !m.isSelected)) {
           selfServeSupportFormGroup.controls.mealTypes.controls.forEach((m) => {
-            if (m.controls.breakfast.value === true) m.controls.breakfast.setValue(false, { emitEvent: false });
-            if (m.controls.lunch.value === true) m.controls.lunch.setValue(false, { emitEvent: false });
-            if (m.controls.dinner.value === true) m.controls.dinner.setValue(false, { emitEvent: false });
+            if (m.controls.breakfast.value === true) {
+              m.controls.breakfast.setValue(false, { emitEvent: false });
+            }
+            if (m.controls.lunch.value === true) {
+              m.controls.lunch.setValue(false, { emitEvent: false });
+            }
+            if (m.controls.dinner.value === true) {
+              m.controls.dinner.setValue(false, { emitEvent: false });
+            }
+            // disalbe all fields
+            m.controls.breakfast.disable({ emitEvent: false });
+            m.controls.lunch.disable({ emitEvent: false });
+            m.controls.dinner.disable({ emitEvent: false });
+          });
+        } else {
+          selfServeSupportFormGroup.controls.mealTypes.controls.forEach((meal) => {
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].breakfast === false
+            ) {
+              meal.controls.breakfast.enable({ emitEvent: false });
+            }
+
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].lunch === false
+            ) {
+              meal.controls.lunch.enable({ emitEvent: false });
+            }
+
+            if (
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === true ||
+              originalMealSupportsDraft[meal.controls.date.value.format('YYYY-MM-DD')].dinner === false
+            ) {
+              meal.controls.dinner.enable({ emitEvent: false });
+            }
           });
         }
       }
@@ -223,6 +263,7 @@ export class SelfServeSupportDetailsFormComponent {
     this.foodRestaurantDates = [...dates];
 
     this.showSelfServeFoodSupport = true;
+    this.hasSelfServiceFoodRestaurantSupport = true;
   }
 
   private createSelfServeClothingSupportForm(
@@ -270,5 +311,15 @@ export class SelfServeSupportDetailsFormComponent {
   getPersonName(id: string) {
     const personDetails = this.draftSupports.householdMembers.find((p) => p.id == id)?.details;
     return `${personDetails?.firstName ?? ''}`;
+  }
+
+  openRestaurantMealsInfoDialog() {
+    this.dialog
+      .open(SelfServeSupportRestaurantMealsInfoDialogComponent, {
+        data: {},
+        maxWidth: '400px'
+      })
+      .afterClosed()
+      .subscribe();
   }
 }

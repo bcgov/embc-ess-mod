@@ -4,40 +4,37 @@ namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {
-        public static DateTime UtcNowWithKind => DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+        private static string PSTTimeZoneName = GetPSTTimeZoneId();
+        private static TimeZoneInfo PSTTimeZone = TimeZoneInfo.FindSystemTimeZoneById(PSTTimeZoneName);
 
         public static DateTime ToPST(this DateTime date)
         {
             if (date.Kind == DateTimeKind.Unspecified) date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone());
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZoneId());
         }
 
         public static DateTime FromUnspecifiedPstToUtc(this DateTime date)
         {
             //convert from Unspecified PST to UTC
             if (date.Kind != DateTimeKind.Unspecified) date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone(), GetUTCTimeZone());
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZoneId(), GetUTCTimeZone());
         }
 
-        private static string GetPSTTimeZone()
-        {
-            return Environment.OSVersion.Platform switch
-            {
-                PlatformID.Win32NT => "Pacific Standard Time",
-                PlatformID.Unix => "America/Vancouver",
-                _ => throw new NotSupportedException()
-            };
-        }
+        public static TimeZoneInfo GetPstTimeZone() => PSTTimeZone;
 
-        private static string GetUTCTimeZone()
+        private static string GetPSTTimeZoneId() => Environment.OSVersion.Platform switch
         {
-            return Environment.OSVersion.Platform switch
-            {
-                PlatformID.Win32NT => "UTC",
-                PlatformID.Unix => "Etc/UTC",
-                _ => throw new NotSupportedException()
-            };
-        }
+            PlatformID.Win32NT => "Pacific Standard Time",
+            PlatformID.Unix => "America/Vancouver",
+            _ => throw new NotSupportedException()
+        };
+
+        private static string GetUTCTimeZone() => Environment.OSVersion.Platform switch
+        {
+            PlatformID.Win32NT => "UTC",
+            PlatformID.Unix => "Etc/UTC",
+            _ => throw new NotSupportedException()
+        };
 
         public static bool IsMinor(this DateTime dob) => dob.CalculateAge(null) < 19;
 

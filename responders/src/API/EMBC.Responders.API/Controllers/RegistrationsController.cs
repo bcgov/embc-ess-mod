@@ -170,6 +170,20 @@ namespace EMBC.Responders.API.Controllers
             var inviteId = await messagingClient.Send(inviteRequest);
             return Ok(inviteId);
         }
+
+        [HttpPost("registrants/{registrantId}/access")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AuditRegistrantAccess(string registrantId, AuditAccessRequest request)
+        {
+            await messagingClient.Send(new RecordAuditAccessCommand
+            {
+                TeamMemberId = currentUserId,
+                RegistrantId = registrantId,
+                AccessReasonId = request.AccessReasonId
+            });
+            return Ok();
+        }
     }
 
     public class RegistrationResult
@@ -255,6 +269,12 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+    }
+
+    public record AuditAccessRequest
+    {
+        [Required]
+        public int AccessReasonId { get; set; }
     }
 
     public class RegistrationsMapping : Profile

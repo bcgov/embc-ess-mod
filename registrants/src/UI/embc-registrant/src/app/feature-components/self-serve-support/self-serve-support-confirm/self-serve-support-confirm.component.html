@@ -3,17 +3,22 @@
     <mat-card-content style="display: flex; gap: var(--size-3); flex-direction: column; align-items: center">
       <h1 class="card-heading" style="font-size: calc(var(--size-1) * 4); text-align: center">
         You are eligible to receive financial assistance via <br />
-        <b>Interac</b>® <b>e-Transfer</b> while you are evacuated.
+        <b>Interac e-Transfer</b><sup>TM</sup> while you are evacuated.
       </h1>
 
       <h2 class="highlightText">
         Before proceeding, please <b>confirm</b> that you meet the following <b>requirements</b>.
       </h2>
 
-      <img src="assets/images/valid_bank_account.svg" width="200" height="200" />
+      <img
+        style="padding: 50px"
+        src="assets/images/interac-e-transfer-logo-without-text.png"
+        width="200"
+        height="200"
+      />
 
-      <p style="font-size: 18px">
-        You have a <b>valid bank account</b> <br />and can accept an e-Transfer
+      <p style="font-size: 18px; max-width: 400px; text-align: center">
+        You have a <b>valid bank account</b> and can accept transfers via Interac e-Transfer.
         <button mat-icon-button (click)="openInteracETransferDialog()">
           <img src="assets/images/info.svg" height="28" width="28" />
         </button>
@@ -21,11 +26,11 @@
 
       <button
         class="button-p"
-        style="width: 350px; font-size: var(--size-3)"
+        style="width: auto; min-height: 55px; height: auto !important; font-size: var(--size-3)"
         mat-raised-button
         (click)="gotoSelfServeSupport()"
       >
-        Proceed With e-Transfer
+        Proceed With Interac e-Transfer
       </button>
       <div>
         <a class="highlightText" style="cursor: pointer; text-decoration: none" (click)="optOutSelfServe()">
@@ -39,7 +44,7 @@
   </mat-card>
   <mat-card style="background-color: #f2f2f2; padding: calc(var(--size-1) * 5); margin-bottom: var(--size-4)">
     <mat-card-content style="display: flex; gap: var(--size-3); flex-direction: column; align-items: center">
-      <span style="font-size: var(--size-3)">Why Choose Interac® eTransfer?</span>
+      <span style="font-size: var(--size-3)">Why Choose Interac e-Transfer?</span>
       <div style="display: flex; gap: var(--size-3); flex-wrap: wrap; justify-content: space-around; width: 100%">
         <div style="display: flex; gap: var(--size-1); flex-direction: column; align-items: center; text-align: center">
           <img src="assets/images/money_in_account.svg" width="80" height="80" />

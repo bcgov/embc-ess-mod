@@ -85,6 +85,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
+    this.insuranceDisplay = globalConst.insuranceOptions.find(
+      (ins) => ins.value === this.stepEssFileService.insurance
+    )?.name;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(() => {
@@ -94,7 +97,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Go back to the Security Phrase tab
+   * Go back to the Security Word tab
    */
   back(): void {
     this.router.navigate([this.tabMetaData?.previous]);

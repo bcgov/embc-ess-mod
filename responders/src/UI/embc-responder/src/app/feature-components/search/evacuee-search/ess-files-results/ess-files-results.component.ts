@@ -12,7 +12,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
@@ -26,6 +26,11 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EssFilesResultsService } from './ess-files-results.service';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgClass, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  AccessReasonData,
+  AccessReasonGateDialogComponent
+} from '../access-reason-gate-dialog/access-reason-gate-dialog.component';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -48,7 +53,8 @@ export class EssFilesResultsComponent implements OnChanges, AfterViewInit, After
     private cd: ChangeDetectorRef,
     private alertService: AlertService,
     private appBaseService: AppBaseService,
-    private essFilesResultsService: EssFilesResultsService
+    private essFilesResultsService: EssFilesResultsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,6 +79,19 @@ export class EssFilesResultsComponent implements OnChanges, AfterViewInit, After
    * @param selectedESSFile selected ess file
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
+    const shouldProceed = await firstValueFrom(
+      this.dialog
+        .open<AccessReasonGateDialogComponent, AccessReasonData>(AccessReasonGateDialogComponent, {
+          data: {
+            accessEntity: 'essFile',
+            entityId: selectedESSFile.id
+          }
+        })
+        .afterClosed()
+    );
+
+    if (!shouldProceed) return;
+
     this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
     const profile$ = await this.essFilesResultsService.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {

@@ -19,6 +19,8 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_essteamuser team2Tier1Member;
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
+        private readonly string selfServeActiveTaskId;
+        private readonly string partialSelfServeActiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
@@ -31,6 +33,8 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_supplier inactiveSupplier;
         private readonly era_country canada;
         private readonly era_provinceterritories bc;
+
+        private static int[] selfServeSupportTypes = [174360000, 174360001, 174360005, 174360006, 174360009];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
@@ -48,6 +52,8 @@ namespace EMBC.Tests.Integration.ESS
         public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
         public string InactiveTaskCommunity => inactiveTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
+        public string SelfServeActiveTaskId => selfServeActiveTaskId;
+        public string PartialSelfServeActiveTaskId => partialSelfServeActiveTaskId;
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
@@ -89,6 +95,8 @@ namespace EMBC.Tests.Integration.ESS
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
+            this.selfServeActiveTaskId = testPrefix + "-selfserve-task";
+            this.partialSelfServeActiveTaskId = testPrefix + "-partial-selfserve-task";
 
             this.team1 = GetOrCreateTeam(essContext, testPrefix + "-team1");
 
@@ -105,6 +113,8 @@ namespace EMBC.Tests.Integration.ESS
             this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, activeTaskId, DateTime.UtcNow);
 
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
+            if (essContext.era_tasks.Where(t => t.era_name == selfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, selfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes);
+            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, [174360001, 174360005]);
 
             this.testContact = essContext.contacts.Where(c => c.era_bcservicescardid == this.testPrefix + "-userId").SingleOrDefault() ?? CreateContact(essContext);
 
@@ -120,7 +130,7 @@ namespace EMBC.Tests.Integration.ESS
 
             if (evacuationfile == null)
             {
-                evacuationfile = CreateEvacuationFile(essContext, this.testContact, testPrefix + "-digital");
+                evacuationfile = CreateEvacuationFile(essContext, this.testContact, activeTask, testPrefix + "-digital");
             }
             else
             {
@@ -135,7 +145,7 @@ namespace EMBC.Tests.Integration.ESS
 
             if (paperEvacuationfile == null)
             {
-                paperEvacuationfile = CreateEvacuationFile(essContext, this.testContact, testPrefix + "-paper", testPrefix + "-paper");
+                paperEvacuationfile = CreateEvacuationFile(essContext, this.testContact, inactiveTask, testPrefix + "-paper", testPrefix + "-paper");
                 CreateEvacueeSupports(essContext, paperEvacuationfile, this.testContact, this.team1Tier4Member, testPrefix);
             }
             else
@@ -239,14 +249,20 @@ namespace EMBC.Tests.Integration.ESS
             return member;
         }
 
-        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate)
+        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate, int[]? selfServeSupportTypes = null)
         {
+            var from = startDate;
+            var to = startDate.AddHours(72);
+            var selfServe = selfServeSupportTypes != null;
+
             var task = new era_task
             {
                 era_taskid = Guid.NewGuid(),
                 era_name = taskId,
-                era_taskstartdate = startDate,
-                era_currentdateandtime = startDate.AddDays(3),
+                era_taskstartdate = from,
+                era_currentdateandtime = to,
+                era_selfservetoggle = selfServe,
+                era_taskdetails = "autotest",
             };
             essContext.AddToera_tasks(task);
 
@@ -257,6 +273,21 @@ namespace EMBC.Tests.Integration.ESS
                 task._era_jurisdictionid_value = jurisdiction.era_jurisdictionid;
             }
 
+            if (selfServe)
+            {
+                task.era_createselfservesupportlimits = true;
+
+                foreach (var supportType in selfServeSupportTypes!)
+                {
+                    var limit = new era_selfservesupportlimits
+                    {
+                        era_supporttypeoption = supportType,
+                        era_selfservesupportlimitsid = Guid.NewGuid(),
+                    };
+                    essContext.AddToera_selfservesupportlimitses(limit);
+                    essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_Task), task);
+                }
+            }
             return task;
         }
 
@@ -284,7 +315,7 @@ namespace EMBC.Tests.Integration.ESS
             return contact;
         }
 
-        private era_evacuationfile CreateEvacuationFile(EssContext essContext, contact primaryContact, string fileId, string? paperFileNumber = null)
+        private era_evacuationfile CreateEvacuationFile(EssContext essContext, contact primaryContact, era_task? task, string fileId, string? paperFileNumber = null)
         {
             var file = new era_evacuationfile()
             {
@@ -309,7 +340,13 @@ namespace EMBC.Tests.Integration.ESS
             essContext.SetLink(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), needsAssessment);
             essContext.AddLink(file, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), needsAssessment);
             essContext.SetLink(file, nameof(era_evacuationfile.era_Registrant), primaryContact);
-
+            if (task != null)
+            {
+                essContext.SetLink(file, nameof(era_evacuationfile.era_TaskId), task);
+                essContext.SetLink(needsAssessment, nameof(era_needassessment.era_TaskNumber), task);
+                file.era_TaskId = task;
+                needsAssessment.era_TaskNumber = task;
+            }
             var primaryMember = new era_householdmember
             {
                 era_householdmemberid = Guid.NewGuid(),
@@ -353,13 +390,14 @@ namespace EMBC.Tests.Integration.ESS
             }
 
             file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(householdMembers);
+            file.era_CurrentNeedsAssessmentid = needsAssessment;
             return file;
         }
 
         private void CreateEvacueeSupports(EssContext essContext, era_evacuationfile file, contact contact, era_essteamuser creator, string prefix)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
-            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
+            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008, 174360009 };
 
             var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
@@ -389,6 +427,7 @@ namespace EMBC.Tests.Integration.ESS
             {
                 essContext.AddToera_evacueesupports(support);
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+                essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), support);
                 essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), creator);
             }
 
@@ -396,6 +435,7 @@ namespace EMBC.Tests.Integration.ESS
             {
                 essContext.AddToera_evacueesupports(support);
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+                essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), support);
                 essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), creator);
                 essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
             }

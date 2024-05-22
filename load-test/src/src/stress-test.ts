@@ -36,30 +36,30 @@ let ramp_up_scenario: Scenario = {
 export const options: Options = {
     scenarios: {
         /*---Registrant---*/
-        anonymousRegistration: {
-            exec: 'RegistrantAnonymousRegistration',
-            ...ramp_up_scenario
-        },
+        // anonymousRegistration: {
+        //     exec: 'RegistrantAnonymousRegistration',
+        //     ...ramp_up_scenario
+        // },
         newRegistration: {
             exec: 'RegistrantNewRegistration',
             ...ramp_up_scenario
         },
-        existingProfileRegistration: {
-            exec: 'RegistrantExistingProfileRegistration',
-            startTime: '2m',
-            ...ramp_up_scenario
-        },
+        // existingProfileRegistration: {
+        //     exec: 'RegistrantExistingProfileRegistration',
+        //     startTime: '2m',
+        //     ...ramp_up_scenario
+        // },
 
 
         /*---Responder---*/
-        ResponderNewRegistration: {
-            exec: 'ResponderNewRegistration',
-            ...ramp_up_scenario
-        },
-        ResponderExistingRegistration: {
-            exec: 'ResponderExistingRegistration',
-            ...ramp_up_scenario
-        },
+        // ResponderNewRegistration: {
+        //     exec: 'ResponderNewRegistration',
+        //     ...ramp_up_scenario
+        // },
+        // ResponderExistingRegistration: {
+        //     exec: 'ResponderExistingRegistration',
+        //     ...ramp_up_scenario
+        // },
     },
 
     thresholds: {

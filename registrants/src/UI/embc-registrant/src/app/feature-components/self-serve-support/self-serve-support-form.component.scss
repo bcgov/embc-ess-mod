@@ -1,3 +1,17 @@
+sup {
+  top: -0.9em;
+  font-size: 0.45em;
+  font-weight: bold;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding: 0;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none;
+}
+
 mat-card {
   margin-bottom: var(--size-3);
 }

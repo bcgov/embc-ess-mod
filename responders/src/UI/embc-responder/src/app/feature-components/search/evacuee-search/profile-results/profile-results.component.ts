@@ -11,7 +11,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -25,6 +25,11 @@ import { ProfileResultsService } from './profile-results.service';
 import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pipe';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  AccessReasonData,
+  AccessReasonGateDialogComponent
+} from '../access-reason-gate-dialog/access-reason-gate-dialog.component';
 
 @Component({
   selector: 'app-profile-results',
@@ -58,7 +63,8 @@ export class ProfileResultsComponent implements OnChanges, AfterViewInit {
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private alertService: AlertService,
     private appBaseService: AppBaseService,
-    private profileResultsService: ProfileResultsService
+    private profileResultsService: ProfileResultsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -79,7 +85,20 @@ export class ProfileResultsComponent implements OnChanges, AfterViewInit {
    *
    * @param selectedRegistrant selected profile
    */
-  openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
+  async openProfile(selectedRegistrant: RegistrantProfileSearchResultModel) {
+    const shouldProceed = await firstValueFrom(
+      this.dialog
+        .open<AccessReasonGateDialogComponent, AccessReasonData, boolean>(AccessReasonGateDialogComponent, {
+          data: {
+            accessEntity: 'profile',
+            entityId: selectedRegistrant.id
+          }
+        })
+        .afterClosed()
+    );
+
+    if (!shouldProceed) return;
+
     if (
       this.evacueeSessionService.isPaperBased &&
       !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification

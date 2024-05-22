@@ -25,8 +25,8 @@ internal class SupportProcessingStrategyFactory
     {
         SupportProcessingStrategyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
         SupportProcessingStrategyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
-        SupportProcessingStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportProcessingStrategy>(),
-        SupportProcessingStrategyType.Eligibility => services.GetRequiredService<SelfServeSupportProcessingStrategy>(),
+        SupportProcessingStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportEligibilityStrategy>(),
+        SupportProcessingStrategyType.Eligibility => services.GetRequiredService<SelfServeSupportEligibilityStrategy>(),
 
         _ => throw new NotImplementedException($"{type}")
     };

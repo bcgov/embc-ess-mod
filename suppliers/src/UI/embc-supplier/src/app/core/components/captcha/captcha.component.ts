@@ -18,6 +18,8 @@ import { HttpResponse } from '@angular/common/http';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SupplierHttpService } from 'src/app/core/services/supplierHttp.service';
+import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 //
 // Ref: https://github.com/bcgov/MyGovBC-CAPTCHA-Widget
@@ -45,7 +47,9 @@ enum CAPTCHA_STATE {
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'captcha',
   templateUrl: './captcha.component.html',
-  styleUrls: ['./captcha.component.scss']
+  styleUrls: ['./captcha.component.scss'],
+  standalone: true,
+  imports: [FormsModule, NgClass]
 })
 export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('image') imageContainer: ElementRef;

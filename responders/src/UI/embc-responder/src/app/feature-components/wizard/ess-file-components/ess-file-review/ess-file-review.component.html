@@ -228,19 +228,19 @@
           <div class="row">
             <div class="col-12">
               <div class="review-panel data-panel">
-                <label class="tab-subtitle">Security Phrase</label>
+                <label class="tab-subtitle">Security Word</label>
                 @if (wizardType === 'new-ess-file' && stepEssFileService?.bypassPhrase) {
                   <div class="row">
                     <div class="col-8">
                       <mat-checkbox [checked]="true" [disabled]="true">
-                        Bypass security phrase for manual entry of paper ESS file.
+                        Bypass security word for manual entry of paper ESS file.
                       </mat-checkbox>
                     </div>
                   </div>
                 }
                 @if (!stepEssFileService?.bypassPhrase || wizardType !== 'new-ess-file') {
                   <div class="row">
-                    <div class="col-4">Security Phrase</div>
+                    <div class="col-4">Security Word</div>
                     <div class="col-8 bold">
                       {{ stepEssFileService?.securityPhrase | maskText }}
                     </div>

@@ -9,6 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AuditAccessRequest } from '../models/audit-access-request';
 import { EvacuationFile } from '../models/evacuation-file';
 import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
@@ -658,7 +659,7 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsGetSecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
-   * get the security phrase of an evacuation file.
+   * get the security word of an evacuation file.
    *
    *
    *
@@ -675,7 +676,7 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * get the security phrase of an evacuation file.
+   * get the security word of an evacuation file.
    *
    *
    *
@@ -697,7 +698,7 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsVerifySecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
-   * verify an evacuation file's security phrase.
+   * verify an evacuation file's security word.
    *
    *
    *
@@ -714,7 +715,7 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * verify an evacuation file's security phrase.
+   * verify an evacuation file's security word.
    *
    *
    *

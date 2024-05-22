@@ -148,7 +148,7 @@ describe('ProfileResultsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open unable access dialog', () => {
+  it('should open access gate dialog ', () => {
     evacueeSessionService.isPaperBased = true;
     evacueeSearchService.evacueeSearchContext = {
       hasShownIdentification: false,
@@ -162,103 +162,11 @@ describe('ProfileResultsComponent', () => {
     component.openProfile(mockProfileSearchResult);
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-access-reason-gate-dialog')[0] as HTMLElement;
 
-    expect(dialogContent.textContent).toEqual(
-      'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
-    );
+    expect(dialogContent.textContent).toContain('Please specify the reason for accessing');
   });
 
-  it('should open unable to display dialog without security questions', () => {
-    evacueeSessionService.isPaperBased = false;
-    evacueeSearchService.evacueeSearchContext = {
-      hasShownIdentification: false,
-      evacueeSearchParameters: {
-        firstName: 'Anne',
-        lastName: 'Lee',
-        dateOfBirth: '09/09/1999'
-      }
-    };
-    profileSecurityQuestionsService.securityQuestionsValue = { questions: [] };
-
-    fixture.detectChanges();
-    component.openProfile(mockProfileSearchResult);
-    fixture.detectChanges();
-
-    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
-
-    expect(dialogContent.textContent).toEqual(
-      'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
-    );
-  });
-
-  it('should navigate to profile dashboard', inject([Router], (router: Router) => {
-    spyOn(router, 'navigate').and.stub();
-    evacueeSessionService.isPaperBased = false;
-    evacueeSearchService.evacueeSearchContext = {
-      hasShownIdentification: true,
-      evacueeSearchParameters: {
-        firstName: 'Anne',
-        lastName: 'Lee',
-        dateOfBirth: '09/09/1999'
-      }
-    };
-
-    fixture.detectChanges();
-    component.openProfile(mockProfileSearchResult);
-    fixture.detectChanges();
-
-    expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/evacuee-profile-dashboard']);
-  }));
-
-  it('should navigate to security questions', fakeAsync(
-    inject([Router], (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = false;
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: false,
-        evacueeSearchParameters: {
-          firstName: 'Anne',
-          lastName: 'Lee',
-          dateOfBirth: '09/09/1999'
-        }
-      };
-      profileSecurityQuestionsService.securityQuestionsValue = {
-        questions: [
-          {
-            id: 1,
-            question: 'What was the name of your first pet?',
-            answer: 't*****t',
-            answerChanged: false
-          },
-          {
-            id: 3,
-            question: 'What is your favourite movie?',
-            answer: 't*****t',
-            answerChanged: false
-          },
-          {
-            id: 2,
-            question: 'What was your first car’s make and model? (e.g. Ford Taurus)',
-            answer: 't*****t',
-            answerChanged: false
-          }
-        ]
-      };
-
-      fixture.detectChanges();
-      component.openProfile(mockProfileSearchResult);
-
-      flush();
-      flushMicrotasks();
-      discardPeriodicTasks();
-
-      tick();
-      fixture.detectChanges();
-
-      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-questions']);
-    })
-  ));
   afterAll(() => {
     TestBed.resetTestingModule();
   });

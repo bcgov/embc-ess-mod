@@ -53,7 +53,7 @@ export class ComponentCreationService {
     {
       component: 'evac-address',
       nextButtonLabel: 'Next - Household Information',
-      backButtonLabel: 'Go Back & Edit',
+      backButtonLabel: 'Cancel & Go Back to My Profile',
       isLast: false,
       loadWrapperButton: false,
       lastStep: -1,
@@ -70,7 +70,7 @@ export class ComponentCreationService {
     },
     {
       component: 'identify-needs',
-      nextButtonLabel: 'Next - Security Phrase',
+      nextButtonLabel: 'Next - Security Word',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
@@ -84,7 +84,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Security Phrase'
+      stepName: 'Security Word'
     }
   ];
 

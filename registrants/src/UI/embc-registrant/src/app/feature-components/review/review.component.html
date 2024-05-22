@@ -32,41 +32,31 @@
       @if (showHeading) {
         <p class="review-heading">Review & Submit</p>
       }
-
-      <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Restriction</div>
-          <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
-              <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-            </button>
+      @if (type === 'profile' || type === 'both') {
+        <mat-card-content>
+          <div class="row justify-content-between">
+            <div class="col-md-6 card-heading">Consent to Share Registration Status</div>
+            <div class="col-md-2">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
+                <img src="/assets/images/edit.svg" height="35" width="35" />
+                <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              </button>
+            </div>
           </div>
-        </div>
-        <hr />
+          <hr />
 
-        <div class="row info-detail">
-          <div class="col-md-1">
-            @if (!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
-              <span>
-                <img src="/assets/images/restriction-on.svg" height="20" width="20" />
-              </span>
-            }
-            @if ((formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
-              <span>
-                <img src="/assets/images/restriction-off.svg" height="20" width="20" />
-              </span>
-            }
+          <div class="row info-detail">
+            <div class="col-md-3">
+              @if (!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
+                Yes
+              }
+              @if ((formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
+                No
+              }
+            </div>
           </div>
-          <div class="col-md-9">
-            <p>
-              You have given your consent to have your location and contact information shared with concerned family or
-              friends who enquire about your wellbeing.
-            </p>
-          </div>
-        </div>
-      </mat-card-content>
-
+        </mat-card-content>
+      }
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Personal Details</div>
@@ -375,46 +365,6 @@
         <p class="review-heading">Evacuation File</p>
       }
 
-      @if (type === 'need') {
-        <mat-card-content>
-          @if (showHeading) {
-            <p class="review-heading">Review & Submit</p>
-          }
-          <div class="row justify-content-between">
-            <div class="col-md-6 card-heading">Restriction</div>
-            @if (allowEdit) {
-              <div class="col-md-2">
-                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
-                  <img src="/assets/images/edit.svg" height="35" width="35" />
-                  <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                </button>
-              </div>
-            }
-          </div>
-          <hr />
-          <div class="row info-detail">
-            <div class="col-md-1">
-              @if (!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
-                <span>
-                  <img src="/assets/images/restriction-on.svg" height="20" width="20" />
-                </span>
-              }
-              @if ((formCreationService.restrictionForm$ | async)?.value.restrictedAccess) {
-                <span>
-                  <img src="/assets/images/restriction-off.svg" height="20" width="20" />
-                </span>
-              }
-            </div>
-            <div class="col-md-9">
-              <p>
-                You have given your consent to have your location and contact information shared with concerned family
-                or friends who enquire about your wellbeing.
-              </p>
-            </div>
-          </div>
-        </mat-card-content>
-      }
-
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Location</div>
@@ -582,7 +532,7 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Security Phrase</div>
+          <div class="col-md-6 card-heading">Security Word</div>
           @if (allowEdit) {
             <div class="col-md-2">
               <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
@@ -595,7 +545,7 @@
         <hr />
 
         <div class="row info-detail">
-          <div class="col-md-3">Security Phrase</div>
+          <div class="col-md-3">Security Word</div>
           <div class="col-md-3">
             {{ (formCreationService.secretForm$ | async)?.value?.secretPhrase }}
           </div>

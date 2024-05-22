@@ -82,14 +82,14 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get form controls from the security Phrase form
+   * Get form controls from the security word form
    */
   get securityFormControl(): { [key: string]: AbstractControl } {
     return this.securityForm.controls;
   }
 
   /**
-   * Handle changed state of "Bypass Security Phrase" checkbox
+   * Handle changed state of "Bypass Security Word" checkbox
    *
    * @param event Mat-checkbox change event, automatically passed in when triggered by form
    */
@@ -98,7 +98,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Disables or enables the Security Phrase input
+   * Disables or enables the Security Word input
    *
    * @param checked True = Disable, False = Enable
    */
@@ -135,7 +135,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Activates the form to edit the security phrase
+   * Activates the form to edit the security word
    */
   editSecurityPhrase() {
     this.editedSecurityPhrase = !this.editedSecurityPhrase;
@@ -144,7 +144,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cancels the change of security phrase and goes back to the previous view
+   * Cancels the change of security word and goes back to the previous view
    */
   cancel(): void {
     this.stepEssFileService.securityPhrase = this.stepEssFileService.originalSecurityPhrase;
@@ -155,7 +155,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Set Security Phrase values in global var, update tab's status indicator
+   * Set Security Word values in global var, update tab's status indicator
    */
   updateTabStatus() {
     this.securityForm.updateValueAndValidity();
@@ -196,7 +196,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates a new security phrase form
+   * Creates a new security word form
    */
   private createSecurityPhraseForm() {
     this.securityForm = this.formBuilder.group({

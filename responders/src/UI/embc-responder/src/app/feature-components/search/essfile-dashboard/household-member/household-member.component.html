@@ -54,19 +54,6 @@
                       </td>
                     </tr>
                   }
-                  @if (member?.isRestricted !== null) {
-                    <tr>
-                      <th>Restriction Status:</th>
-                      <td
-                        [ngClass]="{
-                          'profile-restricted': member?.isRestricted,
-                          'profile-not-restricted': !member?.isRestricted
-                        }"
-                      >
-                        {{ member?.isRestricted ? 'Restricted' : 'Unrestricted' }}
-                      </td>
-                    </tr>
-                  }
                   <tr>
                     <th>Date of Birth:</th>
                     <td class="bold">

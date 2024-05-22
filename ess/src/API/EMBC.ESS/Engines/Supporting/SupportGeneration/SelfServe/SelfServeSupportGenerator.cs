@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
@@ -31,7 +30,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
                     SelfServeFoodGroceriesSupport s => CalculateSelfServeSupportAmount(s),
                     SelfServeFoodRestaurantSupport s => CalculateSelfServeSupportAmount(s),
                     SelfServeIncidentalsSupport s => CalculateSelfServeSupportAmount(s),
-                    SelfServeShelterAllowanceSupport s => CalculateSelfServeSupportAmount(s, req.HouseholdMembersIds),
+                    SelfServeShelterAllowanceSupport s => CalculateSelfServeSupportAmount(s),
 
                     _ => throw new NotImplementedException($"{item.GetType().Name}")
                 };
@@ -43,28 +42,29 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         private async Task<GenerateResponse> Handle(GenerateSelfServeSupports req, CancellationToken ct)
         {
             var householdMembers = req.HouseholdMembersIds.ToArray();
-            var supports = req.Needs.Select(n => CreateSupportsForNeed(n, req.SupportPeriodFrom, req.SupportPeriodTo, householdMembers)).SelectMany(s => s).ToList();
+            var supports = req.SupportTypes.Select(n => CreateSupportsForNeed(n, req.SupportPeriodFrom, req.SupportPeriodTo, householdMembers)).ToList();
             return await Task.FromResult(new GenerateSelfServeSupportsResponse(supports));
         }
 
-        private static IEnumerable<DateTime> CreateSupportDays(DateTime from, DateTime to)
+        private static IEnumerable<DateOnly> CreateSupportDays(DateTime from, DateTime to)
         {
-            while (from < to)
+            while (from.Date < to.Date)
             {
-                yield return from;
+                yield return DateOnly.FromDateTime(from.Date);
                 from = from.AddDays(1);
             }
         }
 
-        private static IEnumerable<SelfServeSupport> CreateSupportsForNeed(IdentifiedNeed need, DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
-            need switch
+        private static SelfServeSupport CreateSupportsForNeed(SelfServeSupportType type, DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers) =>
+            type switch
             {
-                IdentifiedNeed.Food => [CreateSelfServeFoodGroceriesSupport(from, to, householdMembers), CreateSelfServeFoodRestaurantSupport(from, to, householdMembers)],
-                IdentifiedNeed.Incidentals => [CreateIncidentalsSupport(householdMembers)],
-                IdentifiedNeed.Clothing => [CreateClothingSupport(householdMembers)],
-                IdentifiedNeed.ShelterAllowance => [CreateShelterAllowanceSupport(from, to, householdMembers)],
+                SelfServeSupportType.FoodGroceries => CreateSelfServeFoodGroceriesSupport(from, to, householdMembers),
+                SelfServeSupportType.FoodRestaurant => CreateSelfServeFoodRestaurantSupport(from, to, householdMembers),
+                SelfServeSupportType.Incidentals => CreateIncidentalsSupport(householdMembers),
+                SelfServeSupportType.Clothing => CreateClothingSupport(householdMembers),
+                SelfServeSupportType.ShelterAllowance => CreateShelterAllowanceSupport(from, to, householdMembers),
 
-                _ => throw new NotImplementedException($"{need}")
+                _ => throw new NotImplementedException($"{type}")
             };
 
         private static SelfServeClothingSupport CreateClothingSupport(IEnumerable<SelfServeHouseholdMember> householdMembers)
@@ -97,35 +97,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeShelterAllowanceSupport
             {
-                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                Nights = CreateSupportDays(from, to).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
-            support.TotalAmount = CalculateSelfServeSupportAmount(support, householdMembers);
+            support.TotalAmount = CalculateSelfServeSupportAmount(support);
             return support;
         }
 
-        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support, IEnumerable<SelfServeHouseholdMember> householdMembers)
-        {
-            var hmList = householdMembers.ToList();
-            var numberOfNights = support.Nights.Count();
-
-            if (hmList.Count == 0 || numberOfNights == 0) return 0d;
-
-            var numberOfAdults = hmList.Count(hm => !hm.IsMinor);
-            var numberOfMinors = hmList.Count(hm => hm.IsMinor);
-
-            //compensate for first adult
-            if (numberOfAdults >= 1) numberOfAdults--;
-
-            return (30d + numberOfAdults * 10d + numberOfMinors * 5d) * numberOfNights;
-        }
+        private static double CalculateSelfServeSupportAmount(SelfServeShelterAllowanceSupport support) => support.IncludedHouseholdMembers.Count() > 0 ? 200d * support.Nights.Count() : 0d;
 
         private static SelfServeFoodGroceriesSupport CreateSelfServeFoodGroceriesSupport(DateTime from, DateTime to, IEnumerable<SelfServeHouseholdMember> householdMembers)
         {
             var support = new SelfServeFoodGroceriesSupport
             {
-                Nights = CreateSupportDays(from, to).Select(DateOnly.FromDateTime).ToList(),
+                Nights = CreateSupportDays(from, to).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
