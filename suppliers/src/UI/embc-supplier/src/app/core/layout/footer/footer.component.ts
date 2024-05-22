@@ -4,11 +4,14 @@ import { environment } from '../../../../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogContent } from '../../model/dialog-content.model';
 import { InformationDialogComponent } from '../../components/dialog/information-dialog.component';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+    selector: 'app-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, MatToolbarRow]
 })
 export class FooterComponent implements OnInit {
   appVersion: string;

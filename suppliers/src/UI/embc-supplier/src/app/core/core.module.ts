@@ -18,34 +18,31 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, MatDialogModule, NgbModule, MatToolbarModule],
-  declarations: [
-    AlertComponent,
-    BannerComponent,
-    CaptchaComponent,
-    DecimalCurrencyDirective,
-    DragDropDirective,
-    FileUploadComponent,
-    GSTCodeDirective,
-    LoaderComponent,
-    ModalComponent,
-    PhoneMaskDirective,
-    ToastsComponent,
-    WarningModalComponent
-  ],
-  exports: [
-    AlertComponent,
-    BannerComponent,
-    CaptchaComponent,
-    DecimalCurrencyDirective,
-    DragDropDirective,
-    MatToolbarModule,
-    FileUploadComponent,
-    GSTCodeDirective,
-    LoaderComponent,
-    MatDialogModule,
-    PhoneMaskDirective,
-    ToastsComponent
-  ]
+    imports: [CommonModule, FormsModule, MatDialogModule, NgbModule, MatToolbarModule, AlertComponent,
+        BannerComponent,
+        CaptchaComponent,
+        DecimalCurrencyDirective,
+        DragDropDirective,
+        FileUploadComponent,
+        GSTCodeDirective,
+        LoaderComponent,
+        ModalComponent,
+        PhoneMaskDirective,
+        ToastsComponent,
+        WarningModalComponent],
+    exports: [
+        AlertComponent,
+        BannerComponent,
+        CaptchaComponent,
+        DecimalCurrencyDirective,
+        DragDropDirective,
+        MatToolbarModule,
+        FileUploadComponent,
+        GSTCodeDirective,
+        LoaderComponent,
+        MatDialogModule,
+        PhoneMaskDirective,
+        ToastsComponent
+    ]
 })
 export class CoreModule {}

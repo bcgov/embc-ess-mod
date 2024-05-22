@@ -9,10 +9,10 @@ import { OAuthLogger, OAuthService, UrlHelperService } from 'angular-oauth2-oidc
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
-      declarations: [AppComponent],
-      providers: [SupplierHttpService, AuthenticationService, OAuthService, UrlHelperService, OAuthLogger]
-    }).compileComponents();
+    imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
+    declarations: [AppComponent],
+    providers: [SupplierHttpService, AuthenticationService, OAuthService, UrlHelperService, OAuthLogger]
+}).compileComponents();
   }));
 
   it('should create the app', () => {

@@ -5,7 +5,6 @@ import { CoreModule } from '../core/core.module';
 import { ErrorRoutingModule } from './error-routing.module';
 
 @NgModule({
-  declarations: [ErrorComponent],
-  imports: [CommonModule, ErrorRoutingModule]
+    imports: [CommonModule, ErrorRoutingModule, ErrorComponent]
 })
 export class ErrorModule {}

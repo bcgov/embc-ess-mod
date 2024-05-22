@@ -1,20 +1,27 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SupplierService } from '../../core/services/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { NgbModal, NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../../core/components/modal/modal.component';
 import { Country } from '../../core/model/country';
 import { CustomValidationService } from '../../core/services/customValidation.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
+import { ReceiptComponent } from './receipt/receipt.component';
+import { InvoiceComponent } from './invoice/invoice.component';
+import { PhoneMaskDirective } from '../../core/directives/PhoneMask.directive';
+import { GSTCodeDirective } from '../../core/directives/GSTCode.directive';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-supplier-submission',
-  templateUrl: './submission.component.html',
-  styleUrls: ['./submission.component.scss'],
-  providers: [CustomValidationService, NgbTypeaheadConfig]
+    selector: 'app-supplier-submission',
+    templateUrl: './submission.component.html',
+    styleUrls: ['./submission.component.scss'],
+    providers: [CustomValidationService, NgbTypeaheadConfig],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, GSTCodeDirective, NgbTypeahead, PhoneMaskDirective, NgFor, InvoiceComponent, ReceiptComponent]
 })
 export class SubmissionComponent implements OnInit {
   supplierForm: UntypedFormGroup;

@@ -5,8 +5,7 @@ import { ReviewRoutingModule } from './review-routing.module';
 import { CoreModule } from '../../core/core.module';
 
 @NgModule({
-  imports: [CommonModule, ReviewRoutingModule, CoreModule],
-  declarations: [ReviewComponent],
-  exports: []
+    imports: [CommonModule, ReviewRoutingModule, CoreModule, ReviewComponent],
+    exports: []
 })
 export class ReviewModule {}

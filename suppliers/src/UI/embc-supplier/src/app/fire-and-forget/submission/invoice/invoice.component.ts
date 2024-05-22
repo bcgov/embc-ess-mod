@@ -1,22 +1,27 @@
 import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
-import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ReferralComponent } from '../referral/referral.component';
+import { FileUploadComponent } from '../../../core/components/fileUpload/fileUpload.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.scss'],
-  providers: [
-    { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
-    { provide: NgbDateParserFormatter, useClass: DateParserService },
-    CustomValidationService,
-    NgbDatepickerConfig
-  ]
+    selector: 'app-invoice',
+    templateUrl: './invoice.component.html',
+    styleUrls: ['./invoice.component.scss'],
+    providers: [
+        { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
+        { provide: NgbDateParserFormatter, useClass: DateParserService },
+        CustomValidationService,
+        NgbDatepickerConfig
+    ],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, NgbInputDatepicker, NgFor, FileUploadComponent, ReferralComponent]
 })
 export class InvoiceComponent implements OnInit {
   @Input() formGroupName: number;

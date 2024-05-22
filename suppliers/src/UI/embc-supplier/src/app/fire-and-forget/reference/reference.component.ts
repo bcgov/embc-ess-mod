@@ -3,9 +3,10 @@ import { SupplierService } from '../../core/services/supplier.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-reference',
-  templateUrl: './reference.component.html',
-  styleUrls: ['./reference.component.scss']
+    selector: 'app-reference',
+    templateUrl: './reference.component.html',
+    styleUrls: ['./reference.component.scss'],
+    standalone: true
 })
 export class ReferenceComponent implements OnInit {
   referenceNumber: any;
