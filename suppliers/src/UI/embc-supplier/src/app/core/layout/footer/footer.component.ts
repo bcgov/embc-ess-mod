@@ -7,11 +7,11 @@ import { InformationDialogComponent } from '../../components/dialog/information-
 import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
-    selector: 'app-footer',
-    templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss'],
-    standalone: true,
-    imports: [MatToolbar, MatToolbarRow]
+  selector: 'app-footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss'],
+  standalone: true,
+  imports: [MatToolbar, MatToolbarRow]
 })
 export class FooterComponent implements OnInit {
   appVersion: string;

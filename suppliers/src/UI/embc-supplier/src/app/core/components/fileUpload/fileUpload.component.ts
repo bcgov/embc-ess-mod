@@ -4,14 +4,13 @@ import { WarningService } from 'src/app/core/services/warning.service';
 import * as constant from 'src/app/core/services/globalConstants';
 import { DragDropDirective } from '../../directives/DragDrop.directive';
 import { ToastsComponent } from '../toasts/toasts.component';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-    selector: 'app-file-upload',
-    templateUrl: './fileUpload.component.html',
-    styleUrls: ['./fileUpload.component.scss'],
-    standalone: true,
-    imports: [NgIf, ToastsComponent, DragDropDirective, NgFor]
+  selector: 'app-file-upload',
+  templateUrl: './fileUpload.component.html',
+  styleUrls: ['./fileUpload.component.scss'],
+  standalone: true,
+  imports: [ToastsComponent, DragDropDirective]
 })
 export class FileUploadComponent implements OnInit {
   @Output() attachedFile = new EventEmitter<any>();

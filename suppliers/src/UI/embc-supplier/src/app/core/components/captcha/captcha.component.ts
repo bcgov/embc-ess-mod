@@ -18,7 +18,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SupplierHttpService } from 'src/app/core/services/supplierHttp.service';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 //
@@ -49,7 +49,7 @@ enum CAPTCHA_STATE {
     templateUrl: './captcha.component.html',
     styleUrls: ['./captcha.component.scss'],
     standalone: true,
-    imports: [FormsModule, NgClass, NgIf]
+    imports: [FormsModule, NgClass]
 })
 export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   @ViewChild('image') imageContainer: ElementRef;

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Alert } from '../../model/alert';
 import { AlertService } from '../../services/alert.service';
-import { NgFor, NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-alert',
-    templateUrl: './alert.component.html',
-    styleUrls: ['./alert.component.scss'],
-    standalone: true,
-    imports: [NgFor, NgIf]
+  selector: 'app-alert',
+  templateUrl: './alert.component.html',
+  styleUrls: ['./alert.component.scss'],
+  standalone: true,
+  imports: []
 })
 export class AlertComponent implements OnInit {
   type: string;

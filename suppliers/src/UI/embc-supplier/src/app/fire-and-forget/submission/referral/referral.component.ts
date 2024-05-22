@@ -1,25 +1,38 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup, UntypedFormArray, UntypedFormBuilder, AbstractControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import {
+  UntypedFormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  AbstractControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import {
+  NgbDateParserFormatter,
+  NgbCalendar,
+  NgbDateAdapter,
+  NgbDatepickerConfig,
+  NgbInputDatepicker
+} from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { FileUploadComponent } from '../../../core/components/fileUpload/fileUpload.component';
 import { DecimalCurrencyDirective } from '../../../core/directives/DecimalCurrency.directive';
-import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-    selector: 'app-referral',
-    templateUrl: './referral.component.html',
-    styleUrls: ['./referral.component.scss'],
-    providers: [
-        { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
-        { provide: NgbDateParserFormatter, useClass: DateParserService },
-        NgbDatepickerConfig
-    ],
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, NgbInputDatepicker, NgFor, DecimalCurrencyDirective, FileUploadComponent]
+  selector: 'app-referral',
+  templateUrl: './referral.component.html',
+  styleUrls: ['./referral.component.scss'],
+  providers: [
+    { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
+    { provide: NgbDateParserFormatter, useClass: DateParserService },
+    NgbDatepickerConfig
+  ],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, NgbInputDatepicker, DecimalCurrencyDirective, FileUploadComponent]
 })
 export class ReferralComponent implements OnInit {
   @Input() formGroupName: number;

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../core/services/authentication.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: true
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true
 })
 export class LoginComponent implements OnInit {
   constructor(

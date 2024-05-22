@@ -2,8 +2,8 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-    selector: '[formControlName][appGSTMask]',
-    standalone: true
+  selector: '[formControlName][appGSTMask]',
+  standalone: true
 })
 export class GSTCodeDirective {
   constructor(public ngControl: NgControl) {}

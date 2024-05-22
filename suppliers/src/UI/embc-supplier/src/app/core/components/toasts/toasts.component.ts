@@ -1,12 +1,12 @@
 import { Component, TemplateRef } from '@angular/core';
 import { ToastService } from '../../services/toast.service';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 @Component({
-    selector: 'app-toasts',
-    templateUrl: './toasts.component.html',
-    standalone: true,
-    imports: [NgFor, NgbToast, NgIf, NgTemplateOutlet]
+  selector: 'app-toasts',
+  templateUrl: './toasts.component.html',
+  standalone: true,
+  imports: [NgbToast, NgTemplateOutlet]
 })
 export class ToastsComponent {
   constructor(public toastService: ToastService) {}

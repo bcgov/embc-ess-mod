@@ -4,11 +4,11 @@ import { ConfigGuard } from '../core/guards/config.guard';
 import { BannerComponent } from '../core/components/banner/banner.component';
 
 @Component({
-    selector: 'app-maintenance',
-    templateUrl: './maintenance.component.html',
-    styleUrls: ['./maintenance.component.scss'],
-    standalone: true,
-    imports: [BannerComponent]
+  selector: 'app-maintenance',
+  templateUrl: './maintenance.component.html',
+  styleUrls: ['./maintenance.component.scss'],
+  standalone: true,
+  imports: [BannerComponent]
 })
 export class MaintenanceComponent {
   @Input() bannerMsg: SafeHtml =
