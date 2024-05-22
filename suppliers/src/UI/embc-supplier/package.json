@@ -25,7 +25,7 @@
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
     "@angular/router": "^17.3.9",
-    "@bcgov/bootstrap-theme": "https://github.com/bcgov/bootstrap-theme/releases/download/v1.1.3/bcgov-bootstrap-theme-1.1.3.tgz",
+    "@bcgov/bootstrap-v5-theme": "^1.0.1",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "angular-oauth2-oidc": "^17.0.2",
