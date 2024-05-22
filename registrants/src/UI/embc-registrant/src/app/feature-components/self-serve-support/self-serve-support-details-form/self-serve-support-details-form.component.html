@@ -56,18 +56,30 @@
                 style="display: flex; flex-direction: column"
                 [formControl]="supportDraftForm.controls.food.controls.fundsFor"
               >
-                <mat-radio-button [value]="SelfServeSupportType.FoodGroceries">
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodGroceries"
+                  [disabled]="!hasSelfServeFoodGroceriesSupport"
+                >
                   @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
                     <b>Groceries</b>
                   } @else {
                     Groceries
                   }
+                  @if (!hasSelfServeFoodGroceriesSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
+                  }
                 </mat-radio-button>
-                <mat-radio-button [value]="SelfServeSupportType.FoodRestaurant">
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodRestaurant"
+                  [disabled]="!hasSelfServiceFoodRestaurantSupport"
+                >
                   @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
                     <b>Restaurant Meals</b>
                   } @else {
                     Restaurant Meals
+                  }
+                  @if (!hasSelfServiceFoodRestaurantSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
                   }
                 </mat-radio-button>
               </mat-radio-group>
