@@ -39,7 +39,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool IsHidden { get; set; }
     }
 
-    public class EvacuationFile
+    public record EvacuationFile
     {
         public string Id { get; set; }
         public string ManualFileId { get; set; }
@@ -63,7 +63,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
-    public class TeamMember
+    public record TeamMember
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
@@ -82,7 +82,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         Archived
     }
 
-    public class NeedsAssessment
+    public record NeedsAssessment
     {
         public string Id { get; set; }
         public string? TaskNumber { get; set; }
@@ -96,7 +96,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
     }
 
-    public class HouseholdMember
+    public record HouseholdMember
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
@@ -112,7 +112,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool? Authenticated { get; set; }
     }
 
-    public class Pet
+    public record Pet
     {
         public string Type { get; set; }
         public string Quantity { get; set; }
@@ -132,7 +132,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         Assessed
     }
 
-    public class Note
+    public record Note
     {
         public string Id { get; set; }
         public NoteType Type { get; set; }
