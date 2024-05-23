@@ -1,19 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './app-loader.component.html',
-  styleUrls: ['./app-loader.component.scss']
+  styleUrls: ['./app-loader.component.scss'],
+  standalone: true,
+  imports: [MatProgressSpinnerModule, NgStyle]
 })
-export class AppLoaderComponent implements OnInit {
+export class AppLoaderComponent {
   @Input() showLoader: boolean;
   @Input() strokeWidth: number;
   @Input() diameter: number;
   @Input() color: string;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   get spinnerColor(): { color: string } {
     return { color: this.color };

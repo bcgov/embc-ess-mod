@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -6,14 +6,16 @@ import {
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import * as moment from 'moment';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,12 +29,69 @@ import { DateConversionService } from 'src/app/core/services/utility/dateConvers
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {
+  MatDatepickerInputEvent,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+  MatDatepicker
+} from '@angular/material/datepicker';
+import { MatButton } from '@angular/material/button';
+import { ClothingComponent } from './details-type/clothing/clothing.component';
+import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
+import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
+import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
+import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
+import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
+import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
+import { FoodGroceriesComponent } from './details-type/food-groceries/food-groceries.component';
+import { FoodMealsComponent } from './details-type/food-meals/food-meals.component';
+import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-support-details',
   templateUrl: './support-details.component.html',
-  styleUrls: ['./support-details.component.scss']
+  styleUrls: ['./support-details.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    NgStyle,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatPrefix,
+    MatError,
+    AppLoaderComponent,
+    MatLabel,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    MatSelect,
+    MatOption,
+    MatCheckbox,
+    ShelterAllowanceGroupComponent,
+    FoodMealsComponent,
+    FoodGroceriesComponent,
+    TaxiTransportationComponent,
+    OtherTransportationComponent,
+    LodgingHotelMotelComponent,
+    LodgingBilletingComponent,
+    LodgingGroupComponent,
+    IncidentalsComponent,
+    ClothingComponent,
+    MatButton,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class SupportDetailsComponent implements OnInit, OnDestroy {
   currentTime: string;

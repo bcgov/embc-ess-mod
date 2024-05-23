@@ -12,10 +12,12 @@
       <div class="col-md-8">
         <span class="wizard-tab-heading">Support Details</span>
       </div>
-      <div *ngIf="hideRateSheet()" class="col-md-4">
-        <img src="/assets/images/rate-card.svg" width="23" height="23" />
-        <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
-      </div>
+      @if (hideRateSheet()) {
+        <div class="col-md-4">
+          <img src="/assets/images/rate-card.svg" width="23" height="23" />
+          <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
+        </div>
+      }
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -27,195 +29,179 @@
   <div class="row">
     <div class="col-lg-8">
       <mat-card class="support-time-box">
-        <div class="row row-padding">
-          <div class="col-md-12">
-            <p class="time-heading">Task Number Details</p>
+        <mat-card-content>
+          <div class="row row-padding">
+            <div class="col-md-12">
+              <p class="time-heading">Task Number Details</p>
+            </div>
           </div>
-        </div>
 
-        <div class="row row-padding">
-          <div class="col-md-4">
-            <p>Task Number Start Date & Time:</p>
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number Start Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p class="bold">
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
+              </p>
+            </div>
           </div>
-          <div class="col-md-4">
-            <p class="bold">
-              {{ evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy' }}
-              at
-              {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
-            </p>
-          </div>
-        </div>
 
-        <div class="row row-padding">
-          <div class="col-md-4">
-            <p>Task Number End Date & Time:</p>
+          <div class="row row-padding">
+            <div class="col-md-4">
+              <p>Task Number End Date & Time:</p>
+            </div>
+            <div class="col-md-4">
+              <p
+                class="bold"
+                [ngStyle]="{
+                  color: validTaskDate(
+                    evacueeSessionService?.evacFile?.task?.from,
+                    evacueeSessionService?.evacFile?.task?.to
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
+                at
+                {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
+              </p>
+            </div>
           </div>
-          <div class="col-md-4">
-            <p
-              class="bold"
-              [ngStyle]="{
-                color: validTaskDate(
-                  evacueeSessionService?.evacFile?.task?.from,
-                  evacueeSessionService?.evacFile?.task?.to
-                )
-                  ? 'black'
-                  : 'red'
-              }"
-            >
-              {{ evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy' }}
-              at
-              {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
-            </p>
-          </div>
-        </div>
+        </mat-card-content>
       </mat-card>
 
       <div class="row-padding">
         <form [formGroup]="supportDetailsForm">
-          <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
-            <div class="col-md-12 paper-details">
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="time-heading requiredField">Paper Support Number:</p>
+          @if (evacueeSessionService?.isPaperBased) {
+            <div class="row">
+              <div class="col-md-12 paper-details">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Support Number:</p>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <p>Please enter the support number as it appears on the paper referral.</p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p>Please enter the support number as it appears on the paper referral.</p>
+                  </div>
                 </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col-md-8">
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="paperSupportNumber"
-                      matInput
-                      type="text"
-                      maxlength="10"
-                      (change)="checkReferralNumber($event)"
-                      required
-                    />
-                    <span matPrefix>R</span>
-                    <mat-error
-                      *ngIf="
+                <div class="row align-items-center">
+                  <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                      <input
+                        formControlName="paperSupportNumber"
+                        matInput
+                        type="text"
+                        maxlength="10"
+                        (change)="checkReferralNumber($event)"
+                        required
+                      />
+                      <span matPrefix>R</span>
+                      @if (
                         supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError('whitespaceError')
-                      "
-                    >
-                      Support Number is required</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
+                      ) {
+                        <mat-error> Support Number is required</mat-error>
+                      }
+                      @if (
                         supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError('minlength')
-                      "
-                    >
-                      Support Number must be 6 to 10 digits in length</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
+                      ) {
+                        <mat-error> Support Number must be 6 to 10 digits in length</mat-error>
+                      }
+                      @if (
                         supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError('pattern')
-                      "
-                    >
-                      Only digits allowed</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
+                      ) {
+                        <mat-error> Only digits allowed</mat-error>
+                      }
+                      @if (
                         supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError('userNameExists')
-                      "
-                    >
-                      Paper Referral Number already exists for the same Support type:
-                      {{ stepSupportsService?.supportTypeToAdd?.description }}</mat-error
-                    >
-                  </mat-form-field>
+                      ) {
+                        <mat-error>
+                          Paper Referral Number already exists for the same Support type:
+                          {{ stepSupportsService?.supportTypeToAdd?.description }}</mat-error
+                        >
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color">
+                    </app-loader>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Issued By:</p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="time-heading requiredField">Paper Issued By:</p>
-                </div>
-              </div>
-
-              <div class="row" formGroupName="paperIssuedBy">
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Interviewer first name</mat-label>
-                    <input matInput type="text" formControlName="firstName" required />
-                    <mat-error
-                      *ngIf="
+                <div class="row" formGroupName="paperIssuedBy">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Interviewer first name</mat-label>
+                      <input matInput type="text" formControlName="firstName" required />
+                      @if (
                         supportDetailsFormControl?.paperIssuedBy?.get('firstName').invalid &&
                         supportDetailsFormControl?.paperIssuedBy?.get('firstName').hasError('whitespaceError')
-                      "
-                    >
-                      Interviewer first name is required</mat-error
-                    >
-                  </mat-form-field>
-                </div>
-
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Initial of their last name</mat-label>
-                    <input matInput type="text" formControlName="lastNameInitial" maxlength="1" required />
-                    <mat-error
-                      *ngIf="
+                      ) {
+                        <mat-error> Interviewer first name is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Initial of their last name</mat-label>
+                      <input matInput type="text" formControlName="lastNameInitial" maxlength="1" required />
+                      @if (
                         supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').invalid &&
                         supportDetailsFormControl?.paperIssuedBy?.get('lastNameInitial').hasError('whitespaceError')
-                      "
-                    >
-                      Initial is required</mat-error
-                    >
-                  </mat-form-field>
+                      ) {
+                        <mat-error> Initial is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="time-heading requiredField">Paper Support Completed On:</p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="time-heading requiredField">Paper Support Completed On:</p>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      [matDatepicker]="paperPicker"
-                      [matDatepickerFilter]="paperCompletedDateFilter"
-                      formControlName="paperCompletedOn"
-                      placeholder="Support Completed On"
-                      required
-                    />
-                    <mat-datepicker-toggle matSuffix [for]="paperPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #paperPicker></mat-datepicker>
-
-                    <mat-error
-                      *ngIf="
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        [matDatepicker]="paperPicker"
+                        [matDatepickerFilter]="paperCompletedDateFilter"
+                        formControlName="paperCompletedOn"
+                        placeholder="Support Completed On"
+                        required
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="paperPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #paperPicker></mat-datepicker>
+                      @if (
                         supportDetailsFormControl?.paperCompletedOn?.invalid &&
                         supportDetailsFormControl?.paperCompletedOn?.hasError('invalidDate')
-                      "
-                    >
-                      Please enter a valid date</mat-error
-                    >
-
-                    <mat-error
-                      *ngIf="
+                      ) {
+                        <mat-error> Please enter a valid date</mat-error>
+                      }
+                      @if (
                         supportDetailsFormControl?.paperCompletedOn?.invalid &&
                         supportDetailsFormControl?.paperCompletedOn?.hasError('required')
-                      "
-                    >
-                      Completed on date is required</mat-error
-                    >
-                  </mat-form-field>
+                      ) {
+                        <mat-error> Completed on date is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
 
           <div class="row">
             <div class="col-md-12 add-detail">
@@ -245,23 +231,19 @@
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
 
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.fromDate.invalid &&
-                                supportDetailsFormControl.fromDate.hasError('invalidDate')
-                              "
-                            >
-                              Please enter a valid date</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.fromDate.invalid &&
+                              supportDetailsFormControl.fromDate.hasError('invalidDate')
+                            ) {
+                              <mat-error> Please enter a valid date</mat-error>
+                            }
 
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.fromDate.invalid &&
-                                supportDetailsFormControl.fromDate.hasError('required')
-                              "
-                            >
-                              From Date is required</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.fromDate.invalid &&
+                              supportDetailsFormControl.fromDate.hasError('required')
+                            ) {
+                              <mat-error> From Date is required</mat-error>
+                            }
                           </mat-form-field>
                         </div>
                         <div class="col-md-6">
@@ -274,14 +256,12 @@
                               placeholder="Valid From Time"
                               required
                             />
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.fromTime.invalid &&
-                                supportDetailsFormControl.fromTime.hasError('required')
-                              "
-                            >
-                              From Time is required</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.fromTime.invalid &&
+                              supportDetailsFormControl.fromTime.hasError('required')
+                            ) {
+                              <mat-error> From Time is required</mat-error>
+                            }
                           </mat-form-field>
                         </div>
                       </div>
@@ -291,18 +271,18 @@
                           <mat-form-field appearance="outline">
                             <mat-label>Number of Days</mat-label>
                             <mat-select formControlName="noOfDays" required>
-                              <mat-option *ngFor="let no of noOfDaysList" [value]="no">
-                                {{ no }}
-                              </mat-option>
+                              @for (no of noOfDaysList; track no) {
+                                <mat-option [value]="no">
+                                  {{ no }}
+                                </mat-option>
+                              }
                             </mat-select>
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.noOfDays.invalid &&
-                                supportDetailsFormControl.noOfDays.hasError('required')
-                              "
-                            >
-                              Required</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.noOfDays.invalid &&
+                              supportDetailsFormControl.noOfDays.hasError('required')
+                            ) {
+                              <mat-error> Required</mat-error>
+                            }
                           </mat-form-field>
                         </div>
                       </div>
@@ -322,60 +302,58 @@
                             <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
                             <mat-datepicker #toDatepicker></mat-datepicker>
 
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.toDate.invalid &&
-                                supportDetailsFormControl.toDate.hasError('invalidDate')
-                              "
-                            >
-                              Please enter a valid date</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.toDate.invalid &&
+                              supportDetailsFormControl.toDate.hasError('invalidDate')
+                            ) {
+                              <mat-error> Please enter a valid date</mat-error>
+                            }
 
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.toDate.invalid &&
-                                supportDetailsFormControl.toDate.hasError('required')
-                              "
-                            >
-                              To Date is required</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.toDate.invalid &&
+                              supportDetailsFormControl.toDate.hasError('required')
+                            ) {
+                              <mat-error> To Date is required</mat-error>
+                            }
                           </mat-form-field>
 
-                          <mat-error class="custom-mat-error" *ngIf="!checkDateRange()">
-                            Valid To Date cannot be greater then the 30 days from the Valid From Date</mat-error
-                          >
+                          @if (!checkDateRange()) {
+                            <mat-error class="custom-mat-error">
+                              Valid To Date cannot be greater then the 30 days from the Valid From Date</mat-error
+                            >
+                          }
                         </div>
                         <div class="col-md-6">
                           <mat-form-field appearance="outline">
                             <mat-label>Valid To Time</mat-label>
                             <input type="time" formControlName="toTime" matInput placeholder="Valid To Time" required />
-                            <mat-error
-                              *ngIf="
-                                supportDetailsFormControl.toTime.invalid &&
-                                supportDetailsFormControl.toTime.hasError('required')
-                              "
-                            >
-                              To Time Required</mat-error
-                            >
+                            @if (
+                              supportDetailsFormControl.toTime.invalid &&
+                              supportDetailsFormControl.toTime.hasError('required')
+                            ) {
+                              <mat-error> To Time Required</mat-error>
+                            }
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-6" *ngIf="cloneFlag">
-                      <div class="original-period-container">
-                        <div class="original-period-content">
-                          <p><b>Original Support Period:</b></p>
-                          <p>
-                            Valid From:
-                            <b>{{ originalSupport?.from | date: 'dd-MMM-yyyy' }}</b>
-                          </p>
-                          <p>
-                            Valid To:
-                            <b>{{ originalSupport?.to | date: 'dd-MMM-yyyy' }}</b>
-                          </p>
+                    @if (cloneFlag) {
+                      <div class="col-lg-6">
+                        <div class="original-period-container">
+                          <div class="original-period-content">
+                            <p><b>Original Support Period:</b></p>
+                            <p>
+                              Valid From:
+                              <b>{{ originalSupport?.from | date: 'dd-MMM-yyyy' }}</b>
+                            </p>
+                            <p>
+                              Valid To:
+                              <b>{{ originalSupport?.to | date: 'dd-MMM-yyyy' }}</b>
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    }
                   </div>
 
                   <div class="row">
@@ -398,104 +376,118 @@
                       >
                     </div>
                   </div>
-                  <div
-                    class="row"
-                    *ngFor="let member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers"
-                  >
-                    <div class="col-md-12">
-                      <mat-checkbox
-                        (click)="$event.stopPropagation()"
-                        (change)="$event ? onChange($event, member) : null"
-                        [checked]="exists(member)"
-                      >
-                        {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}</mat-checkbox
-                      >
+                  @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-checkbox
+                          (click)="$event.stopPropagation()"
+                          (change)="$event ? onChange($event, member) : null"
+                          [checked]="exists(member)"
+                        >
+                          {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}</mat-checkbox
+                        >
+                      </div>
                     </div>
-                  </div>
-                  <mat-error
-                    class="custom-mat-error"
-                    *ngIf="
-                      supportDetailsFormControl.members.invalid &&
-                      supportDetailsFormControl.members.hasError('noSelection')
-                    "
-                  >
-                    Required</mat-error
-                  >
+                  }
+                  @if (
+                    supportDetailsFormControl.members.invalid &&
+                    supportDetailsFormControl.members.hasError('noSelection')
+                  ) {
+                    <mat-error class="custom-mat-error"> Required</mat-error>
+                  }
 
-                  <div [ngSwitch]="stepSupportsService?.supportTypeToAdd?.value">
-                    <!-- Shelter-Allowance -->
-                    <div *ngSwitchCase="'Lodging_Allowance'">
-                      <app-shelter-allowance
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                        [selectedHouseholdMembers]="supportDetailsForm.get('members').value"
-                      ></app-shelter-allowance>
-                    </div>
-
-                    <!--Restaurant Meals-->
-                    <div *ngSwitchCase="'Food_Restaurant'">
-                      <app-food-meals
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                        [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                      ></app-food-meals>
-                    </div>
-                    <!--Groceries-->
-                    <div *ngSwitchCase="'Food_Groceries'">
-                      <app-food-groceries
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                        [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                      ></app-food-groceries>
-                    </div>
-                    <!--Taxi-->
-                    <div *ngSwitchCase="'Transportation_Taxi'">
-                      <app-taxi-transportation [supportDetailsForm]="supportDetailsForm"></app-taxi-transportation>
-                    </div>
-                    <!--Transport-Other-->
-                    <div *ngSwitchCase="'Transportation_Other'">
-                      <app-other-transportation [supportDetailsForm]="supportDetailsForm"></app-other-transportation>
-                    </div>
-
-                    <!--Lodging-Hotel/Motel-->
-                    <div *ngSwitchCase="'Lodging_Hotel'">
-                      <app-lodging-hotel-motel
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                      ></app-lodging-hotel-motel>
-                    </div>
-
-                    <!--Lodging-Billeting-->
-                    <div *ngSwitchCase="'Lodging_Billeting'">
-                      <app-lodging-billeting
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                      ></app-lodging-billeting>
-                    </div>
-
-                    <!--Group Lodging-->
-                    <div *ngSwitchCase="'Lodging_Group'">
-                      <app-lodging-group
-                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
-                        [supportDetailsForm]="supportDetailsForm"
-                      ></app-lodging-group>
-                    </div>
-
-                    <!--Incidentals-->
-                    <div *ngSwitchCase="'Incidentals'">
-                      <app-incidentals
-                        [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                        [supportDetailsForm]="supportDetailsForm"
-                      ></app-incidentals>
-                    </div>
-
-                    <!--Clothing-->
-                    <div *ngSwitchCase="'Clothing'">
-                      <app-clothing
-                        [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
-                        [supportDetailsForm]="supportDetailsForm"
-                      ></app-clothing>
-                    </div>
+                  <div>
+                    @switch (stepSupportsService?.supportTypeToAdd?.value) {
+                      <!-- Shelter-Allowance -->
+                      @case ('Lodging_Allowance') {
+                        <div>
+                          <app-shelter-allowance
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [selectedHouseholdMembers]="supportDetailsForm.get('members').value"
+                          ></app-shelter-allowance>
+                        </div>
+                      }
+                      <!--Restaurant Meals-->
+                      @case ('Food_Restaurant') {
+                        <div>
+                          <app-food-meals
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                          ></app-food-meals>
+                        </div>
+                      }
+                      <!--Groceries-->
+                      @case ('Food_Groceries') {
+                        <div>
+                          <app-food-groceries
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                          ></app-food-groceries>
+                        </div>
+                      }
+                      <!--Taxi-->
+                      @case ('Transportation_Taxi') {
+                        <div>
+                          <app-taxi-transportation [supportDetailsForm]="supportDetailsForm"></app-taxi-transportation>
+                        </div>
+                      }
+                      <!--Transport-Other-->
+                      @case ('Transportation_Other') {
+                        <div>
+                          <app-other-transportation
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-other-transportation>
+                        </div>
+                      }
+                      <!--Lodging-Hotel/Motel-->
+                      @case ('Lodging_Hotel') {
+                        <div>
+                          <app-lodging-hotel-motel
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-hotel-motel>
+                        </div>
+                      }
+                      <!--Lodging-Billeting-->
+                      @case ('Lodging_Billeting') {
+                        <div>
+                          <app-lodging-billeting
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-billeting>
+                        </div>
+                      }
+                      <!--Group Lodging-->
+                      @case ('Lodging_Group') {
+                        <div>
+                          <app-lodging-group
+                            [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-lodging-group>
+                        </div>
+                      }
+                      <!--Incidentals-->
+                      @case ('Incidentals') {
+                        <div>
+                          <app-incidentals
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-incidentals>
+                        </div>
+                      }
+                      <!--Clothing-->
+                      @case ('Clothing') {
+                        <div>
+                          <app-clothing
+                            [noOfHouseholdMembers]="supportDetailsForm.get('members').value.length"
+                            [supportDetailsForm]="supportDetailsForm"
+                          ></app-clothing>
+                        </div>
+                      }
+                    }
                   </div>
                 </div>
               </div>
@@ -507,12 +499,16 @@
   </div>
 
   <div class="row button-row">
-    <div *ngIf="editFlag" class="col-md-6">
-      <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
-    </div>
-    <div *ngIf="!editFlag" class="col-md-6">
-      <button class="button-s" mat-button (click)="back()">Cancel</button>
-    </div>
+    @if (editFlag) {
+      <div class="col-md-6">
+        <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
+      </div>
+    }
+    @if (!editFlag) {
+      <div class="col-md-6">
+        <button class="button-s" mat-button (click)="back()">Cancel</button>
+      </div>
+    }
     <div class="col-md-6 button-col">
       <button class="button-p" mat-button (click)="validateDelivery()">Next - Support Delivery</button>
     </div>

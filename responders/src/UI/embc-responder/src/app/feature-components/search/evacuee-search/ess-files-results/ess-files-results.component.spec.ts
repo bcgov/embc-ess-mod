@@ -8,7 +8,6 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { EssFilesResultsComponent } from './ess-files-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -29,6 +28,7 @@ import { EssfileSecurityPhraseComponent } from '../../essfile-security-phrase/es
 import { computeInterfaceToken } from 'src/app/app.module';
 import { EssFilesResultsService } from './ess-files-results.service';
 import { MockEssFilesResultsService } from 'src/app/unit-tests/mockEssFileResults.service';
+import { provideRouter } from '@angular/router';
 
 describe('EssFilesResultsComponent', () => {
   let component: EssFilesResultsComponent;
@@ -125,14 +125,7 @@ describe('EssFilesResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EssFilesResultsComponent],
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, EssFilesResultsComponent],
       providers: [
         EssFilesResultsComponent,
         {
@@ -151,7 +144,8 @@ describe('EssFilesResultsComponent', () => {
         {
           provide: EssFilesResultsService,
           useClass: MockEssFilesResultsService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

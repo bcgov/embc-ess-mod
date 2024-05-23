@@ -4,7 +4,6 @@ import { OutageComponent } from './outage.component';
 import { OutageRoutingModule } from './outage-routing.module';
 
 @NgModule({
-  declarations: [OutageComponent],
-  imports: [CommonModule, OutageRoutingModule]
+  imports: [CommonModule, OutageRoutingModule, OutageComponent]
 })
 export class OutageModule {}

@@ -3,10 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeamListComponent } from './team-list.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('TeamListComponent', () => {
   let component: TeamListComponent;
@@ -15,14 +14,13 @@ describe('TeamListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        TeamListComponent
       ],
-      declarations: [TeamListComponent]
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

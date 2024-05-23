@@ -12,8 +12,6 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
-@import '@angular/material/theming';
-
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
@@ -23,6 +21,9 @@
     /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
     /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
+
+// Include mat.core only once
+@include mat.core();
 
 $custom-typography: mat.define-typography-config(
   $font-family: $font-family-sans-serif,
@@ -171,46 +172,53 @@ footer nav {
   font-size: 45px;
 }
 
-.button-style {
-  height: 55px !important;
-  font-weight: normal;
-}
-.button-p {
-  @extend .button-style;
-  background-color: #234075 !important;
-  color: #ffffff !important;
-  float: right;
-}
-
-.button-s {
-  @extend .button-style;
-  border: 1px solid #b5b5b5 !important;
-  color: #606060;
-  background-color: #ffffff !important;
-}
-
-.button-p:hover {
-  background-color: #169bd5 !important;
-}
-
-.button-s:hover {
-  background-color: #e5e5e5 !important;
-}
-
-.button-p:disabled {
-  background-color: #234075 !important;
-  color: #ffffff !important;
-}
-
 button {
-  border-width: 0px !important;
+  border-width: 0px;
 }
 
 button:focus {
   outline: 0px !important;
 }
 
-.button-with-loader {
+.button-style {
+  height: 55px !important;
+  font-weight: normal;
+}
+
+.mat-mdc-button-base.mat-mdc-button-base.button-p {
+  @extend .button-style;
+  background-color: #234075;
+  color: #ffffff;
+  float: right;
+
+  --mdc-text-button-label-text-color: #fff;
+  --mdc-outlined-button-label-text-color: #fff;
+}
+
+.mat-mdc-button-base.button-s,
+.mat-mdc-outlined-button:not(:disabled).button-s {
+  @extend .button-style;
+  border: 1px solid #b5b5b5;
+  color: #606060;
+  background-color: #ffffff;
+
+  --mdc-outlined-button-outline-color: #b5b5b5;
+}
+
+.mat-mdc-button-base.button-p:hover {
+  background-color: #169bd5;
+}
+
+.mat-mdc-button-base.button-s:hover {
+  background-color: #e5e5e5;
+}
+
+.mat-mdc-button-base.button-p:disabled {
+  background-color: #234075;
+  color: #ffffff;
+}
+
+.mat-mdc-button-base.button-with-loader {
   min-width: 240px;
   display: flex;
   align-items: center;
@@ -218,33 +226,36 @@ button:focus {
 }
 
 .close-image,
-.edit-image {
+.edit-image,
+.delete-image  {
   img:last-of-type {
     display: none;
   }
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image :hover {
   img:last-of-type {
     display: inline;
   }
 }
 
 .close-image:hover,
-.edit-image:hover {
+.edit-image:hover,
+.delete-image:hover {
   img:first-of-type {
     display: none;
   }
 }
 
 @media screen and (max-width: 768px) {
-  .resp-style .button-p {
+  .resp-style .mat-mdc-button-base.button-p {
     width: 100% !important;
     float: none;
   }
 
-  .resp-style .button-s {
+  .resp-style .mat-mdc-button-base.button-s {
     margin-bottom: 10px;
     width: 100% !important;
   }

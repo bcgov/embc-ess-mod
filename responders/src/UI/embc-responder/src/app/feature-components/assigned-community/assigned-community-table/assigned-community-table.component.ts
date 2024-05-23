@@ -11,17 +11,53 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { LoadEvacueeListService } from '../../../core/services/load-evacuee-list.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-assigned-community-table',
   templateUrl: './assigned-community-table.component.html',
-  styleUrls: ['./assigned-community-table.component.scss']
+  styleUrls: ['./assigned-community-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatCheckbox,
+    MatSortHeader,
+    MatTooltip,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AppLoaderComponent,
+    MatPaginator,
+    DatePipe
+  ]
 })
 export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

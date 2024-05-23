@@ -1,14 +1,33 @@
 import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
-import { UntypedFormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/global-constants';
 import { Community, LocationsService } from '../../../../core/services/locations.service';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { AsyncPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-bc-address',
   templateUrl: './bc-address.component.html',
-  styleUrls: ['./bc-address.component.scss']
+  styleUrls: ['./bc-address.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    MatHint,
+    AsyncPipe
+  ]
 })
 export class BcAddressComponent implements OnInit, AfterViewChecked {
   @Input() addressForm: UntypedFormGroup;

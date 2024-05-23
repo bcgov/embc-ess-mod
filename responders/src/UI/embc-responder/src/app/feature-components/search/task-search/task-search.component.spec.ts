@@ -1,7 +1,6 @@
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { TaskSearchComponent } from './task-search.component';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { Router } from '@angular/router';
@@ -9,6 +8,7 @@ import { TaskSearchService } from './task-search.service';
 import { MockTaskSearchService } from 'src/app/unit-tests/mockTaskSearch.service';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { provideRouter } from '@angular/router';
 
 describe('TaskSearchComponent', () => {
   let component: TaskSearchComponent;
@@ -18,18 +18,14 @@ describe('TaskSearchComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TaskSearchComponent],
-      imports: [
-        RouterTestingModule.withRoutes([
+      imports: [HttpClientTestingModule, ReactiveFormsModule, TaskSearchComponent],
+      providers: [
+        provideRouter([
           {
             path: 'responder-access/search/task-details',
             component: TaskDetailsComponent
           }
         ]),
-        HttpClientTestingModule,
-        ReactiveFormsModule
-      ],
-      providers: [
         TaskSearchComponent,
         {
           provide: TaskSearchService,

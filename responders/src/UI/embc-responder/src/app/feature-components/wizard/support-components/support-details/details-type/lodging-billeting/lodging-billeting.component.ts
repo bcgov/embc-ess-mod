@@ -1,12 +1,28 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NumberOfNightsPipe } from '../../../../../../shared/pipes/numberOfNights.pipe';
+import { MatOption } from '@angular/material/core';
+
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-lodging-billeting',
   templateUrl: './lodging-billeting.component.html',
-  styleUrls: ['./lodging-billeting.component.scss']
+  styleUrls: ['./lodging-billeting.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    NumberOfNightsPipe
+  ]
 })
-export class LodgingBilletingComponent implements OnInit, OnChanges, AfterViewInit {
+export class LodgingBilletingComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
   referralForm: UntypedFormGroup;
@@ -28,8 +44,6 @@ export class LodgingBilletingComponent implements OnInit, OnChanges, AfterViewIn
       this.referralForm.get('noOfNights').patchValue(this.noOfDays);
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

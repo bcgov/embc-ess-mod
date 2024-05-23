@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { TaskWorkflow } from './task-workflow';
+import { TaskWorkflow } from '../models/task-workflow';
 export interface EssTask {
   communityCode?: string;
   description?: string;

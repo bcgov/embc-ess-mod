@@ -10,19 +10,23 @@
 </div>
 <br />
 
-<div class="row" *ngIf="this.optionInjectionService?.instance?.optionType === selectedPathType.remoteExtensions">
-  <div class="col-md-12">
-    <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
-    <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
-    <p class="p-custom">2. The file is in a pending, completed or expired status.</p>
-    <p class="p-custom">3. The file has no associated supports to extend.</p>
+@if (this.optionInjectionService?.instance?.optionType === selectedPathType.remoteExtensions) {
+  <div class="row">
+    <div class="col-md-12">
+      <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
+      <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
+      <p class="p-custom">2. The file is in a pending, completed or expired status.</p>
+      <p class="p-custom">3. The file has no associated supports to extend.</p>
+    </div>
   </div>
-</div>
+}
 
-<div class="row" *ngIf="this.optionInjectionService?.instance?.optionType === selectedPathType.caseNotes">
-  <div class="col-md-12">
-    <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
-    <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
-    <p class="p-custom">2. The file is in a Pending or Expired status.</p>
+@if (this.optionInjectionService?.instance?.optionType === selectedPathType.caseNotes) {
+  <div class="row">
+    <div class="col-md-12">
+      <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
+      <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
+      <p class="p-custom">2. The file is in a Pending or Expired status.</p>
+    </div>
   </div>
-</div>
+}

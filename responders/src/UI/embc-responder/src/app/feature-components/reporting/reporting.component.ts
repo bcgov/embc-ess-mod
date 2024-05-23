@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subscription, timer } from 'rxjs';
 import { map, retry, startWith, switchMap } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
@@ -10,11 +10,38 @@ import * as globalConst from '../../core/services/global-constants';
 import * as moment from 'moment';
 import { CustomValidationService } from '../../core/services/customValidation.service';
 import { padFileIdForSearch } from '../../core/services/helper/search.formatter';
+import { OverlayLoaderComponent } from '../../shared/components/overlay-loader/overlay-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { AsyncPipe } from '@angular/common';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
-  styleUrls: ['./reporting.component.scss']
+  styleUrls: ['./reporting.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+    MatSelect,
+    MatButton,
+    OverlayLoaderComponent,
+    AsyncPipe
+  ]
 })
 export class ReportingComponent implements OnInit, OnDestroy {
   reportForm: UntypedFormGroup;
@@ -79,7 +106,7 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(reportResponse, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+            this.downloadFile(reportResponse as any, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {
@@ -121,7 +148,7 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(reportResponse, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+            this.downloadFile(reportResponse as any, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {

@@ -9,19 +9,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SecurityQuestionsRoutingModule } from './security-questions-routing.module';
 import { SecurityQuestionsComponent } from './security-questions.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [SecurityQuestionsComponent],
   imports: [
     CommonModule,
-    CustomPipeModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
     SecurityQuestionsRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SecurityQuestionsComponent
   ]
 })
 export class SecurityQuestionsModule {}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import {
   FoodGroceriesSupport,
@@ -32,11 +32,28 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { DownloadService } from '../../../../core/services/utility/download.service';
 import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
+import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgStyle, DecimalPipe, DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-review-support',
   templateUrl: './review-support.component.html',
-  styleUrls: ['./review-support.component.scss']
+  styleUrls: ['./review-support.component.scss'],
+  standalone: true,
+  imports: [
+    NgStyle,
+    MatCard,
+    MatCardContent,
+    MatCheckbox,
+    MatButtonModule,
+    AppLoaderComponent,
+    DecimalPipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class ReviewSupportComponent implements OnInit {
   certificationAccepted = false;

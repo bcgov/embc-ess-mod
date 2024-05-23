@@ -9,10 +9,8 @@ import {
   tick
 } from '@angular/core/testing';
 import { ExistingSupportDetailsComponent } from './existing-support-details.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { DatePipe } from '@angular/common';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import { MockStepSupportsService } from 'src/app/unit-tests/mockStepSupport.service';
@@ -23,9 +21,8 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { MockEvacueeListService } from 'src/app/unit-tests/mockEvacueeList.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { ViewSupportsComponent } from '../view-supports/view-supports.component';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { SupportDetailsComponent } from '../support-details/support-details.component';
 import { computeInterfaceToken } from 'src/app/app.module';
 
@@ -38,21 +35,7 @@ describe('ExistingSupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        CustomPipeModule,
-        SharedModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: 'ess-wizard/add-supports/details',
-            component: SupportDetailsComponent
-          }
-        ])
-      ],
-      declarations: [ExistingSupportDetailsComponent],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, ExistingSupportDetailsComponent],
       providers: [
         ExistingSupportDetailsComponent,
         DatePipe,
@@ -68,7 +51,13 @@ describe('ExistingSupportDetailsComponent', () => {
           provide: LoadEvacueeListService,
           useClass: MockEvacueeListService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([
+          {
+            path: 'ess-wizard/add-supports/details',
+            component: SupportDetailsComponent
+          }
+        ])
       ]
     }).compileComponents();
   });

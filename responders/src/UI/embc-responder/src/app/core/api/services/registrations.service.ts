@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
 import { AuditAccessRequest } from '../models/audit-access-request';
 import { EvacuationFile } from '../models/evacuation-file';
@@ -15,35 +15,80 @@ import { EvacuationFileSearchResult } from '../models/evacuation-file-search-res
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
-import { InviteRequest } from '../models/invite-request';
-import { Note } from '../models/note';
-import { ProcessDigitalSupportsRequest } from '../models/process-digital-supports-request';
-import { ProcessPaperReferralsRequest } from '../models/process-paper-referrals-request';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
-import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrantProfileSearchResult } from '../models/registrant-profile-search-result';
 import { RegistrationResult } from '../models/registration-result';
+import { registrationsAuditFileAcccess } from '../fn/registrations/registrations-audit-file-acccess';
+import { RegistrationsAuditFileAcccess$Params } from '../fn/registrations/registrations-audit-file-acccess';
+import { registrationsAuditRegistrantAccess } from '../fn/registrations/registrations-audit-registrant-access';
+import { RegistrationsAuditRegistrantAccess$Params } from '../fn/registrations/registrations-audit-registrant-access';
+import { registrationsCancelSupport } from '../fn/registrations/registrations-cancel-support';
+import { RegistrationsCancelSupport$Params } from '../fn/registrations/registrations-cancel-support';
+import { registrationsCreateFile } from '../fn/registrations/registrations-create-file';
+import { RegistrationsCreateFile$Params } from '../fn/registrations/registrations-create-file';
+import { registrationsCreateFileNote } from '../fn/registrations/registrations-create-file-note';
+import { RegistrationsCreateFileNote$Params } from '../fn/registrations/registrations-create-file-note';
+import { registrationsCreateRegistrantProfile } from '../fn/registrations/registrations-create-registrant-profile';
+import { RegistrationsCreateRegistrantProfile$Params } from '../fn/registrations/registrations-create-registrant-profile';
+import { registrationsGetFile } from '../fn/registrations/registrations-get-file';
+import { RegistrationsGetFile$Params } from '../fn/registrations/registrations-get-file';
+import { registrationsGetFiles } from '../fn/registrations/registrations-get-files';
+import { RegistrationsGetFiles$Params } from '../fn/registrations/registrations-get-files';
+import { registrationsGetPrint } from '../fn/registrations/registrations-get-print';
+import { RegistrationsGetPrint$Params } from '../fn/registrations/registrations-get-print';
+import { registrationsGetRegistrantProfile } from '../fn/registrations/registrations-get-registrant-profile';
+import { RegistrationsGetRegistrantProfile$Params } from '../fn/registrations/registrations-get-registrant-profile';
+import { registrationsGetSecurityPhrase } from '../fn/registrations/registrations-get-security-phrase';
+import { RegistrationsGetSecurityPhrase$Params } from '../fn/registrations/registrations-get-security-phrase';
+import { registrationsGetSecurityQuestions } from '../fn/registrations/registrations-get-security-questions';
+import { RegistrationsGetSecurityQuestions$Params } from '../fn/registrations/registrations-get-security-questions';
+import { registrationsInviteToRegistrantPortal } from '../fn/registrations/registrations-invite-to-registrant-portal';
+import { RegistrationsInviteToRegistrantPortal$Params } from '../fn/registrations/registrations-invite-to-registrant-portal';
+import { registrationsLinkRegistrantToHouseholdMember } from '../fn/registrations/registrations-link-registrant-to-household-member';
+import { RegistrationsLinkRegistrantToHouseholdMember$Params } from '../fn/registrations/registrations-link-registrant-to-household-member';
+import { registrationsProcessPaperReferrals } from '../fn/registrations/registrations-process-paper-referrals';
+import { RegistrationsProcessPaperReferrals$Params } from '../fn/registrations/registrations-process-paper-referrals';
+import { registrationsProcessSupports } from '../fn/registrations/registrations-process-supports';
+import { RegistrationsProcessSupports$Params } from '../fn/registrations/registrations-process-supports';
+import { registrationsReprintSupport } from '../fn/registrations/registrations-reprint-support';
+import { RegistrationsReprintSupport$Params } from '../fn/registrations/registrations-reprint-support';
+import { registrationsSearch } from '../fn/registrations/registrations-search';
+import { RegistrationsSearch$Params } from '../fn/registrations/registrations-search';
+import { registrationsSearchMatchingEvacuationFiles } from '../fn/registrations/registrations-search-matching-evacuation-files';
+import { RegistrationsSearchMatchingEvacuationFiles$Params } from '../fn/registrations/registrations-search-matching-evacuation-files';
+import { registrationsSearchMatchingRegistrants } from '../fn/registrations/registrations-search-matching-registrants';
+import { RegistrationsSearchMatchingRegistrants$Params } from '../fn/registrations/registrations-search-matching-registrants';
+import { registrationsSearchSupports } from '../fn/registrations/registrations-search-supports';
+import { RegistrationsSearchSupports$Params } from '../fn/registrations/registrations-search-supports';
+import { registrationsSetFileNoteHiddenStatus } from '../fn/registrations/registrations-set-file-note-hidden-status';
+import { RegistrationsSetFileNoteHiddenStatus$Params } from '../fn/registrations/registrations-set-file-note-hidden-status';
+import { registrationsSetRegistrantVerified } from '../fn/registrations/registrations-set-registrant-verified';
+import { RegistrationsSetRegistrantVerified$Params } from '../fn/registrations/registrations-set-registrant-verified';
+import { registrationsUpdateFile } from '../fn/registrations/registrations-update-file';
+import { RegistrationsUpdateFile$Params } from '../fn/registrations/registrations-update-file';
+import { registrationsUpdateFileNoteContent } from '../fn/registrations/registrations-update-file-note-content';
+import { RegistrationsUpdateFileNoteContent$Params } from '../fn/registrations/registrations-update-file-note-content';
+import { registrationsUpdateRegistrantProfile } from '../fn/registrations/registrations-update-registrant-profile';
+import { RegistrationsUpdateRegistrantProfile$Params } from '../fn/registrations/registrations-update-registrant-profile';
+import { registrationsVerifySecurityPhrase } from '../fn/registrations/registrations-verify-security-phrase';
+import { RegistrationsVerifySecurityPhrase$Params } from '../fn/registrations/registrations-verify-security-phrase';
+import { registrationsVerifySecurityQuestions } from '../fn/registrations/registrations-verify-security-questions';
+import { RegistrationsVerifySecurityQuestions$Params } from '../fn/registrations/registrations-verify-security-questions';
+import { registrationsVoidSupport } from '../fn/registrations/registrations-void-support';
+import { RegistrationsVoidSupport$Params } from '../fn/registrations/registrations-void-support';
 import { SearchResults } from '../models/search-results';
 import { Support } from '../models/support';
-import { SupportReprintReason } from '../models/support-reprint-reason';
-import { SupportVoidReason } from '../models/support-void-reason';
-import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
-import { VerifySecurityQuestionsRequest } from '../models/verify-security-questions-request';
 import { VerifySecurityQuestionsResponse } from '../models/verify-security-questions-response';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RegistrationsService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation registrationsGetRegistrantProfile
-   */
+  /** Path part for operation `registrationsGetRegistrantProfile()` */
   static readonly RegistrationsGetRegistrantProfilePath = '/api/Registrations/registrants/{registrantId}';
 
   /**
@@ -56,30 +101,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetRegistrantProfile$Response(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-  }): Observable<StrictHttpResponse<RegistrantProfile>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetRegistrantProfilePath, 'get');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrantProfile>;
-        })
-      );
+  registrationsGetRegistrantProfile$Response(
+    params: RegistrationsGetRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrantProfile>> {
+    return registrationsGetRegistrantProfile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -87,25 +113,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetRegistrantProfile$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetRegistrantProfile(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-  }): Observable<RegistrantProfile> {
-    return this.registrationsGetRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrantProfile>) => r.body as RegistrantProfile)
+  registrationsGetRegistrantProfile(
+    params: RegistrationsGetRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<RegistrantProfile> {
+    return this.registrationsGetRegistrantProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrantProfile>): RegistrantProfile => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsUpdateRegistrantProfile
-   */
+  /** Path part for operation `registrationsUpdateRegistrantProfile()` */
   static readonly RegistrationsUpdateRegistrantProfilePath = '/api/Registrations/registrants/{registrantId}';
 
   /**
@@ -118,36 +140,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateRegistrantProfile$Response(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateRegistrantProfilePath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsUpdateRegistrantProfile$Response(
+    params: RegistrationsUpdateRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsUpdateRegistrantProfile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -155,30 +152,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsUpdateRegistrantProfile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateRegistrantProfile(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile;
-  }): Observable<RegistrationResult> {
-    return this.registrationsUpdateRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsUpdateRegistrantProfile(
+    params: RegistrationsUpdateRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsUpdateRegistrantProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsCreateRegistrantProfile
-   */
+  /** Path part for operation `registrationsCreateRegistrantProfile()` */
   static readonly RegistrationsCreateRegistrantProfilePath = '/api/Registrations/registrants';
 
   /**
@@ -191,30 +179,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateRegistrantProfile$Response(params: {
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateRegistrantProfilePath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsCreateRegistrantProfile$Response(
+    params: RegistrationsCreateRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsCreateRegistrantProfile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -222,25 +191,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsCreateRegistrantProfile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateRegistrantProfile(params: {
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile;
-  }): Observable<RegistrationResult> {
-    return this.registrationsCreateRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsCreateRegistrantProfile(
+    params: RegistrationsCreateRegistrantProfile$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsCreateRegistrantProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsSetRegistrantVerified
-   */
+  /** Path part for operation `registrationsSetRegistrantVerified()` */
   static readonly RegistrationsSetRegistrantVerifiedPath =
     '/api/Registrations/registrants/{registrantId}/verified/{verified}';
 
@@ -254,36 +219,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSetRegistrantVerified$Response(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-
-    /**
-     * Verified
-     */
-    verified: boolean;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetRegistrantVerifiedPath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.path('verified', params.verified, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsSetRegistrantVerified$Response(
+    params: RegistrationsSetRegistrantVerified$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsSetRegistrantVerified(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -291,30 +231,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSetRegistrantVerified$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSetRegistrantVerified(params: {
-    /**
-     * RegistrantId
-     */
-    registrantId: string;
-
-    /**
-     * Verified
-     */
-    verified: boolean;
-  }): Observable<RegistrationResult> {
-    return this.registrationsSetRegistrantVerified$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsSetRegistrantVerified(
+    params: RegistrationsSetRegistrantVerified$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsSetRegistrantVerified$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsGetSecurityQuestions
-   */
+  /** Path part for operation `registrationsGetSecurityQuestions()` */
   static readonly RegistrationsGetSecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
 
   /**
@@ -327,30 +258,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetSecurityQuestions$Response(params: {
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<StrictHttpResponse<GetSecurityQuestionsResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityQuestionsPath, 'get');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<GetSecurityQuestionsResponse>;
-        })
-      );
+  registrationsGetSecurityQuestions$Response(
+    params: RegistrationsGetSecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<GetSecurityQuestionsResponse>> {
+    return registrationsGetSecurityQuestions(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -358,25 +270,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetSecurityQuestions$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetSecurityQuestions(params: {
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<GetSecurityQuestionsResponse> {
-    return this.registrationsGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<GetSecurityQuestionsResponse>) => r.body as GetSecurityQuestionsResponse)
+  registrationsGetSecurityQuestions(
+    params: RegistrationsGetSecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<GetSecurityQuestionsResponse> {
+    return this.registrationsGetSecurityQuestions$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GetSecurityQuestionsResponse>): GetSecurityQuestionsResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsVerifySecurityQuestions
-   */
+  /** Path part for operation `registrationsVerifySecurityQuestions()` */
   static readonly RegistrationsVerifySecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
 
   /**
@@ -389,36 +297,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsVerifySecurityQuestions$Response(params: {
-    /**
-     * registrant id
-     */
-    registrantId: string;
-
-    /**
-     * array of questions and their answers
-     */
-    body: VerifySecurityQuestionsRequest;
-  }): Observable<StrictHttpResponse<VerifySecurityQuestionsResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityQuestionsPath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<VerifySecurityQuestionsResponse>;
-        })
-      );
+  registrationsVerifySecurityQuestions$Response(
+    params: RegistrationsVerifySecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<VerifySecurityQuestionsResponse>> {
+    return registrationsVerifySecurityQuestions(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -426,30 +309,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsVerifySecurityQuestions$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsVerifySecurityQuestions(params: {
-    /**
-     * registrant id
-     */
-    registrantId: string;
-
-    /**
-     * array of questions and their answers
-     */
-    body: VerifySecurityQuestionsRequest;
-  }): Observable<VerifySecurityQuestionsResponse> {
-    return this.registrationsVerifySecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>) => r.body as VerifySecurityQuestionsResponse)
+  registrationsVerifySecurityQuestions(
+    params: RegistrationsVerifySecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<VerifySecurityQuestionsResponse> {
+    return this.registrationsVerifySecurityQuestions$Response(params, context).pipe(
+      map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>): VerifySecurityQuestionsResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsInviteToRegistrantPortal
-   */
+  /** Path part for operation `registrationsInviteToRegistrantPortal()` */
   static readonly RegistrationsInviteToRegistrantPortalPath = '/api/Registrations/registrants/{registrantId}/invite';
 
   /**
@@ -458,46 +332,29 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsInviteToRegistrantPortal$Response(params: {
-    registrantId: string;
-    body: InviteRequest;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsInviteToRegistrantPortalPath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsInviteToRegistrantPortal$Response(
+    params: RegistrationsInviteToRegistrantPortal$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsInviteToRegistrantPortal(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsInviteToRegistrantPortal$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsInviteToRegistrantPortal(params: { registrantId: string; body: InviteRequest }): Observable<void> {
-    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  registrationsInviteToRegistrantPortal(
+    params: RegistrationsInviteToRegistrantPortal$Params,
+    context?: HttpContext
+  ): Observable<void> {
+    return this.registrationsInviteToRegistrantPortal$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsAuditRegistrantAccess
-   */
+  /** Path part for operation `registrationsAuditRegistrantAccess()` */
   static readonly RegistrationsAuditRegistrantAccessPath = '/api/Registrations/registrants/{registrantId}/access';
 
   /**
@@ -506,46 +363,29 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsAuditRegistrantAccess$Response(params: {
-    registrantId: string;
-    body: AuditAccessRequest;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsAuditRegistrantAccessPath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsAuditRegistrantAccess$Response(
+    params: RegistrationsAuditRegistrantAccess$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsAuditRegistrantAccess(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsAuditRegistrantAccess$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsAuditRegistrantAccess(params: { registrantId: string; body: AuditAccessRequest }): Observable<void> {
-    return this.registrationsAuditRegistrantAccess$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  registrationsAuditRegistrantAccess(
+    params: RegistrationsAuditRegistrantAccess$Params,
+    context?: HttpContext
+  ): Observable<void> {
+    return this.registrationsAuditRegistrantAccess$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsGetFile
-   */
+  /** Path part for operation `registrationsGetFile()` */
   static readonly RegistrationsGetFilePath = '/api/Registrations/files/{fileId}';
 
   /**
@@ -558,36 +398,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetFile$Response(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * optional historical needs aseesment id
-     */
-    needsAssessmentId?: string;
-  }): Observable<StrictHttpResponse<EvacuationFile>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilePath, 'get');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.query('needsAssessmentId', params.needsAssessmentId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<EvacuationFile>;
-        })
-      );
+  registrationsGetFile$Response(
+    params: RegistrationsGetFile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<EvacuationFile>> {
+    return registrationsGetFile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -595,30 +410,18 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetFile$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetFile(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * optional historical needs aseesment id
-     */
-    needsAssessmentId?: string;
-  }): Observable<EvacuationFile> {
-    return this.registrationsGetFile$Response(params).pipe(
-      map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile)
+  registrationsGetFile(params: RegistrationsGetFile$Params, context?: HttpContext): Observable<EvacuationFile> {
+    return this.registrationsGetFile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<EvacuationFile>): EvacuationFile => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsUpdateFile
-   */
+  /** Path part for operation `registrationsUpdateFile()` */
   static readonly RegistrationsUpdateFilePath = '/api/Registrations/files/{fileId}';
 
   /**
@@ -631,36 +434,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFile$Response(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * file
-     */
-    body: EvacuationFile;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFilePath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsUpdateFile$Response(
+    params: RegistrationsUpdateFile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsUpdateFile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -668,30 +446,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsUpdateFile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFile(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * file
-     */
-    body: EvacuationFile;
-  }): Observable<RegistrationResult> {
-    return this.registrationsUpdateFile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsUpdateFile(
+    params: RegistrationsUpdateFile$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsUpdateFile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsGetFiles
-   */
+  /** Path part for operation `registrationsGetFiles()` */
   static readonly RegistrationsGetFilesPath = '/api/Registrations/files';
 
   /**
@@ -704,42 +473,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetFiles$Response(params?: {
-    /**
-     * fileId
-     */
-    registrantId?: string;
-
-    /**
-     * manualFileId
-     */
-    manualFileId?: string;
-
-    /**
-     * id
-     */
-    id?: string;
-  }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
-    if (params) {
-      rb.query('registrantId', params.registrantId, {});
-      rb.query('manualFileId', params.manualFileId, {});
-      rb.query('id', params.id, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<EvacuationFileSummary>>;
-        })
-      );
+  registrationsGetFiles$Response(
+    params?: RegistrationsGetFiles$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
+    return registrationsGetFiles(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -747,35 +485,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetFiles$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetFiles(params?: {
-    /**
-     * fileId
-     */
-    registrantId?: string;
-
-    /**
-     * manualFileId
-     */
-    manualFileId?: string;
-
-    /**
-     * id
-     */
-    id?: string;
-  }): Observable<Array<EvacuationFileSummary>> {
-    return this.registrationsGetFiles$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<EvacuationFileSummary>>) => r.body as Array<EvacuationFileSummary>)
+  registrationsGetFiles(
+    params?: RegistrationsGetFiles$Params,
+    context?: HttpContext
+  ): Observable<Array<EvacuationFileSummary>> {
+    return this.registrationsGetFiles$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<EvacuationFileSummary>>): Array<EvacuationFileSummary> => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsCreateFile
-   */
+  /** Path part for operation `registrationsCreateFile()` */
   static readonly RegistrationsCreateFilePath = '/api/Registrations/files';
 
   /**
@@ -788,30 +512,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFile$Response(params: {
-    /**
-     * file
-     */
-    body: EvacuationFile;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFilePath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsCreateFile$Response(
+    params: RegistrationsCreateFile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsCreateFile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -819,25 +524,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsCreateFile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFile(params: {
-    /**
-     * file
-     */
-    body: EvacuationFile;
-  }): Observable<RegistrationResult> {
-    return this.registrationsCreateFile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsCreateFile(
+    params: RegistrationsCreateFile$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsCreateFile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsCreateFileNote
-   */
+  /** Path part for operation `registrationsCreateFileNote()` */
   static readonly RegistrationsCreateFileNotePath = '/api/Registrations/files/{fileId}/notes';
 
   /**
@@ -850,36 +551,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFileNote$Response(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * note
-     */
-    body: Note;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFileNotePath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsCreateFileNote$Response(
+    params: RegistrationsCreateFileNote$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsCreateFileNote(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -887,30 +563,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsCreateFileNote$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFileNote(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * note
-     */
-    body: Note;
-  }): Observable<RegistrationResult> {
-    return this.registrationsCreateFileNote$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsCreateFileNote(
+    params: RegistrationsCreateFileNote$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsCreateFileNote$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsUpdateFileNoteContent
-   */
+  /** Path part for operation `registrationsUpdateFileNoteContent()` */
   static readonly RegistrationsUpdateFileNoteContentPath = '/api/Registrations/files/{fileId}/notes/{noteId}';
 
   /**
@@ -923,42 +590,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFileNoteContent$Response(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * noteId
-     */
-    noteId: string;
-
-    /**
-     * note
-     */
-    body: Note;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFileNoteContentPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('noteId', params.noteId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsUpdateFileNoteContent$Response(
+    params: RegistrationsUpdateFileNoteContent$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsUpdateFileNoteContent(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -966,35 +602,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsUpdateFileNoteContent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFileNoteContent(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * noteId
-     */
-    noteId: string;
-
-    /**
-     * note
-     */
-    body: Note;
-  }): Observable<RegistrationResult> {
-    return this.registrationsUpdateFileNoteContent$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsUpdateFileNoteContent(
+    params: RegistrationsUpdateFileNoteContent$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsUpdateFileNoteContent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsSetFileNoteHiddenStatus
-   */
+  /** Path part for operation `registrationsSetFileNoteHiddenStatus()` */
   static readonly RegistrationsSetFileNoteHiddenStatusPath = '/api/Registrations/files/{fileId}/notes/{noteId}/hidden';
 
   /**
@@ -1007,42 +629,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSetFileNoteHiddenStatus$Response(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * noteId
-     */
-    noteId: string;
-
-    /**
-     * isHidden
-     */
-    isHidden?: boolean;
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetFileNoteHiddenStatusPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('noteId', params.noteId, {});
-      rb.query('isHidden', params.isHidden, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<RegistrationResult>;
-        })
-      );
+  registrationsSetFileNoteHiddenStatus$Response(
+    params: RegistrationsSetFileNoteHiddenStatus$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<RegistrationResult>> {
+    return registrationsSetFileNoteHiddenStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1050,35 +641,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSetFileNoteHiddenStatus$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSetFileNoteHiddenStatus(params: {
-    /**
-     * fileId
-     */
-    fileId: string;
-
-    /**
-     * noteId
-     */
-    noteId: string;
-
-    /**
-     * isHidden
-     */
-    isHidden?: boolean;
-  }): Observable<RegistrationResult> {
-    return this.registrationsSetFileNoteHiddenStatus$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+  registrationsSetFileNoteHiddenStatus(
+    params: RegistrationsSetFileNoteHiddenStatus$Params,
+    context?: HttpContext
+  ): Observable<RegistrationResult> {
+    return this.registrationsSetFileNoteHiddenStatus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>): RegistrationResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsGetSecurityPhrase
-   */
+  /** Path part for operation `registrationsGetSecurityPhrase()` */
   static readonly RegistrationsGetSecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
@@ -1091,30 +668,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetSecurityPhrase$Response(params: {
-    /**
-     * file id
-     */
-    fileId: string;
-  }): Observable<StrictHttpResponse<GetSecurityPhraseResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityPhrasePath, 'get');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<GetSecurityPhraseResponse>;
-        })
-      );
+  registrationsGetSecurityPhrase$Response(
+    params: RegistrationsGetSecurityPhrase$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<GetSecurityPhraseResponse>> {
+    return registrationsGetSecurityPhrase(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1122,25 +680,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetSecurityPhrase$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetSecurityPhrase(params: {
-    /**
-     * file id
-     */
-    fileId: string;
-  }): Observable<GetSecurityPhraseResponse> {
-    return this.registrationsGetSecurityPhrase$Response(params).pipe(
-      map((r: StrictHttpResponse<GetSecurityPhraseResponse>) => r.body as GetSecurityPhraseResponse)
+  registrationsGetSecurityPhrase(
+    params: RegistrationsGetSecurityPhrase$Params,
+    context?: HttpContext
+  ): Observable<GetSecurityPhraseResponse> {
+    return this.registrationsGetSecurityPhrase$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GetSecurityPhraseResponse>): GetSecurityPhraseResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsVerifySecurityPhrase
-   */
+  /** Path part for operation `registrationsVerifySecurityPhrase()` */
   static readonly RegistrationsVerifySecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
 
   /**
@@ -1153,36 +707,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsVerifySecurityPhrase$Response(params: {
-    /**
-     * file id
-     */
-    fileId: string;
-
-    /**
-     * security word to verify
-     */
-    body: VerifySecurityPhraseRequest;
-  }): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityPhrasePath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<VerifySecurityPhraseResponse>;
-        })
-      );
+  registrationsVerifySecurityPhrase$Response(
+    params: RegistrationsVerifySecurityPhrase$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
+    return registrationsVerifySecurityPhrase(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1190,30 +719,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsVerifySecurityPhrase$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsVerifySecurityPhrase(params: {
-    /**
-     * file id
-     */
-    fileId: string;
-
-    /**
-     * security word to verify
-     */
-    body: VerifySecurityPhraseRequest;
-  }): Observable<VerifySecurityPhraseResponse> {
-    return this.registrationsVerifySecurityPhrase$Response(params).pipe(
-      map((r: StrictHttpResponse<VerifySecurityPhraseResponse>) => r.body as VerifySecurityPhraseResponse)
+  registrationsVerifySecurityPhrase(
+    params: RegistrationsVerifySecurityPhrase$Params,
+    context?: HttpContext
+  ): Observable<VerifySecurityPhraseResponse> {
+    return this.registrationsVerifySecurityPhrase$Response(params, context).pipe(
+      map((r: StrictHttpResponse<VerifySecurityPhraseResponse>): VerifySecurityPhraseResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsLinkRegistrantToHouseholdMember
-   */
+  /** Path part for operation `registrationsLinkRegistrantToHouseholdMember()` */
   static readonly RegistrationsLinkRegistrantToHouseholdMemberPath = '/api/Registrations/files/{fileId}/link';
 
   /**
@@ -1222,53 +742,29 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsLinkRegistrantToHouseholdMember$Response(params: {
-    fileId: string;
-    body: RegistrantLinkRequest;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath,
-      'post'
-    );
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+  registrationsLinkRegistrantToHouseholdMember$Response(
+    params: RegistrationsLinkRegistrantToHouseholdMember$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<string>> {
+    return registrationsLinkRegistrantToHouseholdMember(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsLinkRegistrantToHouseholdMember$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsLinkRegistrantToHouseholdMember(params: {
-    fileId: string;
-    body: RegistrantLinkRequest;
-  }): Observable<string> {
-    return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+  registrationsLinkRegistrantToHouseholdMember(
+    params: RegistrationsLinkRegistrantToHouseholdMember$Params,
+    context?: HttpContext
+  ): Observable<string> {
+    return this.registrationsLinkRegistrantToHouseholdMember$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsAuditFileAcccess
-   */
+  /** Path part for operation `registrationsAuditFileAcccess()` */
   static readonly RegistrationsAuditFileAcccessPath = '/api/Registrations/files/{fileId}/access';
 
   /**
@@ -1277,46 +773,26 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsAuditFileAcccess$Response(params: {
-    fileId: string;
-    body: AuditAccessRequest;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsAuditFileAcccessPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsAuditFileAcccess$Response(
+    params: RegistrationsAuditFileAcccess$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsAuditFileAcccess(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsAuditFileAcccess$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsAuditFileAcccess(params: { fileId: string; body: AuditAccessRequest }): Observable<void> {
-    return this.registrationsAuditFileAcccess$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  registrationsAuditFileAcccess(params: RegistrationsAuditFileAcccess$Params, context?: HttpContext): Observable<void> {
+    return this.registrationsAuditFileAcccess$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsSearch
-   */
+  /** Path part for operation `registrationsSearch()` */
   static readonly RegistrationsSearchPath = '/api/Registrations';
 
   /**
@@ -1329,33 +805,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearch$Response(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<StrictHttpResponse<SearchResults>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchPath, 'get');
-    if (params) {
-      rb.query('firstName', params.firstName, {});
-      rb.query('lastName', params.lastName, {});
-      rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ManualFileId', params.ManualFileId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<SearchResults>;
-        })
-      );
+  registrationsSearch$Response(
+    params?: RegistrationsSearch$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SearchResults>> {
+    return registrationsSearch(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1363,25 +817,18 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSearch$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearch(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<SearchResults> {
-    return this.registrationsSearch$Response(params).pipe(
-      map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults)
+  registrationsSearch(params?: RegistrationsSearch$Params, context?: HttpContext): Observable<SearchResults> {
+    return this.registrationsSearch$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SearchResults>): SearchResults => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsSearchMatchingRegistrants
-   */
+  /** Path part for operation `registrationsSearchMatchingRegistrants()` */
   static readonly RegistrationsSearchMatchingRegistrantsPath = '/api/Registrations/registrants/matches';
 
   /**
@@ -1390,57 +837,29 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchMatchingRegistrants$Response(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<StrictHttpResponse<Array<RegistrantProfileSearchResult>>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
-    if (params) {
-      rb.query('firstName', params.firstName, {});
-      rb.query('lastName', params.lastName, {});
-      rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ManualFileId', params.ManualFileId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<RegistrantProfileSearchResult>>;
-        })
-      );
+  registrationsSearchMatchingRegistrants$Response(
+    params?: RegistrationsSearchMatchingRegistrants$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<RegistrantProfileSearchResult>>> {
+    return registrationsSearchMatchingRegistrants(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSearchMatchingRegistrants$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchMatchingRegistrants(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<Array<RegistrantProfileSearchResult>> {
-    return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
-      map(
-        (r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>) => r.body as Array<RegistrantProfileSearchResult>
-      )
+  registrationsSearchMatchingRegistrants(
+    params?: RegistrationsSearchMatchingRegistrants$Params,
+    context?: HttpContext
+  ): Observable<Array<RegistrantProfileSearchResult>> {
+    return this.registrationsSearchMatchingRegistrants$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>): Array<RegistrantProfileSearchResult> => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsSearchMatchingEvacuationFiles
-   */
+  /** Path part for operation `registrationsSearchMatchingEvacuationFiles()` */
   static readonly RegistrationsSearchMatchingEvacuationFilesPath = '/api/Registrations/files/matches';
 
   /**
@@ -1449,59 +868,29 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchMatchingEvacuationFiles$Response(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath,
-      'get'
-    );
-    if (params) {
-      rb.query('firstName', params.firstName, {});
-      rb.query('lastName', params.lastName, {});
-      rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ManualFileId', params.ManualFileId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<EvacuationFileSearchResult>>;
-        })
-      );
+  registrationsSearchMatchingEvacuationFiles$Response(
+    params?: RegistrationsSearchMatchingEvacuationFiles$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
+    return registrationsSearchMatchingEvacuationFiles(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSearchMatchingEvacuationFiles$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchMatchingEvacuationFiles(params?: {
-    firstName?: string;
-    lastName?: string;
-    dateOfBirth?: string;
-    ManualFileId?: string;
-  }): Observable<Array<EvacuationFileSearchResult>> {
-    return this.registrationsSearchMatchingEvacuationFiles$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<EvacuationFileSearchResult>>) => r.body as Array<EvacuationFileSearchResult>)
+  registrationsSearchMatchingEvacuationFiles(
+    params?: RegistrationsSearchMatchingEvacuationFiles$Params,
+    context?: HttpContext
+  ): Observable<Array<EvacuationFileSearchResult>> {
+    return this.registrationsSearchMatchingEvacuationFiles$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<EvacuationFileSearchResult>>): Array<EvacuationFileSearchResult> => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsProcessSupports
-   */
+  /** Path part for operation `registrationsProcessSupports()` */
   static readonly RegistrationsProcessSupportsPath = '/api/Registrations/files/{fileId}/supports';
 
   /**
@@ -1514,36 +903,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsProcessSupports$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * the request with draft supports to process
-     */
-    body: ProcessDigitalSupportsRequest;
-  }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessSupportsPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<ReferralPrintRequestResponse>;
-        })
-      );
+  registrationsProcessSupports$Response(
+    params: RegistrationsProcessSupports$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
+    return registrationsProcessSupports(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1551,30 +915,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsProcessSupports$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsProcessSupports(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * the request with draft supports to process
-     */
-    body: ProcessDigitalSupportsRequest;
-  }): Observable<ReferralPrintRequestResponse> {
-    return this.registrationsProcessSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
+  registrationsProcessSupports(
+    params: RegistrationsProcessSupports$Params,
+    context?: HttpContext
+  ): Observable<ReferralPrintRequestResponse> {
+    return this.registrationsProcessSupports$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ReferralPrintRequestResponse>): ReferralPrintRequestResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsProcessPaperReferrals
-   */
+  /** Path part for operation `registrationsProcessPaperReferrals()` */
   static readonly RegistrationsProcessPaperReferralsPath = '/api/Registrations/files/{fileId}/paperreferrals';
 
   /**
@@ -1587,36 +942,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsProcessPaperReferrals$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * the request with paper referrals to process
-     */
-    body: ProcessPaperReferralsRequest;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessPaperReferralsPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsProcessPaperReferrals$Response(
+    params: RegistrationsProcessPaperReferrals$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsProcessPaperReferrals(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1624,30 +954,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsProcessPaperReferrals$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsProcessPaperReferrals(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * the request with paper referrals to process
-     */
-    body: ProcessPaperReferralsRequest;
-  }): Observable<void> {
-    return this.registrationsProcessPaperReferrals$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  registrationsProcessPaperReferrals(
+    params: RegistrationsProcessPaperReferrals$Params,
+    context?: HttpContext
+  ): Observable<void> {
+    return this.registrationsProcessPaperReferrals$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsVoidSupport
-   */
+  /** Path part for operation `registrationsVoidSupport()` */
   static readonly RegistrationsVoidSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/void';
 
   /**
@@ -1660,42 +981,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsVoidSupport$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support id
-     */
-    supportId: string;
-
-    /**
-     * reason to void the support
-     */
-    voidReason?: SupportVoidReason;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVoidSupportPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('supportId', params.supportId, {});
-      rb.query('voidReason', params.voidReason, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsVoidSupport$Response(
+    params: RegistrationsVoidSupport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsVoidSupport(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1703,33 +993,18 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsVoidSupport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsVoidSupport(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support id
-     */
-    supportId: string;
-
-    /**
-     * reason to void the support
-     */
-    voidReason?: SupportVoidReason;
-  }): Observable<void> {
-    return this.registrationsVoidSupport$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+  registrationsVoidSupport(params: RegistrationsVoidSupport$Params, context?: HttpContext): Observable<void> {
+    return this.registrationsVoidSupport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
   }
 
-  /**
-   * Path part for operation registrationsCancelSupport
-   */
+  /** Path part for operation `registrationsCancelSupport()` */
   static readonly RegistrationsCancelSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/cancel';
 
   /**
@@ -1742,36 +1017,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsCancelSupport$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support id
-     */
-    supportId: string;
-  }): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCancelSupportPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('supportId', params.supportId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'text',
-          accept: '*/*'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-        })
-      );
+  registrationsCancelSupport$Response(
+    params: RegistrationsCancelSupport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return registrationsCancelSupport(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1779,28 +1029,18 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsCancelSupport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsCancelSupport(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support id
-     */
-    supportId: string;
-  }): Observable<void> {
-    return this.registrationsCancelSupport$Response(params).pipe(map((r: StrictHttpResponse<void>) => r.body as void));
+  registrationsCancelSupport(params: RegistrationsCancelSupport$Params, context?: HttpContext): Observable<void> {
+    return this.registrationsCancelSupport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
   }
 
-  /**
-   * Path part for operation registrationsReprintSupport
-   */
+  /** Path part for operation `registrationsReprintSupport()` */
   static readonly RegistrationsReprintSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/reprint';
 
   /**
@@ -1813,48 +1053,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsReprintSupport$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support if
-     */
-    supportId: string;
-
-    /**
-     * reprint reason
-     */
-    reprintReason?: SupportReprintReason;
-
-    /**
-     * inlcude summary
-     */
-    includeSummary?: boolean;
-  }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsReprintSupportPath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('supportId', params.supportId, {});
-      rb.query('reprintReason', params.reprintReason, {});
-      rb.query('includeSummary', params.includeSummary, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<ReferralPrintRequestResponse>;
-        })
-      );
+  registrationsReprintSupport$Response(
+    params: RegistrationsReprintSupport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
+    return registrationsReprintSupport(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1862,40 +1065,21 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsReprintSupport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsReprintSupport(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * support if
-     */
-    supportId: string;
-
-    /**
-     * reprint reason
-     */
-    reprintReason?: SupportReprintReason;
-
-    /**
-     * inlcude summary
-     */
-    includeSummary?: boolean;
-  }): Observable<ReferralPrintRequestResponse> {
-    return this.registrationsReprintSupport$Response(params).pipe(
-      map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
+  registrationsReprintSupport(
+    params: RegistrationsReprintSupport$Params,
+    context?: HttpContext
+  ): Observable<ReferralPrintRequestResponse> {
+    return this.registrationsReprintSupport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ReferralPrintRequestResponse>): ReferralPrintRequestResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation registrationsGetPrint
-   */
+  /** Path part for operation `registrationsGetPrint()` */
   static readonly RegistrationsGetPrintPath = '/api/Registrations/files/{fileId}/supports/print/{printRequestId}';
 
   /**
@@ -1908,36 +1092,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetPrint$Response(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * print request id
-     */
-    printRequestId: string;
-  }): Observable<StrictHttpResponse<Blob>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetPrintPath, 'get');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.path('printRequestId', params.printRequestId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'blob',
-          accept: 'application/octet-stream'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Blob>;
-        })
-      );
+  registrationsGetPrint$Response(
+    params: RegistrationsGetPrint$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Blob>> {
+    return registrationsGetPrint(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -1945,28 +1104,18 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsGetPrint$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetPrint(params: {
-    /**
-     * evacuation file number
-     */
-    fileId: string;
-
-    /**
-     * print request id
-     */
-    printRequestId: string;
-  }): Observable<Blob> {
-    return this.registrationsGetPrint$Response(params).pipe(map((r: StrictHttpResponse<Blob>) => r.body as Blob));
+  registrationsGetPrint(params: RegistrationsGetPrint$Params, context?: HttpContext): Observable<Blob> {
+    return this.registrationsGetPrint$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+    );
   }
 
-  /**
-   * Path part for operation registrationsSearchSupports
-   */
+  /** Path part for operation `registrationsSearchSupports()` */
   static readonly RegistrationsSearchSupportsPath = '/api/Registrations/supports';
 
   /**
@@ -1979,36 +1128,11 @@ export class RegistrationsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchSupports$Response(params?: {
-    /**
-     * search for supports for an manual referral id
-     */
-    manualReferralId?: string;
-
-    /**
-     * search for supports in a specific evacuation file
-     */
-    fileId?: string;
-  }): Observable<StrictHttpResponse<Array<Support>>> {
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
-    if (params) {
-      rb.query('manualReferralId', params.manualReferralId, {});
-      rb.query('fileId', params.fileId, {});
-    }
-
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json'
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<Array<Support>>;
-        })
-      );
+  registrationsSearchSupports$Response(
+    params?: RegistrationsSearchSupports$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<Support>>> {
+    return registrationsSearchSupports(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -2016,24 +1140,17 @@ export class RegistrationsService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registrationsSearchSupports$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsSearchSupports(params?: {
-    /**
-     * search for supports for an manual referral id
-     */
-    manualReferralId?: string;
-
-    /**
-     * search for supports in a specific evacuation file
-     */
-    fileId?: string;
-  }): Observable<Array<Support>> {
-    return this.registrationsSearchSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>)
+  registrationsSearchSupports(
+    params?: RegistrationsSearchSupports$Params,
+    context?: HttpContext
+  ): Observable<Array<Support>> {
+    return this.registrationsSearchSupports$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Support>>): Array<Support> => r.body)
     );
   }
 }

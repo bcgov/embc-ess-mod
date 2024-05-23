@@ -17,9 +17,9 @@
           maxlength="1000"
           matInput
         ></textarea>
-        <mat-error *ngIf="verifiedFormControl?.note.hasError('whitespaceError')">
-          You cannot save a blank note
-        </mat-error>
+        @if (verifiedFormControl?.note.hasError('whitespaceError')) {
+          <mat-error> You cannot save a blank note </mat-error>
+        }
       </mat-form-field>
     </form>
   </div>

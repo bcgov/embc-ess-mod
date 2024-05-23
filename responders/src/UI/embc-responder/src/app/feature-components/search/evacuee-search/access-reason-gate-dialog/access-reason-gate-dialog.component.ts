@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +8,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { tap } from 'rxjs';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { ConfigService } from 'src/app/core/services/config.service';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { AppLoaderComponent } from 'src/app/shared/components/app-loader/app-loader.component';
 
 export type AccessEntity = 'profile' | 'essFile';
 
@@ -21,13 +21,13 @@ export interface AccessReasonData {
   selector: 'app-access-reason-gate-dialog',
   standalone: true,
   imports: [
-    CommonModule,
-    SharedModule,
     MatButtonModule,
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppLoaderComponent,
+    AsyncPipe
   ],
   templateUrl: './access-reason-gate-dialog.component.html'
 })

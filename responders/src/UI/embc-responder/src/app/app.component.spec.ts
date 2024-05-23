@@ -8,7 +8,6 @@ import {
   discardPeriodicTasks,
   fakeAsync
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -43,12 +42,23 @@ import { LoadEvacueeListService } from './core/services/load-evacuee-list.servic
 import { MockEvacueeListService } from './unit-tests/mockEvacueeList.service';
 import { SupplierService } from './core/services/suppliers.service';
 import { MockSupplierService } from './unit-tests/mockSuppliers.service';
+import { provideRouter } from '@angular/router';
 //import { MockEventRouter } from './unit-tests/mockEventRouter.service';
 
-@Component({ selector: 'app-environment-banner', template: '' })
+@Component({
+  selector: 'app-environment-banner',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, MatDialogModule]
+})
 class EnvironmentBannerStubComponent {}
 
-@Component({ selector: 'app-outage-banner', template: '' })
+@Component({
+  selector: 'app-outage-banner',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, MatDialogModule]
+})
 class OutageBannerStubComponent {}
 
 // export class MockEventRouter {
@@ -80,7 +90,17 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([
+        HttpClientTestingModule,
+        OAuthModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
+        MatDialogModule,
+        EnvironmentBannerStubComponent,
+        OutageBannerStubComponent,
+        AppComponent
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        provideRouter([
           { path: 'outage', component: OutageComponent },
           {
             path: 'electronic-agreement',
@@ -91,14 +111,6 @@ describe('AppComponent', () => {
             component: ResponderAccessComponent
           }
         ]),
-        HttpClientTestingModule,
-        OAuthModule.forRoot(),
-        NgIdleKeepaliveModule.forRoot(),
-        MatDialogModule
-      ],
-      declarations: [AppComponent, EnvironmentBannerStubComponent, OutageBannerStubComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
         AppComponent,
         { provide: Router, useValue: routerMock },
         {

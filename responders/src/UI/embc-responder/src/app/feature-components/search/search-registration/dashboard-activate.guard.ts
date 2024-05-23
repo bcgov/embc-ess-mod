@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -8,7 +8,7 @@ import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardActivateGuard implements CanActivate {
+export class DashboardActivateGuard {
   constructor(
     private evacueeSearchService: EvacueeSearchService,
     private appBaseService: AppBaseService,

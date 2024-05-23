@@ -3,8 +3,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { NumberCommaDirective } from './number-comma.directive';
 
 @NgModule({
-  declarations: [NumberCommaDirective],
-  imports: [CommonModule],
+  imports: [CommonModule, NumberCommaDirective],
   exports: [NumberCommaDirective],
   providers: [DecimalPipe]
 })

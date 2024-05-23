@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewSupportsComponent } from './view-supports.component';
 
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('ViewSupportsComponent', () => {
   let component: ViewSupportsComponent;
@@ -14,9 +14,8 @@ describe('ViewSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
-      declarations: [ViewSupportsComponent],
-      providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }]
+      imports: [HttpClientTestingModule, MatDialogModule, ViewSupportsComponent],
+      providers: [DatePipe, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])]
     }).compileComponents();
   });
 

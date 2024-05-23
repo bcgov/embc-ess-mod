@@ -1,19 +1,49 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators, AbstractControl, UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  Validators,
+  AbstractControl,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { EditSupplierService } from './edit-supplier.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { MatButton } from '@angular/material/button';
+import { IMaskDirective } from 'angular-imask';
+import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-address/bc-address.component';
+import { CustomGstFieldComponent } from '../../../shared/components/custom-gst-field/custom-gst-field.component';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-edit-supplier',
   templateUrl: './edit-supplier.component.html',
-  styleUrls: ['./edit-supplier.component.scss']
+  styleUrls: ['./edit-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    CustomGstFieldComponent,
+    BcAddressComponent,
+    IMaskDirective,
+    MatButton
+  ]
 })
 export class EditSupplierComponent implements OnInit {
   editForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   constructor(
     private formBuilder: UntypedFormBuilder,

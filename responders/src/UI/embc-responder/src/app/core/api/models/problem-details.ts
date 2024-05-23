@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface ProblemDetails {
-  detail?: null | string;
-  instance?: null | string;
-  status?: null | number;
-  title?: null | string;
-  type?: null | string;
+  detail?: string | null;
+  instance?: string | null;
+  status?: number | null;
+  title?: string | null;
+  type?: string | null;
 
-  [key: string]: any | null | number | string | undefined;
+  [key: string]: any | null | number | null | string | null | undefined;
 }

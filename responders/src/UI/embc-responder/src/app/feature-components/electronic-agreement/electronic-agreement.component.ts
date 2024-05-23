@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ElectronicAgreementService } from './electronic-agreement.service';
 import * as globalConst from '../../core/services/global-constants';
 import { UserService } from '../../core/services/user.service';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-electronic-agreement',
   templateUrl: './electronic-agreement.component.html',
-  styleUrls: ['./electronic-agreement.component.scss']
+  styleUrls: ['./electronic-agreement.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatCheckbox, MatButton]
 })
-export class ElectronicAgreementComponent implements OnInit {
+export class ElectronicAgreementComponent {
   agreementAccepted = false;
 
   constructor(
@@ -20,8 +24,6 @@ export class ElectronicAgreementComponent implements OnInit {
     private alertService: AlertService,
     private userService: UserService
   ) {}
-
-  ngOnInit(): void {}
 
   submitEAA(): void {
     this.eaaService.signAgreement().subscribe({

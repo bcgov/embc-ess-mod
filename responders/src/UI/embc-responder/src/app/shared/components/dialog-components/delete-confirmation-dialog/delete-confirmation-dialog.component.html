@@ -8,9 +8,9 @@
       >I confirm that I want to remove this user from ERA and this action cannot be undone.</mat-checkbox
     >
   </div>
-  <div *ngIf="showError" class="col-md-12 field-error">
-    You must confirm this action before selecting the Delete button
-  </div>
+  @if (showError) {
+    <div class="col-md-12 field-error">You must confirm this action before selecting the Delete button</div>
+  }
 </div>
 
 <br />

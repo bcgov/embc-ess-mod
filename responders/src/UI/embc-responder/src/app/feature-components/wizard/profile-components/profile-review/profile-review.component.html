@@ -15,10 +15,11 @@
             <label class="tab-subtitle">Restriction</label>
             <div class="row">
               <div class="col-4">Consent to Share Registration Status</div>
-              <div class="col-8 bold" *ngIf="!stepEvacueeProfileService?.restrictedAccess; else notRestricted">Yes</div>
-              <ng-template #notRestricted>
+              @if (!stepEvacueeProfileService?.restrictedAccess) {
+                <div class="col-8 bold">Yes</div>
+              } @else {
                 <div class="col-8 bold">No</div>
-              </ng-template>
+              }
             </div>
           </div>
         </div>
@@ -192,175 +193,166 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="stepEvacueeProfileService?.showContact">
-              <div class="col-4">Telephone/Mobile</div>
-              <div class="col-8 bold">
-                {{ stepEvacueeProfileService?.contactDetails?.phone }}
-              </div>
-            </div>
-
-            <div class="row" *ngIf="stepEvacueeProfileService?.showContact">
-              <div class="col-4">Email Address</div>
-              <div class="col-8 bold">
-                {{ stepEvacueeProfileService?.contactDetails?.email }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="!evacueeSessionService?.isPaperBased" class="col-12">
-          <div class="review-panel data-panel">
-            <label class="tab-subtitle">Security Questions</label>
-
-            <div class="row" *ngIf="stepEvacueeProfileService?.bypassSecurityQuestions">
-              <div class="col-8">
-                <mat-checkbox [checked]="true" [disabled]="true">
-                  Bypass security questions for manual entry of paper ESS file.
-                </mat-checkbox>
-              </div>
-            </div>
-
-            <div
-              class="row"
-              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 0"
-            >
-              <div class="col-4">
-                {{ displayQuestions[0]?.question }}
-              </div>
-              <div class="col-8 bold">
-                {{ displayQuestions[0]?.answer | maskText }}
-              </div>
-            </div>
-
-            <div
-              class="row"
-              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 1"
-            >
-              <div class="col-4">
-                {{ displayQuestions[1]?.question }}
-              </div>
-              <div class="col-8 bold">
-                {{ displayQuestions[1]?.answer | maskText }}
-              </div>
-            </div>
-
-            <div
-              class="row"
-              *ngIf="!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 2"
-            >
-              <div class="col-4">
-                {{ displayQuestions[2]?.question }}
-              </div>
-              <div class="col-8 bold">
-                {{ displayQuestions[2]?.answer | maskText }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="col-12"
-          *ngIf="
-            !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id ||
-            this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration
-          "
-        >
-          <div class="confirm-panel">
-            <label class="tab-subtitle">Identification</label>
-
-            <p id="verifiedProfile-radio-group-label" class="requiredField">
-              Did you see government issued identification from this individual?
-            </p>
-
-            <form [formGroup]="verifiedProfileGroup">
+            @if (stepEvacueeProfileService?.showContact) {
               <div class="row">
-                <div class="col-12">
-                  <mat-radio-group
-                    aria-labelledby="verifiedProfile-radio-group-label"
-                    formControlName="verifiedProfile"
-                    class="primary-radio-group"
-                    required
-                  >
-                    <mat-radio-button class="primary-radio-button" [value]="true" id="yesOption">
-                      <span class="bold">Yes</span> - I have seen government issued identification
-                    </mat-radio-button>
-                    <mat-radio-button class="primary-radio-button" [value]="false" id="noOption">
-                      <span class="bold">No</span> - I did not see government issued identification
-                    </mat-radio-button>
-                  </mat-radio-group>
+                <div class="col-4">Telephone/Mobile</div>
+                <div class="col-8 bold">
+                  {{ stepEvacueeProfileService?.contactDetails?.phone }}
+                </div>
+              </div>
+            }
 
-                  <mat-error
-                    *ngIf="
+            @if (stepEvacueeProfileService?.showContact) {
+              <div class="row">
+                <div class="col-4">Email Address</div>
+                <div class="col-8 bold">
+                  {{ stepEvacueeProfileService?.contactDetails?.email }}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (!evacueeSessionService?.isPaperBased) {
+          <div class="col-12">
+            <div class="review-panel data-panel">
+              <label class="tab-subtitle">Security Questions</label>
+              @if (stepEvacueeProfileService?.bypassSecurityQuestions) {
+                <div class="row">
+                  <div class="col-8">
+                    <mat-checkbox [checked]="true" [disabled]="true">
+                      Bypass security questions for manual entry of paper ESS file.
+                    </mat-checkbox>
+                  </div>
+                </div>
+              }
+              @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 0) {
+                <div class="row">
+                  <div class="col-4">
+                    {{ displayQuestions[0]?.question }}
+                  </div>
+                  <div class="col-8 bold">
+                    {{ displayQuestions[0]?.answer | maskText }}
+                  </div>
+                </div>
+              }
+              @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 1) {
+                <div class="row">
+                  <div class="col-4">
+                    {{ displayQuestions[1]?.question }}
+                  </div>
+                  <div class="col-8 bold">
+                    {{ displayQuestions[1]?.answer | maskText }}
+                  </div>
+                </div>
+              }
+              @if (!stepEvacueeProfileService?.bypassSecurityQuestions && displayQuestions?.length > 2) {
+                <div class="row">
+                  <div class="col-4">
+                    {{ displayQuestions[2]?.question }}
+                  </div>
+                  <div class="col-8 bold">
+                    {{ displayQuestions[2]?.answer | maskText }}
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (
+          !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id ||
+          this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration
+        ) {
+          <div class="col-12">
+            <div class="confirm-panel">
+              <label class="tab-subtitle">Identification</label>
+              <p id="verifiedProfile-radio-group-label" class="requiredField">
+                Did you see government issued identification from this individual?
+              </p>
+              <form [formGroup]="verifiedProfileGroup">
+                <div class="row">
+                  <div class="col-12">
+                    <mat-radio-group
+                      aria-labelledby="verifiedProfile-radio-group-label"
+                      formControlName="verifiedProfile"
+                      class="primary-radio-group"
+                      required
+                    >
+                      <mat-radio-button class="primary-radio-button" [value]="true" id="yesOption">
+                        <span class="bold">Yes</span> - I have seen government issued identification
+                      </mat-radio-button>
+                      <mat-radio-button class="primary-radio-button" [value]="false" id="noOption">
+                        <span class="bold">No</span> - I did not see government issued identification
+                      </mat-radio-button>
+                    </mat-radio-group>
+                    @if (
                       verifiedProfileControl?.verifiedProfile?.touched &&
                       verifiedProfileControl?.verifiedProfile?.invalid &&
                       verifiedProfileControl?.verifiedProfile?.hasError('required')
-                    "
-                  >
-                    Please select an option.
-                  </mat-error>
+                    ) {
+                      <mat-error> Please select an option. </mat-error>
+                    }
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
+        }
 
-        <div
-          class="col-12"
-          *ngIf="
-            !evacueeSessionService?.isPaperBased &&
-            (this.appBaseService?.wizardProperties?.wizardType === wizardType.NewRegistration ||
-              this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration)
-          "
-        >
-          <div class="e-transfer-panel">
-            <label class="tab-subtitle">e-Transfer Eligibility</label>
-
-            <p>
-              <strong>
-                Send an email invitation to the evacuee to confirm their identity by logging in to their profile using
-                the BC Services Card app.
-              </strong>
-            </p>
-
-            <form [formGroup]="inviteEmailGroup">
-              <div class="row">
-                <div class="col-md-5">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Email Address</mat-label>
-                    <input formControlName="email" matInput placeholder="Email Address" />
-                    <mat-error *ngIf="inviteEmailControl?.email.invalid && inviteEmailControl?.email.hasError('email')"
-                      >Invalid email</mat-error
-                    >
-                  </mat-form-field>
+        @if (
+          !evacueeSessionService?.isPaperBased &&
+          (this.appBaseService?.wizardProperties?.wizardType === wizardType.NewRegistration ||
+            this.appBaseService?.wizardProperties?.wizardType === wizardType.MemberRegistration)
+        ) {
+          <div class="col-12">
+            <div class="e-transfer-panel">
+              <label class="tab-subtitle">e-Transfer Eligibility</label>
+              <p>
+                <strong>
+                  Send an email invitation to the evacuee to confirm their identity by logging in to their profile using
+                  the BC Services Card app.
+                </strong>
+              </p>
+              <form [formGroup]="inviteEmailGroup">
+                <div class="row">
+                  <div class="col-md-5">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Email Address</mat-label>
+                      <input formControlName="email" matInput placeholder="Email Address" />
+                      @if (inviteEmailControl?.email.invalid && inviteEmailControl?.email.hasError('email')) {
+                        <mat-error>Invalid email</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row" *ngIf="inviteEmailControl?.email.value">
-                <div class="col-md-5">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Confirm Email Address</mat-label>
-                    <input
-                      formControlName="confirmEmail"
-                      matInput
-                      placeholder="Confirm Email Address"
-                      [errorStateMatcher]="emailMatcher"
-                    />
-                    <mat-error
-                      *ngIf="
-                        inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')
-                      "
-                    >
-                      Invalid email</mat-error
-                    >
-                    <mat-error *ngIf="inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')">
-                      Email address mismatch</mat-error
-                    >
-                  </mat-form-field>
-                </div>
-              </div>
-            </form>
+                @if (inviteEmailControl?.email.value) {
+                  <div class="row">
+                    <div class="col-md-5">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Confirm Email Address</mat-label>
+                        <input
+                          formControlName="confirmEmail"
+                          matInput
+                          placeholder="Confirm Email Address"
+                          [errorStateMatcher]="emailMatcher"
+                        />
+                        @if (
+                          inviteEmailControl?.confirmEmail.invalid && inviteEmailControl?.confirmEmail.hasError('email')
+                        ) {
+                          <mat-error> Invalid email</mat-error>
+                        }
+                        @if (inviteEmailControl?.confirmEmail?.parent?.hasError('emailMatch')) {
+                          <mat-error> Email address mismatch</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div>
+                }
+              </form>
+            </div>
           </div>
-        </div>
+        }
       </div>
 
       <div class="row">

@@ -2,13 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedInUserProfile, UserService } from '../../services/user.service';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [MatToolbar, MatToolbarRow, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   public get profile(): LoggedInUserProfile {
     return this.userService.currentProfile;
   }
@@ -36,8 +42,6 @@ export class HeaderComponent implements OnInit {
     private authService: AuthenticationService,
     private userService: UserService
   ) {}
-
-  public ngOnInit(): void {}
 
   public homeButton(): void {
     if (this.router.url !== '/outage' && this.router.url !== '/access-denied') {

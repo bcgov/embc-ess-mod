@@ -1,18 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HouseholdMemberType } from './household-member-type';
+import { HouseholdMemberType } from '../models/household-member-type';
 export interface EvacuationFileHouseholdMember {
   dateOfBirth?: string;
   firstName?: string;
   gender?: string;
-  id?: null | string;
-  initials?: null | string;
+  id?: string | null;
+  initials?: string | null;
   isHouseholdMember?: boolean;
   isMinor?: boolean;
   isPrimaryRegistrant?: boolean;
-  isRestricted?: null | boolean;
-  isVerified?: null | boolean;
+  isRestricted?: boolean | null;
+  isVerified?: boolean | null;
   lastName?: string;
-  linkedRegistrantId?: null | string;
+  linkedRegistrantId?: string | null;
   type?: HouseholdMemberType;
 }

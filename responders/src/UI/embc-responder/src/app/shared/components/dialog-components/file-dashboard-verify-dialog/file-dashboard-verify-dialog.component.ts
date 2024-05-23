@@ -1,15 +1,25 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from 'src/app/feature-components/search/profile-security-questions/profile-security-questions.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-file-dashboard-verify-dialog',
   templateUrl: './file-dashboard-verify-dialog.component.html',
-  styleUrls: ['./file-dashboard-verify-dialog.component.scss']
+  styleUrls: ['./file-dashboard-verify-dialog.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatButton]
 })
 export class FileDashboardVerifyDialogComponent implements OnInit {
   @Input() content: DialogContent;

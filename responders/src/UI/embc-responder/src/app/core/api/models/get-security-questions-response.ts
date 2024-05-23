@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SecurityQuestion } from './security-question';
+import { SecurityQuestion } from '../models/security-question';
 export interface GetSecurityQuestionsResponse {
   questions?: Array<SecurityQuestion>;
 }

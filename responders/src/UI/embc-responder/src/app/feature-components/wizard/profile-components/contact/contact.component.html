@@ -39,7 +39,7 @@
                 Support Services and/or future assistance when required.
               </mat-radio-button>
             </mat-radio-group>
-            <ng-container *ngIf="contactFormControl?.showContacts.value === true">
+            @if (contactFormControl?.showContacts.value === true) {
               <p class="requiredField">
                 <b>Enter your telephone number and/ or email address.</b>
               </p>
@@ -48,54 +48,39 @@
                   <p class="sub-heading">Contact Telephone Number</p>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-4">
                   <mat-form-field appearance="outline">
                     <mat-label>Telephone Number</mat-label>
-                    <input
-                      formControlName="phone"
-                      matInput
-                      placeholder="Telephone Number"
-                      [textMask]="{ mask: phoneMask, keepCharPositions: true }"
-                    />
-                    <mat-error
-                      *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('whitespaceError')"
-                    >
-                      Telephone Number is required</mat-error
-                    >
-                    <mat-error
-                      *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')"
-                    >
-                      Telephone number must have 10 digits</mat-error
-                    >
+                    <input formControlName="phone" matInput placeholder="Telephone Number" [imask]="phoneMask" />
+                    @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('whitespaceError')) {
+                      <mat-error> Telephone Number is required</mat-error>
+                    }
+                    @if (contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')) {
+                      <mat-error> Telephone number must have 10 digits</mat-error>
+                    }
                   </mat-form-field>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-12">
                   <p class="sub-heading">Email Address</p>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-5">
                   <mat-form-field appearance="outline">
                     <mat-label>Email Address</mat-label>
                     <input formControlName="email" matInput placeholder="Email Address" />
-                    <mat-error
-                      *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('whitespaceError')"
-                    >
-                      Email is required</mat-error
-                    >
-                    <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')"
-                      >Invalid email</mat-error
-                    >
+                    @if (contactFormControl.email.invalid && contactFormControl.email.hasError('whitespaceError')) {
+                      <mat-error> Email is required</mat-error>
+                    }
+                    @if (contactFormControl.email.invalid && contactFormControl.email.hasError('email')) {
+                      <mat-error>Invalid email</mat-error>
+                    }
                   </mat-form-field>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-5">
                   <mat-form-field appearance="outline">
@@ -106,38 +91,34 @@
                       placeholder="Confirm Email Address"
                       [errorStateMatcher]="emailMatcher"
                     />
-                    <mat-error
-                      *ngIf="
-                        contactFormControl.confirmEmail.invalid &&
-                        contactFormControl.confirmEmail.hasError('whitespaceError')
-                      "
-                    >
-                      Confirm Email is required</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
-                        contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')
-                      "
-                    >
-                      Invalid email</mat-error
-                    >
-                    <mat-error *ngIf="contactFormControl?.confirmEmail?.parent?.hasError('emailMatch')">
-                      Email address mismatch</mat-error
-                    >
+                    @if (
+                      contactFormControl.confirmEmail.invalid &&
+                      contactFormControl.confirmEmail.hasError('whitespaceError')
+                    ) {
+                      <mat-error> Confirm Email is required</mat-error>
+                    }
+                    @if (contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')) {
+                      <mat-error> Invalid email</mat-error>
+                    }
+                    @if (contactFormControl?.confirmEmail?.parent?.hasError('emailMatch')) {
+                      <mat-error> Email address mismatch</mat-error>
+                    }
                   </mat-form-field>
                 </div>
               </div>
-            </ng-container>
+            }
           </form>
         </div>
 
         <div class="col-md-4">
           <mat-card class="tips-card">
-            <div>
-              <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-              <span class="tips-heading"><b>Tip: </b>Contact Details</span>
-            </div>
-            <p class="tips-info">If the Registrant is present, always read the entire question out.</p>
+            <mat-card-content>
+              <div>
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+                <span class="tips-heading"><b>Tip: </b>Contact Details</span>
+              </div>
+              <p class="tips-info">If the Registrant is present, always read the entire question out.</p>
+            </mat-card-content>
           </mat-card>
         </div>
       </div>

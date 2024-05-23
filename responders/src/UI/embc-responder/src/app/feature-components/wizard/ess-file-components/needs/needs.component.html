@@ -28,40 +28,41 @@
                 You can receive a shelter allowance and use that money to find your own shelter or be provided with a
                 referral to shelter (like a cot in a gym or a hotel/motel).
               </p>
-              <mat-radio-group
-                id="shelterRadio"
-                class="primary-radio-group"
-                formControlName="requiresShelterType"
-                aria-label="Select an option"
-                *ngIf="needsForm.controls['requiresShelter'].value"
-              >
-                <label for="shelterAllowance">
-                  <mat-radio-button
-                    id="shelterAllowance"
-                    class="primary-radio-button"
-                    value="shelterAllowance"
-                  ></mat-radio-button>
-                  I need the shelter allowance and can find my own shelter.
-                  <span>
-                    <a class="status-info" (click)="openShelterAllowanceDialog()">
-                      <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
-                    </a>
-                  </span>
-                </label>
-                <label for="shelterReferral">
-                  <mat-radio-button
-                    id="shelterReferral"
-                    class="primary-radio-button"
-                    value="shelterReferral"
-                  ></mat-radio-button>
-                  I need a referral to shelter.
-                  <span>
-                    <a class="status-info" (click)="openShelterReferralDialog()">
-                      <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
-                    </a>
-                  </span>
-                </label>
-              </mat-radio-group>
+              @if (needsForm.controls['requiresShelter'].value) {
+                <mat-radio-group
+                  id="shelterRadio"
+                  class="primary-radio-group"
+                  formControlName="requiresShelterType"
+                  aria-label="Select an option"
+                >
+                  <label for="shelterAllowance">
+                    <mat-radio-button
+                      id="shelterAllowance"
+                      class="primary-radio-button"
+                      value="shelterAllowance"
+                    ></mat-radio-button>
+                    I need the shelter allowance and can find my own shelter.
+                    <span>
+                      <a class="status-info" (click)="openShelterAllowanceDialog()">
+                        <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
+                      </a>
+                    </span>
+                  </label>
+                  <label for="shelterReferral">
+                    <mat-radio-button
+                      id="shelterReferral"
+                      class="primary-radio-button"
+                      value="shelterReferral"
+                    ></mat-radio-button>
+                    I need a referral to shelter.
+                    <span>
+                      <a class="status-info" (click)="openShelterReferralDialog()">
+                        <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
+                      </a>
+                    </span>
+                  </label>
+                </mat-radio-group>
+              }
             </div>
           </div>
         </div>

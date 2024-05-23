@@ -1,181 +1,189 @@
 <mat-card class="overview-card data-card">
-  <div class="row card-heading-outer info-box">
-    <div class="col-md-12">
-      <p class="margins card-heading">Details</p>
+  <mat-card-content>
+    <div class="row card-heading-outer info-box">
+      <div class="col-md-12">
+        <p class="margins card-heading">Details</p>
+      </div>
     </div>
-  </div>
 
-  <div class="row section-padding">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Evacuation Details</p>
-        </div>
-      </div>
-      <ng-container *ngIf="essFile?.isPaper">
-        <div class="row row-align">
-          <div class="col-md-4">Paper ESS File Number</div>
-          <div class="col-md-8 bold">
-            {{ essFile?.manualFileId }}
+    <div class="row section-padding">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <p class="subsection-heading">Evacuation Details</p>
           </div>
         </div>
-        <div class="row row-align">
-          <div class="col-md-4">Paper ESS File Created by</div>
-          <div class="col-md-8 bold">
-            {{ essFile?.completedBy }}
-          </div>
-        </div>
-        <div class="row row-align">
-          <div class="col-md-4">Paper ESS File Created on</div>
-          <div class="col-md-8 bold" *ngIf="essFile?.completedOn">
-            {{ essFile?.completedOn | date: 'dd-MMM-yyyy' }}
-            at
-            {{ essFile?.completedOn | date: 'shortTime' }}
-          </div>
-        </div>
-      </ng-container>
-      <div class="row row-align">
-        <div class="col-md-4">Evacuated From</div>
-        <div class="col-md-8">
-          <p class="bold" [innerHTML]="essFile?.evacuatedFromAddress | maskEvacuatedaddress"></p>
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">Registration Location/ Facility Name</div>
-        <div class="col-md-8 bold">
-          {{ essFile?.registrationLocation ? essFile?.registrationLocation : 'n/a' }}
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">Task #</div>
-        <div class="col-md-8 bold">
-          {{ essFile?.task?.taskNumber ? essFile?.task?.taskNumber : 'n/a' }}
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">Insurance</div>
-        <div class="col-md-8 bold">
-          {{ essFile?.needsAssessment?.insurance }}
-        </div>
-      </div>
-
-      <hr class="dotted-hr hr-padding" />
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Household Members</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-8">
-              <mat-table class="table-outline" [dataSource]="memberListDisplay">
-                <ng-container matColumnDef="firstName">
-                  <mat-header-cell class="header-cell" *matHeaderCellDef>First Name</mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    {{ element.firstName }}
-                  </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="lastName">
-                  <mat-header-cell class="header-cell" *matHeaderCellDef>Last Name</mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    {{ element.lastName }}
-                  </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="dateOfBirth">
-                  <mat-header-cell class="header-cell" *matHeaderCellDef> Date of Birth </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    {{ element.dateOfBirth | date: 'dd-MMM-yyyy' }}
-                  </mat-cell>
-                </ng-container>
-
-                <mat-header-row class="table-header" *matHeaderRowDef="memberColumns"></mat-header-row>
-                <mat-row class="bold" *matRowDef="let row; columns: memberColumns"></mat-row>
-              </mat-table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="dotted-hr hr-padding" />
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Pets</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-md-4">Pets?</div>
+        @if (essFile?.isPaper) {
+          <div class="row row-align">
+            <div class="col-md-4">Paper ESS File Number</div>
             <div class="col-md-8 bold">
-              {{ essFile?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
+              {{ essFile?.manualFileId }}
             </div>
           </div>
+          <div class="row row-align">
+            <div class="col-md-4">Paper ESS File Created by</div>
+            <div class="col-md-8 bold">
+              {{ essFile?.completedBy }}
+            </div>
+          </div>
+          <div class="row row-align">
+            <div class="col-md-4">Paper ESS File Created on</div>
+            @if (essFile?.completedOn) {
+              <div class="col-md-8 bold">
+                {{ essFile?.completedOn | date: 'dd-MMM-yyyy' }}
+                at
+                {{ essFile?.completedOn | date: 'shortTime' }}
+              </div>
+            }
+          </div>
+        }
+        <div class="row row-align">
+          <div class="col-md-4">Evacuated From</div>
+          <div class="col-md-8">
+            <p class="bold" [innerHTML]="essFile?.evacuatedFromAddress | maskEvacuatedaddress"></p>
+          </div>
+        </div>
+        <div class="row row-align">
+          <div class="col-md-4">Registration Location/ Facility Name</div>
+          <div class="col-md-8 bold">
+            {{ essFile?.registrationLocation ? essFile?.registrationLocation : 'n/a' }}
+          </div>
+        </div>
+        <div class="row row-align">
+          <div class="col-md-4">Task #</div>
+          <div class="col-md-8 bold">
+            {{ essFile?.task?.taskNumber ? essFile?.task?.taskNumber : 'n/a' }}
+          </div>
+        </div>
+        <div class="row row-align">
+          <div class="col-md-4">Insurance</div>
+          <div class="col-md-8 bold">
+            {{ essFile?.needsAssessment?.insurance }}
+          </div>
+        </div>
 
-          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-md-8">
-              <mat-table class="table-outline" [dataSource]="essFile?.needsAssessment?.pets">
-                <ng-container matColumnDef="type">
-                  <mat-header-cell class="header-cell" *matHeaderCellDef>Pet Type</mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    {{ element.type }}
-                  </mat-cell>
-                </ng-container>
+        <hr class="dotted-hr hr-padding" />
+        <div class="row">
+          <div class="col-md-12">
+            <p class="subsection-heading">Household Members</p>
+          </div>
+        </div>
 
-                <ng-container matColumnDef="quantity">
-                  <mat-header-cell class="header-cell" *matHeaderCellDef> Number </mat-header-cell>
-                  <mat-cell *matCellDef="let element">
-                    {{ element.quantity }}
-                  </mat-cell>
-                </ng-container>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-8">
+                <mat-table class="table-outline" [dataSource]="memberListDisplay">
+                  <ng-container matColumnDef="firstName">
+                    <mat-header-cell class="header-cell" *matHeaderCellDef>First Name</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.firstName }}
+                    </mat-cell>
+                  </ng-container>
 
-                <mat-header-row class="table-header" *matHeaderRowDef="petColumns"></mat-header-row>
-                <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
-              </mat-table>
+                  <ng-container matColumnDef="lastName">
+                    <mat-header-cell class="header-cell" *matHeaderCellDef>Last Name</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.lastName }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dateOfBirth">
+                    <mat-header-cell class="header-cell" *matHeaderCellDef> Date of Birth </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row class="table-header" *matHeaderRowDef="memberColumns"></mat-header-row>
+                  <mat-row class="bold" *matRowDef="let row; columns: memberColumns"></mat-row>
+                </mat-table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <hr class="dotted-hr hr-padding" />
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Needs</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
-            <div class="col-12 bold">{{ noAssistanceRequiredMessage }}</div>
-          </div>
-          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
-            <div class="col-12 bold">{{ item }}</div>
+        <hr class="dotted-hr hr-padding" />
+        <div class="row">
+          <div class="col-md-12">
+            <p class="subsection-heading">Pets</p>
           </div>
         </div>
-      </div>
 
-      <!-- <hr class="dotted-hr hr-padding" />
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Security Word</p>
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md-4">Pets?</div>
+              <div class="col-md-8 bold">
+                {{ essFile?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
+              </div>
+            </div>
+
+            @if (essFile?.needsAssessment?.pets?.length > 0) {
+              <div class="row">
+                <div class="col-md-8">
+                  <mat-table class="table-outline" [dataSource]="essFile?.needsAssessment?.pets">
+                    <ng-container matColumnDef="type">
+                      <mat-header-cell class="header-cell" *matHeaderCellDef>Pet Type</mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{ element.type }}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                      <mat-header-cell class="header-cell" *matHeaderCellDef> Number </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{ element.quantity }}
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row class="table-header" *matHeaderRowDef="petColumns"></mat-header-row>
+                    <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
+                  </mat-table>
+                </div>
+              </div>
+            }
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-4">Security Word</div>
-            <div class="col-8 bold">
-              {{ essFile?.securityPhrase | maskText }}
+        <hr class="dotted-hr hr-padding" />
+        <div class="row">
+          <div class="col-md-12">
+            <p class="subsection-heading">Needs</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            @if (getIdentifiedNeeds().length === 0) {
+              <div class="row">
+                <div class="col-12 bold">{{ noAssistanceRequiredMessage }}</div>
+              </div>
+            }
+            @for (item of getIdentifiedNeeds(); track item) {
+              <div class="row">
+                <div class="col-12 bold">{{ item }}</div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- <hr class="dotted-hr hr-padding" />
+        <div class="row">
+          <div class="col-md-12">
+            <p class="subsection-heading">Security Word</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-4">Security Word</div>
+              <div class="col-8 bold">
+                {{ essFile?.securityPhrase | maskText }}
+              </div>
             </div>
           </div>
-        </div>
-      </div> -->
+        </div> -->
+      </div>
     </div>
-  </div>
+  </mat-card-content>
 </mat-card>

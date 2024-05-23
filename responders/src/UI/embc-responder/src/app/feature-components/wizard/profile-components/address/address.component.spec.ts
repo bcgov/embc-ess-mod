@@ -10,33 +10,51 @@ import {
 } from '@angular/core/testing';
 
 import { AddressComponent } from './address.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { MockLocationService } from 'src/app/unit-tests/mockLocation.service';
 import { AddressService } from './address.service';
 import { MockAddressService } from 'src/app/unit-tests/mockAddress.service';
 import { Router } from '@angular/router';
-import { _MatRadioButtonBase } from '@angular/material/radio';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
-@Component({ selector: 'app-bc-address', template: '' })
+@Component({
+  selector: 'app-bc-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class BcAddressStubComponent {}
 
-@Component({ selector: 'app-can-address', template: '' })
+@Component({
+  selector: 'app-can-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class CanadaAddressStubComponent {}
 
-@Component({ selector: 'app-usa-address', template: '' })
+@Component({
+  selector: 'app-usa-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class UsaAddressStubComponent {}
 
-@Component({ selector: 'app-other-address', template: '' })
+@Component({
+  selector: 'app-other-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class OtherAddressStubComponent {}
 
 describe('AddressComponent', () => {
@@ -49,14 +67,10 @@ describe('AddressComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [
+        BrowserAnimationsModule,
         AddressComponent,
         BcAddressStubComponent,
         CanadaAddressStubComponent,
@@ -77,7 +91,8 @@ describe('AddressComponent', () => {
         {
           provide: AddressService,
           useClass: MockAddressService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -307,7 +322,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.sameAsPrimary({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
@@ -331,7 +346,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.mailingAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
@@ -355,7 +370,7 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.primaryAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;

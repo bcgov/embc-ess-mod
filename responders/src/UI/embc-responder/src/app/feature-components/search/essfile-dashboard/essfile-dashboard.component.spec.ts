@@ -11,7 +11,6 @@ import {
 
 import { EssfileDashboardComponent } from './essfile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
@@ -26,6 +25,7 @@ import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { EvacuationFileStatus } from 'src/app/core/api/models';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('EssfileDashboardComponent', () => {
   let component: EssfileDashboardComponent;
@@ -38,12 +38,11 @@ describe('EssfileDashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        EssfileDashboardComponent
       ],
-      declarations: [EssfileDashboardComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -57,7 +56,8 @@ describe('EssfileDashboardComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

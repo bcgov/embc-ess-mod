@@ -4,7 +4,10 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 
-@Pipe({ name: 'maskFullAddress' })
+@Pipe({
+  name: 'maskFullAddress',
+  standalone: true
+})
 export class MaskFullAddressPipe implements PipeTransform {
   constructor(
     private locationService: LocationsService,

@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 
-@Pipe({ name: 'supplierContact' })
+@Pipe({
+  name: 'supplierContact',
+  standalone: true
+})
 export class SupplierContactPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 

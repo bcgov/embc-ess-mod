@@ -10,15 +10,12 @@ import {
 } from '@angular/core/testing';
 
 import { ContactComponent } from './contact.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
-import { _MatRadioButtonBase } from '@angular/material/radio';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { MockStepEvacueeProfileService } from 'src/app/unit-tests/mockStepEvacueeProfile.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +23,7 @@ import { Router } from '@angular/router';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { ContactService } from './contact.service';
+import { provideRouter } from '@angular/router';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;
@@ -38,14 +36,12 @@ describe('ContactComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ContactComponent
       ],
-      declarations: [ContactComponent],
       providers: [
         UntypedFormBuilder,
         ContactService,
@@ -61,7 +57,8 @@ describe('ContactComponent', () => {
         {
           provide: EvacueeSessionService,
           useClass: MockEvacueeSessionService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -92,7 +89,7 @@ describe('ContactComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    component.hideContact({ source: {} as _MatRadioButtonBase, value: false });
+    component.hideContact({ source: {} as any, value: false });
     fixture.detectChanges();
     const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');
@@ -104,7 +101,7 @@ describe('ContactComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    component.hideContact({ source: {} as _MatRadioButtonBase, value: true });
+    component.hideContact({ source: {} as any, value: true });
     fixture.detectChanges();
     const formElem = fixture.debugElement.nativeElement.querySelector('#contactInfoForm');
     const totalElems = formElem.querySelectorAll('input');

@@ -7,8 +7,7 @@ import { CommonModule } from '@angular/common';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 @NgModule({
-  declarations: [ErrorDialogComponent, AccessDeniedComponent],
-  imports: [CommonModule]
+  imports: [CommonModule, ErrorDialogComponent, AccessDeniedComponent]
 })
 export class ErrorHandlingModule {
   public static forRoot(): ModuleWithProviders<ErrorHandlingModule> {

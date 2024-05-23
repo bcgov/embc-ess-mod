@@ -1,6 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MatAccordion } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuation-file-search-result.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
@@ -9,13 +15,32 @@ import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { PossibleMatchedEssfilesService } from './possible-matched-essfiles.service';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, NgStyle, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-possible-matched-essfiles',
   templateUrl: './possible-matched-essfiles.component.html',
-  styleUrls: ['./possible-matched-essfiles.component.scss']
+  styleUrls: ['./possible-matched-essfiles.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    NgClass,
+    MatExpansionPanelDescription,
+    NgStyle,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
-export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
+export class PossibleMatchedEssfilesComponent implements OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() evacueeProfile: RegistrantProfileModel;
   currentlyOpenedItemIndex = -1;
@@ -30,8 +55,6 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
     private router: Router,
     private possibleMatchedEssfilesService: PossibleMatchedEssfilesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.evacueeProfile) {

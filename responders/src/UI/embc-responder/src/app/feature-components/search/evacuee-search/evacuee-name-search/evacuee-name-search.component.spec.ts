@@ -11,7 +11,6 @@ import {
 } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
@@ -25,6 +24,7 @@ import { EvacueeSearchComponent } from '../evacuee-search.component';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 import { EvacueeNameSearchComponent } from './evacuee-name-search.component';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeNameSearchComponent', () => {
   let component: EvacueeNameSearchComponent;
@@ -34,8 +34,7 @@ describe('EvacueeNameSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeNameSearchComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, EvacueeNameSearchComponent],
       providers: [
         EvacueeNameSearchComponent,
         {
@@ -46,7 +45,8 @@ describe('EvacueeNameSearchComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

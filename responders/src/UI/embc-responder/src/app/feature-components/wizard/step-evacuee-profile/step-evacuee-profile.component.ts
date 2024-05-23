@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEvacueeProfileService } from './step-evacuee-profile.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { NgClass } from '@angular/common';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
 
 /**
  * Initializes the profile tabs layout and defines navigation rules
@@ -9,7 +12,9 @@ import { StepEvacueeProfileService } from './step-evacuee-profile.service';
 @Component({
   selector: 'app-step-evacuee-profile',
   templateUrl: './step-evacuee-profile.component.html',
-  styleUrls: ['./step-evacuee-profile.component.scss']
+  styleUrls: ['./step-evacuee-profile.component.scss'],
+  standalone: true,
+  imports: [MatTabNav, MatTabLink, RouterLinkActive, RouterLink, NgClass, AlertComponent, MatTabNavPanel, RouterOutlet]
 })
 export class StepEvacueeProfileComponent {
   stepId: string;

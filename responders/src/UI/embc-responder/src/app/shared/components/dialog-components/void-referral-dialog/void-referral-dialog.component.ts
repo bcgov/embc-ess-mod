@@ -1,12 +1,36 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { EnumToArrayPipe } from '../../../pipes/EnumToArray.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-void-referral-dialog',
   templateUrl: './void-referral-dialog.component.html',
-  styleUrls: ['./void-referral-dialog.component.scss']
+  styleUrls: ['./void-referral-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatButton,
+    EnumToArrayPipe
+  ]
 })
 export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;

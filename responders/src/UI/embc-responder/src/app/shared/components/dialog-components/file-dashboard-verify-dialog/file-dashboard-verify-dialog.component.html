@@ -27,18 +27,17 @@
         >
       </mat-radio-group>
 
-      <div
-        class="field-error"
-        *ngIf="
-          verifiedFormControl?.verified.touched &&
-          verifiedFormControl?.verified.invalid &&
-          verifiedFormControl?.verified.hasError('required')
-        "
-      >
-        Please make a selection
-      </div>
+      @if (
+        verifiedFormControl?.verified.touched &&
+        verifiedFormControl?.verified.invalid &&
+        verifiedFormControl?.verified.hasError('required')
+      ) {
+        <div class="field-error">Please make a selection</div>
+      }
 
-      <div class="field-error" *ngIf="!noIdFlag">Evacuee identification must be provided to access the profile</div>
+      @if (!noIdFlag) {
+        <div class="field-error">Evacuee identification must be provided to access the profile</div>
+      }
     </form>
   </div>
 </div>
@@ -49,9 +48,11 @@
       {{ content?.cancelButton }}
     </button>
   </div>
-  <div *ngIf="noIdFlag" class="col-md-6">
-    <button class="button-p button-width" mat-button (click)="verify()">
-      {{ content?.confirmButton }}
-    </button>
-  </div>
+  @if (noIdFlag) {
+    <div class="col-md-6">
+      <button class="button-p button-width" mat-button (click)="verify()">
+        {{ content?.confirmButton }}
+      </button>
+    </div>
+  }
 </div>

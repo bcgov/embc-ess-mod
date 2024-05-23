@@ -15,11 +15,17 @@ import { SupportSubCategory } from '../../../../core/api/models';
 import { CacheService } from '../../../../core/services/cache.service';
 import { CloneSupportDetailsService } from '../existing-support-details/clone-support-details.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
+import { MatButton } from '@angular/material/button';
+import { SupportEtransferComponent } from './support-etransfer/support-etransfer.component';
+import { SupportReferralComponent } from './support-referral/support-referral.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-support-delivery',
   templateUrl: './support-delivery.component.html',
-  styleUrls: ['./support-delivery.component.scss']
+  styleUrls: ['./support-delivery.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SupportReferralComponent, SupportEtransferComponent, MatButton]
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: UntypedFormGroup;

@@ -1,14 +1,34 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { IMaskDirective } from 'angular-imask';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { AsyncPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-group-lodging-delivery',
   templateUrl: './group-lodging-delivery.component.html',
-  styleUrls: ['./group-lodging-delivery.component.scss']
+  styleUrls: ['./group-lodging-delivery.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    IMaskDirective,
+    AsyncPipe
+  ]
 })
 export class GroupLodgingDeliveryComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() supportDeliveryForm: UntypedFormGroup;

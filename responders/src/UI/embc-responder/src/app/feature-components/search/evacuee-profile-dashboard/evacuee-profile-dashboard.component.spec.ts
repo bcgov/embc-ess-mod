@@ -11,9 +11,7 @@ import {
 
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -30,6 +28,7 @@ import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.serv
 import { Router } from '@angular/router';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { MockEvacueeProfileDashboardService } from 'src/app/unit-tests/mockEvacueeProfileDashboard.service';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeProfileDashboardComponent', () => {
   let component: EvacueeProfileDashboardComponent;
@@ -45,12 +44,10 @@ describe('EvacueeProfileDashboardComponent', () => {
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
-        CustomPipeModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        EvacueeProfileDashboardComponent
       ],
-      declarations: [EvacueeProfileDashboardComponent],
       providers: [
         EvacueeProfileDashboardComponent,
         {
@@ -73,7 +70,8 @@ describe('EvacueeProfileDashboardComponent', () => {
         {
           provide: OptionInjectionService,
           useClass: MockOptionInjectionService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

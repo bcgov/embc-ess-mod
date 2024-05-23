@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SecurityQuestion, VerifySecurityQuestionsRequest } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -11,11 +11,25 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { SecurityQuestionCardComponent } from './security-question-card/security-question-card.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-profile-security-questions',
   templateUrl: './profile-security-questions.component.html',
-  styleUrls: ['./profile-security-questions.component.scss']
+  styleUrls: ['./profile-security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    SecurityQuestionCardComponent,
+    MatButton,
+    AppLoaderComponent
+  ]
 })
 export class ProfileSecurityQuestionsComponent implements OnInit {
   securityQuestionsForm: UntypedFormGroup;

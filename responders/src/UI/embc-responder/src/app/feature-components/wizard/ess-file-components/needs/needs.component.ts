@@ -1,5 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ShelterType, StepEssFileService } from '../../step-ess-file/step-ess-file.service';
@@ -12,11 +19,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { MatButton } from '@angular/material/button';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-needs',
   templateUrl: './needs.component.html',
-  styleUrls: ['./needs.component.scss']
+  styleUrls: ['./needs.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatCheckbox, MatRadioGroup, MatRadioButton, MatButton]
 })
 export class NeedsComponent implements OnInit, OnDestroy {
   needsForm: UntypedFormGroup = this.stepEssFileService.needsForm;

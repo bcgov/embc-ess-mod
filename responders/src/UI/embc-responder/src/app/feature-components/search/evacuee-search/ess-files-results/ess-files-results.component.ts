@@ -24,6 +24,8 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EssFilesResultsService } from './ess-files-results.service';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgClass, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import {
   AccessReasonData,
@@ -33,9 +35,11 @@ import {
 @Component({
   selector: 'app-ess-files-results',
   templateUrl: './ess-files-results.component.html',
-  styleUrls: ['./ess-files-results.component.scss']
+  styleUrls: ['./ess-files-results.component.scss'],
+  standalone: true,
+  imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
 })
-export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class EssFilesResultsComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();
@@ -68,8 +72,6 @@ export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewIni
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to next step based on user verified status

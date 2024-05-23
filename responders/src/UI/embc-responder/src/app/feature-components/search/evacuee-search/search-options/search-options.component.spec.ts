@@ -1,6 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -11,6 +10,7 @@ import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession
 import { Router } from '@angular/router';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { MockUserService } from 'src/app/unit-tests/mockUser.service';
+import { provideRouter } from '@angular/router';
 
 describe('SearchOptionsComponent', () => {
   let component: SearchOptionsComponent;
@@ -21,8 +21,7 @@ describe('SearchOptionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [SearchOptionsComponent],
+      imports: [HttpClientTestingModule, SearchOptionsComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -36,7 +35,8 @@ describe('SearchOptionsComponent', () => {
         {
           provide: UserService,
           useClass: MockUserService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

@@ -7,21 +7,82 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 import { MemberRole, MutualAid, Team } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { SupplierDetailService } from './supplier-detail.service';
 import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, startWith } from 'rxjs/operators';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-supplier-detail',
   templateUrl: './supplier-detail.component.html',
-  styleUrls: ['./supplier-detail.component.scss']
+  styleUrls: ['./supplier-detail.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatButton,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    AppLoaderComponent,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    AsyncPipe,
+    UpperCasePipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class SupplierDetailComponent implements OnInit {
   searchMutualAidForm: UntypedFormGroup;

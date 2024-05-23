@@ -7,11 +7,16 @@ import { ComputeRulesService } from 'src/app/core/services/computeRules.service'
 import { UserService } from 'src/app/core/services/user.service';
 import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { NgClass } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-search-options',
   templateUrl: './search-options.component.html',
-  styleUrls: ['./search-options.component.scss']
+  styleUrls: ['./search-options.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, NgClass, MatButton]
 })
 export class SearchOptionsComponent implements OnInit {
   selectedPathway: SelectedPathType;

@@ -17,13 +17,15 @@
       style="display: flex; flex-direction: column"
       [formControl]="accessReasonControl"
     >
-      <mat-radio-button style="margin-bottom: 16px" *ngFor="let reason of accessReasons$ | async" [value]="reason[0]">
-        {{ reason[1] }}
-      </mat-radio-button>
+      @for (reason of accessReasons$ | async; track reason) {
+        <mat-radio-button style="margin-bottom: 16px" [value]="reason[0]">
+          {{ reason[1] }}
+        </mat-radio-button>
+      }
     </mat-radio-group>
-    <p style="color: red" *ngIf="accessReasonControl.touched && accessReasonControl.invalid">
-      Please select a reason before proceeding
-    </p>
+    @if (accessReasonControl.touched && accessReasonControl.invalid) {
+      <p style="color: red">Please select a reason before proceeding</p>
+    }
     <app-loader class="spinner" [showLoader]="showLoader" [strokeWidth]="10" [diameter]="50" [color]="color">
     </app-loader>
   </mat-dialog-content>
@@ -32,15 +34,10 @@
     <button cdkFocusInitial mat-button class="button-s" [mat-dialog-close]="false">Cancel</button>
     <button mat-button class="button-p" (click)="proceed()">
       Proceed to {{ buttonLabel[dialogData.accessEntity] }}
-      <app-loader
-        *ngIf="showButtonLoader"
-        class="spinner"
-        [showLoader]="showButtonLoader"
-        [strokeWidth]="10"
-        [diameter]="25"
-        [color]="color"
-      >
-      </app-loader>
+      @if (showButtonLoader) {
+        <app-loader class="spinner" [showLoader]="showButtonLoader" [strokeWidth]="10" [diameter]="25" [color]="color">
+        </app-loader>
+      }
     </button>
   </mat-dialog-actions>
 </div>

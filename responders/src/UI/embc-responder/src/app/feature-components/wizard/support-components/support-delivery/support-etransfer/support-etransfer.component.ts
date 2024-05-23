@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import {
   CustomErrorMailMatcher,
   CustomErrorMobileMatcher
@@ -12,11 +12,31 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
 import { CacheService } from '../../../../../core/services/cache.service';
 import { WizardType } from '../../../../../core/models/wizard-type.model';
+import * as globalConst from 'src/app/core/services/global-constants';
+import { IMaskDirective } from 'angular-imask';
+import { MatInput } from '@angular/material/input';
+import { TitleCasePipe } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-support-etransfer',
   templateUrl: './support-etransfer.component.html',
-  styleUrls: ['./support-etransfer.component.scss']
+  styleUrls: ['./support-etransfer.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatLabel,
+    MatInput,
+    MatCheckbox,
+    IMaskDirective,
+    TitleCasePipe
+  ]
 })
 export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() supportDeliveryForm: UntypedFormGroup;
@@ -24,7 +44,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() cloneFlag: boolean;
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
   @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   supplierList: SupplierListItemModel[];
   filteredOptions: Observable<SupplierListItemModel[]>;

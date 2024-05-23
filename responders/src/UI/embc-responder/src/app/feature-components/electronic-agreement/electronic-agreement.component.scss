@@ -1,5 +1,5 @@
 .mat-body p,
-.mat-body-1 p,
+.mat-subtitle-2 p,
 .mat-typography p {
   margin: 0;
 }
@@ -15,7 +15,7 @@ p {
   margin-bottom: 30px;
 }
 
-.mat-card {
+.mat-mdc-card {
   width: 75%;
 }
 
@@ -29,7 +29,7 @@ p {
 }
 
 @media screen and (max-width: 833px) {
-  .mat-card {
+  .mat-mdc-card {
     width: 100%;
   }
 }

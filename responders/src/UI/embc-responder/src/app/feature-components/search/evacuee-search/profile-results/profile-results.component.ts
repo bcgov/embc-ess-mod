@@ -22,6 +22,9 @@ import { ProfileSecurityQuestionsService } from '../../profile-security-question
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ProfileResultsService } from './profile-results.service';
+import { MaskFullAddressPipe } from '../../../../shared/pipes/maskFullAddress.pipe';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgClass, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import {
   AccessReasonData,
@@ -31,9 +34,21 @@ import {
 @Component({
   selector: 'app-profile-results',
   templateUrl: './profile-results.component.html',
-  styleUrls: ['./profile-results.component.scss']
+  styleUrls: ['./profile-results.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    NgClass,
+    MatCardContent,
+    MatPaginator,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
-export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
+export class ProfileResultsComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResultModel>;
   matchedRegistrants = new MatTableDataSource();
@@ -64,8 +79,6 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
     this.matchedRegistrants.paginator = this.paginator;
     this.cd.detectChanges();
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to next step based on user verified status

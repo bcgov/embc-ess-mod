@@ -18,9 +18,11 @@
                   <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
-                <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
-              </div>
+              @if (evacueeDetailsService?.showLockIcon) {
+                <div class="col-md-1">
+                  <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
+                </div>
+              }
             </div>
 
             <div class="row">
@@ -30,9 +32,11 @@
                   <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
-                <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
-              </div>
+              @if (evacueeDetailsService?.showLockIcon) {
+                <div class="col-md-1">
+                  <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
+                </div>
+              }
             </div>
 
             <div class="row">
@@ -58,15 +62,15 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Gender</mat-label>
                   <mat-select formControlName="gender" required>
-                    <mat-option *ngFor="let gen of gender" [value]="gen.value">
-                      {{ gen.name }}
-                    </mat-option>
+                    @for (gen of gender; track gen) {
+                      <mat-option [value]="gen.value">
+                        {{ gen.name }}
+                      </mat-option>
+                    }
                   </mat-select>
-                  <mat-error
-                    *ngIf="detailsFormControl.gender.invalid && detailsFormControl.gender.hasError('whitespaceError')"
-                  >
-                    Gender is required</mat-error
-                  >
+                  @if (detailsFormControl.gender.invalid && detailsFormControl.gender.hasError('whitespaceError')) {
+                    <mat-error> Gender is required</mat-error>
+                  }
                 </mat-form-field>
               </div>
             </div>
@@ -75,34 +79,34 @@
               <div class="col-md-4">
                 <mat-form-field type="date" appearance="outline">
                   <mat-label>Date of Birth</mat-label>
-                  <input
-                    formControlName="dateOfBirth"
-                    matInput
-                    placeholder="mm/dd/yyyy"
-                    [textMask]="{ mask: dateMask, keepCharPositions: true }"
-                    required
-                  />
+                  <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy" [imask]="dateMask" required />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
-                <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
-              </div>
+              @if (evacueeDetailsService?.showLockIcon) {
+                <div class="col-md-1">
+                  <img class="locked-field" src="/assets/images/field-lock.svg" width="13" height="17" />
+                </div>
+              }
             </div>
 
-            <div class="row" *ngIf="evacueeDetailsService?.showUnlockLink">
-              <div class="col-md-3">
-                <button class="btn unlock-link" (click)="editLockedFields()">Edit locked fields</button>
+            @if (evacueeDetailsService?.showUnlockLink) {
+              <div class="row">
+                <div class="col-md-3">
+                  <button class="btn unlock-link" (click)="editLockedFields()">Edit locked fields</button>
+                </div>
               </div>
-            </div>
+            }
           </form>
         </div>
         <div class="col-md-4">
           <mat-card class="tips-card">
-            <div>
-              <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-              <span class="tips-heading"><b>Tip: </b>Editable Details</span>
-            </div>
-            <p id="tips-text" [innerHTML]="tipText"></p>
+            <mat-card-content>
+              <div>
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+                <span class="tips-heading"><b>Tip: </b>Editable Details</span>
+              </div>
+              <p id="tips-text" [innerHTML]="tipText"></p>
+            </mat-card-content>
           </mat-card>
         </div>
       </div>

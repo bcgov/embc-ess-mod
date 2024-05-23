@@ -4,13 +4,42 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { MaskEvacuatedAddressPipe } from '../../../pipes/maskEvacuatedAddress.pipe';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-view-assessment-dialog',
   templateUrl: './view-assessment-dialog.component.html',
-  styleUrls: ['./view-assessment-dialog.component.scss']
+  styleUrls: ['./view-assessment-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
-export class ViewAssessmentDialogComponent implements OnInit {
+export class ViewAssessmentDialogComponent {
   @Input() content: DialogContent;
   @Input() profileData: EvacuationFileModel;
   @Output() outputEvent = new EventEmitter<string>();
@@ -22,8 +51,6 @@ export class ViewAssessmentDialogComponent implements OnInit {
     public evacueeSessionService: EvacueeSessionService,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
-
-  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');

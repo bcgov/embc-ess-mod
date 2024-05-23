@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-import { EvacuationFileSearchResult } from './evacuation-file-search-result';
-import { RegistrantProfileSearchResult } from './registrant-profile-search-result';
+import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
+import { RegistrantProfileSearchResult } from '../models/registrant-profile-search-result';
 export interface SearchResults {
   files?: Array<EvacuationFileSearchResult>;
   registrants?: Array<RegistrantProfileSearchResult>;

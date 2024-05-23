@@ -22,14 +22,18 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepNotesService } from '../../step-notes/step-notes.service';
+import { MatIconButton } from '@angular/material/button';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-notes',
   templateUrl: './list-notes.component.html',
   styleUrls: ['./list-notes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
 })
-export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListNotesComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() notesList: Array<Note>;
   @Output() hideUnhideToggle = new EventEmitter<Note>();
@@ -43,8 +47,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
     private userService: UserService,
     private stepNotesService: StepNotesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.notesList) {

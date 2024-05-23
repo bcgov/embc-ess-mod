@@ -12,7 +12,7 @@ describe('TopNavMenuComponent', () => {
     const userServiceSpy = jasmine.createSpyObj('UserService', ['hasClaim']);
 
     await TestBed.configureTestingModule({
-      declarations: [TopNavMenuComponent],
+      imports: [TopNavMenuComponent],
       providers: [{ provide: UserService, useValue: userServiceSpy }]
     }).compileComponents();
   });

@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -9,12 +15,36 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { EditTeamMemberService } from './edit-team-member.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-edit-team-member',
   templateUrl: './edit-team-member.component.html',
-  styleUrls: ['./edit-team-member.component.scss']
+  styleUrls: ['./edit-team-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AlertComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    AppLoaderComponent,
+    MatSelect,
+    MatOption,
+    MatButton
+  ]
 })
 export class EditTeamMemberComponent implements OnInit {
   editForm: UntypedFormGroup;

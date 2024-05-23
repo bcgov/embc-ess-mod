@@ -1,8 +1,32 @@
+import { IMask, IMaskFactory } from 'angular-imask';
 import { DashboardBanner, DialogContent } from '../models/dialog-content.model';
 
-export const phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+export const phoneMask = '000-000-0000';
 
-export const dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+export const dateMask: Parameters<IMaskFactory['create']>[1] = {
+  mask: 'mm/dd/yyyy',
+  lazy: false,
+  blocks: {
+    yyyy: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'y',
+      from: 1900,
+      to: 2999
+    },
+    mm: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'm',
+      from: 1,
+      to: 12
+    },
+    dd: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'd',
+      from: 1,
+      to: 31
+    }
+  }
+};
 
 export const etransferLimt = 10000;
 

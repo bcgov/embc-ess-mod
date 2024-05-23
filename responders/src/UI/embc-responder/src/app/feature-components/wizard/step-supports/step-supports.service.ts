@@ -164,7 +164,7 @@ export class StepSupportsService {
             issuedToPersonName:
               this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
                 ? this.supportDelivery.details.hostName
-                : this.supportDelivery.issuedTo !== 'Someone else'
+                : (this.supportDelivery.issuedTo as any) !== 'Someone else'
                   ? this.supportDelivery.issuedTo.lastName + ', ' + this.supportDelivery.issuedTo.firstName
                   : this.supportDelivery.name,
 

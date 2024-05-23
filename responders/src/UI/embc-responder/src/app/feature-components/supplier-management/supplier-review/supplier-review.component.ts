@@ -6,11 +6,18 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
+import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { UpperCasePipe } from '@angular/common';
+import { MatCard } from '@angular/material/card';
 
 @Component({
   selector: 'app-supplier-review',
   templateUrl: './supplier-review.component.html',
-  styleUrls: ['./supplier-review.component.scss']
+  styleUrls: ['./supplier-review.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
 })
 export class SupplierReviewComponent {
   selectedSupplier: SupplierModel;

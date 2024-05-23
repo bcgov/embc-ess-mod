@@ -1,19 +1,53 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 import * as globalConst from '../../../../../core/services/global-constants';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
-import { MatSelectChange } from '@angular/material/select';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { MaskEvacuatedAddressPipe } from '../../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { GroupLodgingDeliveryComponent } from '../delivery-types/group-lodging-delivery/group-lodging-delivery.component';
+import { ShelterAllowanceDeliveryComponent } from '../delivery-types/shelter-allowance-delivery/shelter-allowance-delivery.component';
+import { BilletingDeliveryComponent } from '../delivery-types/billeting-delivery/billeting-delivery.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { AppLoaderComponent } from '../../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatError, MatLabel } from '@angular/material/form-field';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-support-referral',
   templateUrl: './support-referral.component.html',
-  styleUrls: ['./support-referral.component.scss']
+  styleUrls: ['./support-referral.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatButton,
+    AppLoaderComponent,
+    MatCard,
+    MatCardContent,
+    BilletingDeliveryComponent,
+    ShelterAllowanceDeliveryComponent,
+    GroupLodgingDeliveryComponent,
+    AsyncPipe,
+    UpperCasePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class SupportReferralComponent implements OnInit {
   @Input() referralDeliveryForm: UntypedFormGroup;

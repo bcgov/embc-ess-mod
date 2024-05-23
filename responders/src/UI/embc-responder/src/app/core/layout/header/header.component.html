@@ -31,7 +31,7 @@
         </div>
 
         <div class="col-md-3 menu-responsive">
-          <ng-container *ngIf="showUserProfile()">
+          @if (showUserProfile()) {
             <button mat-button class="button-align" [matMenuTriggerFor]="menu">
               <div class="row">
                 <div class="col-md-2">
@@ -51,13 +51,15 @@
               </div>
             </button>
             <mat-menu #menu="matMenu">
-              <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">
-                Sign in to a different task #
-              </button>
-              <button mat-menu-item (click)="openUserProfile()" *ngIf="allowMyProfile()">My Profile</button>
+              @if (allowSignIn()) {
+                <button mat-menu-item (click)="newTaskSignIn()">Sign in to a different task #</button>
+              }
+              @if (allowMyProfile()) {
+                <button mat-menu-item (click)="openUserProfile()">My Profile</button>
+              }
               <button mat-menu-item (click)="signOut()">Sign out</button>
             </mat-menu>
-          </ng-container>
+          }
         </div>
       </div>
     </mat-toolbar-row>

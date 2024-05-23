@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Reflection;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,11 +9,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using NSwag;
-using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EMBC.Responders.API;
 
@@ -19,36 +22,6 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
     public void ConfigureServices(ConfigurationServices configurationServices)
     {
         var services = configurationServices.Services;
-
-        services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
-        {
-            options.Path = "/api/openapi/{documentName}/openapi.json";
-            options.DocumentName = "Responders Portal API";
-            options.PostProcess = (document, req) =>
-            {
-                document.Info.Title = "Responders Portal API";
-            };
-        });
-
-        services.Configure<SwaggerUiSettings>(options =>
-        {
-            options.Path = "/api/openapi";
-            options.DocumentTitle = "responders Portal API Documentation";
-            options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
-        });
-
-        services.AddOpenApiDocument(document =>
-        {
-            document.AddSecurity("bearer token", Array.Empty<string>(), new OpenApiSecurityScheme
-            {
-                Type = OpenApiSecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "paste token here",
-                In = OpenApiSecurityApiKeyLocation.Header
-            });
-
-            document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
-        });
 
         services.AddAuthentication(options =>
         {
@@ -64,9 +37,10 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.FromSeconds(60),
+                NameClaimType = ClaimTypes.Upn,
+                RoleClaimType = ClaimTypes.Role,
                 ValidateActor = true,
                 ValidateIssuerSigningKey = true,
-                NameClaimType = "bceid_username"
             };
 
             configurationServices.Configuration.GetSection("jwt").Bind(options);
@@ -78,7 +52,7 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                     var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
                     c.Principal = await userService.GetPrincipal(c.Principal);
                 }
-            };
+            };       
             options.Validate();
         });
         services.AddAuthorization(options =>
@@ -91,6 +65,37 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                     .RequireClaim("user_team");
             });
             options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
+        });
+
+        services.AddSwaggerGen(opts =>
+        {
+            opts.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Responders Portal API",
+                Version = "v1"
+            });
+
+            opts.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+            opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
+                },
+                new string[] {}
+            }
+        });
+            opts.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? $"{apiDesc.ActionDescriptor.RouteValues["controller"]}{methodInfo.Name}" : null);
+            opts.OperationFilter<ContentTypeOperationFilter>();
+            opts.UseOneOfForPolymorphism();
+            opts.UseAllOfForInheritance();
         });
 
         services.AddTransient<IUserService, UserService>();
@@ -109,10 +114,31 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
 
         if (!env.IsProduction())
         {
-            app.UseOpenApi();
-            app.UseSwaggerUi();
+            app.UseSwagger(opts =>
+            {
+                opts.RouteTemplate = "api/openapi/{documentName}/openapi.json";
+            });
+            app.UseSwaggerUI(opts =>
+            {
+                opts.SwaggerEndpoint("v1/openapi.json", "Responders portal API");
+                opts.RoutePrefix = "api/openapi";
+            });
         }
         app.UseAuthentication();
         app.UseAuthorization();
+    }
+}
+
+internal class ContentTypeOperationFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        foreach (var (_, response) in operation.Responses)
+        {
+            if (response.Content.ContainsKey("text/plain"))
+                response.Content.Remove("text/plain");
+            if (response.Content.ContainsKey("text/json"))
+                response.Content.Remove("text/json");
+        }
     }
 }

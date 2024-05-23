@@ -2,11 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EvacueeSearchComponent } from './evacuee-search.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { Component } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
-@Component({ selector: 'app-search-options', template: '' })
+@Component({
+  selector: 'app-search-options',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule]
+})
 class SearchOptionsStubComponent {}
 
 describe('EvacueeSearchComponent', () => {
@@ -15,9 +20,8 @@ describe('EvacueeSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeSearchComponent, SearchOptionsStubComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [{ provide: computeInterfaceToken, useValue: {} }]
+      imports: [HttpClientTestingModule, EvacueeSearchComponent, SearchOptionsStubComponent],
+      providers: [{ provide: computeInterfaceToken, useValue: {} }, provideRouter([])]
     }).compileComponents();
   });
 

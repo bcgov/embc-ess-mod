@@ -1,16 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Code, SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-select-support',
   templateUrl: './select-support.component.html',
-  styleUrls: ['./select-support.component.scss']
+  styleUrls: ['./select-support.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatButton,
+    MatCard,
+    MatCardContent
+  ]
 })
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];

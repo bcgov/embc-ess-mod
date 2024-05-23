@@ -43,16 +43,13 @@
                     registration with concerned family and friend
                   </mat-radio-button>
 
-                  <mat-error
-                    class="custom-mat-error field-error"
-                    *ngIf="
-                      restrFormControl?.restrictedAccess.touched &&
-                      restrFormControl?.restrictedAccess.invalid &&
-                      restrFormControl?.restrictedAccess.hasError('required')
-                    "
-                  >
-                    Restriction is required</mat-error
-                  >
+                  @if (
+                    restrFormControl?.restrictedAccess.touched &&
+                    restrFormControl?.restrictedAccess.invalid &&
+                    restrFormControl?.restrictedAccess.hasError('required')
+                  ) {
+                    <mat-error class="custom-mat-error field-error"> Restriction is required</mat-error>
+                  }
                 </mat-radio-group>
               </div>
             </div>
@@ -61,20 +58,24 @@
       </form>
       <br />
       <br />
-      <div *ngIf="!editFlag" class="row">
-        <div class="col-md-6">
-          <button class="button-s back" mat-button (click)="back()">Back</button>
+      @if (!editFlag) {
+        <div class="row">
+          <div class="col-md-6">
+            <button class="button-s back" mat-button (click)="back()">Back</button>
+          </div>
+          <div class="col-md-6">
+            <button class="button-p next" mat-button (click)="next()">Next</button>
+          </div>
         </div>
-        <div class="col-md-6">
-          <button class="button-p next" mat-button (click)="next()">Next</button>
-        </div>
-      </div>
+      }
 
-      <div *ngIf="editFlag" class="row">
-        <div class="col-md-12">
-          <button class="button-p edit-next" mat-button (click)="next()">Next</button>
+      @if (editFlag) {
+        <div class="row">
+          <div class="col-md-12">
+            <button class="button-p edit-next" mat-button (click)="next()">Next</button>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

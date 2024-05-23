@@ -2,11 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamMemberReviewComponent } from './team-member-review.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('TeamMemberReviewComponent', () => {
   let component: TeamMemberReviewComponent;
@@ -15,14 +14,13 @@ describe('TeamMemberReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        TeamMemberReviewComponent
       ],
-      declarations: [TeamMemberReviewComponent]
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

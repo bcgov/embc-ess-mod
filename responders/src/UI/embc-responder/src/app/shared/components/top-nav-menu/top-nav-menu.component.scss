@@ -12,3 +12,21 @@ a:hover {
 a:focus {
   color: #169bd5 !important;
 }
+
+.mobile-menu {
+  display: none;
+}
+
+.desktop-menu {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .mobile-menu {
+    display: block;
+  }
+
+  .desktop-menu {
+    display: none;
+  }
+}

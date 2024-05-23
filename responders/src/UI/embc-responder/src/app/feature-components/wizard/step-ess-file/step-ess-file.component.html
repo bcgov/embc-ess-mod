@@ -10,45 +10,38 @@
     </div>
   </div>
   <br />
-  <nav mat-tab-nav-bar dynamicHeight>
-    <a
-      mat-tab-link
-      #tabNavLinks
-      *ngFor="let tabItem of tabs"
-      [routerLink]="tabItem.route"
-      routerLinkActive="active-step-tab"
-      [ngClass]="{
-        'tab-highlight': tabItem.name === 'review',
-        'tab-margin custom-tab-link': tabItem.name !== 'review'
-      }"
-    >
-      <span class="span-height" (click)="isAllowed(tabItem.name, $event)"
-        >{{ tabItem.label }}
-        <img
-          class="tab-status"
-          *ngIf="tabItem.status === 'complete'"
-          src="/assets/images/status/complete.svg"
-          width="20"
-          height="20" />
-        <img
-          class="tab-status"
-          *ngIf="tabItem.status === 'incomplete'"
-          src="/assets/images/status/incomplete.svg"
-          width="20"
-          height="20" />
-        <img
-          class="tab-status"
-          *ngIf="tabItem.status === 'not-started'"
-          src="/assets/images/status/not-started.svg"
-          width="20"
-          height="20"
-      /></span>
-    </a>
+  <nav mat-tab-nav-bar mat-stretch-tabs="false" [tabPanel]="tabPanel" dynamicHeight>
+    @for (tabItem of tabs; track tabItem) {
+      <a
+        mat-tab-link
+        #tabNavLinks
+        [routerLink]="tabItem.route"
+        routerLinkActive="active-step-tab"
+        [ngClass]="{
+          'tab-highlight': tabItem.name === 'review',
+          'tab-margin custom-tab-link': tabItem.name !== 'review'
+        }"
+      >
+        <span class="span-height" (click)="isAllowed(tabItem.name, $event)"
+          >{{ tabItem.label }}
+          @if (tabItem.status === 'complete') {
+            <img class="tab-status" src="/assets/images/status/complete.svg" width="20" height="20" />
+          }
+          @if (tabItem.status === 'incomplete') {
+            <img class="tab-status" src="/assets/images/status/incomplete.svg" width="20" height="20" />
+          }
+          @if (tabItem.status === 'not-started') {
+            <img class="tab-status" src="/assets/images/status/not-started.svg" width="20" height="20" />
+          }
+        </span>
+      </a>
+    }
   </nav>
 
   <div class="content-container">
     <app-alert></app-alert>
-
-    <router-outlet></router-outlet>
+    <mat-tab-nav-panel #tabPanel>
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
   </div>
 </div>

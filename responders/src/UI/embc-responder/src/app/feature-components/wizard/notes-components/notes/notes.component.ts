@@ -3,11 +3,19 @@ import { Note } from 'src/app/core/api/models';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import * as globalConst from 'src/app/core/services/global-constants';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { ListNotesComponent } from '../list-notes/list-notes.component';
+import { AddNotesComponent } from '../add-notes/add-notes.component';
+
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-notes',
   templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.scss']
+  styleUrls: ['./notes.component.scss'],
+  standalone: true,
+  imports: [MatButton, AppLoaderComponent, AddNotesComponent, ListNotesComponent, MatCard, MatCardContent]
 })
 export class NotesComponent implements OnInit {
   notesList: Array<Note>;

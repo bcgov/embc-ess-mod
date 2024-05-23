@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockEnvironmentBannerService } from 'src/app/unit-tests/mockEnvironmentBanner.service';
 
 import { EnvironmentBannerComponent } from './environment-banner.component';
 import { EnvironmentBannerService } from './environment-banner.service';
+import { provideRouter } from '@angular/router';
 
 describe('EnvironmentBannerComponent', () => {
   let component: EnvironmentBannerComponent;
@@ -14,14 +14,14 @@ describe('EnvironmentBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [EnvironmentBannerComponent],
+      imports: [HttpClientTestingModule, EnvironmentBannerComponent],
       providers: [
         EnvironmentBannerComponent,
         {
           provide: EnvironmentBannerService,
           useClass: MockEnvironmentBannerService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

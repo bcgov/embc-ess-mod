@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'nightsArray' })
+@Pipe({
+  name: 'nightsArray',
+  standalone: true
+})
 export class NumberOfNightsPipe implements PipeTransform {
   transform(value): Array<number> {
     const numbers = [];

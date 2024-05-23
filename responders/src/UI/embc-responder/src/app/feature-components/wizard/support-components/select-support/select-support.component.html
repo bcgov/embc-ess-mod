@@ -28,13 +28,15 @@
               <mat-form-field appearance="outline">
                 <mat-label>Support Type</mat-label>
                 <mat-select formControlName="type" required>
-                  <mat-option *ngFor="let type of supportList" [value]="type">
-                    {{ type.description }}
-                  </mat-option>
+                  @for (type of supportList; track type) {
+                    <mat-option [value]="type">
+                      {{ type.description }}
+                    </mat-option>
+                  }
                 </mat-select>
-                <mat-error *ngIf="typeFormControl.type.invalid && typeFormControl.type.hasError('required')">
-                  Support Type is required</mat-error
-                >
+                @if (typeFormControl.type.invalid && typeFormControl.type.hasError('required')) {
+                  <mat-error> Support Type is required</mat-error>
+                }
               </mat-form-field>
             </div>
           </div>
@@ -49,17 +51,23 @@
 
       <div class="col-md-5">
         <mat-card class="needs-box">
-          <div class="row">
-            <div class="col-md-12">
-              <p class="bold">Support requirements based on current Needs Assessment</p>
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <p class="bold">Support requirements based on current Needs Assessment</p>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
-            <div class="col-4">{{ item }}</div>
-          </div>
-          <div class="row" *ngIf="getIdentifiedNeeds().length === 0">
-            <div class="col-8">{{ noAssistanceRequiredMessage }}</div>
-          </div>
+            @for (item of getIdentifiedNeeds(); track item) {
+              <div class="row">
+                <div class="col-4">{{ item }}</div>
+              </div>
+            }
+            @if (getIdentifiedNeeds().length === 0) {
+              <div class="row">
+                <div class="col-8">{{ noAssistanceRequiredMessage }}</div>
+              </div>
+            }
+          </mat-card-content>
         </mat-card>
       </div>
     </div>

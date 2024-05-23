@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
@@ -9,11 +9,30 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from './security-questions.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-security-questions',
   templateUrl: './security-questions.component.html',
-  styleUrls: ['./security-questions.component.scss']
+  styleUrls: ['./security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatInput,
+    MatButton,
+    MaskTextPipe
+  ]
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   parentForm: UntypedFormGroup = null;

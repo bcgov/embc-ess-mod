@@ -9,12 +9,12 @@ import {
   tick
 } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';
 
 import { OutageComponent } from './outage.component';
 import { OutageService } from './outage.service';
+import { provideRouter } from '@angular/router';
 
 describe('OutageComponent', () => {
   let component: OutageComponent;
@@ -23,14 +23,14 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
-      declarations: [OutageComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, OAuthModule.forRoot(), OutageComponent],
       providers: [
         OutageComponent,
         {
           provide: OutageService,
           useClass: MockOutageService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

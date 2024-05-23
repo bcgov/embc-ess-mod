@@ -14,11 +14,18 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
+import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
+
+import { SuppliersTableComponent } from './suppliers-table/suppliers-table.component';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-suppliers-list',
   templateUrl: './suppliers-list.component.html',
-  styleUrls: ['./suppliers-list.component.scss']
+  styleUrls: ['./suppliers-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, OverlayLoaderComponent]
 })
 export class SuppliersListComponent implements OnInit {
   primarySupplierFilterTerm: TableFilterValueModel;

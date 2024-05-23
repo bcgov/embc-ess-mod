@@ -1,19 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { SupplierStatus } from 'src/app/core/api/models';
+import { MatButton } from '@angular/material/button';
+import { IMaskDirective } from 'angular-imask';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-address/bc-address.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-new-supplier',
   templateUrl: './new-supplier.component.html',
-  styleUrls: ['./new-supplier.component.scss']
+  styleUrls: ['./new-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    BcAddressComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    IMaskDirective,
+    MatButton
+  ]
 })
 export class NewSupplierComponent implements OnInit {
   newForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
 
   constructor(
     private formBuilder: UntypedFormBuilder,

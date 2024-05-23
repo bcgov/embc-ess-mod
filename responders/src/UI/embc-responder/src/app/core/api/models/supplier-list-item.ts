@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { MutualAid } from './mutual-aid';
-import { SupplierStatus } from './supplier-status';
-import { SupplierTeamDetails } from './supplier-team-details';
+import { Address } from '../models/address';
+import { MutualAid } from '../models/mutual-aid';
+import { SupplierStatus } from '../models/supplier-status';
+import { SupplierTeamDetails } from '../models/supplier-team-details';
 export interface SupplierListItem {
   address?: Address;
   gstNumber?: string;

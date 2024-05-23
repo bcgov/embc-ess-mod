@@ -10,8 +10,7 @@ describe('SecurityQuestionCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SecurityQuestionCardComponent],
-      imports: [ReactiveFormsModule, FormsModule]
+      imports: [ReactiveFormsModule, FormsModule, SecurityQuestionCardComponent]
     }).compileComponents();
   });
 

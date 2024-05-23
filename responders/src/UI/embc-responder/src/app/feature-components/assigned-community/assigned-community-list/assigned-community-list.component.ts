@@ -10,11 +10,18 @@ import { AssignedCommunityListService } from './assigned-community-list.service'
 import * as globalConst from '../../../core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
 import { AddCommunityService } from '../add-community/add-community.service';
+import { AssignedCommunityTableComponent } from '../assigned-community-table/assigned-community-table.component';
+import { MatButton } from '@angular/material/button';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-assigned-community-list',
   templateUrl: './assigned-community-list.component.html',
-  styleUrls: ['./assigned-community-list.component.scss']
+  styleUrls: ['./assigned-community-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, MatButton, AssignedCommunityTableComponent]
 })
 export class AssignedCommunityListComponent implements OnInit {
   filterTerm: TableFilterValueModel;

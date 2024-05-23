@@ -1,8 +1,8 @@
 <div class="container container-frame">
   <div class="content-container">
-    <ng-container *ngIf="showDataEntryComponent">
+    @if (showDataEntryComponent) {
       <app-search-options></app-search-options>
-    </ng-container>
+    }
   </div>
 </div>
 

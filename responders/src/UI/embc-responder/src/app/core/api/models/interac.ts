@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ETransfer } from './e-transfer';
+import { ETransfer } from '../models/e-transfer';
 export type Interac = ETransfer & {
   receivingRegistrantId: string;
   recipientFirstName?: string;

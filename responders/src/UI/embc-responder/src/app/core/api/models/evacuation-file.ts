@@ -1,35 +1,35 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { EvacuationFileHouseholdMember } from './evacuation-file-household-member';
-import { EvacuationFileStatus } from './evacuation-file-status';
-import { EvacuationFileTask } from './evacuation-file-task';
-import { NeedsAssessment } from './needs-assessment';
-import { Note } from './note';
-import { Support } from './support';
+import { Address } from '../models/address';
+import { EvacuationFileHouseholdMember } from '../models/evacuation-file-household-member';
+import { EvacuationFileStatus } from '../models/evacuation-file-status';
+import { EvacuationFileTask } from '../models/evacuation-file-task';
+import { NeedsAssessment } from '../models/needs-assessment';
+import { Note } from '../models/note';
+import { Support } from '../models/support';
 
 /**
  * Evacuation File
  */
 export interface EvacuationFile {
-  completedBy?: null | string;
-  completedOn?: null | string;
+  completedBy?: string | null;
+  completedOn?: string | null;
   evacuatedFromAddress: Address;
-  evacuationFileDate?: null | string;
+  evacuationFileDate?: string | null;
   householdMembers?: Array<EvacuationFileHouseholdMember>;
-  id?: null | string;
-  isPaper?: null | boolean;
-  isRestricted?: null | boolean;
-  manualFileId?: null | string;
+  id?: string | null;
+  isPaper?: boolean | null;
+  isRestricted?: boolean | null;
+  manualFileId?: string | null;
   needsAssessment: NeedsAssessment;
   notes?: Array<Note>;
-  primaryRegistrantFirstName?: null | string;
+  primaryRegistrantFirstName?: string | null;
   primaryRegistrantId: string;
-  primaryRegistrantLastName?: null | string;
+  primaryRegistrantLastName?: string | null;
   registrationLocation: string;
-  securityPhrase?: null | string;
-  securityPhraseEdited?: null | boolean;
-  status?: null | EvacuationFileStatus;
+  securityPhrase?: string | null;
+  securityPhraseEdited?: boolean | null;
+  status?: EvacuationFileStatus | null;
   supports?: Array<Support>;
   task: EvacuationFileTask;
 }

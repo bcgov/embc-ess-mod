@@ -1,7 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+  FormGroupDirective,
+  NgForm,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -9,6 +17,11 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ContactService } from './contact.service';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { IMaskDirective } from 'angular-imask';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -33,11 +46,26 @@ export class CustomErrorMobileMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    IMaskDirective,
+    MatError,
+    MatCard,
+    MatCardContent,
+    MatButton
+  ]
 })
 export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: UntypedFormGroup;
-  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  readonly phoneMask = globalConst.phoneMask;
   emailMatcher = new CustomErrorMailMatcher();
   tabUpdateSubscription: Subscription;
 

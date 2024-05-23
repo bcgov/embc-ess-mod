@@ -10,7 +10,6 @@ import {
 } from '@angular/core/testing';
 
 import { RestrictionComponent } from './restriction.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
@@ -18,9 +17,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RestrictionService } from './restriction.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
-import { MaterialModule } from 'src/app/material.module';
 import { MockRestrictionService } from 'src/app/unit-tests/mockRestriction.service';
 import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('RestrictionComponent', () => {
   let component: RestrictionComponent;
@@ -30,8 +29,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, MaterialModule],
-      declarations: [RestrictionComponent],
+      imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule, RestrictionComponent],
       providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
@@ -39,7 +37,8 @@ describe('RestrictionComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

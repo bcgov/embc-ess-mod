@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HouseholdMemberType } from './household-member-type';
+import { HouseholdMemberType } from '../models/household-member-type';
 export interface EvacuationFileSearchResultHouseholdMember {
   firstName?: string;
   id?: string;
   isMainApplicant?: boolean;
-  isRestricted?: null | boolean;
+  isRestricted?: boolean | null;
   isSearchMatch?: boolean;
   lastName?: string;
   type?: HouseholdMemberType;

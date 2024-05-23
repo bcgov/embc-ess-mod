@@ -1,24 +1,24 @@
 /* tslint:disable */
 /* eslint-disable */
-import { MemberLabel } from './member-label';
-import { MemberRole } from './member-role';
+import { MemberLabel } from '../models/member-label';
+import { MemberRole } from '../models/member-role';
 
 /**
  * Team member
  */
 export interface TeamMember {
-  agreementSignDate?: null | string;
-  email?: null | string;
+  agreementSignDate?: string | null;
+  email?: string | null;
   firstName: string;
-  id?: null | string;
+  id?: string | null;
   isActive?: boolean;
   isUserNameEditable?: boolean;
-  label?: null | MemberLabel;
+  label?: MemberLabel | null;
   lastName: string;
-  lastSuccessfulLogin?: null | string;
-  phone?: null | string;
+  lastSuccessfulLogin?: string | null;
+  phone?: string | null;
   role: MemberRole;
-  teamId?: null | string;
+  teamId?: string | null;
   teamName?: string;
   userName: string;
 }
