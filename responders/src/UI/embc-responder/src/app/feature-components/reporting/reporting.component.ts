@@ -106,7 +106,7 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(reportResponse, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+            this.downloadFile(reportResponse as any, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {
@@ -148,7 +148,7 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(reportResponse, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+            this.downloadFile(reportResponse as any, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {
