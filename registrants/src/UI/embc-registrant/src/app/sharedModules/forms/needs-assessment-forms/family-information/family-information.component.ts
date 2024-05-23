@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
 import { PersonDetailFormComponent } from '../../person-detail-form/person-detail-form.component';
+import { DialogContent } from 'src/app/core/model/dialog-content.model';
 
 @Component({
   selector: 'app-family-information',
@@ -68,17 +69,37 @@ export default class FamilyInformationComponent implements OnInit {
 
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
+      const duplicateHouseholdMemberIndex = this.data.findIndex((element) => {
+        return (
+          element.firstName.toLowerCase().trim() ===
+            this.householdMemberForm.get('householdMember').value.firstName.toLowerCase().trim() &&
+          element.lastName.toLowerCase().trim() ===
+            this.householdMemberForm.get('householdMember').value.lastName.toLowerCase().trim() &&
+          element.dateOfBirth === this.householdMemberForm.get('householdMember').value.dateOfBirth &&
+          element.gender === this.householdMemberForm.get('householdMember').value.gender
+        );
+      });
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
-        this.rowEdit = !this.rowEdit;
-        this.editIndex = undefined;
+        if (duplicateHouseholdMemberIndex !== -1 && duplicateHouseholdMemberIndex !== this.editIndex) {
+          this.duplicateHouseholdMemberWarningDialog();
+          return;
+        } else {
+          this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
+          this.rowEdit = !this.rowEdit;
+          this.editIndex = undefined;
+        }
       } else {
-        this.data.push(this.householdMemberForm.get('householdMember').value);
+        if (duplicateHouseholdMemberIndex !== -1) {
+          this.duplicateHouseholdMemberWarningDialog();
+          return;
+        } else {
+          this.data.push(this.householdMemberForm.get('householdMember').value);
+          this.dataSource.next(this.data);
+          this.householdMemberForm.get('householdMembers').setValue(this.data);
+          this.showFamilyForm = !this.showFamilyForm;
+          this.editFlag = !this.editFlag;
+        }
       }
-      this.dataSource.next(this.data);
-      this.householdMemberForm.get('householdMembers').setValue(this.data);
-      this.showFamilyForm = !this.showFamilyForm;
-      this.editFlag = !this.editFlag;
     } else {
       this.householdMemberForm.get('householdMember').markAllAsTouched();
     }
@@ -135,5 +156,19 @@ export default class FamilyInformationComponent implements OnInit {
     this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
     this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
     this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
+  }
+
+  public duplicateHouseholdMemberWarningDialog() {
+    this.openInfoDialog(globalConst.duplicateHouseholdMemberWarning);
+  }
+
+  private openInfoDialog(dialog: DialogContent) {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: dialog
+      },
+      maxWidth: '600px'
+    });
   }
 }
