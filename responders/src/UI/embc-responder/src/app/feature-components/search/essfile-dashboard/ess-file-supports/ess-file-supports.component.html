@@ -47,32 +47,30 @@
                   </div>
                   <div class="col-md-4">
                     <p
-                    [ngClass]="{
-                      'support-draft': support?.status === 'Draft',
-                      'support-active': support?.status === 'Active',
-                      'support-expired': support?.status === 'Expired',
-                      'support-void': support?.status === 'Void',
-                      'support-pending-approval': support?.status === 'PendingApproval',
-                      'support-under-review': support?.status === 'UnderReview',
-                      'support-approved': support?.status === 'Approved',
-                      'support-paid': support?.status === 'Paid',
-                      'support-cancelled': support?.status === 'Cancelled'
-                    }"
-                      >
+                      [ngClass]="{
+                        'support-draft': support?.status === 'Draft',
+                        'support-active': support?.status === 'Active',
+                        'support-expired': support?.status === 'Expired',
+                        'support-void': support?.status === 'Void',
+                        'support-pending-approval': support?.status === 'PendingApproval',
+                        'support-under-review': support?.status === 'UnderReview',
+                        'support-approved': support?.status === 'Approved',
+                        'support-paid': support?.status === 'Paid',
+                        'support-cancelled': support?.status === 'Cancelled'
+                      }"
+                    >
                       {{ getStatusDescription(support?.status) }}
                     </p>
                   </div>
                   <div class="col">
                     @if (support?.subCategory !== 'Lodging_Billeting' && support?.subCategory !== 'Lodging_Group') {
-                      <p
-                        class="supplier-align"
-                        >
+                      <p class="supplier-align">
                         <b>{{
                           getReferral(support)?.method === supportMethod.Referral
-                          ? getReferral(support)?.supplierName
-                          : getReferral(support)?.method === supportMethod.ETransfer
-                          ? 'e-Transfer'
-                          : ''
+                            ? getReferral(support)?.supplierName
+                            : getReferral(support)?.method === supportMethod.ETransfer
+                              ? 'e-Transfer'
+                              : ''
                         }}</b>
                         @if (support?.isSelfServe) {
                           <i> (Self-Serve) </i>
