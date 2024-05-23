@@ -86,6 +86,12 @@ export const interacOptOut: DialogContent = {
   text: 'Provided by an ESS responder to direct evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
 };
 
+export const duplicateHouseholdMemberWarning: DialogContent = {
+  title: 'Duplicate Household Member Detected',
+  text: 'It looks like the member you are trying to add already exists in your household. Please review the existing members before proceeding.',
+  cancelButton: 'Close'
+};
+
 export const securityQuesError = 'An error occurred while loading the security questions. Please try again later';
 export const systemError = 'The service is temporarily unavailable. Please try again later';
 export const profileExistError = 'User profile does not exist.';
