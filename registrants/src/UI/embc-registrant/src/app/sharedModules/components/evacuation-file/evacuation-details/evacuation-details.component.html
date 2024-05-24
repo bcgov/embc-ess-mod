@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  @if (evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending) {
+  @if (isPending) {
     <div
       style="
         display: flex;
@@ -68,7 +68,7 @@
     </div>
   }
 
-  @if (referralData?.size === 0) {
+  @if (isPending) {
     <div>
       <app-review
         [type]="type"
@@ -78,13 +78,6 @@
         [allowEdit]="false"
       >
       </app-review>
-      <div class="supportReceived">
-        <p class="titleDetailHeader">Supports Issued</p>
-        <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-        <p class="supportReceivedRegSpan">
-          Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.
-        </p>
-      </div>
     </div>
   } @else {
     <mat-card-content class="contentCard">
@@ -109,31 +102,33 @@
         </div>
       </div>
       <br /><br />
-      <div class="row justify-content-between">
-        <div class="col-md-6 card-heading">Support Issued</div>
-      </div>
-      <hr />
-      <div class="row info-detail">
-        <div class="col-10">
-          Please select the date/s for which you were issued supports to access comprehensive support details.
+      @if (showSupports) {
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Support Issued</div>
         </div>
-        <div class="col-2 row mainReferralsLink" (click)="expandDetails()">
-          <div class="col-md-6 allReferrals">
-            <a>{{ this.allExpandState ? 'close all' : 'expand all' }}</a>
+        <hr />
+        <div class="row info-detail">
+          <div class="col-10">
+            Please select the date/s for which you were issued supports to access comprehensive support details.
           </div>
-          <div class="col-md-6 row">
-            <div class="col-md-9" style="height: 6px">
-              <img
-                [ngClass]="allExpandState ? 'none' : 'rotate180'"
-                src="../../../../assets/images/expand_arrow.png"
-                height="15"
-                width="18"
-              />
+          <div class="col-2 row mainReferralsLink" (click)="expandDetails()">
+            <div class="col-md-6 allReferrals">
+              <a>{{ this.allExpandState ? 'close all' : 'expand all' }}</a>
+            </div>
+            <div class="col-md-6 row">
+              <div class="col-md-9" style="height: 6px">
+                <img
+                  [ngClass]="allExpandState ? 'none' : 'rotate180'"
+                  src="../../../../assets/images/expand_arrow.png"
+                  height="15"
+                  width="18"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <br />
+        <br />
+      }
       @for (key of referralData.keys(); track key) {
         <app-referral-details
           [referralDataSource]="referralData.get(key)"
@@ -144,5 +139,19 @@
         </app-referral-details>
       }
     </mat-card-content>
+  }
+  @if (referralData?.size === 0) {
+    @if (isActive) {
+      <hr />
+    }
+    <div class="supportReceived">
+      <p class="titleDetailHeader">Supports Issued</p>
+      <p class="supportReceivedBoldSpan">You have not been issued any supports.</p>
+      @if (isPending) {
+        <p class="supportReceivedRegSpan">
+          Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.
+        </p>
+      }
+    </div>
   }
 </mat-card>
