@@ -39,6 +39,9 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   showActiveList = true;
   showInactiveList = true;
   displayStatus: string;
+  showSupports = false;
+  isActive = false;
+  isPending = false;
 
   constructor(
     public formCreationService: FormCreationService,
@@ -55,10 +58,13 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     } else {
       this.evacuationFileTab = 'Past';
     }
-
     if (this.evacuationFileDataService?.supports?.length > 0) {
+      this.showSupports = true;
       this.referralData = this.splitReferralsByDate(this.evacuationFileDataService?.supports);
     }
+    if (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active) this.isActive = true;
+    else if (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending)
+      this.isPending = true;
   }
 
   ngAfterViewInit(): void {
