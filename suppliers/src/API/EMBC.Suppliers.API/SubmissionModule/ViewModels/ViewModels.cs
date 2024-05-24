@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
@@ -12,6 +13,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
         public IEnumerable<Invoice> Invoices { get; set; }
         public IEnumerable<LineItem> LineItems { get; set; }
         public IEnumerable<Attachment> Attachments { get; set; }
+        [Required]
+        public string Captcha { get; set; }
     }
 
     public class SupplierInformation

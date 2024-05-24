@@ -66,6 +66,10 @@ export interface OidcConfiguration {
   issuer?: null | string;
 }
 
+export interface CaptchaConfiguration {
+  key?: string | null;
+}
+
 export interface Configuration {
   oidc?: null | OidcConfiguration;
 }
