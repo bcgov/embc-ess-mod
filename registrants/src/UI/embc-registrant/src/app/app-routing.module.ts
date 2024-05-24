@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AuthGuard } from './core/services/auth.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: 'registration-method',
@@ -40,14 +39,3 @@ const routes: Routes = [
     loadChildren: () => import('./feature-components/outage/outage.module').then((m) => m.OutageModule)
   }
 ];
-
-@NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'top',
-      canceledNavigationResolution: 'computed'
-    })
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}

@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
   imports: [MatCardModule, MatButtonModule, DatePipe]
 })
 export class EvacuationCardComponent implements OnInit {
+  EvacuationFileStatus = EvacuationFileStatus;
   @Input() evacuationFileCard: EvacuationFileModel;
 
   imageIcon: string;

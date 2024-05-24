@@ -88,6 +88,8 @@ $ess-theme: mat.define-light-theme(
   --size-4: calc(var(--size-1) * 4);
   --size-5: calc(var(--size-1) * 5);
   --size-6: calc(var(--size-1) * 6);
+
+  --color-primary: #169bd5;
 }
 
 main {
@@ -228,6 +230,7 @@ button:focus {
   outline: 0px !important;
 }
 
+.list-image,
 .close-image,
 .edit-image,
 .delete-image {
@@ -236,6 +239,7 @@ button:focus {
   }
 }
 
+.list-image:hover,
 .close-image:hover,
 .edit-image:hover,
 .delete-image:hover {
@@ -244,6 +248,7 @@ button:focus {
   }
 }
 
+.list-image:hover,
 .close-image:hover,
 .edit-image:hover,
 .delete-image:hover {
@@ -286,6 +291,10 @@ button:focus {
 /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   border-radius: 0px !important;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */

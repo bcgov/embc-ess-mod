@@ -10,6 +10,7 @@ export class Suppliers {
   referrals: Referrals[];
   lineItems: LineItems[];
   attachments: Attachment[];
+  captcha: string;
 
   constructor(
     suppliers: SupplierInformation[],

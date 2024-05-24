@@ -370,7 +370,12 @@
           <div class="col-md-6 card-heading">Location</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
+              <button
+                class="edit-image"
+                mat-icon-button
+                aria-label="Edit"
+                (click)="editNeedsAssessment('evac-address')"
+              >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>
@@ -416,7 +421,12 @@
           <div class="col-md-6 card-heading">Insurance</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
+              <button
+                class="edit-image"
+                mat-icon-button
+                aria-label="Edit"
+                (click)="editNeedsAssessment('evac-address')"
+              >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>
@@ -445,7 +455,12 @@
           <div class="col-md-6 card-heading">Household Members</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+              <button
+                class="edit-image"
+                mat-icon-button
+                aria-label="Edit"
+                (click)="editNeedsAssessment('family-information')"
+              >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>
@@ -487,7 +502,7 @@
           <div class="col-md-6 card-heading">Pets</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editNeedsAssessment('pets')">
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>
@@ -515,7 +530,12 @@
           <div class="col-md-6 card-heading">Needs</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
+              <button
+                class="edit-image"
+                mat-icon-button
+                aria-label="Edit"
+                (click)="editNeedsAssessment('identify-needs')"
+              >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>
@@ -535,7 +555,7 @@
           <div class="col-md-6 card-heading">Security Word</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
+              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editNeedsAssessment('secret')">
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>

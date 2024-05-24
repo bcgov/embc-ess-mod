@@ -1,5 +1,13 @@
+button {
+  min-width: 240px;
+}
+
 .save-button {
   width: 100%;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none;
 }
 
 @media screen and (max-width: 768px) {

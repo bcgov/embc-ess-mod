@@ -44,14 +44,38 @@
       </div>
     </div>
   </div>
-  @if (isPending) {
+
+  @if (evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending) {
+    <div
+      style="
+        display: flex;
+        gap: var(--size-2);
+        padding: var(--size-2);
+        margin: var(--size-2);
+        border: 3px solid var(--color-primary);
+      "
+    >
+      <div>
+        <img src="assets/images/black_edit.svg" alt="Edit Icon" height="40" width="40" />
+      </div>
+      <div style="flex: 1; color: #333">
+        <h2>Ensure Your Evacuation Details are Up-to-Date</h2>
+        <p>Verify the information provided below and update your ESS File if required.</p>
+      </div>
+      <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+        Update your Details
+      </button>
+    </div>
+  }
+
+  @if (referralData?.size === 0) {
     <div>
       <app-review
         [type]="type"
         [showHeading]="false"
         [currentFlow]="currentFlow"
         [parentPageName]="parentPageName"
-        [allowEdit]="allowEdition()"
+        [allowEdit]="false"
       >
       </app-review>
     </div>

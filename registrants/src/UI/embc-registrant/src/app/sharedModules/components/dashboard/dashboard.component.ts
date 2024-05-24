@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { SelfServeSubmissionDialogComponent } from 'src/app/core/components/dialog-components/self-serve-submissoin-dialog/self-serve-submission-dialog.component';
+import { EssFileUpdateDialogComponent } from 'src/app/core/components/dialog-components/ess-file-update-dialog/ess-file-update-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -78,7 +79,12 @@ export class DashboardComponent implements OnInit {
     const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
-      const { selfServe = null, supportData = null } = this.router.lastSuccessfulNavigation.extras?.state ?? {
+      const {
+        isUpdateNeedsAssessment = false,
+        selfServe = false,
+        supportData = null
+      } = this.router.lastSuccessfulNavigation.extras?.state ?? {
+        isUpdateNeedsAssessment: false,
         selfServe: false,
         supportData: null
       };
@@ -89,6 +95,17 @@ export class DashboardComponent implements OnInit {
             data: supportData,
             width: '80%',
             height: '750px',
+            maxWidth: '900px'
+          })
+          .afterClosed()
+          .subscribe(() => {
+            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
+          });
+      } else if (isUpdateNeedsAssessment) {
+        this.dialog
+          .open(EssFileUpdateDialogComponent, {
+            width: '80%',
+            height: 'auto',
             maxWidth: '900px'
           })
           .afterClosed()

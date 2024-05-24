@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
@@ -10,6 +9,7 @@ import { MaskEvacuatedAddressPipe } from '../../../../core/pipe/maskEvacuatedAdd
 import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
 import { ReviewComponent } from '../../../../feature-components/review/review.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -19,6 +19,7 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [
     MatCardModule,
+    MatButtonModule,
     NgClass,
     ReviewComponent,
     ReferralDetailsComponent,
@@ -28,6 +29,7 @@ import { MatCardModule } from '@angular/material/card';
   ]
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
+  EvacuationFileStatus = EvacuationFileStatus;
   @Input() allExpandState = false;
   evacuationFileTab: string;
   backArrowImgSrc = '/assets/images/back_arrow.svg';
@@ -88,6 +90,14 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     } else {
       this.router.navigate(['/verified-registration/dashboard/past']);
     }
+  }
+
+  gotoUpdateDetails() {
+    this.router.navigate([
+      '/verified-registration/needs-assessment',
+      this.evacuationFileDataService.essFileId,
+      'update'
+    ]);
   }
 
   allowEdition(): boolean {
