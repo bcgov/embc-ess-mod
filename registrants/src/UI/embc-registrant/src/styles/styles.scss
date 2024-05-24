@@ -43,6 +43,8 @@ $custom-typography: mat.define-typography-config(
   --size-4: calc(var(--size-1) * 4);
   --size-5: calc(var(--size-1) * 5);
   --size-6: calc(var(--size-1) * 6);
+
+  --color-primary: #169bd5;
 }
 
 main {
@@ -227,7 +229,7 @@ button:focus {
 
 .close-image,
 .edit-image,
-.delete-image  {
+.delete-image {
   img:last-of-type {
     display: none;
   }

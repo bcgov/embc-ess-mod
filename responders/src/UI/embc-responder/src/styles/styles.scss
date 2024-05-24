@@ -88,6 +88,8 @@ $ess-theme: mat.define-light-theme(
   --size-4: calc(var(--size-1) * 4);
   --size-5: calc(var(--size-1) * 5);
   --size-6: calc(var(--size-1) * 6);
+
+  --color-primary: #169bd5;
 }
 
 main {

@@ -34,7 +34,17 @@
       </div>
       <div class="col-md-3 button-align">
         <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">
-          View Details
+          @switch (evacuationFileCard?.status) {
+            @case (EvacuationFileStatus.Pending) {
+              View & Edit Details
+            }
+            @case (EvacuationFileStatus.Expired) {
+              View & Edit Details
+            }
+            @default {
+              View Details
+            }
+          }
         </button>
       </div>
     </div>

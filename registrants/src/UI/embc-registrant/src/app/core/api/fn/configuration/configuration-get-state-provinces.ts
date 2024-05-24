@@ -7,7 +7,6 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { Code } from '../../models/code';
-import { CommunityCode } from '../../models/community-code';
 
 export interface ConfigurationGetStateProvinces$Params {
   countryId?: string;
@@ -18,7 +17,7 @@ export function configurationGetStateProvinces(
   rootUrl: string,
   params?: ConfigurationGetStateProvinces$Params,
   context?: HttpContext
-): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
+): Observable<StrictHttpResponse<Array<Code>>> {
   const rb = new RequestBuilder(rootUrl, configurationGetStateProvinces.PATH, 'get');
   if (params) {
     rb.query('countryId', params.countryId, {});
@@ -27,7 +26,7 @@ export function configurationGetStateProvinces(
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Code | CommunityCode>>;
+      return r as StrictHttpResponse<Array<Code>>;
     })
   );
 }

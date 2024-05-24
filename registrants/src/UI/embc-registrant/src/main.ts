@@ -9,12 +9,13 @@ import { ApiModule } from './app/core/api/api.module';
 import { CoreModule } from './app/core/core.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app/app-routing.module';
+import { routes } from './app/app-routing.module';
 import { withInterceptorsFromDi, provideHttpClient, HttpClient } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideMarkdown } from 'ngx-markdown';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from '@angular/router';
 
 if (environment.production) {
   enableProdMode();
@@ -22,9 +23,18 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withRouterConfig({
+        canceledNavigationResolution: 'computed'
+      }),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'top'
+      })
+    ),
     importProvidersFrom(
       BrowserModule,
-      AppRoutingModule,
       ReactiveFormsModule,
       CoreModule,
       ApiModule.forRoot({ rootUrl: '.' }),
