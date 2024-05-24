@@ -117,6 +117,20 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
                     return NotEligible($"Household member {householdMember.era_householdmemberid}) not found in previous needs assessment",
                         taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
                 }
+                else if (householdMember.era_isprimaryregistrant != true)
+                {
+                    var history = (await ctx.audits
+                        .Where(a => a.objecttypecode == nameof(era_householdmember) && a._objectid_value == householdMember.era_householdmemberid && a.createdon >= currentNeedsAssessment.createdon)
+                        .GetAllPagesAsync(ct))
+                        .ToList();
+
+                    if (history.Any(a => a.action == 2))
+                    {
+                        // household member was modified in the current needs assessment
+                        return NotEligible($"Household member {householdMember.era_householdmemberid} was modified",
+                            taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+                    }
+                }
             }
 #pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
         }

@@ -149,7 +149,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
     }
 
-    [Fact(Skip = "not ready")]
+    [Fact]
     public async Task ValidateExtensionEligibility_LessHouseholdMembers_True()
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
@@ -159,7 +159,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await RunEligibilityTest(file.Id, true);
     }
 
-    [Fact(Skip = "not ready")]
+    [Fact]
     public async Task ValidateExtensionEligibility_ChangedHouseholdMembers_False()
     {
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
