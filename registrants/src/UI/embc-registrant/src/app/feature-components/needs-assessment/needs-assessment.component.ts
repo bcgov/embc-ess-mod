@@ -186,7 +186,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   cancelAndGoBackToReview() {
-    // revert the form changes on cancel
+    // revert the form changes on cancel and do not emit event
     this.form.setValue(this.copyCurrentStepFormValue, { emitEvent: false });
 
     this.editFromReview = false;
