@@ -247,12 +247,12 @@
     </div>
     <div class="row" style="margin-top: 20px">
       <div class="col">
-        <captcha
-          language="en"
-          eagerFetchAudio="true"
-          (validToken)="onValidToken($event)"
-          (serverError)="onServerError($event)"
-        ></captcha>
+        <p>Please complete the CAPTCHA below. This helps us prevent automated registrations.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <app-captcha-v2 (captchaResponse)="onTokenResponse($event)"></app-captcha-v2>
       </div>
     </div>
 

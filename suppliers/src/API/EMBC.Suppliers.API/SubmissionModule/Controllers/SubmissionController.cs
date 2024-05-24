@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.Services;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -21,24 +23,38 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         private readonly ISubmissionHandler handler;
         private readonly IHostEnvironment env;
         private readonly ConfigHealthProvider healthcheck;
+        private readonly ICaptchaVerificationService captchaVerificationService;
 
-        public SubmissionController(ISubmissionHandler handler, IHostEnvironment env, ConfigHealthProvider healthcheck)
+        public SubmissionController(ISubmissionHandler handler, IHostEnvironment env, ConfigHealthProvider healthcheck, ICaptchaVerificationService captchaVerificationService)
         {
             this.handler = handler;
             this.env = env;
             this.healthcheck = healthcheck;
+            this.captchaVerificationService = captchaVerificationService;
         }
 
         /// <summary>
         /// Post to create a new submission
         /// </summary>
         /// <param name="submission">Submission details</param>
+        /// <param name="ct">cancellation token</param>
         /// <returns>New submission's reference number</returns>
         [HttpPost]
-        public async Task<ActionResult<string>> Create(Submission submission)
+        public async Task<ActionResult<string>> Create(Submission submission, CancellationToken ct)
         {
             try
             {
+                var isValid = await captchaVerificationService.VerifyAsync(submission.Captcha, ct);
+
+                if (!isValid)
+                {
+                    return BadRequest(new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest,
+                        Title = "Invalid captcha",
+                    });
+                }
+
                 // If site is in maintenance mode, return special message
                 var maintResult = healthcheck.GetMaintenanceState();
 

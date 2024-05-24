@@ -126,6 +126,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                 {
                     ClientId = conf["oidc:clientId"],
                     Issuer = conf["oidc:issuer"]
+                },
+                Captcha = new CaptchaConfiguration
+                {
+                    Key = conf["captcha:key"]
                 }
             };
         }
