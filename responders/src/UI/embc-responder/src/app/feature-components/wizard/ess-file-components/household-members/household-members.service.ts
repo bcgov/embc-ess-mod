@@ -29,6 +29,8 @@ export class HouseholdMembersService {
 
   saveHouseholdMember(householdForm: UntypedFormGroup): UntypedFormGroup {
     householdForm.get('houseHoldMember').reset();
+    // reset date field sepcically to remove the mask placeholder value
+    (householdForm.get('houseHoldMember') as any).controls.dateOfBirth.reset('');
     householdForm.get('addMemberFormIndicator').setValue(false);
     householdForm.get('addMemberIndicator').setValue(false);
 
