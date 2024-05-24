@@ -20,6 +20,7 @@ import {
 } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MaskTextPipe } from 'src/app/shared/pipes/maskText.pipe';
 
 @Component({
   selector: 'app-ess-file-details',
@@ -40,7 +41,8 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatRowDef,
     MatRow,
     DatePipe,
-    MaskEvacuatedAddressPipe
+    MaskEvacuatedAddressPipe,
+    MaskTextPipe
   ]
 })
 export class EssFileDetailsComponent implements OnInit {
