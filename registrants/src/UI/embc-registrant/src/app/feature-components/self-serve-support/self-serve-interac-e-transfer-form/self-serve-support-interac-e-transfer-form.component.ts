@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ETransferDetailsForm } from '../self-serve-support.model';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -29,7 +29,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     './self-serve-support-interac-e-transfer-form.component.scss'
   ]
 })
-export class SelfServeSupportInteracETransfterFormComponent {
+export class SelfServeSupportInteracETransfterFormComponent implements OnInit {
   ETransferNotificationPreference = ETransferNotificationPreference;
 
   @Input() eTransferDetailsForm: FormGroup<ETransferDetailsForm>;

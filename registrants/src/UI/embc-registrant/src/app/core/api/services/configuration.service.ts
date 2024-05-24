@@ -77,7 +77,7 @@ export class ConfigurationService extends BaseService {
   configurationGetCodes$Response(
     params?: ConfigurationGetCodes$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
+  ): Observable<StrictHttpResponse<Array<Code>>> {
     return configurationGetCodes(this.http, this.rootUrl, params, context);
   }
 
@@ -87,12 +87,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCodes(
-    params?: ConfigurationGetCodes$Params,
-    context?: HttpContext
-  ): Observable<Array<Code | CommunityCode>> {
+  configurationGetCodes(params?: ConfigurationGetCodes$Params, context?: HttpContext): Observable<Array<Code>> {
     return this.configurationGetCodes$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Code | CommunityCode>>): Array<Code | CommunityCode> => r.body)
+      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
     );
   }
 
@@ -139,7 +136,7 @@ export class ConfigurationService extends BaseService {
   configurationGetStateProvinces$Response(
     params?: ConfigurationGetStateProvinces$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
+  ): Observable<StrictHttpResponse<Array<Code>>> {
     return configurationGetStateProvinces(this.http, this.rootUrl, params, context);
   }
 
@@ -152,9 +149,9 @@ export class ConfigurationService extends BaseService {
   configurationGetStateProvinces(
     params?: ConfigurationGetStateProvinces$Params,
     context?: HttpContext
-  ): Observable<Array<Code | CommunityCode>> {
+  ): Observable<Array<Code>> {
     return this.configurationGetStateProvinces$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Code | CommunityCode>>): Array<Code | CommunityCode> => r.body)
+      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
     );
   }
 
@@ -170,7 +167,7 @@ export class ConfigurationService extends BaseService {
   configurationGetCountries$Response(
     params?: ConfigurationGetCountries$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
+  ): Observable<StrictHttpResponse<Array<Code>>> {
     return configurationGetCountries(this.http, this.rootUrl, params, context);
   }
 
@@ -180,12 +177,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCountries(
-    params?: ConfigurationGetCountries$Params,
-    context?: HttpContext
-  ): Observable<Array<Code | CommunityCode>> {
+  configurationGetCountries(params?: ConfigurationGetCountries$Params, context?: HttpContext): Observable<Array<Code>> {
     return this.configurationGetCountries$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Code | CommunityCode>>): Array<Code | CommunityCode> => r.body)
+      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
     );
   }
 
