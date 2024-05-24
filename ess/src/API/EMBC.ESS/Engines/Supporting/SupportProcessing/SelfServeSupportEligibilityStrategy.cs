@@ -35,26 +35,19 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
     private async Task<SelfServeSupportEligibility> ValidateEligibility(ValidateSelfServeSupportsEligibility request, CancellationToken ct)
     {
         var ctx = essContextFactory.Create();
-        var file = await ctx.era_evacuationfiles
-            .Expand(f => f.era_CurrentNeedsAssessmentid)
-            .Expand(f => f.era_CurrentNeedsAssessmentid.era_TaskNumber)
-            .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
-            .Expand(f => f.era_Registrant)
-            .Expand(f => f.era_Registrant.era_BCSCAddress)
-            .Where(f => f.era_name == request.EvacuationFileId).SingleOrDefaultAsync();
 
+        var file = await GetFile(ctx, request.EvacuationFileId, ct);
         if (file == null) throw new InvalidOperationException($"File {request.EvacuationFileId} not found");
-        await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
 
         var registrant = file.era_Registrant;
         if (registrant == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no primary registrant");
 
-        var needsAssessment = file.era_CurrentNeedsAssessmentid;
-        if (needsAssessment == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no needs assesment");
+        var currentNeedsAssessment = file.era_CurrentNeedsAssessmentid;
+        if (currentNeedsAssessment == null) throw new InvalidOperationException($"File {request.EvacuationFileId} has no needs assesment");
 
         // check maximum number of household members
         if (registrant.birthdate.HasValue && ((DateTime)file.era_Registrant.birthdate.Value).IsMinor()) return NotEligible("Registrant is a minor");
-        if (needsAssessment.era_era_householdmember_era_needassessment.Count > MaximumNumberOfHouseholdMember) return NotEligible($"File has more than {MaximumNumberOfHouseholdMember} household members");
+        if (currentNeedsAssessment.era_era_householdmember_era_needassessment.Count > MaximumNumberOfHouseholdMember) return NotEligible($"File has more than {MaximumNumberOfHouseholdMember} household members");
 
         // check home address eligibility
         var homeAddress = registrant.era_BCSCAddress;
@@ -68,13 +61,10 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // check the task is enabled for self-serve
-        var task = await ctx.era_tasks
-            .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
-            .Where(t => t.era_name == taskNumber && t.statuscode == 1).SingleOrDefaultAsync(ct);
 
+        var task = await GetTask(ctx, taskNumber, ct);
         if (task == null) return NotEligible($"Task {taskNumber} was not found or not active in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
-        await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
 
         var enabledSupports = GetEnabledSupportTypesForTask(task).ToArray();
         if (enabledSupports.Length == 0) return NotEligible("Task has no supports enabled for self serve", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
@@ -84,7 +74,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
         if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
 
-        var needs = GetIdentifiedNeeds(needsAssessment).ToArray();
+        var needs = GetIdentifiedNeeds(currentNeedsAssessment).ToArray();
 
         // check if any needs were requested
         if (needs.Length == 0) return Eligible(taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid.Value, from: eligibleFrom, to: eligibleTo, eligibleSupportTypes: []);
@@ -97,21 +87,51 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (ineligibleSupports.Any()) return NotEligible($"Requested supports are not enabled: {string.Join(",", ineligibleSupports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // add - duplicate check
-        var similarSupportTypes = needs.SelectMany(t => MapNeedToSupportType(t)).Cast<int>().ToList();
-        foreach (var hm in needsAssessment.era_era_householdmember_era_needassessment)
+        var similarSupportTypes = needs.SelectMany(t => MapNeedToSupportType(t)).Cast<int>().ToArray();
+        foreach (var hm in currentNeedsAssessment.era_era_householdmember_era_needassessment)
         {
-            var supports = (await ctx.era_evacueesupports
-                .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
-                .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
-                .Where(s =>
-                    s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
-                    ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
-                .GetAllPagesAsync(ct))
-                .Select(s => s.era_name)
-                .ToList();
-
-            if (supports.Any()) return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+            var supports = (await GetDuplicateSupportsForHouseholdMember(ctx, hm, similarSupportTypes, eligibleFrom, eligibleTo, ct)).ToList();
+            if (supports.Count > 0)
+                return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
         }
+
+        // check if household member composition changed from the last needs assessment
+        var previousNeedsAssessment = ctx.era_needassessments
+            .Expand(na => na.era_era_householdmember_era_needassessment)
+            .Where(na => na.era_needassessmentid != currentNeedsAssessment.era_needassessmentid && na.era_EvacuationFile.era_evacuationfileid == file.era_evacuationfileid).OrderByDescending(na => na.createdon).FirstOrDefault();
+        if (previousNeedsAssessment != null)
+        {
+            if (previousNeedsAssessment.era_era_householdmember_era_needassessment.Count < currentNeedsAssessment.era_era_householdmember_era_needassessment.Count)
+            {
+                // current needs assessment has more household members than previous needs assessment
+                return NotEligible("Current needs assessment has more household members from the previous needs asessment",
+                    taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+            }
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
+            foreach (var householdMember in currentNeedsAssessment.era_era_householdmember_era_needassessment)
+            {
+                var previouseHouseholdMember = previousNeedsAssessment.era_era_householdmember_era_needassessment.SingleOrDefault(hm => hm.era_householdmemberid == householdMember.era_householdmemberid);
+                if (previouseHouseholdMember == null)
+                {
+                    // not found in previous needs assessment
+                    return NotEligible($"Household member {householdMember.era_householdmemberid}) not found in previous needs assessment",
+                        taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+                }
+            }
+#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
+        }
+
+        var receivedSupports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId.ToList();
+        var notExpiredPastSupports = receivedSupports.Where(s => s.era_validto > eligibleFrom).ToList();
+
+        // check all the past supports expired
+        if (notExpiredPastSupports.Count > 0) return NotEligible($"Past supports {string.Join(",", notExpiredPastSupports.Select(s => s.era_name))} are still active",
+            taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+
+        // filter supports enabled for extensions
+        var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToArray();
+        var enabledSupportTypesForExtensions = GetExtensionEnabledSupportTypesForTask(task).ToArray();
+        eligibleSupports = FilterExtensibleSupportTypes(eligibleSupports, receivedSupportTypes, enabledSupportTypesForExtensions);
 
         // return eligibility results
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo, eligibleSupports);
@@ -185,7 +205,18 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
 
     private static IEnumerable<SupportType> GetEnabledSupportTypesForTask(era_task task)
     {
-        return task.era_era_task_era_selfservesupportlimits_Task.Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString())).ToArray();
+        return task.era_era_task_era_selfservesupportlimits_Task
+            .Where(sl => sl.statuscode == 1)
+            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString()))
+            .ToArray();
+    }
+
+    private static IEnumerable<SupportType> GetExtensionEnabledSupportTypesForTask(era_task task)
+    {
+        return task.era_era_task_era_selfservesupportlimits_Task
+            .Where(sl => sl.statuscode == 1 && sl.era_extensionavailable == true)
+            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString()))
+            .ToArray();
     }
 
     private static SupportType[] MapNeedToSupportType(IdentifiedNeed need) =>
@@ -208,12 +239,79 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             ?.FirstOrDefault(p => p.Name == "ESS_TASK_NUMBER")?.Value;
     }
 
+    private async Task<era_evacuationfile?> GetFile(EssContext ctx, string evacuationFileNumber, CancellationToken ct)
+    {
+        var file = await ctx.era_evacuationfiles
+            .Expand(f => f.era_CurrentNeedsAssessmentid)
+            .Expand(f => f.era_CurrentNeedsAssessmentid.era_TaskNumber)
+            .Expand(f => f.era_CurrentNeedsAssessmentid.era_EligibilityCheck)
+            .Expand(f => f.era_Registrant)
+            .Expand(f => f.era_Registrant.era_BCSCAddress)
+            .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+            .Where(f => f.era_name == evacuationFileNumber).SingleOrDefaultAsync(ct);
+
+        if (file != null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment), ct);
+
+        return file;
+    }
+
+    private static async Task<era_task?> GetTask(EssContext ctx, string taskNumber, CancellationToken ct)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var task = await ctx.era_tasks
+          .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
+          .Where(t => t.era_name == taskNumber && t.statuscode == 1 && t.era_taskstartdate <= now && t.era_taskenddate > now).SingleOrDefaultAsync(ct);
+        if (task != null) await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_selfservesupportlimits_Task), ct);
+
+        return task;
+    }
+
+    private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset eligibleFrom, DateTimeOffset eligibleTo, CancellationToken ct)
+    {
+        return await ctx.era_evacueesupports
+               .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+               .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
+               .Where(s =>
+                   s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
+               ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
+        .GetAllPagesAsync(ct);
+    }
+
+    private static IEnumerable<SelfServeSupportType> FilterExtensibleSupportTypes(IEnumerable<SelfServeSupportType> eligibleSupportTypes, IEnumerable<SupportType> receivedSupportTypes, IEnumerable<SupportType> enabledSupportTypesForExtensions)
+    {
+        foreach (var type in eligibleSupportTypes)
+        {
+            switch (type)
+            {
+                case SelfServeSupportType.ShelterAllowance when enabledSupportTypesForExtensions.Contains(SupportType.ShelterAllowance) || !receivedSupportTypes.Contains(SupportType.ShelterAllowance):
+                    yield return SelfServeSupportType.ShelterAllowance;
+                    break;
+
+                case SelfServeSupportType.FoodGroceries when enabledSupportTypesForExtensions.Contains(SupportType.FoodGroceries) || !receivedSupportTypes.Contains(SupportType.FoodGroceries):
+                    yield return SelfServeSupportType.FoodGroceries;
+                    break;
+
+                case SelfServeSupportType.FoodRestaurant when enabledSupportTypesForExtensions.Contains(SupportType.FoodRestaurant) || !receivedSupportTypes.Contains(SupportType.FoodRestaurant):
+                    yield return SelfServeSupportType.FoodRestaurant;
+                    break;
+
+                case SelfServeSupportType.Incidentals when enabledSupportTypesForExtensions.Contains(SupportType.Incidentals) || !receivedSupportTypes.Contains(SupportType.Incidentals):
+                    yield return SelfServeSupportType.Incidentals;
+                    break;
+
+                case SelfServeSupportType.Clothing when enabledSupportTypesForExtensions.Contains(SupportType.Clothing) || !receivedSupportTypes.Contains(SupportType.Clothing):
+                    yield return SelfServeSupportType.Clothing;
+                    break;
+            }
+        }
+    }
+
     private static SelfServeSupportEligibility NotEligible(
-        string reason,
-        string? taskNumber = null,
-        Guid? referencedHomeAddressId = null,
-        DateTimeOffset? from = null,
-        DateTimeOffset? to = null,
+    string reason,
+    string? taskNumber = null,
+    Guid? referencedHomeAddressId = null,
+    DateTimeOffset? from = null,
+    DateTimeOffset? to = null,
         IEnumerable<SelfServeSupportType>? eligibleSupportTypes = null) =>
         new SelfServeSupportEligibility(false, reason, taskNumber, referencedHomeAddressId?.ToString(), from, to, eligibleSupportTypes ?? []);
 

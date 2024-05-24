@@ -55,7 +55,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     public async Task ValidateEligibility_NoNeeds_True()
     {
         var (file, _) = await CreateTestSubjects(needs: [], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
-        var eligibility = await RunEligibilityTest(file.Id, true, null);
+        var eligibility = await RunEligibilityTest(file.Id, true);
         eligibility.eligibleSupportTypes.ShouldBeEmpty();
     }
 
@@ -65,6 +65,23 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
 
         await RunEligibilityTest(file.Id, false, "Evacuee requested support referrals");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_PartialEnabledSupports_False()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
+
+        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,ShelterAllowance");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_PartialEnabledSupports_True()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
+
+        var eligibility = await RunEligibilityTest(file.Id, true);
+        eligibility.eligibleSupportTypes.ShouldHaveSingleItem().ShouldBe(SelfServeSupportType.FoodRestaurant);
     }
 
     [Fact]
@@ -82,27 +99,9 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
-    public async Task ValidateEligibility_PartialEnabledSupports_False()
-    {
-        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Clothing, IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
-
-        await RunEligibilityTest(file.Id, false, "Requested supports are not enabled: Clothing,ShelterAllowance");
-    }
-
-    [Fact]
-    public async Task ValidateEligibility_PartialEnabledSupports_True()
-    {
-        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
-
-        var eligibility = await RunEligibilityTest(file.Id, true, null);
-        eligibility.eligibleSupportTypes.ShouldHaveSingleItem().ShouldBe(SelfServeSupportType.FoodRestaurant);
-    }
-
-    [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
         var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
-        var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
             new ShelterAllowanceSupport
@@ -110,13 +109,13 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
                 FileId = file.Id,
                 From = DateTime.Now.AddDays(-7),
                 To = DateTime.Now.AddDays(-7).AddHours(72),
-                IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                IncludedHouseholdMembers = file.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
                 SupportDelivery = new Referral()
             }
         };
         await SaveSupports(file.Id, previousSupports);
 
-        await RunEligibilityTest(file.Id, true, null);
+        await RunEligibilityTest(file.Id, true);
     }
 
     [Fact]
@@ -140,7 +139,65 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         support.IncludedHouseholdMembers.Order().ShouldBe(file.NeedsAssessment.HouseholdMembers.Select(hm => hm.Id).Order());
     }
 
-    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason)
+    [Fact]
+    public async Task ValidateExtensionEligibility_MoreHouseholdMembers_False()
+    {
+        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 2, needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+
+        var newHouseholdMember = file.HouseholdMembers.Last() with { Id = null, IsPrimaryRegistrant = false, DateOfBirth = "1/19/2002" };
+        await UpdateTestFile(file, householdMembers: file.NeedsAssessment.HouseholdMembers.Append(newHouseholdMember));
+        await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
+    }
+
+    [Fact(Skip = "not ready")]
+    public async Task ValidateExtensionEligibility_LessHouseholdMembers_True()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+
+        var updatedHouseholdMembers = file.HouseholdMembers.Take(4).Select(hm => hm with { });
+        await UpdateTestFile(file, householdMembers: updatedHouseholdMembers);
+        await RunEligibilityTest(file.Id, true);
+    }
+
+    [Fact(Skip = "not ready")]
+    public async Task ValidateExtensionEligibility_ChangedHouseholdMembers_False()
+    {
+        var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+
+        var updatedHouseholdMembers = file.HouseholdMembers.Select(hm => hm with { }).ToList();
+        updatedHouseholdMembers[updatedHouseholdMembers.Count - 1].DateOfBirth = "1/19/2002";
+        await UpdateTestFile(file, householdMembers: updatedHouseholdMembers);
+        await RunEligibilityTest(file.Id, false, $"Household member {updatedHouseholdMembers[updatedHouseholdMembers.Count - 1].Id} was modified");
+    }
+
+    [Fact]
+    public async Task ValidateExtensionEligibility_NonExtensibleSupport_True()
+    {
+        var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var eligibility1 = await RunEligibilityTest(file.Id, true);
+        eligibility1.eligibleSupportTypes.ShouldContain(SelfServeSupportType.Incidentals);
+
+        var previousSupports = new[]
+        {
+            new IncidentalsSupport
+            {
+                FileId = file.Id,
+                From = DateTime.Now.AddDays(-7),
+                To = DateTime.Now.AddDays(-7).AddHours(72),
+                IncludedHouseholdMembers = file.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                SupportDelivery = new Interac(),
+                IsSelfServe = true
+            }
+        };
+        await SaveSupports(file.Id, previousSupports);
+
+        await UpdateTestFile(file);
+
+        var eligibility2 = await RunEligibilityTest(file.Id, true);
+        eligibility2.eligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
+    }
+
+    private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason = null)
     {
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
         eligibilityResponse.ShouldNotBeNull();
@@ -161,11 +218,21 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         registrant.Id = await SaveRegistrant(registrant);
         var file = TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber, numberOfHoldholdMembers);
         file.PrimaryRegistrantId = registrant.Id;
+        file.PrimaryRegistrantUserId = registrant.UserId;
         file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(numberOfHoldholdMembers).ToList();
         file.NeedsAssessment.Needs = needs ?? [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
 
         file.Id = await SaveFile(file);
-        return (file, registrant);
+
+        var savedFile = await GetFile(file.Id);
+        return (savedFile, registrant);
+    }
+
+    private async Task<EvacuationFile> UpdateTestFile(EvacuationFile file, IEnumerable<HouseholdMember>? householdMembers = null)
+    {
+        file.NeedsAssessment = file.NeedsAssessment with { HouseholdMembers = householdMembers ?? file.NeedsAssessment.HouseholdMembers };
+        await SaveFile(file);
+        return file;
     }
 
     private async Task<string> SaveFile(EvacuationFile evacuationFile)
