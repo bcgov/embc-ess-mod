@@ -22,7 +22,7 @@ import { EvacuationFileStatus } from 'src/app/core/api/models';
   imports: [MatCardModule, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, AsyncPipe, CustomDate]
 })
 export class ReviewComponent implements OnInit {
-  EvacuationFileStatus=  EvacuationFileStatus;
+  EvacuationFileStatus = EvacuationFileStatus;
   NeedsAssessmentSteps = NeedsAssessmentSteps;
   essFileId = input<string | undefined>();
 
