@@ -313,13 +313,26 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
     }
 
     private static async Task<IEnumerable<era_evacueesupport>> GetPreviousOnetimeSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] oneTimeSupportTypes, DateTimeOffset taskStartDate, CancellationToken ct)
-    {
-        return await ctx.era_evacueesupports
-               .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
-               .WhereIn(s => s.era_supporttype.Value, oneTimeSupportTypes)
-               .Where(s => s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
-                    s.era_NeedsAssessmentID.era_TaskNumber.era_taskenddate >= taskStartDate)
-        .GetAllPagesAsync(ct);
+    {        
+        var matchingHouseholdMembers = await ctx.era_householdmembers
+            .Expand(hm1 => hm1.era_era_householdmember_era_evacueesupport)
+            .Where(hm1 => hm1.era_firstname == hm.era_firstname && hm1.era_lastname == hm.era_lastname && hm1.era_dateofbirth == hm.era_dateofbirth && hm1.statuscode == 1)
+            .GetAllPagesAsync(ct);
+
+        var matchingSupports = matchingHouseholdMembers
+            .SelectMany(hm1 => hm1.era_era_householdmember_era_evacueesupport)
+            .Where(s => oneTimeSupportTypes.Contains(s.era_supporttype.Value));
+
+        var supports = new List<era_evacueesupport>();
+        foreach (var support in matchingSupports)
+        {
+            var needassessment = await ctx.era_needassessments
+                .Expand(na => na.era_TaskNumber)
+                .Where(na => na.era_needassessmentid == support._era_needsassessmentid_value)
+                .SingleOrDefaultAsync(ct);
+            if (needassessment.era_TaskNumber.era_taskenddate >= taskStartDate) supports.Add(support);
+        }
+        return supports;
     }
 
     private static IEnumerable<SelfServeSupportType> FilterExtensibleSupportTypes(IEnumerable<SelfServeSupportType> eligibleSupportTypes, IEnumerable<SupportType> receivedSupportTypes, IEnumerable<SupportType> enabledSupportTypesForExtensions)
