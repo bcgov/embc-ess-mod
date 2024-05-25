@@ -10,7 +10,7 @@ import { RegistrationsService } from 'src/app/core/api/services';
 import { ConfigService } from 'src/app/core/services/config.service';
 import { AppLoaderComponent } from 'src/app/shared/components/app-loader/app-loader.component';
 
-export type AccessEntity = 'profile' | 'essFile';
+export type AccessEntity = 'profile' | 'essFile' | 'secretWord';
 
 export interface AccessReasonData {
   accessEntity: AccessEntity;
@@ -42,12 +42,14 @@ export class AccessReasonGateDialogComponent {
 
   label: Record<AccessEntity, string> = {
     profile: 'evacuee profile',
-    essFile: 'ESS File'
+    essFile: 'ESS File',
+    secretWord: 'Secret Word'
   };
 
   buttonLabel: Record<AccessEntity, string> = {
     profile: 'Profile',
-    essFile: 'ESS File'
+    essFile: 'ESS File',
+    secretWord: 'Secret Word'
   };
 
   constructor(
@@ -81,9 +83,8 @@ export class AccessReasonGateDialogComponent {
             this.showButtonLoader = false;
           }
         });
-    } else if (this.dialogData.accessEntity === 'essFile') {
+    } else if (this.dialogData.accessEntity === 'essFile' || this.dialogData.accessEntity === 'secretWord') {
       this.showButtonLoader = true;
-
       this.registrationsService
         .registrationsAuditFileAcccess({
           body: { accessReasonId: this.accessReasonControl.value },
