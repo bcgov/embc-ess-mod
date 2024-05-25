@@ -97,7 +97,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeShelterAllowanceSupport
             {
-                Nights = CreateSupportDays(from, to).ToList(),
+                Nights = CreateSupportDays(from, to).Take(3).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };
@@ -111,7 +111,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe
         {
             var support = new SelfServeFoodGroceriesSupport
             {
-                Nights = CreateSupportDays(from, to).ToList(),
+                Nights = CreateSupportDays(from, to).Take(3).ToList(),
                 IncludedHouseholdMembers = householdMembers.Select(hm => hm.Id).ToList(),
                 TotalAmount = 0d
             };

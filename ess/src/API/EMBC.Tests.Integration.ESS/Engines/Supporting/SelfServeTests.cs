@@ -85,17 +85,31 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
-    public async Task ValidateEligibility_DuplicateSupport_False()
+    public async Task ValidateEligibility_ActiveSupports_False()
     {
         var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
-        var actualFile = await GetFile(file.Id);
         var previousSupports = new[]
         {
-            new ShelterAllowanceSupport{FileId = file.Id, From = DateTime.Now, To = DateTime.Now.AddHours(72), IncludedHouseholdMembers = actualFile.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+            new ShelterAllowanceSupport{FileId = file.Id, From = DateTime.Now, To = DateTime.Now.AddHours(72), IncludedHouseholdMembers = file.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
         };
         await SaveSupports(file.Id, previousSupports);
+        var support = (await GetFile(file.Id)).Supports.ShouldHaveSingleItem();
 
-        await RunEligibilityTest(file.Id, false, "Duplicate supports found");
+        await RunEligibilityTest(file.Id, false, $"Supports {support.Id} are still active");
+    }
+
+    [Fact]
+    public async Task ValidateEligibility_DuplicateSupports_False()
+    {
+        var (file1, registrant) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport{FileId = file1.Id, From = DateTime.Now, To = DateTime.Now.AddHours(72), IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+        };
+        await SaveSupports(file1.Id, previousSupports);
+
+        var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress(), existingRegistrant: registrant);
+        await RunEligibilityTest(file2.Id, false, "Overlapping supports found");
     }
 
     [Fact]
@@ -197,6 +211,20 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         eligibility2.eligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
     }
 
+    [Fact]
+    public async Task ValidateEligibility_PreviousOnetimeSupports_False()
+    {
+        var (file1, registrant) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var previousSupports = new[]
+        {
+            new ClothingSupport{FileId = file1.Id, From = DateTime.Now.AddDays(-7), To = DateTime.Now.AddHours(-3), IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+        };
+        await SaveSupports(file1.Id, previousSupports);
+
+        var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress(), existingRegistrant: registrant);
+        await RunEligibilityTest(file2.Id, false, "Previous one-time supports found for household member");
+    }
+
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason = null)
     {
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
@@ -210,9 +238,14 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         return eligibilityResponse.Eligibility;
     }
 
-    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(string? taskNumber = null, int numberOfHoldholdMembers = 5, Address? homeAddress = null, IEnumerable<IdentifiedNeed>? needs = null)
+    private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(
+        string? taskNumber = null,
+        int numberOfHoldholdMembers = 5,
+        Address? homeAddress = null,
+        IEnumerable<IdentifiedNeed>? needs = null,
+        RegistrantProfile? existingRegistrant = null)
     {
-        var registrant = TestHelper.CreateRegistrantProfile();
+        var registrant = existingRegistrant ?? TestHelper.CreateRegistrantProfile();
         registrant.HomeAddress = homeAddress;
 
         registrant.Id = await SaveRegistrant(registrant);
