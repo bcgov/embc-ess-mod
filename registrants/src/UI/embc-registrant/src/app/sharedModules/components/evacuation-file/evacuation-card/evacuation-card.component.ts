@@ -6,13 +6,16 @@ import { EvacuationFileMappingService } from '../evacuation-file-mapping.service
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import * as moment from 'moment';
+import { EvacuationFileDataService } from '../evacuation-file-data.service';
 
 @Component({
   selector: 'app-evacuation-card',
   templateUrl: './evacuation-card.component.html',
   styleUrls: ['./evacuation-card.component.scss'],
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, DatePipe]
+  imports: [MatCardModule, MatChipsModule, MatButtonModule, DatePipe]
 })
 export class EvacuationCardComponent implements OnInit {
   EvacuationFileStatus = EvacuationFileStatus;
@@ -21,15 +24,23 @@ export class EvacuationCardComponent implements OnInit {
   imageIcon: string;
   pathName: string;
 
+  hasActiveSupports: boolean = false;
+  hasNoSupports: boolean = false;
+
   constructor(
     private router: Router,
-    private evacuationFileMapping: EvacuationFileMappingService
+    private evacuationFileMapping: EvacuationFileMappingService,
+    private evacuationFileDataService: EvacuationFileDataService
   ) {
     this.pathName = window.location.pathname;
   }
 
   ngOnInit(): void {
     this.changeStatusColor();
+
+    this.hasActiveSupports = this.evacuationFileDataService.hasActiveSupports(this.evacuationFileCard.supports);
+
+    this.hasNoSupports = this.evacuationFileDataService.hasNoSupports(this.evacuationFileCard.supports);
   }
 
   changeStatusColor(): void {

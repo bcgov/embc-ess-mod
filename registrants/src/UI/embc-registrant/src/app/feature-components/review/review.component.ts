@@ -10,6 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { CaptchaV2Component } from '../../core/components/captcha-v2/captcha-v2.component';
 import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { NeedsAssessmentSteps } from 'src/app/core/services/componentCreation.service';
+import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
+import { EvacuationFileStatus } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-review',
@@ -19,6 +22,8 @@ import { MatCardModule } from '@angular/material/card';
   imports: [MatCardModule, NgTemplateOutlet, CaptchaV2Component, MatButtonModule, AsyncPipe, CustomDate]
 })
 export class ReviewComponent implements OnInit {
+  EvacuationFileStatus=  EvacuationFileStatus;
+  NeedsAssessmentSteps = NeedsAssessmentSteps;
   essFileId = input<string | undefined>();
 
   @Output() captchaPassed = new EventEmitter<CaptchaResponse>();
@@ -38,7 +43,8 @@ export class ReviewComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public formCreationService: FormCreationService
+    public formCreationService: FormCreationService,
+    public evacuationFileDataService: EvacuationFileDataService
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +69,8 @@ export class ReviewComponent implements OnInit {
   editNeedsAssessment(componentToEdit: string): void {
     if (this.essFileId()) {
       // convert to needs assessment step name, used to find the index of the step
-      if (['family-information', 'pets'].includes(componentToEdit)) componentToEdit = 'family-information-pets';
+      if (['family-information', 'pets'].includes(componentToEdit))
+        componentToEdit = NeedsAssessmentSteps.FamilyAndPetsInformation;
       this.editStep.emit(componentToEdit);
     } else {
       this.editDetails(componentToEdit);

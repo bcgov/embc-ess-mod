@@ -1,7 +1,14 @@
 <mat-card appearance="outlined">
   <mat-card-content>
     <span class="evacuatedSecondary">Evacuated From</span>
-    <mat-card-title class="evacuatedTitle">{{ evacuationFileCard?.evacuatedAddress?.community?.name }} </mat-card-title>
+    <mat-card-title class="evacuatedTitle">
+      {{ evacuationFileCard?.evacuatedAddress?.community?.name }}
+      @if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports) {
+        <mat-chip disabled>Supports available</mat-chip>
+      } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports) {
+        <mat-chip disabled> Support extensions available</mat-chip>
+      }
+    </mat-card-title>
     <div class="row">
       <div class="col-md-9">
         <table style="width: 100%">
@@ -34,16 +41,14 @@
       </div>
       <div class="col-md-3 button-align">
         <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">
-          @switch (evacuationFileCard?.status) {
-            @case (EvacuationFileStatus.Pending) {
-              View & Edit Details
-            }
-            @case (EvacuationFileStatus.Expired) {
-              View & Edit Details
-            }
-            @default {
-              View Details
-            }
+          @if ([EvacuationFileStatus.Pending, EvacuationFileStatus.Expired].includes(evacuationFileCard?.status)) {
+            View & Edit Details
+          } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports) {
+            View Details & Get Supports
+          } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports) {
+            View Details & Extend Supports
+          } @else {
+            View Details
           }
         </button>
       </div>

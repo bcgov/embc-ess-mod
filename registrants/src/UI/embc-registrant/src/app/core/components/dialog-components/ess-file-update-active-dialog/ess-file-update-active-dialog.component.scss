@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  padding: var(--size-3);
+}
+
+:host p {
+  margin-bottom: var(--size-2);
+}
+
+:host a {
+  text-decoration: none;
+}
+
+:host a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

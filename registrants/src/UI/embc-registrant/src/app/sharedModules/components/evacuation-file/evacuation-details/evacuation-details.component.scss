@@ -102,6 +102,21 @@
   padding: 3px 0;
 }
 
+.update-header-container {
+  display: flex;
+  gap: var(--size-2);
+  padding: var(--size-2);
+  margin: var(--size-2);
+}
+
+.update-header-container.pending {
+  border: 3px solid var(--color-primary);
+}
+
+.update-header-container.active {
+  border: 3px solid #fdba1b;
+}
+
 :host ::ng-deep app-review {
   .mat-mdc-card {
     box-shadow: none;

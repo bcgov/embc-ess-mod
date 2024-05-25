@@ -1,3 +1,13 @@
+:host .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+  --mat-chip-disabled-container-opacity: 1;
+  --mdc-chip-elevated-disabled-container-color: #2e8540;
+  --mdc-chip-container-height: 32px;
+  --mdc-chip-disabled-label-text-color: #fff;
+
+  margin-left: var(--size-2);
+}
+
+
 .content-container {
   padding-top: 24px;
   padding-right: 24px;
@@ -20,6 +30,8 @@
   font-style: normal;
   font-size: 32px;
   color: #169bd5;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .button-align {
