@@ -83,7 +83,9 @@ export class EssFilesResultsComponent implements OnChanges, AfterViewInit, After
       this.dialog
         .open<AccessReasonGateDialogComponent, AccessReasonData>(AccessReasonGateDialogComponent, {
           data: {
-            accessEntity: 'essFile',
+            accessEntity: this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+              ? 'essFile'
+              : 'secretWord',
             entityId: selectedESSFile.id
           }
         })
