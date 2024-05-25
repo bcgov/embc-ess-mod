@@ -5,6 +5,7 @@ import { ComponentCreationService } from '../../core/services/componentCreation.
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -13,7 +14,7 @@ describe('ProfileComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, ProfileComponent],
-      providers: [ComponentCreationService, FormCreationService, provideRouter([])]
+      providers: [ComponentCreationService, FormCreationService, provideRouter([]), provideHttpClient()]
     }).compileComponents();
   }));
 
