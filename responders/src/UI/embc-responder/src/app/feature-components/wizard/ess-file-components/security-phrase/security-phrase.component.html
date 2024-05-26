@@ -38,10 +38,10 @@
                     securityFormControl?.securityPhrase?.hasError('minlength') ||
                     securityFormControl?.securityPhrase?.hasError('maxlength')
                   ) {
-                    <mat-error> Phrase must be between 6 and 50 characters long. </mat-error>
+                    <mat-error> Word must be between 6 and 50 characters long. </mat-error>
                   }
                   @if (securityFormControl?.securityPhrase?.hasError('pattern')) {
-                    <mat-error> Phrase cannot contain special characters. </mat-error>
+                    <mat-error> Word cannot contain special characters. </mat-error>
                   }
                 </mat-form-field>
               </div>
