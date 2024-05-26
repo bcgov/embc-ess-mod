@@ -45,16 +45,12 @@
     </div>
   </div>
 
-  @if (isPending) {
-    <div
-      style="
-        display: flex;
-        gap: var(--size-2);
-        padding: var(--size-2);
-        margin: var(--size-2);
-        border: 3px solid var(--color-primary);
-      "
-    >
+  @if (
+    [EvacuationFileStatus.Pending, EvacuationFileStatus.Expired].includes(
+      evacuationFileDataService.evacuationFileStatus
+    )
+  ) {
+    <div class="update-header-container pending">
       <div>
         <img src="assets/images/black_edit.svg" alt="Edit Icon" height="40" width="40" />
       </div>
@@ -107,6 +103,22 @@
           <div class="col-md-6 card-heading">Support Issued</div>
         </div>
         <hr />
+
+        @if (isActive && !evacuationFileDataService.hasActiveSupports(evacuationFileDataService.supports)) {
+          <div class="update-header-container active">
+            <div>
+              <img src="assets/images/black_exclamation.svg" alt="Edit Icon" height="40" width="40" />
+            </div>
+            <div style="flex: 1; color: #333">
+              <h2>Do you need additional supports while evacuated?</h2>
+              <p>Please review your household needs to confirm they are still correct.</p>
+            </div>
+            <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+              Review Household Needs
+            </button>
+          </div>
+        }
+
         <div class="row info-detail">
           <div class="col-10">
             Please select the date/s for which you were issued supports to access comprehensive support details.
@@ -146,6 +158,27 @@
     }
     <div class="supportReceived">
       <p class="titleDetailHeader">Supports Issued</p>
+      <hr />
+      @if (
+        [EvacuationFileStatus.Active].includes(evacuationFileDataService.evacuationFileStatus) &&
+        evacuationFileDataService.hasNoSupports(evacuationFileDataService.supports)
+      ) {
+        <div class="update-header-container active">
+          <div>
+            <img src="assets/images/black_exclamation.svg" alt="Edit Icon" height="40" width="40" />
+          </div>
+          <div style="flex: 1; color: #333">
+            <h2>Do you need supports while evacuated?</h2>
+            <p>
+              Based on the information provided, you are categorized as a <b>self-sufficient evacuee</b> with the
+              necessary resources to support yourself. If your situation changes, please update your household needs.
+            </p>
+          </div>
+          <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+            Review Household Needs
+          </button>
+        </div>
+      }
       <p class="supportReceivedBoldSpan">You have not been issued any supports.</p>
       @if (isPending) {
         <p class="supportReceivedRegSpan">

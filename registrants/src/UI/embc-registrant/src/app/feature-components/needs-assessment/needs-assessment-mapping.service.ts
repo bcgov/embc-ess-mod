@@ -106,6 +106,9 @@ export class NeedsAssessmentMappingService {
         }
 
         details.controls.requiresShelter.setValue(details.controls.requiresShelterType.value !== undefined);
+
+        // if none of the needs are selected then set requiresNothing to true
+        if (!needs || needs?.length === 0) details.controls.requiresNothing.setValue(true);
       });
   }
 

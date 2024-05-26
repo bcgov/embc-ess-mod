@@ -16,6 +16,7 @@ import { LocationService } from 'src/app/core/services/location.service';
 import { ProfileDataService } from 'src/app/feature-components/profile/profile-data.service';
 import { RestrictionService } from 'src/app/feature-components/restriction/restriction.service';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
+import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
@@ -121,6 +122,15 @@ export class EvacuationFileDataService {
     this.supportsVal = value;
   }
 
+  hasActiveSupports(supports?: Array<Support>): boolean {
+    // if at least one support has support.to date time greater than now, then hasActiveSupports is true
+    return supports.some((s) => moment(s.to).diff(moment()) > 0);
+  }
+
+  hasNoSupports(supports: Array<Support>): boolean {
+    return !supports || supports?.length === 0;
+  }
+
   public getCurrentEvacuationFileCount(): Observable<number> {
     return this.currentEvacuationFileCount$;
   }
@@ -209,9 +219,6 @@ export class EvacuationFileDataService {
     return this.profileService.profileUpsert({
       body: this.profileDataService.createProfileDTO()
     });
-    // return this.profileService.upsertProfile(
-    //   this.profileDataService.createProfileDTO()
-    // );
   }
 
   public createEvacuationFile(): Observable<string> {

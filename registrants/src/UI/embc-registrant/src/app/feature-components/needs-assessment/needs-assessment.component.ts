@@ -2,7 +2,7 @@ import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, 
 import { FormBuilder, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
-import { ComponentCreationService } from '../../core/services/componentCreation.service';
+import { ComponentCreationService, NeedsAssessmentSteps } from '../../core/services/componentCreation.service';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
@@ -19,7 +19,7 @@ import { AlertComponent } from '../../core/components/alert/alert.component';
 import { ReviewComponent } from '../review/review.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
-import { DraftSupports, EligibilityCheck } from 'src/app/core/api/models';
+import { DraftSupports, EligibilityCheck, EvacuationFileStatus } from 'src/app/core/api/models';
 import { SupportsService } from 'src/app/core/api/services';
 import { input } from '@angular/core';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -88,7 +88,14 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     } else {
       this.type = 'need';
     }
-    this.needsSteps = this.componentService.createEvacSteps();
+    this.needsSteps = this.componentService
+      .createEvacSteps()
+      .filter(
+        (s) =>
+          this.evacuationFileDataService.evacuationFileStatus !== EvacuationFileStatus.Active ||
+          (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active &&
+            (s.component as unknown as string) !== NeedsAssessmentSteps.EvacAddress)
+      );
   }
 
   ngAfterViewChecked(): void {
@@ -119,14 +126,17 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
    * @param index index of the step
    */
   loadStepForm(index: number): void {
-    switch (index) {
-      case 0:
+    const step = this.needsSteps?.[index]?.component as unknown as NeedsAssessmentSteps;
+
+    switch (step) {
+      case NeedsAssessmentSteps.EvacAddress:
         this.form$ = this.formCreationService.getEvacuatedForm().subscribe((evacuatedForm) => {
           this.form = evacuatedForm;
           this.copyCurrentStepFormValue = this.form.getRawValue();
         });
         break;
-      case 1:
+
+      case NeedsAssessmentSteps.FamilyAndPetsInformation:
         this.form$ = combineLatest([
           this.formCreationService.getHouseholdMembersForm(),
           this.formCreationService.getPetsForm()
@@ -135,17 +145,22 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
           this.copyCurrentStepFormValue = this.form.getRawValue();
         });
         break;
-      case 2:
+
+      case NeedsAssessmentSteps.IdentifyNeeds:
         this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
           this.form = identifyNeedsForm;
           this.copyCurrentStepFormValue = this.form.getRawValue();
         });
         break;
-      case 3:
+
+      case NeedsAssessmentSteps.Secret:
         this.form$ = this.formCreationService.getSecretForm().subscribe((secret) => {
           this.form = secret;
           this.copyCurrentStepFormValue = this.form.getRawValue();
         });
+        break;
+
+      default:
         break;
     }
   }
@@ -199,20 +214,21 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   setFormData(component: string): void {
-    switch (component) {
-      case 'evac-address':
+    const step = component as NeedsAssessmentSteps;
+    switch (step) {
+      case NeedsAssessmentSteps.EvacAddress:
         this.evacuationFileDataService.evacuatedAddress = this.form.get('evacuatedFromAddress').value;
         this.needsAssessmentService.insurance = this.form.get('insurance').value;
         break;
-      case 'family-information-pets':
+      case NeedsAssessmentSteps.FamilyAndPetsInformation:
         this.needsAssessmentService.setHouseHoldMembers(this.form.get('householdMemberForm').value.householdMembers);
 
         this.needsAssessmentService.pets = this.form.get('petsForm').value.pets;
         break;
-      case 'identify-needs':
+      case NeedsAssessmentSteps.IdentifyNeeds:
         this.needsAssessmentService.setNeedsDetails(this.form);
         break;
-      case 'secret':
+      case NeedsAssessmentSteps.Secret:
         this.evacuationFileDataService.secretPhrase = this.form.get('secretPhrase').value;
         this.evacuationFileDataService.secretPhraseEdited = true;
         break;
@@ -288,7 +304,19 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
           else
             this.router.navigate(['/verified-registration/dashboard'], {
               state: {
-                isUpdateNeedsAssessment: !!this.essFileId()
+                isNeedsAssessmentUpdatePendingOrExpiredEssFile:
+                  !!this.essFileId() &&
+                  [EvacuationFileStatus.Pending, EvacuationFileStatus.Expired].includes(
+                    this.evacuationFileDataService.evacuationFileStatus
+                  ),
+                isNeedsAssessmentUpdateActiveEssFileForSupports:
+                  !!this.essFileId() &&
+                  [EvacuationFileStatus.Active].includes(this.evacuationFileDataService.evacuationFileStatus) &&
+                  this.evacuationFileDataService.hasNoSupports(this.evacuationFileDataService.supports),
+                isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions:
+                  !!this.essFileId() &&
+                  [EvacuationFileStatus.Active].includes(this.evacuationFileDataService.evacuationFileStatus) &&
+                  !this.evacuationFileDataService.hasActiveSupports(this.evacuationFileDataService.supports)
               }
             });
         },

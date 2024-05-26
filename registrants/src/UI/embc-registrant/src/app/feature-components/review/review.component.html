@@ -368,7 +368,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Location</div>
-          @if (allowEdit) {
+          @if (allowEdit && evacuationFileDataService.evacuationFileStatus !== EvacuationFileStatus.Active) {
             <div class="col-md-2">
               <button
                 class="edit-image"
@@ -419,13 +419,13 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Insurance</div>
-          @if (allowEdit) {
+          @if (allowEdit && evacuationFileDataService.evacuationFileStatus !== EvacuationFileStatus.Active) {
             <div class="col-md-2">
               <button
                 class="edit-image"
                 mat-icon-button
                 aria-label="Edit"
-                (click)="editNeedsAssessment('evac-address')"
+                (click)="editNeedsAssessment(NeedsAssessmentSteps.EvacAddress)"
               >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -534,7 +534,7 @@
                 class="edit-image"
                 mat-icon-button
                 aria-label="Edit"
-                (click)="editNeedsAssessment('identify-needs')"
+                (click)="editNeedsAssessment(NeedsAssessmentSteps.IdentifyNeeds)"
               >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -555,7 +555,12 @@
           <div class="col-md-6 card-heading">Security Word</div>
           @if (allowEdit) {
             <div class="col-md-2">
-              <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editNeedsAssessment('secret')">
+              <button
+                class="edit-image"
+                mat-icon-button
+                aria-label="Edit"
+                (click)="editNeedsAssessment(NeedsAssessmentSteps.Secret)"
+              >
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
               </button>

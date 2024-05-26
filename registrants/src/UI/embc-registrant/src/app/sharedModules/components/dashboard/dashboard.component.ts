@@ -14,7 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { SelfServeSubmissionDialogComponent } from 'src/app/core/components/dialog-components/self-serve-submissoin-dialog/self-serve-submission-dialog.component';
-import { EssFileUpdateDialogComponent } from 'src/app/core/components/dialog-components/ess-file-update-dialog/ess-file-update-dialog.component';
+import { EssFileUpdatePendingOrExpiredDialogComponent } from 'src/app/core/components/dialog-components/ess-file-update-pending-or-expired-dialog/ess-file-update-pending-or-expired-dialog.component';
+import { EssFileUpdateActiveDialogComponent } from 'src/app/core/components/dialog-components/ess-file-update-active-dialog/ess-file-update-active-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -80,11 +81,15 @@ export class DashboardComponent implements OnInit {
 
     if (registrationResult !== null) {
       const {
-        isUpdateNeedsAssessment = false,
+        isNeedsAssessmentUpdatePendingOrExpiredEssFile = false,
+        isNeedsAssessmentUpdateActiveEssFileForSupports = false,
+        isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions = false,
         selfServe = false,
         supportData = null
       } = this.router.lastSuccessfulNavigation.extras?.state ?? {
-        isUpdateNeedsAssessment: false,
+        isNeedsAssessmentUpdatePendingOrExpiredEssFile: false,
+        isNeedsAssessmentUpdateActiveEssFileForSupports: false,
+        isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions: false,
         selfServe: false,
         supportData: null
       };
@@ -101,9 +106,26 @@ export class DashboardComponent implements OnInit {
           .subscribe(() => {
             this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
           });
-      } else if (isUpdateNeedsAssessment) {
+      } else if (
+        isNeedsAssessmentUpdateActiveEssFileForSupports ||
+        isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions
+      ) {
         this.dialog
-          .open(EssFileUpdateDialogComponent, {
+          .open(EssFileUpdateActiveDialogComponent, {
+            width: '80%',
+            height: 'auto',
+            maxWidth: '900px',
+            data: {
+              supportWithExtensions: isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions
+            }
+          })
+          .afterClosed()
+          .subscribe(() => {
+            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
+          });
+      } else if (isNeedsAssessmentUpdatePendingOrExpiredEssFile) {
+        this.dialog
+          .open(EssFileUpdatePendingOrExpiredDialogComponent, {
             width: '80%',
             height: 'auto',
             maxWidth: '900px'
