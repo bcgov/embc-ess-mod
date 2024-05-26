@@ -6,22 +6,6 @@
         <mat-card-content>
           <div class="question-box">
             <p class="card-heading">Shelter Allowance</p>
-            <div class="card-question">
-              <label>Which <b>people</b> in your household require <b>Shelter Allowance</b>?</label>
-            </div>
-
-            <div style="display: flex; flex-direction: column">
-              @for (
-                person of supportDraftForm.controls?.shelterAllowance?.controls?.includedHouseholdMembers?.controls;
-                track $index
-              ) {
-                <div>
-                  <mat-checkbox [formControl]="person.controls.isSelected">
-                    {{ getPersonName(person.controls.personId.value) }}
-                  </mat-checkbox>
-                </div>
-              }
-            </div>
 
             <div class="card-question">
               <label>Which <b>days</b> does your household require <b>Shelter Allowance</b>?</label>
