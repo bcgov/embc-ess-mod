@@ -125,6 +125,7 @@ public class EvacuationRepository : IEvacuationRepository
         var file = mapper.Map<era_evacuationfile>(evacuationFile);
         file.era_evacuationfileid = currentFile.era_evacuationfileid;
         file.era_TaskId = currentFile.era_TaskId;
+        file.era_era_evacuationfile_era_householdmember_EvacuationFileid = currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid;
 
         essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
         essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
@@ -159,7 +160,13 @@ public class EvacuationRepository : IEvacuationRepository
 
         foreach (var member in needsAssessment.era_era_householdmember_era_needassessment)
         {
-            if (member.era_householdmemberid.HasValue)
+            if (!member.era_householdmemberid.HasValue)
+            {
+                //create member
+                member.era_householdmemberid = Guid.NewGuid();
+                essContext.AddToera_householdmembers(member);
+            }
+            else if (HouseholdMemberChanged(member, file.era_era_evacuationfile_era_householdmember_EvacuationFileid.Single(hm => hm.era_householdmemberid == member.era_householdmemberid)))
             {
                 //update member
                 essContext.AttachTo(nameof(essContext.era_householdmembers), member);
@@ -167,14 +174,19 @@ public class EvacuationRepository : IEvacuationRepository
             }
             else
             {
-                //create member
-                member.era_householdmemberid = Guid.NewGuid();
-                essContext.AddToera_householdmembers(member);
+                essContext.AttachTo(nameof(essContext.era_householdmembers), member);
             }
             AssignHouseholdMember(essContext, file, member);
             AssignHouseholdMember(essContext, needsAssessment, member);
         }
     }
+
+    private static bool HouseholdMemberChanged(era_householdmember hm1, era_householdmember hm2) =>
+        hm1.era_firstname != hm2.era_firstname ||
+        hm1.era_lastname != hm2.era_lastname ||
+        hm1.era_initials != hm2.era_initials ||
+        hm1.era_dateofbirth != hm2.era_dateofbirth ||
+        hm1.era_gender != hm2.era_gender;
 
     private static void AssignPrimaryRegistrant(EssContext essContext, era_evacuationfile file, contact primaryContact)
     {

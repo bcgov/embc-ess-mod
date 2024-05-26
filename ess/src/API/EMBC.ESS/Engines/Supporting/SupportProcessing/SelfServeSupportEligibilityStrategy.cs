@@ -61,7 +61,6 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         if (taskNumber == null) return NotEligible("No suitable task found for home address", referencedHomeAddressId: homeAddress.era_bcscaddressid);
 
         // check the task is enabled for self-serve
-
         var task = await GetTask(ctx, taskNumber, ct);
         if (task == null) return NotEligible($"Task {taskNumber} was not found or not active in Dynamics", referencedHomeAddressId: homeAddress.era_bcscaddressid);
         if (!task.era_selfservetoggle.GetValueOrDefault()) return NotEligible($"Task {taskNumber} is not enabled for self-serve");
@@ -82,17 +81,43 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         // check if requested supports include referrals
         if (needs.Contains(IdentifiedNeed.ShelterReferral)) return NotEligible("Evacuee requested support referrals", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
 
+        // check all the previous supports expired
+        var receivedSupports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId.ToList();
+        var notExpiredPastSupports = receivedSupports.Where(s => s.era_validto > eligibleFrom).ToList();
+        if (notExpiredPastSupports.Count > 0) return NotEligible($"Supports {string.Join(",", notExpiredPastSupports.Select(s => s.era_name))} are still active",
+            taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+
         // check for disabled supports
         var (eligibleSupports, ineligibleSupports) = GenerateSelfServeSupportTypesEligibility(needs, enabledSupports);
-        if (ineligibleSupports.Any()) return NotEligible($"Requested supports are not enabled: {string.Join(",", ineligibleSupports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        if (ineligibleSupports.Any())
+        {
+            return NotEligible($"Requested supports are not enabled: {string.Join(",", ineligibleSupports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid);
+        }
 
-        // add - duplicate check
+        // filter supports enabled for extensions
+        var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToArray();
+        if (receivedSupportTypes.Any())
+        {
+            var enabledSupportTypesForExtensions = GetExtensionEnabledSupportTypesForTask(task).ToArray();
+            eligibleSupports = FilterExtensibleSupportTypes(eligibleSupports, receivedSupportTypes, enabledSupportTypesForExtensions);
+        }
+        // check for overlapping supports
         var similarSupportTypes = needs.SelectMany(t => MapNeedToSupportType(t)).Cast<int>().ToArray();
         foreach (var hm in currentNeedsAssessment.era_era_householdmember_era_needassessment)
         {
-            var supports = (await GetDuplicateSupportsForHouseholdMember(ctx, hm, similarSupportTypes, eligibleFrom, eligibleTo, ct)).ToList();
-            if (supports.Count > 0)
-                return NotEligible($"Duplicate supports found {string.Join(",", supports)}", taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+            var overlappingSupports = (await GetDuplicateSupportsForHouseholdMember(ctx, hm, similarSupportTypes, eligibleFrom, eligibleTo, ct)).ToList();
+            if (overlappingSupports.Count > 0)
+            {
+                return NotEligible($"Overlapping supports found for household member {hm.era_householdmemberid}: {string.Join(",", overlappingSupports.Select(s => s.era_name))}",
+                    taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+            }
+
+            var previousOnetimeSupports = (await GetPreviousOnetimeSupportsForHouseholdMember(ctx, hm, GetOnetimeEnabledSupportTypesForTask(task).Cast<int>().ToArray(), task.era_taskstartdate.Value, ct)).ToList();
+            if (previousOnetimeSupports.Count > 0)
+            {
+                return NotEligible($"Previous one-time supports found for household member {hm.era_householdmemberid}: {string.Join(",", previousOnetimeSupports.Select(s => s.era_name))}",
+                    taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+            }
         }
 
         // check if household member composition changed from the last needs assessment
@@ -117,21 +142,23 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
                     return NotEligible($"Household member {householdMember.era_householdmemberid}) not found in previous needs assessment",
                         taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
                 }
+                else if (householdMember.era_isprimaryregistrant != true)
+                {
+                    var history = (await ctx.audits
+                        .Where(a => a.objecttypecode == nameof(era_householdmember) && a._objectid_value == householdMember.era_householdmemberid && a.createdon >= currentNeedsAssessment.createdon)
+                        .GetAllPagesAsync(ct))
+                        .ToList();
+
+                    if (history.Any(a => a.action == 2))
+                    {
+                        // household member was modified in the current needs assessment
+                        return NotEligible($"Household member {householdMember.era_householdmemberid} was modified",
+                            taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
+                    }
+                }
             }
 #pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
         }
-
-        var receivedSupports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId.ToList();
-        var notExpiredPastSupports = receivedSupports.Where(s => s.era_validto > eligibleFrom).ToList();
-
-        // check all the past supports expired
-        if (notExpiredPastSupports.Count > 0) return NotEligible($"Past supports {string.Join(",", notExpiredPastSupports.Select(s => s.era_name))} are still active",
-            taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
-
-        // filter supports enabled for extensions
-        var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToArray();
-        var enabledSupportTypesForExtensions = GetExtensionEnabledSupportTypesForTask(task).ToArray();
-        eligibleSupports = FilterExtensibleSupportTypes(eligibleSupports, receivedSupportTypes, enabledSupportTypesForExtensions);
 
         // return eligibility results
         return Eligible(taskNumber, homeAddress.era_bcscaddressid.Value, eligibleFrom, eligibleTo, eligibleSupports);
@@ -219,6 +246,14 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             .ToArray();
     }
 
+    private static IEnumerable<SupportType> GetOnetimeEnabledSupportTypesForTask(era_task task)
+    {
+        return task.era_era_task_era_selfservesupportlimits_Task
+            .Where(sl => sl.statuscode == 1 && sl.era_extensionavailable != true)
+            .Select(s => Enum.Parse<SupportType>(s.era_supporttypeoption.Value.ToString()))
+            .ToArray();
+    }
+
     private static SupportType[] MapNeedToSupportType(IdentifiedNeed need) =>
      need switch
      {
@@ -275,6 +310,29 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
                    s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
                ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
         .GetAllPagesAsync(ct);
+    }
+
+    private static async Task<IEnumerable<era_evacueesupport>> GetPreviousOnetimeSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] oneTimeSupportTypes, DateTimeOffset taskStartDate, CancellationToken ct)
+    {        
+        var matchingHouseholdMembers = await ctx.era_householdmembers
+            .Expand(hm1 => hm1.era_era_householdmember_era_evacueesupport)
+            .Where(hm1 => hm1.era_firstname == hm.era_firstname && hm1.era_lastname == hm.era_lastname && hm1.era_dateofbirth == hm.era_dateofbirth && hm1.statuscode == 1)
+            .GetAllPagesAsync(ct);
+
+        var matchingSupports = matchingHouseholdMembers
+            .SelectMany(hm1 => hm1.era_era_householdmember_era_evacueesupport)
+            .Where(s => oneTimeSupportTypes.Contains(s.era_supporttype.Value));
+
+        var supports = new List<era_evacueesupport>();
+        foreach (var support in matchingSupports)
+        {
+            var needassessment = await ctx.era_needassessments
+                .Expand(na => na.era_TaskNumber)
+                .Where(na => na.era_needassessmentid == support._era_needsassessmentid_value)
+                .SingleOrDefaultAsync(ct);
+            if (needassessment.era_TaskNumber.era_taskenddate >= taskStartDate) supports.Add(support);
+        }
+        return supports;
     }
 
     private static IEnumerable<SelfServeSupportType> FilterExtensibleSupportTypes(IEnumerable<SelfServeSupportType> eligibleSupportTypes, IEnumerable<SupportType> receivedSupportTypes, IEnumerable<SupportType> enabledSupportTypesForExtensions)
