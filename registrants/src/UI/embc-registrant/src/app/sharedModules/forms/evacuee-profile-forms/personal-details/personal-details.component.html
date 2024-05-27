@@ -3,7 +3,7 @@
     <p class="card-heading">Personal Details</p>
     <form [formGroup]="personalDetailsForm">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
             <input formControlName="firstName" matInput placeholder="First Name" required [readonly]="disableFields" />
@@ -15,7 +15,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
             <input formControlName="lastName" matInput placeholder="Last Name" required [readonly]="disableFields" />
@@ -27,7 +27,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
           <mat-form-field appearance="outline">
             <mat-label>Preferred Name</mat-label>
             <input maxlength="100" formControlName="preferredName" matInput placeholder="Preferred Name" />
@@ -36,7 +36,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-5">
           <mat-form-field appearance="outline">
             <mat-label>Initials</mat-label>
             <input maxlength="100" formControlName="initials" matInput placeholder="Initials" />
@@ -45,7 +45,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-5">
           <mat-form-field appearance="outline">
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender" required>
@@ -64,7 +64,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-5">
           <mat-form-field type="date" appearance="outline">
             <!--maxlength="10"-->
             <mat-label>Date of Birth</mat-label>

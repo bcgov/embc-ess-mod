@@ -28,3 +28,16 @@
 .no-bottom-margin {
   margin-bottom: 0;
 }
+
+.edit-image {
+  top: -17px;
+}
+
+.header-row {
+  @media (min-width: 576px) {
+    height: 27px;
+  }
+  @media (max-width: 575px) {
+    height: 52px;
+  }
+}

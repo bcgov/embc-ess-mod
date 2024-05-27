@@ -1,5 +1,9 @@
 .edit-button {
   width: 50%;
+  position: relative;
+  app-loader {
+    position: absolute;
+  }
 }
 
 .content-container {

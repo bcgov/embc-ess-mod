@@ -60,7 +60,12 @@
         </mat-card>
         <br />
         <div>
-          <button class="button-s" mat-stroked-button (click)="next('name')" [disabled]="isSubmitted">
+          <button
+            class="button-s button-with-loader"
+            mat-stroked-button
+            (click)="next('name')"
+            [disabled]="isSubmitted"
+          >
             Continue
             <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>
@@ -119,7 +124,7 @@
         </mat-card>
         <br />
         <div>
-          <button class="button-s" mat-stroked-button (click)="next('dob')" [disabled]="isSubmitted">
+          <button class="button-s button-with-loader" mat-stroked-button (click)="next('dob')" [disabled]="isSubmitted">
             Continue
             <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
           </button>
@@ -211,7 +216,12 @@
           <div>
             <div class="row justify-content-between resp-style">
               <div class="col-md-6">
-                <button class="button-s" mat-stroked-button [disabled]="isSubmitted" (click)="navigateDashboard()">
+                <button
+                  class="button-s button-with-loader"
+                  mat-stroked-button
+                  [disabled]="isSubmitted"
+                  (click)="navigateDashboard()"
+                >
                   No, Keep My Address
                   <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
                 </button>
@@ -231,7 +241,12 @@
                 <button class="button-s" mat-stroked-button (click)="toggleAddress('cancel')">Cancel</button>
               </div>
               <div class="col-md-6">
-                <button class="button-p" mat-stroked-button (click)="conflictsResolved()" [disabled]="isSubmitted">
+                <button
+                  class="button-p button-with-loader"
+                  mat-stroked-button
+                  (click)="conflictsResolved()"
+                  [disabled]="isSubmitted"
+                >
                   Save
                   <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
                 </button>

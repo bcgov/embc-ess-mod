@@ -47,3 +47,13 @@ tr.header-row {
   flex-direction: column;
   gap: var(--size-2);
 }
+
+@media (max-width: 767px) {
+  .question-box {
+    max-width: 100%;
+  }
+
+  .meals-table-container {
+    overflow: auto;
+  }
+}

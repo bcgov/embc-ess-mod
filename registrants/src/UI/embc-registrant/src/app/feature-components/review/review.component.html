@@ -34,9 +34,9 @@
       }
       @if (type === 'profile' || type === 'both') {
         <mat-card-content>
-          <div class="row justify-content-between">
-            <div class="col-md-6 card-heading">Consent to Share Registration Status</div>
-            <div class="col-md-2">
+          <div class="row justify-content-between header-row">
+            <div class="col-md-6 col-9 card-heading">Consent to Share Registration Status</div>
+            <div class="col-md-2 col-3">
               <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -58,9 +58,9 @@
         </mat-card-content>
       }
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Personal Details</div>
-          <div class="col-md-2">
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Personal Details</div>
+          <div class="col-md-2 col-3">
             <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('personal-details')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -108,9 +108,9 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Primary Address</div>
-          <div class="col-md-2">
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Primary Address</div>
+          <div class="col-md-2 col-3">
             <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -192,9 +192,9 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Mailing Address</div>
-          <div class="col-md-2">
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Mailing Address</div>
+          <div class="col-md-2 col-3">
             <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -275,9 +275,9 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Contact Details</div>
-          <div class="col-md-2">
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Contact Details</div>
+          <div class="col-md-2 col-3">
             <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('contact-info')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -320,9 +320,9 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Security Questions</div>
-          <div class="col-md-2">
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Security Questions</div>
+          <div class="col-md-2 col-3">
             <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('security-questions')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -366,10 +366,10 @@
       }
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Location</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Location</div>
           @if (allowEdit && evacuationFileDataService.evacuationFileStatus !== EvacuationFileStatus.Active) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button
                 class="edit-image"
                 mat-icon-button
@@ -417,10 +417,10 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Insurance</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Insurance</div>
           @if (allowEdit && evacuationFileDataService.evacuationFileStatus !== EvacuationFileStatus.Active) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button
                 class="edit-image"
                 mat-icon-button
@@ -451,10 +451,10 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Household Members</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Household Members</div>
           @if (allowEdit) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button
                 class="edit-image"
                 mat-icon-button
@@ -498,10 +498,10 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Pets</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Pets</div>
           @if (allowEdit) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editNeedsAssessment('pets')">
                 <img src="/assets/images/edit.svg" height="35" width="35" />
                 <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
@@ -526,10 +526,10 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Needs</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Needs</div>
           @if (allowEdit) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button
                 class="edit-image"
                 mat-icon-button
@@ -551,10 +551,10 @@
       </mat-card-content>
 
       <mat-card-content>
-        <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Security Word</div>
+        <div class="row justify-content-between header-row">
+          <div class="col-md-6 col-9 card-heading">Security Word</div>
           @if (allowEdit) {
-            <div class="col-md-2">
+            <div class="col-md-2 col-3">
               <button
                 class="edit-image"
                 mat-icon-button
