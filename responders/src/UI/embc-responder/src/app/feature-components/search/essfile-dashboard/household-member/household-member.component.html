@@ -75,12 +75,16 @@
               }
               @if (essfileDashboardService?.displayMemberButton === 'create-profile') {
                 <div class="row button-div">
-                  <button class="button-p proceed-button" (click)="createProfile(member)">Create Profile</button>
+                  <button mat-button class="button-p proceed-button" (click)="createProfile(member)">
+                    Create Profile
+                  </button>
                 </div>
               }
               @if (essfileDashboardService?.displayMemberButton === 'link-profile') {
                 <div class="row button-div">
-                  <button class="button-p proceed-button" (click)="linkToProfile(member)">Link to this Profile</button>
+                  <button mat-button class="button-p proceed-button" (click)="linkToProfile(member)">
+                    Link to this Profile
+                  </button>
                   <a (click)="createProfile(member)" class="no-match">Not a Match? Create Profile</a>
                 </div>
               }
