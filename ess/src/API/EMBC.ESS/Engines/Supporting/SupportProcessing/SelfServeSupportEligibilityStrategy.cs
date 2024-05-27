@@ -95,7 +95,13 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // filter supports enabled for extensions
-        var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToArray();
+        var oneTimeSupportTypes = GetOnetimeEnabledSupportTypesForTask(task).Cast<int>().ToArray();
+        var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToList();
+        var oneTimeReceivedSupportTypes = (await currentNeedsAssessment.era_era_householdmember_era_needassessment
+            .SelectManyAsync(async hm => await GetPreviousOnetimeSupportsForHouseholdMember(ctx, hm, oneTimeSupportTypes, task.era_taskstartdate.Value, ct)))
+            .Select(s=>s.era_supporttype).Cast<SupportType>().Distinct().ToList();
+        
+        receivedSupportTypes = receivedSupportTypes.Concat(oneTimeReceivedSupportTypes).Distinct().ToList();
         if (receivedSupportTypes.Any())
         {
             var enabledSupportTypesForExtensions = GetExtensionEnabledSupportTypesForTask(task).ToArray();
@@ -109,13 +115,6 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             if (overlappingSupports.Count > 0)
             {
                 return NotEligible($"Overlapping supports found for household member {hm.era_householdmemberid}: {string.Join(",", overlappingSupports.Select(s => s.era_name))}",
-                    taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
-            }
-
-            var previousOnetimeSupports = (await GetPreviousOnetimeSupportsForHouseholdMember(ctx, hm, GetOnetimeEnabledSupportTypesForTask(task).Cast<int>().ToArray(), task.era_taskstartdate.Value, ct)).ToList();
-            if (previousOnetimeSupports.Count > 0)
-            {
-                return NotEligible($"Previous one-time supports found for household member {hm.era_householdmemberid}: {string.Join(",", previousOnetimeSupports.Select(s => s.era_name))}",
                     taskNumber: taskNumber, referencedHomeAddressId: homeAddress.era_bcscaddressid, from: eligibleFrom, to: eligibleTo);
             }
         }
@@ -304,35 +303,24 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
     private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset eligibleFrom, DateTimeOffset eligibleTo, CancellationToken ct)
     {
         return await ctx.era_evacueesupports
-               .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
-               .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
-               .Where(s =>
-                   s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
-               ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
+            .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+            .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
+            .Where(s =>
+                s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
+            ((s.era_validfrom >= eligibleFrom && s.era_validfrom <= eligibleTo) || (s.era_validto >= eligibleFrom && s.era_validto <= eligibleTo) || (s.era_validfrom < eligibleFrom && s.era_validto > eligibleTo)))
         .GetAllPagesAsync(ct);
     }
 
     private static async Task<IEnumerable<era_evacueesupport>> GetPreviousOnetimeSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] oneTimeSupportTypes, DateTimeOffset taskStartDate, CancellationToken ct)
-    {        
-        var matchingHouseholdMembers = await ctx.era_householdmembers
-            .Expand(hm1 => hm1.era_era_householdmember_era_evacueesupport)
-            .Where(hm1 => hm1.era_firstname == hm.era_firstname && hm1.era_lastname == hm.era_lastname && hm1.era_dateofbirth == hm.era_dateofbirth && hm1.statuscode == 1)
+    {
+        return await ctx.era_evacueesupports
+            .Expand(s => s.era_Task)
+            .Expand(s => s.era_era_householdmember_era_evacueesupport)
+            .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+            .WhereIn(s => s.era_supporttype.Value, oneTimeSupportTypes)
+            .Where(s => s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname))
+            .Where(s => s.era_Task.era_taskenddate >= taskStartDate)
             .GetAllPagesAsync(ct);
-
-        var matchingSupports = matchingHouseholdMembers
-            .SelectMany(hm1 => hm1.era_era_householdmember_era_evacueesupport)
-            .Where(s => oneTimeSupportTypes.Contains(s.era_supporttype.Value));
-
-        var supports = new List<era_evacueesupport>();
-        foreach (var support in matchingSupports)
-        {
-            var needassessment = await ctx.era_needassessments
-                .Expand(na => na.era_TaskNumber)
-                .Where(na => na.era_needassessmentid == support._era_needsassessmentid_value)
-                .SingleOrDefaultAsync(ct);
-            if (needassessment.era_TaskNumber.era_taskenddate >= taskStartDate) supports.Add(support);
-        }
-        return supports;
     }
 
     private static IEnumerable<SelfServeSupportType> FilterExtensibleSupportTypes(IEnumerable<SelfServeSupportType> eligibleSupportTypes, IEnumerable<SupportType> receivedSupportTypes, IEnumerable<SupportType> enabledSupportTypesForExtensions)

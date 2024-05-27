@@ -13,7 +13,7 @@
         <RepositoryType>GIT</RepositoryType>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <DebugType>full</DebugType>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
 
     <ItemGroup>

@@ -212,17 +212,25 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
-    public async Task ValidateEligibility_PreviousOnetimeSupports_False()
+    public async Task ValidateEligibility_PreviousOnetimeSupports_TrueWithoutOneTimeSupports()
     {
         var (file1, registrant) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var previousSupports = new[]
         {
-            new ClothingSupport{FileId = file1.Id, From = DateTime.Now.AddDays(-7), To = DateTime.Now.AddHours(-3), IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+            new ClothingSupport
+            {
+                FileId = file1.Id,
+                From = DateTime.Now.AddDays(-3).AddHours(-3),
+                To = DateTime.Now.AddHours(-3),
+                IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                SupportDelivery = new Referral()
+            }
         };
         await SaveSupports(file1.Id, previousSupports);
 
         var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress(), existingRegistrant: registrant);
-        await RunEligibilityTest(file2.Id, false, "Previous one-time supports found for household member");
+        var eligibility = await RunEligibilityTest(file2.Id, true);
+        eligibility.eligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Clothing);
     }
 
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason = null)
