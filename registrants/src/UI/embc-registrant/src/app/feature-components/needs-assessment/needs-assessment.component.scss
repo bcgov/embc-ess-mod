@@ -4,13 +4,17 @@ button {
 
 .save-button {
   width: 100%;
+  position: relative;
+  app-loader {
+    position: absolute;
+  }
 }
 
 ::ng-deep .mat-horizontal-stepper-header {
   pointer-events: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   ::ng-deep .mat-step-label {
     display: none !important;
   }

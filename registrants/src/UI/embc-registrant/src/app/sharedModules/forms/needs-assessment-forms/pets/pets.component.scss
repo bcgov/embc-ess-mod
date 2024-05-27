@@ -39,11 +39,19 @@ table {
   display: none;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .mobile-label {
     width: 80px;
     display: inline-block;
     font-weight: bold;
+  }
+
+  .mat-mdc-cell:first-of-type:has(.mobile-label) {
+    padding: 0 16px 0 16px !important;
+  }
+
+  .mat-mdc-cell {
+    border-bottom: none !important;
   }
 
   // Remove the header row altogether
@@ -69,6 +77,10 @@ table {
   .mat-mdc-cell {
     align-items: unset;
     min-height: unset;
+  }
+
+  .button-s {
+    margin-bottom: 10px;
   }
 }
 
