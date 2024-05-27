@@ -289,6 +289,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact]
         public async Task OptOutEligibility_Success()
         {
+            await evacuationRepository.Manage(new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = TestData.EvacuationFileId,
+                TaskNumber = TestData.SelfServeActiveTaskId,
+                From = DateTime.UtcNow,
+                To = DateTime.UtcNow.AddDays(3),
+                Reason = "Test",
+                HomeAddressReferenceId = null,
+                EligibleSupports = [SelfServeSupportType.ShelterAllowance, SelfServeSupportType.Clothing, SelfServeSupportType.Incidentals, SelfServeSupportType.FoodRestaurant, SelfServeSupportType.FoodGroceries]
+            });
+
             var cmd = new OptoutSelfServe
             {
                 EvacuationFileNumber = TestData.EvacuationFileId

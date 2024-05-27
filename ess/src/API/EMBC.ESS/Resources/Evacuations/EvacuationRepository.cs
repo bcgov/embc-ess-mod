@@ -523,7 +523,10 @@ public class EvacuationRepository : IEvacuationRepository
     private async Task<ManageEvacuationFileCommandResult> Handle(OptoutSelfServe c, CancellationToken ct)
     {
         var ctx = essContextFactory.Create();
-        var check = await ctx.era_eligibilitychecks.Where(ec => ec.era_ESSFile.era_name == c.EvacuationFileNumber).OrderByDescending(ec => ec.createdon).Take(1).SingleOrDefaultAsync(ct);
+        var file = await ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.era_name == c.EvacuationFileNumber).SingleOrDefaultAsync(ct);
+        if (file == null || file.era_CurrentNeedsAssessmentid == null) throw new InvalidOperationException($"Evacuation file {c.EvacuationFileNumber} not found");
+        await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
+        var check = file.era_CurrentNeedsAssessmentid.era_EligibilityCheck;
         if (check != null)
         {
             check.era_selfserveoptout = true;
