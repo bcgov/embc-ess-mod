@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
@@ -26,7 +26,7 @@ import { DialogContent } from 'src/app/core/model/dialog-content.model';
   standalone: true,
   imports: [ReactiveFormsModule, MatCardModule, MatTableModule, MatButtonModule, PersonDetailFormComponent]
 })
-export default class FamilyInformationComponent implements OnInit {
+export default class FamilyInformationComponent implements OnInit, OnDestroy {
   householdMemberForm: UntypedFormGroup;
   radioOption = globalConst.radioButton1;
   formBuilder: UntypedFormBuilder;
@@ -39,6 +39,8 @@ export default class FamilyInformationComponent implements OnInit {
   editIndex: number;
   rowEdit = false;
   editFlag = false;
+  personalDetailsForm$: Subscription;
+  personalDetailsForm: UntypedFormGroup;
 
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
@@ -58,6 +60,13 @@ export default class FamilyInformationComponent implements OnInit {
       .valueChanges.subscribe((value) => this.updateOnVisibility());
     this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
+    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {
+      this.personalDetailsForm = personalDetails;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.personalDetailsForm$.unsubscribe();
   }
 
   addMembers(): void {
@@ -69,6 +78,10 @@ export default class FamilyInformationComponent implements OnInit {
 
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
+      if (this.compareToPrimaryApplicant()) {
+        this.duplicateHouseholdMemberWarningDialog();
+        return;
+      }
       const duplicateHouseholdMemberIndex = this.data.findIndex((element) => {
         return (
           element.firstName.toLowerCase().trim() ===
@@ -125,7 +138,6 @@ export default class FamilyInformationComponent implements OnInit {
           component: InformationDialogComponent,
           content: globalConst.deleteMemberInfoBody
         },
-        height: '260px',
         width: '500px'
       })
       .afterClosed()
@@ -170,5 +182,18 @@ export default class FamilyInformationComponent implements OnInit {
       },
       maxWidth: '600px'
     });
+  }
+
+  private compareToPrimaryApplicant(): boolean {
+    return (
+      this.personalDetailsForm.value.firstName.toLowerCase().trim() ===
+        this.householdMemberForm.get('householdMember').value.firstName.toLowerCase().trim() &&
+      this.personalDetailsForm.value.lastName.toLowerCase().trim() ===
+        this.householdMemberForm.get('householdMember').value.lastName.toLowerCase().trim() &&
+      this.personalDetailsForm.value.dateOfBirth.toLowerCase().trim() ===
+        this.householdMemberForm.get('householdMember').value.dateOfBirth.toLowerCase().trim() &&
+      this.personalDetailsForm.value.gender.toLowerCase().trim() ===
+        this.householdMemberForm.get('householdMember').value.gender.toLowerCase().trim()
+    );
   }
 }
