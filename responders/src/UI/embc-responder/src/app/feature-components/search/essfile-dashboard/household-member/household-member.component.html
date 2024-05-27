@@ -70,17 +70,23 @@
               </div>
               @if (essfileDashboardService?.displayMemberButton === 'view-profile') {
                 <div class="row button-div">
-                  <button mat-button class="button-p proceed-button" (click)="viewProfile(member)">View Profile</button>
+                  <button mat-button class="button-p proceed-button mat-mdc-button-base" (click)="viewProfile(member)">
+                    View Profile
+                  </button>
                 </div>
               }
               @if (essfileDashboardService?.displayMemberButton === 'create-profile') {
                 <div class="row button-div">
-                  <button class="button-p proceed-button" (click)="createProfile(member)">Create Profile</button>
+                  <button class="button-p proceed-button mat-mdc-button-base" (click)="createProfile(member)">
+                    Create Profile
+                  </button>
                 </div>
               }
               @if (essfileDashboardService?.displayMemberButton === 'link-profile') {
                 <div class="row button-div">
-                  <button class="button-p proceed-button" (click)="linkToProfile(member)">Link to this Profile</button>
+                  <button class="button-p proceed-button mat-mdc-button-base" (click)="linkToProfile(member)">
+                    Link to this Profile
+                  </button>
                   <a (click)="createProfile(member)" class="no-match">Not a Match? Create Profile</a>
                 </div>
               }
