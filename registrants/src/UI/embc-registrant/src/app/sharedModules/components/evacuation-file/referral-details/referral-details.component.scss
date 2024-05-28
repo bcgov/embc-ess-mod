@@ -36,6 +36,10 @@
   line-height: 35px;
 }
 
+.panelTitle.mat-expansion-panel-header-title {
+  --mat-expansion-header-text-color: rgb(254, 254, 254);
+}
+
 table {
   width: 99.99%;
   box-shadow: none;
