@@ -4,14 +4,18 @@
 
 <div class="row button-row justify-content-between">
   @if (content?.cancelButton) {
-    <button class="button-s button-width" mat-button (click)="cancel()">
-      {{ content?.cancelButton }}
-    </button>
+    <div class="col-sm-4">
+      <button class="button-s button-width" mat-button (click)="cancel()">
+        {{ content?.cancelButton }}
+      </button>
+    </div>
   }
 
   @if (content?.confirmButton) {
-    <button class="button-p button-width confirm-button" mat-button (click)="confirm()">
-      {{ content?.confirmButton }}
-    </button>
+    <div class="col">
+      <button class="button-p button-width confirm-button" mat-button (click)="confirm()">
+        {{ content?.confirmButton }}
+      </button>
+    </div>
   }
 </div>
