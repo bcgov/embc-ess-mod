@@ -53,8 +53,8 @@
           <p class="question-heading requiredField">Select Supplier</p>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
+      <div class="row supplier-list">
+        <div class="col-md-8">
           <mat-form-field appearance="outline">
             <mat-label>Supplier</mat-label>
             <input
@@ -67,6 +67,7 @@
               required
             />
             <mat-autocomplete
+              class="supplier-list-autocomplete-control"
               (optionSelected)="showDetails($event)"
               #auto="matAutocomplete"
               [displayWith]="displaySupplier"
@@ -97,14 +98,12 @@
             }
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
           <button class="search-button button-transparent" mat-button (click)="refreshList()">
-            <img src="/assets/images/reset.svg" height="20" width="20" /><span class="reset-img"
-              >Refresh Supplier List</span
-            >
+            <img src="/assets/images/reset.svg" height="20" width="20" />
           </button>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2" style="padding: var(--size-2)">
           <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
         </div>
       </div>

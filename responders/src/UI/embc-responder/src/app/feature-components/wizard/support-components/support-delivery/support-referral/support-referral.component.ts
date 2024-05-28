@@ -155,10 +155,10 @@ export class SupportReferralComponent implements OnInit {
    * Refreshes the supplier list
    */
   refreshList() {
-    this.showLoader = !this.showLoader;
+    this.showLoader = true;
     this.stepSupportsService.getSupplierList().subscribe({
       next: (value) => {
-        this.showLoader = !this.showLoader;
+        this.showLoader = false;
         this.stepSupportsService.supplierList = value;
         this.supplierList = value;
         this.filteredOptions = this.referralDeliveryForm.get('supplier').valueChanges.pipe(
@@ -167,7 +167,7 @@ export class SupportReferralComponent implements OnInit {
         );
       },
       error: (error) => {
-        this.showLoader = !this.showLoader;
+        this.showLoader = false;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supplierRefresherror);
       }
