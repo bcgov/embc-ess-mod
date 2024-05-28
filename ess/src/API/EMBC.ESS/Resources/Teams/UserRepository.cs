@@ -22,6 +22,7 @@ public class UserRepository(IEssContextFactory essContextFactory) : IUserReposit
         {
             era_portalaccessauditlogsid = Guid.NewGuid(),
             era_fileaccessreason = auditEntry.AccessReason,
+            era_datetimeaccessed = DateTime.UtcNow,
         };
         ctx.AddToera_portalaccessauditlogses(auditRecord);
         if (file != null) ctx.SetLink(auditRecord, nameof(era_portalaccessauditlogs.era_ESSFileNumber), file);
