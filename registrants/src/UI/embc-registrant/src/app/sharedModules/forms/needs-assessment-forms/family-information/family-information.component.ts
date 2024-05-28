@@ -100,6 +100,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
           this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
           this.rowEdit = !this.rowEdit;
           this.editIndex = undefined;
+          this.clearAddForm();
         }
       } else {
         if (duplicateHouseholdMemberIndex !== -1) {
@@ -107,15 +108,19 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
           return;
         } else {
           this.data.push(this.householdMemberForm.get('householdMember').value);
-          this.dataSource.next(this.data);
-          this.householdMemberForm.get('householdMembers').setValue(this.data);
-          this.showFamilyForm = !this.showFamilyForm;
-          this.editFlag = !this.editFlag;
+          this.clearAddForm();
         }
       }
     } else {
       this.householdMemberForm.get('householdMember').markAllAsTouched();
     }
+  }
+
+  clearAddForm(): void {
+    this.dataSource.next(this.data);
+    this.householdMemberForm.get('householdMembers').setValue(this.data);
+    this.showFamilyForm = !this.showFamilyForm;
+    this.editFlag = !this.editFlag;
   }
 
   cancel(): void {
