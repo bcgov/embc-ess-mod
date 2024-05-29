@@ -9,6 +9,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "IDENTITYSERVER_TESTUSERS_FILE": "./Data/test_users.json",
         "IDENTITYSERVER_CONFIG_FILE": "./Data/config.json",
+        "IDENTITYSERVER_OIDC_KEY_FILE": "./Data/oidc_key.jwk",
         "DOTNET_gcServer": "1"
       }
     }
