@@ -84,12 +84,11 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
       }
       const duplicateHouseholdMemberIndex = this.data.findIndex((element) => {
         return (
-          element.firstName.toLowerCase().trim() ===
-            this.householdMemberForm.get('householdMember').value.firstName.toLowerCase().trim() &&
-          element.lastName.toLowerCase().trim() ===
-            this.householdMemberForm.get('householdMember').value.lastName.toLowerCase().trim() &&
-          element.dateOfBirth === this.householdMemberForm.get('householdMember').value.dateOfBirth &&
-          element.gender === this.householdMemberForm.get('householdMember').value.gender
+          element.firstName?.toLowerCase()?.trim() ===
+            this.householdMemberForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
+          element.lastName?.toLowerCase()?.trim() ===
+            this.householdMemberForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
+          element.dateOfBirth === this.householdMemberForm.get('householdMember').value?.dateOfBirth
         );
       });
       if (this.editIndex !== undefined && this.rowEdit) {
@@ -191,14 +190,12 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
 
   private compareToPrimaryApplicant(): boolean {
     return (
-      this.personalDetailsForm.value.firstName.toLowerCase().trim() ===
-        this.householdMemberForm.get('householdMember').value.firstName.toLowerCase().trim() &&
-      this.personalDetailsForm.value.lastName.toLowerCase().trim() ===
-        this.householdMemberForm.get('householdMember').value.lastName.toLowerCase().trim() &&
-      this.personalDetailsForm.value.dateOfBirth.toLowerCase().trim() ===
-        this.householdMemberForm.get('householdMember').value.dateOfBirth.toLowerCase().trim() &&
-      this.personalDetailsForm.value.gender.toLowerCase().trim() ===
-        this.householdMemberForm.get('householdMember').value.gender.toLowerCase().trim()
+      this.personalDetailsForm.value?.firstName?.toLowerCase()?.trim() ===
+        this.householdMemberForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
+      this.personalDetailsForm.value?.lastName?.toLowerCase()?.trim() ===
+        this.householdMemberForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
+      this.personalDetailsForm.value?.dateOfBirth?.toLowerCase()?.trim() ===
+        this.householdMemberForm.get('householdMember').value?.dateOfBirth?.toLowerCase()?.trim()
     );
   }
 }
