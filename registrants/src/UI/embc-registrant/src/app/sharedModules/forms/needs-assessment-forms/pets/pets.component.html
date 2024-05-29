@@ -9,7 +9,6 @@
 
           @if (dataSource.getValue().length > 0) {
             <mat-table [dataSource]="dataSource">
-              <!--&& showTable-->
               <ng-container matColumnDef="type">
                 <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
                 <mat-cell [ngClass]="element.type.length >= 40 ? 'wrapText' : ''" *matCellDef="let element">

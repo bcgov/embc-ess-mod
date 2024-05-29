@@ -1,17 +1,14 @@
-import { Component, OnInit, NgModule, Inject, Output } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { NgClass } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { FormCreationService } from '../../../../core/services/formCreation.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { InformationDialogComponent } from '../../../../core/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from '../../../../core/components/dialog/dialog.component';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { PetFormComponent } from '../../pet-form/pet-form.component';
 
@@ -34,11 +31,11 @@ export default class PetsComponent implements OnInit {
   data = [];
   editIndex: number;
   rowEdit = false;
-  showTable = true;
 
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
-    @Inject('formCreationService') formCreationService: FormCreationService
+    @Inject('formCreationService') formCreationService: FormCreationService,
+    public dialog: MatDialog
   ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
@@ -58,7 +55,6 @@ export default class PetsComponent implements OnInit {
   addPets(): void {
     this.petsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;
-    // this.showTable = !this.showTable;
     this.petsForm.get('addPetIndicator').setValue(true);
   }
 
@@ -74,7 +70,6 @@ export default class PetsComponent implements OnInit {
       this.dataSource.next(this.data);
       this.petsForm.get('pets').setValue(this.data);
       this.showPetsForm = !this.showPetsForm;
-      // this.showTable = !this.showTable;
     } else {
       this.petsForm.get('pet').markAllAsTouched();
     }
@@ -82,7 +77,6 @@ export default class PetsComponent implements OnInit {
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
-    // this.showTable = !this.showTable;
 
     this.petsForm.get('pet').reset();
     this.petsForm.get('addPetIndicator').setValue(false);
@@ -96,13 +90,24 @@ export default class PetsComponent implements OnInit {
   }
 
   deleteRow(index: number): void {
-    this.data.splice(index, 1);
-    this.dataSource.next(this.data);
-    this.petsForm.get('pets').setValue(this.data);
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.deletePetInfoBody
+        },
+        width: '575px'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        this.data.splice(index, 1);
+        this.dataSource.next(this.data);
+        this.petsForm.get('pets').setValue(this.data);
 
-    if (this.data.length === 0) {
-      this.petsForm.get('addPetIndicator').setValue(false);
-    }
+        if (this.data.length === 0) {
+          this.petsForm.get('addPetIndicator').setValue(false);
+        }
+      });
   }
 
   editRow(element, index): void {
@@ -110,7 +115,6 @@ export default class PetsComponent implements OnInit {
     this.rowEdit = !this.rowEdit;
     this.petsForm.get('pet').setValue(element);
     this.showPetsForm = !this.showPetsForm;
-    // this.showTable = !this.showTable;
     this.petsForm.get('addPetIndicator').setValue(true);
   }
 

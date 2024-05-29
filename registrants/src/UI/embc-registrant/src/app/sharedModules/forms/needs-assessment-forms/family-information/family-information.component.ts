@@ -1,23 +1,16 @@
-import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-
-import { MatCardModule } from '@angular/material/card';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
-import { FormCreationService } from '../../../../core/services/formCreation.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
-
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import * as globalConst from '../../../../core/services/globalConstants';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { MatTableModule } from '@angular/material/table';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
-import { PersonDetailFormComponent } from '../../person-detail-form/person-detail-form.component';
+import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
+import * as globalConst from '../../../../core/services/globalConstants';
+import { PersonDetailFormComponent } from '../../person-detail-form/person-detail-form.component';
 
 @Component({
   selector: 'app-family-information',
@@ -144,7 +137,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
           component: InformationDialogComponent,
           content: globalConst.deleteMemberInfoBody
         },
-        width: '500px'
+        width: '575px'
       })
       .afterClosed()
       .subscribe((result) => {

@@ -10,7 +10,6 @@
           <p><em>Please note:</em> Roommates & tenants need to register separately.</p>
           @if (dataSource.getValue().length > 0) {
             <mat-table [dataSource]="dataSource">
-              <!--&& showTable-->
               <ng-container matColumnDef="firstName">
                 <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
                 <mat-cell *matCellDef="let element">
