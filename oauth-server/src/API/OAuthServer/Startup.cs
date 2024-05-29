@@ -145,8 +145,11 @@ namespace OAuthServer
             services.AddTestUsers(configuration);
 
             //store the oidc key in the key ring persistent volume
-            var keyDirectory = configuration.GetValue("IDENTITYSERVER_OIDC_KEY_PATH", "./Data");
-            var keyPath = Path.Combine(new DirectoryInfo(keyDirectory).FullName, "oidc_key.jwk");
+            var keyPath = configuration.GetValue("IDENTITYSERVER_OIDC_KEY_FILE", (string)null);
+            if (string.IsNullOrEmpty(keyPath) || !File.Exists(keyPath))
+            {
+                throw new InvalidOperationException($"OIDC Key file not found: check env var IDENTITYSERVER_OIDC_KEY_FILE={keyPath}");
+            }
 
             //add key as signing key
             builder.AddDeveloperSigningCredential(filename: keyPath);
