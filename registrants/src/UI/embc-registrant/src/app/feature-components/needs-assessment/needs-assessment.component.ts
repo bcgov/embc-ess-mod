@@ -60,6 +60,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   editFromReview: boolean = false;
   copyCurrentStepFormValue: any;
 
+  resetIdentifyNeeds = true;
+
   constructor(
     private router: Router,
     private componentService: ComponentCreationService,
@@ -96,6 +98,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
           (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active &&
             (s.component as unknown as string) !== NeedsAssessmentSteps.EvacAddress)
       );
+
+    this.needsSteps[0].lastStep = -1;
+    this.needsSteps[0].backButtonLabel = 'Cancel & Go Back to My Profile';
   }
 
   ngAfterViewChecked(): void {
@@ -148,6 +153,17 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
       case NeedsAssessmentSteps.IdentifyNeeds:
         this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
+          // reset identify needs selection if extending supports with an active ess file
+          if (
+            this.resetIdentifyNeeds &&
+            this.essFileId() &&
+            this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active
+          ) {
+            identifyNeedsForm.reset();
+            // reset only once on load, so set the flag to false
+            this.resetIdentifyNeeds = false;
+          }
+
           this.form = identifyNeedsForm;
           this.copyCurrentStepFormValue = this.form.getRawValue();
         });
@@ -316,6 +332,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
                 isNeedsAssessmentUpdateActiveEssFileForSupportWithExtensions:
                   !!this.essFileId() &&
                   [EvacuationFileStatus.Active].includes(this.evacuationFileDataService.evacuationFileStatus) &&
+                  this.evacuationFileDataService.supports?.length > 0 &&
                   !this.evacuationFileDataService.hasActiveSupports(this.evacuationFileDataService.supports)
               }
             });
