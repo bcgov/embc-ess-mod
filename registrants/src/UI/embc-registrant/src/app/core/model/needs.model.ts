@@ -52,6 +52,9 @@ export class HouseholdMembersForm {
         [
           customValidator
             .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
             .bind(customValidator)
         ]
       ],
@@ -60,6 +63,9 @@ export class HouseholdMembersForm {
         [
           customValidator
             .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
             .bind(customValidator)
         ]
       ],
@@ -122,6 +128,9 @@ export class PetForm {
         [
           customValidator
             .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, customValidator.whitespaceValidator())
             .bind(customValidator)
         ]
       ]

@@ -43,6 +43,12 @@ export const deleteMemberInfoBody: DialogContent = {
   confirmButton: 'Yes, remove this household member'
 };
 
+export const deletePetInfoBody: DialogContent = {
+  text: '<p>Are you sure you want to remove this pet from your Emergency Support Services (ESS) file?</p>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, remove pet'
+};
+
 export const addEssFile: DialogContent = {
   text: 'Add Another Evacuation File'
 };
