@@ -181,7 +181,7 @@ public record SelfServeEligibilityCheck
     public IEnumerable<SelfServeSupportSetting> SupportSettings { get; set; } = [];
 }
 
-public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState EligibilityStatus);
+public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState State);
 
 public enum NoteType
 {
