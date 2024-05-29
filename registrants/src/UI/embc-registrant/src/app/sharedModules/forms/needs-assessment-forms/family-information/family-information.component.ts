@@ -121,12 +121,14 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
     this.householdMemberForm.get('householdMembers').setValue(this.data);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
+    this.scrollToTopHousehold();
   }
 
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
+    this.scrollToTopHousehold();
   }
 
   /**
@@ -200,5 +202,13 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
       this.personalDetailsForm.value.gender.toLowerCase().trim() ===
         this.householdMemberForm.get('householdMember').value.gender.toLowerCase().trim()
     );
+  }
+
+  public scrollToTopHousehold() {
+    // Scroll to top of householdMemberForm
+    const element = document.getElementById('warningMember');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
