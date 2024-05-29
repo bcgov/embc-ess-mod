@@ -52,7 +52,8 @@ public class SupportsController(IMessagingClient messagingClient, IMapper mapper
             IsEligable = eligilityCheck.IsEligible,
             From = eligilityCheck.From?.DateTime.ToUniversalTime(),
             To = eligilityCheck.To?.DateTime.ToUniversalTime(),
-            TaskNumber = eligilityCheck.TaskNumber
+            TaskNumber = eligilityCheck.TaskNumber,
+            SupportSettings = mapper.Map<IEnumerable<SelfServeSupportSetting>>(eligilityCheck.SupportSettings)
         });
     }
 

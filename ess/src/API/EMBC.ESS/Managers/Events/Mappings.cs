@@ -279,6 +279,11 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Accuracy, opts => opts.MapFrom(s => s.Score))
                 .ForMember(d => d.GeocodedOn, opts => opts.MapFrom(_ => DateTimeOffset.UtcNow))
                 ;
+
+            CreateMap<SelfServeSupportSetting, Shared.Contracts.Events.SelfServe.SelfServeSupportSetting>()
+                .ForCtorParam(nameof(Shared.Contracts.Events.SelfServe.SelfServeSupportSetting.Type), opts => opts.MapFrom(s => s.Type))
+                .ForCtorParam(nameof(Shared.Contracts.Events.SelfServe.SelfServeSupportSetting.State), opts => opts.MapFrom(s => s.State))
+                ;
         }
 
         private static Referral GetReferralOrNull(Support support) => support.SupportDelivery as Referral;

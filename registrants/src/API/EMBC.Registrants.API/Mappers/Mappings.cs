@@ -215,6 +215,9 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<ESS.Shared.Contracts.Events.SelfServe.ETransferDetails, ETransferDetails>()
                 .ReverseMap();
+
+            CreateMap<ESS.Shared.Contracts.Events.SelfServe.SelfServeSupportSetting, SelfServeSupportSetting>()
+                ;
         }
     }
 }

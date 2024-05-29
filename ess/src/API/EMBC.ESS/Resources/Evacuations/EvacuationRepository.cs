@@ -526,7 +526,7 @@ public class EvacuationRepository : IEvacuationRepository
                 var eligibleSupport = new era_eligiblesupport
                 {
                     era_eligiblesupportid = Guid.NewGuid(),
-                    era_supporteligible = (int)support.EligibilityStatus
+                    era_supporteligible = (int)support.State
                 };
                 ctx.AddToera_eligiblesupports(eligibleSupport);
                 ctx.SetLink(eligibleSupport, nameof(era_eligiblesupport.era_EligibilityCheck), eligibilityCheck);
