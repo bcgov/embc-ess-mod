@@ -167,6 +167,16 @@ public record EligibilityCheck
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
     public string? TaskNumber { get; set; }
+    public IEnumerable<SelfServeSupportSetting> SupportSettings { get; set; }
+}
+
+public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState State);
+
+public enum SelfServeSupportEligibilityState
+{
+    Available,
+    Unavailable,
+    UnavailableOneTimeUsed
 }
 
 public record DraftSupports

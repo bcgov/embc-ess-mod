@@ -71,7 +71,7 @@ public record AddEligibilityCheck : ManageEvacuationFileCommand
     public string? Reason { get; set; }
     public DateTimeOffset? From { get; set; }
     public DateTimeOffset? To { get; set; }
-    public IEnumerable<SelfServeSupportEligibility> EligibleSupports { get; set; } = [];
+    public IEnumerable<SelfServeSupportSetting> EligibleSupports { get; set; } = [];
 }
 
 public record OptoutSelfServe : ManageEvacuationFileCommand
@@ -178,10 +178,10 @@ public record SelfServeEligibilityCheck
     public string? TaskNumber { get; set; }
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
-    public IEnumerable<SelfServeSupportEligibility> EligibleSupports { get; set; } = [];
+    public IEnumerable<SelfServeSupportSetting> SupportSettings { get; set; } = [];
 }
 
-public record SelfServeSupportEligibility(SelfServeSupportType Type, SelfServeSupportEligibilityState EligibilityStatus);
+public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState EligibilityStatus);
 
 public enum NoteType
 {

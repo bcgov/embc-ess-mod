@@ -272,11 +272,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 HomeAddressReferenceId = null,
                 EligibleSupports =
                 [
-                    new SelfServeSupportEligibility(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
-                    new SelfServeSupportEligibility(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
                 ],
             };
 
@@ -290,7 +290,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             eligibility.TaskNumber.ShouldBe(taskNumber);
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
-            eligibility.EligibleSupports.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
+            eligibility.SupportSettings.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
         }
 
         [Fact]
@@ -307,11 +307,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 HomeAddressReferenceId = null,
                 EligibleSupports =
                 [
-                    new SelfServeSupportEligibility(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
-                    new SelfServeSupportEligibility(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportEligibility(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
                 ],
             });
 

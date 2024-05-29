@@ -201,12 +201,12 @@ public class Mappings : Profile
             .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_Task == null ? null : s.era_Task.era_name))
             .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_eligibilityperiodfrom.HasValue ? s.era_eligibilityperiodfrom.Value.DateTime.ToUniversalTime() : (DateTime?)null))
             .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_eligibilityperiodto.HasValue ? s.era_eligibilityperiodto.Value.DateTime.ToUniversalTime() : (DateTime?)null))
-            .ForMember(d => d.EligibleSupports, opts => opts.MapFrom((s, _, _, ctx) => s.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck))
+            .ForMember(d => d.SupportSettings, opts => opts.MapFrom((s, _, _, ctx) => s.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck))
             ;
 
-        CreateMap<era_eligiblesupport, SelfServeSupportEligibility>()
-            .ForCtorParam(nameof(SelfServeSupportEligibility.EligibilityStatus), opts => opts.MapFrom(s => s.era_supporteligible))
-            .ForCtorParam(nameof(SelfServeSupportEligibility.Type), opts => opts.MapFrom(s => s.era_SelfServeSupportLimit.era_supporttypeoption))
+        CreateMap<era_eligiblesupport, SelfServeSupportSetting>()
+            .ForCtorParam(nameof(SelfServeSupportSetting.EligibilityStatus), opts => opts.MapFrom(s => s.era_supporteligible))
+            .ForCtorParam(nameof(SelfServeSupportSetting.Type), opts => opts.MapFrom(s => s.era_SelfServeSupportLimit.era_supporttypeoption))
             ;
     }
 }

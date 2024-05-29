@@ -168,15 +168,6 @@ public record GenerateSelfServeSupports(IEnumerable<SelfServeSupportType> Suppor
 
 public record SelfServeHouseholdMember(string Id, bool IsMinor);
 
-public enum SelfServeSupportType
-{
-    ShelterAllowance,
-    FoodGroceries,
-    FoodRestaurant,
-    Incidentals,
-    Clothing
-}
-
 public record CalculateSelfServeSupports(IEnumerable<SelfServeSupport> Supports, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 
 public record GenerateSelfServeSupportsResponse(IEnumerable<SelfServeSupport> Supports) : GenerateResponse;

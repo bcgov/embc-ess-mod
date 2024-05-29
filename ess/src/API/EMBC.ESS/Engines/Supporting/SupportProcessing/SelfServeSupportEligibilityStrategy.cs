@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Spatial;
