@@ -56,7 +56,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(needs: [], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var eligibility = await RunEligibilityTest(file.Id, true);
-        eligibility.eligibleSupportTypes.ShouldBeEmpty();
+        eligibility.EligibleSupportTypes.ShouldBeEmpty();
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         var (file, _) = await CreateTestSubjects(needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreatePartialSelfServeEligibleAddress());
 
         var eligibility = await RunEligibilityTest(file.Id, true);
-        eligibility.eligibleSupportTypes.ShouldHaveSingleItem().ShouldBe(SelfServeSupportType.FoodRestaurant);
+        eligibility.EligibleSupportTypes.ShouldHaveSingleItem().ShouldBe(SelfServeSupportType.FoodRestaurant);
     }
 
     [Fact]
@@ -189,7 +189,8 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
         var eligibility1 = await RunEligibilityTest(file.Id, true);
-        eligibility1.eligibleSupportTypes.ShouldContain(SelfServeSupportType.Incidentals);
+        eligibility1.EligibleSupportTypes.ShouldContain(SelfServeSupportType.Incidentals);
+        eligibility1.OneTimePastSupportTypes.ShouldBeEmpty();
 
         var previousSupports = new[]
         {
@@ -208,7 +209,8 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         await UpdateTestFile(file);
 
         var eligibility2 = await RunEligibilityTest(file.Id, true);
-        eligibility2.eligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
+        eligibility2.EligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
+        eligibility2.OneTimePastSupportTypes.ShouldBe([SelfServeSupportType.Incidentals]);
     }
 
     [Fact]
@@ -230,7 +232,7 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
 
         var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress(), existingRegistrant: registrant);
         var eligibility = await RunEligibilityTest(file2.Id, true);
-        eligibility.eligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Clothing);
+        eligibility.EligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Clothing);
     }
 
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason = null)

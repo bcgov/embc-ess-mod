@@ -270,7 +270,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 To = to,
                 Reason = "Test",
                 HomeAddressReferenceId = null,
-                EligibleSupports = [SelfServeSupportType.ShelterAllowance, SelfServeSupportType.Clothing, SelfServeSupportType.Incidentals, SelfServeSupportType.FoodRestaurant, SelfServeSupportType.FoodGroceries]
+                EligibleSupports =
+                [
+                    new SelfServeSupportEligibility(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportEligibility(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                ],
             };
 
             var response = await evacuationRepository.Manage(cmd);
@@ -298,7 +305,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 To = DateTime.UtcNow.AddDays(3),
                 Reason = "Test",
                 HomeAddressReferenceId = null,
-                EligibleSupports = [SelfServeSupportType.ShelterAllowance, SelfServeSupportType.Clothing, SelfServeSupportType.Incidentals, SelfServeSupportType.FoodRestaurant, SelfServeSupportType.FoodGroceries]
+                EligibleSupports =
+                [
+                    new SelfServeSupportEligibility(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportEligibility(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportEligibility(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                ],
             });
 
             var cmd = new OptoutSelfServe

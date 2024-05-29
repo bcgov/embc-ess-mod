@@ -8,6 +8,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Resources.Evacuations;
 
@@ -306,12 +307,20 @@ public class EvacuationRepository : IEvacuationRepository
         if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
         ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
         if (file.era_CurrentNeedsAssessmentid.era_TaskNumber == null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), ct);
-        if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck == null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_EligibilityCheck), ct);
+
+        file.era_CurrentNeedsAssessmentid.era_EligibilityCheck = await ctx.era_eligibilitychecks
+            .Expand(ec => ec.era_Task)
+            .Expand(ec => ec.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck)
+            .Where(ec => ec._era_needsassessment_value == file.era_CurrentNeedsAssessmentid.era_needassessmentid)
+            .SingleOrDefaultAsync(ct);
+
         if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
         {
-            ctx.AttachTo(nameof(EssContext.era_eligibilitychecks), file.era_CurrentNeedsAssessmentid.era_EligibilityCheck);
-            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_Task));
-            await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid.era_EligibilityCheck, nameof(era_eligibilitycheck.era_eligibilitycheck_era_selfservesupport));
+            await file.era_CurrentNeedsAssessmentid.era_EligibilityCheck.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck.ForEachAsync(5, async s =>
+            {
+                ctx.AttachTo(nameof(EssContext.era_eligiblesupports), s);
+                await ctx.LoadPropertyAsync(s, nameof(era_eligiblesupport.era_SelfServeSupportLimit), ct);
+            });
         }
 
         var members = await ctx.era_householdmembers
@@ -508,11 +517,18 @@ public class EvacuationRepository : IEvacuationRepository
             if (task == null) throw new ArgumentException($"Task {command.TaskNumber} not found");
             ctx.SetLink(eligibilityCheck, nameof(era_eligibilitycheck.era_Task), task);
 
-            foreach (var supportType in command.EligibleSupports)
+            foreach (var support in command.EligibleSupports)
             {
-                var supportLimit = task.era_era_task_era_selfservesupportlimits_Task.SingleOrDefault(sl => sl.era_supporttypeoption == (int)supportType && sl.statecode == 0);
-                if (supportLimit == null) throw new InvalidOperationException($"Eligibility has support type {supportType} which is not enabled for task {task.era_name}");
-                ctx.AddLink(eligibilityCheck, nameof(era_eligibilitycheck.era_eligibilitycheck_era_selfservesupport), supportLimit);
+                var supportLimit = task.era_era_task_era_selfservesupportlimits_Task.SingleOrDefault(sl => sl.era_supporttypeoption == (int)support.Type && sl.statecode == 0);
+                if (supportLimit == null) throw new InvalidOperationException($"Eligibility has support type {support.Type} which is not enabled for task {task.era_name}");
+                var eligibleSupport = new era_eligiblesupport
+                {
+                    era_eligiblesupportid = Guid.NewGuid(),
+                    era_supporteligible = (int)support.EligibilityStatus
+                };
+                ctx.AddToera_eligiblesupports(eligibleSupport);
+                ctx.SetLink(eligibleSupport, nameof(era_eligiblesupport.era_EligibilityCheck), eligibilityCheck);
+                ctx.SetLink(eligibleSupport, nameof(era_eligiblesupport.era_SelfServeSupportLimit), supportLimit);
             }
         }
         await ctx.SaveChangesAsync(ct);

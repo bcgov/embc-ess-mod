@@ -355,7 +355,7 @@ public partial class EventsManager
         {
             //generate the supports based on the file
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
-                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.EligibleSupports),
+                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.EligibleSupports.Select(s => s.Type)),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
@@ -393,10 +393,12 @@ public partial class EventsManager
             From = eligibilityResult.From,
             To = eligibilityResult.To,
             Reason = eligibilityResult.Reason,
-            EligibleSupports = mapper.Map<IEnumerable<Resources.Evacuations.SelfServeSupportType>>(eligibilityResult.eligibleSupportTypes)
+            EligibleSupports = eligibilityResult.EligibleSupportTypes
+                .Select(s => new Resources.Evacuations.SelfServeSupportEligibility(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.Unused))
+                .Concat(eligibilityResult.OneTimePastSupportTypes.Select(s => new Resources.Evacuations.SelfServeSupportEligibility(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.UsedOneTime)))
         });
 
-        if (eligibilityResult.Eligible && !eligibilityResult.eligibleSupportTypes.Any())
+        if (eligibilityResult.Eligible && !eligibilityResult.EligibleSupportTypes.Any())
         {
             // no supports are required, associate the file to the task
             await evacuationRepository.Manage(new Resources.Evacuations.AssignFileToTask { EvacuationFileNumber = file.Id, TaskNumber = eligibilityResult.TaskNumber });
