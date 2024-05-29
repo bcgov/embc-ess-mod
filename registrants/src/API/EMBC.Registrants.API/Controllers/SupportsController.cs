@@ -173,13 +173,6 @@ public record EligibilityCheck
 
 public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState State);
 
-public enum SelfServeSupportEligibilityState
-{
-    Available,
-    Unavailable,
-    UnavailableOneTimeUsed
-}
-
 public record DraftSupports
 {
     public IEnumerable<SelfServeSupport> Items { get; set; } = [];
@@ -238,6 +231,7 @@ public record SelfServeClothingSupport : SelfServeSupport
     public override SelfServeSupportType Type => SelfServeSupportType.Clothing;
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SelfServeSupportType
 {
     ShelterAllowance,
@@ -245,4 +239,12 @@ public enum SelfServeSupportType
     FoodRestaurant,
     Incidentals,
     Clothing
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SelfServeSupportEligibilityState
+{
+    Available,
+    Unavailable,
+    UnavailableOneTimeUsed
 }
