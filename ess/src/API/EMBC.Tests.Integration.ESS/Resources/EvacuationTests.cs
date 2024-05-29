@@ -290,7 +290,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             eligibility.TaskNumber.ShouldBe(taskNumber);
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
-            eligibility.EligibleSupports.Order().ShouldBe(cmd.EligibleSupports.Order());
+            eligibility.EligibleSupports.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
         }
 
         [Fact]

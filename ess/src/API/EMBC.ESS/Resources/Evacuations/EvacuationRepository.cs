@@ -312,6 +312,8 @@ public class EvacuationRepository : IEvacuationRepository
             .Expand(ec => ec.era_Task)
             .Expand(ec => ec.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck)
             .Where(ec => ec._era_needsassessment_value == file.era_CurrentNeedsAssessmentid.era_needassessmentid)
+            .OrderByDescending(ec => ec.createdon)
+            .Take(1)
             .SingleOrDefaultAsync(ct);
 
         if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)

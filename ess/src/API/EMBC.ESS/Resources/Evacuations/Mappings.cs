@@ -205,8 +205,8 @@ public class Mappings : Profile
             ;
 
         CreateMap<era_eligiblesupport, SelfServeSupportEligibility>()
-            .ForMember(d => d.EligibilityStatus, opts => opts.MapFrom(s => s.era_supporteligible))
-            .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_SelfServeSupportLimit.era_supporttypeoption))
+            .ForCtorParam(nameof(SelfServeSupportEligibility.EligibilityStatus), opts => opts.MapFrom(s => s.era_supporteligible))
+            .ForCtorParam(nameof(SelfServeSupportEligibility.Type), opts => opts.MapFrom(s => s.era_SelfServeSupportLimit.era_supporttypeoption))
             ;
     }
 }
