@@ -53,7 +53,9 @@ export class HouseholdMembersForm {
           customValidator
             .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
             .bind(customValidator),
-          customValidator.whitespaceValidator().bind(customValidator)
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
         ]
       ],
       lastName: [
@@ -62,7 +64,9 @@ export class HouseholdMembersForm {
           customValidator
             .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
             .bind(customValidator),
-          customValidator.whitespaceValidator().bind(customValidator)
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
         ]
       ],
       sameLastNameCheck: [''],
@@ -125,7 +129,9 @@ export class PetForm {
           customValidator
             .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
             .bind(customValidator),
-          customValidator.whitespaceValidator().bind(customValidator)
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
         ]
       ]
     });
