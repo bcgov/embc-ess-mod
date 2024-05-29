@@ -35,6 +35,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_provinceterritories bc;
 
         private static int[] selfServeSupportTypes = [174360000, 174360001, 174360005, 174360006, 174360009];
+        private static int[] selfServeOneTimeSupportTypes = [174360005, 174360006];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
@@ -283,6 +284,7 @@ namespace EMBC.Tests.Integration.ESS
                     {
                         era_supporttypeoption = supportType,
                         era_selfservesupportlimitsid = Guid.NewGuid(),
+                        era_extensionavailable = !selfServeOneTimeSupportTypes.Contains((int)supportType),
                     };
                     essContext.AddToera_selfservesupportlimitses(limit);
                     essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_Task), task);

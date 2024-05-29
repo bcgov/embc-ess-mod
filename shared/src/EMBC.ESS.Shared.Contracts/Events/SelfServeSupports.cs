@@ -106,4 +106,23 @@ public record SupportEligibility
     public DateTimeOffset? From { get; set; }
     public DateTimeOffset? To { get; set; }
     public string TaskNumber { get; set; }
+    public IEnumerable<SelfServeSupportSetting> SupportSettings { get; set; } = [];
+}
+
+public record SelfServeSupportSetting(SelfServeSupportType Type, SelfServeSupportEligibilityState State);
+
+public enum SelfServeSupportType
+{
+    ShelterAllowance,
+    FoodGroceries,
+    FoodRestaurant,
+    Incidentals,
+    Clothing
+}
+
+public enum SelfServeSupportEligibilityState
+{
+    Available,
+    Unavailable,
+    NotAvailableOneTimeUsed
 }

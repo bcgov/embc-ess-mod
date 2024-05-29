@@ -270,7 +270,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 To = to,
                 Reason = "Test",
                 HomeAddressReferenceId = null,
-                EligibleSupports = [SelfServeSupportType.ShelterAllowance, SelfServeSupportType.Clothing, SelfServeSupportType.Incidentals, SelfServeSupportType.FoodRestaurant, SelfServeSupportType.FoodGroceries]
+                EligibleSupports =
+                [
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                ],
             };
 
             var response = await evacuationRepository.Manage(cmd);
@@ -283,12 +290,31 @@ namespace EMBC.Tests.Integration.ESS.Resources
             eligibility.TaskNumber.ShouldBe(taskNumber);
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
-            eligibility.EligibleSupports.Order().ShouldBe(cmd.EligibleSupports.Order());
+            eligibility.SupportSettings.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
         }
 
         [Fact]
         public async Task OptOutEligibility_Success()
         {
+            await evacuationRepository.Manage(new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = TestData.EvacuationFileId,
+                TaskNumber = TestData.SelfServeActiveTaskId,
+                From = DateTime.UtcNow,
+                To = DateTime.UtcNow.AddDays(3),
+                Reason = "Test",
+                HomeAddressReferenceId = null,
+                EligibleSupports =
+                [
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                ],
+            });
+
             var cmd = new OptoutSelfServe
             {
                 EvacuationFileNumber = TestData.EvacuationFileId
