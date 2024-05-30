@@ -26,14 +26,20 @@ export class EvacuationFileDataService {
   pastEvacuationFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public pastEvacuationFileCount$: Observable<number> = this.pastEvacuationFileCount.asObservable();
 
-  hasPendingEssFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public hasPendingEssFiles$: Observable<boolean> = this.hasPendingEssFiles.asObservable();
+  isPendingEssFile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isPendingEssFile$: Observable<boolean> = this.isPendingEssFile.asObservable();
 
   allSupportsSelfServe: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public allSupportsSelfServe$: Observable<boolean> = this.allSupportsSelfServe.asObservable();
 
-  hasMultipleActiveFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public hasMultipleActiveFiles$: Observable<boolean> = this.hasMultipleActiveFiles.asObservable();
+  hasActiveReferrals: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public hasActiveReferrals$: Observable<boolean> = this.hasActiveReferrals.asObservable();
+
+  expiredSupportsOnly: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public expiredSupportsOnly$: Observable<boolean> = this.expiredSupportsOnly.asObservable();
+
+  noSupports: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public noSupports$: Observable<boolean> = this.noSupports.asObservable();
 
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
@@ -147,17 +153,17 @@ export class EvacuationFileDataService {
     this.pastEvacuationFileCount.next(count);
   }
 
-  public getHasPendingEssFiles(): Observable<boolean> {
-    return this.hasPendingEssFiles$;
+  public getIsPendingEssFile(): Observable<boolean> {
+    return this.isPendingEssFile$;
   }
 
-  public setHasPendingEssFiles(evacuationFiles: Array<EvacuationFileModel>): void {
-    const totalPendingFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Pending).length;
-
-    if (totalPendingFiles > 0) {
-      this.hasPendingEssFiles.next(true);
-    } else {
-      this.hasPendingEssFiles.next(false);
+  public setIsPendingEssFile(essFileData: EvacuationFileModel): void {
+    if (essFileData === undefined || essFileData.status !== EvacuationFileStatus.Pending) {
+      this.isPendingEssFile.next(false);
+      return;
+    } else if (essFileData.status === EvacuationFileStatus.Pending) {
+      this.isPendingEssFile.next(true);
+      return;
     }
   }
 
@@ -172,7 +178,11 @@ export class EvacuationFileDataService {
     }
     for (let i = 0; i < essFileData.supports.length; i++) {
       const item: Support = essFileData.supports[i];
-      if (item.isSelfServe !== true || item.method === SupportMethod.Referral) {
+      if (
+        item.isSelfServe !== true ||
+        item.method === SupportMethod.Referral ||
+        moment(item.to).isSameOrBefore(moment())
+      ) {
         this.allSupportsSelfServe.next(false);
         return;
       }
@@ -180,26 +190,60 @@ export class EvacuationFileDataService {
 
     this.allSupportsSelfServe.next(true);
   }
-
-  public getHasMultipleActiveFiles(): Observable<boolean> {
-    return this.hasMultipleActiveFiles$;
+  public getExpiredSupportsOnly(): Observable<boolean> {
+    return this.expiredSupportsOnly$;
   }
 
-  public setHasMultipleActiveFiles(evacuationFiles: Array<EvacuationFileModel>): void {
-    const totalActiveFiles = evacuationFiles.filter((item) => item.status === EvacuationFileStatus.Active).length;
+  public setExpiredSupportsOnly(essFileData: EvacuationFileModel): void {
+    if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+      this.expiredSupportsOnly.next(false);
+      return;
+    }
 
-    if (totalActiveFiles > 0) {
-      let essFileData = evacuationFiles.find((item) => item.status === EvacuationFileStatus.Active);
-      if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
-        this.hasMultipleActiveFiles.next(false);
-        return;
-      }
-      if (essFileData.supports.length > 0) {
-        this.hasMultipleActiveFiles.next(true);
+    // if at least one support has support.to date time greater than now =>
+    let hasActiveSupports = essFileData.supports.some((s) => moment(s.to).diff(moment()) > 0);
+    if (!hasActiveSupports) {
+      this.expiredSupportsOnly.next(true);
+      return;
+    }
+    this.expiredSupportsOnly.next(false);
+    return;
+  }
+
+  public getNoSupports(): Observable<boolean> {
+    return this.noSupports$;
+  }
+
+  public setNoSupports(essFileData: EvacuationFileModel): void {
+    this.noSupports.next(false);
+    if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+      this.noSupports.next(true);
+    }
+  }
+
+  public getHasActiveReferrals(): Observable<boolean> {
+    return this.hasActiveReferrals$;
+  }
+
+  public setHasActiveReferrals(essFileData: EvacuationFileModel): void {
+    if (essFileData === undefined || essFileData.supports === undefined || essFileData.supports.length === 0) {
+      this.hasActiveReferrals.next(false);
+      return;
+    }
+
+    for (let i = 0; i < essFileData.supports.length; i++) {
+      const item: Support = essFileData.supports[i];
+      if (
+        ((item.isSelfServe !== true && item.method === SupportMethod.ETransfer) ||
+          item.method === SupportMethod.Referral) &&
+        moment(item.to).diff(moment()) > 0
+      ) {
+        this.hasActiveReferrals.next(true);
         return;
       }
     }
-    this.hasMultipleActiveFiles.next(false);
+
+    this.hasActiveReferrals.next(false);
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
