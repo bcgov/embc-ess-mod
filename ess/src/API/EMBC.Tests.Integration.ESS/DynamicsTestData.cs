@@ -36,6 +36,7 @@ namespace EMBC.Tests.Integration.ESS
 
         private static int[] selfServeSupportTypes = [174360000, 174360001, 174360005, 174360006, 174360009];
         private static int[] selfServeOneTimeSupportTypes = [174360005, 174360006];
+        private static string[] petTypes = ["Dog", "Cat", "Fish", "Bird", "Hamster", "Rabbit"];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
@@ -389,6 +390,19 @@ namespace EMBC.Tests.Integration.ESS
                     essContext.SetLink(member, nameof(era_householdmember.era_Registrant), primaryContact);
                     essContext.SetLink(file, nameof(era_evacuationfile.era_Registrant), primaryContact);
                 }
+            }
+
+            var pets = Enumerable.Range(1, Random.Shared.Next(1, petTypes.Length)).Select(i => new era_animal
+            {
+                era_animalid = Guid.NewGuid(),
+                era_numberofpets = Random.Shared.Next(1, 5),
+                era_name = $"{testPrefix}-{petTypes[i - 1]}"
+            }).ToArray();
+
+            foreach (var pet in pets)
+            {
+                essContext.AddToera_animals(pet);
+                essContext.SetLink(pet, nameof(era_animal.era_ESSFileid), file);
             }
 
             file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(householdMembers);

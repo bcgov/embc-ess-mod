@@ -9,6 +9,7 @@ using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities;
 using EMBC.Utilities.Extensions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EMBC.ESS.Resources.Evacuations;
 
@@ -292,11 +293,11 @@ public class EvacuationRepository : IEvacuationRepository
 
         var loadTasks = new List<Task>();
 
-        if (file.era_era_evacuationfile_era_animal_ESSFileid == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct));
-        if (file.era_era_evacuationfile_era_essfilenote_ESSFileID == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), ct));
+        if (file.era_era_evacuationfile_era_animal_ESSFileid.IsNullOrEmpty()) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct));
+        if (file.era_era_evacuationfile_era_essfilenote_ESSFileID.IsNullOrEmpty()) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), ct));
         if (file.era_TaskId == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId), ct));
         if (file.era_Registrant == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_Registrant), ct));
-        if (file.era_era_evacuationfile_era_evacueesupport_ESSFileId == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct));
+        if (file.era_era_evacuationfile_era_evacueesupport_ESSFileId.IsNullOrEmpty()) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct));
         loadTasks.Add(LoadNeedsAssessment(ctx, file, ct));
 
         await Task.WhenAll(loadTasks);

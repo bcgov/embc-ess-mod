@@ -85,6 +85,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact]
+        public async Task Query_FileByRegistrantId_ResponseIncludesPets()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                LinkedRegistrantId = TestContactId
+            };
+            var files = (await evacuationRepository.Query(caseQuery)).Items.ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.NeedsAssessment.Pets.Count() > 0);
+        }
+
+        [Fact]
         public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
         {
             var caseQuery = new EvacuationFilesQuery
