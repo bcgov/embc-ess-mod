@@ -635,12 +635,12 @@ export const shelterAllowanceNeedDialog: DialogContent = {
 
 export const shelterReferralNeedDialog: DialogContent = {
   title: 'Referrals',
-  text: 'A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
+  text: 'Provided by an ESS responder to direct evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
 };
 
 export const incidentalsNeedDialog: DialogContent = {
   title: 'Incidentals',
-  text: 'Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.'
+  text: 'Incidentals could include items such as personal hygiene products like toothpaste, laundry soap and/or pet food.'
 };
 
 export const noAssistanceRequired = 'Household currently does not require assistance.';
