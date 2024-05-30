@@ -272,11 +272,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 HomeAddressReferenceId = null,
                 EligibleSupports =
                 [
-                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
-                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.NotAvailableOneTimeUsed),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Available)
                 ],
             };
 
@@ -307,11 +307,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 HomeAddressReferenceId = null,
                 EligibleSupports =
                 [
-                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.UsedOneTime),
-                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Unused),
-                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Unused)
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.NotAvailableOneTimeUsed),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Available)
                 ],
             });
 
