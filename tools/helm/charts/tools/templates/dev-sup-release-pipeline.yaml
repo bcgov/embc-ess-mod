@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: prj-dev-release-pipeline
+  name: dev-sup-release-pipeline
 
 spec:
   params:
     - name: imageTag
-      description: ''
+      description: 'Image Tag'
       default: 'master'
     {{- range $key, $value := .Values.images }}
     - name: promote_{{ $key }}
@@ -16,7 +16,7 @@ spec:
 
   tasks:
     {{- range $key, $value := .Values.images }}
-    - name: dev-{{ $key }}
+    - name: dev-sup-{{ $key }}
       when:
         - input: "$(params.promote_{{ $key }})"
           operator: in
@@ -29,11 +29,9 @@ spec:
         - name: destinationImage
           value: {{ $key }}
         - name: destinationTag
-          value: dev
-        - name: scheduled
+          value: dev-sup
+        - name: alias
           value: true
-        - name: referencePolicy
-          value: local
       taskRef:
         kind: Task
         name: tag-image-task

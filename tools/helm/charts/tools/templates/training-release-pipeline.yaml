@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: training-release-pipeline
+
+spec:
+  params:
+    - name: sourceImageTag
+      description: 'Source Image Tag'
+      default: 'test-sup'  
+  tasks:
+    {{- range $key, $value := .Values.images }}
+    - name: training-{{ $key }}
+      params:
+        - name: imageName
+          value: {{ $key }}
+        - name: fromTag
+          value: $(params.sourceImageTag)
+        - name: toTag
+          value: training
+        - name: referencePolicy
+          value: source
+      taskRef:
+        kind: Task
+        name: promote-image-task
+    {{- end }}

@@ -394,8 +394,8 @@ public partial class EventsManager
             To = eligibilityResult.To,
             Reason = eligibilityResult.Reason,
             EligibleSupports = eligibilityResult.EligibleSupportTypes
-                .Select(s => new Resources.Evacuations.SelfServeSupportSetting(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.Unused))
-                .Concat(eligibilityResult.OneTimePastSupportTypes.Select(s => new Resources.Evacuations.SelfServeSupportSetting(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.UsedOneTime)))
+                .Select(s => new Resources.Evacuations.SelfServeSupportSetting(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.Available))
+                .Concat(eligibilityResult.OneTimePastSupportTypes.Select(s => new Resources.Evacuations.SelfServeSupportSetting(mapper.Map<Resources.Evacuations.SelfServeSupportType>(s), Resources.Evacuations.SelfServeSupportEligibilityState.NotAvailableOneTimeUsed)))
         });
 
         if (eligibilityResult.Eligible && !eligibilityResult.EligibleSupportTypes.Any())

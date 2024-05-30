@@ -31,7 +31,7 @@
                   </button>
                 </div>
               </div>
-            } @else if (evacuationFilesDataService.hasPendingEssFiles$ | async) {
+            } @else if (evacuationFilesDataService.isPendingEssFile$ | async) {
               <div class="col-md-12">
                 <p class="top-detail">
                   <b
@@ -42,7 +42,7 @@
                 <p>
                   <b>Please remember to bring government-issued identification with you if you have it.</b>
                 </p>
-                <p>All details pertaining to your event can be found below, under the "Current Events" tab.</p>
+                <p>All details pertaining to your event can be found below, under the "Current Events" tab below.</p>
               </div>
             } @else if (evacuationFilesDataService.allSupportsSelfServe$ | async) {
               <div class="col-md-12">
@@ -58,11 +58,33 @@
                   >
                 </p>
               </div>
-            } @else if (evacuationFilesDataService.hasMultipleActiveFiles$ | async) {
+            } @else if (evacuationFilesDataService.hasActiveReferrals$ | async) {
               <div class="col-md-12">
                 <p class="top-detail">
                   <b>Are you still on evacuation order and require additional supports?</b>
                 </p>
+                <p>
+                  For information about evacuation orders and alerts, please visit your Local Emergency Programs website
+                  or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.
+                </p>
+              </div>
+            } @else if (evacuationFilesDataService.expiredSupportsOnly$ | async) {
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b>Are you still on evacuation order and require additional supports?</b>
+                </p>
+                <p>Extend your supports by reviewing your household needs to confirm they are still correct.</p>
+                <p>
+                  For information about evacuation orders and alerts, please visit your Local Emergency Programs website
+                  or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.
+                </p>
+              </div>
+            } @else if (evacuationFilesDataService.noSupports$ | async) {
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b>Are you still on evacuation order and require supports?</b>
+                </p>
+                <p>Get supports by reviewing your household needs to confirm they are still correct.</p>
                 <p>
                   For information about evacuation orders and alerts, please visit your Local Emergency Programs website
                   or <a href="https://EmergencyInfoBC.ca">EmergencyInfoBC.ca</a>.

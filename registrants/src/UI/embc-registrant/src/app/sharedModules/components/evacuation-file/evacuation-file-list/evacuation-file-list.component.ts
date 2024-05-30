@@ -48,14 +48,16 @@ export class EvacuationFileListComponent implements OnInit {
       this.evacuationFileService.getCurrentEvacuationFiles().subscribe({
         next: (files) => {
           this.dataSourceActive = files;
-          this.dataSourceActive.sort(
-            (a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf()
-          );
+          this.dataSourceActive.sort((a, b) => new Date(b.lastModified).valueOf() - new Date(a.lastModified).valueOf());
           this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
-          this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
+          this.evacuationFileDataService.setIsPendingEssFile(this.primaryEssFile);
           this.evacuationFileDataService.setAllSupportsSelfServe(this.primaryEssFile);
-          this.evacuationFileDataService.setHasMultipleActiveFiles(files);
+          this.evacuationFileDataService.setHasActiveReferrals(this.primaryEssFile);
+
+          this.evacuationFileDataService.setExpiredSupportsOnly(this.primaryEssFile);
+          this.evacuationFileDataService.setNoSupports(this.primaryEssFile);
+
           this.showLoading = false;
         },
         error: (error) => {
