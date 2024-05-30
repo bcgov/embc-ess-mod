@@ -8,6 +8,36 @@
   margin-bottom: var(--size-2);
 }
 
+.card-heading {
+  width: 100%;
+}
+
+.show-one-time-used-message {
+  display: none;
+}
+
+:host .mat-mdc-card.support-one-time-used {
+  background: #eee;
+
+  .card-heading {
+    color: #999;
+  }
+
+  .show-one-time-used-message {
+    display: block;
+    color: red;
+    width: 100%;
+  }
+
+  .hide-on-one-time-used {
+    display: none;
+  }
+
+  .note-box {
+    display: none;
+  }
+}
+
 hr {
   height: 1px;
   background-color: #333;
