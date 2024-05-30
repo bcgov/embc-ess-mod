@@ -33,6 +33,35 @@
     background-color: white !important;
   }
 
+  .mat-mdc-slide-toggle.mat-accent {
+    --color-active: rgba(37, 168, 0, 1);
+    --color-inactive: rgba(210, 0, 0, 1);
+
+    --mdc-switch-selected-focus-state-layer-color: #fff;
+    --mdc-switch-selected-handle-color: #fff;
+    --mdc-switch-selected-hover-state-layer-color: #fff;
+    --mdc-switch-selected-pressed-state-layer-color: #fff;
+    --mdc-switch-selected-focus-handle-color: #fff;
+    --mdc-switch-selected-hover-handle-color: #fff;
+    --mdc-switch-selected-pressed-handle-color: #fff;
+    --mdc-switch-selected-focus-track-color: var(--color-active);
+    --mdc-switch-selected-hover-track-color: var(--color-active);
+    --mdc-switch-selected-pressed-track-color: var(--color-active);
+    --mdc-switch-selected-track-color: var(--color-active);
+
+    --mdc-switch-unselected-focus-state-layer-color: #fff;
+    --mdc-switch-unselected-handle-color: #fff;
+    --mdc-switch-unselected-hover-state-layer-color: #fff;
+    --mdc-switch-unselected-pressed-state-layer-color: #fff;
+    --mdc-switch-unselected-focus-handle-color: #fff;
+    --mdc-switch-unselected-hover-handle-color: #fff;
+    --mdc-switch-unselected-pressed-handle-color: #fff;
+    --mdc-switch-unselected-focus-track-color: var(--color-inactive);
+    --mdc-switch-unselected-hover-track-color: var(--color-inactive);
+    --mdc-switch-unselected-pressed-track-color: var(--color-inactive);
+    --mdc-switch-unselected-track-color: var(--color-inactive);
+  }
+
   ::ng-deep .arrow-color .mat-sort-header-arrow {
     color: #fff;
   }

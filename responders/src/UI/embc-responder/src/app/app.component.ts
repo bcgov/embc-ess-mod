@@ -18,13 +18,22 @@ import { FooterComponent } from './core/layout/footer/footer.component';
 import { HeaderComponent } from './core/layout/header/header.component';
 import { EnvironmentBannerComponent } from './core/layout/environment-banner/environment-banner.component';
 import { NgStyle, AsyncPipe } from '@angular/common';
+import { AppLoaderComponent } from './shared/components/app-loader/app-loader.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [EnvironmentBannerComponent, HeaderComponent, NgStyle, RouterOutlet, FooterComponent, AsyncPipe],
+  imports: [
+    EnvironmentBannerComponent,
+    HeaderComponent,
+    NgStyle,
+    RouterOutlet,
+    FooterComponent,
+    AsyncPipe,
+    AppLoaderComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent implements OnInit {

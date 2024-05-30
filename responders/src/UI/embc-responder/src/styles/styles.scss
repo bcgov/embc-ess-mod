@@ -105,6 +105,11 @@ body {
   height: 100%;
   margin: 0;
 }
+
+input.mat-mdc-input-element::-webkit-calendar-picker-indicator {
+  display: block;
+}
+
 app-root {
   height: 100%;
 }
