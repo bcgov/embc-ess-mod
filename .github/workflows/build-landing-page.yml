@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - 'release/**'
+      - "release/**"
     paths:
       - "landing-page/src/**"
       - .github/workflows/build-landing-page.yml
