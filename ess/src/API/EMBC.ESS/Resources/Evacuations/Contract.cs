@@ -238,6 +238,6 @@ public enum SelfServeSupportType
 
 public enum SelfServeSupportEligibilityState
 {
-    Unused = 174360000,
-    UsedOneTime = 174360001,
+    Available = 174360000,
+    NotAvailableOneTimeUsed = 174360001,
 }

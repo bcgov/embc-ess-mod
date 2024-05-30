@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: promote-image-task1
+  name: promote-image-task
 spec:
   params:
     - name: imageName
