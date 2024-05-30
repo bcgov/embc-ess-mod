@@ -109,7 +109,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.SecurityPhrase))
                 .ForMember(d => d.SecretPhraseEdited, opts => opts.MapFrom(s => false))
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.NeedsAssessment.CompletedOn))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.Support, Support>()
