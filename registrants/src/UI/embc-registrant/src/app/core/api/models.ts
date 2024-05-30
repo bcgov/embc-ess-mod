@@ -48,6 +48,8 @@ export { SelfServeFoodRestaurantSupport } from './models/self-serve-food-restaur
 export { SelfServeIncidentalsSupport } from './models/self-serve-incidentals-support';
 export { SelfServeShelterAllowanceSupport } from './models/self-serve-shelter-allowance-support';
 export { SelfServeSupport } from './models/self-serve-support';
+export { SelfServeSupportEligibilityState } from './models/self-serve-support-eligibility-state';
+export { SelfServeSupportSetting } from './models/self-serve-support-setting';
 export { SelfServeSupportType } from './models/self-serve-support-type';
 export { SubmitSupportsRequest } from './models/submit-supports-request';
 export { Support } from './models/support';

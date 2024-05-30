@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,27 +19,39 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   DraftSupports,
-  HouseholdMember,
   SelfServeClothingSupport,
   SelfServeFoodGroceriesSupport,
   SelfServeFoodRestaurantSupport,
   SelfServeIncidentalsSupport,
   SelfServeShelterAllowanceSupport,
+  SelfServeSupportEligibilityState,
   SelfServeSupportType,
   SupportDayMeals
 } from 'src/app/core/api/models';
 import * as moment from 'moment';
 import { SelfServeSupportRestaurantMealsInfoDialogComponent } from '../self-serve-support-restaurant-meals-info-dialog/self-serve-support-restaurant-meals-info-dialog.component';
+import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-self-serve-support-details-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatButtonModule, MatCheckboxModule, MatCardModule, MatRadioModule, MatFormFieldModule],
+  imports: [
+    NgClass,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatRadioModule,
+    MatFormFieldModule
+  ],
   templateUrl: './self-serve-support-details-form.component.html',
-  styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-details-form.component.scss']
+  styleUrls: ['../self-serve-support-form.component.scss', './self-serve-support-details-form.component.scss'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SelfServeSupportDetailsFormComponent {
   SelfServeSupportType = SelfServeSupportType;
+  SelfServeSupportEligibilityState = SelfServeSupportEligibilityState;
   @Input() supportDraftForm: FormGroup<DraftSupportForm>;
 
   showSelfServeShelterAllowanceSupport = false;
@@ -52,6 +64,8 @@ export class SelfServeSupportDetailsFormComponent {
   foodRestaurantDates: moment.Moment[] = [];
 
   _draftSupports: DraftSupports;
+
+  supportEligibilityStateSettings: Partial<Record<SelfServeSupportType, SelfServeSupportEligibilityState>> = {};
 
   @Input()
   set draftSupports(draftSupports: DraftSupports) {
@@ -92,7 +106,10 @@ export class SelfServeSupportDetailsFormComponent {
     return this._draftSupports;
   }
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    public evacuationFileDataService: EvacuationFileDataService
+  ) {}
 
   private createSelfServeShelterAllowanceSupportForm(
     selfServeSupport: SelfServeShelterAllowanceSupport,
@@ -107,7 +124,15 @@ export class SelfServeSupportDetailsFormComponent {
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
+    this.supportEligibilityStateSettings[SelfServeSupportType.ShelterAllowance] = this.getEligibilityState(
+      SelfServeSupportType.ShelterAllowance
+    );
+
     this.showSelfServeShelterAllowanceSupport = true;
+  }
+
+  getEligibilityState(type: SelfServeSupportType) {
+    return this.evacuationFileDataService.selfServeEligibilityCheck.supportSettings.find((s) => s.type === type).state;
   }
 
   private createSelfServeFoodGroceriesSupportForm(
@@ -123,8 +148,19 @@ export class SelfServeSupportDetailsFormComponent {
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
+    this.supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] = this.getEligibilityState(
+      SelfServeSupportType.FoodGroceries
+    );
+
     this.showSelfServeFoodSupport = true;
     this.hasSelfServeFoodGroceriesSupport = true;
+
+    if (
+      this.supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] ===
+      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+    ) {
+      this.hasSelfServeFoodGroceriesSupport = false;
+    }
   }
 
   private createSelfServeFoodRestaurantSupportForm(
@@ -262,8 +298,19 @@ export class SelfServeSupportDetailsFormComponent {
 
     this.foodRestaurantDates = [...dates];
 
+    this.supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] = this.getEligibilityState(
+      SelfServeSupportType.FoodRestaurant
+    );
+
     this.showSelfServeFoodSupport = true;
     this.hasSelfServiceFoodRestaurantSupport = true;
+
+    if (
+      this.supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] ===
+      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+    ) {
+      this.hasSelfServiceFoodRestaurantSupport = false;
+    }
   }
 
   private createSelfServeClothingSupportForm(
@@ -275,6 +322,10 @@ export class SelfServeSupportDetailsFormComponent {
     });
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.Clothing] = this.getEligibilityState(
+      SelfServeSupportType.Clothing
+    );
 
     this.showSelfServeClothingSupport = true;
   }
@@ -288,6 +339,10 @@ export class SelfServeSupportDetailsFormComponent {
     });
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.Incidentals] = this.getEligibilityState(
+      SelfServeSupportType.Incidentals
+    );
 
     this.showSelfServeIncidentsSupport = true;
   }
