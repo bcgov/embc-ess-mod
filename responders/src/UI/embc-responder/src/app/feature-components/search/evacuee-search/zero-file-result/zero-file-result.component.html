@@ -3,59 +3,30 @@
     <div class="no-results">
       <p>
         No matching Active ESS Files in the ERA Tool for
-        {{
-          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.essFileNumber
-        }}.
+        {{ evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.essFileNumber }}.
       </p>
     </div>
   </div>
 </div>
 <br />
 
-<div
-  class="row"
-  *ngIf="
-    this.optionInjectionService?.instance?.optionType ===
-    selectedPathType.remoteExtensions
-  "
->
-  <div class="col-md-12">
-    <p class="p-custom bold">
-      Reasons why you are not seeing an ESS File result.
-    </p>
-    <p class="p-custom">
-      1. The file you searched for does not exist in the ERA tool.
-    </p>
-    <p class="p-custom">
-      2. The file is in a pending, completed or expired status.
-    </p>
-    <p class="p-custom">3. The file has no associated supports to extend.</p>
+@if (this.optionInjectionService?.instance?.optionType === selectedPathType.remoteExtensions) {
+  <div class="row">
+    <div class="col-md-12">
+      <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
+      <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
+      <p class="p-custom">2. The file is in a pending, completed or expired status.</p>
+      <p class="p-custom">3. The file has no associated supports to extend.</p>
+    </div>
   </div>
-</div>
+}
 
-<div
-  class="row"
-  *ngIf="
-    this.optionInjectionService?.instance?.optionType ===
-    selectedPathType.caseNotes
-  "
->
-  <div class="col-md-12">
-    <p class="p-custom bold">
-      Reasons why you are not seeing an ESS File result.
-    </p>
-    <p class="p-custom">
-      1. The file you searched for does not exist in the ERA tool.
-    </p>
-    <p class="p-custom">2. The file is in a Pending or Expired status.</p>
-    <p class="p-custom">
-      3. The file is Restricted and you do not have permission to view it (Tier
-      1 Responders).
-    </p>
-    <p class="p-custom">
-      4. The file is in a Completed status and you do not have permission to
-      view it (Tier 1 Responders).
-    </p>
+@if (this.optionInjectionService?.instance?.optionType === selectedPathType.caseNotes) {
+  <div class="row">
+    <div class="col-md-12">
+      <p class="p-custom bold">Reasons why you are not seeing an ESS File result.</p>
+      <p class="p-custom">1. The file you searched for does not exist in the ERA tool.</p>
+      <p class="p-custom">2. The file is in a Pending or Expired status.</p>
+    </div>
   </div>
-</div>
+}

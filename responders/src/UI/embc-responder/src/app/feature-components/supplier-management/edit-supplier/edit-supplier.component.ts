@@ -3,35 +3,47 @@ import {
   UntypedFormBuilder,
   Validators,
   AbstractControl,
-  UntypedFormGroup
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { EditSupplierService } from './edit-supplier.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { MatButton } from '@angular/material/button';
+import { IMaskDirective } from 'angular-imask';
+import { BcAddressComponent } from '../../../shared/forms/address-forms/bc-address/bc-address.component';
+import { CustomGstFieldComponent } from '../../../shared/components/custom-gst-field/custom-gst-field.component';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-edit-supplier',
   templateUrl: './edit-supplier.component.html',
-  styleUrls: ['./edit-supplier.component.scss']
+  styleUrls: ['./edit-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    CustomGstFieldComponent,
+    BcAddressComponent,
+    IMaskDirective,
+    MatButton
+  ]
 })
 export class EditSupplierComponent implements OnInit {
   editForm: UntypedFormGroup;
-  readonly phoneMask = [
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    '-',
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ];
+  readonly phoneMask = globalConst.phoneMask;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -40,9 +52,7 @@ export class EditSupplierComponent implements OnInit {
     private editSupplierService: EditSupplierService
   ) {
     if (this.editSupplierService.editedSupplier === undefined) {
-      this.router.navigate([
-        '/responder-access/supplier-management/suppliers-list'
-      ]);
+      this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
     }
   }
 
@@ -91,24 +101,18 @@ export class EditSupplierComponent implements OnInit {
    */
   next(): void {
     this.saveDataForm();
-    const updatedSupplier: SupplierModel =
-      this.editSupplierService.editedSupplier;
-    this.router.navigate(
-      ['/responder-access/supplier-management/review-supplier'],
-      {
-        queryParams: { action: 'edit' },
-        state: { ...updatedSupplier }
-      }
-    );
+    const updatedSupplier: SupplierModel = this.editSupplierService.editedSupplier;
+    this.router.navigate(['/responder-access/supplier-management/review-supplier'], {
+      queryParams: { action: 'edit' },
+      state: { ...updatedSupplier }
+    });
   }
 
   /**
    * Cancels the action of editing by going back to the Suppliers list page
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 
   /**
@@ -128,31 +132,21 @@ export class EditSupplierComponent implements OnInit {
         {
           part1: [
             {
-              value:
-                this.editSupplierService.editedSupplier?.supplierGstNumber
-                  ?.part1 ?? '',
+              value: this.editSupplierService.editedSupplier?.supplierGstNumber?.part1 ?? '',
               disabled: true
             },
             [Validators.required, Validators.pattern(globalConst.gstFirstField)]
           ],
           part2: [
             {
-              value:
-                this.editSupplierService.editedSupplier?.supplierGstNumber
-                  ?.part2 ?? '',
+              value: this.editSupplierService.editedSupplier?.supplierGstNumber?.part2 ?? '',
               disabled: true
             },
-            [
-              Validators.required,
-              Validators.pattern(globalConst.gstSecondField)
-            ]
+            [Validators.required, Validators.pattern(globalConst.gstSecondField)]
           ]
         },
         {
-          validators: [
-            this.customValidation.groupRequiredValidator(),
-            this.customValidation.groupMinLengthValidator()
-          ]
+          validators: [this.customValidation.groupRequiredValidator(), this.customValidation.groupMinLengthValidator()]
         }
       ),
       address: this.createSupplierAddressEditForm(),
@@ -171,21 +165,14 @@ export class EditSupplierComponent implements OnInit {
         this.editSupplierService.editedSupplier?.address?.addressLine1 ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
-      addressLine2: [
-        this.editSupplierService.editedSupplier?.address?.addressLine2 ?? ''
-      ],
-      community: [
-        this.editSupplierService.editedSupplier?.address?.community ?? '',
-        [Validators.required]
-      ],
+      addressLine2: [this.editSupplierService.editedSupplier?.address?.addressLine2 ?? ''],
+      community: [this.editSupplierService.editedSupplier?.address?.community ?? '', [Validators.required]],
       stateProvince: [
-        this.editSupplierService.editedSupplier?.address?.stateProvince ??
-          globalConst.defaultProvince,
+        this.editSupplierService.editedSupplier?.address?.stateProvince ?? globalConst.defaultProvince,
         [Validators.required]
       ],
       country: [
-        this.editSupplierService.editedSupplier?.address?.country ??
-          globalConst.defaultCountry,
+        this.editSupplierService.editedSupplier?.address?.country ?? globalConst.defaultCountry,
         [Validators.required]
       ],
       postalCode: [
@@ -207,30 +194,17 @@ export class EditSupplierComponent implements OnInit {
       ],
       phone: [
         this.editSupplierService.editedSupplier?.contact?.phone ?? '',
-        [
-          Validators.required,
-          this.customValidation
-            .maskedNumberLengthValidator()
-            .bind(this.customValidation)
-        ]
+        [Validators.required, this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]
       ],
-      email: [
-        this.editSupplierService?.editedSupplier?.contact?.email ?? '',
-        [Validators.email]
-      ]
+      email: [this.editSupplierService?.editedSupplier?.contact?.email ?? '', [Validators.email]]
     });
   }
 
   private saveDataForm(): void {
-    this.editSupplierService.editedSupplier.name =
-      this.editForm.get('supplierName').value;
-    this.editSupplierService.editedSupplier.legalName =
-      this.editForm.get('supplierLegalName').value;
-    this.editSupplierService.editedSupplier.supplierGstNumber =
-      this.editForm.get('gstNumber').value;
-    this.editSupplierService.editedSupplier.address =
-      this.editForm.get('address').value;
-    this.editSupplierService.editedSupplier.contact =
-      this.editForm.get('contact').value;
+    this.editSupplierService.editedSupplier.name = this.editForm.get('supplierName').value;
+    this.editSupplierService.editedSupplier.legalName = this.editForm.get('supplierLegalName').value;
+    this.editSupplierService.editedSupplier.supplierGstNumber = this.editForm.get('gstNumber').value;
+    this.editSupplierService.editedSupplier.address = this.editForm.get('address').value;
+    this.editSupplierService.editedSupplier.contact = this.editForm.get('contact').value;
   }
 }

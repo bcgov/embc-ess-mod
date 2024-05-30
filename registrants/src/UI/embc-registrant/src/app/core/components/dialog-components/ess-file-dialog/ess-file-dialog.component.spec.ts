@@ -8,7 +8,7 @@ describe('EssFileDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EssFileDialogComponent]
+      imports: [EssFileDialogComponent]
     }).compileComponents();
   });
 

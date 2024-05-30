@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
-  UntypedFormGroup
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -10,11 +12,32 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from './task-search.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-task-search',
   templateUrl: './task-search.component.html',
-  styleUrls: ['./task-search.component.scss']
+  styleUrls: ['./task-search.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AlertComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatButton,
+    AppLoaderComponent
+  ]
 })
 export class TaskSearchComponent implements OnInit {
   taskSearchForm: UntypedFormGroup;
@@ -59,31 +82,29 @@ export class TaskSearchComponent implements OnInit {
   submitTask(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.taskSearchService
-      .searchTask(this.taskSearchForm.get('taskNumber').value)
-      .subscribe({
-        next: (result) => {
+    this.taskSearchService.searchTask(this.taskSearchForm.get('taskNumber').value).subscribe({
+      next: (result) => {
+        this.router.navigate(['/responder-access/search/task-details'], {
+          state: { essTask: result }
+        });
+      },
+      error: (error) => {
+        if (error?.status && error?.status === 404) {
           this.router.navigate(['/responder-access/search/task-details'], {
-            state: { essTask: result }
-          });
-        },
-        error: (error) => {
-          if (error?.status && error?.status === 404) {
-            this.router.navigate(['/responder-access/search/task-details'], {
-              state: {
-                essTask: {
-                  id: this.taskSearchForm.get('taskNumber').value,
-                  status: 'Invalid'
-                }
+            state: {
+              essTask: {
+                id: this.taskSearchForm.get('taskNumber').value,
+                status: 'Invalid'
               }
-            });
-          } else {
-            this.showLoader = !this.showLoader;
-            this.isSubmitted = !this.isSubmitted;
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.taskSearchError);
-          }
+            }
+          });
+        } else {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.taskSearchError);
         }
-      });
+      }
+    });
   }
 }

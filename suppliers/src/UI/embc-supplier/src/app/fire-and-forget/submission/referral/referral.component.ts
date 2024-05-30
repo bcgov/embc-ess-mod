@@ -1,28 +1,26 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormArray,
   UntypedFormBuilder,
   AbstractControl,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import {
   NgbDateParserFormatter,
   NgbCalendar,
   NgbDateAdapter,
-  NgbDatepickerConfig
+  NgbDatepickerConfig,
+  NgbInputDatepicker
 } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { FileUploadComponent } from '../../../core/components/fileUpload/fileUpload.component';
+import { DecimalCurrencyDirective } from '../../../core/directives/DecimalCurrency.directive';
 
 @Component({
   selector: 'app-referral',
@@ -32,7 +30,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
     { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
     { provide: NgbDateParserFormatter, useClass: DateParserService },
     NgbDatepickerConfig
-  ]
+  ],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, NgbInputDatepicker, DecimalCurrencyDirective, FileUploadComponent]
 })
 export class ReferralComponent implements OnInit {
   @Input() formGroupName: number;
@@ -83,8 +83,7 @@ export class ReferralComponent implements OnInit {
   }
 
   get rowControl() {
-    return (this.referralForm.controls.referralRows as UntypedFormArray)
-      .controls;
+    return (this.referralForm.controls.referralRows as UntypedFormArray).controls;
   }
 
   ngOnInit() {
@@ -102,14 +101,9 @@ export class ReferralComponent implements OnInit {
   loadWithExistingValues() {
     const storedSupplierDetails = this.supplierService.getSupplierDetails();
     if (this.component === 'I') {
-      const rowList =
-        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[
-          this.index
-        ].referralRows;
+      const rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
       this.reloadedFiles =
-        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[
-          this.index
-        ].referralAttachments;
+        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralAttachments;
       this.reloadedFiles.forEach((element) => {
         this.referralAttachments.push(
           this.createAttachmentObject({
@@ -119,9 +113,7 @@ export class ReferralComponent implements OnInit {
         );
       });
       this.reloadedFiles2 =
-        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[
-          this.index
-        ].receiptAttachments;
+        storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].receiptAttachments;
       this.reloadedFiles2.forEach((element) => {
         this.receiptAttachments.push(
           this.createAttachmentObject({
@@ -134,10 +126,7 @@ export class ReferralComponent implements OnInit {
         this.referralRows.push(this.createRowFormWithValues(row));
       });
     } else if (this.component === 'R') {
-      const rowList =
-        storedSupplierDetails.receipts[this.invoiceCurrentIndex].referrals[
-          this.index
-        ].referralRows;
+      const rowList = storedSupplierDetails.receipts[this.invoiceCurrentIndex].referrals[this.index].referralRows;
       rowList.forEach((row) => {
         this.referralRows.push(this.createRowFormWithValues(row));
       });
@@ -155,9 +144,7 @@ export class ReferralComponent implements OnInit {
 
   onChanges() {
     this.referralForm.get('referralRows').valueChanges.subscribe((formrow) => {
-      const amtSum = formrow
-        .reduce((prev, next) => prev + +next.amount, 0)
-        .toFixed(2);
+      const amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0).toFixed(2);
       this.referralForm.get('totalAmount').setValue(amtSum);
     });
   }

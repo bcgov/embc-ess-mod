@@ -10,33 +10,51 @@ import {
 } from '@angular/core/testing';
 
 import { AddressComponent } from './address.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { MockLocationService } from 'src/app/unit-tests/mockLocation.service';
 import { AddressService } from './address.service';
 import { MockAddressService } from 'src/app/unit-tests/mockAddress.service';
 import { Router } from '@angular/router';
-import { _MatRadioButtonBase } from '@angular/material/radio';
 import { Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
-@Component({ selector: 'app-bc-address', template: '' })
+@Component({
+  selector: 'app-bc-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class BcAddressStubComponent {}
 
-@Component({ selector: 'app-can-address', template: '' })
+@Component({
+  selector: 'app-can-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class CanadaAddressStubComponent {}
 
-@Component({ selector: 'app-usa-address', template: '' })
+@Component({
+  selector: 'app-usa-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class UsaAddressStubComponent {}
 
-@Component({ selector: 'app-other-address', template: '' })
+@Component({
+  selector: 'app-other-address',
+  template: '',
+  standalone: true,
+  imports: [MatDialogModule, ReactiveFormsModule, HttpClientTestingModule]
+})
 class OtherAddressStubComponent {}
 
 describe('AddressComponent', () => {
@@ -49,14 +67,10 @@ describe('AddressComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [
+        BrowserAnimationsModule,
         AddressComponent,
         BcAddressStubComponent,
         CanadaAddressStubComponent,
@@ -77,7 +91,8 @@ describe('AddressComponent', () => {
         {
           provide: AddressService,
           useClass: MockAddressService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -97,9 +112,7 @@ describe('AddressComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#primaryAddressForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#primaryAddressForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(4);
   });
@@ -140,8 +153,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    const mailingAddressForm =
-      component.primaryAddressForm.get('mailingAddress');
+    const mailingAddressForm = component.primaryAddressForm.get('mailingAddress');
     const formValues = {
       addressLine1: '',
       addressLine2: '',
@@ -170,9 +182,7 @@ describe('AddressComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/evacuee-details'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/evacuee-details']);
     })
   ));
 
@@ -193,9 +203,7 @@ describe('AddressComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/contact'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/contact']);
     })
   ));
 
@@ -232,10 +240,7 @@ describe('AddressComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        addressService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'address'
-        );
+      const tabMetaData = addressService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'address');
 
       expect(tabMetaData.status).toEqual('not-started');
     })
@@ -251,8 +256,7 @@ describe('AddressComponent', () => {
         addressService.stepEvacueeProfileService.evacueeProfileTabs;
 
       addressService.stepEvacueeProfileService.isBcAddressVal = 'Yes';
-      addressService.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddressVal =
-        'Yes';
+      addressService.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddressVal = 'Yes';
       addressService.stepEvacueeProfileService.isBcMailingAddressVal = 'Yes';
       addressService.stepEvacueeProfileService.mailingAddressDetailsVal = {
         addressLine1: '1',
@@ -296,10 +300,7 @@ describe('AddressComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        addressService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'address'
-        );
+      const tabMetaData = addressService.stepEvacueeProfileService.profileTabs.find((tab) => tab.name === 'address');
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -321,12 +322,11 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.sameAsPrimary({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
-    const mailingAddress =
-      component.primaryAddressForm.get('mailingAddress').value;
+    const mailingAddress = component.primaryAddressForm.get('mailingAddress').value;
     expect(primaryAddress).toEqual(mailingAddress);
   });
 
@@ -346,12 +346,11 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.mailingAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
-    const mailingAddress =
-      component.primaryAddressForm.get('mailingAddress').value;
+    const mailingAddress = component.primaryAddressForm.get('mailingAddress').value;
     expect(primaryAddress).not.toEqual(mailingAddress);
   });
 
@@ -371,14 +370,12 @@ describe('AddressComponent', () => {
     };
     fixture.detectChanges();
     component.primaryAddressChange({
-      source: {} as _MatRadioButtonBase,
+      source: {} as any,
       value: 'Yes'
     });
     const primaryAddress = component.primaryAddressForm.get('address').value;
 
-    expect(primaryAddress).not.toEqual(
-      addressService.stepEvacueeProfileService.primaryAddressDetailsVal
-    );
+    expect(primaryAddress).not.toEqual(addressService.stepEvacueeProfileService.primaryAddressDetailsVal);
   });
 
   it('should display BC address form for primary address', () => {
@@ -394,9 +391,7 @@ describe('AddressComponent', () => {
     addressService.stepEvacueeProfileService.isBcAddressVal = 'No';
     fixture.detectChanges();
     component.ngOnInit();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#primaryAddressForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#primaryAddressForm');
     const totalElems = formElem.querySelectorAll('mat-autocomplete');
     expect(totalElems.length).toEqual(1);
   });
@@ -406,9 +401,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'CAN', name: 'Canada' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'CAN', name: 'Canada' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
@@ -421,9 +414,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'USA', name: 'United States of America' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'USA', name: 'United States of America' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
@@ -436,9 +427,7 @@ describe('AddressComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.primaryAddressForm
-      .get('address.country')
-      .setValue({ code: 'AUS', name: 'Australia' });
+    component.primaryAddressForm.get('address.country').setValue({ code: 'AUS', name: 'Australia' });
     fixture.detectChanges();
 
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;

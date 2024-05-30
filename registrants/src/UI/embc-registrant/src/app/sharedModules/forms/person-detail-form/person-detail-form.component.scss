@@ -1,3 +1,13 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .last-name-col {
+    height: 55px;
+  }
+
+  .same-as-applicant-col {
+    padding-bottom: 20px;
+  }
 }

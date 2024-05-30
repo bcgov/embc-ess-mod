@@ -1,17 +1,31 @@
 <br />
 <div class="row" style="max-width: 100%">
   <div class="col-md-12 breadCrumb">
-    <a class="goBackLink" (click)="goToCurrent()">{{ evacuationFileTab }} Events ({{ evacuationFileDataService.currentEvacuationFileCount$ | async }}) &nbsp;</a>
-    <span> / &nbsp; ESS File #{{ evacuationFileDataService?.isPaper ? evacuationFileDataService.externalReferenceId : evacuationFileDataService?.essFileId }}</span>
+    <a class="goBackLink" (click)="goToCurrent()"
+      >{{ evacuationFileTab }} Events ({{ evacuationFileDataService.currentEvacuationFileCount$ | async }}) &nbsp;</a
+    >
+    <span>
+      / &nbsp; ESS File #{{
+        evacuationFileDataService?.isPaper
+          ? evacuationFileDataService.externalReferenceId
+          : evacuationFileDataService?.essFileId
+      }}</span
+    >
   </div>
 </div>
-<mat-card class="detailsCard">
+<mat-card appearance="outlined" class="detailsCard">
   <div class="row evacFileHeader">
     <div class="col-md-9 titleDetailHeader">
       <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
         <img [src]="backArrowImgSrc" height="28" width="31" />
       </button>
-      <span class="evacFileSpan">ESS File #{{ evacuationFileDataService?.isPaper ? evacuationFileDataService.externalReferenceId : evacuationFileDataService?.essFileId }}</span>
+      <span class="evacFileSpan"
+        >ESS File #{{
+          evacuationFileDataService?.isPaper
+            ? evacuationFileDataService.externalReferenceId
+            : evacuationFileDataService?.essFileId
+        }}</span
+      >
     </div>
 
     <div class="col-md-3 statusDetailHeader">
@@ -30,21 +44,43 @@
       </div>
     </div>
   </div>
-  <div *ngIf="referralData?.size === 0; else referrals">
-    <app-review [type]="type" [showHeading]="false" [currentFlow]="currentFlow" [parentPageName]="parentPageName" [allowEdit]="allowEdition()"> </app-review>
-    <div class="supportReceived">
-      <p class="titleDetailHeader">Supports Received</p>
-      <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-      <p class="supportReceivedRegSpan">Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.</p>
+
+  @if (
+    [EvacuationFileStatus.Pending, EvacuationFileStatus.Expired].includes(
+      evacuationFileDataService.evacuationFileStatus
+    )
+  ) {
+    <div class="update-header-container pending">
+      <div>
+        <img src="assets/images/black_edit.svg" alt="Edit Icon" height="40" width="40" />
+      </div>
+      <div style="flex: 1; color: #333">
+        <h2>Ensure Your Evacuation Details are Up-to-Date</h2>
+        <p>Verify the information provided below and update your ESS File if required.</p>
+      </div>
+      <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+        Update your Details
+      </button>
     </div>
-  </div>
-  <ng-template #referrals>
+  }
+
+  @if (isPending) {
+    <div>
+      <app-review
+        [type]="type"
+        [showHeading]="false"
+        [currentFlow]="currentFlow"
+        [parentPageName]="parentPageName"
+        [allowEdit]="false"
+      >
+      </app-review>
+    </div>
+  } @else {
     <mat-card-content class="contentCard">
       <div class="row justify-content-between">
         <div class="col-md-6 card-heading">Event Details</div>
       </div>
       <hr />
-
       <div class="row info-detail">
         <div class="col-md-3">Evacuated From:</div>
         <div class="col-md-3 evacuatedAddress">
@@ -62,32 +98,93 @@
         </div>
       </div>
       <br /><br />
-      <div class="row justify-content-between">
-        <div class="col-md-6 card-heading">Support Received</div>
-      </div>
-      <hr />
-      <div class="row info-detail">
-        <div class="col-10">Click on the dates that you received supports below to view full support details.</div>
-        <div class="col-2 row mainReferralsLink" (click)="expandDetails()">
-          <div class="col-md-6 allReferrals">
-            <a>{{ this.allExpandState ? 'close all' : 'expand all' }}</a>
+      @if (showSupports) {
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Support Issued</div>
+        </div>
+        <hr />
+
+        @if (isActive && !evacuationFileDataService.hasActiveSupports(evacuationFileDataService.supports)) {
+          <div class="update-header-container active">
+            <div>
+              <img src="assets/images/black_exclamation.svg" alt="Edit Icon" height="40" width="40" />
+            </div>
+            <div style="flex: 1; color: #333">
+              <h2>Do you need additional supports while evacuated?</h2>
+              <p>Please <b>review your household needs</b> to confirm they are still correct.</p>
+            </div>
+            <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+              Review Household Needs
+            </button>
           </div>
-          <div class="col-md-6 row">
-            <div class="col-md-9" style="height: 6px">
-              <img [ngClass]="allExpandState ? 'none' : 'rotate180'" src="../../../../assets/images/expand_arrow.png" height="15" width="18" />
+        }
+
+        <div class="row info-detail">
+          <div class="col-10">
+            Please select the date/s for which you were issued supports to access comprehensive support details.
+          </div>
+          <div class="col-2 row mainReferralsLink" (click)="expandDetails()">
+            <div class="col-md-6 allReferrals">
+              <a>{{ this.allExpandState ? 'close all' : 'expand all' }}</a>
+            </div>
+            <div class="col-md-6 row">
+              <div class="col-md-9" style="height: 6px">
+                <img
+                  [ngClass]="allExpandState ? 'none' : 'rotate180'"
+                  src="../../../../assets/images/expand_arrow.png"
+                  height="15"
+                  width="18"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <br />
-      <app-referral-details
-        *ngFor="let key of referralData.keys()"
-        [referralDataSource]="referralData.get(key)"
-        [referralsDate]="key"
-        [allExpandState]="allExpandState"
-        (allExpandStateUpdate)="allExpandState = $event"
-      >
-      </app-referral-details>
+        <br />
+      }
+      @for (key of referralData.keys(); track key) {
+        <app-referral-details
+          [referralDataSource]="referralData.get(key)"
+          [referralsDate]="key"
+          [allExpandState]="allExpandState"
+          (allExpandStateUpdate)="allExpandState = $event"
+        >
+        </app-referral-details>
+      }
     </mat-card-content>
-  </ng-template>
+  }
+  @if (referralData?.size === 0) {
+    @if (isActive) {
+      <hr />
+    }
+    <div class="supportReceived">
+      <p class="card-heading">Supports Issued</p>
+      <hr />
+      @if (
+        [EvacuationFileStatus.Active].includes(evacuationFileDataService.evacuationFileStatus) &&
+        evacuationFileDataService.hasNoSupports(evacuationFileDataService.supports)
+      ) {
+        <div class="update-header-container active">
+          <div>
+            <img src="assets/images/black_exclamation.svg" alt="Edit Icon" height="40" width="40" />
+          </div>
+          <div style="flex: 1; color: #333">
+            <h2>Do you need supports while evacuated?</h2>
+            <p>
+              Based on the information provided, you are categorized as a <b>self-sufficient evacuee</b> with the
+              necessary resources to support yourself. If your situation changes, please update your household needs.
+            </p>
+          </div>
+          <button style="width: 240px" mat-button class="button-p" (click)="gotoUpdateDetails()">
+            Review Household Needs
+          </button>
+        </div>
+      }
+      <p class="supportReceivedBoldSpan">You have not been issued any supports.</p>
+      @if (isPending) {
+        <p class="supportReceivedRegSpan">
+          Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.
+        </p>
+      }
+    </div>
+  }
 </mat-card>

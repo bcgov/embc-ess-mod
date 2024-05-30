@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { MemberRole } from './member-role';
+import { MemberRole } from '../models/member-role';
 
 /**
  * role code and description

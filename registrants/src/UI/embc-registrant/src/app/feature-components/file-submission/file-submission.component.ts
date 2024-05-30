@@ -12,11 +12,16 @@ import { FileSubmissionService } from './file-submission.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { DialogContent } from 'src/app/core/model/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
+import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-file-submission',
   templateUrl: './file-submission.component.html',
-  styleUrls: ['./file-submission.component.scss']
+  styleUrls: ['./file-submission.component.scss'],
+  standalone: true,
+  imports: [MatCardModule, MatButtonModule, AppLoaderComponent]
 })
 export class FileSubmissionComponent implements OnInit {
   referenceNumber: string;
@@ -42,8 +47,7 @@ export class FileSubmissionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    const registrationResult =
-      this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
+    const registrationResult = this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
       if (!this.referenceNumber) {
@@ -76,22 +80,17 @@ export class FileSubmissionComponent implements OnInit {
       .subscribe((emailId) => {
         if (emailId !== 'close') {
           this.showLoader = !this.showLoader;
-          this.fileSubmissionService
-            .inviteByEmail(emailId, this.referenceNumber)
-            .subscribe({
-              next: (value) => {
-                this.showLoader = !this.showLoader;
-                this.openSuccessModal(globalConst.successfulBcscInvite);
-              },
-              error: (error) => {
-                this.showLoader = !this.showLoader;
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.bcscInviteError
-                );
-              }
-            });
+          this.fileSubmissionService.inviteByEmail(emailId, this.referenceNumber).subscribe({
+            next: (value) => {
+              this.showLoader = !this.showLoader;
+              this.openSuccessModal(globalConst.successfulBcscInvite);
+            },
+            error: (error) => {
+              this.showLoader = !this.showLoader;
+              this.alertService.clearAlert();
+              this.alertService.setAlert('danger', globalConst.bcscInviteError);
+            }
+          });
         }
       });
   }

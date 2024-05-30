@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Messaging;
@@ -9,7 +10,7 @@ namespace EMBC.Registrants.API.Services
 {
     public interface IProfileInviteService
     {
-        Task<bool> ProcessInvite(string inviteId, string loggedInUserId);
+        Task<bool> ProcessInvite(string inviteId, string loggedInUserId, CancellationToken ct);
     }
 
     public class ProfileInviteService : IProfileInviteService
@@ -23,11 +24,11 @@ namespace EMBC.Registrants.API.Services
             this.logger = telemetryProvider.Get<ProfileInviteService>();
         }
 
-        public async Task<bool> ProcessInvite(string inviteId, string loggedInUserId)
+        public async Task<bool> ProcessInvite(string inviteId, string loggedInUserId, CancellationToken ct)
         {
             try
             {
-                await messagingClient.Send(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = loggedInUserId });
+                await messagingClient.Send(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = loggedInUserId }, ct);
                 return true;
             }
             catch (BusinessLogicException e)

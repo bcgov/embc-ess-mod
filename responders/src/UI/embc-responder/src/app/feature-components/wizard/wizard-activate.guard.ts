@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -15,7 +9,7 @@ import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.se
 import { WizardAdapterService } from './wizard-adapter.service';
 
 @Injectable({ providedIn: 'root' })
-export class WizardActivateGuard implements CanActivate {
+export class WizardActivateGuard {
   constructor(
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
@@ -28,16 +22,10 @@ export class WizardActivateGuard implements CanActivate {
   public canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const loggedInTaskNumber = this.cacheService.get('loggedInTaskNumber');
     const wizardType = this.appBaseService?.wizardProperties?.wizardType;
-    const registrantProfileId =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.id;
+    const registrantProfileId = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTaskNumber)) {
@@ -55,17 +43,13 @@ export class WizardActivateGuard implements CanActivate {
       return false;
     } else if (wizardType === WizardType.EditRegistration) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        return this.wizardAdapterService.stepEditProfileFromProfileId(
-          registrantProfileId
-        );
+        return this.wizardAdapterService.stepEditProfileFromProfileId(registrantProfileId);
       }
 
       return false;
     } else if (wizardType === WizardType.NewEssFile) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        return this.wizardAdapterService.stepCreateEssFileFromProfileId(
-          registrantProfileId
-        );
+        return this.wizardAdapterService.stepCreateEssFileFromProfileId(registrantProfileId);
       }
 
       return false;
@@ -104,10 +88,8 @@ export class WizardActivateGuard implements CanActivate {
     return (
       loggedInTaskNumber !== null &&
       loggedInTaskNumber !== undefined &&
-      this.evacueeSearchService?.evacueeSearchContext
-        ?.evacueeSearchParameters !== null &&
-      this.evacueeSearchService?.evacueeSearchContext
-        ?.evacueeSearchParameters !== undefined
+      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters !== null &&
+      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters !== undefined
     );
   }
 

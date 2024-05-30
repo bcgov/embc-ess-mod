@@ -31,15 +31,7 @@ export class MockOutageService extends OutageService {
     public cacheService: CacheService,
     zone: NgZone
   ) {
-    super(
-      dialog,
-      configService,
-      alertService,
-      router,
-      loginService,
-      cacheService,
-      zone
-    );
+    super(dialog, configService, alertService, router, loginService, cacheService, zone);
   }
 
   public displayOutageInfoInit(): boolean {

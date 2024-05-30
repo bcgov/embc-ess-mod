@@ -57,10 +57,7 @@ export class MockStepNotesService extends StepNotesService {
     return new BehaviorSubject<Array<Note>>(this.noteList);
   }
 
-  public hideUnhideNotes(
-    noteId: string,
-    isHidden: boolean
-  ): Observable<Array<Note>> {
+  public hideUnhideNotes(noteId: string, isHidden: boolean): Observable<Array<Note>> {
     return new BehaviorSubject<Array<Note>>(this.hiddenNoteList);
   }
 }

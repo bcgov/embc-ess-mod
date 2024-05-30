@@ -1,9 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  UntypedFormBuilder,
-  FormsModule,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SecurityQuestionCardComponent } from './security-question-card.component';
 
@@ -14,8 +10,7 @@ describe('SecurityQuestionCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SecurityQuestionCardComponent],
-      imports: [ReactiveFormsModule, FormsModule]
+      imports: [ReactiveFormsModule, FormsModule, SecurityQuestionCardComponent]
     }).compileComponents();
   });
 

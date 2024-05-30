@@ -11,11 +11,49 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import { NgClass, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-ess-file-review',
   templateUrl: './ess-file-review.component.html',
-  styleUrls: ['./ess-file-review.component.scss']
+  styleUrls: ['./ess-file-review.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    NgClass,
+    MatCheckbox,
+    MatButton,
+    AppLoaderComponent,
+    DatePipe,
+    MaskEvacuatedAddressPipe,
+    MaskTextPipe
+  ]
 })
 export class EssFileReviewComponent implements OnInit, OnDestroy {
   taskNumber: string;
@@ -27,17 +65,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   insuranceDisplay: string;
   needs: string[] = [];
 
-  memberColumns: string[] = [
-    'firstName',
-    'lastName',
-    'initials',
-    'gender',
-    'dateOfBirth'
-  ];
+  memberColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth'];
 
   petColumns: string[] = ['type', 'quantity'];
   tabMetaData: TabModel;
-  noAssistanceRequiredMessage = globalConst.noAssistanceRequired; 
+  noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -47,23 +79,25 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private essFileService: EssFileService,
     private alertService: AlertService,
     private appBaseService: AppBaseService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
+    this.insuranceDisplay = globalConst.insuranceOptions.find(
+      (ins) => ins.value === this.stepEssFileService.insurance
+    )?.name;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(() => {
+      this.updateTabStatus();
+    });
     this.tabMetaData = this.stepEssFileService.getNavLinks('review');
   }
 
   /**
-   * Go back to the Security Phrase tab
+   * Go back to the Security Word tab
    */
   back(): void {
     this.router.navigate([this.tabMetaData?.previous]);
@@ -106,44 +140,37 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    * Calls Create new ESS File API
    */
   private createNewEssFile() {
-    this.essFileService
-      .createFile(this.stepEssFileService.createEvacFileDTO())
-      .subscribe({
-        next: (essFile: EvacuationFileModel) => {
-          // After creating and fetching ESS File, update ESS File Step values
-          this.stepEssFileService.setFormValuesFromFile(essFile);
-          // Once all profile work is done, user can close wizard or proceed to step 3
-          this.disableButton = true;
-          this.saveLoader = false;
+    this.essFileService.createFile(this.stepEssFileService.createEvacFileDTO()).subscribe({
+      next: (essFile: EvacuationFileModel) => {
+        // After creating and fetching ESS File, update ESS File Step values
+        this.stepEssFileService.setFormValuesFromFile(essFile);
+        // Once all profile work is done, user can close wizard or proceed to step 3
+        this.disableButton = true;
+        this.saveLoader = false;
 
-          this.stepEssFileService
-            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
-            .afterClosed()
-            .subscribe((event) => {
-              this.wizardService.setStepStatus(
-                '/ess-wizard/add-supports',
-                false
-              );
-              this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+        this.stepEssFileService
+          .openModal(globalConst.newRegWizardEssFileCreatedMessage)
+          .afterClosed()
+          .subscribe((event) => {
+            this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+            this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
-              if (event === 'exit') {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
-              } else {
-                this.router.navigate(['/ess-wizard/add-supports'], {
-                  state: { step: 'STEP 3', title: 'Add Supports' }
-                });
-                this.stepEssFileService.setReviewEssFileTabStatus();
-              }
-            });
-        },
-        error: (error) => {
-          this.saveLoader = false;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.createEssFileError);
-        }
-      });
+            if (event === 'exit') {
+              this.router.navigate(['responder-access/search/essfile-dashboard']);
+            } else {
+              this.router.navigate(['/ess-wizard/add-supports'], {
+                state: { step: 'STEP 3', title: 'Add Supports' }
+              });
+              this.stepEssFileService.setReviewEssFileTabStatus();
+            }
+          });
+      },
+      error: (error) => {
+        this.saveLoader = false;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.createEssFileError);
+      }
+    });
   }
 
   /**
@@ -151,10 +178,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   private editEssFile() {
     this.essFileService
-      .updateFile(
-        this.appBaseService?.appModel?.selectedEssFile?.id,
-        this.stepEssFileService.updateEvacFileDTO()
-      )
+      .updateFile(this.appBaseService?.appModel?.selectedEssFile?.id, this.stepEssFileService.updateEvacFileDTO())
       .subscribe({
         next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
@@ -167,16 +191,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
             .openModal(globalConst.newRegWizardEssFileCreatedMessage)
             .afterClosed()
             .subscribe((event) => {
-              this.wizardService.setStepStatus(
-                '/ess-wizard/add-supports',
-                false
-              );
+              this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
               if (event === 'exit') {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }

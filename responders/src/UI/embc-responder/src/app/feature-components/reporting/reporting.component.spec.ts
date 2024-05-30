@@ -2,9 +2,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { ReportingComponent } from './reporting.component';
+import { provideRouter } from '@angular/router';
 
 describe('ReportingComponent', () => {
   let component: ReportingComponent;
@@ -12,13 +12,8 @@ describe('ReportingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatAutocompleteModule
-      ],
-      declarations: [ReportingComponent],
-      providers: [UntypedFormBuilder]
+      imports: [HttpClientTestingModule, MatAutocompleteModule, ReportingComponent],
+      providers: [UntypedFormBuilder, provideRouter([])]
     }).compileComponents();
   });
 

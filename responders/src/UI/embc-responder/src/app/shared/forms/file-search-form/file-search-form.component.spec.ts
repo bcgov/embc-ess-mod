@@ -8,7 +8,7 @@ describe('FileSearchFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FileSearchFormComponent]
+      imports: [FileSearchFormComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FileSearchFormComponent);

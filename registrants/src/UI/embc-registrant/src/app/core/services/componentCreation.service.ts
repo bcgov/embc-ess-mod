@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ComponentMetaDataModel } from '../model/componentMetaData.model';
 
+export enum NeedsAssessmentSteps {
+  EvacAddress = 'evac-address',
+  FamilyAndPetsInformation = 'family-information-pets',
+  IdentifyNeeds = 'identify-needs',
+  Secret = 'secret'
+}
+
 @Injectable({ providedIn: 'root' })
 export class ComponentCreationService {
   dynamicComponents: any = [
@@ -51,16 +58,16 @@ export class ComponentCreationService {
 
   needsAssessmentComponents: Array<any> = [
     {
-      component: 'evac-address',
+      component: NeedsAssessmentSteps.EvacAddress,
       nextButtonLabel: 'Next - Household Information',
-      backButtonLabel: 'Go Back & Edit',
+      backButtonLabel: 'Cancel & Go Back to My Profile',
       isLast: false,
       loadWrapperButton: false,
       lastStep: -1,
       stepName: 'Location'
     },
     {
-      component: 'family-information-pets',
+      component: NeedsAssessmentSteps.FamilyAndPetsInformation,
       nextButtonLabel: 'Next - Identify Needs',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
@@ -69,8 +76,8 @@ export class ComponentCreationService {
       stepName: 'Household & Pets'
     },
     {
-      component: 'identify-needs',
-      nextButtonLabel: 'Next - Security Phrase',
+      component: NeedsAssessmentSteps.IdentifyNeeds,
+      nextButtonLabel: 'Next - Security Word',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
@@ -78,13 +85,13 @@ export class ComponentCreationService {
       stepName: 'Needs'
     },
     {
-      component: 'secret',
+      component: NeedsAssessmentSteps.Secret,
       nextButtonLabel: 'Next - Review Submission',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Security Phrase'
+      stepName: 'Security Word'
     }
   ];
 
@@ -97,8 +104,7 @@ export class ComponentCreationService {
   }
 
   createProfileSteps(): Array<ComponentMetaDataModel> {
-    const componentArr: Array<ComponentMetaDataModel> =
-      new Array<ComponentMetaDataModel>();
+    const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
     for (const comp of this.profileComponents) {
       componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
     }
@@ -106,8 +112,7 @@ export class ComponentCreationService {
   }
 
   createEvacSteps(): Array<ComponentMetaDataModel> {
-    const componentArr: Array<ComponentMetaDataModel> =
-      new Array<ComponentMetaDataModel>();
+    const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
     for (const comp of this.needsAssessmentComponents) {
       componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
     }

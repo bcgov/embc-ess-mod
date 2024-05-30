@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: dev-sup-release-pipeline
+
+spec:
+  params:
+    - name: imageTag
+      description: 'Image Tag'
+      default: 'master'
+    {{- range $key, $value := .Values.images }}
+    - name: promote_{{ $key }}
+      description: ''
+      default: 'true'
+    {{- end }}
+
+  tasks:
+    {{- range $key, $value := .Values.images }}
+    - name: dev-sup-{{ $key }}
+      when:
+        - input: "$(params.promote_{{ $key }})"
+          operator: in
+          values: ["true"]
+      params:
+        - name: sourceImage
+          value: {{ $value.image }}
+        - name: sourceTag
+          value: $(params.imageTag)
+        - name: destinationImage
+          value: {{ $key }}
+        - name: destinationTag
+          value: dev-sup
+        - name: alias
+          value: true
+      taskRef:
+        kind: Task
+        name: tag-image-task
+    {{- end }}

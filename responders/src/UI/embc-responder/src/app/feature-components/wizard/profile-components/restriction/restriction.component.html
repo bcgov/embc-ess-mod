@@ -2,7 +2,7 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="wizard-tab-heading requiredField">Restriction</span>
+        <span class="wizard-tab-heading requiredField">Consent to Share Registration Status</span>
       </div>
     </div>
   </div>
@@ -12,13 +12,10 @@
         <div class="row">
           <div class="col-12">
             <p><b>Consent to share registration status:</b></p>
-            <p>
-              Concerned family and friends may inquire about your household
-              because of this emergency event.
-            </p>
+            <p>Concerned family and friends may inquire about your household because of this emergency event.</p>
             <p id="restrictedAccess-radio-group-label" class="requiredField">
-              Do you consent to have your registration STATUS shared with those
-              who may ask about your household's wellbeing?
+              Do you consent to have your registration STATUS shared with those who may ask about your household's
+              wellbeing?
             </p>
 
             <div class="row">
@@ -30,53 +27,29 @@
                   required
                 >
                   <mat-radio-button [value]="false" id="yesOption"
-                    ><span class="bold radio-text">Yes</span> - you may share
-                    the status of my ESS registration status:
+                    ><span class="bold radio-text">Yes</span> - You may share the status of my ESS registration with
+                    concerned family and friends.
                   </mat-radio-button>
                   <p>
-                    I acknowledge that an ESS Responder may ONLY share the
-                    status of my ESS registration (pending, active or complete)
-                    with concerned family and friends. For reunification
-                    purposes, concerned family and friends may opt to leave
-                    their contact details (telephone number and/ or email
-                    address) where they can be reached. These contact details
-                    can be added under the Notes section of the active ESS File,
-                    by trained ESS Responder.
+                    I acknowledge that an ESS Responder may ONLY share the status of my ESS registration (pending,
+                    active or complete) with concerned family and friends. For reunification purposes, concerned family
+                    and friends may opt to leave their contact details (telephone number and/ or email address) where
+                    they can be reached. These contact details can be added under the Notes section of the active ESS
+                    File, by trained ESS Responder.
                   </p>
 
                   <mat-radio-button [value]="true" id="noOption"
-                    ><span class="bold radio-text">No</span> - please
-                    <strong>RESTRICT</strong> access to my ESS registration
-                    status:
+                    ><span class="bold radio-text">No</span> - You may <strong>not</strong> share the status of my ESS
+                    registration with concerned family and friends.
                   </mat-radio-button>
-                  <p>
-                    I acknowledge that by RESTRICTING access to my registration
-                    status I am:
-                  </p>
-                  <ul>
-                    <li>
-                      restricting access to my ERA Profile and ESS File,
-                      including ALL household members listed on ESS file(s) and
-                      past ESS Files and Profile.
-                    </li>
-                    <li>
-                      limiting access to ERA users with permission to
-                      view/locate RESTRICTED status files (ERA Manager/Director
-                      and above), which may increase wait times for service
-                      delivery (in-person or virtually).
-                    </li>
-                  </ul>
 
-                  <mat-error
-                    class="custom-mat-error field-error"
-                    *ngIf="
-                      restrFormControl?.restrictedAccess.touched &&
-                      restrFormControl?.restrictedAccess.invalid &&
-                      restrFormControl?.restrictedAccess.hasError('required')
-                    "
-                  >
-                    Restriction is required</mat-error
-                  >
+                  @if (
+                    restrFormControl?.restrictedAccess.touched &&
+                    restrFormControl?.restrictedAccess.invalid &&
+                    restrFormControl?.restrictedAccess.hasError('required')
+                  ) {
+                    <mat-error class="custom-mat-error field-error"> Restriction is required</mat-error>
+                  }
                 </mat-radio-group>
               </div>
             </div>
@@ -85,26 +58,24 @@
       </form>
       <br />
       <br />
-      <div *ngIf="!editFlag" class="row">
-        <div class="col-md-6">
-          <button class="button-s back" mat-button (click)="back()">
-            Back
-          </button>
+      @if (!editFlag) {
+        <div class="row">
+          <div class="col-md-6">
+            <button class="button-s back" mat-button (click)="back()">Back</button>
+          </div>
+          <div class="col-md-6">
+            <button class="button-p next" mat-button (click)="next()">Next</button>
+          </div>
         </div>
-        <div class="col-md-6">
-          <button class="button-p next" mat-button (click)="next()">
-            Next
-          </button>
-        </div>
-      </div>
+      }
 
-      <div *ngIf="editFlag" class="row">
-        <div class="col-md-12">
-          <button class="button-p edit-next" mat-button (click)="next()">
-            Next
-          </button>
+      @if (editFlag) {
+        <div class="row">
+          <div class="col-md-12">
+            <button class="button-p edit-next" mat-button (click)="next()">Next</button>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

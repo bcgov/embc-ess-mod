@@ -1,4 +1,4 @@
-.mat-form-field + .mat-form-field {
+.mat-mdc-form-field + .mat-form-field {
   margin-left: 8px;
 }
 
@@ -36,12 +36,16 @@
   line-height: 35px;
 }
 
+.panelTitle.mat-expansion-panel-header-title {
+  --mat-expansion-header-text-color: rgb(254, 254, 254);
+}
+
 table {
   width: 99.99%;
   box-shadow: none;
 }
 
-.mat-header-cell {
+.mat-mdc-header-cell {
   font-weight: 700;
   font-size: 15px;
   color: rgba(0, 0, 0, 0.35);
@@ -123,4 +127,12 @@ tr.example-element-row:not(.example-expanded-row):hover {
 
 .support-cancel {
   color: #dc2791;
+}
+
+@media (max-width: 649px) {
+  .header-row th.mat-mdc-header-cell,
+  .example-element-row td {
+    padding: 0 2px;
+    word-break: break-all;
+  }
 }

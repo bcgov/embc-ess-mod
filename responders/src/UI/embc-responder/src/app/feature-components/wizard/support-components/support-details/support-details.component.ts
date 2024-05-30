@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -6,14 +6,16 @@ import {
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import * as moment from 'moment';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,12 +29,69 @@ import { DateConversionService } from 'src/app/core/services/utility/dateConvers
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {
+  MatDatepickerInputEvent,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+  MatDatepicker
+} from '@angular/material/datepicker';
+import { MatButton } from '@angular/material/button';
+import { ClothingComponent } from './details-type/clothing/clothing.component';
+import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
+import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
+import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
+import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
+import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
+import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
+import { FoodGroceriesComponent } from './details-type/food-groceries/food-groceries.component';
+import { FoodMealsComponent } from './details-type/food-meals/food-meals.component';
+import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-support-details',
   templateUrl: './support-details.component.html',
-  styleUrls: ['./support-details.component.scss']
+  styleUrls: ['./support-details.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    NgStyle,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatPrefix,
+    MatError,
+    AppLoaderComponent,
+    MatLabel,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    MatSelect,
+    MatOption,
+    MatCheckbox,
+    ShelterAllowanceGroupComponent,
+    FoodMealsComponent,
+    FoodGroceriesComponent,
+    TaxiTransportationComponent,
+    OtherTransportationComponent,
+    LodgingHotelMotelComponent,
+    LodgingBilletingComponent,
+    LodgingGroupComponent,
+    IncidentalsComponent,
+    ClothingComponent,
+    MatButton,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class SupportDetailsComponent implements OnInit, OnDestroy {
   currentTime: string;
@@ -139,17 +198,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
     this.calculateNoOfDays();
 
-    this.supportListSubscription = this.stepSupportsService
-      .getExistingSupportList()
-      .subscribe({
-        next: (supports) => {
-          this.existingSupports = supports;
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.supportListerror);
-        }
-      });
+    this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
+      next: (supports) => {
+        this.existingSupports = supports;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -157,28 +214,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   checkDateRange(): boolean {
-    const selectedFromDate = new Date(
-      this.supportDetailsForm.get('fromDate').value
-    );
-    const updateFromDate = new Date(
-      selectedFromDate.setDate(selectedFromDate.getDate() + 30)
-    );
-    return moment(this.supportDetailsForm.get('toDate').value).isSameOrBefore(
-      moment(updateFromDate)
-    );
+    const selectedFromDate = new Date(this.supportDetailsForm.get('fromDate').value);
+    const updateFromDate = new Date(selectedFromDate.setDate(selectedFromDate.getDate() + 30));
+    return moment(this.supportDetailsForm.get('toDate').value).isSameOrBefore(moment(updateFromDate));
   }
 
   calculateNoOfDays() {
-    const taskStartDate = this.datePipe.transform(
-      this.evacueeSessionService?.evacFile?.task?.from,
-      'MMM d, y'
-    );
-    const taskEndDate = this.datePipe.transform(
-      this.evacueeSessionService?.evacFile?.task?.to,
-      'MMM d, y'
-    );
-    const dateDiff =
-      new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();
+    const taskStartDate = this.datePipe.transform(this.evacueeSessionService?.evacFile?.task?.from, 'MMM d, y');
+    const taskEndDate = this.datePipe.transform(this.evacueeSessionService?.evacFile?.task?.to, 'MMM d, y');
+    const dateDiff = new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();
     const noOfDaysCalc = dateDiff / (1000 * 60 * 60 * 24);
 
     const counter = noOfDaysCalc > 30 ? 30 : noOfDaysCalc;
@@ -211,9 +255,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   addExistingMembers() {
     if (this.stepSupportsService?.supportDetails?.members) {
-      const members = this.supportDetailsForm.get(
-        'members'
-      ) as UntypedFormArray;
+      const members = this.supportDetailsForm.get('members') as UntypedFormArray;
       this.stepSupportsService?.supportDetails?.members.forEach((member) => {
         members.push(new UntypedFormControl(member));
       });
@@ -269,11 +311,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const members = this.supportDetailsForm.get('members') as UntypedFormArray;
     if ($event.checked) {
       members.clear();
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach(
-        (member) => {
-          members.push(new UntypedFormControl(member));
-        }
-      );
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach((member) => {
+        members.push(new UntypedFormControl(member));
+      });
     } else {
       members.clear();
     }
@@ -286,31 +326,23 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @returns true/false
    */
   exists(member: EvacuationFileHouseholdMember) {
-    const existingList: EvacuationFileHouseholdMember[] =
-      this.supportDetailsForm.get('members').value;
+    const existingList: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get('members').value;
     return existingList.findIndex((value) => value.id === member.id) > -1;
   }
 
   isIndeterminate() {
-    return (
-      this.supportDetailsForm.get('members').value.length > 0 &&
-      !this.isChecked()
-    );
+    return this.supportDetailsForm.get('members').value.length > 0 && !this.isChecked();
   }
 
   isChecked() {
     return (
       this.supportDetailsForm.get('members').value.length ===
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers
-        .length
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.length
     );
   }
 
   hideRateSheet(): boolean {
-    return (
-      this.stepSupportsService?.supportTypeToAdd?.value !==
-      SupportSubCategory.Lodging_Group
-    );
+    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.Lodging_Group;
   }
 
   /**
@@ -320,10 +352,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
-      const finalValue = this.datePipe.transform(
-        date.setDate(date.getDate() + days),
-        'MM/dd/yyyy'
-      );
+      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
   }
@@ -337,10 +366,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     const date = new Date(currentVal);
-    const finalValue = this.datePipe.transform(
-      date.setDate(date.getDate() + days),
-      'MM/dd/yyyy'
-    );
+    const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
     this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
   }
 
@@ -350,10 +376,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   updateNoOfDays(event: MatDatepickerInputEvent<Date>) {
-    const fromDate = this.datePipe.transform(
-      this.supportDetailsForm.get('fromDate').value,
-      'dd-MMM-yyyy'
-    );
+    const fromDate = this.datePipe.transform(this.supportDetailsForm.get('fromDate').value, 'dd-MMM-yyyy');
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
     const days = dateDiff / (1000 * 60 * 60 * 24);
@@ -399,39 +422,32 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       this.supportDetailsForm.markAllAsTouched();
       return;
     }
-    
+
     let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
-    
+
     if (this.editFlag) {
-      existingSupports = existingSupports.filter(
-        (s) => s !== this.stepSupportsService.selectedSupportDetail
-      );
+      existingSupports = existingSupports.filter((s) => s !== this.stepSupportsService.selectedSupportDetail);
     }
 
     const thisSupport = this.supportDetailsForm.getRawValue();
-    const from = this.dateConversionService.createDateTimeString(
-      thisSupport.fromDate,
-      thisSupport.fromTime
-    );
-    const to = this.dateConversionService.createDateTimeString(
-      thisSupport.toDate,
-      thisSupport.toTime
-    );
+    const from = this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime);
+    const to = this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime);
     const overlappingSupports = existingSupports.filter(
       (s) =>
-        this.generateSupportType(s) ===
-          this.stepSupportsService.supportTypeToAdd.description &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))
-    );
-    const overlappingFoodSupports = existingSupports.filter(
-      (s) =>
-        (this.generateSupportType(s) === SupportSubCategory.Food_Groceries.toString() || this.generateSupportType(s) === SupportSubCategory.Food_Restaurant.toString()) &&
-        (this.stepSupportsService.supportTypeToAdd.description == SupportSubCategory.Food_Groceries.toString() || this.stepSupportsService.supportTypeToAdd.description == SupportSubCategory.Food_Restaurant.toString()) &&
+        this.generateSupportType(s) === this.stepSupportsService.supportTypeToAdd.description &&
         moment(to).isSameOrAfter(moment(s.from)) &&
         moment(from).isSameOrBefore(moment(s.to))
     );
-    
+    const overlappingFoodSupports = existingSupports.filter(
+      (s) =>
+        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Groceries.toString() &&
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to))) ||
+        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Restaurant.toString() &&
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to)))
+    );
+
     hasConflict = overlappingSupports.length > 0 || overlappingFoodSupports.length > 0;
 
     if (hasConflict) {
@@ -458,8 +474,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * Navigates to support delivery page
    */
   addDelivery() {
-    this.stepSupportsService.supportDetails =
-      this.supportDetailsForm.getRawValue();
+    this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
     this.computeState.triggerEvent();
     if (this.evacueeSessionService.isPaperBased) {
       this.mapPaperFields();
@@ -481,8 +496,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       this.supportDetailsForm.get('paperIssuedBy.firstName').value +
       ' ' +
       this.supportDetailsForm.get('paperIssuedBy.lastNameInitial').value;
-    this.stepSupportsService.supportDetails.issuedOn =
-      this.supportDetailsForm.get('paperCompletedOn').value;
+    this.stepSupportsService.supportDetails.issuedOn = this.supportDetailsForm.get('paperCompletedOn').value;
   }
 
   /**
@@ -507,35 +521,29 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   checkReferralNumber($event): void {
     this.showLoader = !this.showLoader;
-    this.supportDetailsService
-      .checkUniqueReferralNumber('R' + $event.target.value)
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          const draftList = this.referralCreationService.getDraftSupport();
-          const duplicateReferralList: Support[] = [...value, ...draftList];
-          const filteredReferrals = duplicateReferralList.filter(
-            (referrals) =>
-              referrals.category ===
-                this.stepSupportsService?.supportTypeToAdd?.value ||
-              referrals.subCategory ===
-                this.stepSupportsService?.supportTypeToAdd?.value
-          );
-          this.updateFormValidations(filteredReferrals);
-          if (value) {
-            this.supportDetailsForm
-              .get('paperSupportNumber')
-              .updateValueAndValidity();
-          } else {
-            this.supportDetailsForm.updateValueAndValidity();
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.referralCheckerror);
+    this.supportDetailsService.checkUniqueReferralNumber('R' + $event.target.value).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        const draftList = this.referralCreationService.getDraftSupport();
+        const duplicateReferralList: Support[] = [...value, ...draftList];
+        const filteredReferrals = duplicateReferralList.filter(
+          (referrals) =>
+            referrals.category === this.stepSupportsService?.supportTypeToAdd?.value ||
+            referrals.subCategory === this.stepSupportsService?.supportTypeToAdd?.value
+        );
+        this.updateFormValidations(filteredReferrals);
+        if (value) {
+          this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();
+        } else {
+          this.supportDetailsForm.updateValueAndValidity();
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.referralCheckerror);
+      }
+    });
   }
 
   private setFromDate() {
@@ -546,11 +554,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     } else {
       return this.stepSupportsService?.supportDetails?.fromDate
         ? this.stepSupportsService?.supportDetails?.fromDate
-        : new Date(
-            this.dateConversionService.convertStringToDate(
-              this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
-            )
-          );
+        : new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')));
     }
   }
 
@@ -568,9 +572,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   private setToTime() {
     if (this.evacueeSessionService.isPaperBased) {
-      return this.stepSupportsService?.supportDetails?.toTime
-        ? this.stepSupportsService?.supportDetails?.toTime
-        : '';
+      return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : '';
     } else {
       return this.stepSupportsService?.supportDetails?.toTime
         ? this.stepSupportsService?.supportDetails?.toTime
@@ -583,31 +585,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
-      fromDate: [
-        this.setFromDate(),
-        [this.customValidation.validDateValidator(), Validators.required]
-      ],
+      fromDate: [this.setFromDate(), [this.customValidation.validDateValidator(), Validators.required]],
       fromTime: [this.setFromTime(), [Validators.required]],
       noOfDays: [
-        this.stepSupportsService?.supportDetails?.noOfDays
-          ? this.stepSupportsService?.supportDetails?.noOfDays
-          : '',
+        this.stepSupportsService?.supportDetails?.noOfDays ? this.stepSupportsService?.supportDetails?.noOfDays : '',
         [Validators.required]
       ],
       toDate: [
-        this.stepSupportsService?.supportDetails?.toDate
-          ? this.stepSupportsService?.supportDetails?.toDate
-          : '',
+        this.stepSupportsService?.supportDetails?.toDate ? this.stepSupportsService?.supportDetails?.toDate : '',
         [this.customValidation.validDateValidator(), Validators.required]
       ],
       toTime: [this.setToTime(), [Validators.required]],
-      members: this.formBuilder.array(
-        [],
-        [this.customValidation.memberCheckboxValidator()]
-      ),
-      referral: this.supportDetailsService.generateDynamicForm(
-        this.stepSupportsService?.supportTypeToAdd?.value
-      ),
+      members: this.formBuilder.array([], [this.customValidation.memberCheckboxValidator()]),
+      referral: this.supportDetailsService.generateDynamicForm(this.stepSupportsService?.supportTypeToAdd?.value),
       paperSupportNumber: [
         this.stepSupportsService?.supportDetails?.externalReferenceId
           ? this.stepSupportsService?.supportDetails?.externalReferenceId
@@ -621,10 +611,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             .bind(this.customValidation),
 
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              Validators.minLength(6)
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
             .bind(this.customValidation),
           this.customValidation
             .conditionalValidation(
@@ -663,15 +650,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         ]
       }),
       paperCompletedOn: [
-        this.stepSupportsService?.supportDetails?.issuedOn
-          ? this.stepSupportsService?.supportDetails?.issuedOn
-          : '',
+        this.stepSupportsService?.supportDetails?.issuedOn ? this.stepSupportsService?.supportDetails?.issuedOn : '',
         [
           this.customValidation
-            .conditionalValidation(
-              () => this.evacueeSessionService.isPaperBased,
-              Validators.required
-            )
+            .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.required)
             .bind(this.customValidation),
           this.customValidation
             .conditionalValidation(
@@ -688,9 +670,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     this.supportDetailsForm
       .get('paperSupportNumber')
       .setValidators([
-        this.customValidation
-          .userNameExistsValidator(filteredReferrals.length > 0)
-          .bind(this.customValidation),
+        this.customValidation.userNameExistsValidator(filteredReferrals.length > 0).bind(this.customValidation),
         this.customValidation
           .conditionalValidation(
             () => this.evacueeSessionService.isPaperBased,
@@ -699,10 +679,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           .bind(this.customValidation),
 
         this.customValidation
-          .conditionalValidation(
-            () => this.evacueeSessionService.isPaperBased,
-            Validators.minLength(6)
-          )
+          .conditionalValidation(() => this.evacueeSessionService.isPaperBased, Validators.minLength(6))
           .bind(this.customValidation),
         this.customValidation
           .conditionalValidation(

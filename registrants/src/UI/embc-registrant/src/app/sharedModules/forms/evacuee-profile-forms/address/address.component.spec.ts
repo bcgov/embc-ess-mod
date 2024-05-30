@@ -10,8 +10,7 @@ describe('AddressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AddressComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, AddressComponent],
       providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));

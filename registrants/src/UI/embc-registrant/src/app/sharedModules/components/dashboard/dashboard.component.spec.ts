@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormCreationService } from '../../../core/services/formCreation.service';
+import { provideRouter } from '@angular/router';
 
 describe('ViewAuthProfileComponent', () => {
   let component: DashboardComponent;
@@ -10,9 +10,8 @@ describe('ViewAuthProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent],
-      imports: [RouterTestingModule],
-      providers: [FormCreationService]
+      imports: [DashboardComponent],
+      providers: [FormCreationService, provideRouter([])]
     }).compileComponents();
   }));
 

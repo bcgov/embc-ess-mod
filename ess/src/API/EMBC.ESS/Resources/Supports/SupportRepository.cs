@@ -253,6 +253,13 @@ namespace EMBC.ESS.Resources.Supports
                 !query.ByStatus.HasValue)
                 throw new ArgumentException("Supports query must have at least one criteria", nameof(query));
 
+            IQueryable<era_evacueesupport> supportsQuery = ctx.era_evacueesupports
+              .Expand(s => s.era_EvacuationFileId)
+              .Expand(s => s.era_era_householdmember_era_evacueesupport)
+              .Expand(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport)
+              .Expand(s => s.era_era_etransfertransaction_era_evacueesuppo)
+              .Expand(s => s.era_NeedsAssessmentID);
+
             // search a specific file
             if (!string.IsNullOrEmpty(query.ByEvacuationFileId))
             {
@@ -262,19 +269,8 @@ namespace EMBC.ESS.Resources.Supports
                     .SingleOrDefault();
                 if (file == null) return Array.Empty<era_evacueesupport>();
 
-                ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
-                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct);
-                var supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId.AsQueryable();
-                if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
-                if (!string.IsNullOrEmpty(query.ByManualReferralId)) supports = supports.Where(s => s.era_manualsupport == query.ByManualReferralId);
-                if (query.ByStatus.HasValue) supports = supports.Where(s => s.statuscode == (int)query.ByStatus.Value);
-                supports = supports.OrderBy(s => s.createdon);
-
-                return supports;
+                supportsQuery = supportsQuery.Where(s => s._era_evacuationfileid_value == file.era_evacuationfileid);
             }
-
-            // search all supports
-            IQueryable<era_evacueesupport> supportsQuery = ctx.era_evacueesupports;
 
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByManualReferralId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByManualReferralId);
@@ -290,14 +286,16 @@ namespace EMBC.ESS.Resources.Supports
             ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
             var tasks = new List<Task>();
 
-            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId), ct));
-            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport), ct));
-            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport), ct));
-            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_etransfertransaction_era_evacueesuppo), ct));
+            if (support.era_EvacuationFileId == null) tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId), ct));
+            if (support.era_NeedsAssessmentID == null) tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_NeedsAssessmentID), ct));
+            if (support.era_era_householdmember_era_evacueesupport == null) tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport), ct));
+            if (support.era_era_evacueesupport_era_supportflag_EvacueeSupport == null) tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport), ct));
+            if (support.era_era_etransfertransaction_era_evacueesuppo == null) tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_etransfertransaction_era_evacueesuppo), ct));
 
             await Task.WhenAll(tasks);
 
-            var task = await ctx.era_tasks.Where(t => t.era_taskid == support.era_EvacuationFileId._era_taskid_value).SingleOrDefaultAsync();
+            if (support.era_NeedsAssessmentID?._era_tasknumber_value == null) throw new InvalidOperationException($"Support {support.era_name} needs assessment has no task");
+            var task = await ctx.era_tasks.ByKey(support.era_NeedsAssessmentID._era_tasknumber_value).GetValueAsync(ct);
             if (task == null) throw new InvalidOperationException($"Support {support.era_name} has no task");
 
             support.era_EvacuationFileId.era_TaskId = task;
@@ -382,7 +380,7 @@ namespace EMBC.ESS.Resources.Supports
                 ctx.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), ctx.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
 
             AssignHouseholdMembersToSupport(ctx, support, support.era_era_householdmember_era_evacueesupport);
-            await AssignTeamMemberToSupport(ctx, support, ct);
+            if (support.era_selfservesupport == false) await AssignTeamMemberToSupport(ctx, support, ct);
             await AssignSupplierToSupport(ctx, support, ct);
             await AssignETransferRecipientToSupport(ctx, support, ct);
         }
@@ -390,7 +388,7 @@ namespace EMBC.ESS.Resources.Supports
         private static IEnumerable<string> ValidateSupportInvariants(era_evacueesupport support)
         {
             if (!support.era_era_householdmember_era_evacueesupport.Any()) yield return "No household members associated";
-            if (!support._era_issuedbyid_value.HasValue) yield return "No issuing team member";
+            if (!support.era_selfservesupport == true && !support._era_issuedbyid_value.HasValue) yield return "No issuing team member";
         }
 
         private static void AssignHouseholdMembersToSupport(EssContext ctx, era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)

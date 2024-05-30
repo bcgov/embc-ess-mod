@@ -3,55 +3,26 @@
     <div class="col-md-3">
       <mat-form-field class="custom-padding" appearance="outline">
         <mat-label>GST Number</mat-label>
-        <input
-          formControlName="part1"
-          maxlength="9"
-          matInput
-          placeholder="999999999"
-          required
-        />
-        <mat-error
-          *ngIf="
-            gstFormControl.part1.invalid &&
-            gstFormControl.part1.hasError('maxLength')
-          "
-        >
-          9 Digits allowed</mat-error
-        >
+        <input formControlName="part1" maxlength="9" matInput placeholder="999999999" required />
+        @if (gstFormControl.part1.invalid && gstFormControl.part1.hasError('maxLength')) {
+          <mat-error> 9 Digits allowed</mat-error>
+        }
       </mat-form-field>
     </div>
     <span class="bold gst-text">RT</span>
     <div class="col-md-2">
       <mat-form-field class="custom-padding" appearance="outline">
-        <input
-          formControlName="part2"
-          maxlength="4"
-          matInput
-          placeholder="9999"
-          required
-        />
+        <input formControlName="part2" maxlength="4" matInput placeholder="9999" required />
       </mat-form-field>
     </div>
   </div>
-  <small
-    class="field-error"
-    *ngIf="gstFormGroup.hasError('groupRequiredError')"
-  >
-    GST Number is required
-  </small>
-  <small
-    class="field-error"
-    *ngIf="gstFormGroup.hasError('groupMinLengthError')"
-  >
-    GST Number is incomplete
-  </small>
-  <small
-    class="field-error"
-    *ngIf="
-      gstFormGroup.get('part1').hasError('pattern') ||
-      gstFormGroup.get('part2').hasError('pattern')
-    "
-  >
-    Only Digits allowed
-  </small>
+  @if (gstFormGroup.hasError('groupRequiredError')) {
+    <small class="field-error"> GST Number is required </small>
+  }
+  @if (gstFormGroup.hasError('groupMinLengthError')) {
+    <small class="field-error"> GST Number is incomplete </small>
+  }
+  @if (gstFormGroup.get('part1').hasError('pattern') || gstFormGroup.get('part2').hasError('pattern')) {
+    <small class="field-error"> Only Digits allowed </small>
+  }
 </div>

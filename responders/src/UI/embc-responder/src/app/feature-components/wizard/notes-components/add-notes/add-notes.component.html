@@ -1,9 +1,8 @@
 <div class="row">
   <div class="col-md-12">
-    <span class="bold">Please add case notes in the field below. </span> All
-    notes will be date stamped and tagged with your first name and last name
-    initial. Notes are editable for 24 hours, after which they will be locked
-    from editing.
+    <span class="bold">Please add case notes in the field below. </span> All notes will be date stamped and tagged with
+    your first name and last name initial. Notes are editable for 24 hours, after which they will be locked from
+    editing.
   </div>
 </div>
 
@@ -18,11 +17,9 @@
           maxlength="1000"
           matInput
         ></textarea>
-        <mat-error
-          *ngIf="verifiedFormControl?.note.hasError('whitespaceError')"
-        >
-          You cannot save a blank note
-        </mat-error>
+        @if (verifiedFormControl?.note.hasError('whitespaceError')) {
+          <mat-error> You cannot save a blank note </mat-error>
+        }
       </mat-form-field>
     </form>
   </div>
@@ -30,24 +27,13 @@
 
 <div class="row">
   <div class="col-md-5">
-    <button class="button-s button-width" mat-button (click)="cancel()">
-      Cancel
-    </button>
+    <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
   </div>
 
   <div class="col-md-5">
-    <button
-      [disabled]="isSubmitted"
-      class="button-p button-width"
-      mat-button
-      (click)="save()"
-    >
+    <button [disabled]="isSubmitted" class="button-p button-width" mat-button (click)="save()">
       Save Note
-      <app-loader
-        [strokeWidth]="3"
-        [diameter]="25"
-        [showLoader]="showLoader"
-      ></app-loader>
+      <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
     </button>
   </div>
 </div>

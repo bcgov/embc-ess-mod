@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EssFileNotesComponent } from './ess-file-notes.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 describe('EssFileNotesComponent', () => {
   let component: EssFileNotesComponent;
@@ -10,8 +10,8 @@ describe('EssFileNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [EssFileNotesComponent]
+      imports: [HttpClientTestingModule, EssFileNotesComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

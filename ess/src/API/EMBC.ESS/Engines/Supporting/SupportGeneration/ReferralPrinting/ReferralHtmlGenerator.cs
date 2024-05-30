@@ -20,7 +20,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
             {
                 var incoming = (string)arguments[0];
-                output.WriteSafeString(incoming.ToUpperInvariant()[0]);
+                output.WriteSafeString(incoming?.ToUpperInvariant()[0]);
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
@@ -34,7 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handleBars.RegisterHelper("upperCase", (output, context, arguments) =>
             {
                 var upperCaseString = (string)arguments[0];
-                output.WriteSafeString(upperCaseString.ToUpperInvariant());
+                output.WriteSafeString(upperCaseString?.ToUpperInvariant());
             });
 
             return handleBars;

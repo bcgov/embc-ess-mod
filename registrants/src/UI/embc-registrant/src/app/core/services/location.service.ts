@@ -50,8 +50,8 @@ export class LocationService {
     return this.communityList
       ? this.communityList
       : JSON.parse(this.cacheService.get('communityList'))
-      ? JSON.parse(this.cacheService.get('communityList'))
-      : this.getCommunities();
+        ? JSON.parse(this.cacheService.get('communityList'))
+        : this.getCommunities();
   }
 
   public getActiveCommunityList(): Community[] {
@@ -62,8 +62,8 @@ export class LocationService {
     return this.stateProvinceList
       ? this.stateProvinceList
       : JSON.parse(this.cacheService.get('stateProvinceList'))
-      ? JSON.parse(this.cacheService.get('stateProvinceList'))
-      : this.getStateProvinces();
+        ? JSON.parse(this.cacheService.get('stateProvinceList'))
+        : this.getStateProvinces();
   }
 
   public getActiveStateProvinceList(): Community[] {
@@ -74,8 +74,8 @@ export class LocationService {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
-      ? JSON.parse(this.cacheService.get('countriesList'))
-      : this.getCountries();
+        ? JSON.parse(this.cacheService.get('countriesList'))
+        : this.getCountries();
   }
 
   public getActiveCountriesList(): Community[] {
@@ -83,17 +83,15 @@ export class LocationService {
   }
 
   public getRegionalDistricts(): string[] {
-    return this.regionalDistricts
-      ? this.regionalDistricts
-      : JSON.parse(this.cacheService.get('regionalDistrictsList'));
+    return this.regionalDistricts ? this.regionalDistricts : JSON.parse(this.cacheService.get('regionalDistrictsList'));
   }
 
   get supportCategory(): Code[] {
     return this.supportCategoryVal.length > 0
       ? this.supportCategoryVal
       : JSON.parse(this.cacheService.get('supportCategory'))
-      ? JSON.parse(this.cacheService.get('supportCategory'))
-      : this.getCategoryList();
+        ? JSON.parse(this.cacheService.get('supportCategory'))
+        : this.getCategoryList();
   }
 
   set supportCategory(supportCategoryVal: Code[]) {
@@ -110,8 +108,8 @@ export class LocationService {
     return this.supportSubCategoryVal.length > 0
       ? this.supportSubCategoryVal
       : JSON.parse(this.cacheService.get('supportSubCategory'))
-      ? JSON.parse(this.cacheService.get('supportSubCategory'))
-      : this.getSubCategoryList();
+        ? JSON.parse(this.cacheService.get('supportSubCategory'))
+        : this.getSubCategoryList();
   }
 
   public loadSupportCodes() {
@@ -140,22 +138,19 @@ export class LocationService {
               code: c.value,
               name: c.description,
               districtName: c.districtName,
-              stateProvinceCode: c.parentCode.value,
-              countryCode: c.parentCode.parentCode.value,
-              type: c.communityType,
+              stateProvinceCode: c.stateProvinceCode,
+              countryCode: c.countryCode,
               isActive: c.isActive
             }))
           );
-          this.setRegionalDistricts(
-            results[0].map((comm) => comm.districtName)
-          );
+          this.setRegionalDistricts(results[0].map((comm) => comm.districtName));
 
           this.setStateProvinceList(
-            [...results[1]].map((sp) => ({
+            [...results[1]].map((sp: Code) => ({
               code: sp.value,
               name: sp.description,
-              countryCode: sp.parentCode.value,
-              isActive: sp.isActive
+              isActive: sp.isActive,
+              countryCode: sp.parentCode.value
             }))
           );
         })
@@ -179,8 +174,7 @@ export class LocationService {
       communities.find((comm) => comm.name === addressObject.community);
 
     const addressCountry =
-      countries.find((coun) => coun.code === addressObject.country) ??
-      countries.find((coun) => coun.code === 'CAN');
+      countries.find((coun) => coun.code === addressObject.country) ?? countries.find((coun) => coun.code === 'CAN');
 
     const addressStateProvince =
       stateProvinces.find((sp) => sp.code === addressObject.stateProvince) ??
@@ -208,18 +202,14 @@ export class LocationService {
       addressLine2: addressObject.addressLine2,
       country: addressObject.country.code,
       community:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
+        (addressObject.community as Community).code === undefined ? null : (addressObject.community as Community).code,
       city:
-        (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
+        (addressObject.community as Community).code === undefined && typeof addressObject.community === 'string'
           ? addressObject.community
           : null,
       postalCode: addressObject.postalCode,
       stateProvince:
-        addressObject.stateProvince === null ||
-        addressObject.stateProvince === undefined
+        addressObject.stateProvince === null || addressObject.stateProvince === undefined
           ? null
           : addressObject.stateProvince?.code
     };
@@ -255,9 +245,8 @@ export class LocationService {
             code: c.value,
             name: c.description,
             districtName: c.districtName,
-            stateProvinceCode: c.parentCode.value,
-            countryCode: c.parentCode.parentCode.value,
-            type: c.communityType,
+            stateProvinceCode: c.stateProvinceCode,
+            countryCode: c.countryCode,
             isActive: c.isActive
           }))
         );
@@ -311,40 +300,26 @@ export class LocationService {
   }
 
   private getCategoryList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe({
-        next: (categories: Code[]) => {
-          this.supportCategory = categories.filter(
-            (category) => category.description
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportCategory' }).subscribe({
+      next: (categories: Code[]) => {
+        this.supportCategory = categories.filter((category) => category.description);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportCategoryListError);
+      }
+    });
   }
 
   private getSubCategoryList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-      .subscribe({
-        next: (subCategories: Code[]) => {
-          this.supportSubCategory = subCategories.filter(
-            (subCategory) => subCategory.description
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
+    this.configService.configurationGetCodes({ forEnumType: 'SupportSubCategory' }).subscribe({
+      next: (subCategories: Code[]) => {
+        this.supportSubCategory = subCategories.filter((subCategory) => subCategory.description);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportCategoryListError);
+      }
+    });
   }
 }

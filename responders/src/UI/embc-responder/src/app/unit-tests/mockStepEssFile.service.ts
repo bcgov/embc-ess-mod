@@ -72,7 +72,7 @@ export class MockStepEssFileService extends StepEssFileService {
       previous: '/ess-wizard/ess-file/animals'
     },
     {
-      label: 'Security Phrase',
+      label: 'Security Word',
       route: 'security-phrase',
       name: 'security-phrase',
       status: 'not-started',

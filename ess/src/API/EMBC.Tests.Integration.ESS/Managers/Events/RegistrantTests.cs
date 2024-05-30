@@ -17,7 +17,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId) ?? null!;
 
-        private RegistrantProfile CreateNewTestRegistrantProfile() => TestHelper.CreateRegistrantProfile(TestData.TestPrefix);
+        private RegistrantProfile CreateNewTestRegistrantProfile() => TestHelper.CreateRegistrantProfile();
 
         public RegistrantTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -35,11 +35,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var actualRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
             actualRegistrant.Id.ShouldBe(id);
-            actualRegistrant.FirstName.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.LastName.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.Email.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.PrimaryAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
-            actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.FirstName.ShouldBe(newRegistrant.FirstName);
+            actualRegistrant.LastName.ShouldBe(newRegistrant.LastName);
+            actualRegistrant.Email.ShouldBe(newRegistrant.Email);
+            actualRegistrant.PrimaryAddress.AddressLine1.ShouldBe(newRegistrant.PrimaryAddress.AddressLine1);
+            actualRegistrant.MailingAddress.AddressLine1.ShouldBe(newRegistrant.MailingAddress.AddressLine1);
         }
 
         [Fact]
@@ -337,6 +337,20 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             homeAddress.AddressLine1.ShouldBe(registrant.HomeAddress.AddressLine1);
             homeAddress.City.ShouldBe(registrant.HomeAddress.City);
             homeAddress.StateProvince.ShouldBe(registrant.HomeAddress.StateProvince);
+        }
+
+        [Fact]
+        public async Task CanAuditRegistrantAccess()
+        {
+            await Should.NotThrowAsync(async () =>
+            {
+                await manager.Handle(new RecordAuditAccessCommand
+                {
+                    TeamMemberId = TestData.Tier4TeamMemberId,
+                    AccessReasonId = 174360000,
+                    RegistrantId = TestData.ContactId
+                });
+            });
         }
     }
 }

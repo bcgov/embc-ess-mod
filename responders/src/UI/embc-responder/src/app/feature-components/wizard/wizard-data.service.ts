@@ -189,7 +189,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/household-members-pets'
     },
     {
-      label: 'Security Phrase',
+      label: 'Security Word',
       route: 'security-phrase',
       name: 'security-phrase',
       status: 'not-started',
@@ -495,8 +495,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createNewRegistrationMenu(): Array<WizardSidenavModel> {
-    const newRegMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const newRegMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.newRegistrationMenu) {
       newRegMenu.push({ ...menuItems, ...menu });
@@ -510,8 +509,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createEditProfileMenu(): Array<WizardSidenavModel> {
-    const editProfileMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const editProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.editProfileMenu) {
       editProfileMenu.push({ ...menuItems, ...menu });
@@ -525,8 +523,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createMembersProfileMenu(): Array<WizardSidenavModel> {
-    const membersProfileMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const membersProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.membersProfileMenu) {
       membersProfileMenu.push({ ...menuItems, ...menu });
@@ -540,8 +537,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createNewESSFileMenu(): Array<WizardSidenavModel> {
-    const newEssMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const newEssMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.newESSFileMenu) {
       newEssMenu.push({ ...menuItems, ...menu });
@@ -555,8 +551,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createReviewFileMenu(): Array<WizardSidenavModel> {
-    const reviewFileMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const reviewFileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.reviewESSFileMenu) {
       reviewFileMenu.push({ ...menuItems, ...menu });
@@ -570,8 +565,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createCompleteFileMenu(): Array<WizardSidenavModel> {
-    const reviewFileMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const reviewFileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.completeESSFileMenu) {
       reviewFileMenu.push({ ...menuItems, ...menu });
@@ -585,8 +579,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createExtendSupportsMenu(): Array<WizardSidenavModel> {
-    const extendSupportsMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const extendSupportsMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.extendSupportsMenu) {
       extendSupportsMenu.push({ ...menuItems, ...menu });
@@ -600,8 +593,7 @@ export class WizardDataService {
    * @returns side menu array
    */
   public createCaseNotesMenu(): Array<WizardSidenavModel> {
-    const caseNotesMenu: Array<WizardSidenavModel> =
-      new Array<WizardSidenavModel>();
+    const caseNotesMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.caseNotesMenu) {
       caseNotesMenu.push({ ...menuItems, ...menu });

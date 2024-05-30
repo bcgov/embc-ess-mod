@@ -1,96 +1,82 @@
 <div class="row">
   <div class="col-md-8">
     <mat-card>
-      <app-alert></app-alert>
-      <div class="row">
-        <div class="col-md-12">
-          <p class="details-heading">Review Details & Save</p>
+      <mat-card-content>
+        <app-alert></app-alert>
+        <div class="row">
+          <div class="col-md-12">
+            <p class="details-heading">Review Details & Save</p>
+          </div>
         </div>
-      </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">First Name</div>
-        <div class="col-md-8">{{ teamMember?.firstName }}</div>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">First Name</div>
+          <div class="col-md-8">{{ teamMember?.firstName }}</div>
+        </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">Last Name</div>
-        <div class="col-md-8">{{ teamMember?.lastName }}</div>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">Last Name</div>
+          <div class="col-md-8">{{ teamMember?.lastName }}</div>
+        </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">BCeID Username</div>
-        <div class="col-md-8">{{ teamMember?.userName }}</div>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">BCeID Username</div>
+          <div class="col-md-8">{{ teamMember?.userName }}</div>
+        </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">ESS Team</div>
-        <div class="col-md-8">{{ teamMember?.teamName }}</div>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">ESS Team</div>
+          <div class="col-md-8">{{ teamMember?.teamName }}</div>
+        </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">User Role</div>
-        <div class="col-md-8">{{ teamMember?.role }}</div>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">User Role</div>
+          <div class="col-md-8">{{ teamMember?.role }}</div>
+        </div>
 
-      <div class="row row-align">
-        <div class="col-md-4 detail-label">Optional Label</div>
-        <div class="col-md-8">{{ teamMember?.label }}</div>
-      </div>
-      <br />
-      <div>
-        <button class="button-s button-margin" mat-button (click)="goBack()">
-          Go Back & Edit
-        </button>
-        <button
-          class="button-p"
-          mat-button
-          [disabled]="isSubmitted"
-          (click)="save()"
-        >
-          Save
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
-      </div>
+        <div class="row row-align">
+          <div class="col-md-4 detail-label">Optional Label</div>
+          <div class="col-md-8">{{ teamMember?.label }}</div>
+        </div>
+        <br />
+        <div>
+          <button class="button-s button-margin" mat-button (click)="goBack()">Go Back & Edit</button>
+          <button class="button-p" mat-button [disabled]="isSubmitted" (click)="save()">
+            Save
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
 
   <div class="col-md-4">
     <mat-card class="tips-card">
-      <div>
-        <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-        <span class="tips-heading"><b>Tips: </b>User Roles</span>
-      </div>
-      <p class="tips-p">
-        Access is based on a user hierarchy where each level is based on roles
-        and responsibilities. This provides a way of granting different
-        permissions to users within your organization.
-      </p>
-      <p class="tips-p">
-        <span class="tips-gold">Tier 1: Responder</span> can register and
-        complete registrations, as well as add supports based on a evacuee
-        need’s assessment.
-      </p>
-      <p class="tips-p">
-        <span class="tips-gold">Tier 2: Supervisor</span> have the additional
-        ability to manage supplier and user lists. With access to restricted
-        files and basic reporting.
-      </p>
-      <p class="tips-p">
-        <span class="tips-gold">Tier 3: Director/Manager</span> have the
-        additional access to detailed reporting.
-      </p>
-      <p class="tips-p">
-        <span class="tips-gold"
-          >Tier 4: Local Emergency Program Administrator</span
-        >
-        is the primary contact for the organization and responsible for the
-        initial setup and delegation of roles.
-      </p>
+      <mat-card-content>
+        <div>
+          <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+          <span class="tips-heading"><b>Tips: </b>User Roles</span>
+        </div>
+        <p class="tips-p">
+          Access is based on a user hierarchy where each level is based on roles and responsibilities. This provides a
+          way of granting different permissions to users within your organization.
+        </p>
+        <p class="tips-p">
+          <span class="tips-gold">Tier 1: Responder</span> can register and complete registrations, as well as add
+          supports based on a evacuee need’s assessment.
+        </p>
+        <p class="tips-p">
+          <span class="tips-gold">Tier 2: Supervisor</span> have the additional ability to manage supplier and user
+          lists. With access to restricted files and basic reporting.
+        </p>
+        <p class="tips-p">
+          <span class="tips-gold">Tier 3: Director/Manager</span> have the additional access to detailed reporting.
+        </p>
+        <p class="tips-p">
+          <span class="tips-gold">Tier 4: Local Emergency Program Administrator</span>
+          is the primary contact for the organization and responsible for the initial setup and delegation of roles.
+        </p>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

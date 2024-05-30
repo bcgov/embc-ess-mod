@@ -52,11 +52,13 @@
   padding-left: 5px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version.*/
 ::ng-deep .mat-autocomplete-panel {
   min-width: 500px !important;
 }
 
 @media (max-width: 800px) {
+  /* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version.*/
   ::ng-deep .mat-autocomplete-panel {
     min-width: 400px !important;
   }
@@ -149,7 +151,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 965px){
+@media (max-width: 965px) {
   .col-md-4 {
     width: 100%;
   }

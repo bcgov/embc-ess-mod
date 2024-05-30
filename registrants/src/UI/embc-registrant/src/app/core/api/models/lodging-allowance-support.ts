@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Support } from './support';
-import { SupportCategory } from './support-category';
-import { SupportSubCategory } from './support-sub-category';
+import { Support } from '../models/support';
+import { SupportCategory } from '../models/support-category';
+import { SupportSubCategory } from '../models/support-sub-category';
 export type LodgingAllowanceSupport = Support & {
-'category'?: SupportCategory;
-'subCategory'?: SupportSubCategory;
-'numberOfNights'?: number;
-'contactPhone'?: string | null;
-'contactEmail'?: string | null;
-'totalAmount'?: number;
+  category?: SupportCategory;
+  subCategory?: SupportSubCategory;
+  numberOfNights?: number;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
+  totalAmount?: number;
 };

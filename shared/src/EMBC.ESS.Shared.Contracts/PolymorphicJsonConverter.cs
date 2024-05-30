@@ -15,7 +15,7 @@ namespace EMBC.ESS.Shared.Contracts
                 if (clonedReader.TokenType == JsonTokenType.PropertyName && clonedReader.GetString() == "_type")
                 {
                     clonedReader.Read();
-                    type = Type.GetType(clonedReader.GetString());
+                    type = Type.GetType(clonedReader.GetString()!);
                     if (typeToConvert.IsAssignableFrom(type)) break;
                 }
             }
@@ -25,9 +25,9 @@ namespace EMBC.ESS.Shared.Contracts
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            if (value == null) return;
-            var type = value.GetType();
-            var serializedValue = JsonSerializer.SerializeToNode(value, type, options)?.AsObject() ?? null!;
+            var type = value?.GetType();
+            if (type == null) return;
+            var serializedValue = JsonSerializer.SerializeToNode(value, type, options)!.AsObject();
             serializedValue.Add("_type", type.FullName);
             serializedValue.WriteTo(writer, options);
         }

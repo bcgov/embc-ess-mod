@@ -1,0 +1,193 @@
+@if (draftSupportError) {
+  <div class="self-serve-support-error-container">Error: Unable to retrieve Draft Support information.</div>
+}
+@if (submitSupportError) {
+  <div class="self-serve-support-error-container">Error: Unable to submit Support information.</div>
+}
+@if (calculateTotalsError) {
+  <div class="self-serve-support-error-container">Error: Unable to submit Support information.</div>
+}
+<div class="container container-frame">
+  <div class="heading-container">
+    <span class="page-heading">Self Serve Supports</span>
+  </div>
+  @if (isLoadingDraftSupport) {
+    <app-loader
+      style="display: flex; justify-content: space-around; margin-top: var(--size-6)"
+      class="spinner"
+      [strokeWidth]="10"
+      [diameter]="50"
+      [color]="loaderColor"
+      [showLoader]="isLoadingDraftSupport"
+    >
+    </app-loader>
+  } @else {
+    <mat-horizontal-stepper
+      style="margin-bottom: var(--size-2)"
+      class="stepper-style"
+      [linear]="isLinear"
+      #stepper
+      labelPosition="bottom"
+    >
+      <mat-step [stepControl]="supportDraftForm">
+        <ng-template matStepLabel>Support Details</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
+        @if (supportDraftForm) {
+          <app-self-serve-support-details-form
+            [supportDraftForm]="supportDraftForm"
+            [draftSupports]="draftSupports"
+          ></app-self-serve-support-details-form>
+        }
+        <div class="self-serve-support-actions-container">
+          @if (isEditSupportDetailsFromReview) {
+            <button type="button" mat-button class="button-s" (click)="cancelEdits('supportDetails', supportDraftForm)">
+              Cancel
+            </button>
+            <button
+              type="button"
+              mat-button
+              class="button-p button-with-loader"
+              style="min-width: 240px"
+              (click)="goBackToReview('supportDetails', supportDraftForm)"
+            >
+              Save
+              @if (showButtonLoader) {
+                <app-loader
+                  class="spinner"
+                  [strokeWidth]="5"
+                  [diameter]="25"
+                  [color]="loaderColor"
+                  [showLoader]="showButtonLoader"
+                >
+                </app-loader>
+              }
+            </button>
+          } @else {
+            <button type="button" mat-button class="button-s" (click)="gotoEligibilityConfirmation()">
+              Go Back & Edit
+            </button>
+            @if (draftSupports.items?.length > 0) {
+              <button
+                type="button"
+                mat-button
+                class="button-p button-with-loader"
+                (click)="gotoETransfterStep(supportDraftForm)"
+              >
+                Next - Transfer Details
+                @if (showButtonLoader) {
+                  <app-loader
+                    class="spinner"
+                    [strokeWidth]="5"
+                    [diameter]="25"
+                    [color]="loaderColor"
+                    [showLoader]="showButtonLoader"
+                  >
+                  </app-loader>
+                }
+              </button>
+            }
+          }
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="eTransferDetailsForm">
+        <ng-template matStepLabel>Transfer Details</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
+        @if (eTransferDetailsForm) {
+          <app-self-serve-support-interac-e-transfer-form [eTransferDetailsForm]="eTransferDetailsForm">
+          </app-self-serve-support-interac-e-transfer-form>
+        }
+        <div class="self-serve-support-actions-container">
+          @if (isEditETransferFromReview) {
+            <button type="button" mat-button class="button-s" (click)="cancelEdits('eTransfer', eTransferDetailsForm)">
+              Cancel
+            </button>
+            <button
+              type="button"
+              mat-button
+              class="button-p button-with-loader"
+              style="min-width: 240px"
+              (click)="goBackToReview('eTransfer', eTransferDetailsForm)"
+            >
+              Save
+              @if (showButtonLoader) {
+                <app-loader
+                  class="spinner"
+                  [strokeWidth]="5"
+                  [diameter]="25"
+                  [color]="loaderColor"
+                  [showLoader]="showButtonLoader"
+                >
+                </app-loader>
+              }
+            </button>
+          } @else {
+            <button type="button" mat-button class="button-s" matStepperPrevious>Go Back & Edit</button>
+            @if (draftSupports.items?.length > 0) {
+              <button
+                type="button"
+                mat-button
+                class="button-p button-with-loader"
+                (click)="gotoReviewStep(eTransferDetailsForm)"
+              >
+                Next - Review & Submit
+                @if (showButtonLoader) {
+                  <app-loader
+                    class="spinner"
+                    [strokeWidth]="5"
+                    [diameter]="25"
+                    [color]="loaderColor"
+                    [showLoader]="showButtonLoader"
+                  >
+                  </app-loader>
+                }
+              </button>
+            }
+          }
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Review & Submit</ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">{{ index + 1 }}</ng-template>
+
+        @if (supportDraftForm && eTransferDetailsForm) {
+          <app-self-serve-support-review
+            [supportDraftForm]="supportDraftForm"
+            [eTransferDetailsForm]="eTransferDetailsForm"
+            [reviewAcknowledgeForm]="reviewAcknowledgeForm"
+            [draftSupports]="draftSupports"
+            (gotoStep)="gotoStepFromReview($event)"
+          >
+          </app-self-serve-support-review>
+        }
+        <div class="self-serve-support-actions-container">
+          <button
+            type="button"
+            mat-button
+            class="button-s"
+            matStepperPrevious
+            (click)="reviewAcknowledgeForm.markAsUntouched()"
+          >
+            Go Back & Edit
+          </button>
+          @if (draftSupports.items?.length > 0) {
+            <button type="button" mat-button class="button-p button-with-loader" (click)="submit()">
+              Next - Submit
+              @if (showButtonLoader) {
+                <app-loader
+                  class="spinner"
+                  [strokeWidth]="5"
+                  [diameter]="25"
+                  [color]="loaderColor"
+                  [showLoader]="showButtonLoader"
+                >
+                </app-loader>
+              }
+            </button>
+          }
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  }
+</div>

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReviewComponent } from './review.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from '../../core/services/formCreation.service';
+import { provideRouter } from '@angular/router';
 
 describe('ReviewComponent', () => {
   let component: ReviewComponent;
@@ -11,9 +11,8 @@ describe('ReviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ReviewComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule],
-      providers: [UntypedFormBuilder, FormCreationService]
+      imports: [ReactiveFormsModule, ReviewComponent],
+      providers: [UntypedFormBuilder, FormCreationService, provideRouter([])]
     }).compileComponents();
   }));
 

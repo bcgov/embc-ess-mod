@@ -40,5 +40,5 @@ interface ResponderTestParameters {
     scope: string;
 }
 
-export const MAX_VU = 1;
-export const MAX_ITER = 1;
+export const MAX_VU = 1; //Based on the generated test users
+export const MAX_ITER = 1; //Based on the generated test users

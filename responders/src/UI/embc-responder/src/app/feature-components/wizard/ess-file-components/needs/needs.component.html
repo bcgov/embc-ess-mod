@@ -10,7 +10,9 @@
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="needsForm">
-        <p class="no-margin">While evacuated, do you need government assistance with any of the following: Please check all that apply:</p>
+        <p class="no-margin">
+          While evacuated, do you need government assistance with any of the following? (Check all that apply)
+        </p>
         <br />
 
         <div class="row">
@@ -23,34 +25,44 @@
             <div class="shelter-ident">
               <p>
                 There are several ways to meet your shelter needs.<br />
-                You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
+                You can receive a shelter allowance and use that money to find your own shelter or be provided with a
+                referral to shelter (like a cot in a gym or a hotel/motel).
               </p>
-              <mat-radio-group
-                id="shelterRadio"
-                class="primary-radio-group"
-                formControlName="requiresShelterType"
-                aria-label="Select an option"
-                *ngIf="needsForm.controls['requiresShelter'].value"
-              >
-                <label for="shelterAllowance">
-                  <mat-radio-button id="shelterAllowance" class="primary-radio-button" value="shelterAllowance"></mat-radio-button>
-                  I need the shelter allowance and can find my own shelter.
-                  <span>
-                    <a class="status-info" (click)="openShelterAllowanceDialog()">
-                      <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
-                    </a>
-                  </span>
-                </label>
-                <label for="shelterReferral">
-                  <mat-radio-button id="shelterReferral" class="primary-radio-button" value="shelterReferral"></mat-radio-button>
-                  I need a referral to shelter.
-                  <span>
-                    <a class="status-info" (click)="openShelterReferralDialog()">
-                      <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
-                    </a>
-                  </span>
-                </label>
-              </mat-radio-group>
+              @if (needsForm.controls['requiresShelter'].value) {
+                <mat-radio-group
+                  id="shelterRadio"
+                  class="primary-radio-group"
+                  formControlName="requiresShelterType"
+                  aria-label="Select an option"
+                >
+                  <label for="shelterAllowance">
+                    <mat-radio-button
+                      id="shelterAllowance"
+                      class="primary-radio-button"
+                      value="shelterAllowance"
+                    ></mat-radio-button>
+                    I need the shelter allowance and can find my own shelter.
+                    <span>
+                      <a class="status-info" (click)="openShelterAllowanceDialog()">
+                        <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
+                      </a>
+                    </span>
+                  </label>
+                  <label for="shelterReferral">
+                    <mat-radio-button
+                      id="shelterReferral"
+                      class="primary-radio-button"
+                      value="shelterReferral"
+                    ></mat-radio-button>
+                    I need a referral to shelter.
+                    <span>
+                      <a class="status-info" (click)="openShelterReferralDialog()">
+                        <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" />
+                      </a>
+                    </span>
+                  </label>
+                </mat-radio-group>
+              }
             </div>
           </div>
         </div>
@@ -77,12 +89,18 @@
 
         <div class="row">
           <div class="col-12">
-            <mat-checkbox id="incidentals" formControlName="requiresIncidentals" class="primary-checkbox"></mat-checkbox>
+            <mat-checkbox
+              id="incidentals"
+              formControlName="requiresIncidentals"
+              class="primary-checkbox"
+            ></mat-checkbox>
             <label class="tab-subtitle" for="incidentals">
               <img src="../../../../../assets/images/wizard/needs-incidentals.svg" width="40px" height="40px" />
               Incidentals
               <span>
-                <a class="status-info" (click)="openIncidentalsDialog()"> <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28" /></a>
+                <a class="status-info" (click)="openIncidentalsDialog()">
+                  <img src="../../../../../assets/images/info-on-hover.svg" height="28" width="28"
+                /></a>
               </span>
             </label>
           </div>
@@ -90,7 +108,11 @@
 
         <div class="row">
           <div class="col-12">
-            <mat-checkbox id="transportation" formControlName="requiresTransportation" class="primary-checkbox"></mat-checkbox>
+            <mat-checkbox
+              id="transportation"
+              formControlName="requiresTransportation"
+              class="primary-checkbox"
+            ></mat-checkbox>
             <label class="tab-subtitle" for="transportation">
               <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="40px" />
               Transportation

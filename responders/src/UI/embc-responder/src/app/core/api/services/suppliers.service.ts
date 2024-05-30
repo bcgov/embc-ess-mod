@@ -1,32 +1,45 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
 import { Supplier } from '../models/supplier';
 import { SupplierListItem } from '../models/supplier-list-item';
 import { SupplierResult } from '../models/supplier-result';
+import { suppliersActivateSupplier } from '../fn/suppliers/suppliers-activate-supplier';
+import { SuppliersActivateSupplier$Params } from '../fn/suppliers/suppliers-activate-supplier';
+import { suppliersAddSupplierSharedWithTeam } from '../fn/suppliers/suppliers-add-supplier-shared-with-team';
+import { SuppliersAddSupplierSharedWithTeam$Params } from '../fn/suppliers/suppliers-add-supplier-shared-with-team';
+import { suppliersClaimSupplier } from '../fn/suppliers/suppliers-claim-supplier';
+import { SuppliersClaimSupplier$Params } from '../fn/suppliers/suppliers-claim-supplier';
+import { suppliersCreateSupplier } from '../fn/suppliers/suppliers-create-supplier';
+import { SuppliersCreateSupplier$Params } from '../fn/suppliers/suppliers-create-supplier';
+import { suppliersDeactivateSupplier } from '../fn/suppliers/suppliers-deactivate-supplier';
+import { SuppliersDeactivateSupplier$Params } from '../fn/suppliers/suppliers-deactivate-supplier';
+import { suppliersGetSupplierById } from '../fn/suppliers/suppliers-get-supplier-by-id';
+import { SuppliersGetSupplierById$Params } from '../fn/suppliers/suppliers-get-supplier-by-id';
+import { suppliersGetSuppliers } from '../fn/suppliers/suppliers-get-suppliers';
+import { SuppliersGetSuppliers$Params } from '../fn/suppliers/suppliers-get-suppliers';
+import { suppliersRemoveSupplier } from '../fn/suppliers/suppliers-remove-supplier';
+import { SuppliersRemoveSupplier$Params } from '../fn/suppliers/suppliers-remove-supplier';
+import { suppliersRemoveSupplierSharedWithTeam } from '../fn/suppliers/suppliers-remove-supplier-shared-with-team';
+import { SuppliersRemoveSupplierSharedWithTeam$Params } from '../fn/suppliers/suppliers-remove-supplier-shared-with-team';
+import { suppliersUpdateSupplier } from '../fn/suppliers/suppliers-update-supplier';
+import { SuppliersUpdateSupplier$Params } from '../fn/suppliers/suppliers-update-supplier';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SuppliersService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation suppliersGetSuppliers
-   */
+  /** Path part for operation `suppliersGetSuppliers()` */
   static readonly SuppliersGetSuppliersPath = '/api/Suppliers';
 
   /**
@@ -39,34 +52,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersGetSuppliers$Response(params?: {
-
-    /**
-     * legalName
-     */
-    legalName?: string;
-
-    /**
-     * gstNumber
-     */
-    gstNumber?: string;
-  }): Observable<StrictHttpResponse<Array<SupplierListItem>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersGetSuppliersPath, 'get');
-    if (params) {
-      rb.query('legalName', params.legalName, {});
-      rb.query('gstNumber', params.gstNumber, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<SupplierListItem>>;
-      })
-    );
+  suppliersGetSuppliers$Response(
+    params?: SuppliersGetSuppliers$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<SupplierListItem>>> {
+    return suppliersGetSuppliers(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -74,32 +64,21 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersGetSuppliers$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersGetSuppliers(params?: {
-
-    /**
-     * legalName
-     */
-    legalName?: string;
-
-    /**
-     * gstNumber
-     */
-    gstNumber?: string;
-  }): Observable<Array<SupplierListItem>> {
-
-    return this.suppliersGetSuppliers$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<SupplierListItem>>) => r.body as Array<SupplierListItem>)
+  suppliersGetSuppliers(
+    params?: SuppliersGetSuppliers$Params,
+    context?: HttpContext
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersGetSuppliers$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<SupplierListItem>>): Array<SupplierListItem> => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersCreateSupplier
-   */
+  /** Path part for operation `suppliersCreateSupplier()` */
   static readonly SuppliersCreateSupplierPath = '/api/Suppliers';
 
   /**
@@ -112,28 +91,11 @@ export class SuppliersService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  suppliersCreateSupplier$Response(params: {
-
-    /**
-     * supplier
-     */
-    body: Supplier
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersCreateSupplierPath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersCreateSupplier$Response(
+    params: SuppliersCreateSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersCreateSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -141,27 +103,18 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersCreateSupplier$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  suppliersCreateSupplier(params: {
-
-    /**
-     * supplier
-     */
-    body: Supplier
-  }): Observable<SupplierResult> {
-
-    return this.suppliersCreateSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersCreateSupplier(params: SuppliersCreateSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
+    return this.suppliersCreateSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersGetSupplierById
-   */
+  /** Path part for operation `suppliersGetSupplierById()` */
   static readonly SuppliersGetSupplierByIdPath = '/api/Suppliers/{supplierId}';
 
   /**
@@ -174,28 +127,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersGetSupplierById$Response(params: {
-
-    /**
-     * SupplierId
-     */
-    supplierId: string;
-  }): Observable<StrictHttpResponse<Supplier>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersGetSupplierByIdPath, 'get');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Supplier>;
-      })
-    );
+  suppliersGetSupplierById$Response(
+    params: SuppliersGetSupplierById$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Supplier>> {
+    return suppliersGetSupplierById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -203,27 +139,18 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersGetSupplierById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersGetSupplierById(params: {
-
-    /**
-     * SupplierId
-     */
-    supplierId: string;
-  }): Observable<Supplier> {
-
-    return this.suppliersGetSupplierById$Response(params).pipe(
-      map((r: StrictHttpResponse<Supplier>) => r.body as Supplier)
+  suppliersGetSupplierById(params: SuppliersGetSupplierById$Params, context?: HttpContext): Observable<Supplier> {
+    return this.suppliersGetSupplierById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Supplier>): Supplier => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersUpdateSupplier
-   */
+  /** Path part for operation `suppliersUpdateSupplier()` */
   static readonly SuppliersUpdateSupplierPath = '/api/Suppliers/{supplierId}';
 
   /**
@@ -236,34 +163,11 @@ export class SuppliersService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  suppliersUpdateSupplier$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * supplier
-     */
-    body: Supplier
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersUpdateSupplierPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersUpdateSupplier$Response(
+    params: SuppliersUpdateSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersUpdateSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -271,32 +175,18 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersUpdateSupplier$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  suppliersUpdateSupplier(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * supplier
-     */
-    body: Supplier
-  }): Observable<SupplierResult> {
-
-    return this.suppliersUpdateSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersUpdateSupplier(params: SuppliersUpdateSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
+    return this.suppliersUpdateSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersRemoveSupplier
-   */
+  /** Path part for operation `suppliersRemoveSupplier()` */
   static readonly SuppliersRemoveSupplierPath = '/api/Suppliers/{supplierId}/remove';
 
   /**
@@ -309,28 +199,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersRemoveSupplier$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersRemoveSupplierPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersRemoveSupplier$Response(
+    params: SuppliersRemoveSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersRemoveSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -338,27 +211,18 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersRemoveSupplier$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersRemoveSupplier(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersRemoveSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersRemoveSupplier(params: SuppliersRemoveSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
+    return this.suppliersRemoveSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersActivateSupplier
-   */
+  /** Path part for operation `suppliersActivateSupplier()` */
   static readonly SuppliersActivateSupplierPath = '/api/Suppliers/{supplierId}/active';
 
   /**
@@ -371,28 +235,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersActivateSupplier$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersActivateSupplierPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersActivateSupplier$Response(
+    params: SuppliersActivateSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersActivateSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -400,27 +247,21 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersActivateSupplier$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersActivateSupplier(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersActivateSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersActivateSupplier(
+    params: SuppliersActivateSupplier$Params,
+    context?: HttpContext
+  ): Observable<SupplierResult> {
+    return this.suppliersActivateSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersDeactivateSupplier
-   */
+  /** Path part for operation `suppliersDeactivateSupplier()` */
   static readonly SuppliersDeactivateSupplierPath = '/api/Suppliers/{supplierId}/inactive';
 
   /**
@@ -433,28 +274,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersDeactivateSupplier$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersDeactivateSupplierPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersDeactivateSupplier$Response(
+    params: SuppliersDeactivateSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersDeactivateSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -462,27 +286,21 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersDeactivateSupplier$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersDeactivateSupplier(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersDeactivateSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersDeactivateSupplier(
+    params: SuppliersDeactivateSupplier$Params,
+    context?: HttpContext
+  ): Observable<SupplierResult> {
+    return this.suppliersDeactivateSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersClaimSupplier
-   */
+  /** Path part for operation `suppliersClaimSupplier()` */
   static readonly SuppliersClaimSupplierPath = '/api/Suppliers/{supplierId}/claim';
 
   /**
@@ -495,28 +313,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersClaimSupplier$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersClaimSupplierPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersClaimSupplier$Response(
+    params: SuppliersClaimSupplier$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersClaimSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -524,27 +325,18 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersClaimSupplier$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersClaimSupplier(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersClaimSupplier$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersClaimSupplier(params: SuppliersClaimSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
+    return this.suppliersClaimSupplier$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersAddSupplierSharedWithTeam
-   */
+  /** Path part for operation `suppliersAddSupplierSharedWithTeam()` */
   static readonly SuppliersAddSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/add-team/{sharedTeamId}';
 
   /**
@@ -557,34 +349,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersAddSupplierSharedWithTeam$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * shared team id
-     */
-    sharedTeamId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersAddSupplierSharedWithTeamPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-      rb.path('sharedTeamId', params.sharedTeamId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersAddSupplierSharedWithTeam$Response(
+    params: SuppliersAddSupplierSharedWithTeam$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersAddSupplierSharedWithTeam(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -592,32 +361,21 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersAddSupplierSharedWithTeam$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersAddSupplierSharedWithTeam(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * shared team id
-     */
-    sharedTeamId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersAddSupplierSharedWithTeam$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersAddSupplierSharedWithTeam(
+    params: SuppliersAddSupplierSharedWithTeam$Params,
+    context?: HttpContext
+  ): Observable<SupplierResult> {
+    return this.suppliersAddSupplierSharedWithTeam$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
 
-  /**
-   * Path part for operation suppliersRemoveSupplierSharedWithTeam
-   */
+  /** Path part for operation `suppliersRemoveSupplierSharedWithTeam()` */
   static readonly SuppliersRemoveSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/remove-team/{sharedTeamId}';
 
   /**
@@ -630,34 +388,11 @@ export class SuppliersService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  suppliersRemoveSupplierSharedWithTeam$Response(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * shared team id
-     */
-    sharedTeamId: string;
-  }): Observable<StrictHttpResponse<SupplierResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersRemoveSupplierSharedWithTeamPath, 'post');
-    if (params) {
-      rb.path('supplierId', params.supplierId, {});
-      rb.path('sharedTeamId', params.sharedTeamId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SupplierResult>;
-      })
-    );
+  suppliersRemoveSupplierSharedWithTeam$Response(
+    params: SuppliersRemoveSupplierSharedWithTeam$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<SupplierResult>> {
+    return suppliersRemoveSupplierSharedWithTeam(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -665,27 +400,17 @@ export class SuppliersService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersRemoveSupplierSharedWithTeam$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  suppliersRemoveSupplierSharedWithTeam(params: {
-
-    /**
-     * supplier id
-     */
-    supplierId: string;
-
-    /**
-     * shared team id
-     */
-    sharedTeamId: string;
-  }): Observable<SupplierResult> {
-
-    return this.suppliersRemoveSupplierSharedWithTeam$Response(params).pipe(
-      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+  suppliersRemoveSupplierSharedWithTeam(
+    params: SuppliersRemoveSupplierSharedWithTeam$Params,
+    context?: HttpContext
+  ): Observable<SupplierResult> {
+    return this.suppliersRemoveSupplierSharedWithTeam$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
   }
-
 }

@@ -1,25 +1,20 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Note } from 'src/app/core/api/models';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-ess-file-notes',
   templateUrl: './ess-file-notes.component.html',
-  styleUrls: ['./ess-file-notes.component.scss']
+  styleUrls: ['./ess-file-notes.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatPaginator, AsyncPipe, DatePipe]
 })
 export class EssFileNotesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -60,9 +55,6 @@ export class EssFileNotesComponent implements OnInit, AfterViewInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 }

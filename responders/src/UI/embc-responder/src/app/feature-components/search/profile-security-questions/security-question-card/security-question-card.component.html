@@ -1,56 +1,50 @@
 <mat-card [formGroup]="parentForm">
-  <div>
-    <div class="row line-space">
-      <div class="col-md-4">
-        <p>Question:</p>
+  <mat-card-content>
+    <div>
+      <div class="row line-space">
+        <div class="col-md-4">
+          <p>Question:</p>
+        </div>
+        <div class="col-md-8">
+          <span class="question-highlight"> {{ question?.question }} </span>
+        </div>
       </div>
-      <div class="col-md-8">
-        <span class="question-highlight"> {{ question?.question }} </span>
+      <div class="row img-space">
+        <div class="col-md-4">
+          <img class="divider" src="/assets/images/questionLine.svg" />
+        </div>
       </div>
-    </div>
-    <div class="row img-space">
-      <div class="col-md-4">
-        <img class="divider" src="/assets/images/questionLine.svg" />
+      <div class="row line-space">
+        <div class="col-md-4">
+          <p>Answer Hint:</p>
+        </div>
+        <div class="col-md-8">
+          <p>
+            <b> {{ question?.answer }} </b>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="row line-space">
-      <div class="col-md-4">
-        <p>Answer Hint:</p>
-      </div>
-      <div class="col-md-8">
-        <p>
-          <b> {{ question?.answer }} </b>
-        </p>
-      </div>
-    </div>
 
-    <div class="row line-space">
-      <div class="col-md-4">
-        <p>Answer:</p>
-      </div>
-      <div class="col-md-6">
-        <mat-form-field appearance="outline">
-          <input [formControlName]="controlName" matInput type="text" />
-          <mat-error
-            *ngIf="
+      <div class="row line-space">
+        <div class="col-md-4">
+          <p>Answer:</p>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="outline">
+            <input [formControlName]="controlName" matInput type="text" />
+            @if (
               (securityQuestionsFormControl.answer1.invalid &&
-                securityQuestionsFormControl.answer1.hasError(
-                  'whitespaceError'
-                )) ||
+                securityQuestionsFormControl.answer1.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer2.invalid &&
-                securityQuestionsFormControl.answer2.hasError(
-                  'whitespaceError'
-                )) ||
+                securityQuestionsFormControl.answer2.hasError('whitespaceError')) ||
               (securityQuestionsFormControl.answer3.invalid &&
-                securityQuestionsFormControl.answer3.hasError(
-                  'whitespaceError'
-                ))
-            "
-          >
-            Security Question cannot be blank</mat-error
-          >
-        </mat-form-field>
+                securityQuestionsFormControl.answer3.hasError('whitespaceError'))
+            ) {
+              <mat-error> Security Question cannot be blank</mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
     </div>
-  </div>
+  </mat-card-content>
 </mat-card>

@@ -3,11 +3,19 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { SupportReprintReason } from 'src/app/core/api/models';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { EnumToArrayPipe } from '../../../pipes/EnumToArray.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 interface ReprintOutput {
   reason?: string;
@@ -17,7 +25,20 @@ interface ReprintOutput {
 @Component({
   selector: 'app-reprint-referral-dialog',
   templateUrl: './reprint-referral-dialog.component.html',
-  styleUrls: ['./reprint-referral-dialog.component.scss']
+  styleUrls: ['./reprint-referral-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatCheckbox,
+    MatButton,
+    EnumToArrayPipe
+  ]
 })
 export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;
@@ -75,9 +96,7 @@ export class ReprintReferralDialogComponent implements OnInit {
    * @returns the same reason for reprinting with spaces between words.
    */
   getReasonDescription(reasonOption: string): string {
-    return this.loadEvacueeListService
-      .getReprintReasons()
-      .find((reason) => reason.value === reasonOption).description;
+    return this.loadEvacueeListService.getReprintReasons().find((reason) => reason.value === reasonOption).description;
   }
 
   evacueeSummChangeEvent(event: MatCheckboxChange): void {

@@ -7,7 +7,8 @@ button.next {
   width: 20%;
 }
 
-p, .tips-card {
+p,
+.tips-card {
   margin: 1.8em 0;
 }
 
@@ -33,7 +34,7 @@ p, .tips-card {
 
 .checkbox-row {
   padding: 1.8em 0;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
   ::ng-deep .mat-checkbox-label {
     margin-left: 0.8em;
   }
@@ -43,13 +44,14 @@ p, .tips-card {
   padding: 1.8em 0.9em;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-wrapper {
-	padding-bottom: 0.25em;
+  padding-bottom: 0.25em;
 }
 
 .edit-phrase {
   padding: 0;
-  color: #169BD5;
+  color: #169bd5;
 }
 
 .edit-phrase:hover {

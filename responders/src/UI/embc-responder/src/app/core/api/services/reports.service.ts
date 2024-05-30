@@ -1,29 +1,30 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
+import { reportsCreateEvacueeReport } from '../fn/reports/reports-create-evacuee-report';
+import { ReportsCreateEvacueeReport$Params } from '../fn/reports/reports-create-evacuee-report';
+import { reportsCreateSupportReport } from '../fn/reports/reports-create-support-report';
+import { ReportsCreateSupportReport$Params } from '../fn/reports/reports-create-support-report';
+import { reportsGetEvacueeReport } from '../fn/reports/reports-get-evacuee-report';
+import { ReportsGetEvacueeReport$Params } from '../fn/reports/reports-get-evacuee-report';
+import { reportsGetSupportReport } from '../fn/reports/reports-get-support-report';
+import { ReportsGetSupportReport$Params } from '../fn/reports/reports-get-support-report';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReportsService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation reportsGetEvacueeReport
-   */
+  /** Path part for operation `reportsGetEvacueeReport()` */
   static readonly ReportsGetEvacueeReportPath = '/api/Reports/evacuee';
 
   /**
@@ -32,44 +33,26 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetEvacueeReport$Response(params?: {
-    reportRequestId?: string;
-  }): Observable<StrictHttpResponse<Blob>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetEvacueeReportPath, 'get');
-    if (params) {
-      rb.query('reportRequestId', params.reportRequestId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+  reportsGetEvacueeReport$Response(
+    params?: ReportsGetEvacueeReport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return reportsGetEvacueeReport(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportsGetEvacueeReport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsGetEvacueeReport(params?: {
-    reportRequestId?: string;
-  }): Observable<Blob> {
-
-    return this.reportsGetEvacueeReport$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+  reportsGetEvacueeReport(params?: ReportsGetEvacueeReport$Params, context?: HttpContext): Observable<void> {
+    return this.reportsGetEvacueeReport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation reportsCreateEvacueeReport
-   */
+  /** Path part for operation `reportsCreateEvacueeReport()` */
   static readonly ReportsCreateEvacueeReportPath = '/api/Reports/evacuee';
 
   /**
@@ -78,59 +61,26 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsCreateEvacueeReport$Response(params?: {
-    taskNumber?: string;
-    fileId?: string;
-    evacuatedFrom?: string;
-    evacuatedTo?: string;
-    from?: string;
-    to?: string;
-  }): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsCreateEvacueeReportPath, 'post');
-    if (params) {
-      rb.query('taskNumber', params.taskNumber, {});
-      rb.query('fileId', params.fileId, {});
-      rb.query('evacuatedFrom', params.evacuatedFrom, {});
-      rb.query('evacuatedTo', params.evacuatedTo, {});
-      rb.query('from', params.from, {});
-      rb.query('to', params.to, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+  reportsCreateEvacueeReport$Response(
+    params?: ReportsCreateEvacueeReport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<string>> {
+    return reportsCreateEvacueeReport(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportsCreateEvacueeReport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsCreateEvacueeReport(params?: {
-    taskNumber?: string;
-    fileId?: string;
-    evacuatedFrom?: string;
-    evacuatedTo?: string;
-    from?: string;
-    to?: string;
-  }): Observable<string> {
-
-    return this.reportsCreateEvacueeReport$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+  reportsCreateEvacueeReport(params?: ReportsCreateEvacueeReport$Params, context?: HttpContext): Observable<string> {
+    return this.reportsCreateEvacueeReport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 
-  /**
-   * Path part for operation reportsGetSupportReport
-   */
+  /** Path part for operation `reportsGetSupportReport()` */
   static readonly ReportsGetSupportReportPath = '/api/Reports/support';
 
   /**
@@ -139,44 +89,26 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsGetSupportReport$Response(params?: {
-    reportRequestId?: string;
-  }): Observable<StrictHttpResponse<Blob>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetSupportReportPath, 'get');
-    if (params) {
-      rb.query('reportRequestId', params.reportRequestId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+  reportsGetSupportReport$Response(
+    params?: ReportsGetSupportReport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return reportsGetSupportReport(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportsGetSupportReport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsGetSupportReport(params?: {
-    reportRequestId?: string;
-  }): Observable<Blob> {
-
-    return this.reportsGetSupportReport$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+  reportsGetSupportReport(params?: ReportsGetSupportReport$Params, context?: HttpContext): Observable<void> {
+    return this.reportsGetSupportReport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation reportsCreateSupportReport
-   */
+  /** Path part for operation `reportsCreateSupportReport()` */
   static readonly ReportsCreateSupportReportPath = '/api/Reports/support';
 
   /**
@@ -185,54 +117,22 @@ export class ReportsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reportsCreateSupportReport$Response(params?: {
-    taskNumber?: string;
-    fileId?: string;
-    evacuatedFrom?: string;
-    evacuatedTo?: string;
-    from?: string;
-    to?: string;
-  }): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsCreateSupportReportPath, 'post');
-    if (params) {
-      rb.query('taskNumber', params.taskNumber, {});
-      rb.query('fileId', params.fileId, {});
-      rb.query('evacuatedFrom', params.evacuatedFrom, {});
-      rb.query('evacuatedTo', params.evacuatedTo, {});
-      rb.query('from', params.from, {});
-      rb.query('to', params.to, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+  reportsCreateSupportReport$Response(
+    params?: ReportsCreateSupportReport$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<string>> {
+    return reportsCreateSupportReport(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportsCreateSupportReport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsCreateSupportReport(params?: {
-    taskNumber?: string;
-    fileId?: string;
-    evacuatedFrom?: string;
-    evacuatedTo?: string;
-    from?: string;
-    to?: string;
-  }): Observable<string> {
-
-    return this.reportsCreateSupportReport$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+  reportsCreateSupportReport(params?: ReportsCreateSupportReport$Params, context?: HttpContext): Observable<string> {
+    return this.reportsCreateSupportReport$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
-
 }

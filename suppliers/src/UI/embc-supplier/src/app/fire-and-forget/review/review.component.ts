@@ -1,20 +1,29 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { SupplierService } from '../../core/services/supplier.service';
 import { Router } from '@angular/router';
-import { SupplierHttpService } from '../../core/services/supplierHttp.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
+import { AlertComponent } from '../../core/components/alert/alert.component';
+import {
+  CaptchaResponse,
+  CaptchaResponseType,
+  CaptchaV2Component
+} from '../../core/components/captcha-v2/captcha-v2.component';
+import { LoaderComponent } from '../../core/components/loader/loader.component';
 import { AlertService } from '../../core/services/alert.service';
+import { SupplierService } from '../../core/services/supplier.service';
+import { SupplierHttpService } from '../../core/services/supplierHttp.service';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss']
+  styleUrls: ['./review.component.scss'],
+  standalone: true,
+  imports: [CaptchaV2Component, AlertComponent, LoaderComponent, CurrencyPipe]
 })
 export class ReviewComponent implements OnInit {
   supplierSubmissionType: string;
   supplier: any;
-  captchaVerified = false;
-  captchaFilled = false;
+  captchaResponse: CaptchaResponse;
   isSubmitted = false;
   showLoader = false;
 
@@ -39,12 +48,14 @@ export class ReviewComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
 
-    if (!this.captchaFilled) {
+    if (this.captchaResponse?.type !== CaptchaResponseType.success) {
       this.alertService.setAlert('danger', globalConst.captchaErr);
       this.isSubmitted = !this.isSubmitted;
       this.showLoader = !this.showLoader;
     } else {
-      this.httpService.submitForm(this.supplierService.getPayload()).subscribe(
+      let payload = this.supplierService.getPayload();
+      payload.captcha = this.captchaResponse.resolved;
+      this.httpService.submitForm(payload).subscribe(
         (res: any) => {
           this.supplierService.setReferenceNumber(res);
           this.router.navigate(['/thankyou']);
@@ -67,15 +78,10 @@ export class ReviewComponent implements OnInit {
     window.print();
   }
 
-  public onValidToken(token: any) {
-    this.captchaVerified = true;
-    this.captchaFilled = true;
-    this.alertService.clearAlert();
-  }
-
-  public onServerError(error: any) {
-    console.log('Server error: ', error);
-    this.captchaVerified = true;
-    this.captchaFilled = true;
+  onTokenResponse($event: CaptchaResponse) {
+    this.captchaResponse = $event;
+    if ($event.type === CaptchaResponseType.success) {
+      this.alertService.clearAlert();
+    }
   }
 }

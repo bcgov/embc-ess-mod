@@ -11,7 +11,6 @@ import {
 
 import { EvacueeSearchResultsComponent } from './evacuee-search-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
@@ -30,8 +29,14 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { Component } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
-@Component({ selector: 'app-zero-file-result', template: '' })
+@Component({
+  selector: 'app-zero-file-result',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule]
+})
 class ZeroFileResultStubComponent {}
 
 describe('EvacueeSearchResultsComponent', () => {
@@ -45,16 +50,13 @@ describe('EvacueeSearchResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        EvacueeSearchResultsComponent,
-        ZeroFileResultStubComponent
-      ],
       imports: [
         HttpClientTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        EvacueeSearchResultsComponent,
+        ZeroFileResultStubComponent
       ],
       providers: [
         EvacueeSearchResultsComponent,
@@ -75,7 +77,8 @@ describe('EvacueeSearchResultsComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -168,38 +171,33 @@ describe('EvacueeSearchResultsComponent', () => {
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const titleElem = nativeElem.querySelector('.result-text');
 
-    expect(titleElem.textContent).toEqual(
-      ' Results for "FIVE, Evac" with a date of birth "12-Dec-2000".'
-    );
+    expect(titleElem.textContent).toEqual(' Results for "FIVE, Evac" with a date of birth "12-Dec-2000".');
   });
 
-  it('should be able to start New Registration for digital flow', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should be able to start New Registration for digital flow', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.digital
-      };
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: true,
-        evacueeSearchParameters: {
-          firstName: 'Evac',
-          lastName: 'Five',
-          dateOfBirth: '12/12/2000'
-        }
-      };
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+    evacueeSearchService.evacueeSearchContext = {
+      hasShownIdentification: true,
+      evacueeSearchParameters: {
+        firstName: 'Evac',
+        lastName: 'Five',
+        dateOfBirth: '12/12/2000'
+      }
+    };
 
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.openWizard();
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.openWizard();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
-        queryParams: { type: WizardType.NewRegistration },
-        queryParamsHandling: 'merge'
-      });
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
+      queryParams: { type: WizardType.NewRegistration },
+      queryParamsHandling: 'merge'
+    });
+  }));
 
   it('should be able to start New Registration for Paper flow if Paper file does not exist', fakeAsync(
     inject([Router], (router: Router) => {
@@ -263,9 +261,7 @@ describe('EvacueeSearchResultsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const dialogContent = document.getElementsByTagName(
-        'app-ess-file-exists'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-ess-file-exists')[0] as HTMLElement;
       expect(dialogContent).toBeTruthy();
     })
   ));

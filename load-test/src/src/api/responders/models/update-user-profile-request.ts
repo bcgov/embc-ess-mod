@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface UpdateUserProfileRequest {
-  email?: string;
+  email?: null | string;
   firstName?: string;
   lastName?: string;
-  phone?: string;
+  phone?: null | string;
 }

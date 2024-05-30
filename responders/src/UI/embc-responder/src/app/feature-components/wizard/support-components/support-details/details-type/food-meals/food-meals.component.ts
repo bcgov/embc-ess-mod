@@ -1,20 +1,30 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { NumberOfMealsPipe } from '../../../../../../shared/pipes/numberOfMeals.pipe';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { NgClass, DecimalPipe } from '@angular/common';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-food-meals',
   templateUrl: './food-meals.component.html',
-  styleUrls: ['./food-meals.component.scss']
+  styleUrls: ['./food-meals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    NgClass,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    DecimalPipe,
+    NumberOfMealsPipe
+  ]
 })
 export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
@@ -35,9 +45,7 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
@@ -76,17 +84,11 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
    */
   updateTotalAmount() {
     const breakfastAmount =
-      globalConst.mealRate.breakfast *
-      this.referralForm.get('noOfBreakfast').value *
-      this.noOfHouseholdMembers;
+      globalConst.mealRate.breakfast * this.referralForm.get('noOfBreakfast').value * this.noOfHouseholdMembers;
     const lunchAmount =
-      globalConst.mealRate.lunch *
-      this.referralForm.get('noOfLunches').value *
-      this.noOfHouseholdMembers;
+      globalConst.mealRate.lunch * this.referralForm.get('noOfLunches').value * this.noOfHouseholdMembers;
     const dinnerAmount =
-      globalConst.mealRate.dinner *
-      this.referralForm.get('noOfDinners').value *
-      this.noOfHouseholdMembers;
+      globalConst.mealRate.dinner * this.referralForm.get('noOfDinners').value * this.noOfHouseholdMembers;
     this.totalAmount = breakfastAmount + lunchAmount + dinnerAmount;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
     this.checkOverlimit(this.totalAmount);

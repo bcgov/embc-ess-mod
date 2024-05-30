@@ -1,58 +1,59 @@
 <mat-card>
-  <div class="row">
-    <div class="col-md-12">
-      <p class="bold list-subheading">Primary Supplier Directory</p>
+  <mat-card-content>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="bold list-subheading">Primary Supplier Directory</p>
+      </div>
     </div>
-  </div>
-  <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="primarySupplierFilter($event)"
-    ></app-search-filter>
-  </div>
-  <div class="data-margin">
-    <app-suppliers-table
-      [incomingData]="suppliersList"
-      [displayedColumns]="primarySuppliersColumns"
-      [filterTerm]="primarySupplierFilterTerm"
-      [isLoading]="suppliersLoader"
-      [statusLoading]="statusLoading"
-      [loggedInRole]="loggedInRole"
-      [showToggle]="true"
-      (clickedRow)="openSupplierDetails($event)"
-      (toggleActive)="activateSupplier($event)"
-      (toggleInactive)="deactivateSupplier($event)"
-    >
-    </app-suppliers-table>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <p class="bold list-subheading">Mutual Aid Suppliers</p>
+    <div class="filter-margin">
+      <app-search-filter
+        [filtersToLoad]="filtersToLoad"
+        (filterEvent)="primarySupplierFilter($event)"
+      ></app-search-filter>
     </div>
-  </div>
-  <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="mutualAidSupplierFilter($event)"
-    ></app-search-filter>
-  </div>
-  <div class="data-margin">
-    <app-suppliers-table
-      [incomingData]="mutualAidList"
-      [displayedColumns]="mutualAidSuppliersColumns"
-      [filterTerm]="mutualAidSupplierFilterTerm"
-      [isLoading]="mutualAidLoader"
-      [statusLoading]="statusLoading"
-      [loggedInRole]="loggedInRole"
-      [showToggle]="false"
-      (clickedRow)="openMutualAidDetails($event)"
-    >
-    </app-suppliers-table>
-  </div>
+    <div class="data-margin">
+      <app-suppliers-table
+        [incomingData]="suppliersList"
+        [displayedColumns]="primarySuppliersColumns"
+        [filterTerm]="primarySupplierFilterTerm"
+        [isLoading]="suppliersLoader"
+        [statusLoading]="statusLoading"
+        [loggedInRole]="loggedInRole"
+        [showToggle]="true"
+        (clickedRow)="openSupplierDetails($event)"
+        (toggleActive)="activateSupplier($event)"
+        (toggleInactive)="deactivateSupplier($event)"
+      >
+      </app-suppliers-table>
+    </div>
 
-  <app-overlay-loader
-    *ngIf="isLoading"
-    [showLoader]="isLoading"
-  ></app-overlay-loader>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="bold list-subheading">Mutual Aid Suppliers</p>
+      </div>
+    </div>
+    <div class="filter-margin">
+      <app-search-filter
+        [filtersToLoad]="filtersToLoad"
+        (filterEvent)="mutualAidSupplierFilter($event)"
+      ></app-search-filter>
+    </div>
+    <div class="data-margin">
+      <app-suppliers-table
+        [incomingData]="mutualAidList"
+        [displayedColumns]="mutualAidSuppliersColumns"
+        [filterTerm]="mutualAidSupplierFilterTerm"
+        [isLoading]="mutualAidLoader"
+        [statusLoading]="statusLoading"
+        [loggedInRole]="loggedInRole"
+        [showToggle]="false"
+        (clickedRow)="openMutualAidDetails($event)"
+      >
+      </app-suppliers-table>
+    </div>
+
+    @if (isLoading) {
+      <app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
+    }
+  </mat-card-content>
 </mat-card>

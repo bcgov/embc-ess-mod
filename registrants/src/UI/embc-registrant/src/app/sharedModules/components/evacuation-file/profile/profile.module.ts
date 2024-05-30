@@ -5,7 +5,6 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { ReviewModule } from '../../../../feature-components/review/review.module';
 
 @NgModule({
-  declarations: [ProfileComponent],
-  imports: [CommonModule, ProfileRoutingModule, ReviewModule]
+  imports: [CommonModule, ProfileRoutingModule, ReviewModule, ProfileComponent]
 })
 export class ProfileModule {}

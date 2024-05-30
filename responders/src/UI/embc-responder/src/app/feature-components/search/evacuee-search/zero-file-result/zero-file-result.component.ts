@@ -6,14 +6,14 @@ import { EvacueeSearchService } from '../evacuee-search.service';
 @Component({
   selector: 'app-zero-file-result',
   templateUrl: './zero-file-result.component.html',
-  styleUrls: ['./zero-file-result.component.scss']
+  styleUrls: ['./zero-file-result.component.scss'],
+  standalone: true,
+  imports: []
 })
-export class ZeroFileResultComponent implements OnInit {
+export class ZeroFileResultComponent {
   readonly selectedPathType = SelectedPathType;
   constructor(
     public evacueeSearchService: EvacueeSearchService,
     public optionInjectionService: OptionInjectionService
   ) {}
-
-  ngOnInit(): void {}
 }

@@ -1,80 +1,76 @@
 <div class="row row-padding">
-  <div class="col-md-12 heading" *ngIf="voidType === 'Referral'">
-    Void Support
-  </div>
-  <div class="col-md-12 heading" *ngIf="voidType === 'ETransfer'">
-    Cancel e-Transfer
-  </div>
+  @if (voidType === 'Referral') {
+    <div class="col-md-12 heading">Void Support</div>
+  }
+  @if (voidType === 'ETransfer') {
+    <div class="col-md-12 heading">Cancel e-Transfer</div>
+  }
 </div>
 
-<div class="row row-padding" *ngIf="voidType === 'Referral'">
-  <div class="col-md-12">
-    <p>
-      You are requesting to void
-      <span class="bold">Support #{{ profileData }}</span
-      >, a support can only be voided if the evacuee can provide you with the
-      original referral.
-    </p>
-  </div>
-</div>
-
-<div class="row row-padding" *ngIf="voidType === 'ETransfer'">
-  <div class="col-md-12">
-    <p>
-      You are requesting to cancel
-      <span class="bold">e-Transfer support #{{ profileData }}</span
-      >, a support can only be cancelled while it is in the Pending Approval
-      state.
-    </p>
-  </div>
-</div>
-
-<div class="row row-padding" *ngIf="voidType === 'Referral'">
-  <div class="col-md-12 bold">Reason for void:</div>
-</div>
-
-<form [formGroup]="voidForm" *ngIf="voidType === 'Referral'">
+@if (voidType === 'Referral') {
   <div class="row row-padding">
-    <div class="col-md-5">
-      <mat-form-field appearance="outline">
-        <mat-label>Reason for void</mat-label>
-        <mat-select formControlName="reason" required>
-          <mat-option *ngFor="let gen of reasons | enumToArray" [value]="gen">
-            {{ getReasonDescription(gen) }}
-          </mat-option>
-        </mat-select>
-        <mat-error
-          *ngIf="
-            voidFormControl.reason.invalid &&
-            voidFormControl.reason.hasError('required')
-          "
-        >
-          Reason for void is required</mat-error
-        >
-      </mat-form-field>
+    <div class="col-md-12">
+      <p>
+        You are requesting to void
+        <span class="bold">Support #{{ profileData }}</span
+        >, a support can only be voided if the evacuee can provide you with the original referral.
+      </p>
     </div>
   </div>
-</form>
+}
+
+@if (voidType === 'ETransfer') {
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <p>
+        You are requesting to cancel
+        <span class="bold">e-Transfer support #{{ profileData }}</span
+        >, a support can only be cancelled while it is in the Pending Approval state.
+      </p>
+    </div>
+  </div>
+}
+
+@if (voidType === 'Referral') {
+  <div class="row row-padding">
+    <div class="col-md-12 bold">Reason for void:</div>
+  </div>
+}
+
+@if (voidType === 'Referral') {
+  <form [formGroup]="voidForm">
+    <div class="row row-padding">
+      <div class="col-md-5">
+        <mat-form-field appearance="outline">
+          <mat-label>Reason for void</mat-label>
+          <mat-select formControlName="reason" required>
+            @for (gen of reasons | enumToArray; track gen) {
+              <mat-option [value]="gen">
+                {{ getReasonDescription(gen) }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (voidFormControl.reason.invalid && voidFormControl.reason.hasError('required')) {
+            <mat-error> Reason for void is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+}
 
 <div class="row row-padding">
   <div class="col-md-6">
-    <button class="button-s button-width" mat-button (click)="close()">
-      Close
-    </button>
+    <button class="button-s button-width" mat-button (click)="close()">Close</button>
   </div>
-  <div class="col-md-6" *ngIf="voidType === 'Referral'">
-    <button
-      class="button-p button-width"
-      mat-button
-      id="voidButton"
-      (click)="void()"
-    >
-      Proceed & Void
-    </button>
-  </div>
-  <div class="col-md-6" *ngIf="voidType === 'ETransfer'">
-    <button class="button-p button-width" mat-button (click)="cancel()">
-      Proceed & Cancel
-    </button>
-  </div>
+  @if (voidType === 'Referral') {
+    <div class="col-md-6">
+      <button class="button-p button-width" mat-button id="voidButton" (click)="void()">Proceed & Void</button>
+    </div>
+  }
+  @if (voidType === 'ETransfer') {
+    <div class="col-md-6">
+      <button class="button-p button-width" mat-button (click)="cancel()">Proceed & Cancel</button>
+    </div>
+  }
 </div>

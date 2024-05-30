@@ -11,7 +11,6 @@ import {
 
 import { HouseholdMemberComponent } from './household-member.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
@@ -24,6 +23,7 @@ import { MockEssfileDashboardService } from 'src/app/unit-tests/mockEssfileDashb
 import { MockHouseholdMemberService } from 'src/app/unit-tests/mockHouseholdMember.service';
 import { Router } from '@angular/router';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { provideRouter } from '@angular/router';
 
 describe('HouseholdMemberComponent', () => {
   let component: HouseholdMemberComponent;
@@ -35,12 +35,11 @@ describe('HouseholdMemberComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        HouseholdMemberComponent
       ],
-      declarations: [HouseholdMemberComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -54,7 +53,8 @@ describe('HouseholdMemberComponent', () => {
         {
           provide: EssfileDashboardService,
           useClass: MockEssfileDashboardService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -83,9 +83,7 @@ describe('HouseholdMemberComponent', () => {
 
       tick();
       fixture.detectChanges();
-      const dialogContent = document.getElementsByTagName(
-        'app-file-dashboard-verify-dialog'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-file-dashboard-verify-dialog')[0] as HTMLElement;
       expect(dialogContent).toBeDefined();
     })
   ));
@@ -106,9 +104,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/evacuee-profile-dashboard'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/evacuee-profile-dashboard']);
     })
   ));
 
@@ -128,9 +124,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-questions'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-questions']);
     })
   ));
 
@@ -150,9 +144,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/evacuee-profile-dashboard'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/evacuee-profile-dashboard']);
     })
   ));
 
@@ -183,8 +175,7 @@ describe('HouseholdMemberComponent', () => {
       spyOn(router, 'navigate').and.stub();
       const memberDetails = householdMemberService.householdMemberValue1;
       component.essFile = householdMemberService.mockEssfile;
-      essfileDashboardService.matchedProfiles =
-        householdMemberService.singleMatchedProfile;
+      essfileDashboardService.matchedProfiles = householdMemberService.singleMatchedProfile;
       fixture.detectChanges();
       component.linkToProfile(memberDetails);
       fixture.detectChanges();
@@ -196,9 +187,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-questions'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-questions']);
     })
   ));
 
@@ -207,8 +196,7 @@ describe('HouseholdMemberComponent', () => {
       spyOn(router, 'navigate').and.stub();
       const memberDetails = householdMemberService.householdMemberValue1;
       component.essFile = householdMemberService.mockEssfile;
-      essfileDashboardService.matchedProfiles =
-        householdMemberService.multipleMatchedProfile;
+      essfileDashboardService.matchedProfiles = householdMemberService.multipleMatchedProfile;
       fixture.detectChanges();
       component.linkToProfile(memberDetails);
       fixture.detectChanges();
@@ -220,9 +208,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const dialogContent = document.getElementsByTagName(
-        'app-registrant-link-dialog'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-registrant-link-dialog')[0] as HTMLElement;
       expect(dialogContent).toBeDefined();
     })
   ));
@@ -232,8 +218,7 @@ describe('HouseholdMemberComponent', () => {
       spyOn(router, 'navigate').and.stub();
       const memberDetails = householdMemberService.householdMemberValue1;
       component.essFile = householdMemberService.mockEssfile;
-      essfileDashboardService.matchedProfiles =
-        householdMemberService.multipleMatchedProfile;
+      essfileDashboardService.matchedProfiles = householdMemberService.multipleMatchedProfile;
       fixture.detectChanges();
 
       component.linkToProfile(memberDetails);
@@ -247,9 +232,7 @@ describe('HouseholdMemberComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-questions'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['responder-access/search/security-questions']);
     })
   ));
 });

@@ -7,33 +7,20 @@
 <div class="row">
   <div class="col-md-8">
     <mat-card>
-      <p class="heading">
-        Enter the <b>ESS File Number</b> associated with the supports that
-        require extending.
-      </p>
+      <mat-card-content>
+        <p class="heading">Enter the <b>ESS File Number</b> associated with the supports that require extending.</p>
 
-      <app-file-search-form
-        [fileSearchForm]="fileSearchForm"
-      ></app-file-search-form>
+        <app-file-search-form [fileSearchForm]="fileSearchForm"></app-file-search-form>
 
-      <div class="row">
-        <div class="col-md-8">
-          <button
-            class="button-p submit"
-            type="button"
-            (click)="search()"
-            [disabled]="isSubmitted"
-            mat-button
-          >
-            Search
-            <app-loader
-              [strokeWidth]="3"
-              [diameter]="25"
-              [showLoader]="isLoading"
-            ></app-loader>
-          </button>
+        <div class="row">
+          <div class="col-md-8">
+            <button class="button-p submit" type="button" (click)="search()" [disabled]="isSubmitted" mat-button>
+              Search
+              <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="isLoading"></app-loader>
+            </button>
+          </div>
         </div>
-      </div>
+      </mat-card-content>
     </mat-card>
     <br />
   </div>

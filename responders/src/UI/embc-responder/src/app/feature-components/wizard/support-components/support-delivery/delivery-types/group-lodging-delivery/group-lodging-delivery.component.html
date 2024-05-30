@@ -15,22 +15,13 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input
-          formControlName="hostName"
-          maxlength="255"
-          matInput
-          placeholder="Enter Name"
-          required
-        />
-        <mat-error
-          class="custom-mat-error"
-          *ngIf="
-            supportDeliveryFormControl?.hostName.invalid &&
-            supportDeliveryFormControl?.hostName.hasError('whitespaceError')
-          "
-        >
-          Lodging Facility Name is required</mat-error
-        >
+        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" required />
+        @if (
+          supportDeliveryFormControl?.hostName.invalid &&
+          supportDeliveryFormControl?.hostName.hasError('whitespaceError')
+        ) {
+          <mat-error class="custom-mat-error"> Lodging Facility Name is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -45,22 +36,13 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address</mat-label>
-        <input
-          formControlName="hostAddress"
-          maxlength="255"
-          matInput
-          placeholder="Enter Address"
-          required
-        />
-        <mat-error
-          class="custom-mat-error"
-          *ngIf="
-            supportDeliveryFormControl?.hostAddress.invalid &&
-            supportDeliveryFormControl?.hostAddress.hasError('whitespaceError')
-          "
-        >
-          Lodging Facility Address is required</mat-error
-        >
+        <input formControlName="hostAddress" maxlength="255" matInput placeholder="Enter Address" required />
+        @if (
+          supportDeliveryFormControl?.hostAddress.invalid &&
+          supportDeliveryFormControl?.hostAddress.hasError('whitespaceError')
+        ) {
+          <mat-error class="custom-mat-error"> Lodging Facility Address is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -83,23 +65,20 @@
           [displayWith]="cityDisplayFn"
           (optionSelected)="getCommunityCode($event.option.value)"
         >
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-            [id]="option.name"
-          >
-            {{ option.name }}
-          </mat-option>
+          @for (option of filteredOptions | async; track option) {
+            <mat-option [value]="option" [id]="option.name">
+              {{ option.name }}
+            </mat-option>
+          }
         </mat-autocomplete>
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl?.hostCity.invalid &&
-            supportDeliveryFormControl?.hostCity.hasError('required')
-          "
-        >
-          City is required</mat-error
-        >
-        <mat-error *ngIf="validateCity()"> City is invalid</mat-error>
+        @if (
+          supportDeliveryFormControl?.hostCity.invalid && supportDeliveryFormControl?.hostCity.hasError('required')
+        ) {
+          <mat-error> City is required</mat-error>
+        }
+        @if (validateCity()) {
+          <mat-error> City is invalid</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -114,29 +93,21 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Telephone</mat-label>
-        <input
-          formControlName="hostPhone"
-          maxlength="100"
-          matInput
-          placeholder="Telephone"
-          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
-        />
+        <input formControlName="hostPhone" maxlength="100" matInput placeholder="Telephone" [imask]="phoneMask" />
         <!-- <mat-error
           *ngIf="
             supportDeliveryFormControl.hostPhone.invalid &&
             supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
           "
-        >
-          Telephone is required</mat-error 
-        > -->
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl.hostPhone.invalid &&
-            supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
-          "
-        >
-          Telephone must have 10 digits</mat-error
-        >
+                >
+                Telephone is required</mat-error
+                > -->
+        @if (
+          supportDeliveryFormControl.hostPhone.invalid &&
+          supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
+        ) {
+          <mat-error> Telephone must have 10 digits</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>

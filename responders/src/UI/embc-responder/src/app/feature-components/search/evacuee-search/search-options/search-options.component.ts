@@ -5,16 +5,18 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { UserService } from 'src/app/core/services/user.service';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { NgClass } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-search-options',
   templateUrl: './search-options.component.html',
-  styleUrls: ['./search-options.component.scss']
+  styleUrls: ['./search-options.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, NgClass, MatButton]
 })
 export class SearchOptionsComponent implements OnInit {
   selectedPathway: SelectedPathType;
@@ -33,11 +35,7 @@ export class SearchOptionsComponent implements OnInit {
   ngOnInit(): void {
     this.workflows = this.appBaseService?.appModel?.selectedEssTask?.workflows;
     const enabledWorkflows = this.workflows?.filter((w) => w.enabled);
-    if (
-      enabledWorkflows &&
-      enabledWorkflows.length === 1 &&
-      enabledWorkflows[0].name === 'paper-data-entry'
-    ) {
+    if (enabledWorkflows && enabledWorkflows.length === 1 && enabledWorkflows[0].name === 'paper-data-entry') {
       this.setSelection(SelectedPathType.paperBased);
     }
   }
@@ -84,9 +82,6 @@ export class SearchOptionsComponent implements OnInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 }

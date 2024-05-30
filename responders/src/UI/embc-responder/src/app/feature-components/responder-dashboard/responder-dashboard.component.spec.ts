@@ -1,18 +1,13 @@
-import {
-  ComponentFixture,
-  TestBed,
-  waitForAsync,
-  inject
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync, inject } from '@angular/core/testing';
 
 import { ResponderDashboardComponent } from './responder-dashboard.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
 import { MockUserService } from 'src/app/unit-tests/mockUser.service';
 import { TaskSearchComponent } from '../search/task-search/task-search.component';
 import { EvacueeSearchComponent } from '../search/evacuee-search/evacuee-search.component';
+import { provideRouter } from '@angular/router';
 
 describe('ResponderDashboardComponent', () => {
   let component: ResponderDashboardComponent;
@@ -24,27 +19,15 @@ describe('ResponderDashboardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ResponderDashboardComponent],
-      imports: [
-        RouterTestingModule.withRoutes([
-          // {
-          //   path: 'responder-access/search',
-          //   component: TaskSearchComponent
-          // }
-          // {
-          //   path: 'responder-access/search/evacuee',
-          //   component: EvacueeSearchComponent
-          // }
-        ]),
-        HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule, ResponderDashboardComponent],
       providers: [
         ResponderDashboardComponent,
         //{ provide: Router, useValue: routerMock },
         {
           provide: UserService,
           useClass: MockUserService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   }));

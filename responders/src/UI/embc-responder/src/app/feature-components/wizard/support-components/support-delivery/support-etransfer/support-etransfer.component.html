@@ -15,42 +15,31 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="question-heading requiredField">
-        e-Transfer Notification Preference
-      </p>
+      <p class="question-heading requiredField">e-Transfer Notification Preference</p>
     </div>
   </div>
   <div class="row">
     <div class="col-md-4">
       <mat-form-field appearance="outline">
-        <mat-select
-          formControlName="notificationPreference"
-          (selectionChange)="preferenceSelect($event)"
-          required
-        >
+        <mat-select formControlName="notificationPreference" (selectionChange)="preferenceSelect($event)" required>
           <mat-option value=""> Select-- </mat-option>
-          <mat-option
-            *ngFor="let preference of notificationPreferences"
-            [value]="preference"
-          >
-            {{ preference }}
-          </mat-option>
+          @for (preference of notificationPreferences; track preference) {
+            <mat-option [value]="preference">
+              {{ preference }}
+            </mat-option>
+          }
         </mat-select>
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl?.notificationPreference.invalid &&
-            supportDeliveryFormControl?.notificationPreference.hasError(
-              'required'
-            )
-          "
-        >
-          Required</mat-error
-        >
+        @if (
+          supportDeliveryFormControl?.notificationPreference.invalid &&
+          supportDeliveryFormControl?.notificationPreference.hasError('required')
+        ) {
+          <mat-error> Required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
 
-  <ng-container *ngIf="showEmail()">
+  @if (showEmail()) {
     <div class="row">
       <div class="col-md-12">
         <p class="question-heading requiredField">Email Address</p>
@@ -66,89 +55,68 @@
             placeholder="Email Address"
             (input)="notificationEmailChange()"
           />
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl.notificationEmail.invalid &&
-              supportDeliveryFormControl.notificationEmail.hasError(
-                'whitespaceError'
-              )
-            "
-          >
-            Email is required</mat-error
-          >
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl.notificationEmail.invalid &&
-              supportDeliveryFormControl.notificationEmail.hasError('email')
-            "
-            >Invalid email</mat-error
-          >
+          @if (
+            supportDeliveryFormControl.notificationEmail.invalid &&
+            supportDeliveryFormControl.notificationEmail.hasError('whitespaceError')
+          ) {
+            <mat-error> Email is required</mat-error>
+          }
+          @if (
+            supportDeliveryFormControl.notificationEmail.invalid &&
+            supportDeliveryFormControl.notificationEmail.hasError('email')
+          ) {
+            <mat-error>Invalid email</mat-error>
+          }
         </mat-form-field>
       </div>
-      <div class="col-md-8 checkbox-container" *ngIf="showEmailCheckBox">
-        <mat-checkbox
-          (change)="setEmail($event)"
-          #setEmailCheckbox
-          id="setEmailCheckbox"
-        >
-          <span *ngIf="emailOnFile"
-            >Use email address on file</span
-          >
-        </mat-checkbox>
-      </div>
+      @if (showEmailCheckBox) {
+        <div class="col-md-8 checkbox-container">
+          <mat-checkbox (change)="setEmail($event)" #setEmailCheckbox id="setEmailCheckbox">
+            @if (emailOnFile) {
+              <span>Use email address on file</span>
+            }
+          </mat-checkbox>
+        </div>
+      }
     </div>
-
-    <div class="row" *ngIf="showConfirmEmail()">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Confirm Email Address</mat-label>
-          <input
-            formControlName="notificationConfirmEmail"
-            matInput
-            placeholder="Confirm Email Address"
-            [errorStateMatcher]="emailMatcher"
-          />
-          <mat-error
-            *ngIf="
+    @if (showConfirmEmail()) {
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm Email Address</mat-label>
+            <input
+              formControlName="notificationConfirmEmail"
+              matInput
+              placeholder="Confirm Email Address"
+              [errorStateMatcher]="emailMatcher"
+            />
+            @if (
               supportDeliveryFormControl.notificationConfirmEmail.invalid &&
-              supportDeliveryFormControl.notificationConfirmEmail.hasError(
-                'whitespaceError'
-              )
-            "
-          >
-            Confirm Email is required</mat-error
-          >
-          <mat-error
-            *ngIf="
+              supportDeliveryFormControl.notificationConfirmEmail.hasError('whitespaceError')
+            ) {
+              <mat-error> Confirm Email is required</mat-error>
+            }
+            @if (
               supportDeliveryFormControl.notificationConfirmEmail.invalid &&
-              supportDeliveryFormControl.notificationConfirmEmail.hasError(
-                'email'
-              )
-            "
-          >
-            Invalid email</mat-error
-          >
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl?.notificationConfirmEmail?.parent?.hasError(
-                'emailMatch'
-              )
-            "
-          >
-            Email address mismatch</mat-error
-          >
-        </mat-form-field>
+              supportDeliveryFormControl.notificationConfirmEmail.hasError('email')
+            ) {
+              <mat-error> Invalid email</mat-error>
+            }
+            @if (supportDeliveryFormControl?.notificationConfirmEmail?.parent?.hasError('emailMatch')) {
+              <mat-error> Email address mismatch</mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </ng-container>
+    }
+  }
 
-  <ng-container *ngIf="showMobile()">
+  @if (showMobile()) {
     <div class="row">
       <div class="col-md-12">
         <p class="question-heading requiredField">Mobile Number (Canadian)</p>
       </div>
     </div>
-
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
@@ -157,88 +125,66 @@
             formControlName="notificationMobile"
             matInput
             placeholder="Mobile Number"
-            [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+            [imask]="phoneMask"
             (input)="notificationMobileChange()"
           />
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl.notificationMobile.invalid &&
-              supportDeliveryFormControl.notificationMobile.hasError(
-                'whitespaceError'
-              )
-            "
-          >
-            Mobile Number is required</mat-error
-          >
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl.notificationMobile.invalid &&
-              supportDeliveryFormControl.notificationMobile.hasError(
-                'incorrectLength'
-              )
-            "
-          >
-            Mobile number must have 10 digits</mat-error
-          >
+          @if (
+            supportDeliveryFormControl.notificationMobile.invalid &&
+            supportDeliveryFormControl.notificationMobile.hasError('whitespaceError')
+          ) {
+            <mat-error> Mobile Number is required</mat-error>
+          }
+          @if (
+            supportDeliveryFormControl.notificationMobile.invalid &&
+            supportDeliveryFormControl.notificationMobile.hasError('incorrectLength')
+          ) {
+            <mat-error> Mobile number must have 10 digits</mat-error>
+          }
         </mat-form-field>
       </div>
-      <div class="col-md-8 checkbox-container" *ngIf="showMobileCheckBox">
-        <mat-checkbox
-          (change)="setMobile($event)"
-          #setMobileCheckbox
-          id="setMobileCheckbox"
-        >
-          <span *ngIf="mobileOnFile"
-            >Use mobile number on file</span
-          >
-        </mat-checkbox>
-      </div>
+      @if (showMobileCheckBox) {
+        <div class="col-md-8 checkbox-container">
+          <mat-checkbox (change)="setMobile($event)" #setMobileCheckbox id="setMobileCheckbox">
+            @if (mobileOnFile) {
+              <span>Use mobile number on file</span>
+            }
+          </mat-checkbox>
+        </div>
+      }
     </div>
-
-    <div class="row" *ngIf="showConfirmMobile()">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Confirm Mobile Number</mat-label>
-          <input
-            formControlName="notificationConfirmMobile"
-            matInput
-            placeholder="Confirm Mobile Number"
-            [textMask]="{ mask: phoneMask, keepCharPositions: true }"
-            [errorStateMatcher]="mobileMatcher"
-          />
-          <mat-error
-            *ngIf="
+    @if (showConfirmMobile()) {
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm Mobile Number</mat-label>
+            <input
+              formControlName="notificationConfirmMobile"
+              matInput
+              placeholder="Confirm Mobile Number"
+              [imask]="phoneMask"
+              [errorStateMatcher]="mobileMatcher"
+            />
+            @if (
               supportDeliveryFormControl.notificationConfirmMobile.invalid &&
-              supportDeliveryFormControl.notificationConfirmMobile.hasError(
-                'whitespaceError'
-              )
-            "
-          >
-            Mobile Number is required</mat-error
-          >
-          <mat-error
-            *ngIf="
+              supportDeliveryFormControl.notificationConfirmMobile.hasError('whitespaceError')
+            ) {
+              <mat-error> Mobile Number is required</mat-error>
+            }
+            @if (
               supportDeliveryFormControl.notificationConfirmMobile.invalid &&
-              supportDeliveryFormControl.notificationConfirmMobile.hasError(
-                'incorrectLength'
-              )
-            "
-          >
-            Mobile number must have 10 digits</mat-error
-          >
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl?.notificationConfirmMobile?.parent
-                ?.invalid &&
-              supportDeliveryFormControl?.notificationConfirmMobile?.parent?.hasError(
-                'mobileMatch'
-              )
-            "
-          >
-            Mobile number mismatch</mat-error
-          >
-        </mat-form-field>
+              supportDeliveryFormControl.notificationConfirmMobile.hasError('incorrectLength')
+            ) {
+              <mat-error> Mobile number must have 10 digits</mat-error>
+            }
+            @if (
+              supportDeliveryFormControl?.notificationConfirmMobile?.parent?.invalid &&
+              supportDeliveryFormControl?.notificationConfirmMobile?.parent?.hasError('mobileMatch')
+            ) {
+              <mat-error> Mobile number mismatch</mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </ng-container>
+    }
+  }
 </form>

@@ -37,7 +37,8 @@ export class WizardService {
   ) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
-    if (this.sideMenuItems === null || this.sideMenuItems === undefined) this.sideMenuItems = JSON.parse(this.cacheService.get('wizardMenu'));
+    if (this.sideMenuItems === null || this.sideMenuItems === undefined)
+      this.sideMenuItems = JSON.parse(this.cacheService.get('wizardMenu'));
 
     return this.sideMenuItems;
   }
@@ -99,7 +100,11 @@ export class WizardService {
       const lockedMsg = this.menuItems[curStep]?.incompleteMsg || globalConst.stepIncompleteMessage;
 
       this.openLockedModal(lockedMsg);
-    } else if (!lockedIndicator && (this.router.url === '/ess-wizard/add-supports/details' || this.router.url === '/ess-wizard/add-supports/delivery')) {
+    } else if (
+      !lockedIndicator &&
+      (this.router.url === '/ess-wizard/add-supports/details' ||
+        this.router.url === '/ess-wizard/add-supports/delivery')
+    ) {
       $event.stopPropagation();
       $event.preventDefault();
 
@@ -198,7 +203,10 @@ export class WizardService {
     return address;
   }
 
-  createObjectReference<T extends RegistrantProfileModel, X extends EvacuationFileModel>(originalValue: T | X, type: string): void {
+  createObjectReference<T extends RegistrantProfileModel, X extends EvacuationFileModel>(
+    originalValue: T | X,
+    type: string
+  ): void {
     if (type === 'profile') {
       this.profileObjectReference = Object.assign({}, originalValue as RegistrantProfileModel);
     } else if (type === 'file') {
@@ -207,16 +215,28 @@ export class WizardService {
   }
 
   hasChanged(form: { [key: string]: AbstractControl }, type: string): boolean {
-    if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && (type === 'personalDetails' || type === 'contactDetails')) {
+    if (
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      (type === 'personalDetails' || type === 'contactDetails')
+    ) {
       const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       return Object.keys(initialValue).some((key) => {
         const formValue = form[key].value === '' ? null : form[key].value;
         return formValue !== initialValue[key];
       });
-    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && type === 'restriction') {
+    } else if (
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      type === 'restriction'
+    ) {
       const initialValue = (this.profileObjectReference as RegistrantProfileModel).restriction;
       return initialValue !== form.restrictedAccess.value;
-    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && (type === 'primaryAddress' || type === 'mailingAddress')) {
+    } else if (
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      (type === 'primaryAddress' || type === 'mailingAddress')
+    ) {
       const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       let addressFormValue = null;
       if (type === 'primaryAddress') {
@@ -226,13 +246,21 @@ export class WizardService {
       }
 
       return this.compareAddress(addressFormValue, initialValue);
-    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && type === 'securityQuestions') {
+    } else if (
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      type === 'securityQuestions'
+    ) {
       const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       return this.compareSecurityQuestion(initialValue, form);
     } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'evacDetails') {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareEvacDetails(initialValue, form);
-    } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'householdMember') {
+    } else if (
+      this.fileObjectReference !== null &&
+      this.fileObjectReference !== undefined &&
+      type === 'householdMember'
+    ) {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareHouseholdMembers(initialValue, form);
     } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'animals') {
@@ -253,7 +281,8 @@ export class WizardService {
     if (
       formAddress.addressLine1 === incomingAddress.addressLine1 &&
       formAddress.addressLine2 === incomingAddress.addressLine2 &&
-      ((formAddress.community as Community).code === (incomingAddress.community as Community).code || (formAddress.community as string) === incomingAddress.city) &&
+      ((formAddress.community as Community).code === (incomingAddress.community as Community).code ||
+        (formAddress.community as string) === incomingAddress.city) &&
       formAddress.stateProvince.code === incomingAddress.stateProvince.code &&
       formAddress.country.code === incomingAddress.country.code &&
       formAddress.postalCode === incomingAddress.postalCode
@@ -310,7 +339,8 @@ export class WizardService {
       form.requiresClothing.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Clothing) &&
       form.requiresIncidentals.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Incidentals) &&
       form.requiresTransportation.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Transportation) &&
-      form.requiresShelterAllowance.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
+      form.requiresShelterAllowance.value ===
+        initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
       form.requiresShelterReferral.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterReferral)
     );
   }

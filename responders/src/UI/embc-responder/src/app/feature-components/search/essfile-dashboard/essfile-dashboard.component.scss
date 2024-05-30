@@ -28,15 +28,15 @@
   margin-left: 10px;
 }
 
-.info-image img:last-child {
+.info-image img:last-of-type {
   display: none;
 }
 
-.info-image:hover img:last-child {
+.info-image:hover img:last-of-type {
   display: inline;
 }
 
-.info-image:hover img:first-child {
+.info-image:hover img:first-of-type {
   display: none;
 }
 
@@ -107,11 +107,13 @@
 .active-side-item {
   background-color: #169bd5 !important;
   color: white !important;
-  img:last-child {
-    display: block !important;
-  }
-  img:first-child {
+
+  img:first-of-type {
     display: none !important;
+  }
+
+  img:last-of-type {
+    display: block !important;
   }
 }
 
@@ -124,11 +126,24 @@ a:not(.btn):focus {
 }
 
 .a-mat-button {
-  width: 100%;
+  width: 98%;
   text-align: center;
   line-height: 5;
   color: #234075;
   font-weight: bold;
+  height: auto;
+
+  ::ng-deep .mdc-button__label {
+    width: 100%;
+  }
+}
+
+.a-mat-button img:first-of-type {
+  display: block;
+}
+
+.a-mat-button img:last-of-type {
+  display: none;
 }
 
 .content-row {
@@ -180,7 +195,7 @@ a:not(.btn):focus {
   text-overflow: ellipsis;
 }
 
-@media(max-width: 1200px) {
+@media (max-width: 1200px) {
   mat-sidenav-content {
     width: 40% !important;
   }
@@ -190,7 +205,7 @@ a:not(.btn):focus {
   }
 }
 
-@media(max-width: 992px) {
+@media (max-width: 992px) {
   mat-sidenav {
     width: 20% !important;
     .col-md-9 {
@@ -204,11 +219,10 @@ a:not(.btn):focus {
   }
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   mat-sidenav {
     .col-md-3 {
       padding-left: 5%;
-      
     }
 
     .col-md-9 {

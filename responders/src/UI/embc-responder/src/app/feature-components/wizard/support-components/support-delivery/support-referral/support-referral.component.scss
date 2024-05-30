@@ -34,6 +34,15 @@
   width: 50%;
 }
 
+.supplier-list {
+  width: calc((100% / 12) * 8);
+}
+
+::ng-deep .supplier-list-autocomplete-control .mat-mdc-option .mdc-list-item__primary-text {
+  display: block;
+  width: 100%;
+}
+
 .reset-img {
   color: rgb(55, 171, 221);
   padding-right: 5px;
@@ -41,7 +50,6 @@
 }
 
 .search-button {
-  margin: 0.25em 0 0.25em 0;
   width: 100%;
 }
 
@@ -49,17 +57,19 @@
   padding-left: 5px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version. */
 ::ng-deep .mat-autocomplete-panel {
   min-width: 500px !important;
 }
 
 @media (max-width: 800px) {
+  /* TODO(mdc-migration): The following rule targets internal classes of autocomplete that may no longer apply for the MDC version. */
   ::ng-deep .mat-autocomplete-panel {
     min-width: 400px !important;
   }
 }
 
-@media (max-width: 965px){
+@media (max-width: 965px) {
   .col-md-4 {
     width: 100%;
   }
@@ -70,5 +80,9 @@
 
   .supplier-address {
     width: 40%;
+  }
+
+  .supplier-list {
+    width: 100%;
   }
 }

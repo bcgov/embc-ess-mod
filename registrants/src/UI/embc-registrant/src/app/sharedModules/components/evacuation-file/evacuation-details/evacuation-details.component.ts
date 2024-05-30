@@ -1,28 +1,36 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  AfterViewInit
-} from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileStatus, Support } from 'src/app/core/api/models';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass, AsyncPipe } from '@angular/common';
+import { MaskEvacuatedAddressPipe } from '../../../../core/pipe/maskEvacuatedAddress.pipe';
+import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
+import { ReviewComponent } from '../../../../feature-components/review/review.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    NgClass,
+    ReviewComponent,
+    ReferralDetailsComponent,
+    AsyncPipe,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
+  EvacuationFileStatus = EvacuationFileStatus;
   @Input() allExpandState = false;
-  previousUrl: string;
   evacuationFileTab: string;
   backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
@@ -33,6 +41,9 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   showActiveList = true;
   showInactiveList = true;
   displayStatus: string;
+  showSupports = false;
+  isActive = false;
+  isPending = false;
 
   constructor(
     public formCreationService: FormCreationService,
@@ -41,26 +52,21 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     public evacuationFileDataService: EvacuationFileDataService,
     private datePipe: DatePipe,
     private cd: ChangeDetectorRef
-  ) {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.previousUrl = event.url;
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (this.previousUrl?.includes('current')) {
+    if (this.router.url?.includes('current')) {
       this.evacuationFileTab = 'Current';
     } else {
       this.evacuationFileTab = 'Past';
     }
-
     if (this.evacuationFileDataService?.supports?.length > 0) {
-      this.referralData = this.splitReferralsByDate(
-        this.evacuationFileDataService?.supports
-      );
+      this.showSupports = true;
+      this.referralData = this.splitReferralsByDate(this.evacuationFileDataService?.supports);
     }
+    if (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active) this.isActive = true;
+    else if (this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending)
+      this.isPending = true;
   }
 
   ngAfterViewInit(): void {
@@ -69,10 +75,8 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   changeStatusColor(): string {
     if (
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Active ||
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Pending
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Active ||
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending
     ) {
       return '#26B378';
     } else {
@@ -81,19 +85,25 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   }
 
   goToCurrent(): void {
-    if (this.previousUrl.includes('current')) {
+    if (this.router.url.includes('current')) {
       this.router.navigate(['/verified-registration/dashboard/current']);
     } else {
       this.router.navigate(['/verified-registration/dashboard/past']);
     }
   }
 
+  gotoUpdateDetails() {
+    this.router.navigate([
+      '/verified-registration/needs-assessment',
+      this.evacuationFileDataService.essFileId,
+      'update'
+    ]);
+  }
+
   allowEdition(): boolean {
     if (
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Expired ||
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Pending
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Expired ||
+      this.evacuationFileDataService.evacuationFileStatus === EvacuationFileStatus.Pending
     ) {
       return true;
     } else {
@@ -115,15 +125,10 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   private splitReferralsByDate(referrals: Support[]): Map<string, Support[]> {
     //Sorting referrals by Issued On Asc
-    referrals.sort(
-      (a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
-    );
+    referrals.sort((a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf());
 
     //Grouping based on Issued on date
-    const groupedReferrals: Map<string, Support[]> = new Map<
-      string,
-      Support[]
-    >();
+    const groupedReferrals: Map<string, Support[]> = new Map<string, Support[]>();
     referrals.forEach((item) => {
       const date: Date = new Date(item.issuedOn);
       const displayedDate = this.datePipe.transform(date, 'dd-MMM-yyyy');

@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
@@ -50,10 +51,10 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Profile>> GetProfile()
+        public async Task<ActionResult<Profile>> GetProfile(CancellationToken ct)
         {
             var userId = currentUserId;
-            var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId));
+            var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId, ct));
             if (profile == null)
             {
                 //try get BCSC profile
@@ -69,10 +70,10 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>true if existing user, false if a new user</returns>
         [HttpGet("current/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> GetDoesUserExists()
+        public async Task<ActionResult<bool>> GetDoesUserExists(CancellationToken ct)
         {
             var userId = currentUserId;
-            var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
             if (profile != null)
             {
                 profile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
@@ -86,13 +87,12 @@ namespace EMBC.Registrants.API.Controllers
         /// <summary>
         /// Create or update the current user's profile
         /// </summary>
-        /// <param name="profile">The profile information</param>
         /// <returns>profile id</returns>
         [HttpPost("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Upsert(Profile profile)
+        public async Task<ActionResult<string>> Upsert(Profile profile, CancellationToken ct)
         {
             profile.Id = currentUserId;
             var mappedProfile = mapper.Map<RegistrantProfile>(profile);
@@ -101,7 +101,7 @@ namespace EMBC.Registrants.API.Controllers
             mappedProfile.VerifiedUser = true;
             mappedProfile.HomeAddress = mapper.Map<ESS.Shared.Contracts.Events.Address>(GetUserFromPrincipal()?.PrimaryAddress);
 
-            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile });
+            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile }, ct);
             return Ok(profileId);
         }
 
@@ -112,11 +112,11 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current/conflicts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
+        public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts(CancellationToken ct)
         {
             var userId = currentUserId;
 
-            var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId, ct);
             if (profile == null) return NotFound(userId);
 
             var userProfile = GetUserFromPrincipal();
@@ -136,19 +136,19 @@ namespace EMBC.Registrants.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        public async Task<IActionResult> Invite(InviteRequest request)
+        public async Task<IActionResult> Invite(InviteRequest request, CancellationToken ct)
         {
             var file = (await messagingClient.Send(new EvacuationFilesQuery { FileId = request.FileId })).Items.SingleOrDefault();
             if (file == null) return NotFound(request.FileId);
-            await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email });
+            await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email }, ct);
             return Ok();
         }
 
         [HttpPost("current/join")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> ProcessInvite(InviteToken token)
+        public async Task<ActionResult<bool>> ProcessInvite(InviteToken token, CancellationToken ct)
         {
-            return Ok(await profileInviteService.ProcessInvite(token.Token, currentUserId));
+            return Ok(await profileInviteService.ProcessInvite(token.Token, currentUserId, ct));
         }
     }
 

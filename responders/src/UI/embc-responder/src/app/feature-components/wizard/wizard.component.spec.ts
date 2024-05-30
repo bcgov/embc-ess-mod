@@ -1,7 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockWizardService } from 'src/app/unit-tests/mockWizard.service';
 
 import { WizardComponent } from './wizard.component';
@@ -15,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 describe('WizardComponent-Test for New Registration', () => {
   let component: WizardComponent;
@@ -27,22 +27,12 @@ describe('WizardComponent-Test for New Registration', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [WizardComponent],
       imports: [
         MatDialogModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: 'ess-wizard/evacuee-profile',
-            component: StepEvacueeProfileComponent
-          },
-          {
-            path: 'ess-wizard/ess-file',
-            component: StepEssFileComponent
-          }
-        ]),
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        WizardComponent
       ],
       providers: [
         WizardComponent,
@@ -53,7 +43,17 @@ describe('WizardComponent-Test for New Registration', () => {
           provide: WizardService,
           useClass: MockWizardService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([
+          {
+            path: 'ess-wizard/evacuee-profile',
+            component: StepEvacueeProfileComponent
+          },
+          {
+            path: 'ess-wizard/ess-file',
+            component: StepEssFileComponent
+          }
+        ])
       ]
     }).compileComponents();
   }));
@@ -91,7 +91,9 @@ describe('WizardComponent-Test for New Registration', () => {
     spyOn(router, 'navigate').and.stub();
     component.sideNavMenu = wizardDataService.editProfileMenu;
     fixture.detectChanges();
-    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], { state: { step: 'STEP 1', title: 'Edit Evacuee Profile' } });
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], {
+      state: { step: 'STEP 1', title: 'Edit Evacuee Profile' }
+    });
   }));
 
   it('should load NEW-ESS-FILE menu', inject([Router], (router: Router) => {
@@ -138,7 +140,9 @@ describe('WizardComponent-Test for New Registration', () => {
     wizardService.menuItems = wizardDataService.newRegistrationMenu;
     fixture.detectChanges();
     component.ngOnInit();
-    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], { state: { step: 'STEP 1', title: 'Create Evacuee Profile' } });
+    expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile'], {
+      state: { step: 'STEP 1', title: 'Create Evacuee Profile' }
+    });
   }));
 
   it('should not allow navigation to STEP-2 if STEP-1 is incomplete', inject([Router], (router: Router) => {

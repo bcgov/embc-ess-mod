@@ -1,33 +1,33 @@
 <mat-card>
-  <form [formGroup]="parentForm">
-    <div class="row line-space">
-      <div class="col-md-4">
-        <p>Answer Hint:</p>
+  <mat-card-content>
+    <form [formGroup]="parentForm">
+      <div class="row line-space">
+        <div class="col-md-4">
+          <p>Answer Hint:</p>
+        </div>
+        <div class="col-md-8">
+          <p>
+            <b> {{ phrase?.securityPhrase }} </b>
+          </p>
+        </div>
       </div>
-      <div class="col-md-8">
-        <p>
-          <b> {{ phrase?.securityPhrase }} </b>
-        </p>
-      </div>
-    </div>
 
-    <div class="row line-space">
-      <div class="col-md-4">
-        <p>Answer:</p>
-      </div>
-      <div class="col-md-6">
-        <mat-form-field appearance="outline">
-          <input [formControlName]="'phraseAnswer'" matInput type="text" />
-          <mat-error
-            *ngIf="
+      <div class="row line-space">
+        <div class="col-md-4">
+          <p>Answer:</p>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="outline">
+            <input [formControlName]="'phraseAnswer'" matInput type="text" />
+            @if (
               securityPhraseFormControl.phraseAnswer.invalid &&
               securityPhraseFormControl.phraseAnswer.hasError('whitespaceError')
-            "
-          >
-            Security Phrase cannot be blank</mat-error
-          >
-        </mat-form-field>
+            ) {
+              <mat-error> Security Word cannot be blank</mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </mat-card-content>
 </mat-card>

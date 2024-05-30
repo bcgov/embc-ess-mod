@@ -34,6 +34,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))
+                .ForMember(d => d.IsSelfServe, opts => opts.MapFrom(s => s.era_selfservesupport))
                 ;
 
             Func<SupportDelivery, SupportMethod?> resolveSupportDelieveryType = sd => sd switch
@@ -60,6 +61,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ForSourceMember(s => s.IssuedOn, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Flags, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.TaskId, opts => opts.DoNotValidate())
+
+                .ForMember(s => s.era_selfservesupport, opts => opts.MapFrom(s => s.IsSelfServe))
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))

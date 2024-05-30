@@ -7,31 +7,27 @@
   <br />
   <div class="row">
     <div class="col-md-8">
-      <div
-        *ngIf="essTask?.status === 'Active' || essTask?.status === 'Expired'"
-      >
-        <ng-container *ngTemplateOutlet="activeTask"></ng-container>
-      </div>
-      <div *ngIf="essTask?.status === 'Invalid'">
-        <ng-container *ngTemplateOutlet="invalidTask"></ng-container>
-      </div>
+      @if (essTask?.status === 'Active' || essTask?.status === 'Expired') {
+        <div>
+          <ng-container *ngTemplateOutlet="activeTask"></ng-container>
+        </div>
+      }
+      @if (essTask?.status === 'Invalid') {
+        <div>
+          <ng-container *ngTemplateOutlet="invalidTask"></ng-container>
+        </div>
+      }
     </div>
 
     <div class="col-md-3">
       <mat-card class="tips-card">
-        <div>
-          <img
-            class="img-align"
-            src="/assets/images/tips-lightbulb.svg"
-            height="63"
-            width="62"
-          />
-          <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
-        </div>
-        <p class="tips-info">
-          If you have not been provided with a task number, please contact your
-          supervisor.
-        </p>
+        <mat-card-content>
+          <div>
+            <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+            <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
+          </div>
+          <p class="tips-info">If you have not been provided with a task number, please contact your supervisor.</p>
+        </mat-card-content>
       </mat-card>
     </div>
   </div>
@@ -40,89 +36,69 @@
 
 <ng-template #activeTask>
   <mat-card>
-    <p class="heading">Sign in to a Task Number</p>
-    <p>
-      Please confirm that the task number you are about to sign in under is
-      <b>correct</b> by checking it against the support community listed below.
-    </p>
+    <mat-card-content>
+      <p class="heading">Sign in to a Task Number</p>
+      <p>
+        Please confirm that the task number you are about to sign in under is
+        <b>correct</b> by checking it against the support community listed below.
+      </p>
 
-    <div class="row">
-      <div class="col-md-2 task-details">Task Number:</div>
-      <div class="col-md-6 task-details">
-        <b>{{ essTask.id }} - {{ essTask.communityName }}</b>
+      <div class="row">
+        <div class="col-md-2 task-details">Task Number:</div>
+        <div class="col-md-6 task-details">
+          <b>{{ essTask.id }} - {{ essTask.communityName }}</b>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-2 task-details">Task Status:</div>
-      <div class="col-md-4 status-active" *ngIf="essTask?.status === 'Active'">
-        {{ essTask.status }}
+      <div class="row">
+        <div class="col-md-2 task-details">Task Status:</div>
+        @if (essTask?.status === 'Active') {
+          <div class="col-md-4 status-active">
+            {{ essTask.status }}
+          </div>
+        }
+        @if (essTask?.status === 'Expired') {
+          <div class="col-md-4 status-expired">
+            {{ essTask.status }}
+          </div>
+        }
       </div>
-      <div
-        class="col-md-4 status-expired"
-        *ngIf="essTask?.status === 'Expired'"
-      >
-        {{ essTask.status }}
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <button class="button-p submit" type="button" mat-button [disabled]="isSubmitted" (click)="signInTask()">
+            Sign in to Task
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button mat-button type="button" class="link-button" (click)="searchTask()">Incorrect Task?</button>
+        </div>
       </div>
-    </div>
-    <br />
-    <div class="row">
-      <div class="col-md-4">
-        <button
-          class="button-p submit"
-          type="button"
-          mat-button
-          [disabled]="isSubmitted"
-          (click)="signInTask()"
-        >
-          Sign in to Task
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
-      </div>
-      <div class="col-md-4">
-        <button
-          mat-button
-          type="button"
-          class="link-button"
-          (click)="searchTask()"
-        >
-          Incorrect Task?
-        </button>
-      </div>
-    </div>
+    </mat-card-content>
   </mat-card>
 </ng-template>
 <ng-template #invalidTask>
   <mat-card>
-    <p class="heading">Sign in to a Task Number</p>
-    <p>The task number entered does not exist within the ERA Tool.</p>
-    <p>
-      Please contact your supervisor or Local Government if you believe this is
-      an error.
-    </p>
+    <mat-card-content>
+      <p class="heading">Sign in to a Task Number</p>
+      <p>The task number entered does not exist within the ERA Tool.</p>
+      <p>Please contact your supervisor or Local Government if you believe this is an error.</p>
 
-    <div class="row">
-      <div class="col-md-12 task-details">
-        <b>{{ essTask.id }} -</b> Task Number not found
+      <div class="row">
+        <div class="col-md-12 task-details">
+          <b>{{ essTask.id }} -</b> Task Number not found
+        </div>
       </div>
-    </div>
 
-    <br />
-    <div class="row">
-      <div class="col-md-4">
-        <button
-          class="button-p submit"
-          type="button"
-          mat-button
-          (click)="searchTask()"
-        >
-          Go Back & Search Again
-        </button>
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <button class="button-p submit" type="button" mat-button (click)="searchTask()">
+            Go Back & Search Again
+          </button>
+        </div>
       </div>
-    </div>
+    </mat-card-content>
   </mat-card>
 </ng-template>

@@ -11,30 +11,13 @@
         'file-complete': essFile?.status === 'Completed',
         'file-expired': essFile?.status === 'Expired'
       }"
-      >ESS File #
-      <span class="bold">{{ essFile?.manualFileId || essFile?.id }}</span></span
+      >ESS File # <span class="bold">{{ essFile?.manualFileId || essFile?.id }}</span></span
     >
     <span class="file-heading"
-      ><img
-        *ngIf="essFile?.status === 'Pending'"
-        src="/assets/images/pending-flag.svg"
-        height="40"
-        width="33" />
-      <img
-        *ngIf="essFile?.status === 'Active'"
-        src="/assets/images/active-flag.svg"
-        height="40"
-        width="33" />
-      <img
-        *ngIf="essFile?.status === 'Completed'"
-        src="/assets/images/complete-flag.svg"
-        height="40"
-        width="33" />
-      <img
-        *ngIf="essFile?.status === 'Expired'"
-        src="/assets/images/expired-flag.svg"
-        height="40"
-        width="33"
+      ><img *ngIf="essFile?.status === 'Pending'" src="/assets/images/pending-flag.svg" height="40" width="33" />
+      <img *ngIf="essFile?.status === 'Active'" src="/assets/images/active-flag.svg" height="40" width="33" />
+      <img *ngIf="essFile?.status === 'Completed'" src="/assets/images/complete-flag.svg" height="40" width="33" />
+      <img *ngIf="essFile?.status === 'Expired'" src="/assets/images/expired-flag.svg" height="40" width="33"
     /></span>
   </div>
 </div>
@@ -65,27 +48,8 @@
 
     <div class="row">
       <div class="col-md-12">
-        <span class="field-label">Restriction Status: </span>
-        <span
-          [ngClass]="{
-            'not-restricted-field': !essFile?.isRestricted,
-            'restricted-field': essFile?.isRestricted
-          }"
-          >{{ essFile?.isRestricted ? 'Restricted' : 'Unrestricted' }}</span
-        >
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
         <span class="field-label">Main Applicant:</span>
-        <span
-          class="bold"
-          *ngIf="
-            essFile?.primaryRegistrantLastName ||
-            essFile?.primaryRegistrantFirstName
-          "
-        >
+        <span class="bold" *ngIf="essFile?.primaryRegistrantLastName || essFile?.primaryRegistrantFirstName">
           {{ essFile?.primaryRegistrantLastName | uppercase }},
           {{ essFile?.primaryRegistrantFirstName | titlecase }}</span
         >
@@ -114,9 +78,7 @@
       <div class="col-md-12">
         <div *ngIf="essFile?.task?.taskNumber; else noTask">
           <span class="field-label">Task Start Date: </span>
-          <span *ngIf="essFile?.task" class="bold">{{
-            essFile?.task?.from | date: 'dd-MMM-yyyy'
-          }}</span>
+          <span *ngIf="essFile?.task" class="bold">{{ essFile?.task?.from | date: 'dd-MMM-yyyy' }}</span>
         </div>
         <ng-template #noTask>
           <span class="field-label">Task Start Date: </span>
@@ -160,9 +122,7 @@
         <span class="bold" *ngIf="essFile?.evacuatedFromAddress?.addressLine1">
           {{ essFile?.evacuatedFromAddress?.addressLine1 }}</span
         >
-        <span
-          *ngIf="essFile?.evacuatedFromAddress?.addressLine2 !== null"
-          class="bold"
+        <span *ngIf="essFile?.evacuatedFromAddress?.addressLine2 !== null" class="bold"
           >, {{ essFile?.evacuatedFromAddress?.addressLine2 }}</span
         >
       </div>
@@ -173,9 +133,7 @@
         <span class="bold">
           {{ communityName(essFile?.evacuatedFromAddress) }}
         </span>
-        <span
-          *ngIf="essFile?.evacuatedFromAddress?.postalCode !== null"
-          class="bold"
+        <span *ngIf="essFile?.evacuatedFromAddress?.postalCode !== null" class="bold"
           >, {{ essFile?.evacuatedFromAddress?.postalCode }}</span
         >
       </div>
@@ -192,27 +150,15 @@
         <span
           class="bold"
           [ngClass]="{
-            'file-complete':
-              appBaseService?.etransferProperties
-                ?.isRegistrantEtransferEligible,
-            ineligible:
-              !appBaseService?.etransferProperties
-                ?.isRegistrantEtransferEligible
+            'file-complete': appBaseService?.etransferProperties?.isRegistrantEtransferEligible,
+            ineligible: !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
           }"
-          >{{
-            appBaseService?.etransferProperties?.isRegistrantEtransferEligible
-              ? 'Eligible'
-              : 'Ineligible'
-          }}</span
+          >{{ appBaseService?.etransferProperties?.isRegistrantEtransferEligible ? 'Eligible' : 'Ineligible' }}</span
         >
       </div>
     </div>
 
-    <div
-      *ngIf="
-        !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
-      "
-    >
+    <div *ngIf="!appBaseService?.etransferProperties?.isRegistrantEtransferEligible">
       <ng-container *ngIf="isMinor; else bcscCheck">
         <div class="row">
           <div class="col-md-12 bold">
@@ -228,8 +174,7 @@
             <div class="col-md-12 bold">
               {{ eligibilityLastName | uppercase }},
               {{ eligibilityFirstName | titlecase }}
-              must log in to their profile using the BC Services Card app to be
-              eligible.
+              must log in to their profile using the BC Services Card app to be eligible.
             </div>
           </div>
         </ng-container>
@@ -240,8 +185,7 @@
             <div class="col-md-12 bold">
               {{ eligibilityLastName | uppercase }},
               {{ eligibilityFirstName | titlecase }}
-              does not have a B.C. postal code and is not eligible for
-              e-Transfer
+              does not have a B.C. postal code and is not eligible for e-Transfer
             </div>
           </div>
         </ng-container>
@@ -249,17 +193,12 @@
 
       <ng-template #unavailable>
         <div class="row">
-          <div class="col-md-12 bold">
-            Interac e-Transfer is not currently available.
-          </div>
+          <div class="col-md-12 bold">Interac e-Transfer is not currently available.</div>
         </div>
       </ng-template>
     </div>
 
-    <div
-      *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible"
-      class="row"
-    >
+    <div *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible" class="row">
       <div class="col-md-12 bold">
         {{ eligibilityLastName | uppercase }},
         {{ eligibilityFirstName | titlecase }}
@@ -275,11 +214,7 @@
       <span id="file-banner">{{ displayBanner?.content }}</span>
     </div>
     <div *ngIf="displayBanner?.buttonText !== undefined" class="col-md-3">
-      <button
-        class="button-p ess-file-button"
-        (click)="openWizard()"
-        mat-button
-      >
+      <button class="button-p ess-file-button" (click)="openWizard()" mat-button>
         {{ displayBanner?.buttonText }}
       </button>
     </div>
@@ -331,18 +266,8 @@
           >
             <div class="row">
               <div class="col-md-3 img-align-col">
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/locked-ess-file.svg"
-                  width="32"
-                  height="32"
-                />
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/ess-file.svg"
-                  width="32"
-                  height="32"
-                />
+                <img class="img-align" src="/assets/images/wizard/locked-ess-file.svg" width="32" height="32" />
+                <img class="img-align" src="/assets/images/wizard/ess-file.svg" width="32" height="32" />
               </div>
               <div class="col-md-9 menu-title">ESS File Details</div>
             </div>
@@ -356,18 +281,8 @@
           >
             <div class="row">
               <div class="col-md-3 img-align-col">
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/locked-supports.svg"
-                  width="32"
-                  height="32"
-                />
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/supports.svg"
-                  width="32"
-                  height="32"
-                />
+                <img class="img-align" src="/assets/images/wizard/locked-supports.svg" width="32" height="32" />
+                <img class="img-align" src="/assets/images/wizard/supports.svg" width="32" height="32" />
               </div>
               <div class="col-md-9 menu-title">Supports</div>
             </div>
@@ -381,22 +296,10 @@
           >
             <div class="row">
               <div class="col-md-3 img-align-col">
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/locked-notes.svg"
-                  width="42"
-                  height="42"
-                />
-                <img
-                  class="img-align"
-                  src="/assets/images/wizard/notes.svg"
-                  width="42"
-                  height="42"
-                />
+                <img class="img-align" src="/assets/images/wizard/locked-notes.svg" width="42" height="42" />
+                <img class="img-align" src="/assets/images/wizard/notes.svg" width="42" height="42" />
               </div>
-              <div class="col-md-9 menu-title">
-                Case Notes ({{ notesList?.length }})
-              </div>
+              <div class="col-md-9 menu-title">Case Notes ({{ notesList?.length }})</div>
             </div>
           </a>
         </mat-sidenav>

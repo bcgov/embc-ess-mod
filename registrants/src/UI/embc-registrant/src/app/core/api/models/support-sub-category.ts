@@ -2,12 +2,12 @@
 /* eslint-disable */
 export enum SupportSubCategory {
   None = 'None',
-  Lodging_Hotel = 'Lodging_Hotel',
-  Lodging_Billeting = 'Lodging_Billeting',
-  Lodging_Group = 'Lodging_Group',
-  Lodging_Allowance = 'Lodging_Allowance',
-  Food_Groceries = 'Food_Groceries',
-  Food_Restaurant = 'Food_Restaurant',
-  Transportation_Taxi = 'Transportation_Taxi',
-  Transportation_Other = 'Transportation_Other'
+  LodgingHotel = 'Lodging_Hotel',
+  LodgingBilleting = 'Lodging_Billeting',
+  LodgingGroup = 'Lodging_Group',
+  LodgingAllowance = 'Lodging_Allowance',
+  FoodGroceries = 'Food_Groceries',
+  FoodRestaurant = 'Food_Restaurant',
+  TransportationTaxi = 'Transportation_Taxi',
+  TransportationOther = 'Transportation_Other'
 }

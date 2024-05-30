@@ -1,182 +1,147 @@
 <div class="row heading-container container-frame">
-  <div class="col-md-12" *ngIf="!incorrectScreen">
-    <span class="page-heading">Please Answer Your Security Questions</span>
-  </div>
-  <div class="col-md-12" *ngIf="incorrectScreen">
-    <span class="page-heading">Unable to Verify Security Questions</span>
-  </div>
+  @if (!incorrectScreen) {
+    <div class="col-md-12">
+      <span class="page-heading">Please Answer Your Security Questions</span>
+    </div>
+  }
+  @if (incorrectScreen) {
+    <div class="col-md-12">
+      <span class="page-heading">Unable to Verify Security Questions</span>
+    </div>
+  }
 </div>
 <br />
 <div class="row">
-  <ng-container *ngIf="defaultScreen && !incorrectScreen">
+  @if (defaultScreen && !incorrectScreen) {
     <div class="col-md-12">
       <mat-card>
-        <p class="heading">
-          Please ask the evacuee to answer their security questions.
-        </p>
-        <p class="fp-space">
-          The answers are not case sensitive and do not include any special
-          characters.
-        </p>
-        <form [formGroup]="securityQuestionsForm" *ngIf="securityQuestions">
-          <div class="row row-space">
+        <mat-card-content>
+          <p class="heading">Please ask the evacuee to answer their security questions.</p>
+          <p class="fp-space">The answers are not case sensitive and do not include any special characters.</p>
+          @if (securityQuestions) {
+            <form [formGroup]="securityQuestionsForm">
+              <div class="row row-space">
+                <div class="col-md-8">
+                  <app-security-question-card
+                    [question]="securityQuestions[0]"
+                    [parentForm]="securityQuestionsForm"
+                    [index]="1"
+                  >
+                  </app-security-question-card>
+                </div>
+              </div>
+              <div class="row row-space">
+                <div class="col-md-8">
+                  <app-security-question-card
+                    [question]="securityQuestions[1]"
+                    [parentForm]="securityQuestionsForm"
+                    [index]="2"
+                  >
+                  </app-security-question-card>
+                </div>
+              </div>
+            </form>
+          }
+          @if (correctAnswerFlag) {
+            <div>
+              <img width="20px" height="20px" src="/assets/images/status/complete.svg" />
+              <span class="correct"> Correct!</span>
+            </div>
+          }
+          <div class="row double-space">
             <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[0]"
-                [parentForm]="securityQuestionsForm"
-                [index]="1"
+              <button class="button-s submit button-space" type="button" mat-button (click)="back()">
+                Back to Evacuee Search
+              </button>
+              <button
+                class="button-p submit"
+                type="button"
+                mat-button
+                (click)="next()"
+                [disabled]="showLoader || !securityQuestionsForm.valid"
               >
-              </app-security-question-card>
+                Continue
+                <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+              </button>
             </div>
           </div>
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[1]"
-                [parentForm]="securityQuestionsForm"
-                [index]="2"
-              >
-              </app-security-question-card>
-            </div>
-          </div>
-        </form>
-
-        <div *ngIf="correctAnswerFlag">
-          <img
-            width="20px"
-            height="20px"
-            src="/assets/images/status/complete.svg"
-          />
-          <span class="correct"> Correct!</span>
-        </div>
-        <div class="row double-space">
-          <div class="col-md-8">
-            <button
-              class="button-s submit button-space"
-              type="button"
-              mat-button
-              (click)="back()"
-            >
-              Back
-            </button>
-            <button
-              class="button-p submit"
-              type="button"
-              mat-button
-              (click)="next()"
-              [disabled]="showLoader || !securityQuestionsForm.valid"
-            >
-              Continue
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-              ></app-loader>
-            </button>
-          </div>
-        </div>
+        </mat-card-content>
       </mat-card>
     </div>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="!defaultScreen && !incorrectScreen">
+  @if (!defaultScreen && !incorrectScreen) {
     <div class="col-md-12">
       <mat-card>
-        <p class="heading">
-          We're having trouble verifying your identity. Please answer an
-          additional security question.
-        </p>
-        <p class="fp-space">
-          The answers are not case sensitive and do not include any special
-          characters.
-        </p>
-        <form [formGroup]="securityQuestionsForm">
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[2]"
-                [parentForm]="securityQuestionsForm"
-                [index]="3"
-              >
-              </app-security-question-card>
-            </div>
-          </div>
-        </form>
-        <div *ngIf="correctAnswerFlag">
-          <img
-            width="20px"
-            height="20px"
-            src="/assets/images/status/complete.svg"
-          />
-          <span class="correct"> Correct!</span>
-        </div>
-        <div class="row double-space">
-          <div class="col-md-8">
-            <button
-              class="button-s submit button-space"
-              type="button"
-              mat-button
-              (click)="back()"
-            >
-              Back
-            </button>
-            <button
-              class="button-p submit"
-              type="button"
-              mat-button
-              (click)="next()"
-              [disabled]="showLoader || !securityQuestionsForm.valid"
-            >
-              Continue
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-              ></app-loader>
-            </button>
-          </div>
-        </div>
-      </mat-card>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="incorrectScreen">
-    <div class="col-md-12">
-      <mat-card>
-        <div class="text">
+        <mat-card-content>
           <p class="heading">
-            The evacuee was unable to answer the security questions correctly.
+            We're having trouble verifying your identity. Please answer an additional security question.
           </p>
-          <p class="paragraph-space">
-            If the evacuee also has an <b>ESS File</b>, go back to the search
-            results page and try to access their ESS File.
-          </p>
-          <p>
-            Please start a new Evacuee Registration if you cannot access the
-            evacuee's ESS File or Profile.
-          </p>
-        </div>
-        <div class="row double-space">
-          <div class="col-md-8">
-            <button
-              class="button-s submit button-space"
-              type="button"
-              mat-button
-              (click)="back()"
-            >
-              Back
-            </button>
-            <button
-              class="button-p submit"
-              type="button"
-              mat-button
-              (click)="goToEvacRegistration()"
-            >
-              New Evacuee Registration
-            </button>
+          <p class="fp-space">The answers are not case sensitive and do not include any special characters.</p>
+          <form [formGroup]="securityQuestionsForm">
+            <div class="row row-space">
+              <div class="col-md-8">
+                <app-security-question-card
+                  [question]="securityQuestions[2]"
+                  [parentForm]="securityQuestionsForm"
+                  [index]="3"
+                >
+                </app-security-question-card>
+              </div>
+            </div>
+          </form>
+          @if (correctAnswerFlag) {
+            <div>
+              <img width="20px" height="20px" src="/assets/images/status/complete.svg" />
+              <span class="correct"> Correct!</span>
+            </div>
+          }
+          <div class="row double-space">
+            <div class="col-md-8">
+              <button class="button-s submit button-space" type="button" mat-button (click)="back()">
+                Back to Evacuee Search
+              </button>
+              <button
+                class="button-p submit"
+                type="button"
+                mat-button
+                (click)="next()"
+                [disabled]="showLoader || !securityQuestionsForm.valid"
+              >
+                Continue
+                <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+              </button>
+            </div>
           </div>
-        </div>
+        </mat-card-content>
       </mat-card>
     </div>
-  </ng-container>
+  }
+
+  @if (incorrectScreen) {
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <div class="text">
+            <p class="heading">The evacuee was unable to answer the security questions correctly.</p>
+            <p class="paragraph-space">
+              If the evacuee also has an <b>ESS File</b>, go back to the search results page and try to access their ESS
+              File.
+            </p>
+            <p>Please start a new Evacuee Registration if you cannot access the evacuee's ESS File or Profile.</p>
+          </div>
+          <div class="row double-space">
+            <div class="col-md-8">
+              <button class="button-s submit button-space" type="button" mat-button (click)="back()">
+                Back To Evacuee Search
+              </button>
+              <button class="button-p submit" type="button" mat-button (click)="goToEvacRegistration()">
+                New Evacuee Registration
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
 </div>

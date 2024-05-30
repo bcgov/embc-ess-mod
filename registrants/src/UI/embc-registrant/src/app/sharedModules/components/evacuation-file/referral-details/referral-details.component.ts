@@ -1,19 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewEncapsulation,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter
-} from '@angular/core';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { Component, OnInit, Input, ViewEncapsulation, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
   LodgingAllowanceSupport,
   LodgingBilletingSupport,
@@ -23,6 +9,10 @@ import {
 import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
 import { LocationService } from 'src/app/core/services/location.service';
 import { SupportsService } from 'src/app/core/services/supports.service';
+import { MaskSupplierAddressPipe } from '../../../../core/pipe/maskSupplierAddress.pipe';
+import { NgClass, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-referral-details',
@@ -32,13 +22,12 @@ import { SupportsService } from 'src/app/core/services/supports.service';
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatExpansionModule, MatTableModule, NgClass, TitleCasePipe, DatePipe, MaskSupplierAddressPipe]
 })
 export class ReferralDetailsComponent implements OnInit {
   @Input() referralDataSource: Support[];
@@ -69,15 +58,15 @@ export class ReferralDetailsComponent implements OnInit {
     return support as LodgingGroupSupport;
   }
 
-     /**
+  /**
    * Returns the current support as a ShelterAllowanceReferral
    *
    * @param support the support to cast as ShelterAllowanceReferral
    * @returns a ShelterAllowanceReferral object
    */
-     getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
-      return support as LodgingAllowanceSupport;
-    }
+  getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
+    return support as LodgingAllowanceSupport;
+  }
 
   /**
    * Returns the full name of the igiven householmember ID
@@ -86,34 +75,26 @@ export class ReferralDetailsComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
-    const lastName = this.needsAssessmentService.householdMembers.find(
-      (member) => member.id === memberId
-    ).details?.lastName;
-    const firstName = this.needsAssessmentService.householdMembers.find(
-      (member) => member.id === memberId
-    ).details?.firstName;
+    const lastName = this.needsAssessmentService.householdMembers.find((member) => member.id === memberId).details
+      ?.lastName;
+    const firstName = this.needsAssessmentService.householdMembers.find((member) => member.id === memberId).details
+      ?.firstName;
 
     return firstName + ', ' + lastName;
   }
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.locationService.supportCategory.find(
-        (value) => value.value === element?.category
-      );
+      const category = this.locationService.supportCategory.find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.locationService.supportSubCategory.find(
-        (value) => value.value === element?.subCategory
-      );
+      const subCategory = this.locationService.supportSubCategory.find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
 
   getStatusTextToDisplay(enumToText: string): string {
-    return this.supportService.supportStatus.find(
-      (statusValue) => statusValue.value === enumToText
-    ).description;
+    return this.supportService.supportStatus.find((statusValue) => statusValue.value === enumToText).description;
   }
 
   updatePanelState(stateUpdate: boolean) {

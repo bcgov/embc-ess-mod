@@ -1,6 +1,6 @@
 <div class="row justify-content-between">
   <div class="col-md-10">
-    <h1 class="mat-title" mat-dialog-title>{{ title }}</h1>
+    <h1 class="mat-headline-6" mat-dialog-title>{{ title }}</h1>
   </div>
   <div class="col-md-2">
     <button class="close-image" aria-label="Close" (click)="close()">
@@ -12,16 +12,10 @@
 
 <div mat-dialog-content>
   <div class="row">
-    <div
-      id="dialog-content"
-      class="col-md-12"
-      [innerHTML]="content?.text"
-    ></div>
+    <div id="dialog-content" class="col-md-12" [innerHTML]="content?.text"></div>
   </div>
 </div>
 
 <div mat-dialog-actions class="pt-3">
-  <button type="button" class="btn close-button" (click)="close()">
-    Close
-  </button>
+  <button type="button" class="btn close-button" (click)="close()">Close</button>
 </div>

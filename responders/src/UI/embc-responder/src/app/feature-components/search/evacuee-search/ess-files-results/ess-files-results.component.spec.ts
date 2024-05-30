@@ -8,7 +8,6 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { EssFilesResultsComponent } from './ess-files-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,11 +20,7 @@ import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-s
 import { MockEvacueeSearchResultsService } from 'src/app/unit-tests/mockEvacueeSearchResults.service';
 import { MockEssFileSecurityPhraseService } from 'src/app/unit-tests/mockEssFileSecurityPhrase.service';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
-import {
-  CommunityType,
-  EvacuationFileStatus,
-  HouseholdMemberType
-} from 'src/app/core/api/models';
+import { CommunityType, EvacuationFileStatus, HouseholdMemberType } from 'src/app/core/api/models';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { EssfileDashboardComponent } from '../../essfile-dashboard/essfile-dashboard.component';
@@ -33,6 +28,7 @@ import { EssfileSecurityPhraseComponent } from '../../essfile-security-phrase/es
 import { computeInterfaceToken } from 'src/app/app.module';
 import { EssFilesResultsService } from './ess-files-results.service';
 import { MockEssFilesResultsService } from 'src/app/unit-tests/mockEssFileResults.service';
+import { provideRouter } from '@angular/router';
 
 describe('EssFilesResultsComponent', () => {
   let component: EssFilesResultsComponent;
@@ -129,14 +125,7 @@ describe('EssFilesResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EssFilesResultsComponent],
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ],
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, EssFilesResultsComponent],
       providers: [
         EssFilesResultsComponent,
         {
@@ -155,7 +144,8 @@ describe('EssFilesResultsComponent', () => {
         {
           provide: EssFilesResultsService,
           useClass: MockEssFilesResultsService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -174,7 +164,7 @@ describe('EssFilesResultsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not be able to open any ess file if paper based file exists', fakeAsync(() => {
+  it('should  open access gate dialog ', fakeAsync(() => {
     evacueeSessionService.isPaperBased = true;
     evacueeSearchService.evacueeSearchContext = {
       hasShownIdentification: true,
@@ -194,98 +184,8 @@ describe('EssFilesResultsComponent', () => {
 
     tick();
     fixture.detectChanges();
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-access-reason-gate-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeTruthy();
   }));
-
-  it('should navigate to ess file dashboard when selected file is paper based', fakeAsync(
-    inject([Router], (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = true;
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: true,
-        evacueeSearchParameters: {
-          firstName: 'Evac',
-          lastName: 'Five',
-          dateOfBirth: '12/12/2000',
-          paperFileNumber: 'T2000'
-        }
-      };
-
-      fixture.detectChanges();
-      component.openESSFile(mockPaperEssFileResult);
-
-      flush();
-      flushMicrotasks();
-      discardPeriodicTasks();
-
-      tick();
-      fixture.detectChanges();
-
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/essfile-dashboard'
-      ]);
-    })
-  ));
-
-  it('should navigate to security phrase if user has not shown identification and is on digital flow', fakeAsync(
-    inject([Router], (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = false;
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: false,
-        evacueeSearchParameters: {
-          firstName: 'Anne',
-          lastName: 'Lee',
-          dateOfBirth: '09/09/1999'
-        }
-      };
-
-      fixture.detectChanges();
-      component.openESSFile(mockDigitalEssFileResult);
-
-      flush();
-      flushMicrotasks();
-      discardPeriodicTasks();
-
-      tick();
-      fixture.detectChanges();
-
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-phrase'
-      ]);
-    })
-  ));
-
-  it('should navigate to ess file dashboard if user has shown identification and  is on digital flow', fakeAsync(
-    inject([Router], (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = false;
-      evacueeSearchService.evacueeSearchContext = {
-        hasShownIdentification: true,
-        evacueeSearchParameters: {
-          firstName: 'Anne',
-          lastName: 'Lee',
-          dateOfBirth: '09/09/1999'
-        }
-      };
-
-      fixture.detectChanges();
-      component.openESSFile(mockDigitalEssFileResult);
-
-      flush();
-      flushMicrotasks();
-      discardPeriodicTasks();
-
-      tick();
-      fixture.detectChanges();
-
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/essfile-dashboard'
-      ]);
-    })
-  ));
 });

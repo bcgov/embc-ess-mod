@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: promote-image-task
+spec:
+  params:
+    - name: imageName
+      type: string
+    - name: fromTag
+      type: string
+    - name: toTag
+      type: string
+    - name: referencePolicy
+      type: string
+      default: source
+  steps:
+    - name: backup
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+      script: |
+        old=$(oc get imagestream $(params.imageName) -o jsonpath='{.status.tags[?(@.tag=="$(params.toTag)")].items[0].image}')
+        new=$(oc get imagestream $(params.imageName) -o jsonpath='{.status.tags[?(@.tag=="$(params.fromTag)")].items[0].image}')
+        echo new image: $new
+        echo old image: $old
+        if [ ! -z "$old" -a "$new" != "$old" ];          
+        then
+          oc tag $(params.imageName):$(params.toTag) $(params.imageName):$(params.toTag)-backup --reference-policy=$(params.referencePolicy)
+        fi
+    - name: promote
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+      script: |
+        oc tag $(params.imageName):$(params.fromTag) $(params.imageName):$(params.toTag) --reference-policy=$(params.referencePolicy)

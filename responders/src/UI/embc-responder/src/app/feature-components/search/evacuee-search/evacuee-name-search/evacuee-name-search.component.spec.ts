@@ -11,7 +11,6 @@ import {
 } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
@@ -25,6 +24,7 @@ import { EvacueeSearchComponent } from '../evacuee-search.component';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 import { EvacueeNameSearchComponent } from './evacuee-name-search.component';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeNameSearchComponent', () => {
   let component: EvacueeNameSearchComponent;
@@ -34,12 +34,7 @@ describe('EvacueeNameSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeNameSearchComponent],
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule
-      ],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, EvacueeNameSearchComponent],
       providers: [
         EvacueeNameSearchComponent,
         {
@@ -50,7 +45,8 @@ describe('EvacueeNameSearchComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -106,48 +102,42 @@ describe('EvacueeNameSearchComponent', () => {
     expect(fieldElem).toBeDefined();
   }));
 
-  it('should set digital form and navigate to search results page', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.digital
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.nameSearchForm.get('firstName').setValue('EvacueeSearchTest');
-      component.nameSearchForm.get('lastName').setValue('EvacueeSearchTest');
-      component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
-      component.search();
+  it('should set digital form and navigate to search results page', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.nameSearchForm.get('firstName').setValue('EvacueeSearchTest');
+    component.nameSearchForm.get('lastName').setValue('EvacueeSearchTest');
+    component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
+    component.search();
 
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/search-results'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/search-results'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
-  it('should set paper form and navigate to search results page', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      appBaseService.appModel = {
-        selectedUserPathway: SelectedPathType.paperBased
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      component.nameSearchForm.get('firstName').setValue('EvacueeSearchTest');
-      component.nameSearchForm.get('lastName').setValue('EvacueeSearchTest');
-      component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
-      component.nameSearchForm.get('paperBasedEssFile').setValue('T123456');
-      component.search();
+  it('should set paper form and navigate to search results page', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.paperBased
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.nameSearchForm.get('firstName').setValue('EvacueeSearchTest');
+    component.nameSearchForm.get('lastName').setValue('EvacueeSearchTest');
+    component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
+    component.nameSearchForm.get('paperBasedEssFile').setValue('T123456');
+    component.search();
 
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/search-results'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/search-results'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
   afterAll(() => {
     TestBed.resetTestingModule();

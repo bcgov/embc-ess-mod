@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SupportDelivery } from './support-delivery';
-import { SupportMethod } from './support-method';
+import { SupportDelivery } from '../models/support-delivery';
+import { SupportMethod } from '../models/support-method';
 export type ETransfer = SupportDelivery & {
-'method': SupportMethod;
+  method: SupportMethod;
 };

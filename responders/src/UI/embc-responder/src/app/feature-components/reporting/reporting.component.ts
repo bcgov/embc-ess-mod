@@ -1,23 +1,47 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subscription, timer } from 'rxjs';
 import { map, retry, startWith, switchMap } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
 import { ReportParams } from 'src/app/core/models/report-params.model';
-import {
-  Community,
-  LocationsService
-} from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import * as moment from 'moment';
 import { CustomValidationService } from '../../core/services/customValidation.service';
 import { padFileIdForSearch } from '../../core/services/helper/search.formatter';
+import { OverlayLoaderComponent } from '../../shared/components/overlay-loader/overlay-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { AsyncPipe } from '@angular/common';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-reporting',
   templateUrl: './reporting.component.html',
-  styleUrls: ['./reporting.component.scss']
+  styleUrls: ['./reporting.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+    MatSelect,
+    MatButton,
+    OverlayLoaderComponent,
+    AsyncPipe
+  ]
 })
 export class ReportingComponent implements OnInit, OnDestroy {
   reportForm: UntypedFormGroup;
@@ -38,26 +62,22 @@ export class ReportingComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private locationService: LocationsService,
     private customValidation: CustomValidationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.createReportingForm();
     this.cityFrom = this.locationService.getCommunityList();
     this.cityTo = this.locationService.getCommunityList();
 
-    this.filteredOptionsEvacFrom = this.reportForm
-      .get('evacuatedFrom')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => (value ? this.filter(value) : this.cityFrom.slice()))
-      );
+    this.filteredOptionsEvacFrom = this.reportForm.get('evacuatedFrom').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filter(value) : this.cityFrom.slice()))
+    );
 
-    this.filteredOptionsEvacTo = this.reportForm
-      .get('evacuatedTo')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => (value ? this.filterTo(value) : this.cityTo.slice()))
-      );
+    this.filteredOptionsEvacTo = this.reportForm.get('evacuatedTo').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filterTo(value) : this.cityTo.slice()))
+    );
   }
   ngOnDestroy(): void {
     if (this.evacueeReportPoll$) {
@@ -86,20 +106,14 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(
-              reportResponse,
-              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
-            );
+            this.downloadFile(reportResponse as any, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {
             console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.evacueeReportError
-            );
+            this.alertService.setAlert('danger', globalConst.evacueeReportError);
           }
         });
     }
@@ -134,20 +148,14 @@ export class ReportingComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(
-              reportResponse,
-              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
-            );
+            this.downloadFile(reportResponse as any, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (_) => {
             console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.evacueeReportError
-            );
+            this.alertService.setAlert('danger', globalConst.evacueeReportError);
           }
         });
     }
@@ -231,18 +239,14 @@ export class ReportingComponent implements OnInit, OnDestroy {
   private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.cityFrom.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.cityFrom.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 
   private filterTo(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.cityTo.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.cityTo.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 

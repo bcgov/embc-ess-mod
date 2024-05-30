@@ -1,9 +1,13 @@
 .save-button {
-    width: 100%;
+  width: 100%;
+  position: relative;
+  app-loader {
+    position: absolute;
+  }
 }
 
-@media screen and (max-width: 768px) {
-    ::ng-deep .mat-step-label {
-        display: none !important;
-    }
+@media screen and (max-width: 767px) {
+  ::ng-deep .mat-step-label {
+    display: none !important;
+  }
 }

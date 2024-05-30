@@ -14,15 +14,12 @@
       >
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
-        <mat-error
-          class="custom-mat-error field-error"
-          *ngIf="
-            referralFormControl?.extremeWinterConditions.invalid &&
-            referralFormControl?.extremeWinterConditions.hasError('required')
-          "
-        >
-          Required</mat-error
-        >
+        @if (
+          referralFormControl?.extremeWinterConditions.invalid &&
+          referralFormControl?.extremeWinterConditions.hasError('required')
+        ) {
+          <mat-error class="custom-mat-error field-error"> Required</mat-error>
+        }
       </mat-radio-group>
     </div>
   </div>
@@ -30,10 +27,7 @@
   <div class="row">
     <div class="col-md-12">
       <p class="time-heading requiredField">Total Amount</p>
-      <p class="hint">
-        Note: Transactions that exceed $10,000 cannot be processed as an
-        e-Transfer.
-      </p>
+      <p class="hint">Note: Transactions that exceed $10,000 cannot be processed as an e-Transfer.</p>
     </div>
   </div>
 
@@ -59,66 +53,54 @@
           required
         />
         <span matPrefix>$&nbsp;</span>
-        <mat-error
-          *ngIf="
-            referralFormControl?.userTotalAmount.invalid &&
-            referralFormControl?.userTotalAmount.hasError('required')
-          "
-        >
-          Total Amount is required</mat-error
-        >
-        <mat-error
-          *ngIf="
-            (referralFormControl?.userTotalAmount.invalid &&
-              referralFormControl?.userTotalAmount.hasError('pattern')) ||
-            (referralFormControl?.userTotalAmount.invalid &&
-              referralFormControl?.userTotalAmount.hasError('totalZeroError'))
-          "
-        >
-          Invalid amount</mat-error
-        >
+        @if (
+          referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('required')
+        ) {
+          <mat-error> Total Amount is required</mat-error>
+        }
+        @if (
+          (referralFormControl?.userTotalAmount.invalid && referralFormControl?.userTotalAmount.hasError('pattern')) ||
+          (referralFormControl?.userTotalAmount.invalid &&
+            referralFormControl?.userTotalAmount.hasError('totalZeroError'))
+        ) {
+          <mat-error> Invalid amount</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
-  <div class="row" *ngIf="validateUserTotalAmount()">
-    <span class="total-amount-error">
-      <img
-        src="../../../../../assets/images/warning-red.svg"
-        width="25px"
-        height="27px"
-        class="amount-warning-icon"
-      />
-      Total monetary value exceeds the recommended ESS rate.
-    </span>
-  </div>
-  <div *ngIf="validateUserTotalAmount()" class="approver-time-box">
+  @if (validateUserTotalAmount()) {
     <div class="row">
-      <div class="col">
-        <div class="requiredField">
-          Authorization to exceed ESS rates given by (name of EMBC Expense
-          Authority)
+      <span class="total-amount-error">
+        <img
+          src="../../../../../assets/images/warning-red.svg"
+          width="25px"
+          height="27px"
+          class="amount-warning-icon"
+        />
+        Total monetary value exceeds the recommended ESS rate.
+      </span>
+    </div>
+  }
+  @if (validateUserTotalAmount()) {
+    <div class="approver-time-box">
+      <div class="row">
+        <div class="col">
+          <div class="requiredField">Authorization to exceed ESS rates given by (name of EMBC Expense Authority)</div>
+          <div>(If you are unsure who this is, please ask your supervisor of EMBC Regional Manager)</div>
         </div>
-        <div>
-          (If you are unsure who this is, please ask your supervisor of EMBC
-          Regional Manager)
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <input formControlName="approverName" maxlength="100" matInput />
+            @if (
+              referralFormControl?.approverName.invalid && referralFormControl?.approverName.hasError('whitespaceError')
+            ) {
+              <mat-error> Approver name is required</mat-error>
+            }
+          </mat-form-field>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <input formControlName="approverName" maxlength="100" matInput />
-
-          <mat-error
-            *ngIf="
-              referralFormControl?.approverName.invalid &&
-              referralFormControl?.approverName.hasError('whitespaceError')
-            "
-          >
-            Approver name is required</mat-error
-          >
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
+  }
 </form>

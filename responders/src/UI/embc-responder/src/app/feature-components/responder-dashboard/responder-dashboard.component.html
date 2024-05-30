@@ -1,13 +1,6 @@
-<div
-  class="row container-frame heading-container responsive-heading align-items-center"
->
+<div class="row container-frame heading-container responsive-heading align-items-center">
   <div class="col-md-1 logo-container">
-    <img
-      class="logo"
-      width="82px"
-      height="108px"
-      src="/assets/images/logoBlueNew.png"
-    />
+    <img class="logo" width="82px" height="108px" src="/assets/images/logoBlueNew.png" />
   </div>
   <div class="col-md-10">
     <span class="page-heading">Emergency Responder Dashboard</span>
@@ -16,133 +9,107 @@
 <br />
 <div class="row">
   <div class="col-md-12">
-    <mat-card *ngIf="!isTaskSignedIn(); else signedIn">
-      <div class="row">
-        <div class="col-md-8">
-          <p class="card-heading-text">
-            Are you currently assisting evacuees in an
-            <span class="highlighted-word">evacuation</span>?
-          </p>
-          <p class="card-text">
-            To search for an evacuee within the ERA Tool or start a new evacuee
-            registration, please sign in to the task number.
-          </p>
+    @if (!isTaskSignedIn()) {
+      <mat-card>
+        <mat-card-content>
           <div class="row">
             <div class="col-md-8">
-              <button
-                class="button-yellow signin-button"
-                (click)="signinTask()"
-                mat-stroked-button
-                type="button"
-              >
-                Sign in to the Task #
-              </button>
+              <p class="card-heading-text">
+                Are you currently assisting evacuees in an
+                <span class="highlighted-word">evacuation</span>?
+              </p>
+              <p class="card-text">
+                To search for an evacuee within the ERA Tool or start a new evacuee registration, please sign in to the
+                task number.
+              </p>
+              <div class="row">
+                <div class="col-md-8">
+                  <button class="button-yellow signin-button" (click)="signinTask()" mat-stroked-button type="button">
+                    Sign in to the Task #
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 align-self-center">
+              <img class="img-align img-fit-col" src="/assets/images/dashboard-2.svg" height="227" width="279" />
             </div>
           </div>
-        </div>
-        <div class="col-md-4 align-self-center">
-          <img
-            class="img-align img-fit-col"
-            src="/assets/images/dashboard-2.svg"
-            height="227"
-            width="279"
-          />
-        </div>
-      </div>
-    </mat-card>
-    <ng-template #signedIn>
+        </mat-card-content>
+      </mat-card>
+    } @else {
       <mat-card>
-        <div class="row">
-          <div class="col-md-8">
-            <p class="card-heading-text">
-              You are signed in to active task #<span class="highlighted-word"
-                >{{ profile?.taskNumber }} - {{ profile?.taskCommunity }}</span
-              >
-            </p>
-          </div>
-          <div class="col-md-4 align-self-center">
-            <button
-              class="button-yellow"
-              (click)="evacueeSearch()"
-              mat-stroked-button
-              type="button"
-            >
-              Evacuee Search & Registration
-            </button>
-            <div class="row">
-              <div class="col-md-12">
-                <a class="signIn-link" (click)="signinTask()"
-                  ><p class="highlighted-word">
-                    Sign in to a different task #
-                    <img
-                      src="/assets/images/right_arrow_head.svg"
-                      height="11"
-                      width="7"
-                    /></p
-                ></a>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-8">
+              <p class="card-heading-text">
+                You are signed in to active task #<span class="highlighted-word"
+                  >{{ profile?.taskNumber }} - {{ profile?.taskCommunity }}</span
+                >
+              </p>
+            </div>
+            <div class="col-md-4 align-self-center">
+              <button class="button-yellow" (click)="evacueeSearch()" mat-stroked-button type="button">
+                Evacuee Search & Registration
+              </button>
+              <div class="row">
+                <div class="col-md-12">
+                  <a class="signIn-link" (click)="signinTask()"
+                    ><p class="highlighted-word">
+                      Sign in to a different task #
+                      <img src="/assets/images/right_arrow_head.svg" height="11" width="7" /></p
+                  ></a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </mat-card-content>
       </mat-card>
-    </ng-template>
+    }
   </div>
 </div>
 <br />
 <div class="row">
   <div class="col-md-4">
     <mat-card class="training-materials-card view-info-card">
-      <img
-        class="img-align"
-        src="/assets/images/training.svg"
-        height="76"
-        width="69"
-      />
-      <p class="info-card">JIBC ESS Training</p>
-      <p class="info-card-text">Access the JIBC ESS training courses.</p>
-      <div class="external-links">
-        <a
-          href="https://www.jibc.ca/areas-of-study/emergency-management/emergency-support-services-ess"
-          target="_blank"
-          >View JIBC Training</a
-        >
-      </div>
+      <mat-card-content>
+        <img class="img-align" src="/assets/images/training.svg" height="76" width="69" />
+        <p class="info-card">JIBC ESS Training</p>
+        <p class="info-card-text">Access the JIBC ESS training courses.</p>
+        <div class="external-links">
+          <a
+            href="https://www.jibc.ca/areas-of-study/emergency-management/emergency-support-services-ess"
+            target="_blank"
+            >View JIBC Training</a
+          >
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
   <div class="col-md-4">
     <mat-card class="latest-updates-card view-info-card">
-      <img
-        class="img-align"
-        src="/assets/images/era-resources.svg"
-        height="76"
-        width="69"
-      />
-      <p class="info-card">ERA Resource Hub</p>
-      <p class="info-card-text">Access videos, training guides, ERA Updates</p>
-      <div class="external-links">
-        <a href="https://host.jibc.ca/ERAResourceHub">View ERA Resource Hub</a>
-      </div>
+      <mat-card-content>
+        <img class="img-align" src="/assets/images/era-resources.svg" height="76" width="69" />
+        <p class="info-card">ERA Resource Hub</p>
+        <p class="info-card-text">Access videos, training guides, ERA Updates</p>
+        <div class="external-links">
+          <a href="https://host.jibc.ca/ERAResourceHub">View ERA Resource Hub</a>
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
   <div class="col-md-4">
     <mat-card class="useful-tips-card view-info-card">
-      <img
-        class="img-align"
-        src="/assets/images/tips.svg"
-        height="76"
-        width="69"
-      />
-      <p class="info-card">ESS Website</p>
-      <p class="info-card-text">
-        Find the ESS Program Guide, relevant forms & additional information
-        here.
-      </p>
-      <div class="external-links">
-        <a
-          href="https://www2.gov.bc.ca/gov/content/safety/emergency-management/local-emergency-programs/ess/ess-resources"
-          >View ESS Resources</a
-        >
-      </div>
+      <mat-card-content>
+        <img class="img-align" src="/assets/images/tips.svg" height="76" width="69" />
+        <p class="info-card">ESS Website</p>
+        <p class="info-card-text">Find the ESS Program Guide, relevant forms & additional information here.</p>
+        <div class="external-links">
+          <a
+            href="https://www2.gov.bc.ca/gov/content/safety/emergency-management/local-emergency-programs/ess/ess-resources"
+            >View ESS Resources</a
+          >
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

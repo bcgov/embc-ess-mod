@@ -9,6 +9,7 @@ import { OutageService } from 'src/app/feature-components/outage/outage.service'
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';
 
 import { OutageBannerComponent } from './outage-banner.component';
+import { provideRouter } from '@angular/router';
 
 describe('OutageBannerComponent', () => {
   let component: OutageBannerComponent;
@@ -17,20 +18,15 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        OAuthModule.forRoot()
-      ],
-      declarations: [OutageBannerComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, OAuthModule.forRoot(), OutageBannerComponent],
       providers: [
         OutageComponent,
         {
           provide: OutageService,
           useClass: MockOutageService
         },
-        { provide: APP_BASE_HREF, useValue: '/' }
+        { provide: APP_BASE_HREF, useValue: '/' },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -55,9 +51,7 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.content).toEqual(
-      'Outage testing in Responders portal'
-    );
+    expect(outageService.outageInfo.content).toEqual('Outage testing in Responders portal');
   });
 
   it('should display outage Start Date', () => {
@@ -70,9 +64,7 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageStartDate).toEqual(
-      '2021-12-15T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageStartDate).toEqual('2021-12-15T21:00:00Z');
   });
 
   it('should display outage End Date', () => {
@@ -84,8 +76,6 @@ describe('OutageBannerComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageEndDate).toEqual(
-      '2021-12-16T21:00:00Z'
-    );
+    expect(outageService.outageInfo.outageEndDate).toEqual('2021-12-16T21:00:00Z');
   });
 });

@@ -1,60 +1,53 @@
-﻿using System.Linq;
-using EMBC.ESS.Resources.Tasks;
+﻿using EMBC.ESS.Resources.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.Tests.Integration.ESS.Resources
+namespace EMBC.Tests.Integration.ESS.Resources;
+
+public class TaskTests : DynamicsWebAppTestBase
 {
-    public class TaskTests : DynamicsWebAppTestBase
+    private readonly ITaskRepository taskRepository;
+
+    public TaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
     {
-        private readonly ITaskRepository taskRepository;
+        taskRepository = Services.GetRequiredService<ITaskRepository>();
+    }
 
-        // Constants
-        private string ActiveTaskId => TestData.ActiveTaskId;
-
-        private string ExpiredTaskId => TestData.InactiveTaskId;
-        private const string NonExistentTaskId = "XXXXXXX";
-
-        public TaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+    [Fact]
+    public async System.Threading.Tasks.Task CanGetActiveTask()
+    {
+        var query = new TaskQuery
         {
-            taskRepository = Services.GetRequiredService<ITaskRepository>();
-        }
+            ById = TestData.ActiveTaskId
+        };
+        var task = (await taskRepository.QueryTask(query)).Items.ShouldHaveSingleItem().ShouldBeOfType<EssTask>();
+        task.Id.ShouldBe(TestData.ActiveTaskId);
+        task.Status.ShouldBe(EMBC.ESS.Resources.Tasks.TaskStatus.Active);
+        task.EnabledSupports.ShouldBeEmpty();
+    }
 
-        [Fact]
-        public async System.Threading.Tasks.Task CanGetActiveTask()
+    [Fact]
+    public async System.Threading.Tasks.Task CanGetExpiredTask()
+    {
+        var query = new TaskQuery
         {
-            // Active Task
-            var activeTaskQuery = new TaskQuery
-            {
-                ById = ActiveTaskId
-            };
-            var queryResult = await taskRepository.QueryTask(activeTaskQuery);
-            queryResult.Items.ShouldNotBeEmpty();
-            var esstask = (EssTask)queryResult.Items.First();
-            esstask.ShouldNotBeNull();
-            esstask.Id.ShouldNotBeNull();
-        }
+            ById = TestData.InactiveTaskId
+        };
+        var task = (await taskRepository.QueryTask(query)).Items.ShouldHaveSingleItem().ShouldBeOfType<EssTask>();
+        task.Id.ShouldBe(TestData.InactiveTaskId);
+        task.Status.ShouldBe(EMBC.ESS.Resources.Tasks.TaskStatus.Expired);
+        task.EnabledSupports.ShouldBeEmpty();
+    }
 
-        [Fact]
-        public async System.Threading.Tasks.Task CanGetExpiredTask()
+    [Fact]
+    public async System.Threading.Tasks.Task CanGetTaskWithSelfServeSupports()
+    {
+        var query = new TaskQuery
         {
-            // Expired Task
-            var expiredTaskQuery = new TaskQuery
-            {
-                ById = ExpiredTaskId
-            };
-            var queryResult2 = await taskRepository.QueryTask(expiredTaskQuery);
-            queryResult2.Items.ShouldNotBeEmpty();
-            var esstask2 = (EssTask)queryResult2.Items.First();
-            esstask2.ShouldNotBeNull();
-            esstask2.Id.ShouldNotBeNull();
-
-            // Non Existent Task
-            var nonExistentTaskQuery = new TaskQuery
-            {
-                ById = NonExistentTaskId
-            };
-            var queryResult3 = await taskRepository.QueryTask(nonExistentTaskQuery);
-            queryResult3.Items.ShouldBeEmpty();
-        }
+            ById = TestData.SelfServeActiveTaskId
+        };
+        var task = (await taskRepository.QueryTask(query)).Items.ShouldHaveSingleItem().ShouldBeOfType<EssTask>();
+        task.Id.ShouldBe(TestData.SelfServeActiveTaskId);
+        task.Status.ShouldBe(EMBC.ESS.Resources.Tasks.TaskStatus.Active);
+        task.EnabledSupports.ShouldNotBeEmpty();
     }
 }

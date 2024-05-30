@@ -3,10 +3,7 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { EvacueeSearchResultsService } from './evacuee-search-results.service';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import {
   EvacuationFileSearchResultModel,
@@ -17,11 +14,35 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { SearchPages } from 'src/app/core/services/helper/search-data.service';
+import { OverlayLoaderComponent } from '../../../../shared/components/overlay-loader/overlay-loader.component';
+import { EssFilesResultsComponent } from '../ess-files-results/ess-files-results.component';
+import { ProfileResultsComponent } from '../profile-results/profile-results.component';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { ZeroFileResultComponent } from '../zero-file-result/zero-file-result.component';
+import { NgTemplateOutlet, AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-evacuee-search-results',
   templateUrl: './evacuee-search-results.component.html',
-  styleUrls: ['./evacuee-search-results.component.scss']
+  styleUrls: ['./evacuee-search-results.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    ZeroFileResultComponent,
+    AlertComponent,
+    NgTemplateOutlet,
+    MatButton,
+    ProfileResultsComponent,
+    EssFilesResultsComponent,
+    OverlayLoaderComponent,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class EvacueeSearchResultsComponent implements OnInit {
   registrantResults: Array<RegistrantProfileSearchResultModel>;
@@ -40,15 +61,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     if (
-      this.optionInjectionService?.instance?.optionType !==
-        SelectedPathType.remoteExtensions &&
-      this.optionInjectionService?.instance?.optionType !==
-        SelectedPathType.caseNotes
+      this.optionInjectionService?.instance?.optionType !== SelectedPathType.remoteExtensions &&
+      this.optionInjectionService?.instance?.optionType !== SelectedPathType.caseNotes
     ) {
-      this.searchForEvacuee(
-        (this.evacueeSearchContext =
-          this.evacueeSearchService.evacueeSearchContext)
-      );
+      this.searchForEvacuee((this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext));
     }
   }
 
@@ -59,10 +75,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 
   /**
@@ -99,15 +112,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    this.optionInjectionService?.instance
-      ?.openWizard(WizardType.NewRegistration)
-      ?.then((value) => {
-        if (!value) {
-          this.evacueeSearchResultsService.openEssFileExistsDialog(
-            this.evacueeSearchService?.evacueeSearchContext
-              ?.evacueeSearchParameters?.paperFileNumber
-          );
-        }
-      });
+    this.optionInjectionService?.instance?.openWizard(WizardType.NewRegistration)?.then((value) => {
+      if (!value) {
+        this.evacueeSearchResultsService.openEssFileExistsDialog(
+          this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
+        );
+      }
+    });
   }
 }

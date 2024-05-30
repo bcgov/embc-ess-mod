@@ -1,14 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { RestrictionService } from './restriction.service';
+import { MatButton } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
   selector: 'app-restriction',
   templateUrl: './restriction.component.html',
-  styleUrls: ['./restriction.component.scss']
+  styleUrls: ['./restriction.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatError, MatButton]
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;
@@ -25,9 +31,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     this.restrictionService.init();
     this.restrictionForm = this.restrictionService.createForm();
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
-    this.tabUpdateSubscription = this.restrictionService.updateTabStatus(
-      this.restrictionForm
-    );
+    this.tabUpdateSubscription = this.restrictionService.updateTabStatus(this.restrictionForm);
   }
 
   /**

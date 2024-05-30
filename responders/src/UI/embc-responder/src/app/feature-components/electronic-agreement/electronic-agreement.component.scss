@@ -1,33 +1,35 @@
-.mat-body p, .mat-body-1 p, .mat-typography p {
-     margin: 0; 
+.mat-body p,
+.mat-subtitle-2 p,
+.mat-typography p {
+  margin: 0;
 }
 
 p {
-    margin: 0;
+  margin: 0;
 }
 
 .scroll-box {
-    overflow: auto;
-    height: 370px;
-    padding: 35px;
-    margin-bottom: 30px;
-  }
+  overflow: auto;
+  height: 370px;
+  padding: 35px;
+  margin-bottom: 30px;
+}
 
-  .mat-card {
-      width: 75%;
-  }
+.mat-mdc-card {
+  width: 75%;
+}
 
-  .accept-box {
-      padding-left: 35px;
-  }
+.accept-box {
+  padding-left: 35px;
+}
 
-  .submit-eaa {
-      width: 20%;
-      font-size: 16px;
-  }
+.submit-eaa {
+  width: 20%;
+  font-size: 16px;
+}
 
-  @media screen and (max-width: 833px) {
-    .mat-card {
-        width: 100%;
-    }
- }
+@media screen and (max-width: 833px) {
+  .mat-mdc-card {
+    width: 100%;
+  }
+}

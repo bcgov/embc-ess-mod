@@ -38,6 +38,7 @@ mat-expansion-panel {
 
 ::ng-deep .mat-expansion-panel-header {
   height: 60px;
+  --mat-expansion-header-collapsed-state-height: 60px;
 }
 
 .expansion-divider {
@@ -114,7 +115,7 @@ mat-expansion-panel {
 
 .proceed-button {
   height: auto;
-  width: 50%;
+  width: 60%;
 }
 
 .loader-align {
@@ -151,13 +152,14 @@ mat-expansion-panel {
   color: red;
 }
 
-@media(max-width: 992px) {
+@media (max-width: 992px) {
   .card-heading {
     line-height: 30px;
     white-space: normal;
   }
-  
-  td, th {
+
+  td,
+  th {
     display: block;
   }
 }

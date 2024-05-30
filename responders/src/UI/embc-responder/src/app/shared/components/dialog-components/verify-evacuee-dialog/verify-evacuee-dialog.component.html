@@ -5,30 +5,32 @@
 </div>
 <div class="text-content" [innerHTML]="content?.text"></div>
 
-<div *ngIf="profileData" class="row">
-  <div class="col-md-12 table-parent">
-    <table class="table-details">
-      <tr>
-        <th class="bold">First Name:</th>
-        <td>
-          {{ profileData?.personalDetails?.firstName }}
-        </td>
-      </tr>
-      <tr>
-        <th class="bold">Last Name:</th>
-        <td>
-          {{ profileData?.personalDetails?.lastName }}
-        </td>
-      </tr>
-      <tr>
-        <th class="bold">Date of Birth:</th>
-        <td>
-          {{ profileData?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy' }}
-        </td>
-      </tr>
-    </table>
+@if (profileData) {
+  <div class="row">
+    <div class="col-md-12 table-parent">
+      <table class="table-details">
+        <tr>
+          <th class="bold">First Name:</th>
+          <td>
+            {{ profileData?.personalDetails?.firstName }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bold">Last Name:</th>
+          <td>
+            {{ profileData?.personalDetails?.lastName }}
+          </td>
+        </tr>
+        <tr>
+          <th class="bold">Date of Birth:</th>
+          <td>
+            {{ profileData?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy' }}
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
-</div>
+}
 
 <div class="row">
   <div class="col-md-12">
@@ -41,30 +43,26 @@
         required
       >
         <mat-radio-button [value]="true"
-          ><span class="radio-text"><b>Yes</b></span> - I did see government
-          issued identification</mat-radio-button
+          ><span class="radio-text"><b>Yes</b></span> - I did see government issued identification</mat-radio-button
         >
         <mat-radio-button [value]="false"
-          ><span class="radio-text"><b>No</b></span> - I did not see government
-          issued identification</mat-radio-button
+          ><span class="radio-text"><b>No</b></span> - I did not see government issued identification</mat-radio-button
         >
       </mat-radio-group>
 
-      <div
-        class="field-error"
-        *ngIf="
-          verifiedFormControl?.verified.touched &&
-          verifiedFormControl?.verified.invalid &&
-          verifiedFormControl?.verified.hasError('required')
-        "
-      >
-        Please make a selection
-      </div>
+      @if (
+        verifiedFormControl?.verified.touched &&
+        verifiedFormControl?.verified.invalid &&
+        verifiedFormControl?.verified.hasError('required')
+      ) {
+        <div class="field-error">Please make a selection</div>
+      }
 
-      <div class="field-error" *ngIf="!noIdFlag">
-        Evacuee profile cannot be verified without the presentation of
-        government issued identification
-      </div>
+      @if (!noIdFlag) {
+        <div class="field-error">
+          Evacuee profile cannot be verified without the presentation of government issued identification
+        </div>
+      }
     </form>
   </div>
 </div>
@@ -76,13 +74,10 @@
     </button>
   </div>
   <div class="col-md-6">
-    <button
-      *ngIf="noIdFlag"
-      class="button-p button-width"
-      mat-button
-      (click)="verify()"
-    >
-      {{ content?.confirmButton }}
-    </button>
+    @if (noIdFlag) {
+      <button class="button-p button-width" mat-button (click)="verify()">
+        {{ content?.confirmButton }}
+      </button>
+    }
   </div>
 </div>

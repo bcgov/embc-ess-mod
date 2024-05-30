@@ -41,6 +41,7 @@ namespace EMBC.Tests.Integration.ESS
                 cfg
                     .MinimumLevel.Override("System", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                     .MinimumLevel.Debug();
             }, writeToProviders: true);
         }

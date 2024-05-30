@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +18,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
-        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant, string? taskNumber) => TestHelper.CreateNewTestEvacuationFile(registrant, taskNumber);
 
         public SupportTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -27,7 +29,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task ProcessSupports_Supports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var file = CreateNewTestEvacuationFile(registrant);
+            var file = CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
@@ -221,7 +223,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task ProcessPaperSupports_paperSupports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var paperFile = CreateNewTestEvacuationFile(registrant);
+            var paperFile = CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
 
             paperFile.ManualFileId = $"{TestData.TestPrefix}-paperfile";
             paperFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
@@ -374,10 +376,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact]
         public async Task ScanSupports_FlagsRaised()
         {
-            var registrantId = await TestHelper.SaveRegistrant(manager, TestHelper.CreateRegistrantProfile(TestData.TestPrefix));
+            var registrantId = await TestHelper.SaveRegistrant(manager, TestHelper.CreateRegistrantProfile());
             var registrant = (await TestHelper.GetRegistrantById(manager, registrantId)).ShouldNotBeNull();
 
-            var file = CreateNewTestEvacuationFile(registrant);
+            var file = CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
@@ -385,7 +387,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             file = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
-            var newSupports = TestHelper.CreateSupports(TestData.TestPrefix, file);
+            var newSupports = TestHelper.CreateSupports(file);
 
             await manager.Handle(new ProcessSupportsCommand
             {
@@ -417,6 +419,101 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             supports = await manager.Handle(new SearchSupportsQuery { FileId = fileId });
             var scannedDuplicateSupport = supports.Items.Where(s => s is IncidentalsSupport i && i.ApprovedItems == duplicateSupport.ApprovedItems).Cast<IncidentalsSupport>().ShouldHaveSingleItem();
             scannedDuplicateSupport.Flags.ShouldHaveSingleItem().ShouldBeAssignableTo<DuplicateSupportFlag>().ShouldNotBeNull().DuplicatedSupportId.ShouldBe(duplicateSupportId);
+        }
+
+        [Fact]
+        public async Task CheckEligibility_Created()
+        {
+            var eligibilityId = await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = TestData.ContactUserId, EvacuationFileNumber = TestData.EvacuationFileId });
+            eligibilityId.ShouldNotBeNull();
+
+            var eligibility = await manager.Handle(new EligibilityCheckQuery { RegistrantUserId = TestData.ContactUserId, EvacuationFileNumber = TestData.EvacuationFileId });
+            eligibility.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task CheckEligibility_NoNeeds_ActiveFile()
+        {
+            var (file, _) = await CreateTestSubjects(taskNumber: null, needs: []);
+
+            file.RelatedTask.ShouldNotBeNull().Id.ShouldBe(TestData.SelfServeActiveTaskId);
+            file.Status.ShouldBe(EvacuationFileStatus.Active);
+        }
+
+        [Fact]
+        public async Task DraftSelfServeSupport_File_Returned()
+        {
+            var (file, registrant) = await CreateTestSubjects();
+
+            var response = await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
+            response.Items.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task DraftSelfServeSupport_Changes_Returned()
+        {
+            var (file, registrant) = await CreateTestSubjects();
+
+            var draftSupports = (await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id })).Items;
+            var response = await manager.Handle(new DraftSelfServeSupportQuery { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id, Items = draftSupports });
+            response.Items.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public async Task ProcessSelfServeSupports_Supports_SupportsCreated()
+        {
+            var (file, registrant) = await CreateTestSubjects();
+
+            var from = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            var fromDay = DateOnly.FromDateTime(from);
+            var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
+            var supportDays = new[] { fromDay, fromDay.AddDays(1), fromDay.AddDays(2) };
+            var etransferDetails = new ETransferDetails
+            {
+                ContactEmail = registrant.Email ?? "test@test.gov.bc.ca",
+                ETransferEmail = registrant.Email,
+                ETransferMobile = registrant.Phone,
+                RecipientName = $"{registrant.FirstName} {registrant.LastName}"
+            };
+
+            var supports = new SelfServeSupport[]
+            {
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeClothingSupport { TotalAmount = 100d, IncludedHouseholdMembers = householdMembers },
+                new SelfServeFoodGroceriesSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+                new SelfServeShelterAllowanceSupport { TotalAmount = 100d, Nights = supportDays, IncludedHouseholdMembers = householdMembers },
+            };
+
+            await manager.Handle(new ProcessSelfServeSupportsCommand
+            {
+                Supports = supports,
+                ETransferDetails = etransferDetails,
+                EvacuationFileNumber = file.Id,
+                RegistrantUserId = registrant.UserId
+            });
+
+            var updatedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+            updatedFile.Supports.Count().ShouldBe(supports.Length);
+            updatedFile.HouseholdMembers.Count().ShouldBe(file.HouseholdMembers.Count());
+            updatedFile.RelatedTask.ShouldNotBeNull().Id.ShouldBe(TestData.SelfServeActiveTaskId);
+        }
+
+        private async Task<(EvacuationFile file, RegistrantProfile registrantProfile)> CreateTestSubjects(string? taskNumber = null, IEnumerable<IdentifiedNeed>? needs = null)
+        {
+            if (needs == null) needs = [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterAllowance, IdentifiedNeed.Incidentals, IdentifiedNeed.Food];
+            var registrant = TestHelper.CreateRegistrantProfile();
+            registrant.HomeAddress = TestHelper.CreateSelfServeEligibleAddress();
+            registrant.UserId = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            registrant.Id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var file = CreateNewTestEvacuationFile(registrant, taskNumber);
+            file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Take(5);
+            file.NeedsAssessment.Needs = needs;
+            file.Id = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            await manager.Handle(new CheckEligibileForSelfServeCommand { RegistrantUserId = registrant.UserId, EvacuationFileNumber = file.Id });
+            file = (await manager.Handle(new EvacuationFilesQuery { FileId = file.Id })).Items.ShouldHaveSingleItem();
+
+            return (file, registrant);
         }
     }
 }

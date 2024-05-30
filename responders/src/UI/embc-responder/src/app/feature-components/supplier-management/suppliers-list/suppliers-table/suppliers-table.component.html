@@ -1,102 +1,91 @@
 <div class="mat-elevation-z8 table-responsive">
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    matSort
-    (matSortChange)="sortData($event)"
-  >
-    <ng-container
-      *ngFor="let column of displayedColumns"
-      [matColumnDef]="column?.ref"
-    >
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        [mat-sort-header]="column?.ref"
-        class="arrow-color"
-      >
-        <span *ngIf="column?.label !== 'Status'; else statusLabel">{{
-          column?.label
-        }}</span>
-      </th>
-      <ng-template #statusLabel>
-        <span>Status</span>
-        <a class="info-card" (click)="openStatusDefinition()">
-          <img src="/assets/images/info-wht.svg" height="28" width="28" />
-          <img src="/assets/images/info-org.svg" height="28" width="28"
-        /></a>
-      </ng-template>
-
-      <td
-        mat-cell
-        *matCellDef="let row; let index = index"
-        (click)="disableRowInteraction($event, column?.ref)"
-      >
-        <span *ngIf="column?.ref === 'legalName'">
-          <span>{{ row[column?.ref] }}</span>
-        </span>
-        <span *ngIf="column?.ref === 'name'">
-          <span class="name-cell">{{ row[column?.ref] | uppercase }}</span>
-        </span>
-        <span *ngIf="column?.ref === 'address'">
-          <span>{{ row[column?.ref].addressLine1 }}</span>
-        </span>
-        <span *ngIf="column?.ref === 'providesMutualAid'">
-          <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
-        </span>
-        <span *ngIf="column?.ref === 'mutualAid'">
-          <span>{{ row[column?.ref]?.givenToTeam?.name }}</span>
-        </span>
-        <span *ngIf="column?.ref === 'status'">
-          <span *ngIf="showToggle; else status">
-            <mat-slide-toggle
-              [checked]="row[column?.ref] === 'Active'"
-              (change)="slideToggle($event, row, index)"
-            >
-              <span
-                [ngClass]="{
-                  'active-style': row[column?.ref] === 'Active',
-                  'inactive-style': row[column?.ref] === 'Deactivated'
-                }"
-                >{{ row[column?.ref] }}</span
-              >
-              <span>
-                <app-loader
-                  *ngIf="index === selectedIndex"
-                  style="
-                    display: inline;
-                    justify-content: center;
-                    align-items: center;
-                  "
-                  class="mat-progress"
-                  [showLoader]="!statusLoading"
-                  [strokeWidth]="3"
-                  [diameter]="20"
-                  [color]="color"
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+    @for (column of displayedColumns; track column) {
+      <ng-container [matColumnDef]="column?.ref">
+        <th mat-header-cell *matHeaderCellDef [mat-sort-header]="column?.ref" class="arrow-color">
+          @if (column?.label !== 'Status') {
+            <span>{{ column?.label }}</span>
+          } @else {
+            <span>Status</span>
+            <a class="info-card" (click)="openStatusDefinition()">
+              <img src="/assets/images/info-wht.svg" height="28" width="28" />
+              <img src="/assets/images/info-org.svg" height="28" width="28"
+            /></a>
+          }
+        </th>
+        <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
+          @if (column?.ref === 'legalName') {
+            <span>
+              <span>{{ row[column?.ref] }}</span>
+            </span>
+          }
+          @if (column?.ref === 'name') {
+            <span>
+              <span class="name-cell">{{ row[column?.ref] | uppercase }}</span>
+            </span>
+          }
+          @if (column?.ref === 'address') {
+            <span>
+              <span>{{ row[column?.ref].addressLine1 }}</span>
+            </span>
+          }
+          @if (column?.ref === 'providesMutualAid') {
+            <span>
+              <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
+            </span>
+          }
+          @if (column?.ref === 'mutualAid') {
+            <span>
+              <span>{{ row[column?.ref]?.givenToTeam?.name }}</span>
+            </span>
+          }
+          @if (column?.ref === 'status') {
+            <span>
+              @if (showToggle) {
+                <span>
+                  <mat-slide-toggle
+                    [checked]="row[column?.ref] === 'Active'"
+                    (change)="slideToggle($event, row, index)"
+                  >
+                    <span
+                      [ngClass]="{
+                        'active-style': row[column?.ref] === 'Active',
+                        'inactive-style': row[column?.ref] === 'Deactivated'
+                      }"
+                      >{{ row[column?.ref] }}</span
+                    >
+                    <span>
+                      @if (index === selectedIndex) {
+                        <app-loader
+                          style="display: inline; justify-content: center; align-items: center"
+                          class="mat-progress"
+                          [showLoader]="!statusLoading"
+                          [strokeWidth]="3"
+                          [diameter]="20"
+                          [color]="color"
+                        >
+                        </app-loader>
+                      }
+                    </span>
+                  </mat-slide-toggle>
+                </span>
+              } @else {
+                <span
+                  [ngClass]="{
+                    'active-style': row[column?.ref] === 'Active',
+                    'inactive-style': row[column?.ref] === 'Deactivated'
+                  }"
+                  >{{ row[column?.ref] }}</span
                 >
-                </app-loader>
-              </span>
-            </mat-slide-toggle>
-          </span>
-          <ng-template #status>
-            <span
-              [ngClass]="{
-                'active-style': row[column?.ref] === 'Active',
-                'inactive-style': row[column?.ref] === 'Deactivated'
-              }"
-              >{{ row[column?.ref] }}</span
-            >
-          </ng-template>
-        </span>
-      </td>
-    </ng-container>
+              }
+            </span>
+          }
+        </td>
+      </ng-container>
+    }
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: columns"
-      (click)="rowClicked(row)"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: columns" (click)="rowClicked(row)"></tr>
   </table>
 
   <app-loader
@@ -108,10 +97,6 @@
     [color]="color"
   ></app-loader>
 
-  <mat-paginator
-    [pageSize]="20"
-    [pageSizeOptions]="[10, 20, 30, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
+  <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br />

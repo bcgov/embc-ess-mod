@@ -26,12 +26,18 @@ namespace EMBC.Suppliers.API.ConfigurationModule.ViewModels
         public bool SiteDown { get; set; }
         public string Environment { get; set; }
         public OidcConfiguration Oidc { get; set; }
+        public CaptchaConfiguration Captcha { get; set; }
     }
 
     public class OidcConfiguration
     {
         public string Issuer { get; set; }
         public string ClientId { get; set; }
+    }
+
+    public record CaptchaConfiguration
+    {
+        public string Key { get; set; }
     }
 
     public class Country

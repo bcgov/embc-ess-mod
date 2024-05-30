@@ -6,6 +6,7 @@ metadata:
 spec:
   lookupPolicy:
     local: true
+  {{ if ($value).tags }}
   tags:
     {{- range $name, $tag := $value.tags }}
     - name: {{ $name | quote }}
@@ -17,5 +18,6 @@ spec:
       referencePolicy:
         type: Local
     {{ end }}
+    {{- end }}
 ---
 {{ end -}}

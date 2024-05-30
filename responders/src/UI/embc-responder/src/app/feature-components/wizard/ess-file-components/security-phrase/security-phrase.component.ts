@@ -10,16 +10,36 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-security-phrase',
   templateUrl: './security-phrase.component.html',
-  styleUrls: ['./security-phrase.component.scss']
+  styleUrls: ['./security-phrase.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButtonModule,
+    MatError,
+    MatCard,
+    MatCardContent,
+    MaskTextPipe
+  ]
 })
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
   securityForm: UntypedFormGroup = null;
@@ -53,24 +73,23 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     this.formValidation();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe({
-        next: () => {
-          this.updateTabStatus();
-        }
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe({
+      next: () => {
+        this.updateTabStatus();
+      }
+    });
     this.tabMetaData = this.stepEssFileService.getNavLinks('security-phrase');
   }
 
   /**
-   * Get form controls from the security Phrase form
+   * Get form controls from the security word form
    */
   get securityFormControl(): { [key: string]: AbstractControl } {
     return this.securityForm.controls;
   }
 
   /**
-   * Handle changed state of "Bypass Security Phrase" checkbox
+   * Handle changed state of "Bypass Security Word" checkbox
    *
    * @param event Mat-checkbox change event, automatically passed in when triggered by form
    */
@@ -79,7 +98,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Disables or enables the Security Phrase input
+   * Disables or enables the Security Word input
    *
    * @param checked True = Disable, False = Enable
    */
@@ -116,7 +135,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Activates the form to edit the security phrase
+   * Activates the form to edit the security word
    */
   editSecurityPhrase() {
     this.editedSecurityPhrase = !this.editedSecurityPhrase;
@@ -125,21 +144,18 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cancels the change of security phrase and goes back to the previous view
+   * Cancels the change of security word and goes back to the previous view
    */
   cancel(): void {
-    this.stepEssFileService.securityPhrase =
-      this.stepEssFileService.originalSecurityPhrase;
-    this.securityForm
-      .get('securityPhrase')
-      .setValue(this.stepEssFileService.securityPhrase);
+    this.stepEssFileService.securityPhrase = this.stepEssFileService.originalSecurityPhrase;
+    this.securityForm.get('securityPhrase').setValue(this.stepEssFileService.securityPhrase);
     this.editedSecurityPhrase = false;
     this.stepEssFileService.editedSecurityPhrase = false;
     this.securityFormControl.securityPhrase.disable();
   }
 
   /**
-   * Set Security Phrase values in global var, update tab's status indicator
+   * Set Security Word values in global var, update tab's status indicator
    */
   updateTabStatus() {
     this.securityForm.updateValueAndValidity();
@@ -180,7 +196,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates a new security phrase form
+   * Creates a new security word form
    */
   private createSecurityPhraseForm() {
     this.securityForm = this.formBuilder.group({
@@ -202,10 +218,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
       this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
       this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     ) {
-      if (
-        this.stepEssFileService.securityPhrase ===
-        this.stepEssFileService.originalSecurityPhrase
-      ) {
+      if (this.stepEssFileService.securityPhrase === this.stepEssFileService.originalSecurityPhrase) {
         this.securityFormControl.securityPhrase.disable();
         this.editedSecurityPhrase = false;
       } else {
@@ -216,10 +229,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private editedPhraseFlag() {
-    if (
-      this.wizardType === 'review-file' ||
-      this.wizardType === 'complete-file'
-    ) {
+    if (this.wizardType === 'review-file' || this.wizardType === 'complete-file') {
       // If the editedSecurityFlag is not defined, set its default as false
       if (this.stepEssFileService.editedSecurityPhrase === undefined)
         this.stepEssFileService.editedSecurityPhrase = false;

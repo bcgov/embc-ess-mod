@@ -1,0 +1,13 @@
+:host .field-label {
+  width: 240px;
+}
+
+:host .field-value {
+  width: 160px;
+}
+
+@media (max-width: 768px) {
+  :host .interac-e-transfer-logo {
+    display: none;
+  }
+}

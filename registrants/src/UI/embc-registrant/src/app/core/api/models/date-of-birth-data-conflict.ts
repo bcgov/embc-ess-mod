@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ProfileDataConflict } from './profile-data-conflict';
+import { ProfileDataConflict } from '../models/profile-data-conflict';
 export type DateOfBirthDataConflict = ProfileDataConflict & {
-'dataElementName': string;
-'conflictingValue'?: string;
-'originalValue'?: string;
+  dataElementName: string;
+  conflictingValue?: string | null;
+  originalValue?: string | null;
 };

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddCommunityComponent } from './add-community.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('AddCommunityComponent', () => {
   let component: AddCommunityComponent;
@@ -10,8 +10,8 @@ describe('AddCommunityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [AddCommunityComponent]
+      imports: [HttpClientTestingModule, AddCommunityComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 

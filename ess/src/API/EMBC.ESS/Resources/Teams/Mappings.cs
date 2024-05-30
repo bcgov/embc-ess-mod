@@ -33,7 +33,7 @@ namespace EMBC.ESS.Resources.Teams
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserLabelOptionSet), s.era_label)))
                 .ForMember(d => d.LastSuccessfulLogin, opts => opts.MapFrom(s => s.era_lastsuccessfullogin.HasValue ? s.era_lastsuccessfullogin.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.AgreementSignDate, opts => opts.MapFrom(s => s.era_electronicaccessagreementaccepteddate.HasValue ?
-                    new DateTime(s.era_electronicaccessagreementaccepteddate.Value.Year, s.era_electronicaccessagreementaccepteddate.Value.Month, s.era_electronicaccessagreementaccepteddate.Value.Day, 0, 0, 0, 0, DateTimeKind.Utc)
+                    new DateTime(s.era_electronicaccessagreementaccepteddate.Value.Year, s.era_electronicaccessagreementaccepteddate.Value.Month, s.era_electronicaccessagreementaccepteddate.Value.Day, 0, 0, 0, 0)
                     : (DateTime?)null))
                 .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)TeamMemberStatus.Active))
                 ;
@@ -47,7 +47,9 @@ namespace EMBC.ESS.Resources.Teams
                 .ForMember(d => d.era_externalsystemuser, opts => opts.MapFrom(s => s.ExternalUserId))
                 .ForMember(d => d.era_externalsystemtype, opts => opts.MapFrom(s => (int)ExternalSystemOptionSet.Bceid))
                 .ForMember(d => d.era_externalsystemusername, opts => opts.MapFrom(s => s.UserName))
-                .ForMember(d => d.era_electronicaccessagreementaccepteddate, opts => opts.MapFrom(s => s.AgreementSignDate))
+                .ForMember(d => d.era_electronicaccessagreementaccepteddate, opts => opts.MapFrom(s => s.AgreementSignDate.HasValue ?
+                    new DateTime(s.AgreementSignDate.Value.Year, s.AgreementSignDate.Value.Month, s.AgreementSignDate.Value.Day, 0, 0, 0, 0, DateTimeKind.Utc)
+                    : (DateTime?)null))
                 .ForMember(d => d.era_label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? -1 : (int)Enum.Parse<TeamUserLabelOptionSet>(s.Label)))
                 .ForMember(d => d.era_role, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(s.Role)))
                 .ForMember(d => d.era_lastsuccessfullogin, opts => opts.MapFrom(s => s.LastSuccessfulLogin))

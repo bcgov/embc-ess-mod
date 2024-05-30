@@ -1,13 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { MemberRole } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { MockEvacueeProfileService } from 'src/app/unit-tests/mockEvacueeProfile.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
@@ -15,6 +13,7 @@ import { MockUserService } from 'src/app/unit-tests/mockUser.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 import { MatchedEssfilesComponent } from './matched-essfiles.component';
+import { provideRouter } from '@angular/router';
 
 describe('MatchedEssfilesComponent', () => {
   let component: MatchedEssfilesComponent;
@@ -63,13 +62,7 @@ describe('MatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MatchedEssfilesComponent],
-      imports: [
-        MatDialogModule,
-        RouterTestingModule,
-        HttpClientTestingModule,
-        CustomPipeModule
-      ],
+      imports: [MatDialogModule, HttpClientTestingModule, MatchedEssfilesComponent],
       providers: [
         MatchedEssfilesComponent,
         {
@@ -88,7 +81,8 @@ describe('MatchedEssfilesComponent', () => {
           provide: UserService,
           useClass: MockUserService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -153,8 +147,6 @@ describe('MatchedEssfilesComponent', () => {
     evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
     fixture.detectChanges();
     component.ngOnInit();
-    expect(component.essFiles).toEqual(
-      evacueeProfileService.evacuationFileSummaryValue
-    );
+    expect(component.essFiles).toEqual(evacueeProfileService.evacuationFileSummaryValue);
   });
 });

@@ -4,9 +4,7 @@
       <div class="row">
         <div class="col-md-6 mr-auto">
           <div class="form-group">
-            <label class="requiredField" for="invoiceNumber"
-              >Invoice Number</label
-            >
+            <label class="requiredField" for="invoiceNumber">Invoice Number</label>
             <input
               type="text"
               class="form-control form-control-lg"
@@ -14,33 +12,27 @@
               [formControlName]="'invoiceNumber'"
               required
             />
-            <div
-              *ngIf="
-                invoiceControl.invoiceNumber?.invalid &&
-                (invoiceControl.invoiceNumber?.dirty ||
-                  invoiceControl.invoiceNumber?.touched)
-              "
-              class="text-white"
-            >
-              <div
-                *ngIf="invoiceControl.invoiceNumber?.errors.required"
-                style="color: red"
-              >
-                Invoice Number is required
+            @if (
+              invoiceControl.invoiceNumber?.invalid &&
+              (invoiceControl.invoiceNumber?.dirty || invoiceControl.invoiceNumber?.touched)
+            ) {
+              <div class="text-white">
+                @if (invoiceControl.invoiceNumber?.errors.required) {
+                  <div style="color: red">Invoice Number is required</div>
+                }
+                @if (invoiceControl.invoiceNumber?.errors.duplicateInvoice) {
+                  <div style="color: red">Invoice Number is duplicate</div>
+                }
               </div>
-              <div
-                *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice"
-                style="color: red"
-              >
-                Invoice Number is duplicate
-              </div>
-            </div>
+            }
           </div>
         </div>
 
-        <div *ngIf="formArraySize > 1" class="col-auto">
-          <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
-        </div>
+        @if (formArraySize > 1) {
+          <div class="col-auto">
+            <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
+          </div>
+        }
       </div>
     </div>
 
@@ -59,93 +51,74 @@
                 #d2="ngbDatepicker"
               />
               <div class="input-group-append">
-                <button
-                  class="btn btn-outline-primary"
-                  (click)="d2.toggle()"
-                  type="button"
-                >
+                <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button">
                   <i class="far fa-calendar-alt"></i>
                 </button>
               </div>
             </div>
-            <div
-              *ngIf="
-                invoiceControl.invoiceDate?.invalid &&
-                (invoiceControl.invoiceDate?.dirty ||
-                  invoiceControl.invoiceDate?.touched)
-              "
-              class="text-danger"
-            >
-              <div *ngIf="invoiceControl.invoiceDate?.errors.required">
-                Invoice Date is required
-              </div>
-              <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">
-                Future Date not allowed
-              </div>
-              <div
-                *ngIf="
-                  (invoiceControl.invoiceDate?.status === 'INVALID' &&
-                    invoiceControl.invoiceDate?.value !== null) ||
+            @if (
+              invoiceControl.invoiceDate?.invalid &&
+              (invoiceControl.invoiceDate?.dirty || invoiceControl.invoiceDate?.touched)
+            ) {
+              <div class="text-danger">
+                @if (invoiceControl.invoiceDate?.errors.required) {
+                  <div>Invoice Date is required</div>
+                }
+                @if (invoiceControl.invoiceDate?.errors?.futureDate) {
+                  <div>Future Date not allowed</div>
+                }
+                @if (
+                  (invoiceControl.invoiceDate?.status === 'INVALID' && invoiceControl.invoiceDate?.value !== null) ||
                   invoiceControl.invoiceDate?.errors.pattern
-                "
-              >
-                Invalid date
+                ) {
+                  <div>Invalid date</div>
+                }
               </div>
-            </div>
+            }
           </div>
 
-          <p *ngIf="hidden" class="note">
-            Note: To add more referrals, click "Add another referral" at the
-            bottom of the page.
-          </p>
+          @if (hidden) {
+            <p class="note">Note: To add more referrals, click "Add another referral" at the bottom of the page.</p>
+          }
 
-          <div *ngIf="!hidden">
-            <div class="form-group">
-              <label class="requiredField" for="referralList"
-                >How many referrals are listed on your invoice?</label
-              >
-              <select
-                class="form-control form-control-lg"
-                id="referralList"
-                [formControlName]="'referralList'"
-              >
-                <option *ngFor="let no of referralList" [ngValue]="no">
-                  {{ no.name }}
-                </option>
-              </select>
-              <div
-                *ngIf="
-                  invoiceControl.referralList?.invalid &&
-                  (invoiceControl.referralList?.dirty ||
-                    invoiceControl.referralList?.touched)
-                "
-                class="text-danger"
-              >
-                <div *ngIf="invoiceControl.referralList?.errors.required">
-                  Number of referrals is required
-                </div>
-              </div>
-            </div>
-
+          @if (!hidden) {
             <div>
-              <button
-                type="button"
-                (click)="
-                  addReferralTemplate(invoiceForm.get('referralList').value.id)
-                "
-                class="btn primary-button referral-button"
-              >
-                Next
-              </button>
+              <div class="form-group">
+                <label class="requiredField" for="referralList">How many referrals are listed on your invoice?</label>
+                <select class="form-control form-control-lg" id="referralList" [formControlName]="'referralList'">
+                  @for (no of referralList; track no) {
+                    <option [ngValue]="no">
+                      {{ no.name }}
+                    </option>
+                  }
+                </select>
+                @if (
+                  invoiceControl.referralList?.invalid &&
+                  (invoiceControl.referralList?.dirty || invoiceControl.referralList?.touched)
+                ) {
+                  <div class="text-danger">
+                    @if (invoiceControl.referralList?.errors.required) {
+                      <div>Number of referrals is required</div>
+                    }
+                  </div>
+                }
+              </div>
+              <div>
+                <button
+                  type="button"
+                  (click)="addReferralTemplate(invoiceForm.get('referralList').value.id)"
+                  class="btn primary-button referral-button"
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
+          }
         </div>
 
         <div class="col-md-6">
           <div class="form-group">
-            <label class="requiredField"
-              >Attach a photo/scanned copy of your invoice</label
-            >
+            <label class="requiredField">Attach a photo/scanned copy of your invoice</label>
             <app-file-upload
               [reloadedFiles]="reloadedFiles"
               [noOfAttachments]="noOfAttachments"
@@ -153,58 +126,57 @@
               (deleteFile)="deleteFileFormControl($event)"
             >
             </app-file-upload>
-            <div
-              *ngIf="
-                !checkAttachmentLength(invoiceControl.invoiceAttachments.value)
-              "
-              style="color: red"
-            >
-              Attachment is required
-            </div>
+            @if (!checkAttachmentLength(invoiceControl.invoiceAttachments.value)) {
+              <div style="color: red">Attachment is required</div>
+            }
           </div>
         </div>
       </div>
 
       <div formArrayName="referrals">
-        <div *ngFor="let referral of referrals.controls; let j = index">
-          <app-referral
-            [index]="j"
-            [referralForm]="referral"
-            [formGroupName]="j"
-            [component]="component"
-            [formArraySize]="referrals.controls.length"
-            [invoiceCurrentIndex]="index"
-            (referralToRemove)="removeReferral($event)"
-          ></app-referral>
-        </div>
+        @for (referral of referrals.controls; track referral; let j = $index) {
+          <div>
+            <app-referral
+              [index]="j"
+              [referralForm]="referral"
+              [formGroupName]="j"
+              [component]="component"
+              [formArraySize]="referrals.controls.length"
+              [invoiceCurrentIndex]="index"
+              (referralToRemove)="removeReferral($event)"
+            ></app-referral>
+          </div>
+        }
       </div>
 
-      <div *ngIf="referrals.controls.length > 0" class="row">
-        <div class="col-12">
-          <a
-            (click)="addSingleReferralTemplate()"
-            class="btn btn-block add-referral-button"
-            >+ Add another referral to this invoice</a
-          >
+      @if (referrals.controls.length > 0) {
+        <div class="row">
+          <div class="col-12">
+            <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button"
+              >+ Add another referral to this invoice</a
+            >
+          </div>
         </div>
-      </div>
+      }
       <br />
-      <div *ngIf="referrals.controls.length > 0" class="row">
-        <div class="col-12 form-inline" style="justify-content: flex-end">
-          Total Amount &nbsp;&nbsp;
-          <span class="input-symbol-dollar total-dollar-line"
-            ><input
-              type="number"
-              id="invoiceTotalAmount"
-              [formControlName]="'invoiceTotalAmount'"
-              class="form-control form-control-lg"
-              readonly
-          /></span>
+      @if (referrals.controls.length > 0) {
+        <div class="row">
+          <div class="col-12 form-inline" style="justify-content: flex-end">
+            Total Amount &nbsp;&nbsp;
+            <span class="input-symbol-dollar total-dollar-line"
+              ><input
+                type="number"
+                id="invoiceTotalAmount"
+                [formControlName]="'invoiceTotalAmount'"
+                class="form-control form-control-lg"
+                readonly
+            /></span>
+          </div>
+          <div class="col-12 form-inline" style="justify-content: flex-end">
+            <p class="input-help">(inclusive of all taxes)</p>
+          </div>
         </div>
-        <div class="col-12 form-inline" style="justify-content: flex-end">
-          <p class="input-help">(inclusive of all taxes)</p>
-        </div>
-      </div>
+      }
     </div>
   </form>
 </div>

@@ -1,32 +1,66 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pet } from 'src/app/core/api/models';
 import { WizardService } from '../../wizard.service';
+import { PetFormComponent } from '../../../../shared/forms/pet-form/pet-form.component';
+import {
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-animals',
   templateUrl: './animals.component.html',
-  styleUrls: ['./animals.component.scss']
+  styleUrls: ['./animals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatButton,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    NgClass,
+    MatIconButton,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    PetFormComponent
+  ]
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
   @Output() validPetsIndicator: any = new EventEmitter();
@@ -68,15 +102,10 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     });
 
     // Updates the validations for the PetFormGroup
-    this.animalsForm
-      .get('addPetIndicator')
-      .valueChanges.subscribe(() => this.updateOnVisibility());
+    this.animalsForm.get('addPetIndicator').valueChanges.subscribe(() => this.updateOnVisibility());
 
     // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
-    if (
-      this.stepEssFileService.havePets === 'Yes' &&
-      this.stepEssFileService.petsList.length === 0
-    ) {
+    if (this.stepEssFileService.havePets === 'Yes' && this.stepEssFileService.petsList.length === 0) {
       this.addPets();
       this.showPetsForm = true;
     }
@@ -205,10 +234,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     if (this.stepEssFileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.animalsForm.controls,
-        'animals'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(this.animalsForm.controls, 'animals');
 
       const hasPetsUpdated = this.wizardService.hasPetsChanged(this.pets);
 
@@ -233,10 +259,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       pets: [
         this.stepEssFileService.petsList,
         this.customValidation
-          .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === 'Yes',
-            Validators.required
-          )
+          .conditionalValidation(() => this.animalsForm.get('hasPets').value === 'Yes', Validators.required)
           .bind(this.customValidation)
       ],
       pet: this.createPetForm(),
@@ -272,10 +295,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
             )
             .bind(this.customValidation),
           this.customValidation
-            .conditionalValidation(
-              () => this.animalsForm.get('addPetIndicator').value === true,
-              Validators.required
-            )
+            .conditionalValidation(() => this.animalsForm.get('addPetIndicator').value === true, Validators.required)
             .bind(this.customValidation)
         ]
       ]
@@ -296,9 +316,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private runValidation() {
     if (this.animalsForm.valid) {
       this.validPetsIndicator.emit(true);
-    } else if (
-      this.stepEssFileService.checkForPartialUpdates(this.animalsForm)
-    ) {
+    } else if (this.stepEssFileService.checkForPartialUpdates(this.animalsForm)) {
       this.validPetsIndicator.emit(false);
     } else {
       this.validPetsIndicator.emit(false);
@@ -312,7 +330,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private saveFormData() {
     this.stepEssFileService.havePets = this.animalsForm.get('hasPets').value;
     this.stepEssFileService.petsList = this.animalsForm.get('pets').value;
-    this.stepEssFileService.addPetIndicator =
-      this.animalsForm.get('addPetIndicator').value;
+    this.stepEssFileService.addPetIndicator = this.animalsForm.get('addPetIndicator').value;
   }
 }

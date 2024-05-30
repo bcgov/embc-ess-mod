@@ -179,7 +179,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact]
-        public async Task CanValidatExistingUserNameForExistingMember()
+        public async Task CanValidateExistingUserNameForExistingMember()
         {
             var members = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers;
             var aMember = members.Skip(0).First();
@@ -263,7 +263,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task AssignCommunities_Team_PreserveDateAssigned()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.AddSeconds(-10);
             var communities = TestData.Commmunities;
 
             var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
@@ -440,9 +440,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task RemoveSupplier_Supplier_NotClaimedAndNoMutualAids()
         {
-            await manager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierAId });
+            await manager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierBId });
 
-            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierBId })).Items.ShouldHaveSingleItem();
             updatedSupplier.PrimaryTeams.ShouldBeEmpty();
             updatedSupplier.MutualAids.ShouldBeEmpty();
         }

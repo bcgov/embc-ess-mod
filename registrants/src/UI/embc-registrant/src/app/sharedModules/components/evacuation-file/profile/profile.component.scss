@@ -1,17 +1,17 @@
 :host ::ng-deep app-review {
-    .mat-card {
-        box-shadow: none;
-    }
-    .mat-card-top,
-    mat-card {
-        border-top-style: none !important;
-    }
-    .mat-card-left,
-    mat-card {
-        border-left-style: none !important;
-    }
-    .mat-card-right,
-    mat-card {
-        border-right-style: none !important;
-    }
+  .mat-mdc-card {
+    box-shadow: none;
+  }
+  .mat-mdc-card-top,
+  mat-card {
+    border-top-style: none !important;
+  }
+  .mat-mdc-card-left,
+  mat-card {
+    border-left-style: none !important;
+  }
+  .mat-mdc-card-right,
+  mat-card {
+    border-right-style: none !important;
+  }
 }

@@ -4,11 +4,15 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { RestrictionService } from '../../../feature-components/restriction/restriction.service';
+import { MatButtonModule } from '@angular/material/button';
+import { RestrictionFormComponent } from '../../forms/restriction-form/restriction-form.component';
 
 @Component({
   selector: 'app-confirm-restriction',
   templateUrl: './confirm-restriction.component.html',
-  styleUrls: ['./confirm-restriction.component.scss']
+  styleUrls: ['./confirm-restriction.component.scss'],
+  standalone: true,
+  imports: [RestrictionFormComponent, MatButtonModule]
 })
 export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: UntypedFormGroup;
@@ -24,11 +28,9 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    * Initializes and loads the confirm-restriction form
    */
   ngOnInit(): void {
-    this.restrictionForm$ = this.formCreationService
-      .getRestrictionForm()
-      .subscribe((restrictionForm) => {
-        this.restrictionForm = restrictionForm;
-      });
+    this.restrictionForm$ = this.formCreationService.getRestrictionForm().subscribe((restrictionForm) => {
+      this.restrictionForm = restrictionForm;
+    });
   }
 
   /**
@@ -43,8 +45,7 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    */
   needsAssessment(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.restrictionService.restrictedAccess =
-        this.restrictionForm.get('restrictedAccess').value;
+      this.restrictionService.restrictedAccess = this.restrictionForm.get('restrictedAccess').value;
       this.router.navigate(['/verified-registration/needs-assessment']);
     } else {
       this.restrictionForm.markAllAsTouched();

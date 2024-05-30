@@ -7,10 +7,7 @@ import { TeamsService } from 'src/app/core/api/services';
 export class TeamMemberReviewService {
   constructor(private teamMembersService: TeamsService) {}
 
-  updateTeamMember(
-    memberId: string,
-    teamMember: TeamMember
-  ): Observable<TeamMemberResult> {
+  updateTeamMember(memberId: string, teamMember: TeamMember): Observable<TeamMemberResult> {
     return this.teamMembersService.teamsUpdateTeamMember({
       memberId,
       body: teamMember

@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { EvacuationFileTaskFeature } from './evacuation-file-task-feature';
+import { EvacuationFileTaskFeature } from '../models/evacuation-file-task-feature';
 export interface EvacuationFileTask {
-  communityCode?: null | string;
+  communityCode?: string | null;
   features?: Array<EvacuationFileTaskFeature>;
-  from?: null | string;
-  status?: null | string;
+  from?: string | null;
+  status?: string | null;
   taskNumber: string;
-  to?: null | string;
+  to?: string | null;
 }

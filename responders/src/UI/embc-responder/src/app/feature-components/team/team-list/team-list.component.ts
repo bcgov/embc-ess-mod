@@ -14,11 +14,17 @@ import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AddTeamMemberService } from '../add-team-member/add-team-member.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { TeamMemberTableComponent } from './team-member-table/team-member-table.component';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-team-list',
   templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss']
+  styleUrls: ['./team-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, TeamMemberTableComponent]
 })
 export class TeamListComponent implements OnInit {
   filterTerm: TableFilterValueModel;
@@ -84,10 +90,7 @@ export class TeamListComponent implements OnInit {
    */
   openMemberDetails($event: TeamMember): void {
     this.teamDataService.setSelectedTeamMember($event);
-    this.router.navigate(
-      ['/responder-access/responder-management/details/member-details'],
-      { state: $event }
-    );
+    this.router.navigate(['/responder-access/responder-management/details/member-details'], { state: $event });
   }
 
   /**
@@ -105,10 +108,7 @@ export class TeamListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.activateTeamMemberError
-        );
+        this.alertService.setAlert('danger', globalConst.activateTeamMemberError);
       }
     });
   }
@@ -128,10 +128,7 @@ export class TeamListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.deActivateTeamMemberError
-        );
+        this.alertService.setAlert('danger', globalConst.deActivateTeamMemberError);
       }
     });
   }

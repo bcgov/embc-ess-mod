@@ -5,11 +5,7 @@ import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { lastValueFrom } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/internal/operators/tap';
-import {
-  CaptchaConfiguration,
-  Configuration,
-  OutageInformation
-} from '../api/models';
+import { CaptchaConfiguration, Configuration, OutageInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
 import { AlertService } from './alert.service';
@@ -44,13 +40,11 @@ export class ConfigService {
       return this.configuration;
     }
 
-    const config$ = this.configurationService
-      .configurationGetConfiguration()
-      .pipe(
-        tap((c: Configuration) => {
-          this.configuration = c;
-        })
-      );
+    const config$ = this.configurationService.configurationGetConfiguration().pipe(
+      tap((c: Configuration) => {
+        this.configuration = c;
+      })
+    );
 
     return lastValueFrom(config$);
   }
@@ -67,7 +61,6 @@ export class ConfigService {
       scope: config.oidc?.scope || undefined,
       showDebugInformation: true, //!environment.production,
       customQueryParams: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'idp:bcsc'
       }
     };
@@ -99,8 +92,8 @@ export class ConfigService {
     return this.environmentBanner
       ? this.environmentBanner
       : JSON.parse(this.cacheService.get('environment'))
-      ? JSON.parse(this.cacheService.get('environment'))
-      : this.getEnvironmentInfo();
+        ? JSON.parse(this.cacheService.get('environment'))
+        : this.getEnvironmentInfo();
   }
 
   public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {

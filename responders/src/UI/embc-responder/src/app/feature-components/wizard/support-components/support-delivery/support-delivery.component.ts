@@ -15,11 +15,17 @@ import { SupportSubCategory } from '../../../../core/api/models';
 import { CacheService } from '../../../../core/services/cache.service';
 import { CloneSupportDetailsService } from '../existing-support-details/clone-support-details.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
+import { MatButton } from '@angular/material/button';
+import { SupportEtransferComponent } from './support-etransfer/support-etransfer.component';
+import { SupportReferralComponent } from './support-referral/support-referral.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-support-delivery',
   templateUrl: './support-delivery.component.html',
-  styleUrls: ['./support-delivery.component.scss']
+  styleUrls: ['./support-delivery.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SupportReferralComponent, SupportEtransferComponent, MatButton]
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: UntypedFormGroup;
@@ -47,7 +53,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         if (state?.action === 'edit') {
           this.editFlag = true;
         }
-        if (state?.action === 'clone' || this.appBaseService.wizardProperties.wizardType === WizardType.ExtendSupports) {
+        if (
+          state?.action === 'clone' ||
+          this.appBaseService.wizardProperties.wizardType === WizardType.ExtendSupports
+        ) {
           this.cloneFlag = true;
         }
       }
@@ -86,14 +95,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       {
         issuedTo: [
           this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
-          [this.customValidation.conditionalValidation(() => this.selectedSupportMethod === SupportMethod.Referral, Validators.required).bind(this.customValidation)]
+          [
+            this.customValidation
+              .conditionalValidation(() => this.selectedSupportMethod === SupportMethod.Referral, Validators.required)
+              .bind(this.customValidation)
+          ]
         ],
         name: [
           this.stepSupportsService?.supportDelivery?.name ?? '',
           [
             this.customValidation
               .conditionalValidation(
-                () => this.selectedSupportMethod === SupportMethod.Referral && this.supportDeliveryForm.get('issuedTo').value === 'Someone else',
+                () =>
+                  this.selectedSupportMethod === SupportMethod.Referral &&
+                  this.supportDeliveryForm.get('issuedTo').value === 'Someone else',
                 this.customValidation.whitespaceValidator()
               )
               .bind(this.customValidation)
@@ -123,14 +138,19 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         recipientLastName: [
           this.cloneFlag
             ? this.cloneSupportDetailsService.recipientLastName
-            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() || ''
+            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+              ''
         ],
         receivingRegistrantId: [
-          this.cloneFlag ? this.cloneSupportDetailsService.receivingRegistrantId : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id || ''
+          this.cloneFlag
+            ? this.cloneSupportDetailsService.receivingRegistrantId
+            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id || ''
         ],
         notificationPreference: [
           this.getExistingPreference(),
-          this.customValidation.conditionalValidation(() => this.selectedSupportMethod === SupportMethod.ETransfer, Validators.required).bind(this.customValidation)
+          this.customValidation
+            .conditionalValidation(() => this.selectedSupportMethod === SupportMethod.ETransfer, Validators.required)
+            .bind(this.customValidation)
         ],
         notificationEmail: [
           this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
@@ -139,7 +159,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             this.customValidation.conditionalValidation(
               () =>
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -152,7 +173,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -164,7 +186,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             this.customValidation.conditionalValidation(
               () =>
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -177,14 +200,18 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
-                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' || this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
+                (this.supportDeliveryForm.get('notificationPreference').value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference').value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
           ]
         ]
       },
       {
-        validators: [this.customValidation.confirmNotificationEmailValidator(), this.customValidation.confirmNotificationMobileValidator()]
+        validators: [
+          this.customValidation.confirmNotificationEmailValidator(),
+          this.customValidation.confirmNotificationMobileValidator()
+        ]
       }
     );
   }
@@ -301,9 +328,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   private billetingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostAddress: [this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''],
-      hostCity: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '', [this.customValidation.whitespaceValidator()]],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
         this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
@@ -339,17 +372,29 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   private groupLodgingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostCity: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '', [Validators.required]],
       hostCommunityCode: [this.stepSupportsService?.supportDelivery?.details?.hostCity ?? ''],
-      hostPhone: [this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '', [this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]]
+      hostPhone: [
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
+        [this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]
+      ]
     });
   }
 
   private groupShelterAllowanceSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
-      hostName: [this.stepSupportsService?.supportDelivery?.details?.hostName ?? '', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
         this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [

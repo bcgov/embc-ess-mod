@@ -37,11 +37,25 @@ import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe
 import { AppBaseService } from '../../../../core/services/helper/appBase.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
 import { CloneSupportDetailsService } from './clone-support-details.service';
+import { SupplierContactPipe } from '../../../../shared/pipes/supplierContact.pipe';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { OverlayLoaderComponent } from '../../../../shared/components/overlay-loader/overlay-loader.component';
+import { NgClass, UpperCasePipe, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-existing-support-details',
   templateUrl: './existing-support-details.component.html',
-  styleUrls: ['./existing-support-details.component.scss']
+  styleUrls: ['./existing-support-details.component.scss'],
+  standalone: true,
+  imports: [
+    NgClass,
+    OverlayLoaderComponent,
+    UpperCasePipe,
+    DecimalPipe,
+    DatePipe,
+    MaskEvacuatedAddressPipe,
+    SupplierContactPipe
+  ]
 })
 export class ExistingSupportDetailsComponent implements OnInit {
   selectedSupport: Support;
@@ -67,9 +81,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
-    this.isExtendSupports =
-      this.appBaseService?.wizardProperties?.wizardType ===
-      WizardType.ExtendSupports;
+    this.isExtendSupports = this.appBaseService?.wizardProperties?.wizardType === WizardType.ExtendSupports;
   }
 
   back() {
@@ -91,45 +103,33 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   canExtendSupport(): boolean {
-    return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
+    return this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting;
   }
 
   canEditSupport(): boolean {
-    return (this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting)
+    return this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting;
   }
 
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
       (this.selectedSupport as FoodGroceriesSupport).numberOfDays *
-      (this.selectedSupport as FoodGroceriesSupport).includedHouseholdMembers
-        .length;
-    return maxRate < (this.selectedSupport as FoodGroceriesSupport).totalAmount
-      ? false
-      : true;
+      (this.selectedSupport as FoodGroceriesSupport).includedHouseholdMembers.length;
+    return maxRate < (this.selectedSupport as FoodGroceriesSupport).totalAmount ? false : true;
   }
 
   checkIncidentalMaxRate(): boolean {
     const maxRate =
-      globalConst.incidentals.rate *
-      (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers
-        .length;
-    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
-      ? false
-      : true;
+      globalConst.incidentals.rate * (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers.length;
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount ? false : true;
   }
 
   checkClothingMaxRate(): boolean {
-    const rate = (this.selectedSupport as ClothingSupport)
-      .extremeWinterConditions
+    const rate = (this.selectedSupport as ClothingSupport).extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
-    const maxRate =
-      rate *
-      (this.selectedSupport as ClothingSupport).includedHouseholdMembers.length;
-    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
-      ? false
-      : true;
+    const maxRate = rate * (this.selectedSupport as ClothingSupport).includedHouseholdMembers.length;
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount ? false : true;
   }
 
   get groceryReferral(): FoodGroceriesSupport {
@@ -187,10 +187,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   openAssessment(): void {
     this.isLoading = !this.isLoading;
     this.stepSupportsService
-      .getNeedsAssessmentInfo(
-        this.needsAssessmentForSupport?.id,
-        this.selectedSupport?.needsAssessmentId
-      )
+      .getNeedsAssessmentInfo(this.needsAssessmentForSupport?.id, this.selectedSupport?.needsAssessmentId)
       .subscribe((response) => {
         this.dialog.open(DialogComponent, {
           data: {
@@ -220,11 +217,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
         next: (reason) => {
           if (reason !== undefined && reason !== 'close') {
             this.existingSupportService
-              .voidSupport(
-                this.needsAssessmentForSupport.id,
-                this.selectedSupport.id,
-                reason
-              )
+              .voidSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id, reason)
               .subscribe({
                 next: (value) => {
                   const stateIndicator = { action: 'void' };
@@ -234,10 +227,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 },
                 error: (error) => {
                   this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.voidReferralError
-                  );
+                  this.alertService.setAlert('danger', globalConst.voidReferralError);
                 }
               });
           }
@@ -257,11 +247,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe({
         next: (output) => {
-          if (
-            output !== undefined &&
-            output.reason !== undefined &&
-            output.reason !== 'close'
-          ) {
+          if (output !== undefined && output.reason !== undefined && output.reason !== 'close') {
             this.isLoading = !this.isLoading;
             this.existingSupportService
               .reprintSupport(
@@ -276,19 +262,14 @@ export class ExistingSupportDetailsComponent implements OnInit {
                   await this.downloadService.downloadFile(
                     window,
                     blob,
-                    `support-${
-                      this.selectedSupport.id
-                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                    `support-${this.selectedSupport.id}-${new FlatDateFormatPipe().transform(new Date())}.pdf`
                   );
                   this.isLoading = !this.isLoading;
                 },
                 error: (error) => {
                   this.isLoading = !this.isLoading;
                   this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.reprintReferralError
-                  );
+                  this.alertService.setAlert('danger', globalConst.reprintReferralError);
                 }
               });
           }
@@ -309,10 +290,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .subscribe({
         next: (output) => {
           if (output !== undefined && output !== 'cancel') {
-            this.cloneSupportService.cloneSupport(
-              this.selectedSupport,
-              this.needsAssessmentForSupport
-            );
+            this.cloneSupportService.cloneSupport(this.selectedSupport, this.needsAssessmentForSupport);
             this.router.navigate(['/ess-wizard/add-supports/details'], {
               state: { action: 'clone' }
             });
@@ -322,13 +300,11 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   mapMemberName(householdMemberId: string): string {
-    const memberObject = this.needsAssessmentForSupport?.householdMembers.find(
-      (value) => {
-        if (value?.id === householdMemberId) {
-          return value;
-        }
+    const memberObject = this.needsAssessmentForSupport?.householdMembers.find((value) => {
+      if (value?.id === householdMemberId) {
+        return value;
       }
-    );
+    });
     return memberObject?.lastName + ', ' + memberObject?.firstName;
   }
 
@@ -360,10 +336,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   editDraft(): void {
-    this.existingSupportService.createEditableDraft(
-      this.selectedSupport,
-      this.needsAssessmentForSupport
-    );
+    this.existingSupportService.createEditableDraft(this.selectedSupport, this.needsAssessmentForSupport);
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
@@ -384,10 +357,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
         next: (response) => {
           if (response === 'cancel') {
             this.existingSupportService
-              .cancelSupport(
-                this.needsAssessmentForSupport.id,
-                this.selectedSupport.id
-              )
+              .cancelSupport(this.needsAssessmentForSupport.id, this.selectedSupport.id)
               .subscribe({
                 next: (value) => {
                   const stateIndicator = { action: 'cancel' };
@@ -397,10 +367,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 },
                 error: (error) => {
                   this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.cancelEtransferError
-                  );
+                  this.alertService.setAlert('danger', globalConst.cancelEtransferError);
                 }
               });
           }
@@ -409,24 +376,18 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   getStatusTextToDisplay(enumToText: string): string {
-    return this.loadEvacueeListService
-      .getSupportStatus()
-      .find((statusValue) => statusValue.value === enumToText)?.description;
+    return this.loadEvacueeListService.getSupportStatus().find((statusValue) => statusValue.value === enumToText)
+      ?.description;
   }
 
   getMethodTextToDisplay(enumToText: string): string {
-    return this.loadEvacueeListService
-      .getSupportMethods()
-      .find((method) => method.value === enumToText)?.description;
+    return this.loadEvacueeListService.getSupportMethods().find((method) => method.value === enumToText)?.description;
   }
 
   getNotificationPref(): string {
     if (this.interac.notificationEmail && this.interac.notificationMobile) {
       return 'Email & Mobile';
-    } else if (
-      this.interac.notificationEmail &&
-      !this.interac.notificationMobile
-    ) {
+    } else if (this.interac.notificationEmail && !this.interac.notificationMobile) {
       return 'Email';
     } else {
       return 'Mobile';
@@ -440,17 +401,17 @@ export class ExistingSupportDetailsComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
-    const lastName =
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
-        (member) =>
-          member.id === memberId || member.linkedRegistrantId === memberId
-      ).lastName;
-    const firstName =
-      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
-        (member) =>
-          member.id === memberId || member.linkedRegistrantId === memberId
-      ).firstName;
+    const lastName = this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
+      (member) => member.id === memberId || member.linkedRegistrantId === memberId
+    ).lastName;
+    const firstName = this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
+      (member) => member.id === memberId || member.linkedRegistrantId === memberId
+    ).firstName;
 
     return firstName.toLocaleUpperCase() + ' ' + lastName.toUpperCase();
+  }
+
+  getFirstLastNameFormatted(firstName: string, lastName: string): string {
+    return lastName.toUpperCase() + ', ' + firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   }
 }

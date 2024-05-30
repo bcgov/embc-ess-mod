@@ -1,5 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatAccordion } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import {
   EvacuationFileHouseholdMember,
   HouseholdMemberType,
@@ -12,13 +18,33 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { HouseholdMemberService } from './household-member.service';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-household-member',
   templateUrl: './household-member.component.html',
-  styleUrls: ['./household-member.component.scss']
+  styleUrls: ['./household-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatAccordion,
+    MatButtonModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    NgClass,
+    AppLoaderComponent,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
-export class HouseholdMemberComponent implements OnInit {
+export class HouseholdMemberComponent {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() essFile: EvacuationFileModel;
   currentlyOpenedItemIndex = -1;
@@ -32,8 +58,6 @@ export class HouseholdMemberComponent implements OnInit {
     private appBaseService: AppBaseService,
     private householdMemberService: HouseholdMemberService
   ) {}
-
-  ngOnInit(): void {}
 
   /**
    * Sets expanded input value for panel
@@ -50,10 +74,7 @@ export class HouseholdMemberComponent implements OnInit {
    *
    * @param itemIndex selected file index
    */
-  setOpened(
-    itemIndex: number,
-    houseHoldMember: EvacuationFileHouseholdMember
-  ): void {
+  setOpened(itemIndex: number, houseHoldMember: EvacuationFileHouseholdMember): void {
     this.currentlyOpenedItemIndex = itemIndex;
     this.essfileDashboardService.matchedProfiles = undefined;
     this.essfileDashboardService.displayMemberButton = undefined;
@@ -63,17 +84,12 @@ export class HouseholdMemberComponent implements OnInit {
 
     if (
       houseHoldMember.type === HouseholdMemberType.HouseholdMember &&
-      this.appBaseService.appModel.selectedUserPathway ===
-        SelectedPathType.digital &&
+      this.appBaseService.appModel.selectedUserPathway === SelectedPathType.digital &&
       !houseHoldMember.isMinor &&
       houseHoldMember.linkedRegistrantId === null
     ) {
       this.essfileDashboardService
-        .getPossibleProfileMatches(
-          houseHoldMember.firstName,
-          houseHoldMember.lastName,
-          houseHoldMember.dateOfBirth
-        )
+        .getPossibleProfileMatches(houseHoldMember.firstName, houseHoldMember.lastName, houseHoldMember.dateOfBirth)
         .subscribe({
           next: (value: RegistrantProfileSearchResult[]) => {
             this.essfileDashboardService.matchedProfiles = value;

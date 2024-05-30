@@ -10,8 +10,7 @@ describe('UsaAddressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatAutocompleteModule],
-      declarations: [UsaAddressComponent]
+      imports: [HttpClientTestingModule, MatAutocompleteModule, UsaAddressComponent]
     }).compileComponents();
   }));
 

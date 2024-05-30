@@ -9,18 +9,51 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSlideToggleChange, MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamMemberModel } from 'src/app/core/models/team-member.model';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-team-member-table',
   templateUrl: './team-member-table.component.html',
-  styleUrls: ['./team-member-table.component.scss']
+  styleUrls: ['./team-member-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    NgClass,
+    MatSlideToggle,
+    AppLoaderComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator
+  ]
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -95,14 +128,8 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
-        data.lastName
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-        data.userName
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+        data.userName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1
       ) {
         return true;
       }
@@ -113,27 +140,15 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
       const labelTerm = terms[2];
       const matchFilter = [];
       const isActive = data.isActive === true ? 'Active' : 'Deactivated';
-      const roleBoolean =
-        data.roleDescription
-          .trim()
-          .toLowerCase()
-          .indexOf(roleTerm.trim().toLowerCase()) !== -1;
-      const statusBoolean =
-        isActive
-          .trim()
-          .toLowerCase()
-          .indexOf(statusTerm.trim().toLowerCase()) !== -1;
+      const roleBoolean = data.roleDescription.trim().toLowerCase().indexOf(roleTerm.trim().toLowerCase()) !== -1;
+      const statusBoolean = isActive.trim().toLowerCase().indexOf(statusTerm.trim().toLowerCase()) !== -1;
       const labelBoolean =
         labelTerm === ''
           ? true
-          : data.labelDescription === null ||
-            data.labelDescription === undefined
-          ? false
-          : data.labelDescription
-              .trim()
-              .toLowerCase()
-              .indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
-            data.labelDescription.trim().length === labelTerm.trim().length;
+          : data.labelDescription === null || data.labelDescription === undefined
+            ? false
+            : data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
+              data.labelDescription.trim().length === labelTerm.trim().length;
 
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
@@ -190,13 +205,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     if (this.loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier3) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2
-        ? true
-        : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 ||
-        row.role === MemberRole.Tier2 ||
-        row.role === MemberRole.Tier3
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3
         ? true
         : false;
     }

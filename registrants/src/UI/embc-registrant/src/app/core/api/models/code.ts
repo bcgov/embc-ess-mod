@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface Code {
-  description?: string;
+  description?: string | null;
   isActive?: boolean;
   parentCode?: Code;
-  type?: string;
-  value?: string;
+  type?: string | null;
+  value?: string | null;
 }

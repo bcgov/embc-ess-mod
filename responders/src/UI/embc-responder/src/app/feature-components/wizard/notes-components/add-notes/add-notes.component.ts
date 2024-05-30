@@ -2,17 +2,26 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
-  UntypedFormGroup
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import * as globalConst from 'src/app/core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-add-notes',
   templateUrl: './add-notes.component.html',
-  styleUrls: ['./add-notes.component.scss']
+  styleUrls: ['./add-notes.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatError, MatButton, AppLoaderComponent]
 })
 export class AddNotesComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(false);
@@ -67,21 +76,17 @@ export class AddNotesComponent implements OnInit {
    * Creates the notes
    */
   createNote(): void {
-    this.stepNotesService
-      .saveNotes(
-        this.stepNotesService.createNoteDTO(this.notesForm.get('note').value)
-      )
-      .subscribe({
-        next: (result) => {
-          this.closeEvent.emit(true);
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.addNotesError);
-        }
-      });
+    this.stepNotesService.saveNotes(this.stepNotesService.createNoteDTO(this.notesForm.get('note').value)).subscribe({
+      next: (result) => {
+        this.closeEvent.emit(true);
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.addNotesError);
+      }
+    });
   }
 
   /**
@@ -90,10 +95,7 @@ export class AddNotesComponent implements OnInit {
   editNote(): void {
     this.stepNotesService
       .editNote(
-        this.stepNotesService.createNoteDTO(
-          this.notesForm.get('note').value,
-          this.stepNotesService.selectedNote.id
-        )
+        this.stepNotesService.createNoteDTO(this.notesForm.get('note').value, this.stepNotesService.selectedNote.id)
       )
       .subscribe({
         next: (result) => {
@@ -114,9 +116,7 @@ export class AddNotesComponent implements OnInit {
   private createNotesForm(): void {
     this.notesForm = this.formBuilder.group({
       note: [
-        this.stepNotesService.selectedNote !== undefined
-          ? this.stepNotesService.selectedNote.content
-          : '',
+        this.stepNotesService.selectedNote !== undefined ? this.stepNotesService.selectedNote.content : '',
         [this.customValidation.whitespaceValidator()]
       ]
     });

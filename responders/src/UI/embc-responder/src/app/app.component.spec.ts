@@ -8,7 +8,6 @@ import {
   discardPeriodicTasks,
   fakeAsync
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -43,12 +42,23 @@ import { LoadEvacueeListService } from './core/services/load-evacuee-list.servic
 import { MockEvacueeListService } from './unit-tests/mockEvacueeList.service';
 import { SupplierService } from './core/services/suppliers.service';
 import { MockSupplierService } from './unit-tests/mockSuppliers.service';
+import { provideRouter } from '@angular/router';
 //import { MockEventRouter } from './unit-tests/mockEventRouter.service';
 
-@Component({ selector: 'app-environment-banner', template: '' })
+@Component({
+  selector: 'app-environment-banner',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, MatDialogModule]
+})
 class EnvironmentBannerStubComponent {}
 
-@Component({ selector: 'app-outage-banner', template: '' })
+@Component({
+  selector: 'app-outage-banner',
+  template: '',
+  standalone: true,
+  imports: [HttpClientTestingModule, MatDialogModule]
+})
 class OutageBannerStubComponent {}
 
 // export class MockEventRouter {
@@ -80,7 +90,17 @@ describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule.withRoutes([
+        HttpClientTestingModule,
+        OAuthModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
+        MatDialogModule,
+        EnvironmentBannerStubComponent,
+        OutageBannerStubComponent,
+        AppComponent
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        provideRouter([
           { path: 'outage', component: OutageComponent },
           {
             path: 'electronic-agreement',
@@ -91,18 +111,6 @@ describe('AppComponent', () => {
             component: ResponderAccessComponent
           }
         ]),
-        HttpClientTestingModule,
-        OAuthModule.forRoot(),
-        NgIdleKeepaliveModule.forRoot(),
-        MatDialogModule
-      ],
-      declarations: [
-        AppComponent,
-        EnvironmentBannerStubComponent,
-        OutageBannerStubComponent
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
         AppComponent,
         { provide: Router, useValue: routerMock },
         {
@@ -322,10 +330,8 @@ describe('AppComponent', () => {
     };
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
 
@@ -338,9 +344,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.environment.envName).toContain(
-      bannerService.getEnvironmentBanner().envName
-    );
+    expect(component.environment.envName).toContain(bannerService.getEnvironmentBanner().envName);
   }));
 
   it('should have environment banner subtitle', fakeAsync(() => {
@@ -353,10 +357,8 @@ describe('AppComponent', () => {
     };
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
@@ -368,9 +370,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.environment.bannerSubTitle).toContain(
-      bannerService.getEnvironmentBanner().bannerSubTitle
-    );
+    expect(component.environment.bannerSubTitle).toContain(bannerService.getEnvironmentBanner().bannerSubTitle);
   }));
 
   it('should have environment banner title', fakeAsync(() => {
@@ -383,10 +383,8 @@ describe('AppComponent', () => {
     };
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
@@ -398,9 +396,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.environment.bannerTitle).toContain(
-      bannerService.getEnvironmentBanner().bannerTitle
-    );
+    expect(component.environment.bannerTitle).toContain(bannerService.getEnvironmentBanner().bannerTitle);
   }));
 
   it('should display environment banner', fakeAsync(() => {
@@ -413,10 +409,8 @@ describe('AppComponent', () => {
     };
     bannerService.environmentBanner = {
       envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
+      bannerTitle: 'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle: 'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
@@ -498,9 +492,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageService.outageInfo.content).toEqual(
-      'Outage testing in Responders portal'
-    );
+    expect(component.outageService.outageInfo.content).toEqual('Outage testing in Responders portal');
   }));
 
   it('should have an outage start date', fakeAsync(() => {
@@ -525,9 +517,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageService.outageInfo.outageStartDate).toEqual(
-      '2021-12-15T21:00:00Z'
-    );
+    expect(component.outageService.outageInfo.outageStartDate).toEqual('2021-12-15T21:00:00Z');
   }));
 
   it('should have an outage end date', fakeAsync(() => {
@@ -552,9 +542,7 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageService.outageInfo.outageEndDate).toEqual(
-      '2021-12-16T21:00:00Z'
-    );
+    expect(component.outageService.outageInfo.outageEndDate).toEqual('2021-12-16T21:00:00Z');
   }));
 
   it('should display outage banner', fakeAsync(() => {

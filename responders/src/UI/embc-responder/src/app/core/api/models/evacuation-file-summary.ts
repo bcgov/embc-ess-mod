@@ -1,19 +1,19 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { EvacuationFileStatus } from './evacuation-file-status';
-import { EvacuationFileTask } from './evacuation-file-task';
+import { Address } from '../models/address';
+import { EvacuationFileStatus } from '../models/evacuation-file-status';
+import { EvacuationFileTask } from '../models/evacuation-file-task';
 export interface EvacuationFileSummary {
   createdOn?: string;
   evacuatedFromAddress?: Address;
   evacuationFileDate?: string;
   hasSupports?: boolean;
   id?: string;
-  isPaper?: null | boolean;
+  isPaper?: boolean | null;
   isPerliminary?: boolean;
-  isRestricted?: null | boolean;
+  isRestricted?: boolean | null;
   issuedOn?: string;
-  manualFileId?: null | string;
+  manualFileId?: string | null;
   status?: EvacuationFileStatus;
-  task?: null | EvacuationFileTask;
+  task?: EvacuationFileTask | null;
 }

@@ -11,13 +11,11 @@ import {
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NavigationStart, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { MockEditSupplierService } from 'src/app/unit-tests/mockEditSupplier.service';
 import { MockLocationService } from 'src/app/unit-tests/mockLocation.service';
@@ -32,6 +30,7 @@ import { SupplierListDataService } from '../suppliers-list/supplier-list-data.se
 
 import { SupplierDetailComponent } from './supplier-detail.component';
 import { SupplierDetailService } from './supplier-detail.service';
+import { provideRouter } from '@angular/router';
 
 describe('SupplierDetailComponent', () => {
   let component: SupplierDetailComponent;
@@ -53,20 +52,15 @@ describe('SupplierDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        CustomPipeModule,
-        RouterTestingModule.withRoutes([
+      imports: [MatDialogModule, HttpClientTestingModule, SupplierDetailComponent],
+      providers: [
+        provideRouter([
           { path: 'suppliers-list', component: SupplierManagementComponent },
           {
             path: 'edit-supplier',
             component: EditSupplierComponent
           }
-        ])
-      ],
-      declarations: [SupplierDetailComponent],
-      providers: [
+        ]),
         SupplierDetailComponent,
         UntypedFormBuilder,
         {
@@ -177,9 +171,7 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/suppliers-list']);
   }));
 
   it('should navigate to edit supplier', fakeAsync(() => {
@@ -193,8 +185,6 @@ describe('SupplierDetailComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/supplier-management/edit-supplier'
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/responder-access/supplier-management/edit-supplier']);
   }));
 });

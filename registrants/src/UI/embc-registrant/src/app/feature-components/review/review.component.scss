@@ -1,30 +1,43 @@
 .review-heading {
-    font-weight: 700;
-    font-style: normal;
-    font-size: 30px;
-    color: #169bd5;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 30px;
+  color: #169bd5;
 }
 
-.edit-image img:last-child {
-    display: none;
+.edit-image img:last-of-type {
+  display: none;
 }
 
-.edit-image:hover img:last-child {
-    display: block;
+.edit-image:hover img:last-of-type {
+  display: block;
 }
 
-.edit-image:hover img:first-child {
-    display: none;
+.edit-image:hover img:first-of-type {
+  display: none;
 }
 
 .info-detail {
-    padding: 10px;
+  padding: 10px;
 }
 
 .wrap-text {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .no-bottom-margin {
-    margin-bottom: 0;
+  margin-bottom: 0;
+}
+
+.edit-image {
+  top: -17px;
+}
+
+.header-row {
+  @media (min-width: 576px) {
+    height: 27px;
+  }
+  @media (max-width: 575px) {
+    height: 52px;
+  }
 }

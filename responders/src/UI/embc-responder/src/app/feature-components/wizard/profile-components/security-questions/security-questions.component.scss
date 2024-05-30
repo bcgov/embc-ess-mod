@@ -16,10 +16,10 @@ p {
 }
 
 .question-row {
-  .mat-form-field:last-child {
+  .mat-mdc-form-field:last-child {
     padding-left: 0;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 0.25em;
   }
@@ -27,7 +27,7 @@ p {
 
 .checkbox-row {
   padding: 1.8em 0;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
   ::ng-deep .mat-checkbox-label {
     margin-left: 0.8em;
   }
@@ -42,10 +42,11 @@ p {
   text-align: left;
 }
 
-::ng-deep .mat-select-panel {
+::ng-deep .mat-mdc-select-panel {
   max-width: 100% !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-infix {
   width: fit-content !important;
 }
@@ -55,4 +56,3 @@ p {
     width: 100%;
   }
 }
-

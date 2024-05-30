@@ -1,34 +1,42 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
 import { Code } from '../models/code';
 import { CommunityCode } from '../models/community-code';
-import { CommunityType } from '../models/community-type';
 import { Configuration } from '../models/configuration';
+import { configurationGetAuditOptions } from '../fn/configuration/configuration-get-audit-options';
+import { ConfigurationGetAuditOptions$Params } from '../fn/configuration/configuration-get-audit-options';
+import { configurationGetCodes } from '../fn/configuration/configuration-get-codes';
+import { ConfigurationGetCodes$Params } from '../fn/configuration/configuration-get-codes';
+import { configurationGetCommunities } from '../fn/configuration/configuration-get-communities';
+import { ConfigurationGetCommunities$Params } from '../fn/configuration/configuration-get-communities';
+import { configurationGetConfiguration } from '../fn/configuration/configuration-get-configuration';
+import { ConfigurationGetConfiguration$Params } from '../fn/configuration/configuration-get-configuration';
+import { configurationGetCountries } from '../fn/configuration/configuration-get-countries';
+import { ConfigurationGetCountries$Params } from '../fn/configuration/configuration-get-countries';
+import { configurationGetOutageInfo } from '../fn/configuration/configuration-get-outage-info';
+import { ConfigurationGetOutageInfo$Params } from '../fn/configuration/configuration-get-outage-info';
+import { configurationGetSecurityQuestions } from '../fn/configuration/configuration-get-security-questions';
+import { ConfigurationGetSecurityQuestions$Params } from '../fn/configuration/configuration-get-security-questions';
+import { configurationGetStateProvinces } from '../fn/configuration/configuration-get-state-provinces';
+import { ConfigurationGetStateProvinces$Params } from '../fn/configuration/configuration-get-state-provinces';
 import { OutageInformation } from '../models/outage-information';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ConfigurationService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation configurationGetConfiguration
-   */
+  /** Path part for operation `configurationGetConfiguration()` */
   static readonly ConfigurationGetConfigurationPath = '/api/Configuration';
 
   /**
@@ -41,22 +49,11 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetConfiguration$Response(params?: {
-  }): Observable<StrictHttpResponse<Configuration>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetConfigurationPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Configuration>;
-      })
-    );
+  configurationGetConfiguration$Response(
+    params?: ConfigurationGetConfiguration$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Configuration>> {
+    return configurationGetConfiguration(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -64,22 +61,21 @@ export class ConfigurationService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetConfiguration$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetConfiguration(params?: {
-  }): Observable<Configuration> {
-
-    return this.configurationGetConfiguration$Response(params).pipe(
-      map((r: StrictHttpResponse<Configuration>) => r.body as Configuration)
+  configurationGetConfiguration(
+    params?: ConfigurationGetConfiguration$Params,
+    context?: HttpContext
+  ): Observable<Configuration> {
+    return this.configurationGetConfiguration$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Configuration>): Configuration => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetCodes
-   */
+  /** Path part for operation `configurationGetCodes()` */
   static readonly ConfigurationGetCodesPath = '/api/Configuration/codes';
 
   /**
@@ -92,28 +88,11 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCodes$Response(params?: {
-
-    /**
-     * enum type name
-     */
-    forEnumType?: string;
-  }): Observable<StrictHttpResponse<Array<Code>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCodesPath, 'get');
-    if (params) {
-      rb.query('forEnumType', params.forEnumType, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Code>>;
-      })
-    );
+  configurationGetCodes$Response(
+    params?: ConfigurationGetCodes$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<Code>>> {
+    return configurationGetCodes(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -121,27 +100,18 @@ export class ConfigurationService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetCodes$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCodes(params?: {
-
-    /**
-     * enum type name
-     */
-    forEnumType?: string;
-  }): Observable<Array<Code>> {
-
-    return this.configurationGetCodes$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Code>>) => r.body as Array<Code>)
+  configurationGetCodes(params?: ConfigurationGetCodes$Params, context?: HttpContext): Observable<Array<Code>> {
+    return this.configurationGetCodes$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetCommunities
-   */
+  /** Path part for operation `configurationGetCommunities()` */
   static readonly ConfigurationGetCommunitiesPath = '/api/Configuration/codes/communities';
 
   /**
@@ -150,50 +120,29 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCommunities$Response(params?: {
-    stateProvinceId?: string;
-    countryId?: string;
-    types?: Array<CommunityType>;
-  }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCommunitiesPath, 'get');
-    if (params) {
-      rb.query('stateProvinceId', params.stateProvinceId, {});
-      rb.query('countryId', params.countryId, {});
-      rb.query('types', params.types, {"style":"form","explode":true});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<CommunityCode>>;
-      })
-    );
+  configurationGetCommunities$Response(
+    params?: ConfigurationGetCommunities$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+    return configurationGetCommunities(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetCommunities$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCommunities(params?: {
-    stateProvinceId?: string;
-    countryId?: string;
-    types?: Array<CommunityType>;
-  }): Observable<Array<CommunityCode>> {
-
-    return this.configurationGetCommunities$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<CommunityCode>>) => r.body as Array<CommunityCode>)
+  configurationGetCommunities(
+    params?: ConfigurationGetCommunities$Params,
+    context?: HttpContext
+  ): Observable<Array<CommunityCode>> {
+    return this.configurationGetCommunities$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<CommunityCode>>): Array<CommunityCode> => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetStateProvinces
-   */
+  /** Path part for operation `configurationGetStateProvinces()` */
   static readonly ConfigurationGetStateProvincesPath = '/api/Configuration/codes/stateprovinces';
 
   /**
@@ -202,44 +151,29 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetStateProvinces$Response(params?: {
-    countryId?: string;
-  }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetStateProvincesPath, 'get');
-    if (params) {
-      rb.query('countryId', params.countryId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<CommunityCode>>;
-      })
-    );
+  configurationGetStateProvinces$Response(
+    params?: ConfigurationGetStateProvinces$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+    return configurationGetStateProvinces(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetStateProvinces$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetStateProvinces(params?: {
-    countryId?: string;
-  }): Observable<Array<CommunityCode>> {
-
-    return this.configurationGetStateProvinces$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<CommunityCode>>) => r.body as Array<CommunityCode>)
+  configurationGetStateProvinces(
+    params?: ConfigurationGetStateProvinces$Params,
+    context?: HttpContext
+  ): Observable<Array<CommunityCode>> {
+    return this.configurationGetStateProvinces$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<CommunityCode>>): Array<CommunityCode> => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetCountries
-   */
+  /** Path part for operation `configurationGetCountries()` */
   static readonly ConfigurationGetCountriesPath = '/api/Configuration/codes/countries';
 
   /**
@@ -248,41 +182,29 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCountries$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetCountriesPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<CommunityCode>>;
-      })
-    );
+  configurationGetCountries$Response(
+    params?: ConfigurationGetCountries$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+    return configurationGetCountries(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetCountries$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCountries(params?: {
-  }): Observable<Array<CommunityCode>> {
-
-    return this.configurationGetCountries$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<CommunityCode>>) => r.body as Array<CommunityCode>)
+  configurationGetCountries(
+    params?: ConfigurationGetCountries$Params,
+    context?: HttpContext
+  ): Observable<Array<CommunityCode>> {
+    return this.configurationGetCountries$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<CommunityCode>>): Array<CommunityCode> => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetSecurityQuestions
-   */
+  /** Path part for operation `configurationGetSecurityQuestions()` */
   static readonly ConfigurationGetSecurityQuestionsPath = '/api/Configuration/security-questions';
 
   /**
@@ -291,41 +213,29 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetSecurityQuestions$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<string>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<string>>;
-      })
-    );
+  configurationGetSecurityQuestions$Response(
+    params?: ConfigurationGetSecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Array<string>>> {
+    return configurationGetSecurityQuestions(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetSecurityQuestions$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetSecurityQuestions(params?: {
-  }): Observable<Array<string>> {
-
-    return this.configurationGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<string>>) => r.body as Array<string>)
+  configurationGetSecurityQuestions(
+    params?: ConfigurationGetSecurityQuestions$Params,
+    context?: HttpContext
+  ): Observable<Array<string>> {
+    return this.configurationGetSecurityQuestions$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
     );
   }
 
-  /**
-   * Path part for operation configurationGetOutageInfo
-   */
+  /** Path part for operation `configurationGetOutageInfo()` */
   static readonly ConfigurationGetOutageInfoPath = '/api/Configuration/outage-info';
 
   /**
@@ -334,36 +244,70 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetOutageInfo$Response(params?: {
-  }): Observable<StrictHttpResponse<OutageInformation>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetOutageInfoPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<OutageInformation>;
-      })
-    );
+  configurationGetOutageInfo$Response(
+    params?: ConfigurationGetOutageInfo$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<OutageInformation>> {
+    return configurationGetOutageInfo(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetOutageInfo$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetOutageInfo(params?: {
-  }): Observable<OutageInformation> {
-
-    return this.configurationGetOutageInfo$Response(params).pipe(
-      map((r: StrictHttpResponse<OutageInformation>) => r.body as OutageInformation)
+  configurationGetOutageInfo(
+    params?: ConfigurationGetOutageInfo$Params,
+    context?: HttpContext
+  ): Observable<OutageInformation> {
+    return this.configurationGetOutageInfo$Response(params, context).pipe(
+      map((r: StrictHttpResponse<OutageInformation>): OutageInformation => r.body)
     );
   }
 
+  /** Path part for operation `configurationGetAuditOptions()` */
+  static readonly ConfigurationGetAuditOptionsPath = '/api/Configuration/access-reasons';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `configurationGetAuditOptions()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  configurationGetAuditOptions$Response(
+    params?: ConfigurationGetAuditOptions$Params,
+    context?: HttpContext
+  ): Observable<
+    StrictHttpResponse<{
+      [key: string]: string;
+    }>
+  > {
+    return configurationGetAuditOptions(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `configurationGetAuditOptions$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  configurationGetAuditOptions(
+    params?: ConfigurationGetAuditOptions$Params,
+    context?: HttpContext
+  ): Observable<{
+    [key: string]: string;
+  }> {
+    return this.configurationGetAuditOptions$Response(params, context).pipe(
+      map(
+        (
+          r: StrictHttpResponse<{
+            [key: string]: string;
+          }>
+        ): {
+          [key: string]: string;
+        } => r.body
+      )
+    );
+  }
 }

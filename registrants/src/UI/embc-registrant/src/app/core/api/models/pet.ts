@@ -1,10 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * A pet in needs assessment
- */
 export interface Pet {
-  quantity?: string;
-  type?: string;
+  quantity?: string | null;
+  type?: string | null;
 }

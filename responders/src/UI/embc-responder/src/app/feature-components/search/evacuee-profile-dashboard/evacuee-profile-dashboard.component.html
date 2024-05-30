@@ -1,12 +1,12 @@
-<div *ngIf="evacueeProfile?.restriction" class="row">
-  <span class="restricted-text">- - - RESTRICTED FILE - - -</span>
-</div>
+@if (evacueeProfile?.restriction) {
+  <div class="row">
+    <span class="restricted-text">- - - RESTRICTED FILE - - -</span>
+  </div>
+}
 
 <div class="row dashboard-container container-frame">
   <div class="col-md-12">
-    <span
-      class="page-heading"
-      [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#003366' }"
+    <span class="page-heading" [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#003366' }"
       >{{ evacueeProfile?.personalDetails?.lastName | uppercase }},
       {{ evacueeProfile?.personalDetails?.firstName | titlecase }}</span
     >
@@ -15,31 +15,20 @@
 
 <div class="row">
   <div class="col-md-12 no-margin">
-    <span class="dashboard-subheading">{{
-      evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy'
-    }}</span>
+    <span class="dashboard-subheading">{{ evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy' }}</span>
   </div>
 </div>
 
 <div class="row status-row-margin">
   <div class="col-md-4">
-    <img
-      *ngIf="!evacueeProfile?.verifiedUser"
-      src="/assets/images/unverified.svg"
-      height="34"
-      width="34"
-    />
-    <img
-      *ngIf="evacueeProfile?.verifiedUser"
-      src="/assets/images/verified.svg"
-      height="34"
-      width="34"
-    />
+    @if (!evacueeProfile?.verifiedUser) {
+      <img src="/assets/images/unverified.svg" height="34" width="34" />
+    }
+    @if (evacueeProfile?.verifiedUser) {
+      <img src="/assets/images/verified.svg" height="34" width="34" />
+    }
     <span class="status"
-      >Verification Status:
-      <b>{{
-        evacueeProfile?.verifiedUser ? 'Verified' : 'Unverified'
-      }}</b></span
+      >Verification Status: <b>{{ evacueeProfile?.verifiedUser ? 'Verified' : 'Unverified' }}</b></span
     >
 
     <a class="info-test" (click)="openStatusDefinition()">
@@ -47,30 +36,13 @@
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
 
-    <button
-      *ngIf="!evacueeProfile?.verifiedUser"
-      class="button-p verify-button"
-      (click)="verifyEvacuee()"
-      mat-button
-    >
-      Verify
-    </button>
+    @if (!evacueeProfile?.verifiedUser) {
+      <button class="button-p verify-button" (click)="verifyEvacuee()" mat-button>Verify</button>
+    }
   </div>
 
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
-  </div>
-
-  <div class="col-md-4">
-    <img src="/assets/images/unlock.svg" height="31" width="34" />
-    <span class="status">Restriction Status:</span>
-    <span
-      class="status"
-      [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#3C9D0F' }"
-      ><b>{{
-        evacueeProfile?.restriction ? 'Restricted File' : 'Unrestricted File'
-      }}</b></span
-    >
   </div>
 
   <div class="col-md-1 divider">
@@ -80,8 +52,7 @@
   <div class="col-md-2">
     <img src="/assets/images/calendar.svg" height="31" width="34" />
     <span class="status"
-      >Created:
-      <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-yyyy' }}</b></span
+      >Created: <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-yyyy' }}</b></span
     >
   </div>
 </div>
@@ -90,19 +61,10 @@
   <div class="col-md-8 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Create a New ESS File:</span>
-    <span
-      >Create a New ESS File if the evacuee does not have an ESS file for their
-      evacuation.</span
-    >
+    <span>Create a New ESS File if the evacuee does not have an ESS file for their evacuation.</span>
   </div>
   <div class="col-md-4">
-    <button
-      class="button-p ess-file-button"
-      mat-button
-      (click)="createNewESSFile()"
-    >
-      Create New ESS File
-    </button>
+    <button class="button-p ess-file-button" mat-button (click)="createNewESSFile()">Create New ESS File</button>
   </div>
 </div>
 
@@ -111,241 +73,181 @@
     <div class="row">
       <div class="col-md-8">
         <mat-card class="overview-card data-card">
-          <div class="row card-heading-outer info-box">
-            <div class="col-md-12">
-              <p class="margins card-heading">Profile Overview</p>
+          <mat-card-content>
+            <div class="row card-heading-outer info-box">
+              <div class="col-md-12">
+                <p class="margins card-heading">Profile Overview</p>
+              </div>
             </div>
-          </div>
-          <div
-            class="row services-card info-box"
-            *ngIf="
+            @if (
               !evacueeProfile?.authenticatedUser &&
               evacueeProfile?.securityQuestions?.length &&
-              optionInjectionService?.instance?.optionType !==
-                selectedPathType.paperBased
-            "
-          >
-            <div class="col-md-12 service-card-container-mobile">
-              <div class="services-card-img-container-mobile">
-                <img
-                  src="/assets/images/bc-services-card.png"
-                  height="137"
-                  width="132"
-                  class="bc-services-card-img"
-                />
+              optionInjectionService?.instance?.optionType !== selectedPathType.paperBased
+            ) {
+              <div class="row services-card info-box">
+                <div class="col-md-12 service-card-container-mobile">
+                  <div class="services-card-img-container-mobile">
+                    <img
+                      src="/assets/images/bc-services-card.png"
+                      height="137"
+                      width="132"
+                      class="bc-services-card-img"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <p class="services-heading">
+                    Send an email invitation to the evacuee to log in to their profile using the BC Services Card app.
+                  </p>
+                  <p>
+                    Evacuees’ can log in using the BC Services Card app to access their Evacuee Registration &
+                    Assistance profile to view emergency events and supports received during those events. To receive an
+                    Interac e-Transfer for qualifying support, the evacuee must log in to their profile using the BC
+                    Services Card app to confirm their identity.
+                  </p>
+                  <div class="button-div">
+                    <button (click)="sendEmail()" class="button-p invite-button" mat-button>
+                      Send email invitation &nbsp;
+                      <app-loader
+                        style="display: inline-flex; justify-content: center; align-items: center"
+                        [strokeWidth]="3"
+                        [diameter]="20"
+                        [showLoader]="emailLoader"
+                      ></app-loader>
+                    </button>
+                    @if (emailSuccessMessage) {
+                      <span class="email-success bold"
+                        ><img src="/assets/images/status/complete.svg" height="20" width="20" />
+                        {{ emailSuccessMessage }}</span
+                      >
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="services-card-container">
+                    <div class="services-card-img-container">
+                      <img
+                        src="/assets/images/bc-services-card.png"
+                        height="137"
+                        width="132"
+                        class="bc-services-card-img"
+                      />
+                    </div>
+                    <div class="services-card-border"></div>
+                  </div>
+                </div>
+              </div>
+            }
+            <div class="row evacuee-info-row">
+              <div class="col-md-12">
+                <div class="row section-padding">
+                  <div class="col-md-3 subtitle-name">
+                    <img src="/assets/images/profile-user.svg" height="69" width="69" />
+                    <p>Personal</p>
+                    <p>Details</p>
+                  </div>
+                  <div class="col-md-9 table-parent">
+                    <table class="table-details">
+                      <tr>
+                        <th>First Name:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.firstName | titlecase }}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Last Name:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.lastName | uppercase }}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Preferred Name:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.preferredName }}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Initials:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.initials }}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Date of Birth:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Gender:</th>
+                        <td>
+                          <b>{{ evacueeProfile?.personalDetails?.gender }}</b>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <hr class="dotted-hr" />
+                <div class="row section-padding">
+                  <div class="col-md-3 subtitle-name">
+                    <img src="/assets/images/address.svg" height="71" width="71" />
+                    <p>Primary</p>
+                    <p>Residence</p>
+                  </div>
+                  <div class="col-md-9 table-parent">
+                    <p class="address-content" [innerHTML]="evacueeProfile?.primaryAddress | maskFullAddress"></p>
+                  </div>
+                </div>
+                <hr class="dotted-hr" />
+                <div class="row section-padding">
+                  <div class="col-md-3 subtitle-name">
+                    <img src="/assets/images/contact.svg" height="65" width="65" />
+                    <p>Contact</p>
+                    <p>Details</p>
+                  </div>
+                  @if (evacueeProfile?.contactDetails?.email || evacueeProfile?.contactDetails?.phone) {
+                    <div class="col-md-9 table-parent">
+                      <table class="table-details">
+                        <tr>
+                          <th>Email Address:</th>
+                          <td>
+                            <b>{{ evacueeProfile?.contactDetails?.email }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Telephone:</th>
+                          <td>
+                            <b>{{ evacueeProfile?.contactDetails?.phone }}</b>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  }
+                  @if (!evacueeProfile?.contactDetails?.email && !evacueeProfile?.contactDetails?.phone) {
+                    <div class="col-md-9 table-parent">
+                      <mat-radio-button class="primary-radio-button disabled" [value]="true" [checked]="true">
+                        <b>No</b> - Do you authorize Emergency Management British Columbia and your Local Emergency
+                        Program to communicate with you by email or phone regarding your emergency situation?
+                      </mat-radio-button>
+                    </div>
+                  }
+                </div>
+                <div class="button-div">
+                  <button class="button-p edit-profile-button" (click)="editProfile()" mat-button>
+                    Edit Evacuee Profile
+                  </button>
+                </div>
               </div>
             </div>
-            <div class="col-md-8">
-              <p class="services-heading">
-                Send an email invitation to the evacuee to log in to their
-                profile using the BC Services Card app.
-              </p>
-              <p>
-                Evacuees’ can log in using the BC Services Card app to access
-                their Evacuee Registration & Assistance profile to view
-                emergency events and supports received during those events. To
-                receive an Interac e-Transfer for qualifying support, the
-                evacuee must log in to their profile using the BC Services Card
-                app to confirm their identity.
-              </p>
-              <div class="button-div">
-                <button
-                  (click)="sendEmail()"
-                  class="button-p invite-button"
-                  mat-button
-                >
-                  Send email invitation &nbsp;
-                  <app-loader
-                    style="
-                      display: inline-flex;
-                      justify-content: center;
-                      align-items: center;
-                    "
-                    [strokeWidth]="3"
-                    [diameter]="20"
-                    [showLoader]="emailLoader"
-                  ></app-loader>
-                </button>
-                <span class="email-success bold" *ngIf="emailSuccessMessage"
-                  ><img
-                    src="/assets/images/status/complete.svg"
-                    height="20"
-                    width="20"
-                  />
-                  {{ emailSuccessMessage }}</span
-                >
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="services-card-container">
-                <div class="services-card-img-container">
-                  <img
-                    src="/assets/images/bc-services-card.png"
-                    height="137"
-                    width="132"
-                    class="bc-services-card-img"
-                  />
-                </div>
-                <div class="services-card-border"></div>
-              </div>
-            </div>
-          </div>
-          <div class="row evacuee-info-row">
-            <div class="col-md-12">
-              <div class="row section-padding">
-                <div class="col-md-3 subtitle-name">
-                  <img
-                    src="/assets/images/profile-user.svg"
-                    height="69"
-                    width="69"
-                  />
-                  <p>Personal</p>
-                  <p>Details</p>
-                </div>
-                <div class="col-md-9 table-parent">
-                  <table class="table-details">
-                    <tr>
-                      <th>First Name:</th>
-                      <td>
-                        <b>{{
-                          evacueeProfile?.personalDetails?.firstName | titlecase
-                        }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Last Name:</th>
-                      <td>
-                        <b>{{
-                          evacueeProfile?.personalDetails?.lastName | uppercase
-                        }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Preferred Name:</th>
-                      <td>
-                        <b>{{
-                          evacueeProfile?.personalDetails?.preferredName
-                        }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Initials:</th>
-                      <td>
-                        <b>{{ evacueeProfile?.personalDetails?.initials }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Date of Birth:</th>
-                      <td>
-                        <b>{{
-                          evacueeProfile?.personalDetails?.dateOfBirth
-                            | date: 'dd-MMM-yyyy'
-                        }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Gender:</th>
-                      <td>
-                        <b>{{ evacueeProfile?.personalDetails?.gender }}</b>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <hr class="dotted-hr" />
-              <div class="row section-padding">
-                <div class="col-md-3 subtitle-name">
-                  <img
-                    src="/assets/images/address.svg"
-                    height="71"
-                    width="71"
-                  />
-                  <p>Primary</p>
-                  <p>Residence</p>
-                </div>
-                <div class="col-md-9 table-parent">
-                  <p
-                    class="address-content"
-                    [innerHTML]="
-                      evacueeProfile?.primaryAddress | maskFullAddress
-                    "
-                  ></p>
-                </div>
-              </div>
-              <hr class="dotted-hr" />
-              <div class="row section-padding">
-                <div class="col-md-3 subtitle-name">
-                  <img
-                    src="/assets/images/contact.svg"
-                    height="65"
-                    width="65"
-                  />
-                  <p>Contact</p>
-                  <p>Details</p>
-                </div>
-                <div
-                  class="col-md-9 table-parent"
-                  *ngIf="
-                    evacueeProfile?.contactDetails?.email ||
-                    evacueeProfile?.contactDetails?.phone
-                  "
-                >
-                  <table class="table-details">
-                    <tr>
-                      <th>Email Address:</th>
-                      <td>
-                        <b>{{ evacueeProfile?.contactDetails?.email }}</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Telephone:</th>
-                      <td>
-                        <b>{{ evacueeProfile?.contactDetails?.phone }}</b>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div
-                  class="col-md-9 table-parent"
-                  *ngIf="
-                    !evacueeProfile?.contactDetails?.email &&
-                    !evacueeProfile?.contactDetails?.phone
-                  "
-                >
-                  <mat-radio-button
-                    class="primary-radio-button disabled"
-                    [value]="true"
-                    [checked]="true"
-                  >
-                    <b>No</b> - Do you authorize Emergency Management British
-                    Columbia and your Local Emergency Program to communicate
-                    with you by email or phone regarding your emergency
-                    situation?
-                  </mat-radio-button>
-                </div>
-              </div>
-              <div class="button-div">
-                <button
-                  class="button-p edit-profile-button"
-                  (click)="editProfile()"
-                >
-                  Edit Evacuee Profile
-                </button>
-              </div>
-            </div>
-          </div>
+          </mat-card-content>
         </mat-card>
       </div>
       <div class="col-md-4">
         <app-matched-essfiles></app-matched-essfiles>
         <br />
-        <app-possible-matched-essfiles
-          *ngIf="
-            optionInjectionService?.instance?.optionType !==
-            selectedPathType.paperBased
-          "
-          [evacueeProfile]="evacueeProfile"
-        ></app-possible-matched-essfiles>
+        @if (optionInjectionService?.instance?.optionType !== selectedPathType.paperBased) {
+          <app-possible-matched-essfiles [evacueeProfile]="evacueeProfile"></app-possible-matched-essfiles>
+        }
       </div>
     </div>
   </div>

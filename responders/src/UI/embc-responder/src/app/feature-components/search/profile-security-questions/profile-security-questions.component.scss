@@ -1,42 +1,43 @@
 .heading {
-    color: #234075;
-    font-size: 21px;
-    line-height: 30px;
+  color: #234075;
+  font-size: 21px;
+  line-height: 30px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
-    border: none !important;
-    margin-bottom: 20px;
+  border: none !important;
+  margin-bottom: 20px;
 }
 
 .submit {
-    width: 25%;
-    font-size: 16px;
+  width: 25%;
+  font-size: 16px;
 }
 
 .button-space {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .paragraph-space {
-    margin-bottom: 0px;
-    margin-top: 50px;
+  margin-bottom: 0px;
+  margin-top: 50px;
 }
 
 .fp-space {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .correct {
-    color: #3C9D0F;
-    font-size:small;
+  color: #3c9d0f;
+  font-size: small;
 }
 
-.row-space{
-    margin-bottom: 20px;
+.row-space {
+  margin-bottom: 20px;
 }
 
 .double-space {
-    margin-bottom: 20px !important;
-    margin-top: 20px !important;
+  margin-bottom: 20px !important;
+  margin-top: 20px !important;
 }

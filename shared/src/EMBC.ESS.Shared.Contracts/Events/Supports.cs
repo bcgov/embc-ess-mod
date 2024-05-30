@@ -111,21 +111,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
         public SupportDelivery SupportDelivery { get; set; }
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
-    }
-
-    public enum SupportType
-    {
-#pragma warning disable CA1707 // Identifiers should not contain underscores
-        Food_Groceries = 174360000,
-        Food_Restaurant = 174360001,
-        Lodging_Hotel = 174360002,
-        Lodging_Billeting = 174360003,
-        Lodging_Group = 174360004,
-        Incidentals = 174360005,
-        Clothing = 174360006,
-        Transportation_Taxi = 174360007,
-        Transportation_Other = 174360008,
-#pragma warning restore CA1707 // Identifiers should not contain underscores
+        public bool IsSelfServe { get; set; }
     }
 
     [JsonConverter(typeof(PolymorphicJsonConverter<SupportDelivery>))]

@@ -11,61 +11,51 @@
       ><!--fullscreen [fixedInViewport]="true"  [fixedTopGap]="0"-->
       <div class="row logo">
         <div class="col-md-12">
-          <img
-            src="/assets/images/bc-logo-wizard.png"
-            width="168"
-            height="62"
-          />
+          <img src="/assets/images/bc-logo-wizard.png" width="168" height="62" />
         </div>
       </div>
-      <div *ngFor="let menu of sideNavMenu">
-        <a
-          mat-button
-          class="a-mat-button"
-          routerLinkActive="active-side-item"
-          [routerLink]="menu?.route"
-          [state]="{ step: menu?.step, title: menu?.title }"
-        >
-          <div
-            (click)="goToStep(menu?.isLocked, $event, menu?.route)"
-            class="row outer-div"
+      @for (menu of sideNavMenu; track menu) {
+        <div>
+          <a
+            mat-button
+            class="a-mat-button"
+            routerLinkActive="active-side-item"
+            [routerLink]="menu?.route"
+            [state]="{ step: menu?.step, title: menu?.title }"
           >
-            <div class="col-md-3 img-align-col">
-              <img
-                class="img-align"
-                src="{{ menu?.img?.imgSrc }}"
-                width="{{ menu?.img?.width }}"
-                height="{{ menu?.img?.height }}"
-              />
-              <img
-                class="img-align"
-                src="{{ menu?.img?.altSrc }}"
-                width="{{ menu?.img?.width }}"
-                height="{{ menu?.img?.height }}"
-              />
+            <div (click)="goToStep(menu?.isLocked, $event, menu?.route)" class="row outer-div">
+              <div class="col-md-3 img-align-col">
+                <img
+                  class="img-align"
+                  src="{{ menu?.img?.imgSrc }}"
+                  width="{{ menu?.img?.width }}"
+                  height="{{ menu?.img?.height }}"
+                />
+                <img
+                  class="img-align"
+                  src="{{ menu?.img?.altSrc }}"
+                  width="{{ menu?.img?.width }}"
+                  height="{{ menu?.img?.height }}"
+                />
+              </div>
+              <div class="col-md-6">
+                <p class="menu-p">
+                  <b>{{ menu?.step }}</b>
+                </p>
+                <p class="menu-p">{{ menu?.title }}</p>
+              </div>
+              @if (menu?.isLocked) {
+                <div class="col-md-3 img-lock-col">
+                  <img class="img-lock" src="/assets/images/lock.svg" width="10" height="12" />
+                </div>
+              }
             </div>
-            <div class="col-md-6">
-              <p class="menu-p">
-                <b>{{ menu?.step }}</b>
-              </p>
-              <p class="menu-p">{{ menu?.title }}</p>
-            </div>
-            <div class="col-md-3 img-lock-col" *ngIf="menu?.isLocked">
-              <img
-                class="img-lock"
-                src="/assets/images/lock.svg"
-                width="10"
-                height="12"
-              />
-            </div>
-          </div>
-        </a>
-      </div>
+          </a>
+        </div>
+      }
       <div class="row button-container">
         <div class="col-md-12">
-          <button class="exit-button" mat-stroked-button (click)="exit()">
-            Exit Wizard
-          </button>
+          <button class="exit-button" mat-stroked-button (click)="exit()">Exit Wizard</button>
         </div>
       </div>
     </mat-sidenav>

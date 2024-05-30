@@ -1,23 +1,22 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .check-box-col {
-    align-self: center;
+  align-self: center;
 }
 
-@media(max-width: 920px) {
-    .last-name-col {
-        flex-direction: column;
-    }
+@media (max-width: 920px) {
+  .last-name-col {
+    flex-direction: column;
+  }
 
-    .check-box-col {
-        max-width: 100% !important;
-        align-self: baseline;
-
-    }
-
-    ::ng-deep .mat-form-field-subscript-wrapper {
-        position: absolute !important;
-    } 
+  .check-box-col {
+    max-width: 100% !important;
+    align-self: baseline;
+  }
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+  ::ng-deep .mat-form-field-subscript-wrapper {
+    position: absolute !important;
+  }
 }

@@ -9,12 +9,12 @@ import {
   tick
 } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';
 
 import { OutageComponent } from './outage.component';
 import { OutageService } from './outage.service';
+import { provideRouter } from '@angular/router';
 
 describe('OutageComponent', () => {
   let component: OutageComponent;
@@ -23,19 +23,14 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        OAuthModule.forRoot()
-      ],
-      declarations: [OutageComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, OAuthModule.forRoot(), OutageComponent],
       providers: [
         OutageComponent,
         {
           provide: OutageService,
           useClass: MockOutageService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -74,9 +69,7 @@ describe('OutageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageInfo.content).toEqual(
-      'Outage testing in Responders portal'
-    );
+    expect(component.outageInfo.content).toEqual('Outage testing in Responders portal');
   }));
 
   it('should display outage Start Date', fakeAsync(() => {
@@ -96,9 +89,7 @@ describe('OutageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageInfo.outageStartDate).toEqual(
-      '2021-12-15T21:00:00Z'
-    );
+    expect(component.outageInfo.outageStartDate).toEqual('2021-12-15T21:00:00Z');
   }));
 
   it('should display outage End Date', fakeAsync(() => {
@@ -138,8 +129,6 @@ describe('OutageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.outageInfo.content).toEqual(
-      'Unplanned Outage testing in Responders portal'
-    );
+    expect(component.outageInfo.content).toEqual('Unplanned Outage testing in Responders portal');
   }));
 });

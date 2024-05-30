@@ -8,20 +8,33 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { NumberCommaDirective } from '../../../../../../shared/directives/number-comma.directive';
+import { DecimalPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatError, MatPrefix } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-incidentals',
   templateUrl: './incidentals.component.html',
-  styleUrls: ['./incidentals.component.scss']
+  styleUrls: ['./incidentals.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatError,
+    NumberCommaDirective,
+    MatPrefix,
+    DecimalPipe
+  ]
 })
-export class IncidentalsComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfHouseholdMembers: number;
   referralForm: UntypedFormGroup;
@@ -37,11 +50,9 @@ export class IncidentalsComponent
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
 
-    this.userTotalAmountSubscription = this.referralForm
-      .get('userTotalAmount')
-      .valueChanges.subscribe((value) => {
-        this.referralForm.get('approverName').updateValueAndValidity();
-      });
+    this.userTotalAmountSubscription = this.referralForm.get('userTotalAmount').valueChanges.subscribe((value) => {
+      this.referralForm.get('approverName').updateValueAndValidity();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,9 +61,7 @@ export class IncidentalsComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
@@ -96,12 +105,7 @@ export class IncidentalsComponent
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      Number(
-        this.referralForm
-          .get('userTotalAmount')
-          .value.toString()
-          .replace(/,/g, '')
-      ) > this.totalAmount;
+      Number(this.referralForm.get('userTotalAmount').value.toString().replace(/,/g, '')) > this.totalAmount;
 
     if (!exceedsTotal && this.referralForm.get('approverName').value) {
       this.referralForm.get('approverName').patchValue('');

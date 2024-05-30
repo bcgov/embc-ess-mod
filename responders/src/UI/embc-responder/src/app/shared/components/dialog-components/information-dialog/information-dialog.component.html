@@ -3,31 +3,29 @@
 </div>
 
 <div class="row button-row justify-content-between">
-  <div class="col-md-6" *ngIf="content?.cancelButton">
-    <button class="button-s button-width" mat-button (click)="cancel()">
-      {{ content?.cancelButton }}
-    </button>
-  </div>
+  @if (content?.cancelButton) {
+    <div class="col-md-6">
+      <button class="button-s button-width" mat-button (click)="cancel()">
+        {{ content?.cancelButton }}
+      </button>
+    </div>
+  }
 
-  <div class="col-md-6" *ngIf="content?.confirmButton">
-    <button
-      class="button-p button-width confirm-button"
-      mat-button
-      (click)="confirm()"
-    >
-      {{ content?.confirmButton }}
-    </button>
-  </div>
+  @if (content?.confirmButton) {
+    <div class="col-md-6">
+      <button class="button-p button-width confirm-button" mat-button (click)="confirm()">
+        {{ content?.confirmButton }}
+      </button>
+    </div>
+  }
 </div>
 
 <div class="row">
   <div class="col">
-    <button
-      class="btn btn-link exit-link"
-      (click)="exit()"
-      *ngIf="content?.exitLink"
-    >
-      {{ content?.exitLink }}
-    </button>
+    @if (content?.exitLink) {
+      <button class="btn btn-link exit-link" (click)="exit()">
+        {{ content?.exitLink }}
+      </button>
+    }
   </div>
 </div>

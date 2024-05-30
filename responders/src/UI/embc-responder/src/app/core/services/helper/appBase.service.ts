@@ -26,9 +26,7 @@ export class AppBaseService {
   constructor(public cacheService: CacheService) {}
 
   public get appModel(): AppBaseModel {
-    return this.appModelVal
-      ? this.appModelVal
-      : JSON.parse(this.cacheService.get('appCache'));
+    return this.appModelVal ? this.appModelVal : JSON.parse(this.cacheService.get('appCache'));
   }
 
   public set appModel(value: Partial<AppBaseModel>) {
@@ -45,9 +43,7 @@ export class AppBaseService {
   }
 
   public get wizardProperties(): WizardProperties {
-    return this.wizardPropertiesVal
-      ? this.wizardPropertiesVal
-      : JSON.parse(this.cacheService.get('wizardProps'));
+    return this.wizardPropertiesVal ? this.wizardPropertiesVal : JSON.parse(this.cacheService.get('wizardProps'));
   }
 
   public set wizardProperties(value: WizardProperties) {

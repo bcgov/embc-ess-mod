@@ -2,26 +2,19 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="page-heading">Restriction</span>
+        <span class="page-heading">Consent to Share Registration Status</span>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12 content-container">
-      <app-restriction-form
-        [restrictionForm]="restrictionForm"
-      ></app-restriction-form>
+      <app-restriction-form [restrictionForm]="restrictionForm"></app-restriction-form>
       <br />
       <br />
       <div class="row">
         <div class="col-md-12">
-          <button
-            class="button-p notice-button"
-            mat-button
-            type="button"
-            (click)="submitRestriction()"
-          >
-            Next - Create Account
+          <button class="button-p notice-button" mat-button type="button" (click)="submitRestriction()">
+            Next - Create Profile
           </button>
         </div>
       </div>

@@ -1,88 +1,80 @@
 <mat-card>
-  <div class="content-align">
-    <div class="row">
-      <div class="col-md-12">
-        <p class="title-heading">Supplier Already Exists</p>
+  <mat-card-content>
+    <div class="content-align">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="title-heading">Supplier Already Exists</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <p class="bold">
+            The Supplier GST number that you entered is already associated with one or more supplier records.
+          </p>
+          <p class="bold">Please make sure that you are not trying to add the same supplier again.</p>
+          <p>
+            If the supplier you are trying to add already had a Primary ESS Team associated with it, you may still add
+            the supplier if your ESS Team ALSO has an agreement in place with the supplier. If the Supplier you are
+            trying to add does not match any of the results below, click "Create New Supplier".
+          </p>
+        </div>
+      </div>
+
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="legalName">
+          <mat-header-cell *matHeaderCellDef>Supplier Legal Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.legalName }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Supplier Name </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="gstNumber">
+          <mat-header-cell *matHeaderCellDef> GST # </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.gstNumber }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p [innerHTML]="element?.address | maskFullAddress"></p>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="primaryTeam">
+          <mat-header-cell *matHeaderCellDef> Primary ESS Team </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            @if (element?.team) {
+              <p>{{ element.team.name }}</p>
+            }
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <a class="supplier-link" (click)="addSupplier(element)">Add Supplier</a>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+      <div class="row">
+        <div class="col-md-3">
+          <button class="button-s button-width" mat-button (click)="close()">Close</button>
+        </div>
+        <div class="col-md-3">
+          <button class="button-p button-width" mat-button (click)="continue()">Continue</button>
+        </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-8">
-        <p class="bold">
-          The Supplier GST number that you entered is already associated with
-          one or more supplier records.
-        </p>
-        <p class="bold">
-          Please make sure that you are not trying to add the same supplier
-          again.
-        </p>
-        <p>
-          If the supplier you are trying to add already had a Primary ESS Team
-          associated with it, you may still add the supplier if your ESS Team
-          ALSO has an agreement in place with the supplier. If the Supplier you
-          are trying to add does not match any of the results below, click
-          "Create New Supplier".
-        </p>
-      </div>
-    </div>
-
-    <mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="legalName">
-        <mat-header-cell *matHeaderCellDef>Supplier Legal Name</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.legalName }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Supplier Name </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.name }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="gstNumber">
-        <mat-header-cell *matHeaderCellDef> GST # </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.gstNumber }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="address">
-        <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <p [innerHTML]="element?.address | maskFullAddress"></p>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="primaryTeam">
-        <mat-header-cell *matHeaderCellDef> Primary ESS Team </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <p *ngIf="element?.team">{{ element.team.name }}</p>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="action">
-        <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <a class="supplier-link" (click)="addSupplier(element)"
-            >Add Supplier</a
-          >
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
-    <div class="row">
-      <div class="col-md-3">
-        <button class="button-s button-width" mat-button (click)="close()">
-          Close
-        </button>
-      </div>
-      <div class="col-md-3">
-        <button class="button-p button-width" mat-button (click)="continue()">
-          Continue
-        </button>
-      </div>
-    </div>
-  </div>
+  </mat-card-content>
 </mat-card>

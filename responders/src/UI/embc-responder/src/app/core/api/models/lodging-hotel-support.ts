@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Support } from './support';
-import { SupportCategory } from './support-category';
-import { SupportSubCategory } from './support-sub-category';
+import { Support } from '../models/support';
+import { SupportCategory } from '../models/support-category';
+import { SupportSubCategory } from '../models/support-sub-category';
 export type LodgingHotelSupport = Support & {
-'category': SupportCategory;
-'subCategory': SupportSubCategory;
-'numberOfNights': number;
-'numberOfRooms': number;
+  category: SupportCategory;
+  subCategory: SupportSubCategory;
+  numberOfNights: number;
+  numberOfRooms: number;
 };

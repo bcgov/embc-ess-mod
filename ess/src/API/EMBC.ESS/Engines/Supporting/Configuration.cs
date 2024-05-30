@@ -1,6 +1,8 @@
 ﻿using EMBC.ESS.Engines.Supporting.PaymentGeneration;
 using EMBC.ESS.Engines.Supporting.SupportCompliance;
 using EMBC.ESS.Engines.Supporting.SupportGeneration;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.SelfServe;
 using EMBC.ESS.Engines.Supporting.SupportProcessing;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,12 +18,15 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<SupportProcessingStrategyFactory>()
                 .AddTransient<DigitalSupportProcessingStrategy>()
                 .AddTransient<PaperSupportProcessingStrategy>()
-                .AddTransient<SupportGenerationStrategyStragetyFactory>()
+                .AddTransient<SupportGenerationStrategyStrategyFactory>()
                 .AddTransient<SingleDocumentStrategy>()
                 .AddTransient<SupportComplianceStrategyFactory>()
                 .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceCheck>()
                 .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceCheck>()
                 .AddTransient<PaymentGenerationStrategyFactory>()
+                .AddTransient<SelfServeSupportEligibilityStrategy>()
+                .AddTransient<SelfServeSupportGenerator>()
+                .AddTransient<SelfServeEtransferGenerator>()
                 ;
         }
     }

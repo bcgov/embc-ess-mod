@@ -20,18 +20,18 @@ table {
   width: 100%;
 }
 
-.mat-table {
+.mat-mdc-table {
   overflow: auto;
   max-height: 500px;
 }
 
-.mat-cell:first-of-type,
-.mat-footer-cell:first-of-type,
-.mat-header-cell:first-of-type {
+.mat-mdc-cell:first-of-type,
+.mat-mdc-footer-cell:first-of-type,
+.mat-mdc-header-cell:first-of-type {
   padding-left: unset;
 }
 
-.mat-cell {
+.mat-mdc-cell {
   margin-right: 24px;
 }
 
@@ -39,20 +39,28 @@ table {
   display: none;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .mobile-label {
     width: 80px;
     display: inline-block;
     font-weight: bold;
   }
 
+  .mat-mdc-cell:first-of-type:has(.mobile-label) {
+    padding: 0 16px 0 16px !important;
+  }
+
+  .mat-mdc-cell {
+    border-bottom: none !important;
+  }
+
   // Remove the header row altogether
-  .mat-header-row {
+  .mat-mdc-header-row {
     display: none;
   }
 
   // The row cells should display as a column, justified left, with a bit of extra padding
-  .mat-row {
+  .mat-mdc-row {
     flex-direction: column;
     align-items: start;
     padding: 8px 24px;
@@ -60,39 +68,43 @@ table {
   }
 
   // Tweaks for Angular Material 8
-  .mat-cell:first-of-type,
-  .mat-footer-cell:first-of-type,
-  .mat-header-cell:first-of-type {
+  .mat-mdc-cell:first-of-type,
+  .mat-mdc-footer-cell:first-of-type,
+  .mat-mdc-header-cell:first-of-type {
     padding-left: unset;
   }
 
-  .mat-cell {
+  .mat-mdc-cell {
     align-items: unset;
     min-height: unset;
   }
+
+  .button-s {
+    margin-bottom: 10px;
+  }
 }
 
-.edit-image img:last-child {
+.edit-image img:last-of-type {
   display: none;
 }
 
-.edit-image:hover img:last-child {
+.edit-image:hover img:last-of-type {
   display: block;
 }
 
-.edit-image:hover img:first-child {
+.edit-image:hover img:first-of-type {
   display: none;
 }
 
-.delete-image img:last-child {
+.delete-image img:last-of-type {
   display: none;
 }
 
-.delete-image:hover img:last-child {
+.delete-image:hover img:last-of-type {
   display: block;
 }
 
-.delete-image:hover img:first-child {
+.delete-image:hover img:first-of-type {
   display: none;
 }
 

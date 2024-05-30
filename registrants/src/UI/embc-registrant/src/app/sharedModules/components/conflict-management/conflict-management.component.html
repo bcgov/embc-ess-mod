@@ -6,306 +6,256 @@
   </div>
 
   <mat-vertical-stepper class="stepper-style" [linear]="false" #conflictStepper>
-    <mat-step *ngIf="conflicts | arrayContains: 'NameDataConflict'">
-      <ng-template matStepLabel
-        ><span class="custom-label">Name Mismatch</span></ng-template
-      >
-      <mat-card class="card-border">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12">
-              <p>
-                The name attached to your BC Services card
-                <b>does not match</b> the name associated with your ERA Profile.
-                By clicking <span class="highlight">Continue</span> your details
-                in your ERA Profile will be updated to match the details
-                associated with your BC Services card.
-              </p>
+    @if (conflicts | arrayContains: 'NameDataConflict') {
+      <mat-step>
+        <ng-template matStepLabel><span class="custom-label">Name Mismatch</span></ng-template>
+        <mat-card appearance="outlined" class="card-border">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <p>
+                  The name attached to your BC Services card
+                  <b>does not match</b> the name associated with your ERA Profile. By clicking
+                  <span class="highlight">Continue</span> your details in your ERA Profile will be updated to match the
+                  details associated with your BC Services card.
+                </p>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-md-12">
-              <table class="conflicts-table">
-                <tr class="main-view">
-                  <th class="highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </th>
-                  <th class="highlight">BC Services Card</th>
-                </tr>
-                <tr>
-                  <td class="mobile-label highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </td>
-                  <td>
-                    <p>
-                      {{ nameConflict?.originalValue?.lastName }} ,
-                      {{ nameConflict?.originalValue?.firstName }}
-                    </p>
-                  </td>
-                  <td class="main-view">
-                    <p>
-                      {{ nameConflict?.conflictingValue?.lastName }} ,
-                      {{ nameConflict?.conflictingValue?.firstName }}
-                    </p>
-                  </td>
-                </tr>
-                <tr class="alt-BCSC">
-                  <td class="highlight">BC Services Card</td>
-                  <td>
-                    <p>
-                      {{ nameConflict?.conflictingValue?.lastName }} ,
-                      {{ nameConflict?.conflictingValue?.firstName }}
-                    </p>
-                  </td>
-                </tr>
-              </table>
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <table class="conflicts-table">
+                  <tr class="main-view">
+                    <th class="highlight-conflicts">Evacuee Registration & Assistance (ERA)</th>
+                    <th class="highlight">BC Services Card</th>
+                  </tr>
+                  <tr>
+                    <td class="mobile-label highlight-conflicts">Evacuee Registration & Assistance (ERA)</td>
+                    <td>
+                      <p>
+                        {{ nameConflict?.originalValue?.lastName }} ,
+                        {{ nameConflict?.originalValue?.firstName }}
+                      </p>
+                    </td>
+                    <td class="main-view">
+                      <p>
+                        {{ nameConflict?.conflictingValue?.lastName }} ,
+                        {{ nameConflict?.conflictingValue?.firstName }}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr class="alt-BCSC">
+                    <td class="highlight">BC Services Card</td>
+                    <td>
+                      <p>
+                        {{ nameConflict?.conflictingValue?.lastName }} ,
+                        {{ nameConflict?.conflictingValue?.firstName }}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <br />
-      <div>
-        <button
-          class="button-s"
-          mat-stroked-button
-          (click)="next('name')"
-          [disabled]="isSubmitted"
-        >
-          Continue
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
-      </div>
-    </mat-step>
-
-    <mat-step *ngIf="conflicts | arrayContains: 'DateOfBirthDataConflict'">
-      <ng-template matStepLabel
-        ><span class="custom-label">DOB Mismatch</span></ng-template
-      >
-      <mat-card class="card-border">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12">
-              <p>
-                The date of birth attached to your BC Services card
-                <b>does not match</b> the date of birth associated with your ERA
-                Profile. By clicking
-                <span class="highlight">Continue</span> your details in your ERA
-                Profile will be updated to match the details associated with
-                your BC Services card.
-              </p>
-            </div>
-          </div>
-          <br />
-
-          <div class="row">
-            <div class="col-md-12">
-              <table class="conflicts-table">
-                <tr class="main-view">
-                  <th class="highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </th>
-                  <th class="highlight">BC Services Card</th>
-                </tr>
-                <tr>
-                  <td class="mobile-label highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </td>
-                  <td>
-                    <p>
-                      {{ dobConflict?.originalValue | customDate }}
-                    </p>
-                  </td>
-                  <td class="main-view">
-                    <p>
-                      {{ dobConflict?.conflictingValue | customDate }}
-                    </p>
-                  </td>
-                </tr>
-                <tr class="alt-BCSC">
-                  <td class="highlight">BC Services Card</td>
-                  <td>
-                    <p>
-                      {{ dobConflict?.conflictingValue | customDate }}
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <br />
-      <div>
-        <button
-          class="button-s"
-          mat-stroked-button
-          (click)="next('dob')"
-          [disabled]="isSubmitted"
-        >
-          Continue
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
-      </div>
-    </mat-step>
-
-    <mat-step *ngIf="conflicts | arrayContains: 'AddressDataConflict'">
-      <ng-template matStepLabel
-        ><span class="custom-label">Address Mismatch</span></ng-template
-      >
-      <mat-card class="card-border">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12">
-              <p>
-                The address attached to your BC Services card
-                <b>does not match</b> the address associated with your ERA
-                Profile. Do you want to
-                <span class="highlight">update your address</span> with the
-                details from your BC Services Card?
-              </p>
-            </div>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-md-12">
-              <table class="conflicts-table">
-                <tr class="main-view">
-                  <th class="highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </th>
-                  <th class="highlight">BC Services Card</th>
-                </tr>
-                <tr>
-                  <td class="mobile-label highlight-conflicts">
-                    Evacuee Registration & Assistance (ERA)
-                  </td>
-                  <td>
-                    <p>{{ addressConflict?.originalValue?.addressLine1 }}</p>
-                    <p *ngIf="addressConflict?.originalValue?.addressLine2">
-                      {{ addressConflict?.originalValue?.addressLine2 }}
-                    </p>
-                    <p>
-                      {{ addressConflict?.originalValue?.community?.name }}
-                      {{ addressConflict?.originalValue?.stateProvince?.code }}
-                      {{ addressConflict?.originalValue?.postalCode }}<br />
-                      {{ addressConflict?.originalValue?.country?.name }}
-                    </p>
-                  </td>
-                  <td class="main-view">
-                    <p>
-                      {{ addressConflict?.conflictingValue?.addressLine1 }}
-                    </p>
-                    <p *ngIf="addressConflict?.conflictingValue?.addressLine2">
-                      {{ addressConflict?.conflictingValue?.addressLine2 }}
-                    </p>
-                    <p>
-                      {{ addressConflict?.conflictingValue?.community?.name }}
-                      {{
-                        addressConflict?.conflictingValue?.stateProvince?.code
-                      }}
-                      {{ addressConflict?.conflictingValue?.postalCode }}<br />
-                      {{ addressConflict?.conflictingValue?.country?.name }}
-                    </p>
-                  </td>
-                </tr>
-                <tr class="alt-BCSC">
-                  <td class="highlight">BC Services Card</td>
-                  <td>
-                    <p>
-                      {{ addressConflict?.conflictingValue?.addressLine1 }}
-                    </p>
-                    <p *ngIf="addressConflict?.conflictingValue?.addressLine2">
-                      {{ addressConflict?.conflictingValue?.addressLine2 }}
-                    </p>
-                    <p>
-                      {{ addressConflict?.conflictingValue?.community?.name }}
-                      {{
-                        addressConflict?.conflictingValue?.stateProvince?.code
-                      }}
-                      {{ addressConflict?.conflictingValue?.postalCode }}<br />
-                      {{ addressConflict?.conflictingValue?.country?.name }}
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <br />
-      <div *ngIf="!updateAddressIndicator">
-        <div class="row justify-content-between resp-style">
-          <div class="col-md-6">
-            <button
-              class="button-s"
-              mat-stroked-button
-              [disabled]="isSubmitted"
-              (click)="navigateDashboard()"
-            >
-              No, Keep My Address
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-              ></app-loader>
-            </button>
-          </div>
-          <div class="col-md-6">
-            <button
-              class="button-p"
-              mat-stroked-button
-              (click)="toggleAddress()"
-            >
-              Yes, Update My Address
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="updateAddressIndicator">
-        <app-component-wrapper
-          [componentName]="componentName"
-          [folderPath]="folderPath"
-        >
-        </app-component-wrapper>
+          </mat-card-content>
+        </mat-card>
         <br />
-        <div class="row justify-content-between resp-style">
-          <div class="col-md-6">
-            <button
-              class="button-s"
-              mat-stroked-button
-              (click)="toggleAddress('cancel')"
-            >
-              Cancel
-            </button>
-          </div>
-          <div class="col-md-6">
-            <button
-              class="button-p"
-              mat-stroked-button
-              (click)="conflictsResolved()"
-              [disabled]="isSubmitted"
-            >
-              Save
-              <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-              ></app-loader>
-            </button>
-          </div>
+        <div>
+          <button
+            class="button-s button-with-loader"
+            mat-stroked-button
+            (click)="next('name')"
+            [disabled]="isSubmitted"
+          >
+            Continue
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
         </div>
-      </div>
-    </mat-step>
+      </mat-step>
+    }
+
+    @if (conflicts | arrayContains: 'DateOfBirthDataConflict') {
+      <mat-step>
+        <ng-template matStepLabel><span class="custom-label">DOB Mismatch</span></ng-template>
+        <mat-card appearance="outlined" class="card-border">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <p>
+                  The date of birth attached to your BC Services card
+                  <b>does not match</b> the date of birth associated with your ERA Profile. By clicking
+                  <span class="highlight">Continue</span> your details in your ERA Profile will be updated to match the
+                  details associated with your BC Services card.
+                </p>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <table class="conflicts-table">
+                  <tr class="main-view">
+                    <th class="highlight-conflicts">Evacuee Registration & Assistance (ERA)</th>
+                    <th class="highlight">BC Services Card</th>
+                  </tr>
+                  <tr>
+                    <td class="mobile-label highlight-conflicts">Evacuee Registration & Assistance (ERA)</td>
+                    <td>
+                      <p>
+                        {{ dobConflict?.originalValue | customDate }}
+                      </p>
+                    </td>
+                    <td class="main-view">
+                      <p>
+                        {{ dobConflict?.conflictingValue | customDate }}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr class="alt-BCSC">
+                    <td class="highlight">BC Services Card</td>
+                    <td>
+                      <p>
+                        {{ dobConflict?.conflictingValue | customDate }}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <br />
+        <div>
+          <button class="button-s button-with-loader" mat-stroked-button (click)="next('dob')" [disabled]="isSubmitted">
+            Continue
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
+        </div>
+      </mat-step>
+    }
+
+    @if (conflicts | arrayContains: 'AddressDataConflict') {
+      <mat-step>
+        <ng-template matStepLabel><span class="custom-label">Address Mismatch</span></ng-template>
+        <mat-card appearance="outlined" class="card-border">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <p>
+                  The address attached to your BC Services card
+                  <b>does not match</b> the address associated with your ERA Profile. Do you want to
+                  <span class="highlight">update your address</span> with the details from your BC Services Card?
+                </p>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <table class="conflicts-table">
+                  <tr class="main-view">
+                    <th class="highlight-conflicts">Evacuee Registration & Assistance (ERA)</th>
+                    <th class="highlight">BC Services Card</th>
+                  </tr>
+                  <tr>
+                    <td class="mobile-label highlight-conflicts">Evacuee Registration & Assistance (ERA)</td>
+                    <td>
+                      <p>{{ addressConflict?.originalValue?.addressLine1 }}</p>
+                      @if (addressConflict?.originalValue?.addressLine2) {
+                        <p>
+                          {{ addressConflict?.originalValue?.addressLine2 }}
+                        </p>
+                      }
+                      <p>
+                        {{ addressConflict?.originalValue?.community?.name }}
+                        {{ addressConflict?.originalValue?.stateProvince?.code }}
+                        {{ addressConflict?.originalValue?.postalCode }}<br />
+                        {{ addressConflict?.originalValue?.country?.name }}
+                      </p>
+                    </td>
+                    <td class="main-view">
+                      <p>
+                        {{ addressConflict?.conflictingValue?.addressLine1 }}
+                      </p>
+                      @if (addressConflict?.conflictingValue?.addressLine2) {
+                        <p>
+                          {{ addressConflict?.conflictingValue?.addressLine2 }}
+                        </p>
+                      }
+                      <p>
+                        {{ addressConflict?.conflictingValue?.community?.name }}
+                        {{ addressConflict?.conflictingValue?.stateProvince?.code }}
+                        {{ addressConflict?.conflictingValue?.postalCode }}<br />
+                        {{ addressConflict?.conflictingValue?.country?.name }}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr class="alt-BCSC">
+                    <td class="highlight">BC Services Card</td>
+                    <td>
+                      <p>
+                        {{ addressConflict?.conflictingValue?.addressLine1 }}
+                      </p>
+                      @if (addressConflict?.conflictingValue?.addressLine2) {
+                        <p>
+                          {{ addressConflict?.conflictingValue?.addressLine2 }}
+                        </p>
+                      }
+                      <p>
+                        {{ addressConflict?.conflictingValue?.community?.name }}
+                        {{ addressConflict?.conflictingValue?.stateProvince?.code }}
+                        {{ addressConflict?.conflictingValue?.postalCode }}<br />
+                        {{ addressConflict?.conflictingValue?.country?.name }}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <br />
+        @if (!updateAddressIndicator) {
+          <div>
+            <div class="row justify-content-between resp-style">
+              <div class="col-md-6">
+                <button
+                  class="button-s button-with-loader"
+                  mat-stroked-button
+                  [disabled]="isSubmitted"
+                  (click)="navigateDashboard()"
+                >
+                  No, Keep My Address
+                  <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+                </button>
+              </div>
+              <div class="col-md-6">
+                <button class="button-p" mat-stroked-button (click)="toggleAddress()">Yes, Update My Address</button>
+              </div>
+            </div>
+          </div>
+        }
+        @if (updateAddressIndicator) {
+          <div>
+            <app-component-wrapper [componentName]="componentName" [folderPath]="folderPath"> </app-component-wrapper>
+            <br />
+            <div class="row justify-content-between resp-style">
+              <div class="col-md-6">
+                <button class="button-s" mat-stroked-button (click)="toggleAddress('cancel')">Cancel</button>
+              </div>
+              <div class="col-md-6">
+                <button
+                  class="button-p button-with-loader"
+                  mat-stroked-button
+                  (click)="conflictsResolved()"
+                  [disabled]="isSubmitted"
+                >
+                  Save
+                  <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </mat-step>
+    }
     <ng-template matStepperIcon="edit" let-index="index">
       {{ index + 1 }}
     </ng-template>

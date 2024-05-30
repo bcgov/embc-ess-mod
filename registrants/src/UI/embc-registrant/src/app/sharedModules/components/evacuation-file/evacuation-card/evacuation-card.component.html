@@ -1,8 +1,13 @@
-<mat-card>
+<mat-card appearance="outlined">
   <mat-card-content>
     <span class="evacuatedSecondary">Evacuated From</span>
-    <mat-card-title class="evacuatedTitle"
-      >{{ evacuationFileCard?.evacuatedAddress?.community?.name }}
+    <mat-card-title class="evacuatedTitle">
+      {{ evacuationFileCard?.evacuatedAddress?.community?.name }}
+      @if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports) {
+        <mat-chip disabled>Supports available</mat-chip>
+      } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports) {
+        <mat-chip disabled> Support extensions available</mat-chip>
+      }
     </mat-card-title>
     <div class="row">
       <div class="col-md-9">
@@ -11,28 +16,22 @@
             <tr>
               <th class="evacuatedSecondary">ESS File Created</th>
               <th class="evacuatedSecondary">ESS File #</th>
-              <th class="evacuatedSecondary">Supports Received</th>
+              <th class="evacuatedSecondary">Supports Issued</th>
               <th class="evacuatedSecondary">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="dataSpan">
-                {{
-                  evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy'
-                }}
+              <td class="dataSpan data-column-1">
+                {{ evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy' }}
               </td>
-              <td class="dataSpan">
-                {{
-                  evacuationFileCard?.isPaper
-                    ? evacuationFileCard?.manualFileId
-                    : evacuationFileCard?.fileId
-                }}
+              <td class="dataSpan data-column-2">
+                {{ evacuationFileCard?.isPaper ? evacuationFileCard?.manualFileId : evacuationFileCard?.fileId }}
               </td>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-3">
                 {{ evacuationFileCard?.supports.length === 0 ? 'No' : 'Yes' }}
               </td>
-              <td class="dataSpan">
+              <td class="dataSpan data-column-4">
                 <img src="{{ imageIcon }}" height="13" width="13" />
                 {{ evacuationFileCard?.status }}
               </td>
@@ -41,13 +40,16 @@
         </table>
       </div>
       <div class="col-md-3 button-align">
-        <button
-          class="button-p view-details"
-          mat-stroked-button
-          type="button"
-          (click)="goToDetails()"
-        >
-          View Details
+        <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">
+          @if ([EvacuationFileStatus.Pending, EvacuationFileStatus.Expired].includes(evacuationFileCard?.status)) {
+            View & Edit Details
+          } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports) {
+            View Details & Get Supports
+          } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports) {
+            View Details & Extend Supports
+          } @else {
+            View Details
+          }
         </button>
       </div>
     </div>

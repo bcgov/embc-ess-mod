@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Referral, Support, SupportStatus } from 'src/app/core/api/models';
@@ -27,11 +20,17 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
+import { SupportsTableComponent } from './supports-table/supports-table.component';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-view-supports',
   templateUrl: './view-supports.component.html',
-  styleUrls: ['./view-supports.component.scss']
+  styleUrls: ['./view-supports.component.scss'],
+  standalone: true,
+  imports: [MatButton, MatFormField, MatLabel, MatSelect, MatOption, SupportsTableComponent]
 })
 export class ViewSupportsComponent implements OnInit, OnDestroy {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;
@@ -40,9 +39,7 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
   filtersToLoad: TableFilterModel;
   showLoader = false;
   supportListSubscription: Subscription;
-  private supportListEvent: BehaviorSubject<Support[]> = new BehaviorSubject<
-    Support[]
-  >(null);
+  private supportListEvent: BehaviorSubject<Support[]> = new BehaviorSubject<Support[]>(null);
 
   constructor(
     private router: Router,
@@ -67,17 +64,15 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.supportListSubscription = this.stepSupportsService
-      .getExistingSupportList()
-      .subscribe({
-        next: (supports) => {
-          this.supportList = supports;
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.supportListerror);
-        }
-      });
+    this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
+      next: (supports) => {
+        this.supportList = supports;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+      }
+    });
     this.loadEvacueeListService.getSupportStatus();
     this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
@@ -101,49 +96,42 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
   }
 
   loadSupportList() {
-    this.stepSupportsService
-      .getSupports(this.appBaseService?.appModel?.selectedEssFile?.id)
-      .subscribe({
-        next: (supports) => {
-          this.showLoader = !this.showLoader;
-          const supportModel = [];
-          supports.forEach((support) => {
-            if (
-              support.subCategory === 'Lodging_Group' ||
-              support.subCategory === 'Lodging_Billeting' ||
-              support.subCategory === 'Lodging_Allowance' ||
-              support.method === 'ETransfer'
-            ) {
-              supportModel.push(support);
-            } else {
-              const value = {
-                ...support,
-                hostAddress: this.locationsService.getAddressModelFromAddress(
-                  (support.supportDelivery as Referral).supplierAddress
-                )
-              };
-              supportModel.push(value);
-            }
-          });
-          this.supportList = supportModel.sort(
-            (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-          );
-          this.addDraftSupports();
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.supportListerror);
-        }
-      });
+    this.stepSupportsService.getSupports(this.appBaseService?.appModel?.selectedEssFile?.id).subscribe({
+      next: (supports) => {
+        this.showLoader = !this.showLoader;
+        const supportModel = [];
+        supports.forEach((support) => {
+          if (
+            support.subCategory === 'Lodging_Group' ||
+            support.subCategory === 'Lodging_Billeting' ||
+            support.subCategory === 'Lodging_Allowance' ||
+            support.method === 'ETransfer'
+          ) {
+            supportModel.push(support);
+          } else {
+            const value = {
+              ...support,
+              hostAddress: this.locationsService.getAddressModelFromAddress(
+                (support.supportDelivery as Referral).supplierAddress
+              )
+            };
+            supportModel.push(value);
+          }
+        });
+        this.supportList = supportModel.sort((a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf());
+        this.addDraftSupports();
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+      }
+    });
   }
 
   selected(event: MatSelectChange, filterType: string): void {
     this.resetFilter(filterType);
-    const selectedValue =
-      event.value === undefined || event.value === ''
-        ? ''
-        : event.value.value;
+    const selectedValue = event.value === undefined || event.value === '' ? '' : event.value.value;
     this.filterTerm = { type: filterType, value: selectedValue };
   }
 
@@ -163,19 +151,14 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
 
   addDraftSupports() {
     if (this.referralService.getDraftSupport().length !== 0) {
-      this.supportList = [
-        ...this.referralService.getDraftSupport(),
-        ...this.supportList
-      ];
+      this.supportList = [...this.referralService.getDraftSupport(), ...this.supportList];
     }
     this.supportListEvent.next(this.supportList);
     this.stepSupportsService.setExistingSupportList(this.supportList);
   }
 
   setStepStatus() {
-    const index = this.supportList?.findIndex(
-      (support) => support.status === SupportStatus.Draft
-    );
+    const index = this.supportList?.findIndex((support) => support.status === SupportStatus.Draft);
     if (index > -1) {
       this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
       this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
@@ -242,9 +225,6 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
   }
 
   isAddSupportsDisabled() {
-    return (
-      this.appBaseService?.wizardProperties?.wizardType ===
-      WizardType.ExtendSupports
-    );
+    return this.appBaseService?.wizardProperties?.wizardType === WizardType.ExtendSupports;
   }
 }

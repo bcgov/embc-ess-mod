@@ -7,11 +7,31 @@ import { LoginService } from './core/services/login.service';
 import { ConfigService } from './core/services/config.service';
 import { EnvironmentInformation } from './core/model/environment-information.model';
 import { OutageService } from './feature-components/outage/outage.service';
+import { AppLoaderComponent } from './core/components/app-loader/app-loader.component';
+import { FooterComponent } from './core/layout/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
+import { AlertComponent } from './core/components/alert/alert.component';
+import { HeaderComponent } from './core/layout/header/header.component';
+import { EnvironmentBannerComponent } from './core/layout/environment-banner/environment-banner.component';
+import { OutageBannerComponent } from './sharedModules/outage-components/outage-banner/outage-banner.component';
+import { NgStyle, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [
+    OutageBannerComponent,
+    EnvironmentBannerComponent,
+    HeaderComponent,
+    NgStyle,
+    AlertComponent,
+    RouterOutlet,
+    FooterComponent,
+    AppLoaderComponent,
+    AsyncPipe
+  ]
 })
 export class AppComponent implements OnInit {
   public isLoading = true;

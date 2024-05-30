@@ -1,71 +1,104 @@
-table {
+:host {
+  table {
     width: 100%;
   }
 
   th {
     font-size: 16px;
     background-color: rgba(113, 113, 113, 1);
-    color: white
+    color: white;
   }
 
-  tr:nth-child(even){
+  tr:nth-child(even) {
     background-color: #f2f2f2;
   }
 
   tr:hover {
-    background-color: #E1E1E1;
+    background-color: #e1e1e1;
     cursor: pointer;
   }
 
-  ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  ::ng-deep .mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-bar {
     background-color: rgba(37, 168, 0, 1) !important;
-}
-
-::ng-deep .mat-slide-toggle-bar {
-  background-color: rgba(210, 0, 0, 1) !important;
-}
-
-::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
-  background-color: white !important;
-}
-
-::ng-deep .arrow-color .mat-sort-header-arrow {
-  color: #fff;
-}
-
-::ng-deep .mat-sort-header-container {
-  border: 0px !important;
-}
-
-.info-image img:last-child {
-  display: none;
   }
-  
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  ::ng-deep .mat-slide-toggle-bar {
+    background-color: rgba(210, 0, 0, 1) !important;
+  }
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  ::ng-deep .mat-mdc-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: white !important;
+  }
+
+  .mat-mdc-slide-toggle.mat-accent {
+    --color-active: rgba(37, 168, 0, 1);
+    --color-inactive: rgba(210, 0, 0, 1);
+
+    --mdc-switch-selected-focus-state-layer-color: #fff;
+    --mdc-switch-selected-handle-color: #fff;
+    --mdc-switch-selected-hover-state-layer-color: #fff;
+    --mdc-switch-selected-pressed-state-layer-color: #fff;
+    --mdc-switch-selected-focus-handle-color: #fff;
+    --mdc-switch-selected-hover-handle-color: #fff;
+    --mdc-switch-selected-pressed-handle-color: #fff;
+    --mdc-switch-selected-focus-track-color: var(--color-active);
+    --mdc-switch-selected-hover-track-color: var(--color-active);
+    --mdc-switch-selected-pressed-track-color: var(--color-active);
+    --mdc-switch-selected-track-color: var(--color-active);
+
+    --mdc-switch-unselected-focus-state-layer-color: #fff;
+    --mdc-switch-unselected-handle-color: #fff;
+    --mdc-switch-unselected-hover-state-layer-color: #fff;
+    --mdc-switch-unselected-pressed-state-layer-color: #fff;
+    --mdc-switch-unselected-focus-handle-color: #fff;
+    --mdc-switch-unselected-hover-handle-color: #fff;
+    --mdc-switch-unselected-pressed-handle-color: #fff;
+    --mdc-switch-unselected-focus-track-color: var(--color-inactive);
+    --mdc-switch-unselected-hover-track-color: var(--color-inactive);
+    --mdc-switch-unselected-pressed-track-color: var(--color-inactive);
+    --mdc-switch-unselected-track-color: var(--color-inactive);
+  }
+
+  ::ng-deep .arrow-color .mat-sort-header-arrow {
+    color: #fff;
+  }
+
+  ::ng-deep .mat-sort-header-container {
+    border: 0px !important;
+  }
+
+  .info-image img:last-child {
+    display: none;
+  }
+
   .info-image:hover img:last-child {
-  display: inline;
+    display: inline;
   }
-  
+
   .info-image:hover img:first-child {
-  display: none;
+    display: none;
   }
 
-.info-card {
-  @extend .info-image;
-  display: block;
-  margin: auto;
-  text-align: center;
-  margin-left: 20px;
+  .info-card {
+    @extend .info-image;
+    display: block;
+    margin: auto;
+    text-align: center;
+    margin-left: 20px;
+  }
 
-}
+  .active-style {
+    color: rgba(37, 168, 0, 1) !important;
+  }
 
-.active-style {
-  color: rgba(37, 168, 0, 1) !important;
-}
+  .inactive-style {
+    color: rgba(210, 0, 0, 1) !important;
+  }
 
-.inactive-style {
-  color: rgba(210, 0, 0, 1) !important;
-}
-
-.name-cell {
-  font-weight: bold;
+  .name-cell {
+    font-weight: bold;
+  }
 }

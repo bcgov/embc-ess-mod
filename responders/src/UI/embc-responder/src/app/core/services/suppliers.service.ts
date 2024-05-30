@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Injectable } from '@angular/core';
 import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
 import { SuppliersService, TeamsService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  Supplier,
-  SupplierListItem,
-  SupplierResult,
-  Team
-} from '../api/models';
+import { Supplier, SupplierListItem, SupplierResult, Team } from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 import { SupplierListItemModel } from '../models/supplier-list-item.model';
@@ -38,10 +32,7 @@ export class SupplierService {
    *
    * @returns an array of Supplier
    */
-  getSuppliersList(
-    legalName?: string,
-    gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  getSuppliersList(legalName?: string, gstNumber?: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
@@ -59,10 +50,7 @@ export class SupplierService {
    *
    * @returns an array of Main Supplier
    */
-  getMainSuppliersList(
-    legalName?: string,
-    gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  getMainSuppliersList(legalName?: string, gstNumber?: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
@@ -82,10 +70,7 @@ export class SupplierService {
    *
    * @returns an array of Mutual Aid Suppliers
    */
-  getMutualAidSuppliersList(
-    legalName?: string,
-    gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  getMutualAidSuppliersList(legalName?: string, gstNumber?: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
@@ -106,10 +91,7 @@ export class SupplierService {
    * @param gstNumber supplier's gst number
    * @returns an array of suppliers that match with the inserted input
    */
-  checkSupplierExists(
-    legalName?: string,
-    gstNumber?: string
-  ): Observable<Array<SupplierListItemModel>> {
+  checkSupplierExists(legalName?: string, gstNumber?: string): Observable<Array<SupplierListItemModel>> {
     const suppliersItemsResult: Array<SupplierListItemModel> = [];
     return this.suppliersService
       .suppliersGetSuppliers({
@@ -117,22 +99,16 @@ export class SupplierService {
         gstNumber
       })
       .pipe(
-        map(
-          (
-            supplierItemsResult: Array<SupplierListItem>
-          ): Array<SupplierListItemModel> => {
-            supplierItemsResult.forEach((item) => {
-              const supplierItem: SupplierListItemModel = {
-                ...item,
-                address: this.locationServices.getAddressModelFromAddress(
-                  item.address
-                )
-              };
-              suppliersItemsResult.push(supplierItem);
-            });
-            return suppliersItemsResult;
-          }
-        )
+        map((supplierItemsResult: Array<SupplierListItem>): Array<SupplierListItemModel> => {
+          supplierItemsResult.forEach((item) => {
+            const supplierItem: SupplierListItemModel = {
+              ...item,
+              address: this.locationServices.getAddressModelFromAddress(item.address)
+            };
+            suppliersItemsResult.push(supplierItem);
+          });
+          return suppliersItemsResult;
+        })
       );
   }
 
@@ -142,9 +118,7 @@ export class SupplierService {
    * @param supplierId the supplier's ID
    * @returns an array of updated supplierListItem
    */
-  activateSuppliersStatus(
-    supplierId: string
-  ): Observable<Array<SupplierListItem>> {
+  activateSuppliersStatus(supplierId: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersActivateSupplier({
         supplierId
@@ -162,9 +136,7 @@ export class SupplierService {
    * @param supplierId the supplier's ID
    * @returns an array of updated supplierListItem
    */
-  deactivateSuppliersStatus(
-    supplierId: string
-  ): Observable<Array<SupplierListItem>> {
+  deactivateSuppliersStatus(supplierId: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersDeactivateSupplier({
         supplierId
@@ -187,13 +159,8 @@ export class SupplierService {
       map((supplier: Supplier): SupplierModel => {
         const supplierModel = {
           ...supplier,
-          supplierGstNumber:
-            this.supplierManagementService.convertSupplierGSTNumberToFormModel(
-              supplier.gstNumber
-            ),
-          address: this.locationServices.getAddressModelFromAddress(
-            supplier.address
-          )
+          supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberToFormModel(supplier.gstNumber),
+          address: this.locationServices.getAddressModelFromAddress(supplier.address)
         };
 
         return supplierModel;
@@ -220,10 +187,7 @@ export class SupplierService {
    * @param supplierData the supplier's new data
    * @returns updated supplier's ID
    */
-  updateSupplier(
-    supplierId: string,
-    supplierData: Supplier
-  ): Observable<SupplierResult> {
+  updateSupplier(supplierId: string, supplierData: Supplier): Observable<SupplierResult> {
     return this.suppliersService.suppliersUpdateSupplier({
       supplierId,
       body: supplierData
@@ -280,17 +244,12 @@ export class SupplierService {
    * @param sharedTeamId responder's ESS Team ID
    * @returns a list of mutual aid suppliers
    */
-  addMutualAidSupplier(
-    supplierId: string,
-    sharedTeamId: string
-  ): Observable<Array<SupplierListItem>> {
-    return this.suppliersService
-      .suppliersAddSupplierSharedWithTeam({ supplierId, sharedTeamId })
-      .pipe(
-        mergeMap((result) => {
-          return this.getMutualAidSuppliersList();
-        })
-      );
+  addMutualAidSupplier(supplierId: string, sharedTeamId: string): Observable<Array<SupplierListItem>> {
+    return this.suppliersService.suppliersAddSupplierSharedWithTeam({ supplierId, sharedTeamId }).pipe(
+      mergeMap((result) => {
+        return this.getMutualAidSuppliersList();
+      })
+    );
   }
 
   /**
@@ -300,17 +259,12 @@ export class SupplierService {
    * @param sharedTeamId responder's ESS Team ID
    * @returns a list of mutual aid suppliers
    */
-  rescindMutualAidSupplier(
-    supplierId: string,
-    sharedTeamId: string
-  ): Observable<Array<SupplierListItem>> {
-    return this.suppliersService
-      .suppliersRemoveSupplierSharedWithTeam({ supplierId, sharedTeamId })
-      .pipe(
-        mergeMap((result) => {
-          return this.getMutualAidSuppliersList();
-        })
-      );
+  rescindMutualAidSupplier(supplierId: string, sharedTeamId: string): Observable<Array<SupplierListItem>> {
+    return this.suppliersService.suppliersRemoveSupplierSharedWithTeam({ supplierId, sharedTeamId }).pipe(
+      mergeMap((result) => {
+        return this.getMutualAidSuppliersList();
+      })
+    );
   }
 
   /**
@@ -338,8 +292,8 @@ export class SupplierService {
       this.mutualAidEssTeams
         ? resolve(this.mutualAidEssTeams)
         : JSON.parse(this.cacheService.get('mutualAidEssTeams'))
-        ? resolve(JSON.parse(this.cacheService.get('mutualAidEssTeams')))
-        : resolve(this.getMutualAidEssTeams());
+          ? resolve(JSON.parse(this.cacheService.get('mutualAidEssTeams')))
+          : resolve(this.getMutualAidEssTeams());
     });
   }
 

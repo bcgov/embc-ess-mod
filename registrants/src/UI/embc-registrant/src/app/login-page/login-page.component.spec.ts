@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LoginPageComponent } from './login-page.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoginService } from '../core/services/login.service';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { provideRouter } from '@angular/router';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -14,17 +14,8 @@ describe('LoginPageComponent', () => {
   beforeEach(waitForAsync(() => {
     let loginService: jasmine.SpyObj<LoginService>;
     TestBed.configureTestingModule({
-      declarations: [LoginPageComponent],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        OAuthModule.forRoot()
-      ],
-      providers: [
-        UntypedFormBuilder,
-        { provides: LoginService, useValue: loginService }
-      ]
+      imports: [ReactiveFormsModule, HttpClientTestingModule, OAuthModule.forRoot(), LoginPageComponent],
+      providers: [UntypedFormBuilder, { provides: LoginService, useValue: loginService }, provideRouter([])]
     }).compileComponents();
   }));
 

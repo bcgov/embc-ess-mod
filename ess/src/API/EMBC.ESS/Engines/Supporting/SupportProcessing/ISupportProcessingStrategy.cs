@@ -1,37 +1,41 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Engines.Supporting.SupportProcessing
+namespace EMBC.ESS.Engines.Supporting.SupportProcessing;
+
+internal interface ISupportProcessingStrategy
 {
-    internal interface ISupportProcessingStrategy
-    {
-        Task<ProcessResponse> Process(ProcessRequest request);
+    Task<ProcessResponse> Process(ProcessRequest request, CancellationToken ct);
 
-        Task<ValidationResponse> Validate(ValidationRequest request);
+    Task<ValidationResponse> Validate(ValidationRequest request, CancellationToken ct);
+}
+
+internal class SupportProcessingStrategyFactory
+{
+    private readonly IServiceProvider services;
+
+    public SupportProcessingStrategyFactory(IServiceProvider services)
+    {
+        this.services = services;
     }
 
-    internal class SupportProcessingStrategyFactory
+    public ISupportProcessingStrategy Create(SupportProcessingStrategyType type) => type switch
     {
-        private IServiceProvider services;
+        SupportProcessingStrategyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
+        SupportProcessingStrategyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
+        SupportProcessingStrategyType.SelfServe => services.GetRequiredService<SelfServeSupportEligibilityStrategy>(),
+        SupportProcessingStrategyType.Eligibility => services.GetRequiredService<SelfServeSupportEligibilityStrategy>(),
 
-        public SupportProcessingStrategyFactory(IServiceProvider services)
-        {
-            this.services = services;
-        }
+        _ => throw new NotImplementedException($"{type}")
+    };
+}
 
-        public ISupportProcessingStrategy Create(SupportProcessingStrategyType type) => type switch
-        {
-            SupportProcessingStrategyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
-            SupportProcessingStrategyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
-
-            _ => throw new NotImplementedException($"{type}")
-        };
-    }
-
-    internal enum SupportProcessingStrategyType
-    {
-        Digital,
-        Paper
-    }
+internal enum SupportProcessingStrategyType
+{
+    Digital,
+    Paper,
+    SelfServe,
+    Eligibility
 }

@@ -16,23 +16,24 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { Note } from 'src/app/core/api/models';
-import {
-  ActionPermission,
-  ClaimType
-} from 'src/app/core/services/authorization.service';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepNotesService } from '../../step-notes/step-notes.service';
+import { MatIconButton } from '@angular/material/button';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-notes',
   templateUrl: './list-notes.component.html',
   styleUrls: ['./list-notes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconButton, MatPaginator, AsyncPipe, DatePipe]
 })
-export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
+export class ListNotesComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() notesList: Array<Note>;
   @Output() hideUnhideToggle = new EventEmitter<Note>();
@@ -46,8 +47,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
     private userService: UserService,
     private stepNotesService: StepNotesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.notesList) {
@@ -135,9 +134,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
    * @returns true/false
    */
   public hasPermission(action: string): boolean {
-    return this.userService.hasClaim(
-      ClaimType.action,
-      ActionPermission[action]
-    );
+    return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 }

@@ -44,16 +44,13 @@ namespace EMBC.ESS.Utilities.Dynamics
             context.UpdateObject(entity);
         }
 
-        public static async Task<T> SingleOrDefaultAsync<T>(this IQueryable<T> query, CancellationToken? ct = null)
-            where T : crmbaseentity =>
-            (await ((DataServiceQuery<T>)query).ExecuteAsync(ct ?? CancellationToken.None)).SingleOrDefault();
+        public static async Task<T?> SingleOrDefaultAsync<T>(this IQueryable<T> query, CancellationToken ct = default) =>
+            (await ((DataServiceQuery<T>)query).ExecuteAsync(ct)).SingleOrDefault();
 
-        public static async Task<IEnumerable<T>> GetAllPagesAsync<T>(this IQueryable<T> query, CancellationToken? ct = null)
-            where T : crmbaseentity =>
-            await ((DataServiceQuery<T>)query).GetAllPagesAsync(ct ?? CancellationToken.None);
+        public static async Task<IEnumerable<T>> GetAllPagesAsync<T>(this IQueryable<T> query, CancellationToken ct = default) =>
+            await ((DataServiceQuery<T>)query).GetAllPagesAsync(ct);
 
-        public static async Task<IEnumerable<T>> GetTopAsync<T>(this IQueryable<T> query, string top, CancellationToken? ct = null)
-            where T : crmbaseentity =>
-            await ((DataServiceQuery<T>)query).AddQueryOption("$top", top).GetAllPagesAsync(ct ?? CancellationToken.None);
+        public static async Task<IEnumerable<T>> GetTopAsync<T>(this IQueryable<T> query, string top, CancellationToken ct = default) =>
+            await ((DataServiceQuery<T>)query).AddQueryOption("$top", top).GetAllPagesAsync(ct);
     }
 }

@@ -2,7 +2,7 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="wizard-tab-heading requiredField"> Security Phrase </span>
+        <span class="wizard-tab-heading requiredField"> Security Word </span>
       </div>
     </div>
   </div>
@@ -10,119 +10,73 @@
   <div class="row">
     <div class="col-12 content-container">
       <div class="row">
-        <div
-          class="col-8"
-          *ngIf="
-            essFileNumber === null ||
-              essFileNumber === undefined ||
-              editedSecurityPhrase;
-            else editEssFile
-          "
-        >
-          <p>
-            The security phrase is to ensure an Emergency Support Services (ESS)
-            Responder can verbally verify your identity with your registration.
-          </p>
-
-          <p>
-            Enter a
-            <strong
-              >memorable security phrase that is over 6 characters in
-              length.</strong
-            >
-            You may include numbers and letters. Do not include any special
-            characters. The security phrase is not case sensitive.
-          </p>
-
-          <p>Your security phrase should never include your email address.</p>
-
-          <form [formGroup]="securityForm">
-            <div class="row">
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Security Phrase</mat-label>
-
-                <input
-                  matInput
-                  maxlength="50"
-                  autocomplete="off"
-                  formControlName="securityPhrase"
-                />
-
-                <mat-error
-                  *ngIf="
+        @if (essFileNumber === null || essFileNumber === undefined || editedSecurityPhrase) {
+          <div class="col-8">
+            <p>
+              The security word is to ensure an Emergency Support Services (ESS) Responder can verbally verify your
+              identity with your registration.
+            </p>
+            <p>
+              Enter a
+              <strong>memorable security word that is over 6 characters in length.</strong>
+              You may include numbers and letters. Do not include any special characters. The security word is not case
+              sensitive.
+            </p>
+            <p>Your security word should never include your email address.</p>
+            <form [formGroup]="securityForm">
+              <div class="row">
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Security Word</mat-label>
+                  <input matInput maxlength="50" autocomplete="off" formControlName="securityPhrase" />
+                  @if (
                     securityFormControl?.securityPhrase?.hasError('required') ||
-                    securityFormControl?.securityPhrase?.hasError(
-                      'whitespaceError'
-                    )
-                  "
-                >
-                  Phrase is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    securityFormControl?.securityPhrase?.hasError(
-                      'minlength'
-                    ) ||
+                    securityFormControl?.securityPhrase?.hasError('whitespaceError')
+                  ) {
+                    <mat-error> Security Word is required. </mat-error>
+                  }
+                  @if (
+                    securityFormControl?.securityPhrase?.hasError('minlength') ||
                     securityFormControl?.securityPhrase?.hasError('maxlength')
-                  "
-                >
-                  Phrase must be between 6 and 50 characters long.
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    securityFormControl?.securityPhrase?.hasError('pattern')
-                  "
-                >
-                  Phrase cannot contain special characters.
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div
-              class="row edit-phrase-row"
-              *ngIf="essFileNumber !== null && essFileNumber !== undefined"
-            >
-              <button class="btn edit-phrase" (click)="cancel()">Cancel</button>
-            </div>
-          </form>
-        </div>
-
-        <ng-template #editEssFile>
+                  ) {
+                    <mat-error> Word must be between 6 and 50 characters long. </mat-error>
+                  }
+                  @if (securityFormControl?.securityPhrase?.hasError('pattern')) {
+                    <mat-error> Word cannot contain special characters. </mat-error>
+                  }
+                </mat-form-field>
+              </div>
+              @if (essFileNumber !== null && essFileNumber !== undefined) {
+                <div class="row edit-phrase-row">
+                  <button class="btn edit-phrase" (click)="cancel()">Cancel</button>
+                </div>
+              }
+            </form>
+          </div>
+        } @else {
           <div class="col-8">
             <div class="row">
-              <div class="col-md-6"><p>Security Phrase</p></div>
+              <div class="col-md-6"><p>Security Word</p></div>
               <div class="col-md-6">
                 <p>{{ stepEssFileService?.securityPhrase | maskText }}</p>
               </div>
             </div>
-
             <div class="row edit-phrase-row">
-              <button class="btn edit-phrase" (click)="editSecurityPhrase()">
-                Add new security phrase
-              </button>
+              <button class="btn edit-phrase" (click)="editSecurityPhrase()">Add new security word</button>
             </div>
           </div>
-        </ng-template>
+        }
 
         <div class="col-md-4">
           <mat-card class="tips-card">
             <div>
-              <img
-                class="img-align"
-                src="/assets/images/tips-lightbulb.svg"
-                height="63"
-                width="62"
-              />
-              <span class="tips-heading">
-                <span class="bold">Tip:</span> Security Phrase
-              </span>
+              <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+              <span class="tips-heading"> <span class="bold">Tip:</span> Security Word </span>
             </div>
 
             <p class="tips-info">
-              If you have been evacuated, please share your security phrase with
-              your listed household members. This will allow an Emergency
-              Support Services (ESS) Responder to assist each household member
-              registered under the same file.
+              If you have been evacuated, please share your security word with your listed household members. This will
+              allow an Emergency Support Services (ESS) Responder to assist each household member registered under the
+              same file.
             </p>
           </mat-card>
         </div>
@@ -130,12 +84,8 @@
 
       <div class="row nav-buttons">
         <div class="col-12">
-          <button class="button-s back" mat-button (click)="back()">
-            Back
-          </button>
-          <button class="button-p next" mat-button (click)="next()">
-            Next
-          </button>
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+          <button class="button-p next" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </div>

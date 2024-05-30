@@ -18,52 +18,33 @@ const routes: Routes = [
       {
         path: 'auth',
         canActivate: [AuthGuard, DevGuard],
-        loadChildren: () =>
-          import('./supplier-auth/supplier-auth.module').then(
-            (m) => m.SupplierAuthModule
-          )
+        loadChildren: () => import('./supplier-auth/supplier-auth.module').then((m) => m.SupplierAuthModule)
       },
       {
         path: 'public',
         canActivate: [DevGuard],
-        loadChildren: () =>
-          import('./supplier-public/supplier-public.module').then(
-            (m) => m.SupplierPublicModule
-          )
+        loadChildren: () => import('./supplier-public/supplier-public.module').then((m) => m.SupplierPublicModule)
       },
       {
         path: 'submission',
-        loadChildren: () =>
-          import('./fire-and-forget/submission/submission.module').then(
-            (m) => m.SubmissionModule
-          )
+        loadChildren: () => import('./fire-and-forget/submission/submission.module').then((m) => m.SubmissionModule)
       },
       {
         path: 'review',
         canActivate: [ReviewGuard],
-        loadChildren: () =>
-          import('./fire-and-forget/review/review.module').then(
-            (m) => m.ReviewModule
-          )
+        loadChildren: () => import('./fire-and-forget/review/review.module').then((m) => m.ReviewModule)
       },
       {
         path: 'thankyou',
-        loadChildren: () =>
-          import('./fire-and-forget/reference/reference.module').then(
-            (m) => m.ReferenceModule
-          )
+        loadChildren: () => import('./fire-and-forget/reference/reference.module').then((m) => m.ReferenceModule)
       },
       {
         path: 'maintenance',
-        loadChildren: () =>
-          import('./maintenance/maintenance.module').then(
-            (m) => m.MaintenanceModule
-          )
+        loadChildren: () => import('./maintenance/maintenance.module').then((m) => m.MaintenanceModule)
       },
       {
         path: 'error',
-        loadChildren: () =>
-          import('./error/error.module').then((m) => m.ErrorModule)
+        loadChildren: () => import('./error/error.module').then((m) => m.ErrorModule)
       },
       {
         path: '**',
@@ -77,8 +58,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'top',
-      relativeLinkResolution: 'legacy'
+      scrollPositionRestoration: 'top'
     })
   ],
   exports: [RouterModule]

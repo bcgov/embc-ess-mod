@@ -13,6 +13,7 @@ namespace EMBC.ESS.Resources.Metadata
         internal const string StatesProvincesCacheKey = "metadata:stateprovinces";
         internal const string CommunitiesCacheKey = "metadata:communities";
         internal const string SecurityQuestionsCacheKey = "metadata:securityquestions";
+        internal const string AccessReasonsCacheKey = "metadata:accessreasons";
         internal const string PlannedOutagesCacheKey = "metadata:plannedoutages";
 
         internal static readonly TimeSpan CacheEntryLifetime = TimeSpan.FromDays(1);
@@ -50,5 +51,7 @@ namespace EMBC.ESS.Resources.Metadata
         {
             return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), CacheEntryLifetime);
         }
+
+        public async Task<IReadOnlyDictionary<int, string>> GetAuditAccessReasons() => await cache.GetOrSet(AccessReasonsCacheKey, internalRepository.GetAuditAccessReasons, CacheEntryLifetime);
     }
 }

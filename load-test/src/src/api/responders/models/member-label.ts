@@ -8,5 +8,7 @@ export enum MemberLabel {
   Volunteer = 'Volunteer',
   ThirdParty = 'ThirdParty',
   ConvergentVolunteer = 'ConvergentVolunteer',
-  EMBCEmployee = 'EMBCEmployee'
+  EMBCEmployee = 'EMBCEmployee',
+  FirstNation = 'FirstNation',
+  LocalGovernmentEmployee = 'LocalGovernmentEmployee'
 }

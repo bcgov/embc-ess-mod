@@ -1,58 +1,55 @@
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
-    height: auto;
-    width: 70%;
+  height: auto;
+  width: 70%;
 }
 
 .question-highlight {
-    font-weight: 700;
-    color: #234075;
-    line-height: 17px;
+  font-weight: 700;
+  color: #234075;
+  line-height: 17px;
 }
 
 .divider {
-    width: 34vw;
-    height: 2px;
+  width: 34vw;
+  height: 2px;
 }
 
 .line-space {
-    padding: 15px 30px 10px;
+  padding: 15px 30px 10px;
 }
 
 .img-space {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 
 text {
-    margin-bottom: 70px;
+  margin-bottom: 70px;
 }
 
 *:focus {
-    outline: none;
+  outline: none;
 }
 
-@media(max-width: 830px) {
-    
-    mat-card {
-        width: 100%;
-    }
+@media (max-width: 830px) {
+  /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+  mat-card {
+    width: 100%;
+  }
 }
 
 @media (max-width: 767px) {
+  .divider {
+    width: 60vw;
+  }
 
-    .divider {
-        width: 60vw;
-    }
-
-    .line-space {
-        padding: 15px 30px 0px;
-    }
-
+  .line-space {
+    padding: 15px 30px 0px;
+  }
 }
 
 @media (min-width: 2200px) {
-
-    .divider {
-        width: 25vw;
-    }
-
+  .divider {
+    width: 25vw;
+  }
 }

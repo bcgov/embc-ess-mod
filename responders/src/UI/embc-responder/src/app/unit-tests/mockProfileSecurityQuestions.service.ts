@@ -10,11 +10,7 @@ import { ProfileSecurityQuestionsService } from '../feature-components/search/pr
 export class MockProfileSecurityQuestionsService extends ProfileSecurityQuestionsService {
   public securityQuestionsValue: GetSecurityQuestionsResponse;
 
-  public getSecurityQuestions(
-    registrantId: string
-  ): Observable<GetSecurityQuestionsResponse> {
-    return new BehaviorSubject<GetSecurityQuestionsResponse>(
-      this.securityQuestionsValue
-    );
+  public getSecurityQuestions(registrantId: string): Observable<GetSecurityQuestionsResponse> {
+    return new BehaviorSubject<GetSecurityQuestionsResponse>(this.securityQuestionsValue);
   }
 }

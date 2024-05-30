@@ -1,7 +1,5 @@
-<div
-  *ngIf="showLoader"
-  class="spinner-border spinner-border-sm loader-align"
-  role="status"
->
-  <span class="sr-only">Loading...</span>
-</div>
+@if (showLoader) {
+  <div class="spinner-border spinner-border-sm loader-align" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+}

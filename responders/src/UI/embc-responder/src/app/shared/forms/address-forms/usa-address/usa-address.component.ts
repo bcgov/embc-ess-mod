@@ -1,16 +1,31 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UntypedFormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import {
-  LocationsService,
-  StateProvince
-} from '../../../../core/services/locations.service';
+import { LocationsService, StateProvince } from '../../../../core/services/locations.service';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { AsyncPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-usa-address',
   templateUrl: './usa-address.component.html',
-  styleUrls: ['./usa-address.component.scss']
+  styleUrls: ['./usa-address.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe
+  ]
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;
@@ -25,12 +40,10 @@ export class UsaAddressComponent implements OnInit {
       .getActiveStateProvinceList()
       .filter((sp) => sp.countryCode === this.country.countryCode);
 
-    this.filteredOptions = this.addressForm
-      .get('stateProvince')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => (value ? this.filter(value) : this.states.slice()))
-      );
+    this.filteredOptions = this.addressForm.get('stateProvince').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filter(value) : this.states.slice()))
+    );
   }
 
   validateState(): boolean {
@@ -69,9 +82,7 @@ export class UsaAddressComponent implements OnInit {
   private filter(value?: string): StateProvince[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.states.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+      return this.states.filter((option) => option.name.toLowerCase().includes(filterValue));
     }
   }
 }

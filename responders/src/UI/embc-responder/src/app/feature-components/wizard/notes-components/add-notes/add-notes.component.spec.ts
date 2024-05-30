@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddNotesComponent } from './add-notes.component';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('AddNotesComponent', () => {
   let component: AddNotesComponent;
@@ -11,13 +11,8 @@ describe('AddNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        RouterTestingModule
-      ],
-      providers: [UntypedFormBuilder],
-      declarations: [AddNotesComponent]
+      imports: [ReactiveFormsModule, HttpClientTestingModule, AddNotesComponent],
+      providers: [UntypedFormBuilder, provideRouter([])]
     }).compileComponents();
   });
 

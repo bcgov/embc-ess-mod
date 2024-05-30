@@ -21,10 +21,12 @@ input.amount-right-align {
   -moz-appearance: textfield;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-suffix {
   top: 0 !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-prefix {
   top: 0 !important;
 }
@@ -45,6 +47,7 @@ input.amount-right-align {
   padding: 16px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
   background-color: white;
 }
@@ -54,8 +57,8 @@ input.amount-right-align {
   font-style: italic;
 }
 
-@media(max-width: 1024px) {
-
+@media (max-width: 1024px) {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   ::ng-deep .mat-form-field-subscript-wrapper {
     position: relative !important;
     top: auto !important;
@@ -64,5 +67,4 @@ input.amount-right-align {
   .add-details {
     width: 70%;
   }
-  
 }

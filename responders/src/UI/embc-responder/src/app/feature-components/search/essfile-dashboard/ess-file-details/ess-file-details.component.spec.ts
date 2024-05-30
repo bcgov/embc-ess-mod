@@ -1,8 +1,6 @@
 import { ComponentFixture, inject, TestBed, tick } from '@angular/core/testing';
 
 import { EssFileDetailsComponent } from './ess-file-details.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockEssfileDashboardService } from 'src/app/unit-tests/mockEssfileDashboard.service';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
@@ -21,6 +19,7 @@ import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.se
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('EssFileDetailsComponent', () => {
   let component: EssFileDetailsComponent;
@@ -164,14 +163,7 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        CustomPipeModule,
-        HttpClientTestingModule,
-        MatDialogModule,
-        ReactiveFormsModule
-      ],
-      declarations: [EssFileDetailsComponent],
+      imports: [HttpClientTestingModule, MatDialogModule, ReactiveFormsModule, EssFileDetailsComponent],
       providers: [
         EssFileDetailsComponent,
         {
@@ -186,7 +178,8 @@ describe('EssFileDetailsComponent', () => {
           provide: OptionInjectionService,
           useClass: MockOptionInjectionService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -206,10 +199,7 @@ describe('EssFileDetailsComponent', () => {
   it('should get essFile from router', () => {
     mockEssfileState = { file: mockEssfile };
     const routingTest = TestBed.inject(Router);
-    const testMockComponent = new EssFileDetailsComponent(
-      routingTest,
-      essfileDashboardService
-    );
+    const testMockComponent = new EssFileDetailsComponent(routingTest, essfileDashboardService);
     fixture.detectChanges();
     expect(testMockComponent.essFile).toBeDefined();
   });

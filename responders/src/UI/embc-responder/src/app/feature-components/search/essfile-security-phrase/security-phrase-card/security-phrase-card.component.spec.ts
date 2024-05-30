@@ -1,9 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  UntypedFormBuilder,
-  FormsModule,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SecurityPhraseCardComponent } from './security-phrase-card.component';
 
 describe('SecurityPhraseCardComponent', () => {
@@ -13,8 +9,7 @@ describe('SecurityPhraseCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SecurityPhraseCardComponent],
-      imports: [ReactiveFormsModule, FormsModule]
+      imports: [ReactiveFormsModule, FormsModule, SecurityPhraseCardComponent]
     }).compileComponents();
   });
 

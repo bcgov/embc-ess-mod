@@ -1,8 +1,9 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { ReferralDetailsComponent } from './referral-details.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('ReferralDetailsComponent', () => {
   let component: ReferralDetailsComponent;
@@ -10,9 +11,8 @@ describe('ReferralDetailsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ReferralDetailsComponent],
-      imports: [RouterTestingModule],
-      providers: [HttpClient, HttpHandler]
+      imports: [ReferralDetailsComponent],
+      providers: [HttpClient, HttpHandler, provideAnimations(), provideRouter([])]
     }).compileComponents();
   }));
 

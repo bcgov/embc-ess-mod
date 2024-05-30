@@ -1,31 +1,29 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
-import { UpdateUserProfileRequest } from '../models/update-user-profile-request';
+import { profileGetCurrentUserProfile } from '../fn/profile/profile-get-current-user-profile';
+import { ProfileGetCurrentUserProfile$Params } from '../fn/profile/profile-get-current-user-profile';
+import { profileSignAgreement } from '../fn/profile/profile-sign-agreement';
+import { ProfileSignAgreement$Params } from '../fn/profile/profile-sign-agreement';
+import { profileUpdate } from '../fn/profile/profile-update';
+import { ProfileUpdate$Params } from '../fn/profile/profile-update';
 import { UserProfile } from '../models/user-profile';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProfileService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation profileGetCurrentUserProfile
-   */
+  /** Path part for operation `profileGetCurrentUserProfile()` */
   static readonly ProfileGetCurrentUserProfilePath = '/api/Profile/current';
 
   /**
@@ -38,22 +36,11 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileGetCurrentUserProfile$Response(params?: {
-  }): Observable<StrictHttpResponse<UserProfile>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetCurrentUserProfilePath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<UserProfile>;
-      })
-    );
+  profileGetCurrentUserProfile$Response(
+    params?: ProfileGetCurrentUserProfile$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<UserProfile>> {
+    return profileGetCurrentUserProfile(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -61,22 +48,21 @@ export class ProfileService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `profileGetCurrentUserProfile$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  profileGetCurrentUserProfile(params?: {
-  }): Observable<UserProfile> {
-
-    return this.profileGetCurrentUserProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile)
+  profileGetCurrentUserProfile(
+    params?: ProfileGetCurrentUserProfile$Params,
+    context?: HttpContext
+  ): Observable<UserProfile> {
+    return this.profileGetCurrentUserProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UserProfile>): UserProfile => r.body)
     );
   }
 
-  /**
-   * Path part for operation profileUpdate
-   */
+  /** Path part for operation `profileUpdate()` */
   static readonly ProfileUpdatePath = '/api/Profile/current';
 
   /**
@@ -89,28 +75,8 @@ export class ProfileService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileUpdate$Response(params: {
-
-    /**
-     * The profile information
-     */
-    body: UpdateUserProfileRequest
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpdatePath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  profileUpdate$Response(params: ProfileUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return profileUpdate(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -118,27 +84,16 @@ export class ProfileService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `profileUpdate$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileUpdate(params: {
-
-    /**
-     * The profile information
-     */
-    body: UpdateUserProfileRequest
-  }): Observable<void> {
-
-    return this.profileUpdate$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  profileUpdate(params: ProfileUpdate$Params, context?: HttpContext): Observable<void> {
+    return this.profileUpdate$Response(params, context).pipe(map((r: StrictHttpResponse<void>): void => r.body));
   }
 
-  /**
-   * Path part for operation profileSignAgreement
-   */
+  /** Path part for operation `profileSignAgreement()` */
   static readonly ProfileSignAgreementPath = '/api/Profile/agreement';
 
   /**
@@ -151,22 +106,11 @@ export class ProfileService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  profileSignAgreement$Response(params?: {
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileSignAgreementPath, 'post');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  profileSignAgreement$Response(
+    params?: ProfileSignAgreement$Params,
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    return profileSignAgreement(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -174,17 +118,12 @@ export class ProfileService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `profileSignAgreement$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  profileSignAgreement(params?: {
-  }): Observable<void> {
-
-    return this.profileSignAgreement$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
+  profileSignAgreement(params?: ProfileSignAgreement$Params, context?: HttpContext): Observable<void> {
+    return this.profileSignAgreement$Response(params, context).pipe(map((r: StrictHttpResponse<void>): void => r.body));
   }
-
 }

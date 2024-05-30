@@ -8,21 +8,12 @@
     <div class="col-md-6">
       <mat-form-field appearance="outline">
         <mat-label>Mode of transport</mat-label>
-        <input
-          formControlName="transportMode"
-          matInput
-          placeholder="Mode of transport"
-          maxlength="50"
-          required
-        />
-        <mat-error
-          *ngIf="
-            referralFormControl?.transportMode.invalid &&
-            referralFormControl?.transportMode.hasError('whitespaceError')
-          "
-        >
-          Mode of transport is required</mat-error
-        >
+        <input formControlName="transportMode" matInput placeholder="Mode of transport" maxlength="50" required />
+        @if (
+          referralFormControl?.transportMode.invalid && referralFormControl?.transportMode.hasError('whitespaceError')
+        ) {
+          <mat-error> Mode of transport is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -46,24 +37,15 @@
           required
         />
         <span matPrefix>$&nbsp;</span>
-        <mat-error
-          *ngIf="
-            referralFormControl?.totalAmount.invalid &&
-            referralFormControl?.totalAmount.hasError('required')
-          "
-        >
-          Total Amount is required</mat-error
-        >
-        <mat-error
-          *ngIf="
-            (referralFormControl?.totalAmount.invalid &&
-              referralFormControl?.totalAmount.hasError('pattern')) ||
-            (referralFormControl?.totalAmount.invalid &&
-              referralFormControl?.totalAmount.hasError('totalZeroError'))
-          "
-        >
-          Invalid amount</mat-error
-        >
+        @if (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('required')) {
+          <mat-error> Total Amount is required</mat-error>
+        }
+        @if (
+          (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('pattern')) ||
+          (referralFormControl?.totalAmount.invalid && referralFormControl?.totalAmount.hasError('totalZeroError'))
+        ) {
+          <mat-error> Invalid amount</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>

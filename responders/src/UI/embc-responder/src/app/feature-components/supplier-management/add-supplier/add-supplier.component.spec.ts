@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddSupplierComponent } from './add-supplier.component';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 describe('AddSupplierComponent', () => {
   let component: AddSupplierComponent;
@@ -11,13 +11,8 @@ describe('AddSupplierComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddSupplierComponent],
-      imports: [
-        ReactiveFormsModule,
-        RouterTestingModule,
-        HttpClientTestingModule
-      ],
-      providers: [UntypedFormBuilder]
+      imports: [ReactiveFormsModule, HttpClientTestingModule, AddSupplierComponent],
+      providers: [UntypedFormBuilder, provideRouter([])]
     }).compileComponents();
   });
 

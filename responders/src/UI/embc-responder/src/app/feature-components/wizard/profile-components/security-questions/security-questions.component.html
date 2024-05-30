@@ -2,320 +2,209 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="wizard-tab-heading requiredField">
-          Security Questions
-        </span>
+        <span class="wizard-tab-heading requiredField"> Security Questions </span>
       </div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-12 content-container">
-      <div
-        class="row"
-        *ngIf="
-          stepEvacueeProfileService?.editQuestions ||
-          !stepEvacueeProfileService?.savedQuestions ||
-          stepEvacueeProfileService?.savedQuestions.length < 1
-        "
-      >
-        <div class="col-12">
-          <p>
-            You will be asked to answer your questions should you meet with an
-            Emergency Support Services (ESS) Responder in the future, to confirm
-            your identity and gain access to your account. If you are unable to
-            answer your security questions, you will be asked to provide
-            government issued photo identification to confirm your identity.
-          </p>
-
-          <p>
-            <span class="bold"
-              >Tips for creating strong security questions:</span
-            ><br />
-            1. Choose answers that are easy to remember, but difficult for
-            others to guess.<br />
-            2. Try not to choose questions that you have answered on public
-            sites or social media.
-          </p>
-
-          <p>
-            Select <span class="bold">three security questions</span> from the
-            list of options below.
-          </p>
-
-          <p>
-            Note: Your answers need to be greater than two characters and should
-            not include any special characters.<br />
-            You may include numbers and letters. Your security answers are not
-            case sensitive.
-          </p>
-
-          <form [formGroup]="parentForm">
-            <div formGroupName="questionForm">
-              <div class="row question-row">
-                <div class="col-md-8">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Security Question 1</mat-label>
-
-                    <mat-select formControlName="question1">
-                      <mat-option
-                        *ngFor="
-                          let question of stepEvacueeProfileService?.securityQuestionOptions
-                        "
-                        [value]="question"
-                      >
-                        {{ question }}
-                      </mat-option>
-                    </mat-select>
-
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question1?.hasError('required')
-                      "
-                    >
-                      Security Question is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question1?.hasError('notUnique')
-                      "
-                    >
-                      Security Questions must all be different.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Question 1 Answer</mat-label>
-
-                    <input matInput maxlength="50" formControlName="answer1" />
-
-                    <mat-error
-                      *ngIf="
+      @if (
+        stepEvacueeProfileService?.editQuestions ||
+        !stepEvacueeProfileService?.savedQuestions ||
+        stepEvacueeProfileService?.savedQuestions.length < 1
+      ) {
+        <div class="row">
+          <div class="col-12">
+            <p>
+              You will be asked to answer your questions should you meet with an Emergency Support Services (ESS)
+              Responder in the future, to confirm your identity and gain access to your account. If you are unable to
+              answer your security questions, you will be asked to provide government issued photo identification to
+              confirm your identity.
+            </p>
+            <p>
+              <span class="bold">Tips for creating strong security questions:</span><br />
+              1. Choose answers that are easy to remember, but difficult for others to guess.<br />
+              2. Try not to choose questions that you have answered on public sites or social media.
+            </p>
+            <p>Select <span class="bold">three security questions</span> from the list of options below.</p>
+            <p>
+              Note: Your answers need to be greater than two characters and should not include any special
+              characters.<br />
+              You may include numbers and letters. Your security answers are not case sensitive.
+            </p>
+            <form [formGroup]="parentForm">
+              <div formGroupName="questionForm">
+                <div class="row question-row">
+                  <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Security Question 1</mat-label>
+                      <mat-select formControlName="question1">
+                        @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
+                          <mat-option [value]="question">
+                            {{ question }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                      @if (questionFormControl?.question1?.hasError('required')) {
+                        <mat-error> Security Question is required. </mat-error>
+                      }
+                      @if (questionFormControl?.question1?.hasError('notUnique')) {
+                        <mat-error> Security Questions must all be different. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Question 1 Answer</mat-label>
+                      <input matInput maxlength="50" formControlName="answer1" />
+                      @if (
                         questionFormControl?.answer1?.hasError('required') ||
-                        questionFormControl?.answer1?.hasError(
-                          'whitespaceError'
-                        )
-                      "
-                    >
-                      Answer is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
+                        questionFormControl?.answer1?.hasError('whitespaceError')
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
+                      }
+                      @if (
                         questionFormControl?.answer1?.hasError('minlength') ||
                         questionFormControl?.answer1?.hasError('maxlength')
-                      "
-                    >
-                      Answer must be between 3 and 50 characters long.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="questionFormControl?.answer1?.hasError('pattern')"
-                    >
-                      Answer cannot contain special characters.
-                    </mat-error>
-                  </mat-form-field>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
+                      }
+                      @if (questionFormControl?.answer1?.hasError('pattern')) {
+                        <mat-error> Answer cannot contain special characters. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row question-row">
-                <div class="col-md-8">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Security Question 2</mat-label>
-
-                    <mat-select formControlName="question2">
-                      <mat-option
-                        *ngFor="
-                          let question of stepEvacueeProfileService?.securityQuestionOptions
-                        "
-                        [value]="question"
-                      >
-                        {{ question }}
-                      </mat-option>
-                    </mat-select>
-
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question2?.hasError('required')
-                      "
-                    >
-                      Security Question is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question2?.hasError('notUnique')
-                      "
-                    >
-                      Security Questions must all be different.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Question 2 Answer</mat-label>
-
-                    <input matInput maxlength="50" formControlName="answer2" />
-
-                    <mat-error
-                      *ngIf="
+                <div class="row question-row">
+                  <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Security Question 2</mat-label>
+                      <mat-select formControlName="question2">
+                        @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
+                          <mat-option [value]="question">
+                            {{ question }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                      @if (questionFormControl?.question2?.hasError('required')) {
+                        <mat-error> Security Question is required. </mat-error>
+                      }
+                      @if (questionFormControl?.question2?.hasError('notUnique')) {
+                        <mat-error> Security Questions must all be different. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Question 2 Answer</mat-label>
+                      <input matInput maxlength="50" formControlName="answer2" />
+                      @if (
                         questionFormControl?.answer2?.hasError('required') ||
-                        questionFormControl?.answer2?.hasError(
-                          'whitespaceError'
-                        )
-                      "
-                    >
-                      Answer is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
+                        questionFormControl?.answer2?.hasError('whitespaceError')
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
+                      }
+                      @if (
                         questionFormControl?.answer2?.hasError('minlength') ||
                         questionFormControl?.answer2?.hasError('maxlength')
-                      "
-                    >
-                      Answer must be between 3 and 50 characters long.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="questionFormControl?.answer2?.hasError('pattern')"
-                    >
-                      Answer cannot contain special characters.
-                    </mat-error>
-                  </mat-form-field>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
+                      }
+                      @if (questionFormControl?.answer2?.hasError('pattern')) {
+                        <mat-error> Answer cannot contain special characters. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-
-              <div class="row question-row">
-                <div class="col-md-8">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Security Question 3</mat-label>
-
-                    <mat-select formControlName="question3">
-                      <mat-option
-                        *ngFor="
-                          let question of stepEvacueeProfileService?.securityQuestionOptions
-                        "
-                        [value]="question"
-                      >
-                        {{ question }}
-                      </mat-option>
-                    </mat-select>
-
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question3?.hasError('required')
-                      "
-                    >
-                      Security Question is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
-                        questionFormControl?.question3?.hasError('notUnique')
-                      "
-                    >
-                      Security Questions must all be different.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-md-4">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Question 3 Answer</mat-label>
-
-                    <input matInput maxlength="50" formControlName="answer3" />
-
-                    <mat-error
-                      *ngIf="
+                <div class="row question-row">
+                  <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Security Question 3</mat-label>
+                      <mat-select formControlName="question3">
+                        @for (question of stepEvacueeProfileService?.securityQuestionOptions; track question) {
+                          <mat-option [value]="question">
+                            {{ question }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                      @if (questionFormControl?.question3?.hasError('required')) {
+                        <mat-error> Security Question is required. </mat-error>
+                      }
+                      @if (questionFormControl?.question3?.hasError('notUnique')) {
+                        <mat-error> Security Questions must all be different. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Question 3 Answer</mat-label>
+                      <input matInput maxlength="50" formControlName="answer3" />
+                      @if (
                         questionFormControl?.answer3?.hasError('required') ||
-                        questionFormControl?.answer3?.hasError(
-                          'whitespaceError'
-                        )
-                      "
-                    >
-                      Answer is required.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="
+                        questionFormControl?.answer3?.hasError('whitespaceError')
+                      ) {
+                        <mat-error> Answer is required. </mat-error>
+                      }
+                      @if (
                         questionFormControl?.answer3?.hasError('minlength') ||
                         questionFormControl?.answer3?.hasError('maxlength')
-                      "
-                    >
-                      Answer must be between 3 and 50 characters long.
-                    </mat-error>
-                    <mat-error
-                      *ngIf="questionFormControl?.answer3?.hasError('pattern')"
-                    >
-                      Answer cannot contain special characters.
-                    </mat-error>
-                  </mat-form-field>
+                      ) {
+                        <mat-error> Answer must be between 3 and 50 characters long. </mat-error>
+                      }
+                      @if (questionFormControl?.answer3?.hasError('pattern')) {
+                        <mat-error> Answer cannot contain special characters. </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <!-- <div class="row checkbox-row">
+              <!-- <div class="row checkbox-row">
               <div class="col-12">
                 <mat-checkbox
                   class="example-margin"
                   (change)="bypassCheckboxChanged($event)"
                   formControlName="bypassQuestions"
-                >
+                  >
                   Bypass security questions for manual entry of paper ESS file.
                 </mat-checkbox>
               </div>
             </div> -->
-          </form>
-        </div>
-      </div>
-
-      <div
-        class="readonly-questions"
-        *ngIf="
-          !stepEvacueeProfileService?.editQuestions &&
-          stepEvacueeProfileService?.savedQuestions?.length > 0
-        "
-      >
-        <div
-          class="row bottom-space"
-          *ngFor="
-            let question of stepEvacueeProfileService?.savedQuestions;
-            let i = index
-          "
-        >
-          <div class="col-5">
-            {{ question.question }}
-          </div>
-          <div class="col-5">
-            {{ question.answer | maskText }}
+            </form>
           </div>
         </div>
-      </div>
+      }
 
-      <div
-        class="row edit-toggle bottom-space-large"
-        *ngIf="stepEvacueeProfileService?.savedQuestions?.length > 0"
-      >
-        <button
-          class="btn btn-link col-12"
-          (click)="toggleEditQuestions(true)"
-          *ngIf="!stepEvacueeProfileService?.editQuestions"
-        >
-          Add new security questions
-        </button>
-        <button
-          class="btn btn-link col-12"
-          (click)="toggleEditQuestions(false)"
-          *ngIf="stepEvacueeProfileService?.editQuestions"
-        >
-          Cancel
-        </button>
-      </div>
+      @if (!stepEvacueeProfileService?.editQuestions && stepEvacueeProfileService?.savedQuestions?.length > 0) {
+        <div class="readonly-questions">
+          @for (question of stepEvacueeProfileService?.savedQuestions; track question; let i = $index) {
+            <div class="row bottom-space">
+              <div class="col-5">
+                {{ question.question }}
+              </div>
+              <div class="col-5">
+                {{ question.answer | maskText }}
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (stepEvacueeProfileService?.savedQuestions?.length > 0) {
+        <div class="row edit-toggle bottom-space-large">
+          @if (!stepEvacueeProfileService?.editQuestions) {
+            <button class="btn btn-link col-12" (click)="toggleEditQuestions(true)">Add new security questions</button>
+          }
+          @if (stepEvacueeProfileService?.editQuestions) {
+            <button class="btn btn-link col-12" (click)="toggleEditQuestions(false)">Cancel</button>
+          }
+        </div>
+      }
 
       <div class="row nav-buttons">
         <div class="col-12">
-          <button class="button-s back" mat-button (click)="back()">
-            Back
-          </button>
-          <button class="button-p next" mat-button (click)="next()">
-            Next
-          </button>
+          <button class="button-s back" mat-button (click)="back()">Back</button>
+          <button class="button-p next" mat-button (click)="next()">Next</button>
         </div>
       </div>
     </div>

@@ -18,15 +18,18 @@ spec:
     - name: referencePolicy
       type: string
       default: source
+    - name: alias
+      type: string
+      default: false
   steps:
     - name: tag
       image: 'image-registry.openshift-image-registry.svc:5000/openshift/cli:latest'
       resources:
         limits:
-          cpu: 25m
-          memory: 64Mi
+          cpu: 100m
+          memory: 128Mi
         requests:
-          cpu: 5m
-          memory: 32Mi
+          cpu: 50m
+          memory: 64Mi
       script: |
-        oc tag $(params.sourceImage):$(params.sourceTag) $(params.destinationImage):$(params.destinationTag) --scheduled=$(params.scheduled) --reference-policy=$(params.referencePolicy)
+        oc tag $(params.sourceImage):$(params.sourceTag) $(params.destinationImage):$(params.destinationTag) --scheduled=$(params.scheduled) --reference-policy=$(params.referencePolicy) --alias=$(params.alias)

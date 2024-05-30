@@ -1,32 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './fonts';
-$bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
-@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+// $bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
+// @import '@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
 @import './defaults.scss';
 @import './variables';
 
-@import "~@bcgov/bootstrap-theme/dist/scss/common";
+// @import '~@bcgov/bootstrap-theme/dist/scss/common';
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 //@import './floating-labels.scss';
 
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
   font-family: 'LiberationMono';
-  src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-        url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-        url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+  src:
+    url('/assets/LiberationMono-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
+    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 .form-control {
-  border-radius:0
+  border-radius: 0;
 }
 
 .requiredField::after {
-  content: "*";
+  content: '*';
   color: red;
 }
 
@@ -48,28 +49,33 @@ body {
   // background-attachment: fixed;
 }
 
+main {
+  padding-bottom: 40px;
+  padding-top: 20px;
+}
+
 .input-symbol-dollar {
   position: relative;
 }
- 
+
 .input-symbol-dollar:after {
-  content: "$";
+  content: '$';
   font-size: 16px !important;
   font-weight: 400;
   position: absolute;
   height: 100%;
   top: 0;
   left: 4px;
- }
+}
 
 /******** ESS Application Theme********/
 hr {
-  color: #BECDDB;
+  color: #becddb;
   border: 0.75px solid;
 }
 
 .formHeading {
-  background-color: #E2E9F0;
+  background-color: #e2e9f0;
   margin: 20px 0px 20px 0px;
   font-size: 25px;
   padding-left: 20px;
@@ -78,7 +84,7 @@ hr {
 
 //  p {
 //      line-height: 21px;
-//  } 
+//  }
 
 /**START - Theme for Cards**/
 .side-box-title {
@@ -109,8 +115,8 @@ hr {
 }
 
 .form-header {
-  background-color: #2F6699;
-  border-bottom: 3px #FCBA19 solid;
+  background-color: #2f6699;
+  border-bottom: 3px #fcba19 solid;
   color: white;
   font-weight: bold;
   font-size: 21px;
@@ -118,10 +124,10 @@ hr {
 }
 
 .form-body {
-  background-color: #F0F0F0;
-  border-left: 3px #2F6699 solid;
-  border-bottom: 3px #2F6699 solid;
-  border-right: 3px #2F6699 solid;
+  background-color: #f0f0f0;
+  border-left: 3px #2f6699 solid;
+  border-bottom: 3px #2f6699 solid;
+  border-right: 3px #2f6699 solid;
   font-weight: bold;
   padding: 10px;
 }
@@ -130,17 +136,17 @@ hr {
   border-radius: 0 !important;
   height: 40px;
   font-size: 15px;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .primary-button {
   @extend .button-style;
-  background-color: #2F6699;
-} 
+  background-color: #2f6699;
+}
 
 .secondary-button {
   @extend .button-style;
-  background-color: #FCBA19;
+  background-color: #fcba19;
 }
 
 .disable-button {
@@ -148,7 +154,9 @@ hr {
   background-color: #8c8c8c;
 }
 
-.primary-button:hover, .secondary-button:hover, .disable-button:hover {
+.primary-button:hover,
+.secondary-button:hover,
+.disable-button:hover {
   background-color: #174671;
 }
 

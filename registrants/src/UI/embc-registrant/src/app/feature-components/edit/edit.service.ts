@@ -98,7 +98,10 @@ export class EditService {
         }
         break;
       case 'address':
-        if (this.profileDataService.primaryAddressDetails !== undefined && this.profileDataService.mailingAddressDetails !== undefined) {
+        if (
+          this.profileDataService.primaryAddressDetails !== undefined &&
+          this.profileDataService.mailingAddressDetails !== undefined
+        ) {
           form.get('address').patchValue(this.profileDataService.primaryAddressDetails);
           form.get('mailingAddress').patchValue(this.profileDataService.mailingAddressDetails);
         } else {
@@ -127,7 +130,10 @@ export class EditService {
         }
         break;
       case 'evac-address':
-        if (this.evacuationFileDataService.evacuatedAddress !== undefined && this.needsAssessmentDataService.insurance !== undefined) {
+        if (
+          this.evacuationFileDataService.evacuatedAddress !== undefined &&
+          this.needsAssessmentDataService.insurance !== undefined
+        ) {
           form.get('evacuatedFromAddress').patchValue(this.evacuationFileDataService.evacuatedAddress);
           form.get('insurance').patchValue(this.needsAssessmentDataService.insurance);
         } else {
@@ -137,9 +143,21 @@ export class EditService {
       case 'family-information':
         if (this.needsAssessmentDataService.householdMembers.length !== 0) {
           if (path === 'verified-registration') {
-            form.get('householdMembers').patchValue(this.needsAssessmentMapping.convertVerifiedHouseholdMembers(this.needsAssessmentDataService.householdMembers));
+            form
+              .get('householdMembers')
+              .patchValue(
+                this.needsAssessmentMapping.convertVerifiedHouseholdMembers(
+                  this.needsAssessmentDataService.householdMembers
+                )
+              );
           } else {
-            form.get('householdMembers').patchValue(this.needsAssessmentMapping.convertNonVerifiedHouseholdMembers(this.needsAssessmentDataService.householdMembers));
+            form
+              .get('householdMembers')
+              .patchValue(
+                this.needsAssessmentMapping.convertNonVerifiedHouseholdMembers(
+                  this.needsAssessmentDataService.householdMembers
+                )
+              );
           }
         } else {
           form.get('householdMembers').patchValue([]);

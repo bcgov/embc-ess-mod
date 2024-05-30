@@ -7,7 +7,7 @@ on:
     paths:
       - "suppliers/src/API/**"
       - "suppliers/src/UI/**"
-      - "shared/src/**"
+      - "suppliers/src/**"
       - .github/workflows/build-suppliers-portal.yml
       - .github/workflows/build-template.yml
 
@@ -15,7 +15,7 @@ on:
     paths:
       - "suppliers/src/API/**"
       - "suppliers/src/UI/**"
-      - "shared/src/**"
+      - "suppliers/src/**"
       - .github/workflows/build-suppliers-portal.yml
       - .github/workflows/build-template.yml
 

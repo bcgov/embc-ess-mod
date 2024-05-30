@@ -5,12 +5,16 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appNumberComma]'
+  selector: '[appNumberComma]',
+  standalone: true
 })
 export class NumberCommaDirective implements OnInit, OnDestroy {
   private subscription: Subscription;
 
-  constructor(private ngControl: NgControl, private decimal: DecimalPipe) {}
+  constructor(
+    private ngControl: NgControl,
+    private decimal: DecimalPipe
+  ) {}
   ngOnInit(): void {
     const control = this.ngControl.control;
     this.subscription = control.valueChanges

@@ -7,205 +7,170 @@
 <div class="row">
   <div class="col-md-12">
     <mat-card>
-      <p class="heading">Please make a selection:</p>
+      <mat-card-content>
+        <p class="heading">Please make a selection:</p>
 
-      <div class="row pb-4">
-        <div class="col-md-3">
-          <mat-card
-            [ngClass]="{
-              'selected-card': selectedPathway === selectedPathType.digital,
-              disabled: isEnabled('digital-processing')
-            }"
-            class="option-card"
-            (click)="setSelection('digital')"
-          >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.digital"
+        <div class="row pb-4">
+          <div class="col-md-3">
+            <mat-card
+              [ngClass]="{
+                'selected-card': selectedPathway === selectedPathType.digital,
+                disabled: isEnabled('digital-processing')
+              }"
+              class="option-card"
+              (click)="setSelection('digital')"
             >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-            </div>
-            <div class="row">
-              <img
-                src="/assets/images/evacuee-regis.svg"
-                height="89"
-                width="89"
-              />
-            </div>
+              <mat-card-content>
+                @if (selectedPathway === selectedPathType.digital) {
+                  <div class="selected-icon-container">
+                    <img
+                      src="/assets/images/wizard/white-background.svg"
+                      height="23"
+                      width="23"
+                      class="selected-icon"
+                    />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
+                <div class="row">
+                  <img src="/assets/images/evacuee-regis.svg" height="89" width="89" />
+                </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-subheading">
-                  I am doing
-                  <span class="highlight"
-                    >evacuee registration & extensions</span
-                  >
-                </p>
-              </div>
-            </div>
-          </mat-card>
-        </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-subheading">
+                      I am doing
+                      <span class="highlight">evacuee registration & extensions</span>
+                    </p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
 
-        <div class="col-md-3">
-          <mat-card
-            [ngClass]="{
-              'selected-card': selectedPathway === selectedPathType.paperBased,
-              disabled: isEnabled('paper-data-entry')
-            }"
-            class="option-card"
-            (click)="setSelection('paperBased')"
-          >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.paperBased"
+          <div class="col-md-3">
+            <mat-card
+              [ngClass]="{
+                'selected-card': selectedPathway === selectedPathType.paperBased,
+                disabled: isEnabled('paper-data-entry')
+              }"
+              class="option-card"
+              (click)="setSelection('paperBased')"
             >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-            </div>
+              <mat-card-content>
+                @if (selectedPathway === selectedPathType.paperBased) {
+                  <div class="selected-icon-container">
+                    <img
+                      src="/assets/images/wizard/white-background.svg"
+                      height="23"
+                      width="23"
+                      class="selected-icon"
+                    />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
-            <div class="row">
-              <img src="/assets/images/data-entry.svg" height="89" width="89" />
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-subheading">
-                  I am doing <span class="highlight">data entry</span> for a
-                  Paper ESS File
-                </p>
-              </div>
-            </div>
-          </mat-card>
-        </div>
+                <div class="row">
+                  <img src="/assets/images/data-entry.svg" height="89" width="89" />
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-subheading">
+                      I am doing <span class="highlight">data entry</span> for a Paper ESS File
+                    </p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
 
-        <div class="col-md-3">
-          <mat-card
-            [ngClass]="{
-              'selected-card':
-                selectedPathway === selectedPathType.remoteExtensions,
-              disabled: isEnabled('remote-extensions')
-            }"
-            class="option-card"
-            (click)="setSelection('remoteExtensions')"
-          >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.remoteExtensions"
+          <div class="col-md-3">
+            <mat-card
+              [ngClass]="{
+                'selected-card': selectedPathway === selectedPathType.remoteExtensions,
+                disabled: isEnabled('remote-extensions')
+              }"
+              class="option-card"
+              (click)="setSelection('remoteExtensions')"
             >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-            </div>
+              <mat-card-content>
+                @if (selectedPathway === selectedPathType.remoteExtensions) {
+                  <div class="selected-icon-container">
+                    <img
+                      src="/assets/images/wizard/white-background.svg"
+                      height="23"
+                      width="23"
+                      class="selected-icon"
+                    />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
-            <div class="row">
-              <img src="/assets/images/remote-ext.svg" height="89" width="89" />
-            </div>
+                <div class="row">
+                  <img src="/assets/images/remote-ext.svg" height="89" width="89" />
+                </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-subheading">
-                  I am doing
-                  <span class="highlight">remote extensions</span> (evacuee/s
-                  not present)
-                </p>
-              </div>
-            </div>
-          </mat-card>
-        </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-subheading">
+                      I am doing
+                      <span class="highlight">remote extensions</span> (evacuee/s not present)
+                    </p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
 
-        <div class="col-md-3">
-          <mat-card
-            [ngClass]="{
-              'selected-card': selectedPathway === selectedPathType.caseNotes,
-              disabled: isEnabled('case-notes')
-            }"
-            class="option-card"
-            (click)="setSelection('caseNotes')"
-          >
-            <div
-              class="selected-icon-container"
-              *ngIf="selectedPathway === selectedPathType.caseNotes"
+          <div class="col-md-3">
+            <mat-card
+              [ngClass]="{
+                'selected-card': selectedPathway === selectedPathType.caseNotes,
+                disabled: isEnabled('case-notes')
+              }"
+              class="option-card"
+              (click)="setSelection('caseNotes')"
             >
-              <img
-                src="/assets/images/wizard/white-background.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-              <img
-                src="/assets/images/wizard/method-selected.svg"
-                height="23"
-                width="23"
-                class="selected-icon"
-              />
-            </div>
+              <mat-card-content>
+                @if (selectedPathway === selectedPathType.caseNotes) {
+                  <div class="selected-icon-container">
+                    <img
+                      src="/assets/images/wizard/white-background.svg"
+                      height="23"
+                      width="23"
+                      class="selected-icon"
+                    />
+                    <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+                  </div>
+                }
 
-            <div class="row">
-              <img
-                src="/assets/images/add-case-notes.svg"
-                height="90"
-                width="90"
-              />
-            </div>
+                <div class="row">
+                  <img src="/assets/images/add-case-notes.svg" height="90" width="90" />
+                </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <p class="text-subheading">
-                  I am
-                  <span class="highlight">adding case notes</span> to an ESS
-                  File
-                </p>
-              </div>
-            </div>
-          </mat-card>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-subheading">
+                      I am
+                      <span class="highlight">adding case notes</span> to an ESS File
+                    </p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </div>
-      </div>
 
-      <div class="field-error" *ngIf="noSelectionFlag">
-        Please make a selection
-      </div>
+        @if (noSelectionFlag) {
+          <div class="field-error">Please make a selection</div>
+        }
 
-      <div class="row">
-        <div class="col-md-6">
-          <button
-            class="button-p submit"
-            type="button"
-            mat-button
-            (click)="next()"
-          >
-            Next
-          </button>
+        <div class="row">
+          <div class="col-md-6">
+            <button class="button-p submit" type="button" mat-button (click)="next()">Next</button>
+          </div>
         </div>
-      </div>
+      </mat-card-content>
     </mat-card>
   </div>
 </div>

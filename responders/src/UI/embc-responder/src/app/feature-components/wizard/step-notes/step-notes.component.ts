@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-step-notes',
   templateUrl: './step-notes.component.html',
-  styleUrls: ['./step-notes.component.scss']
+  styleUrls: ['./step-notes.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, RouterOutlet]
 })
-export class StepNotesComponent implements OnInit {
+export class StepNotesComponent {
   stepName: string;
 
   constructor(private router: Router) {
@@ -20,6 +23,4 @@ export class StepNotesComponent implements OnInit {
       }
     }
   }
-
-  ngOnInit(): void {}
 }

@@ -41,18 +41,56 @@ export class HouseholdMembersForm {
   householdMembers = new UntypedFormControl([]);
   addHouseholdMemberIndicator = new UntypedFormControl(false);
 
-  constructor(householdMembers: HouseholdMembers, customValidator: CustomValidationService, builder: UntypedFormBuilder) {
+  constructor(
+    householdMembers: HouseholdMembers,
+    customValidator: CustomValidationService,
+    builder: UntypedFormBuilder
+  ) {
     this.householdMember = builder.group({
-      firstName: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
-      lastName: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
+      firstName: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
+        ]
+      ],
+      lastName: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
+        ]
+      ],
       sameLastNameCheck: [''],
       initials: [''],
-      gender: ['', [customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator)]],
+      gender: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator)
+        ]
+      ],
       dateOfBirth: [
         '',
         [
-          customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required).bind(customValidator),
-          customValidator.conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.dateOfBirthValidator().bind(customValidator)).bind(customValidator)
+          customValidator
+            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(
+              () => this.addHouseholdMemberIndicator.value,
+              customValidator.dateOfBirthValidator().bind(customValidator)
+            )
+            .bind(customValidator)
         ]
       ],
       isPrimaryRegistrant: [''],
@@ -79,11 +117,23 @@ export class PetForm {
       quantity: [
         '',
         [
-          customValidator.conditionalValidation(() => this.addPetIndicator.value, Validators.required).bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
+            .bind(customValidator),
           customValidator.quantityPetsValidator().bind(customValidator)
         ]
       ],
-      type: ['', [customValidator.conditionalValidation(() => this.addPetIndicator.value, Validators.required).bind(customValidator)]]
+      type: [
+        '',
+        [
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, Validators.required)
+            .bind(customValidator),
+          customValidator
+            .conditionalValidation(() => this.addPetIndicator.value, customValidator.whitespaceValidator())
+            .bind(customValidator)
+        ]
+      ]
     });
   }
 }
@@ -113,7 +163,8 @@ export class IdentifyNeedsForm {
       this.requiresShelterType.setValue('shelterAllowance');
     }
     this.requiresShelter.setValue(
-      identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral) || identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance)
+      identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral) ||
+        identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance)
     );
     this.requiresNothing.valueChanges.subscribe((checked) => {
       if (checked) {

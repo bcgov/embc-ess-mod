@@ -1,19 +1,11 @@
-<div class="row justify-content-between">
+<div class="row justify-content-between" style="margin: 0">
   <div class="col-md-10">
-    <h1
-      class="mat-title"
-      *ngIf="data?.content?.title"
-      mat-dialog-title
-      [innerHTML]="data?.content?.title"
-    ></h1>
+    @if (data?.content?.title) {
+      <h1 class="mat-headline-6" style="font-weight: bold" mat-dialog-title [innerHTML]="data?.content?.title"></h1>
+    }
   </div>
   <div class="col-md-2">
-    <button
-      class="close-image close-button-style"
-      mat-icon-button
-      aria-label="Close"
-      (click)="buttonAction('close')"
-    >
+    <button class="close-image close-button-style" mat-icon-button aria-label="Close" (click)="buttonAction('close')">
       <img src="/assets/images/close.svg" height="20" width="20" />
       <img src="/assets/images/close_onhover.svg" height="20" width="20" />
     </button>
@@ -24,8 +16,8 @@
   <ng-template #target></ng-template>
 </mat-dialog-content>
 
-<mat-dialog-actions *ngIf="showCloseButton">
-  <button mat-button mat-dialog-close class="button-s cancel-button">
-    Cancel
-  </button>
-</mat-dialog-actions>
+@if (showCloseButton) {
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close class="button-s cancel-button">Cancel</button>
+  </mat-dialog-actions>
+}

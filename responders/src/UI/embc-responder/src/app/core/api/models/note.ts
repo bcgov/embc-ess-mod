@@ -3,10 +3,10 @@
 export interface Note {
   addedOn?: string;
   content: string;
-  creatingTeamMemberId?: null | string;
-  id?: null | string;
+  creatingTeamMemberId?: string | null;
+  id?: string | null;
   isEditable?: boolean;
   isHidden?: boolean;
-  memberName?: null | string;
-  teamName?: null | string;
+  memberName?: string | null;
+  teamName?: string | null;
 }

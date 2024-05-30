@@ -7,7 +7,7 @@ namespace EMBC.Utilities.Csv
 {
     public static class CsvConverter
     {
-        private static void CreateHeader<T>(IEnumerable<T> list, TextWriter sw, string quoteIdentifier = "")
+        private static void CreateHeader<T>(TextWriter sw, string quoteIdentifier = "")
         {
             var properties = typeof(T).GetProperties();
             for (var i = 0; i < properties.Length - 1; i++)
@@ -28,10 +28,10 @@ namespace EMBC.Utilities.Csv
                 for (var i = 0; i < properties.Length - 1; i++)
                 {
                     var prop = properties[i];
-                    sw.Write(Quote(prop.GetValue(item), quoteIdentifier) + ",");
+                    sw.Write(Quote(prop.GetValue(item)!, quoteIdentifier) + ",");
                 }
                 var lastProp = properties[properties.Length - 1];
-                sw.Write(Quote(lastProp.GetValue(item), quoteIdentifier) + sw.NewLine);
+                sw.Write(Quote(lastProp.GetValue(item)!, quoteIdentifier) + sw.NewLine);
             }
         }
 
@@ -41,16 +41,16 @@ namespace EMBC.Utilities.Csv
         private static string Escape(object value, string quoteIdentifier) =>
             (quoteIdentifier switch
             {
-                "\"" => value.ToString().Replace("\"", "\"\""),
-                "'" => value.ToString().Replace("'", "''"),
-                _ => value.ToString()
+                "\"" => value.ToString()!.Replace("\"", "\"\""),
+                "'" => value.ToString()!.Replace("'", "''"),
+                _ => value.ToString()!
             }).Replace("\r", string.Empty).Replace("\n", string.Empty);
 
         public static void CreateCSV<T>(this IEnumerable<T> list, string filePath)
         {
             using (var sw = new StreamWriter(filePath))
             {
-                CreateHeader(list, sw);
+                CreateHeader<T>(sw);
                 CreateRows(list, sw);
             }
         }
@@ -59,7 +59,7 @@ namespace EMBC.Utilities.Csv
         {
             using (var sw = new StringWriter())
             {
-                CreateHeader(list, sw, quoteIdentifier);
+                CreateHeader<T>(sw, quoteIdentifier);
                 CreateRows(list, sw, quoteIdentifier);
                 return sw.ToString();
             }
@@ -70,7 +70,7 @@ namespace EMBC.Utilities.Csv
             using (var sw = new StringWriter())
             {
                 AddHeaderObj(sw, headerObj);
-                CreateHeader(list, sw, quoteIdentifier);
+                CreateHeader<T>(sw, quoteIdentifier);
                 CreateRows(list, sw, quoteIdentifier);
                 return sw.ToString();
             }

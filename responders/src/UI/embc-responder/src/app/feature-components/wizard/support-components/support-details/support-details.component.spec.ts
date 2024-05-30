@@ -2,12 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SupportDetailsComponent } from './support-details.component';
 
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('SupportDetailsComponent', () => {
   let component: SupportDetailsComponent;
@@ -15,13 +15,8 @@ describe('SupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
-      declarations: [SupportDetailsComponent],
-      providers: [
-        DatePipe,
-        UntypedFormBuilder,
-        { provide: computeInterfaceToken, useValue: {} }
-      ]
+      imports: [HttpClientTestingModule, MatDialogModule, SupportDetailsComponent],
+      providers: [DatePipe, UntypedFormBuilder, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])]
     }).compileComponents();
   });
 

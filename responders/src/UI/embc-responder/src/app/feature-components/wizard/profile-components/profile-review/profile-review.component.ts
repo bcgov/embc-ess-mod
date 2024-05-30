@@ -3,7 +3,9 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,11 +25,35 @@ import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomErrorMailMatcher } from '../contact/contact.component';
 import { CustomValidationService } from '../../../../core/services/customValidation.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { DatePipe } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-profile-review',
   templateUrl: './profile-review.component.html',
-  styleUrls: ['./profile-review.component.scss']
+  styleUrls: ['./profile-review.component.scss'],
+  standalone: true,
+  imports: [
+    MatCheckbox,
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+    AppLoaderComponent,
+    DatePipe,
+    MaskTextPipe
+  ]
 })
 export class ProfileReviewComponent implements OnInit, OnDestroy {
   verifiedProfileGroup: UntypedFormGroup = null;
@@ -61,54 +87,36 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Set up form validation for verification check
     this.primaryCommunity =
-      typeof this.stepEvacueeProfileService.primaryAddressDetails?.community ===
-      'string'
+      typeof this.stepEvacueeProfileService.primaryAddressDetails?.community === 'string'
         ? this.stepEvacueeProfileService.primaryAddressDetails?.community
-        : (
-            this.stepEvacueeProfileService.primaryAddressDetails
-              ?.community as Community
-          )?.name;
+        : (this.stepEvacueeProfileService.primaryAddressDetails?.community as Community)?.name;
     this.mailingCommunity =
-      typeof this.stepEvacueeProfileService.mailingAddressDetails?.community ===
-      'string'
+      typeof this.stepEvacueeProfileService.mailingAddressDetails?.community === 'string'
         ? this.stepEvacueeProfileService.mailingAddressDetails?.community
-        : (
-            this.stepEvacueeProfileService.mailingAddressDetails
-              ?.community as Community
-          )?.name;
+        : (this.stepEvacueeProfileService.mailingAddressDetails?.community as Community)?.name;
     this.verifiedProfileGroup = this.formBuilder.group({
-      verifiedProfile: [
-        this.stepEvacueeProfileService.verifiedProfile,
-        Validators.required
-      ]
+      verifiedProfile: [this.stepEvacueeProfileService.verifiedProfile, Validators.required]
     });
 
     // Set up displayed version of Security Questions, depending on if they've been edited
     this.displayQuestions =
-      this.stepEvacueeProfileService.editQuestions ||
-      !(this.stepEvacueeProfileService.savedQuestions?.length > 0)
+      this.stepEvacueeProfileService.editQuestions || !(this.stepEvacueeProfileService.savedQuestions?.length > 0)
         ? this.stepEvacueeProfileService.securityQuestions
         : this.stepEvacueeProfileService.savedQuestions;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEvacueeProfileService.nextTabUpdate?.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate?.subscribe(() => {
+      this.updateTabStatus();
+    });
     this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('review');
 
     this.inviteEmailGroup = this.formBuilder.group(
       {
         email: [this.stepEvacueeProfileService.inviteEmail, Validators.email],
-        confirmEmail: [
-          this.stepEvacueeProfileService.confirmInviteEmail,
-          Validators.email
-        ]
+        confirmEmail: [this.stepEvacueeProfileService.confirmInviteEmail, Validators.email]
       },
       {
-        validators: [
-          this.customValidationService.confirmEmailIsOptionalValidator()
-        ]
+        validators: [this.customValidationService.confirmEmailIsOptionalValidator()]
       }
     );
   }
@@ -137,16 +145,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.saveLoader = true;
 
       if (
-        !this.appBaseService?.appModel?.selectedProfile
-          ?.selectedEvacueeInContext?.id &&
-        this.appBaseService?.wizardProperties?.wizardType ===
-          WizardType.NewRegistration
+        !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id &&
+        this.appBaseService?.wizardProperties?.wizardType === WizardType.NewRegistration
       ) {
         this.createNewProfile();
-      } else if (
-        this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.MemberRegistration
-      ) {
+      } else if (this.appBaseService?.wizardProperties?.wizardType === WizardType.MemberRegistration) {
         this.createMemberRegistration();
       } else {
         this.editProfile();
@@ -159,46 +162,36 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   }
 
   createNewProfile() {
-    this.evacueeProfileService
-      .createProfile(this.stepEvacueeProfileService.createProfileDTO())
-      .subscribe({
-        next: async (profile: RegistrantProfileModel) => {
-          if (this.inviteEmailControl.email.value) {
-            await this.sendEmailInvite(
-              this.inviteEmailControl.email.value,
-              profile.id
-            );
-          }
-          this.disableButton = true;
-          this.saveLoader = false;
-          this.createNewProfileDialog(profile);
-        },
-        error: (error) => {
-          this.saveLoader = false;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.createRegProfileError
-          );
+    this.evacueeProfileService.createProfile(this.stepEvacueeProfileService.createProfileDTO()).subscribe({
+      next: async (profile: RegistrantProfileModel) => {
+        if (this.inviteEmailControl.email.value) {
+          await this.sendEmailInvite(this.inviteEmailControl.email.value, profile.id);
         }
-      });
+        this.disableButton = true;
+        this.saveLoader = false;
+        this.createNewProfileDialog(profile);
+      },
+      error: (error) => {
+        this.saveLoader = false;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.createRegProfileError);
+      }
+    });
   }
 
   sendEmailInvite(email: string, profileId: string) {
     return new Promise<void>((resolve, reject) => {
-      this.evacueeProfileService
-        .inviteProfileByEmail(email, profileId)
-        .subscribe({
-          next: () => {
-            resolve();
-          },
-          error: (error) => {
-            this.saveLoader = false;
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.bcscInviteError);
-            reject();
-          }
-        });
+      this.evacueeProfileService.inviteProfileByEmail(email, profileId).subscribe({
+        next: () => {
+          resolve();
+        },
+        error: (error) => {
+          this.saveLoader = false;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.bcscInviteError);
+          reject();
+        }
+      });
     });
   }
 
@@ -224,10 +217,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.createRegProfileError
-          );
+          this.alertService.setAlert('danger', globalConst.createRegProfileError);
         }
       });
   }
@@ -253,8 +243,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   editProfile() {
     this.evacueeProfileService
       .updateProfile(
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.id,
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id,
         this.stepEvacueeProfileService.createProfileDTO()
       )
       .subscribe({
@@ -276,10 +265,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.createRegProfileError
-          );
+          this.alertService.setAlert('danger', globalConst.createRegProfileError);
         }
       });
   }
@@ -291,9 +277,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-          this.wizardAdapterService.stepCreateEssFileFromEditProfileRecord(
-            profile
-          );
+          this.wizardAdapterService.stepCreateEssFileFromEditProfileRecord(profile);
 
           this.router.navigate(['/ess-wizard/ess-file'], {
             state: { step: 'STEP 2', title: 'Create ESS File' }
@@ -305,21 +289,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   memberProfileDialog() {
     this.router
       .navigate(['responder-access/search/essfile-dashboard'])
-      .then(() =>
-        this.stepEvacueeProfileService.openModal(
-          globalConst.memberProfileCreateMessage
-        )
-      );
+      .then(() => this.stepEvacueeProfileService.openModal(globalConst.memberProfileCreateMessage));
   }
 
   editProfileDialog() {
     this.router
       .navigate(['responder-access/search/evacuee-profile-dashboard'])
-      .then(() =>
-        this.stepEvacueeProfileService.openModal(
-          globalConst.evacueeProfileUpdatedMessage
-        )
-      );
+      .then(() => this.stepEvacueeProfileService.openModal(globalConst.evacueeProfileUpdatedMessage));
   }
 
   /**
@@ -330,14 +306,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.setTabStatus('review', 'complete');
     }
 
-    this.stepEvacueeProfileService.verifiedProfile =
-      this.verifiedProfileGroup.get('verifiedProfile').value;
+    this.stepEvacueeProfileService.verifiedProfile = this.verifiedProfileGroup.get('verifiedProfile').value;
 
-    this.stepEvacueeProfileService.inviteEmail =
-      this.inviteEmailGroup.get('email').value;
+    this.stepEvacueeProfileService.inviteEmail = this.inviteEmailGroup.get('email').value;
 
-    this.stepEvacueeProfileService.confirmInviteEmail =
-      this.inviteEmailGroup.get('confirmEmail').value;
+    this.stepEvacueeProfileService.confirmInviteEmail = this.inviteEmailGroup.get('confirmEmail').value;
   }
 
   /**

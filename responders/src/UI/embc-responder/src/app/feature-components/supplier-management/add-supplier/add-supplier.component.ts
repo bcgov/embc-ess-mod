@@ -3,7 +3,9 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -13,11 +15,32 @@ import * as globalConst from '../../../core/services/global-constants';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { SupplierManagementService } from '../supplier-management.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { CustomGstFieldComponent } from '../../../shared/components/custom-gst-field/custom-gst-field.component';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-add-supplier',
   templateUrl: './add-supplier.component.html',
-  styleUrls: ['./add-supplier.component.scss']
+  styleUrls: ['./add-supplier.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    CustomGstFieldComponent,
+    MatButton,
+    AppLoaderComponent
+  ]
 })
 export class AddSupplierComponent implements OnInit {
   addForm: UntypedFormGroup;
@@ -51,19 +74,14 @@ export class AddSupplierComponent implements OnInit {
    */
   next(): void {
     this.saveDataForm();
-    this.checkSupplierExistance(
-      this.addSupplierService.supplierLegalName,
-      this.addSupplierService.supplierGstNumber
-    );
+    this.checkSupplierExistance(this.addSupplierService.supplierLegalName, this.addSupplierService.supplierGstNumber);
   }
 
   /**
    * Cancel the action of adding a new supplier by going back to the suppliers list page
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/suppliers-list'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/suppliers-list']);
   }
 
   get gstNumber(): UntypedFormGroup {
@@ -75,27 +93,17 @@ export class AddSupplierComponent implements OnInit {
    *
    * @param $event username input change event
    */
-  private checkSupplierExistance(
-    legalName: string,
-    supplierGstNumber: GstNumberModel
-  ): void {
+  private checkSupplierExistance(legalName: string, supplierGstNumber: GstNumberModel): void {
     this.showLoader = !this.showLoader;
-    const gstNumber: string =
-      this.supplierManagementService.convertSupplierGSTNumbertoString(
-        supplierGstNumber
-      );
+    const gstNumber: string = this.supplierManagementService.convertSupplierGSTNumbertoString(supplierGstNumber);
     this.supplierService.checkSupplierExists(legalName, gstNumber).subscribe({
       next: (value) => {
         this.showLoader = !this.showLoader;
         if (value.length === 0) {
-          this.router.navigate([
-            '/responder-access/supplier-management/new-supplier'
-          ]);
+          this.router.navigate(['/responder-access/supplier-management/new-supplier']);
         } else {
           this.addSupplierService.existingSuppliersList = value;
-          this.router.navigate([
-            '/responder-access/supplier-management/supplier-exist'
-          ]);
+          this.router.navigate(['/responder-access/supplier-management/supplier-exist']);
         }
       },
       error: (error) => {
@@ -115,23 +123,11 @@ export class AddSupplierComponent implements OnInit {
       supplierName: ['', [this.customValidation.whitespaceValidator()]],
       gstNumber: this.builder.group(
         {
-          part1: [
-            '',
-            [Validators.required, Validators.pattern(globalConst.gstFirstField)]
-          ],
-          part2: [
-            '',
-            [
-              Validators.required,
-              Validators.pattern(globalConst.gstSecondField)
-            ]
-          ]
+          part1: ['', [Validators.required, Validators.pattern(globalConst.gstFirstField)]],
+          part2: ['', [Validators.required, Validators.pattern(globalConst.gstSecondField)]]
         },
         {
-          validators: [
-            this.customValidation.groupRequiredValidator(),
-            this.customValidation.groupMinLengthValidator()
-          ]
+          validators: [this.customValidation.groupRequiredValidator(), this.customValidation.groupMinLengthValidator()]
         }
       )
     });
@@ -141,10 +137,8 @@ export class AddSupplierComponent implements OnInit {
    * Saves the data from the form and save it into the addSUpplier service
    */
   private saveDataForm() {
-    this.addSupplierService.supplierLegalName =
-      this.addForm.get('supplierLegalName').value;
-    this.addSupplierService.supplierName =
-      this.addForm.get('supplierName').value;
+    this.addSupplierService.supplierLegalName = this.addForm.get('supplierLegalName').value;
+    this.addSupplierService.supplierName = this.addForm.get('supplierName').value;
 
     const gstNumber: GstNumberModel = {
       part1: this.addForm.get('gstNumber.part1').value,

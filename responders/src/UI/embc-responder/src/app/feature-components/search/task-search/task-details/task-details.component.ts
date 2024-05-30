@@ -7,13 +7,19 @@ import { TaskSearchService } from '../task-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss']
+  styleUrls: ['./task-details.component.scss'],
+  standalone: true,
+  imports: [NgTemplateOutlet, MatCard, MatCardContent, MatButton, AppLoaderComponent]
 })
-export class TaskDetailsComponent implements OnInit {
+export class TaskDetailsComponent {
   essTask: EssTaskModel;
   taskNumber: string;
   showLoader = false;
@@ -29,15 +35,12 @@ export class TaskDetailsComponent implements OnInit {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras.state
-          .essTask as EssTaskModel;
+        const state = this.router.getCurrentNavigation().extras.state.essTask as EssTaskModel;
         this.essTask = state;
         this.taskNumber = state.id;
       }
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Navigates to task search page

@@ -3,16 +3,22 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { MatButton } from '@angular/material/button';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-verify-evacuee-dialog',
   templateUrl: './verify-evacuee-dialog.component.html',
-  styleUrls: ['./verify-evacuee-dialog.component.scss']
+  styleUrls: ['./verify-evacuee-dialog.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatButton, DatePipe]
 })
 export class VerifyEvacueeDialogComponent implements OnInit {
   @Input() content: DialogContent;

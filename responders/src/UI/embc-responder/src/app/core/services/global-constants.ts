@@ -1,32 +1,32 @@
+import { IMask, IMaskFactory } from 'angular-imask';
 import { DashboardBanner, DialogContent } from '../models/dialog-content.model';
 
-export const phoneMask = [
-  /\d/,
-  /\d/,
-  /\d/,
-  '-',
-  /\d/,
-  /\d/,
-  /\d/,
-  '-',
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/
-];
+export const phoneMask = '000-000-0000';
 
-export const dateMask = [
-  /\d/,
-  /\d/,
-  '/',
-  /\d/,
-  /\d/,
-  '/',
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/
-];
+export const dateMask: Parameters<IMaskFactory['create']>[1] = {
+  mask: 'mm/dd/yyyy',
+  lazy: false,
+  blocks: {
+    yyyy: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'y',
+      from: 1900,
+      to: 2999
+    },
+    mm: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'm',
+      from: 1,
+      to: 12
+    },
+    dd: {
+      mask: IMask.MaskedRange,
+      placeholderChar: 'd',
+      from: 1,
+      to: 31
+    }
+  }
+};
 
 export const etransferLimt = 10000;
 
@@ -60,16 +60,13 @@ export const billeting = {
 };
 
 export const shelterAllowanceRate = {
-  rate: 30,
-  adult: 10,
-  child: 5
+  rate: 200
 };
 
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const supportNoOfDays = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25, 26, 27, 28, 29, 30
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 ];
 export const mainApplicant = 'Main Applicant';
 export const insuranceOptions = [
@@ -110,8 +107,7 @@ export const groceriesRateSheet: DialogContent = {
 };
 
 export const incidentalsRateSheet: DialogContent = {
-  title:
-    '<b>ESS Rate Sheet - <span class="dialog-title">Incidentals</span></b>',
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Incidentals</span></b>',
   text: `<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children - <span class="bold">up to \$${incidentals.rate.toFixed(
     2
   )} maximum per person (incl. PST)</span></p><div>NOTE:</div><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and shelter, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
@@ -129,15 +125,13 @@ export const clothingRateSheet: DialogContent = {
 };
 
 export const taxiRateSheet: DialogContent = {
-  title:
-    '<b>ESS Rate Sheet - <span class="dialog-title">Transportation</span></b>',
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Transportation</span></b>',
   text: '<p>Transportation necessary to meet immediate needs (e.g. taxis, 3 day bus pass, gasoline)</p>',
   cancelButton: 'Close'
 };
 
 export const otherRateSheet: DialogContent = {
-  title:
-    '<b>ESS Rate Sheet - <span class="dialog-title">Transportation</span></b>',
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Transportation</span></b>',
   text: '<p>Transportation necessary to meet immediate needs (e.g. taxis, 3 day bus pass, gasoline)</p>',
   cancelButton: 'Close'
 };
@@ -150,7 +144,7 @@ export const hotelRateSheet: DialogContent = {
 
 export const needsShelterAllowanceRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
-  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p> $30 per night (single occupancy)</p><p> + $10 for each additional adult</p><p> + $5 for each additional child</p></br>',
+  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p><span class="bold">$200 per night</span> per household</p>',
   cancelButton: 'Close'
 };
 
@@ -160,9 +154,7 @@ export const billetingRateSheet: DialogContent = {
     2
   )} per night based on single occupancy (add \$${billeting.adult.toFixed(
     2
-  )} for each additional adult and youth and \$${billeting.child.toFixed(
-    2
-  )} for each additional child.</p>`,
+  )} for each additional adult and youth and \$${billeting.child.toFixed(2)} for each additional child.</p>`,
   cancelButton: 'Close'
 };
 
@@ -194,17 +186,17 @@ export const duplicateSupportMessage: DialogContent = {
 
 export const needsShelterAllowanceMessage: DialogContent = {
   title: 'Shelter',
-  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+  text: '<p>A shelter allowance of $200 per night per household.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
 };
 
 export const needsShelterReferralMessage: DialogContent = {
   title: 'Referral',
-  text: '<p>Provided by an ESS responder to direct evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.</p>',
+  text: '<p>A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.</p>'
 };
 
 export const needsIncidentalMessage: DialogContent = {
   title: 'Incidentals',
-  text: '<p>Incidentals could include items such as personal hygiene products like toothpaste, laundry soap and/or pet food.</p>',
+  text: '<p>Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.</p>'
 };
 
 export const saveMessage: DialogContent = {
@@ -503,146 +495,82 @@ export const supplierStatusDefinition: DialogContent = {
   cancelButton: 'Close'
 };
 
-export const systemError =
-  'The service is temporarily unavailable. Please try again later';
+export const systemError = 'The service is temporarily unavailable. Please try again later';
 export const accessError = 'Access Denied';
-export const genericError =
-  'An error occurred while loading this page. Please refresh and try again.';
-export const agreementError =
-  'Unable to submit electronic access agreement at this time. Please try again later';
-export const teamMemberListError =
-  'Unable to retrieve team members at this time. Please try again later';
-export const teamMemberDeleteError =
-  'Unable to remove team members at this time. Please try again later';
-export const activateTeamMemberError =
-  'Unable to activate team member at this time. Please try again later';
-export const deActivateTeamMemberError =
-  'Unable to deactivate team member at this time. Please try again later';
-export const saveTeamMemberError =
-  'Unable to add team member at this time. Please try again later';
-export const updateTeamMemberError =
-  'Unable to update team member at this time. Please try again later';
-export const usernameCheckerror =
-  'Unable to check username at this time. Please try again later';
-export const referralCheckerror =
-  'Unable to check paper referral number at this time. Please try again later';
-export const communityListError =
-  'Unable to retrieve assigned communities at this time. Please try again later';
-export const addCommunityListError =
-  'Unable to retrieve community list at this time. Please try again later';
-export const saveCommunityListError =
-  'Unable to add communities at this time. Please try again later';
-export const removeCommunityListError =
-  'Unable to remove communities at this time. Please try again later';
-export const createRegProfileError =
-  'Unable to create evacuee profile at this time. Please try again later';
-export const editProfileError =
-  'Unable to update your user profile at this time. Please try again later';
-export const createEssFileError =
-  'Unable to create ESS file at this time. Please try again later';
-export const findEssFileError =
-  'Unable to find ESS file at this time. Please try again later';
-export const editEssFileError =
-  'Unable to update the ESS file at this time. Please try again later';
-export const securityQuestionError =
-  'Unable to load security questions. Please try again later';
-export const taskSearchError =
-  'Unable to retrieve this task number. Please try again later';
-export const taskSignInError =
-  'Unable to signIn into task. Please try again later';
-export const evacueeSearchError =
-  'Unable to complete the search at this time. Please try again later';
-export const notesListError =
-  'Unable to retrieve notes at this time. Please try again later';
-export const addNotesError =
-  'Unable to add notes at this time. Please try again later';
-export const hideNoteError =
-  'Unable to hide note at this time. Please try again later';
-export const showNoteError =
-  'Unable to show note at this time. Please try again later';
-export const editNotesError =
-  'Unable to edit note at this time. Please try again later';
+export const genericError = 'An error occurred while loading this page. Please refresh and try again.';
+export const agreementError = 'Unable to submit electronic access agreement at this time. Please try again later';
+export const teamMemberListError = 'Unable to retrieve team members at this time. Please try again later';
+export const teamMemberDeleteError = 'Unable to remove team members at this time. Please try again later';
+export const activateTeamMemberError = 'Unable to activate team member at this time. Please try again later';
+export const deActivateTeamMemberError = 'Unable to deactivate team member at this time. Please try again later';
+export const saveTeamMemberError = 'Unable to add team member at this time. Please try again later';
+export const updateTeamMemberError = 'Unable to update team member at this time. Please try again later';
+export const usernameCheckerror = 'Unable to check username at this time. Please try again later';
+export const referralCheckerror = 'Unable to check paper referral number at this time. Please try again later';
+export const communityListError = 'Unable to retrieve assigned communities at this time. Please try again later';
+export const addCommunityListError = 'Unable to retrieve community list at this time. Please try again later';
+export const saveCommunityListError = 'Unable to add communities at this time. Please try again later';
+export const removeCommunityListError = 'Unable to remove communities at this time. Please try again later';
+export const createRegProfileError = 'Unable to create evacuee profile at this time. Please try again later';
+export const editProfileError = 'Unable to update your user profile at this time. Please try again later';
+export const createEssFileError = 'Unable to create ESS file at this time. Please try again later';
+export const findEssFileError = 'Unable to find ESS file at this time. Please try again later';
+export const editEssFileError = 'Unable to update the ESS file at this time. Please try again later';
+export const securityQuestionError = 'Unable to load security questions. Please try again later';
+export const taskSearchError = 'Unable to retrieve this task number. Please try again later';
+export const taskSignInError = 'Unable to signIn into task. Please try again later';
+export const evacueeSearchError = 'Unable to complete the search at this time. Please try again later';
+export const notesListError = 'Unable to retrieve notes at this time. Please try again later';
+export const addNotesError = 'Unable to add notes at this time. Please try again later';
+export const hideNoteError = 'Unable to hide note at this time. Please try again later';
+export const showNoteError = 'Unable to show note at this time. Please try again later';
+export const editNotesError = 'Unable to edit note at this time. Please try again later';
 export const verifyRegistrantProfileError =
   'Unable to verify the Registrant Profile at this time. Please try again later';
-export const bcscInviteError =
-  'Unable to send BC Services Card invitation at this time. Please try again later';
+export const bcscInviteError = 'Unable to send BC Services Card invitation at this time. Please try again later';
 export const getProfileEssFilesError =
   'Unable to retrieve ESS Files associated to the registrant at this time. Please try again later';
 export const getPossibleEssfileMatchError =
   'Unable to retrieve possible ESS Files matches associated to the registrant at this time. Please try again later';
-export const fileDashboardError =
-  'Unable to load ESS File at this time. Please try again later';
-export const supplierCheckerror =
-  'Unable to check supplier at this time. Please try again later';
-export const mainSuppliersListError =
-  'Unable to retrieve suppliers list at this time. Please try again later';
-export const mutualAidListError =
-  'Unable to retrieve mutual aid suppliers list at this time. Please try again later';
-export const activateSupplierError =
-  'Unable to activate supplier at this time. Please try again later';
-export const deActivateSupplierError =
-  'Unable to deactivate supplier at this time. Please try again later';
-export const supplierRefresherror =
-  'Unable to refresh supplier list at this time. Please try again later';
-export const supportListerror =
-  'Unable to retrieve support list at this time. Please try again later';
-export const supportNeedsAssessmentError =
-  'Unable to retrieve needs assessment at this time. Please try again later';
-export const processSupportDraftsError =
-  'Unable to process draft supports at this time. Please try again later';
-export const supportCategoryListError =
-  'Unable to retrieve support categories at this time. Please try again later';
-export const supportStatusListError =
-  'Unable to retrieve support status at this time. Please try again later';
-export const supportMethodListError =
-  'Unable to retrieve support payment methods at this time. Please try again later';
-export const supportVoidReasonsError =
-  'Unable to retrieve support void reasons at this time. Please try again later';
+export const fileDashboardError = 'Unable to load ESS File at this time. Please try again later';
+export const supplierCheckerror = 'Unable to check supplier at this time. Please try again later';
+export const mainSuppliersListError = 'Unable to retrieve suppliers list at this time. Please try again later';
+export const mutualAidListError = 'Unable to retrieve mutual aid suppliers list at this time. Please try again later';
+export const activateSupplierError = 'Unable to activate supplier at this time. Please try again later';
+export const deActivateSupplierError = 'Unable to deactivate supplier at this time. Please try again later';
+export const supplierRefresherror = 'Unable to refresh supplier list at this time. Please try again later';
+export const supportListerror = 'Unable to retrieve support list at this time. Please try again later';
+export const supportNeedsAssessmentError = 'Unable to retrieve needs assessment at this time. Please try again later';
+export const processSupportDraftsError = 'Unable to process draft supports at this time. Please try again later';
+export const supportCategoryListError = 'Unable to retrieve support categories at this time. Please try again later';
+export const supportStatusListError = 'Unable to retrieve support status at this time. Please try again later';
+export const supportMethodListError = 'Unable to retrieve support payment methods at this time. Please try again later';
+export const supportVoidReasonsError = 'Unable to retrieve support void reasons at this time. Please try again later';
 export const supportReprintReasonsError =
   'Unable to retrieve support reprint reasons at this time. Please try again later';
-export const communityTypesError =
-  'Unable to retrieve community types at this time. Please try again later';
-  export const identifiedNeedsError =
-  'Unable to retrieve identified needs at this time. Please try again later';
-export const securityPhraseError =
-  'Unable to retrieve security phrase at this time. Please try again later';
-export const verifySecurityPhraseError =
-  'Unable to verify security phrase at this time. Please try again later';
-export const linkProfileError =
-  'Unable to link to ESS File. Please try again later';
-export const securityQuestionsError =
-  'Unable to retrieve security questions at this time. Please try again later';
-export const verifySecurityQuestionError =
-  'Unable to verify security questions at this time. Please try again later';
-export const getProfileError =
-  'Unable to retrieve profile at this time. Please try again later';
-export const getEssFileError =
-  'Unable to retrieve ESS file at this time. Please try again later';
-export const voidReferralError =
-  'Unable to void referral at this time. Please try again later';
-export const cancelEtransferError =
-  'Unable to cancel transfer at this time. Please try again later';
-export const reprintReferralError =
-  'Unable to reprint referral at this time. Please try again later';
-export const getSupportByIdError =
-  'Unable to retrieve support at this time. Please try again later';
-export const claimSupplierError =
-  'Unable to claim supplier at this time. Please try again later';
-export const rescindSupplierError =
-  'Unable to rescind mutual aid supplier at this time. Please try again later';
-export const addSupplierError =
-  'Unable to add mutual aid supplier at this time. Please try again later';
-export const deleteSupplierError =
-  'Unable to remove supplier at this time. Please try again later';
-export const evacueeReportError =
-  'Unable to retrieve an Evacuee Report at this time. Please try again later';
-export const supportReportError =
-  'Unable to retrieve a Support Report at this time. Please try again later';
+export const communityTypesError = 'Unable to retrieve community types at this time. Please try again later';
+export const identifiedNeedsError = 'Unable to retrieve identified needs at this time. Please try again later';
+export const securityPhraseError = 'Unable to retrieve security word at this time. Please try again later';
+export const verifySecurityPhraseError = 'Unable to verify security word at this time. Please try again later';
+export const linkProfileError = 'Unable to link to ESS File. Please try again later';
+export const securityQuestionsError = 'Unable to retrieve security questions at this time. Please try again later';
+export const verifySecurityQuestionError = 'Unable to verify security questions at this time. Please try again later';
+export const getProfileError = 'Unable to retrieve profile at this time. Please try again later';
+export const getEssFileError = 'Unable to retrieve ESS file at this time. Please try again later';
+export const voidReferralError = 'Unable to void referral at this time. Please try again later';
+export const cancelEtransferError = 'Unable to cancel transfer at this time. Please try again later';
+export const reprintReferralError = 'Unable to reprint referral at this time. Please try again later';
+export const getSupportByIdError = 'Unable to retrieve support at this time. Please try again later';
+export const claimSupplierError = 'Unable to claim supplier at this time. Please try again later';
+export const rescindSupplierError = 'Unable to rescind mutual aid supplier at this time. Please try again later';
+export const addSupplierError = 'Unable to add mutual aid supplier at this time. Please try again later';
+export const deleteSupplierError = 'Unable to remove supplier at this time. Please try again later';
+export const evacueeReportError = 'Unable to retrieve an Evacuee Report at this time. Please try again later';
+export const supportReportError = 'Unable to retrieve a Support Report at this time. Please try again later';
 
 export const paperIdQuestion =
   'Did the evacuee present any <b>government-issued photo ID</b> when the paper ESS File was completed?';
-export const digitalIdQuestion =
-  'Can you present any <b>government-issued photo ID</b> to verify your identity?';
+export const digitalIdQuestion = 'Can you present any <b>government-issued photo ID</b> to verify your identity?';
 
 export const newRegistrationTipText =
   '<p class="tips-info">If you need to update either first name, last name or date of birth, please start a new search using the correct infomation.</p>';
@@ -697,13 +625,12 @@ export const caseNotesActiveText: DashboardBanner = {
 export const caseNotesCompleteText: DashboardBanner = {
   heading: 'Complete:',
   buttonText: 'Add Notes',
-  content:
-    'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
+  content: 'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
 };
 
 export const shelterAllowanceNeedDialog: DialogContent = {
   title: 'Shelter',
-  text: 'A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child). <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+  text: '<p>A shelter allowance of $200 per night per household.</p> <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
 };
 
 export const shelterReferralNeedDialog: DialogContent = {
@@ -716,5 +643,4 @@ export const incidentalsNeedDialog: DialogContent = {
   text: 'Incidentals could include items such as personal hygiene products like toothpaste, laundry soap and/or pet food.'
 };
 
-export const noAssistanceRequired =
-  'Household currently does not require assistance.';
+export const noAssistanceRequired = 'Household currently does not require assistance.';

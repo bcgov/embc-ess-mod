@@ -1,76 +1,69 @@
 <div class="mat-elevation-z8 table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container
-      *ngFor="let column of displayedColumns"
-      [matColumnDef]="column?.ref"
-    >
-      <div *ngIf="column?.ref === 'select'; else noSelect">
-        <th mat-header-cell *matHeaderCellDef class="arrow-color">
-          <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                    </mat-checkbox> -->
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox
-            (click)="$event.stopPropagation()"
-            (change)="$event ? selectionToggle(row) : null"
-            [checked]="selection.isSelected(row)"
-            [disabled]="disable(row)"
-            [aria-label]="checkboxLabel(row)"
-          >
-          </mat-checkbox>
-        </td>
-      </div>
-      <ng-template #noSelect>
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-          class="arrow-color"
-        >
-          {{ column?.label }}
-        </th>
-        <td mat-cell *matCellDef="let row; let index = index">
-          <span
-            *ngIf="column?.ref !== 'dateAssigned' && column?.ref !== 'type'"
-          >
-            <span
-              *ngIf="!row?.allowSelect && disableRow; else data"
-              style="color: #b0b0b0"
-              >{{ row[column?.ref] }}</span
-            >
-          </span>
-          <ng-template #data>
-            <span>{{ row[column?.ref] }}</span>
-          </ng-template>
-          <span *ngIf="column?.ref === 'type'">
-            <span
-              *ngIf="!row?.allowSelect && disableRow; else typeData"
-              style="color: #b0b0b0"
-              >{{ getCommunitTypeDescription(row[column?.ref]) }}</span
-            >
-          </span>
-          <ng-template #typeData>
-            <span>{{ getCommunitTypeDescription(row[column?.ref]) }}</span>
-          </ng-template>
-          <span *ngIf="column?.ref === 'action' && row.conflict">
-            <img
-              matTooltip="This communtiy is being supported by {{
-                row?.teamName
-              }}"
-              matTooltipClass="tooltip-red"
-              src="/assets/images/exclaimation.svg"
-              height="25"
-              width="25"
-            />
-          </span>
-          <span *ngIf="column?.ref === 'dateAssigned'">
-            <span>{{ row[column?.ref] | date: 'dd-MMM-yyyy' }}</span>
-          </span>
-        </td>
-      </ng-template>
-    </ng-container>
+    @for (column of displayedColumns; track column) {
+      <ng-container [matColumnDef]="column?.ref">
+        @if (column?.ref === 'select') {
+          <div>
+            <th mat-header-cell *matHeaderCellDef class="arrow-color">
+              <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox> -->
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selectionToggle(row) : null"
+                [checked]="selection.isSelected(row)"
+                [disabled]="disable(row)"
+                [aria-label]="checkboxLabel(row)"
+              >
+              </mat-checkbox>
+            </td>
+          </div>
+        } @else {
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+            {{ column?.label }}
+          </th>
+          <td mat-cell *matCellDef="let row; let index = index">
+            @if (column?.ref !== 'dateAssigned' && column?.ref !== 'type') {
+              <span>
+                @if (!row?.allowSelect && disableRow) {
+                  <span style="color: #b0b0b0">{{ row[column?.ref] }}</span>
+                } @else {
+                  <span>{{ row[column?.ref] }}</span>
+                }
+              </span>
+            }
+            @if (column?.ref === 'type') {
+              <span>
+                @if (!row?.allowSelect && disableRow) {
+                  <span style="color: #b0b0b0">{{ getCommunitTypeDescription(row[column?.ref]) }}</span>
+                } @else {
+                  <span>{{ getCommunitTypeDescription(row[column?.ref]) }}</span>
+                }
+              </span>
+            }
+            @if (column?.ref === 'action' && row.conflict) {
+              <span>
+                <img
+                  matTooltip="This communtiy is being supported by {{ row?.teamName }}"
+                  matTooltipClass="tooltip-red"
+                  src="/assets/images/exclaimation.svg"
+                  height="25"
+                  width="25"
+                />
+              </span>
+            }
+            @if (column?.ref === 'dateAssigned') {
+              <span>
+                <span>{{ row[column?.ref] | date: 'dd-MMM-yyyy' }}</span>
+              </span>
+            }
+          </td>
+        }
+      </ng-container>
+    }
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns"></tr>
@@ -85,11 +78,7 @@
     [color]="color"
   ></app-loader>
 
-  <mat-paginator
-    [pageSize]="20"
-    [pageSizeOptions]="[10, 20, 30, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
+  <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br />
 <!--color:#b0b0b0-->

@@ -2,13 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SupportReferralComponent } from './support-referral.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UntypedFormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
-import { MaterialModule } from 'src/app/material.module';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('SupportReferralComponent', () => {
   let component: SupportReferralComponent;
@@ -16,19 +15,8 @@ describe('SupportReferralComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatDialogModule,
-        MaterialModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [SupportReferralComponent],
-      providers: [
-        UntypedFormBuilder,
-        DatePipe,
-        { provide: computeInterfaceToken, useValue: {} }
-      ]
+      imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, SupportReferralComponent],
+      providers: [UntypedFormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }, provideRouter([])]
     }).compileComponents();
   });
 

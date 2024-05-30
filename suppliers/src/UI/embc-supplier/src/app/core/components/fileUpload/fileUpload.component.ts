@@ -2,11 +2,15 @@ import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { WarningService } from 'src/app/core/services/warning.service';
 import * as constant from 'src/app/core/services/globalConstants';
+import { DragDropDirective } from '../../directives/DragDrop.directive';
+import { ToastsComponent } from '../toasts/toasts.component';
 
 @Component({
   selector: 'app-file-upload',
   templateUrl: './fileUpload.component.html',
-  styleUrls: ['./fileUpload.component.scss']
+  styleUrls: ['./fileUpload.component.scss'],
+  standalone: true,
+  imports: [ToastsComponent, DragDropDirective]
 })
 export class FileUploadComponent implements OnInit {
   @Output() attachedFile = new EventEmitter<any>();
@@ -57,10 +61,7 @@ export class FileUploadComponent implements OnInit {
         this.warningService.warningModal(constant.invalidFileNameMessage);
         // this.showToast = !this.showToast;
         // this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
-      } else if (
-        this.invoiceAttachments !== undefined &&
-        this.invoiceAttachments.length >= this.noOfAttachments
-      ) {
+      } else if (this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
         this.attachSizeError = true;
         setTimeout(
           function () {

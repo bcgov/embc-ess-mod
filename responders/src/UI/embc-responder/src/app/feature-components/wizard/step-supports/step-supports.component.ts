@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from './step-supports.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-step-supports',
   templateUrl: './step-supports.component.html',
-  styleUrls: ['./step-supports.component.scss']
+  styleUrls: ['./step-supports.component.scss'],
+  standalone: true,
+  imports: [AlertComponent, RouterOutlet]
 })
 export class StepSupportsComponent implements OnInit {
   stepName: string;
@@ -37,10 +40,7 @@ export class StepSupportsComponent implements OnInit {
       },
       error: (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }

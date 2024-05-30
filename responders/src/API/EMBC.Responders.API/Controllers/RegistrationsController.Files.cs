@@ -55,8 +55,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(manualFileId))
             {
-                var userRole = Enum.Parse<MemberRole>(currentUserRole);
-                var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId, userRole);
+                var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId);
                 return Ok(files);
             }
             else if (!string.IsNullOrEmpty(manualFileId) && string.IsNullOrEmpty(registrantId))
@@ -90,6 +89,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var mappedFile = mapper.Map<EMBC.ESS.Shared.Contracts.Events.EvacuationFile>(file);
 
+            mappedFile.Id = null;
             mappedFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             mappedFile.NeedsAssessment.CompletedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = currentUserId };
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
@@ -246,6 +246,20 @@ namespace EMBC.Responders.API.Controllers
         {
             var res = await messagingClient.Send(new LinkRegistrantCommand { FileId = fileId, RegistantId = request.RegistantId, HouseholdMemberId = request.HouseholdMemberId });
             return Ok(res);
+        }
+
+        [HttpPost("files/{fileId}/access")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AuditFileAcccess(string fileId, AuditAccessRequest request)
+        {
+            await messagingClient.Send(new RecordAuditAccessCommand
+            {
+                TeamMemberId = currentUserId,
+                EvacuationFileNumber = fileId,
+                AccessReasonId = request.AccessReasonId
+            });
+            return Ok();
         }
 
         private bool UserCanEditNote(Note note) => !string.IsNullOrEmpty(note.CreatingTeamMemberId) && note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
@@ -548,6 +562,7 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<NeedsAssessment, EMBC.ESS.Shared.Contracts.Events.NeedsAssessment>()
+                .ForMember(d => d.TaskNumber, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))

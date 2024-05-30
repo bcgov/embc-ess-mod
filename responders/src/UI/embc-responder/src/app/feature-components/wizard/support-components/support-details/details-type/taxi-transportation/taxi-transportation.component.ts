@@ -1,22 +1,17 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-taxi-transportation',
   templateUrl: './taxi-transportation.component.html',
-  styleUrls: ['./taxi-transportation.component.scss']
+  styleUrls: ['./taxi-transportation.component.scss'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError]
 })
-export class TaxiTransportationComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class TaxiTransportationComponent implements OnChanges, AfterViewInit {
   @Input() supportDetailsForm: UntypedFormGroup;
   referralForm: UntypedFormGroup;
 
@@ -28,13 +23,9 @@ export class TaxiTransportationComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get(
-        'referral'
-      ) as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
   }
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form

@@ -1,12 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 
 import { RemoteSearchComponent } from './remote-search.component';
+import { provideRouter } from '@angular/router';
 
 describe('RemoteSearchComponent', () => {
   let component: RemoteSearchComponent;
@@ -14,19 +14,15 @@ describe('RemoteSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
-      declarations: [RemoteSearchComponent],
+      imports: [HttpClientTestingModule, ReactiveFormsModule, RemoteSearchComponent],
       providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
           provide: OptionInjectionService,
           useClass: MockOptionInjectionService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });

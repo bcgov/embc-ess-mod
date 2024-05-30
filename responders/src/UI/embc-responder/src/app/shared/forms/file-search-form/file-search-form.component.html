@@ -2,20 +2,13 @@
   <div class="col-md-4">
     <mat-form-field appearance="outline">
       <mat-label>ESS File Number</mat-label>
-      <input
-        maxlength="100"
-        formControlName="essFileNumber"
-        matInput
-        required
-      />
-      <mat-error
-        *ngIf="
-          fileSearchFormControl?.essFileNumber?.invalid &&
-          fileSearchFormControl?.essFileNumber?.hasError('whitespaceError')
-        "
-      >
-        ESS File Number is required</mat-error
-      >
+      <input maxlength="100" formControlName="essFileNumber" matInput required />
+      @if (
+        fileSearchFormControl?.essFileNumber?.invalid &&
+        fileSearchFormControl?.essFileNumber?.hasError('whitespaceError')
+      ) {
+        <mat-error> ESS File Number is required</mat-error>
+      }
     </mat-form-field>
   </div>
 </form>

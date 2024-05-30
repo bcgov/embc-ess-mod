@@ -1,0 +1,206 @@
+<p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+@if (eTransferDetailsForm) {
+  <form class="eTransfer-form">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div style="display: flex; justify-content: space-between; width: 100%">
+          <p class="card-heading requiredField">Interac e-Transfer<sup>TM</sup> Details</p>
+          <img
+            width="100"
+            height="100"
+            src="../../../assets/images/interac-e-transfer-logo-without-text.png"
+            alt="Interac e-transfer Logo"
+          />
+        </div>
+        <div style="display: flex; flex-direction: column; width: 100%">
+          <div class="container-with-logo">
+            <div>
+              <div class="card-question">
+                <label>Interac e-Transfer <b>Recipient</b></label>
+              </div>
+              <mat-form-field>
+                <mat-label>Full Name</mat-label>
+                <input
+                  matInput
+                  placeholder="Full Name"
+                  [formControl]="eTransferDetailsForm.controls.recipientName"
+                  required
+                />
+                @if (
+                  eTransferDetailsForm.controls.recipientName.hasError('required') ||
+                  eTransferDetailsForm.controls.recipientName.hasError('whitespaceError')
+                ) {
+                  <mat-error>Interac e-Transfer Recipient is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="card-question requiredField">How would you prefer to be <b>notified</b> of your transfer?</div>
+          <mat-form-field appearance="outline">
+            <mat-select
+              [formControl]="eTransferDetailsForm.controls.notificationPreference"
+              required
+              placeholder="-- Select One"
+            >
+              @for (preference of eTransferNotificationPreferenceOptions; track preference) {
+                <mat-option [value]="preference">
+                  {{ preference }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (
+              eTransferDetailsForm.controls?.notificationPreference.invalid &&
+              eTransferDetailsForm.controls?.notificationPreference.hasError('required')
+            ) {
+              <mat-error>Notification Preference is required</mat-error>
+            }
+          </mat-form-field>
+          @if (
+            [ETransferNotificationPreference.Email, ETransferNotificationPreference.EmailAndMobile].includes(
+              eTransferDetailsForm.controls.notificationPreference.value
+            )
+          ) {
+            <div style="display: flex; flex-wrap: wrap">
+              @if (eTransferDetailsForm.controls.useEmailOnFile.value === false) {
+                <mat-form-field>
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    placeholder="Email"
+                    [formControl]="eTransferDetailsForm.controls.eTransferEmail"
+                    required
+                  />
+                  @if (eTransferDetailsForm.controls.eTransferEmail.hasError('required')) {
+                    <mat-error> Email Address is required </mat-error>
+                  } @else if (eTransferDetailsForm.controls.eTransferEmail.hasError('email')) {
+                    <mat-error> Enter a valid Email Address </mat-error>
+                  }
+                </mat-form-field>
+              } @else {
+                <span style="width: 400px; padding-bottom: 40px">
+                  <b>{{ profileDataService.getProfile().contactDetails.email }}</b>
+                </span>
+              }
+              @if (hasEmailAddressOnFile) {
+                <mat-checkbox [formControl]="eTransferDetailsForm.controls.useEmailOnFile">
+                  Use email address on file
+                </mat-checkbox>
+              }
+            </div>
+            @if (eTransferDetailsForm.controls.useEmailOnFile.value === false) {
+              <mat-form-field>
+                <mat-label>Confirm Email</mat-label>
+                <input
+                  matInput
+                  placeholder="Confirm Email"
+                  [formControl]="eTransferDetailsForm.controls.confirmEmail"
+                  required
+                />
+                @if (eTransferDetailsForm.controls.confirmEmail.hasError('required')) {
+                  <mat-error> Confirm Email Address is required </mat-error>
+                } @else if (eTransferDetailsForm.controls.confirmEmail.hasError('email')) {
+                  <mat-error> Enter a valid Email Address </mat-error>
+                } @else if (eTransferDetailsForm.controls.confirmEmail.hasError('compare')) {
+                  <mat-error> Email Address Mismatch </mat-error>
+                }
+              </mat-form-field>
+            }
+          }
+          @if (
+            [ETransferNotificationPreference.Mobile, ETransferNotificationPreference.EmailAndMobile].includes(
+              eTransferDetailsForm.controls.notificationPreference.value
+            )
+          ) {
+            <div style="display: flex; flex-wrap: wrap">
+              @if (eTransferDetailsForm.controls.useMobileOnFile.value === false) {
+                <mat-form-field>
+                  <mat-label>Mobile</mat-label>
+                  <input
+                    matInput
+                    placeholder="Mobile"
+                    [formControl]="eTransferDetailsForm.controls.eTransferMobile"
+                    required
+                    [imask]="phoneMask"
+                  />
+                  @if (eTransferDetailsForm.controls.eTransferMobile.hasError('required')) {
+                    <mat-error> Mobile is required </mat-error>
+                  }
+
+                  @if (eTransferDetailsForm.controls.eTransferMobile.hasError('compare')) {
+                    <mat-error> Mobile number mismatch </mat-error>
+                  }
+                </mat-form-field>
+              } @else {
+                <span style="width: 400px">
+                  <b>{{ profileDataService.getProfile().contactDetails.phone }}</b>
+                </span>
+              }
+              @if (hasPhoneOnFile) {
+                <mat-checkbox [formControl]="eTransferDetailsForm.controls.useMobileOnFile">
+                  Use mobile number on file
+                </mat-checkbox>
+              }
+            </div>
+            @if (eTransferDetailsForm.controls.useMobileOnFile.value === false) {
+              <mat-form-field>
+                <mat-label>Confirm Mobile</mat-label>
+                <input
+                  matInput
+                  placeholder="Confirm Mobile"
+                  [formControl]="eTransferDetailsForm.controls.confirmMobile"
+                  required
+                  [imask]="phoneMask"
+                />
+                @if (eTransferDetailsForm.controls.confirmMobile.hasError('required')) {
+                  <mat-error> Confirm Mobile Number is required </mat-error>
+                }
+
+                @if (eTransferDetailsForm.controls.confirmMobile.hasError('compare')) {
+                  <mat-error> Mobile Number Mismatch </mat-error>
+                }
+              </mat-form-field>
+            }
+            @if (
+              eTransferDetailsForm.controls.notificationPreference.value === ETransferNotificationPreference.Mobile &&
+              !hasEmailAddressOnFile
+            ) {
+              <div class="card-question">
+                Kindly provide an <b>email address</b> for any further communications related to the e-transfer.
+              </div>
+              <mat-form-field>
+                <mat-label> Email </mat-label>
+                <input
+                  matInput
+                  placeholder="Email"
+                  [formControl]="eTransferDetailsForm.controls.contactEmail"
+                  required
+                />
+                @if (eTransferDetailsForm.controls.contactEmail.hasError('required')) {
+                  <mat-error> Email Address is required </mat-error>
+                } @else if (eTransferDetailsForm.controls.contactEmail.hasError('email')) {
+                  <mat-error> Enter a valid Email Address </mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Confirm Email</mat-label>
+                <input
+                  matInput
+                  placeholder="Confirm Email"
+                  [formControl]="eTransferDetailsForm.controls.confirmContactEmail"
+                  required
+                />
+                @if (eTransferDetailsForm.controls.confirmContactEmail.hasError('required')) {
+                  <mat-error> Confirm Email Address is required </mat-error>
+                } @else if (eTransferDetailsForm.controls.confirmContactEmail.hasError('email')) {
+                  <mat-error> Enter a valid Email Address </mat-error>
+                } @else if (eTransferDetailsForm.controls.confirmContactEmail.hasError('compare')) {
+                  <mat-error> Email Address Mismatch </mat-error>
+                }
+              </mat-form-field>
+            }
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+}

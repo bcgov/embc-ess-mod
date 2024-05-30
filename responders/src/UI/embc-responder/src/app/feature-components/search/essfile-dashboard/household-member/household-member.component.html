@@ -1,153 +1,112 @@
 <mat-card class="overview-card data-card">
-  <div class="row card-heading-outer info-box">
-    <div class="col-md-12">
-      <p class="margins card-heading">
-        Household Members ({{ essFile?.householdMembers?.length }})
-      </p>
+  <mat-card-content>
+    <div class="row card-heading-outer info-box">
+      <div class="col-md-12">
+        <p class="margins card-heading">Household Members ({{ essFile?.householdMembers?.length }})</p>
+      </div>
     </div>
-  </div>
-  <mat-accordion>
-    <mat-expansion-panel
-      class="expansion-divider"
-      *ngFor="let member of essFile?.householdMembers; let index = index"
-      (opened)="setOpened(index, member)"
-      (closed)="setClosed(index)"
-      hideToggle="true"
-      [expanded]="false"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <span class="member-title">
-            <span class="bold">{{ member.lastName | uppercase }},</span>
-            {{ member.firstName | titlecase }}
-          </span>
-        </mat-panel-title>
-        <mat-panel-description class="description-align essFile-parent">
-          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex !== index">
-            <img src="/assets/images/add-expand.svg" height="20" width="20" />
-            <img
-              src="/assets/images/add-expand-hover.svg"
-              height="20"
-              width="20"
-            />
-          </a>
-          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex === index">
-            <img src="/assets/images/collapse.svg" height="20" width="20" />
-            <img
-              src="/assets/images/collapse-hover.svg"
-              height="20"
-              width="20"
-            />
-          </a>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <div *ngIf="!isLoading">
-        <div class="row table-parent">
-          <table class="table-details">
-            <tr>
-              <th>Type:</th>
-              <td class="bold">
-                {{
-                  member?.type === 'HouseholdMember'
-                    ? 'Household Member'
-                    : member?.type
-                }}
-              </td>
-            </tr>
-            <tr *ngIf="member?.isVerified !== null">
-              <th>Verification Status:</th>
-              <td class="bold">
-                {{ member?.isVerified ? 'Verified' : 'Unverified' }}
-              </td>
-            </tr>
-            <tr *ngIf="member?.isRestricted !== null">
-              <th>Restriction Status:</th>
-              <td
-                [ngClass]="{
-                  'profile-restricted': member?.isRestricted,
-                  'profile-not-restricted': !member?.isRestricted
-                }"
-              >
-                {{ member?.isRestricted ? 'Restricted' : 'Unrestricted' }}
-              </td>
-            </tr>
-            <tr>
-              <th>Date of Birth:</th>
-              <td class="bold">
-                {{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}
-              </td>
-            </tr>
-            <tr>
-              <th>Gender:</th>
-              <td class="bold">
-                {{ member?.gender }}
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <div
-          *ngIf="
-            essfileDashboardService?.displayMemberButton === 'view-profile'
-          "
-          class="row button-div"
+    <mat-accordion>
+      @for (member of essFile?.householdMembers; track member; let index = $index) {
+        <mat-expansion-panel
+          class="expansion-divider"
+          (opened)="setOpened(index, member)"
+          (closed)="setClosed(index)"
+          hideToggle="true"
+          [expanded]="false"
         >
-          <button class="button-p proceed-button" (click)="viewProfile(member)">
-            View Profile
-          </button>
-        </div>
-
-        <div
-          *ngIf="
-            essfileDashboardService?.displayMemberButton === 'create-profile'
-          "
-          class="row button-div"
-        >
-          <button
-            class="button-p proceed-button"
-            (click)="createProfile(member)"
-          >
-            Create Profile
-          </button>
-        </div>
-
-        <div
-          *ngIf="
-            essfileDashboardService?.displayMemberButton === 'link-profile'
-          "
-          class="row button-div"
-        >
-          <button
-            class="button-p proceed-button"
-            (click)="linkToProfile(member)"
-          >
-            Link to this Profile
-          </button>
-          <a (click)="createProfile(member)" class="no-match"
-            >Not a Match? Create Profile</a
-          >
-        </div>
-        <div
-          *ngIf="essfileDashboardService?.displayMemberButton === 'cannot-link'"
-          class="row button-div"
-        >
-          <p class="cannot-link">
-            Cannot link to a profile without security questions.
-          </p>
-          <a (click)="createProfile(member)" class="no-match"
-            >Not a Match? Create Profile</a
-          >
-        </div>
-      </div>
-      <div class="loader-align">
-        <app-loader
-          class="spinner"
-          [showLoader]="isLoading"
-          [strokeWidth]="10"
-          [diameter]="30"
-          [color]="color"
-        ></app-loader>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span class="member-title">
+                <span class="bold">{{ member.lastName | uppercase }},</span>
+                {{ member.firstName | titlecase }}
+              </span>
+            </mat-panel-title>
+            <mat-panel-description class="description-align essFile-parent">
+              @if (currentlyOpenedItemIndex !== index) {
+                <a class="essFile-detail">
+                  <img src="/assets/images/add-expand.svg" height="20" width="20" />
+                  <img src="/assets/images/add-expand-hover.svg" height="20" width="20" />
+                </a>
+              }
+              @if (currentlyOpenedItemIndex === index) {
+                <a class="essFile-detail">
+                  <img src="/assets/images/collapse.svg" height="20" width="20" />
+                  <img src="/assets/images/collapse-hover.svg" height="20" width="20" />
+                </a>
+              }
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          @if (!isLoading) {
+            <div>
+              <div class="row table-parent">
+                <table class="table-details">
+                  <tr>
+                    <th>Type:</th>
+                    <td class="bold">
+                      {{ member?.type === 'HouseholdMember' ? 'Household Member' : member?.type }}
+                    </td>
+                  </tr>
+                  @if (member?.isVerified !== null) {
+                    <tr>
+                      <th>Verification Status:</th>
+                      <td class="bold">
+                        {{ member?.isVerified ? 'Verified' : 'Unverified' }}
+                      </td>
+                    </tr>
+                  }
+                  <tr>
+                    <th>Date of Birth:</th>
+                    <td class="bold">
+                      {{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Gender:</th>
+                    <td class="bold">
+                      {{ member?.gender }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              @if (essfileDashboardService?.displayMemberButton === 'view-profile') {
+                <div class="row button-div">
+                  <button mat-button class="button-p proceed-button" (click)="viewProfile(member)">View Profile</button>
+                </div>
+              }
+              @if (essfileDashboardService?.displayMemberButton === 'create-profile') {
+                <div class="row button-div">
+                  <button mat-button class="button-p proceed-button" (click)="createProfile(member)">
+                    Create Profile
+                  </button>
+                </div>
+              }
+              @if (essfileDashboardService?.displayMemberButton === 'link-profile') {
+                <div class="row button-div">
+                  <button mat-button class="button-p proceed-button" (click)="linkToProfile(member)">
+                    Link to this Profile
+                  </button>
+                  <a (click)="createProfile(member)" class="no-match">Not a Match? Create Profile</a>
+                </div>
+              }
+              @if (essfileDashboardService?.displayMemberButton === 'cannot-link') {
+                <div class="row button-div">
+                  <p class="cannot-link">Cannot link to a profile without security questions.</p>
+                  <a (click)="createProfile(member)" class="no-match">Not a Match? Create Profile</a>
+                </div>
+              }
+            </div>
+          }
+          <div class="loader-align">
+            <app-loader
+              class="spinner"
+              [showLoader]="isLoading"
+              [strokeWidth]="10"
+              [diameter]="30"
+              [color]="color"
+            ></app-loader>
+          </div>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  </mat-card-content>
 </mat-card>

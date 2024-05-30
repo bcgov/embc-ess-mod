@@ -8,11 +8,36 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
+import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
+import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
+import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles/possible-matched-essfiles.component';
+import { MatchedEssfilesComponent } from './matched-essfiles/matched-essfiles.component';
+import { MatRadioButton } from '@angular/material/radio';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { NgStyle, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-evacuee-profile-dashboard',
   templateUrl: './evacuee-profile-dashboard.component.html',
-  styleUrls: ['./evacuee-profile-dashboard.component.scss']
+  styleUrls: ['./evacuee-profile-dashboard.component.scss'],
+  standalone: true,
+  imports: [
+    NgStyle,
+    MatButton,
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatRadioButton,
+    MatchedEssfilesComponent,
+    PossibleMatchedEssfilesComponent,
+    OverlayLoaderComponent,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+    MaskFullAddressPipe
+  ]
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;
@@ -31,8 +56,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.evacueeProfileId =
-      this.evacueeProfileDashboardService.fetchProfileId();
+    this.evacueeProfileId = this.evacueeProfileDashboardService.fetchProfileId();
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
 
@@ -74,8 +98,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         if (!value) {
           this.isLoading = false;
           this.evacueeProfileDashboardService.openEssFileExistsDialog(
-            this.evacueeSearchService?.evacueeSearchContext
-              ?.evacueeSearchParameters?.paperFileNumber
+            this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber
           );
         }
       })
@@ -110,23 +133,17 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         next: (emailId) => {
           if (emailId !== 'close') {
             this.emailLoader = !this.emailLoader;
-            this.evacueeProfileDashboardService
-              .inviteByEmail(emailId, this.evacueeProfile.id)
-              .subscribe({
-                next: (value) => {
-                  this.emailLoader = !this.emailLoader;
-                  this.emailSuccessMessage =
-                    'Email sent successfully to ' + emailId;
-                },
-                error: (error) => {
-                  this.emailLoader = !this.emailLoader;
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.bcscInviteError
-                  );
-                }
-              });
+            this.evacueeProfileDashboardService.inviteByEmail(emailId, this.evacueeProfile.id).subscribe({
+              next: (value) => {
+                this.emailLoader = !this.emailLoader;
+                this.emailSuccessMessage = 'Email sent successfully to ' + emailId;
+              },
+              error: (error) => {
+                this.emailLoader = !this.emailLoader;
+                this.alertService.clearAlert();
+                this.alertService.setAlert('danger', globalConst.bcscInviteError);
+              }
+            });
           }
         }
       });
@@ -137,25 +154,18 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    */
   private verifyProfile(): void {
     this.isLoading = !this.isLoading;
-    this.evacueeProfileService
-      .setVerifiedStatus(this.evacueeProfileId, true)
-      .subscribe({
-        next: (evacueeProfile) => {
-          this.evacueeProfile = evacueeProfile;
-          this.isLoading = !this.isLoading;
-          this.evacueeProfileDashboardService.openSuccessModal(
-            globalConst.successfulVerification
-          );
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.verifyRegistrantProfileError
-          );
-        }
-      });
+    this.evacueeProfileService.setVerifiedStatus(this.evacueeProfileId, true).subscribe({
+      next: (evacueeProfile) => {
+        this.evacueeProfile = evacueeProfile;
+        this.isLoading = !this.isLoading;
+        this.evacueeProfileDashboardService.openSuccessModal(globalConst.successfulVerification);
+      },
+      error: (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.verifyRegistrantProfileError);
+      }
+    });
   }
 
   /**
@@ -169,13 +179,10 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       ?.then((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
         if (
-          this.optionInjectionService.instance.optionType !==
-            SelectedPathType.paperBased &&
+          this.optionInjectionService.instance.optionType !== SelectedPathType.paperBased &&
           !this.evacueeProfile?.securityQuestions?.length
         ) {
-          this.evacueeProfileDashboardService.openIncompleteProfileDialog(
-            globalConst.incompleteProfileMessage
-          );
+          this.evacueeProfileDashboardService.openIncompleteProfileDialog(globalConst.incompleteProfileMessage);
         }
       })
       .catch((error) => {

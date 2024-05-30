@@ -5,18 +5,17 @@
     </div>
   </div>
   <br />
-  <nav mat-tab-nav-bar dynamicHeight>
-    <a
-      mat-tab-link
-      *ngFor="let tabItem of tabs"
-      [routerLink]="tabItem.route"
-      routerLinkActive="active-tab"
-    >
-      {{ tabItem.label }}
-    </a>
+  <nav mat-tab-nav-bar mat-stretch-tabs="false" [tabPanel]="tabPanel" dynamicHeight>
+    @for (tabItem of tabs; track tabItem) {
+      <a mat-tab-link [routerLink]="tabItem.route" routerLinkActive="active-tab">
+        {{ tabItem.label }}
+      </a>
+    }
   </nav>
 
   <div class="content-container">
-    <router-outlet></router-outlet>
+    <mat-tab-nav-panel #tabPanel>
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
   </div>
 </div>

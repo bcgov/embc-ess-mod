@@ -1,52 +1,53 @@
 .tips-info {
-    color: white;
-    padding: 8px;
-    margin-top: 20px;
+  color: white;
+  padding: 8px;
+  margin-top: 20px;
 }
 
 .heading {
-    color: #234075;
-    font-size: 21px;
+  color: #234075;
+  font-size: 21px;
 }
 
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .submit {
-    width: 100%;
-    font-size: 16px;
+  width: 100%;
+  font-size: 16px;
 }
 
 .tips-heading {
-    color: white;
-    font-size: 21px;
-    margin-left: 5px;
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
 }
 
 .tips-card {
-    background-color: rgba(35, 64, 117, 1);
+  background-color: rgba(35, 64, 117, 1);
 }
 
 .task-details {
-    font-size: 21px;
-    color: #169BD5;
+  font-size: 21px;
+  color: #169bd5;
 }
 
 .status-active {
-    font-size: 21px;
-    color: #1BB22C;
+  font-size: 21px;
+  color: #1bb22c;
 }
 
 .status-expired {
-    font-size: 21px;
-    color: #D51616;
+  font-size: 21px;
+  color: #d51616;
 }
 
 .link-button {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
-    border: none !important;
+  border: none !important;
 }

@@ -3,31 +3,27 @@
     <p class="title">System Unavailable</p>
   </div>
   <div class="outage-info">
-    <div *ngIf="outageType === 'planned'; else unplanned">
-      <p class="subtitle">
-        This system is currently undergoing planned maintenance.
-      </p>
-      <p class="dynamic-text">
-        {{ outageInfo?.content }}
-        <b
-          >from
-          {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
-          at
-          {{ outageInfo?.outageStartDate | date: 'shortTime' }}
-          to
-          {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
-          at
-          {{ outageInfo?.outageEndDate | date: 'shortTime' }}
-          PST
-        </b>
-      </p>
-    </div>
-
-    <ng-template #unplanned>
-      <p class="subtitle">
-        This system is currently unavailable or undergoing routine maintenance.
-      </p>
-    </ng-template>
+    @if (outageType === 'planned') {
+      <div>
+        <p class="subtitle">This system is currently undergoing planned maintenance.</p>
+        <p class="dynamic-text">
+          {{ outageInfo?.content }}
+          <b
+            >from
+            {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
+            at
+            {{ outageInfo?.outageStartDate | date: 'shortTime' }}
+            to
+            {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
+            at
+            {{ outageInfo?.outageEndDate | date: 'shortTime' }}
+            PST
+          </b>
+        </p>
+      </div>
+    } @else {
+      <p class="subtitle">This system is currently unavailable or undergoing routine maintenance.</p>
+    }
 
     <p class="description">Please check back later.</p>
     <p class="description">Thank you for understanding.</p>

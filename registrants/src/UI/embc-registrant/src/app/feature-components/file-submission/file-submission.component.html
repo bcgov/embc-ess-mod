@@ -7,13 +7,12 @@
 
   <div class="row">
     <div class="col-12 content-container">
-      <mat-card class="card-align">
+      <mat-card appearance="outlined" class="card-align">
         <mat-card-content>
           <p class="sub-heading">
-            Your Emergency Support Services (ESS) File Number is: &nbsp;<span
-              class="ref-number"
-              >{{ referenceNumber }}</span
-            >
+            Your Emergency Support Services (ESS) File Number is: &nbsp;<span class="ref-number">{{
+              referenceNumber
+            }}</span>
           </p>
           <br />
           <p>Thank you for submitting your online self-registration.</p>
@@ -22,107 +21,77 @@
             <span class="sub-info"><b>Next Steps</b></span>
           </p>
           <p>
-            Please keep a record of your Emergency Support Services(ESS) File
-            Number to receive emergency support services that can be provided up
-            to 72 hours starting from the time connecting in with a local ESS
-            Responder at a Reception Centre.
+            Please keep a record of your Emergency Support Services(ESS) File Number to receive emergency support
+            services that can be provided up to 72 hours starting from the time connecting in with a local ESS Responder
+            at a Reception Centre.
           </p>
           <p>
-            After a needs assessment interview with a local ESS Responder has
-            been completed, supports are provided to purchase goods and services
-            if eligible.
+            After a needs assessment interview with a local ESS Responder has been completed, supports are provided to
+            purchase goods and services if eligible.
           </p>
           <p>
-            Any goods and services purchased prior to a needs assessment
-            interview are not eligible for retroactive reimbursement.
+            Any goods and services purchased prior to a needs assessment interview are not eligible for retroactive
+            reimbursement.
           </p>
           <br />
           <p>
-            If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require
-            emergency services at this time, no further action is required.
+            If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency services at this time, no
+            further action is required.
           </p>
           <br />
           <p>
-            If you are under <b>EVACUATION ORDER</b>, and require emergency
-            supports, proceed to the area designated by your local ESS team or
-            your nearest Reception Centre. A list of open Reception Centres can
-            be found at
-            <a
-              class="sub-info"
-              href="https://www.emergencyinfobc.gov.bc.ca/"
-              target="_blank"
-              >Emergency Info BC</a
-            >.
+            If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to the area designated by
+            your local ESS team or your nearest Reception Centre. A list of open Reception Centres can be found at
+            <a class="sub-info" href="https://www.emergencyinfobc.gov.bc.ca/" target="_blank">Emergency Info BC</a>.
           </p>
           <p>
-            If <b>NO</b> nearby Reception Centre is open and immediate action is
-            required, please contact your Local Emergency Program for next
-            steps.
+            If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your Local
+            Emergency Program for next steps.
           </p>
           <br /><br />
         </mat-card-content>
       </mat-card>
       <br />
       <br />
-      <div *ngIf="currentFlow === 'verified-registration'" class="row">
-        <div class="col-md-12">
-          <button
-            class="button-p notice-button"
-            mat-button
-            type="button"
-            (click)="goToProfile()"
-          >
-            Return to my Profile
-          </button>
+      @if (currentFlow === 'verified-registration') {
+        <div class="row">
+          <div class="col-md-12">
+            <button class="button-p notice-button" mat-button type="button" (click)="goToProfile()">
+              Return to my Profile
+            </button>
+          </div>
         </div>
-      </div>
-      <mat-card
-        *ngIf="currentFlow === 'non-verified-registration'"
-        class="card-align services-info"
-      >
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12 open-panel-heading">
-              <img
-                src="/assets/images/exclamation.svg"
-                height="30"
-                width="30"
-              />
-              Log in to your profile using the <b>BC Services Card app</b>
+      }
+      @if (currentFlow === 'non-verified-registration') {
+        <mat-card appearance="outlined" class="card-align services-info">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12 open-panel-heading">
+                <img src="/assets/images/exclamation.svg" height="30" width="30" />
+                Log in to your profile using the <b>BC Services Card app</b>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-md-8">
-              <p>
-                We will send you an <b>email invitation</b> allowing you to log
-                in to your profile using the BC Services Card app. You can log
-                in to your profile any time using the BC Services Card app to
-                view current and past emergency events and supports received
-                during those events. To receive an Interac e-Transfer for
-                qualifying supports, you must log in to your profile using the
-                BC Services Card app.
-              </p>
+            <br />
+            <div class="row">
+              <div class="col-md-8">
+                <p>
+                  We will send you an <b>email invitation</b> allowing you to log in to your profile using the BC
+                  Services Card app. You can log in to your profile any time using the BC Services Card app to view
+                  current and past emergency events and supports issued during those events. To receive an Interac
+                  e-Transfer for qualifying supports, you must log in to your profile using the BC Services Card app.
+                </p>
+              </div>
+              <div class="col-md-4">
+                <button class="button-p edit-button" mat-stroked-button type="button" (click)="sendEmail()">
+                  Send Email Invitation
+                  <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+                </button>
+              </div>
             </div>
-            <div class="col-md-4">
-              <button
-                class="button-p edit-button"
-                mat-stroked-button
-                type="button"
-                (click)="sendEmail()"
-              >
-                Send Email Invitation
-                <app-loader
-                  [strokeWidth]="3"
-                  [diameter]="25"
-                  [showLoader]="showLoader"
-                ></app-loader>
-              </button>
-            </div>
-          </div>
-          <br />
-        </mat-card-content>
-      </mat-card>
+            <br />
+          </mat-card-content>
+        </mat-card>
+      }
     </div>
   </div>
 </div>

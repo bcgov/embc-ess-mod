@@ -8,9 +8,7 @@ export class AppSessionService {
   constructor(private cacheService: CacheService) {}
 
   public get editParentPage(): string {
-    return this.editParentPageVal
-      ? this.editParentPageVal
-      : this.cacheService.get('editParentPage');
+    return this.editParentPageVal ? this.editParentPageVal : this.cacheService.get('editParentPage');
   }
   public set editParentPage(value: string) {
     this.editParentPageVal = value;

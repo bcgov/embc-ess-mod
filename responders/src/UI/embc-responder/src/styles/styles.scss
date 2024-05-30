@@ -6,27 +6,91 @@
 @import './variables';
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
-
-@import '@angular/material/theming';
+@import 'bootstrap/scss/bootstrap';
 
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
   font-family: 'LiberationMono';
-  src: url('/assets/LiberationMono-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff')
-      format('woff'),
-    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf')
-      format('truetype'); /* Safari, Android, iOS */
+  src:
+    url('/assets/LiberationMono-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
+    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
+
+// Include mat.core only once
+@include mat.core();
 
 $custom-typography: mat.define-typography-config(
   $font-family: $font-family-sans-serif,
-  $body-1: mat.define-typography-level(15px, 1.6, 400)
+  $body-2: mat.define-typography-level(15px, 1.6, 400)
 );
 
 @include mat.all-component-typographies($custom-typography);
+
+// based on the indigo color palette
+// chagne dthe accent color to use the primary color of ess
+$ess-color-palette: (
+  50: #e8eaf6,
+  100: #c5cae9,
+  200: #169bd5,
+  300: #b9e1f2,
+  400: #b9e1f2,
+  500: #169bd5,
+  600: #0c7fc4,
+  700: #0c7fc4,
+  800: #0c7fc4,
+  900: #0c7fc4,
+  A100: #b9e1f2,
+  A200: #b9e1f2,
+  A400: #169bd5,
+  A700: #0c7fc4,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #169bd5
+  )
+);
+
+$ess-primary: mat.define-palette($ess-color-palette, 500);
+$ess-accent: mat.define-palette($ess-color-palette, A400, A200, A700);
+
+$ess-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $ess-primary,
+      accent: $ess-accent
+    )
+  )
+);
+
+@include mat.all-component-themes($ess-theme);
+
+:root {
+  --size-1: 8px;
+
+  --size-quarter: calc(var(--size-1) / 4);
+  --size-half: calc(var(--size-1) / 2);
+  --size-one-and-half: calc(var(--size-1) * 1.5);
+  --size-2: calc(var(--size-1) * 2);
+  --size-3: calc(var(--size-1) * 3);
+  --size-4: calc(var(--size-1) * 4);
+  --size-5: calc(var(--size-1) * 5);
+  --size-6: calc(var(--size-1) * 6);
+
+  --color-primary: #169bd5;
+}
 
 main {
   padding-bottom: 0px !important;
@@ -41,6 +105,11 @@ body {
   height: 100%;
   margin: 0;
 }
+
+input.mat-mdc-input-element::-webkit-calendar-picker-indicator {
+  display: block;
+}
+
 app-root {
   height: 100%;
 }
@@ -66,10 +135,10 @@ footer nav {
   background: #ffffff;
 }
 
-.mat-button,
-.mat-flat-button,
-.mat-icon-button,
-.mat-stroked-button {
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-icon-button,
+.mat-mdc-outlined-button {
   border-radius: 0px !important;
 }
 
@@ -103,21 +172,24 @@ footer nav {
   font-weight: normal;
 }
 
-.button-yellow {
+.mat-mdc-button-base.button-yellow {
   @extend .button-style;
   color: black;
   background-color: #fcba19 !important;
   font-size: 21px;
 }
 
-.button-p {
+.mat-mdc-button-base.button-p {
   @extend .button-style;
   background-color: #234075;
   color: #ffffff;
-  font-size: 16px;
+  font-size: var(--size-2);
+
+  --mdc-text-button-label-text-color: #fff;
+  --mdc-outlined-button-label-text-color: #fff;
 }
 
-.button-s {
+.mat-mdc-button-base.button-s {
   @extend .button-style;
   border: 1px solid #b5b5b5 !important;
   color: #606060;
@@ -125,28 +197,34 @@ footer nav {
   font-size: 16px;
 }
 
-.button-transparent {
+.mat-mdc-button-base.button-transparent {
   @extend .button-style;
   color: #169bd5;
   font-size: 16px;
 }
 
-.button-p:hover {
+.mat-mdc-button-base.button-p:hover {
   background-color: #169bd5;
 }
 
-.button-yellow:hover {
+.mat-mdc-button-base.button-yellow:hover {
   background-color: #234075 !important;
   color: #ffffff;
 }
 
-.button-s:hover {
+.mat-mdc-button-base.button-s:hover {
   background-color: #e5e5e5;
 }
 
-.button-p:disabled {
+.mat-mdc-button-base.button-p:disabled {
   background-color: #234075;
   color: #ffffff !important;
+}
+
+.mat-mdc-icon-button svg,
+.mat-mdc-icon-button img {
+  width: inherit;
+  height: inherit;
 }
 
 button {
@@ -157,14 +235,41 @@ button:focus {
   outline: 0px !important;
 }
 
+.list-image,
+.close-image,
+.edit-image,
+.delete-image {
+  img:last-of-type {
+    display: none;
+  }
+}
+
+.list-image:hover,
+.close-image:hover,
+.edit-image:hover,
+.delete-image:hover {
+  img:last-of-type {
+    display: inline;
+  }
+}
+
+.list-image:hover,
+.close-image:hover,
+.edit-image:hover,
+.delete-image:hover {
+  img:first-of-type {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 833px) {
-  .button-yellow {
+  .mat-mdc-button-base.button-yellow {
     width: 100% !important;
   }
-  .button-p {
+  .mat-mdc-button-base.button-p {
     width: 100% !important;
   }
-  .button-s {
+  .mat-mdc-button-base.button-s {
     margin-right: 0px !important;
     width: 100% !important;
     margin-bottom: 10px !important;
@@ -188,63 +293,70 @@ button:focus {
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   border-radius: 0px !important;
 }
 
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-outline-start {
   border-radius: 0px !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-outline-end {
   border-radius: 0px !important;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-outline-gap {
   border-radius: 0px !important;
 }
 
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-start,
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-end,
-.mat-form-field-appearance-outline
-  .mat-form-field-outline-thick
-  .mat-form-field-outline-gap {
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
   border-width: 1px !important;
 }
 
-.mat-form-field-required-marker {
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+.mat-mdc-form-field-required-marker {
   color: red !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-subscript-wrapper {
   position: relative !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
   background-color: #169bd5 !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 .mat-checkbox-inner-container {
   height: 20px !important;
   width: 20px !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 .mat-checkbox-layout {
   white-space: normal !important;
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+/* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
+.mat-mdc-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
   border-color: #169bd5 !important;
 }
 
-.mat-radio-button.mat-accent .mat-radio-inner-circle,
-.mat-radio-button.mat-accent
-  .mat-radio-ripple
-  .mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-mdc-radio-button.mat-accent .mat-radio-inner-circle,
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
 .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
   background-color: #169bd5 !important;
@@ -259,10 +371,11 @@ mat-card {
   font-size: 75%;
 }
 
-.mat-dialog-container {
+.mat-mdc-dialog-container {
   border-radius: 0px !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
 .mat-radio-label {
   white-space: normal !important;
 }
@@ -275,26 +388,35 @@ mat-form-field {
   mat-form-field {
     display: grid !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-subscript-wrapper {
     position: absolute !important;
   }
 }
 
-.mat-tab-label,
-.mat-tab-link {
+.mat-mdc-tab-nav-bar .mat-mdc-tab-link-container {
+  --mat-tab-header-divider-height: 1px;
+  --mat-tab-header-divider-color: rgba(221, 221, 221, 1);
+}
+
+.mat-mdc-tab-label,
+.mat-mdc-tab-link {
+  --mat-tab-header-label-text-size: 16px;
+  --mat-tab-header-label-text-tracking: normal;
+
   color: #333333 !important;
   font-size: 16px;
   background-color: rgba(221, 221, 221, 1) !important;
   text-decoration: none;
+  letter-spacing: normal;
 }
 
-.mat-tab-group.mat-primary .mat-ink-bar,
-.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+.mat-mdc-tab-group.mat-primary .mat-ink-bar,
+.mat-mdc-tab-nav-bar.mat-primary .mat-ink-bar {
   background-color: transparent !important;
 }
 
-.mat-tab-link {
+.mat-mdc-tab-link {
   opacity: 1 !important;
 }
 

@@ -1,5 +1,5 @@
 <form [formGroup]="primaryAddressForm">
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <p class="card-heading">Primary Residence</p>
       <div class="row">
@@ -9,15 +9,13 @@
           >
           <br />
           <mat-hint class="radio-hint red-text"
-            >A valid B.C. postal code must be entered in order to be eligible to
-            receive an e-Transfer for qualifying supports in the event of an
-            evacuation.</mat-hint
+            >A valid B.C. postal code must be entered in order to be eligible to receive an e-Transfer for qualifying
+            supports in the event of an evacuation.</mat-hint
           >
           <br />
           <mat-hint class="radio-hint"
-            >Primary residence: The dwelling where an individual or household
-            spends most of their personal time. A person can only have one
-            primary residence at any moment in time.</mat-hint
+            >Primary residence: The dwelling where an individual or household spends most of their personal time. A
+            person can only have one primary residence at any moment in time.</mat-hint
           >
           <mat-radio-group
             formControlName="isBcAddress"
@@ -26,11 +24,7 @@
             class="primary-radio-group"
             required
           >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option"
-            >
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{ option }}
             </mat-radio-button>
             <mat-error
@@ -47,14 +41,9 @@
         </div>
       </div>
 
-      <div
-        *ngIf="primaryAddressFormControl?.isBcAddress?.value === 'Yes'"
-        class="row"
-      >
+      <div *ngIf="primaryAddressFormControl?.isBcAddress?.value === 'Yes'" class="row">
         <div class="col-md-12">
-          <app-bc-address
-            [addressForm]="primaryAddressFormControl?.address"
-          ></app-bc-address>
+          <app-bc-address [addressForm]="primaryAddressFormControl?.address"></app-bc-address>
         </div>
       </div>
 
@@ -62,9 +51,7 @@
         <div formGroupName="address">
           <div class="row">
             <div class="col-md-5">
-              <p class="requiredField">
-                In what <b>country</b> is your primary residence located?
-              </p>
+              <p class="requiredField">In what <b>country</b> is your primary residence located?</p>
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -80,31 +67,19 @@
                   [displayWith]="countryDisplayFn"
                   (optionSelected)="setCountryConfig($event)"
                 >
-                  <mat-option
-                    *ngFor="let option of filteredOptions | async"
-                    [value]="option"
-                  >
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{ option.name }}
                   </mat-option>
                 </mat-autocomplete>
                 <mat-error
                   *ngIf="
-                    primaryAddressFormControl?.address?.controls?.country
-                      .invalid &&
-                    primaryAddressFormControl?.address?.controls?.country.hasError(
-                      'required'
-                    )
+                    primaryAddressFormControl?.address?.controls?.country.invalid &&
+                    primaryAddressFormControl?.address?.controls?.country.hasError('required')
                   "
                 >
                   Country is required</mat-error
                 >
-                <mat-error
-                  *ngIf="
-                    validateCountry(
-                      primaryAddressFormControl?.address?.controls?.country
-                    )
-                  "
-                >
+                <mat-error *ngIf="validateCountry(primaryAddressFormControl?.address?.controls?.country)">
                   Country is invalid</mat-error
                 >
               </mat-form-field>
@@ -113,21 +88,13 @@
         </div>
 
         <app-can-address
-          *ngIf="
-            primaryAddressFormControl?.address?.controls?.country?.value
-              ?.code === 'CAN';
-            else usa
-          "
+          *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'CAN'; else usa"
           [addressForm]="primaryAddressFormControl?.address"
         >
         </app-can-address>
         <ng-template #usa>
           <app-usa-address
-            *ngIf="
-              primaryAddressFormControl?.address?.controls?.country?.value
-                ?.code === 'USA';
-              else other
-            "
+            *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'USA'; else other"
             [addressForm]="primaryAddressFormControl?.address"
           >
           </app-usa-address>
@@ -135,12 +102,9 @@
         <ng-template #other>
           <app-other-address
             *ngIf="
-              primaryAddressFormControl?.address?.controls?.country?.value
-                ?.code !== 'USA' &&
-              primaryAddressFormControl?.address?.controls?.country?.value
-                ?.code !== 'CAN' &&
-              primaryAddressFormControl?.address?.controls?.country?.value !==
-                null
+              primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'USA' &&
+              primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'CAN' &&
+              primaryAddressFormControl?.address?.controls?.country?.value !== null
             "
             [addressForm]="primaryAddressFormControl?.address"
           >
@@ -153,18 +117,15 @@
   <br />
   <br />
 
-  <mat-card class="card-align">
+  <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <p class="card-heading">Mailing Address</p>
       <!-- <form [formGroup]="mailingAddressForm"> -->
 
       <div class="row">
         <div class="col-md-12">
-          <label
-            id="isNewMailingAddress-radio-group-label"
-            class="requiredField"
-            >Is your <b>mailing address</b> the same as their primary residence
-            above?</label
+          <label id="isNewMailingAddress-radio-group-label" class="requiredField"
+            >Is your <b>mailing address</b> the same as their primary residence above?</label
           >
           <mat-radio-group
             formControlName="isNewMailingAddress"
@@ -173,11 +134,7 @@
             (change)="sameAsPrimary($event)"
             required
           >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option"
-            >
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{ option }}
             </mat-radio-button>
             <mat-error
@@ -185,9 +142,7 @@
               *ngIf="
                 primaryAddressFormControl?.isNewMailingAddress?.touched &&
                 primaryAddressFormControl?.isNewMailingAddress?.invalid &&
-                primaryAddressFormControl?.isNewMailingAddress?.hasError(
-                  'required'
-                )
+                primaryAddressFormControl?.isNewMailingAddress?.hasError('required')
               "
             >
               Required</mat-error
@@ -196,9 +151,7 @@
         </div>
       </div>
 
-      <div
-        *ngIf="primaryAddressFormControl?.isNewMailingAddress?.value === 'No'"
-      >
+      <div *ngIf="primaryAddressFormControl?.isNewMailingAddress?.value === 'No'">
         <div class="row">
           <div class="col-md-12">
             <label id="isBcMailingAddress-radio-group-label"
@@ -210,11 +163,7 @@
               (change)="mailingAddressChange($event)"
               class="primary-radio-group"
             >
-              <mat-radio-button
-                class="primary-radio-button"
-                *ngFor="let option of radioOption"
-                [value]="option"
-              >
+              <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
                 {{ option }}
               </mat-radio-button>
               <mat-error
@@ -222,9 +171,7 @@
                 *ngIf="
                   primaryAddressFormControl?.isBcMailingAddress.touched &&
                   primaryAddressFormControl?.isBcMailingAddress.invalid &&
-                  primaryAddressFormControl?.isBcMailingAddress.hasError(
-                    'required'
-                  )
+                  primaryAddressFormControl?.isBcMailingAddress.hasError('required')
                 "
               >
                 Mailing Address is required</mat-error
@@ -233,20 +180,13 @@
           </div>
         </div>
 
-        <div
-          *ngIf="primaryAddressFormControl?.isBcMailingAddress.value === 'Yes'"
-          class="row"
-        >
+        <div *ngIf="primaryAddressFormControl?.isBcMailingAddress.value === 'Yes'" class="row">
           <div class="col-md-12">
-            <app-bc-address
-              [addressForm]="primaryAddressFormControl?.mailingAddress"
-            ></app-bc-address>
+            <app-bc-address [addressForm]="primaryAddressFormControl?.mailingAddress"></app-bc-address>
           </div>
         </div>
 
-        <div
-          *ngIf="primaryAddressFormControl?.isBcMailingAddress.value === 'No'"
-        >
+        <div *ngIf="primaryAddressFormControl?.isBcMailingAddress.value === 'No'">
           <div formGroupName="mailingAddress">
             <div class="row">
               <div class="col-md-5">
@@ -265,32 +205,19 @@
                     [displayWith]="countryDisplayFn"
                     (optionSelected)="setMailingCountryConfig($event)"
                   >
-                    <mat-option
-                      *ngFor="let option of mailingFilteredOptions | async"
-                      [value]="option"
-                    >
+                    <mat-option *ngFor="let option of mailingFilteredOptions | async" [value]="option">
                       {{ option.name }}
                     </mat-option>
                   </mat-autocomplete>
                   <mat-error
                     *ngIf="
-                      primaryAddressFormControl?.mailingAddress?.controls
-                        ?.country.invalid &&
-                      primaryAddressFormControl?.mailingAddress?.controls?.country.hasError(
-                        'required'
-                      )
+                      primaryAddressFormControl?.mailingAddress?.controls?.country.invalid &&
+                      primaryAddressFormControl?.mailingAddress?.controls?.country.hasError('required')
                     "
                   >
                     Country is required</mat-error
                   >
-                  <mat-error
-                    *ngIf="
-                      validateCountry(
-                        primaryAddressFormControl?.mailingAddress?.controls
-                          ?.country
-                      )
-                    "
-                  >
+                  <mat-error *ngIf="validateCountry(primaryAddressFormControl?.mailingAddress?.controls?.country)">
                     Country is invalid</mat-error
                   >
                 </mat-form-field>
@@ -299,21 +226,13 @@
           </div>
 
           <app-can-address
-            *ngIf="
-              primaryAddressFormControl?.mailingAddress?.controls?.country
-                ?.value?.code === 'CAN';
-              else usa
-            "
+            *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'CAN'; else usa"
             [addressForm]="primaryAddressFormControl?.mailingAddress"
           >
           </app-can-address>
           <ng-template #usa>
             <app-usa-address
-              *ngIf="
-                primaryAddressFormControl?.mailingAddress?.controls?.country
-                  ?.value?.code === 'USA';
-                else other
-              "
+              *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'USA'; else other"
               [addressForm]="primaryAddressFormControl?.mailingAddress"
             >
             </app-usa-address>
@@ -321,12 +240,9 @@
           <ng-template #other>
             <app-other-address
               *ngIf="
-                primaryAddressFormControl?.mailingAddress?.controls?.country
-                  ?.value?.code !== 'USA' &&
-                primaryAddressFormControl?.mailingAddress?.controls?.country
-                  ?.value?.code !== 'CAN' &&
-                primaryAddressFormControl?.mailingAddress?.controls?.country
-                  ?.value !== null
+                primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'USA' &&
+                primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'CAN' &&
+                primaryAddressFormControl?.mailingAddress?.controls?.country?.value !== null
               "
               [addressForm]="primaryAddressFormControl?.mailingAddress"
             >

@@ -1,14 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface UserProfile {
-  agreementSignDate?: null | string;
-  email?: null | string;
+  agreementSignDate?: string | null;
+  email?: string | null;
   firstName?: string;
   id?: string;
   label?: string;
-  lastLoginDate?: null | string;
+  lastLoginDate?: string | null;
   lastName?: string;
-  phone?: null | string;
+  phone?: string | null;
   requiredToSignAgreement?: boolean;
   role?: string;
   teamId?: string;

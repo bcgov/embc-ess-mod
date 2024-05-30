@@ -11,7 +11,6 @@ import {
 
 import { EssfileDashboardComponent } from './essfile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
@@ -26,6 +25,7 @@ import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { EvacuationFileStatus } from 'src/app/core/api/models';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('EssfileDashboardComponent', () => {
   let component: EssfileDashboardComponent;
@@ -38,12 +38,11 @@ describe('EssfileDashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        EssfileDashboardComponent
       ],
-      declarations: [EssfileDashboardComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -57,7 +56,8 @@ describe('EssfileDashboardComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -94,9 +94,7 @@ describe('EssfileDashboardComponent', () => {
       fixture.detectChanges();
       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
       const labelElem = nativeElem.querySelector('#file-banner');
-      expect(labelElem.textContent).toEqual(
-        'Extend Supports associated with the Current ESS File.'
-      );
+      expect(labelElem.textContent).toEqual('Extend Supports associated with the Current ESS File.');
     })
   ));
 
@@ -169,9 +167,7 @@ describe('EssfileDashboardComponent', () => {
       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
       const labelElem = nativeElem.querySelector('#file-banner');
 
-      expect(labelElem.textContent).toEqual(
-        'Review, extend or add new supports to the current ESS File.'
-      );
+      expect(labelElem.textContent).toEqual('Review, extend or add new supports to the current ESS File.');
     })
   ));
 
@@ -195,9 +191,7 @@ describe('EssfileDashboardComponent', () => {
       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
       const labelElem = nativeElem.querySelector('#file-banner');
 
-      expect(labelElem.textContent).toEqual(
-        'Complete ESS File and add supports if required.'
-      );
+      expect(labelElem.textContent).toEqual('Complete ESS File and add supports if required.');
     })
   ));
 
@@ -221,9 +215,7 @@ describe('EssfileDashboardComponent', () => {
       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
       const labelElem = nativeElem.querySelector('#file-banner');
 
-      expect(labelElem.textContent).toEqual(
-        'Reactivate and complete ESS File and add supports if required.'
-      );
+      expect(labelElem.textContent).toEqual('Reactivate and complete ESS File and add supports if required.');
     })
   ));
 
@@ -273,9 +265,7 @@ describe('EssfileDashboardComponent', () => {
       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
       const labelElem = nativeElem.querySelector('#file-banner');
 
-      expect(labelElem.textContent).toEqual(
-        'Task number end date has expired and ESS File is closed.'
-      );
+      expect(labelElem.textContent).toEqual('Task number end date has expired and ESS File is closed.');
     })
   ));
 
@@ -296,9 +286,7 @@ describe('EssfileDashboardComponent', () => {
 
       tick();
       fixture.detectChanges();
-      const dialogContent = document.getElementsByTagName(
-        'app-file-status-definition'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-file-status-definition')[0] as HTMLElement;
 
       expect(dialogContent).toBeDefined();
     })
@@ -322,13 +310,9 @@ describe('EssfileDashboardComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const dialogContent = document.getElementsByTagName(
-        'app-information-dialog'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
-      expect(dialogContent.textContent).toEqual(
-        'Profile Successfully Linked Close '
-      );
+      expect(dialogContent.textContent).toEqual('Profile Successfully Linked Close ');
     })
   ));
 
@@ -350,12 +334,8 @@ describe('EssfileDashboardComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const dialogContent = document.getElementsByTagName(
-        'app-information-dialog'
-      )[0] as HTMLElement;
-      expect(dialogContent.textContent).toEqual(
-        'Error while linking the profile. Please try again later Close '
-      );
+      const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
+      expect(dialogContent.textContent).toEqual('Error while linking the profile. Please try again later Close ');
     })
   ));
 });

@@ -3,15 +3,34 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { EnumToArrayPipe } from '../../../pipes/EnumToArray.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-void-referral-dialog',
   templateUrl: './void-referral-dialog.component.html',
-  styleUrls: ['./void-referral-dialog.component.scss']
+  styleUrls: ['./void-referral-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatButton,
+    EnumToArrayPipe
+  ]
 })
 export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;
@@ -71,8 +90,6 @@ export class VoidReferralDialogComponent implements OnInit {
    * @returns the same reason for reprinting with spaces between words.
    */
   getReasonDescription(reasonOption: string): string {
-    return this.loadEvacueeListService
-      .getVoidReasons()
-      .find((reason) => reason?.value === reasonOption)?.description;
+    return this.loadEvacueeListService.getVoidReasons().find((reason) => reason?.value === reasonOption)?.description;
   }
 }

@@ -11,13 +11,13 @@
   flex: 1 1 auto;
 }
 
-::ng-deep .mat-menu-panel {
+::ng-deep .mat-mdc-menu-panel {
   border-radius: 0px !important;
   background: #036 !important;
   min-width: 320px !important;
 }
 
-.mat-menu-item {
+.mat-mdc-menu-item {
   color: #ffffff !important;
 }
 
@@ -52,7 +52,7 @@
   }
 }
 
-@media (max-width: 1215px) {
+@media (max-width: 937px) {
   .button-align {
     float: left !important;
     white-space: normal;
@@ -84,13 +84,14 @@ header mat-toolbar {
 .row-align {
   align-items: center !important;
   width: inherit;
+  gap: 16px;
 }
 
 .button-align {
   float: right;
 }
 
-::ng-deep .mat-menu-content {
+::ng-deep .mat-mdc-menu-content {
   border-bottom: 2px solid #fcba19;
 }
 

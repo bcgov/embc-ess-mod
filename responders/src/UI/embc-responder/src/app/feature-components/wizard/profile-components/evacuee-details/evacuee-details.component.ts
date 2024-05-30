@@ -1,15 +1,38 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as globalConst from '../../../../core/services/global-constants';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeDetailsService } from './evacuee-details.service';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { IMaskDirective } from 'angular-imask';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-evacuee-details',
   templateUrl: './evacuee-details.component.html',
-  styleUrls: ['./evacuee-details.component.scss']
+  styleUrls: ['./evacuee-details.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
+    MatError,
+    IMaskDirective,
+    MatCard,
+    MatCardContent,
+    MatButton
+  ]
 })
 export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   evacueeDetailsForm: UntypedFormGroup;
@@ -30,9 +53,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.evacueeDetailsForm = this.evacueeDetailsService.createForm();
     this.evacueeDetailsService.initDisabledFields(this.evacueeDetailsForm);
 
-    this.tabUpdateSubscription = this.evacueeDetailsService.updateTabStatus(
-      this.evacueeDetailsForm
-    );
+    this.tabUpdateSubscription = this.evacueeDetailsService.updateTabStatus(this.evacueeDetailsForm);
   }
 
   /**

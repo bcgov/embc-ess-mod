@@ -3,6 +3,10 @@ import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { WizardService } from './wizard.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { WizardAdapterService } from './wizard-adapter.service';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
+import { MatAnchor, MatButton } from '@angular/material/button';
+
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 
 /**
  * Initializes the wizard layout by loading the appropriate wizard menu
@@ -12,7 +16,18 @@ import { WizardAdapterService } from './wizard-adapter.service';
 @Component({
   selector: 'app-wizard',
   templateUrl: './wizard.component.html',
-  styleUrls: ['./wizard.component.scss']
+  styleUrls: ['./wizard.component.scss'],
+  standalone: true,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    MatAnchor,
+    RouterLinkActive,
+    RouterLink,
+    MatButton,
+    MatSidenavContent,
+    RouterOutlet
+  ]
 })
 export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
@@ -24,8 +39,7 @@ export class WizardComponent implements OnInit, OnDestroy {
     private wizardAdapterService: WizardAdapterService
   ) {
     this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
-    this.wizardService.menuItems =
-      this.appBaseService?.wizardProperties?.wizardMenu;
+    this.wizardService.menuItems = this.appBaseService?.wizardProperties?.wizardMenu;
   }
 
   ngOnInit(): void {
@@ -40,16 +54,8 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param lockedIndicator
    * @param $event
    */
-  goToStep(
-    lockedIndicator: boolean,
-    $event: MouseEvent,
-    targetRoute: string
-  ): void {
-    this.wizardService.manageStepNavigation(
-      lockedIndicator,
-      $event,
-      targetRoute
-    );
+  goToStep(lockedIndicator: boolean, $event: MouseEvent, targetRoute: string): void {
+    this.wizardService.manageStepNavigation(lockedIndicator, $event, targetRoute);
   }
 
   /**

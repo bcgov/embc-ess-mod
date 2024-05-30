@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as _ from 'lodash';
 
-@Pipe({ name: 'supplierContact' })
+@Pipe({
+  name: 'supplierContact',
+  standalone: true
+})
 export class SupplierContactPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -20,8 +23,7 @@ export class SupplierContactPipe implements PipeTransform {
     if (line1 !== null && line1.length > 0) {
       let contactStr = _.escape(line1);
 
-      if (line2 !== null && line2.length > 0)
-        contactStr += '<br>' + _.escape(line2);
+      if (line2 !== null && line2.length > 0) contactStr += '<br>' + _.escape(line2);
       return this.sanitizer.bypassSecurityTrustHtml(contactStr);
     } else if (line1.length === 0 || line1 === null) {
       const contactStr = _.escape(line2);

@@ -17,7 +17,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId) ?? null!;
 
-        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
 
         public EvacuationFileTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -41,7 +41,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 VerifiedUser = false,
                 RestrictedAccess = false,
                 SecurityQuestions = securityQuestions,
-                FirstName = $"{testContextIdentifier}-PriRegTestFirst",
+                FirstName = $"autotest-{testContextIdentifier}-PriRegTestFirst",
                 LastName = $"{testContextIdentifier}-PriRegTestLast",
                 DateOfBirth = "2000/01/01",
                 Gender = "Female",
@@ -204,20 +204,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task Update_EvacuationFileTask_ThrowsError()
-        {
-            var fileWithTask = await GetEvacuationFileById(TestData.EvacuationFileId);
-            fileWithTask.RelatedTask.Id = TestData.ActiveTaskId;
-            //update file to task
-            await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask });
-
-            //update to a different task
-            fileWithTask.RelatedTask.Id = TestData.InactiveTaskId;
-            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })))
-                .Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
-        }
-
-        [Fact]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
@@ -344,6 +330,20 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var pet = updatedFile.NeedsAssessment.Pets.ShouldHaveSingleItem();
             pet.Type.ShouldBe($"{TestData.TestPrefix}-dog");
             pet.Quantity.ShouldBe("2");
+        }
+
+        [Fact]
+        public async Task CanAuditEvacuationFileAccess()
+        {
+            await Should.NotThrowAsync(async () =>
+            {
+                await manager.Handle(new RecordAuditAccessCommand
+                {
+                    TeamMemberId = TestData.Tier4TeamMemberId,
+                    AccessReasonId = 174360000,
+                    EvacuationFileNumber = TestData.EvacuationFileId
+                });
+            });
         }
     }
 }

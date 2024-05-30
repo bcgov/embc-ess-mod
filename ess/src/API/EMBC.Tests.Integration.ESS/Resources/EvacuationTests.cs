@@ -85,6 +85,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact]
+        public async Task Query_FileByRegistrantId_ResponseIncludesPets()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                LinkedRegistrantId = TestContactId
+            };
+            var files = (await evacuationRepository.Query(caseQuery)).Items.ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.NeedsAssessment.Pets.Count() > 0);
+        }
+
+        [Fact]
         public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -252,6 +264,76 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 pet.Type.ShouldBe(originalPet.Type);
                 pet.Id.ShouldNotBeNullOrEmpty();
             }
+        }
+
+        [Fact]
+        public async Task AddEligibilityCheck_Eligible_Added()
+        {
+            var fileId = TestData.EvacuationFileId;
+            var taskNumber = TestData.SelfServeActiveTaskId;
+            var from = DateTimeOffset.Now;
+            var to = from.AddHours(72);
+            var cmd = new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = fileId,
+                TaskNumber = taskNumber,
+                From = from,
+                To = to,
+                Reason = "Test",
+                HomeAddressReferenceId = null,
+                EligibleSupports =
+                [
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.NotAvailableOneTimeUsed),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Available)
+                ],
+            };
+
+            var response = await evacuationRepository.Manage(cmd);
+            response.Id.ShouldNotBeNull();
+
+            var file = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+
+            var eligibility = file.NeedsAssessment.EligibilityCheck.ShouldNotBeNull();
+            eligibility.Eligible.ShouldBeTrue();
+            eligibility.TaskNumber.ShouldBe(taskNumber);
+            eligibility.From.ShouldNotBeNull();
+            eligibility.To.ShouldNotBeNull();
+            eligibility.SupportSettings.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
+        }
+
+        [Fact]
+        public async Task OptOutEligibility_Success()
+        {
+            await evacuationRepository.Manage(new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = TestData.EvacuationFileId,
+                TaskNumber = TestData.SelfServeActiveTaskId,
+                From = DateTime.UtcNow,
+                To = DateTime.UtcNow.AddDays(3),
+                Reason = "Test",
+                HomeAddressReferenceId = null,
+                EligibleSupports =
+                [
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.NotAvailableOneTimeUsed),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Available)
+                ],
+            });
+
+            var cmd = new OptoutSelfServe
+            {
+                EvacuationFileNumber = TestData.EvacuationFileId
+            };
+
+            var response = await evacuationRepository.Manage(cmd);
+            response.Id.ShouldNotBeNull();
         }
 
         private async Task<Evacuee> GetContactByUserId(string userId) =>

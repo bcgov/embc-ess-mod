@@ -1,28 +1,26 @@
-import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  OnInit
-} from '@angular/core';
+import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   UntypedFormArray,
-  Validators
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
 import {
   NgbDateParserFormatter,
   NgbCalendar,
   NgbDateAdapter,
-  NgbDatepickerConfig
+  NgbDatepickerConfig,
+  NgbInputDatepicker
 } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ReferralComponent } from '../referral/referral.component';
+import { FileUploadComponent } from '../../../core/components/fileUpload/fileUpload.component';
 
 @Component({
   selector: 'app-invoice',
@@ -33,7 +31,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
     { provide: NgbDateParserFormatter, useClass: DateParserService },
     CustomValidationService,
     NgbDatepickerConfig
-  ]
+  ],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, NgbInputDatepicker, FileUploadComponent, ReferralComponent]
 })
 export class InvoiceComponent implements OnInit {
   @Input() formGroupName: number;
@@ -105,18 +105,15 @@ export class InvoiceComponent implements OnInit {
    */
   loadWithExistingValues() {
     const storedSupplierDetails = this.supplierService.getSupplierDetails();
-    this.reloadedFiles =
-      storedSupplierDetails.invoices[this.index].invoiceAttachments;
-    storedSupplierDetails.invoices[this.index].invoiceAttachments.forEach(
-      (element) => {
-        this.invoiceAttachments.push(
-          this.createAttachmentObject({
-            fileName: element.fileName,
-            file: element.file
-          })
-        );
-      }
-    );
+    this.reloadedFiles = storedSupplierDetails.invoices[this.index].invoiceAttachments;
+    storedSupplierDetails.invoices[this.index].invoiceAttachments.forEach((element) => {
+      this.invoiceAttachments.push(
+        this.createAttachmentObject({
+          fileName: element.fileName,
+          file: element.file
+        })
+      );
+    });
     const referralList = storedSupplierDetails.invoices[this.index].referrals;
     if (referralList.length > 0) {
       this.hidden = true;
@@ -150,9 +147,7 @@ export class InvoiceComponent implements OnInit {
 
   onChanges() {
     this.invoiceForm.get('referrals').valueChanges.subscribe((template) => {
-      const totalAmount = template
-        .reduce((prev, next) => prev + +next.totalAmount, 0)
-        .toFixed(2);
+      const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0).toFixed(2);
       this.invoiceForm.get('invoiceTotalAmount').setValue(totalAmount);
     });
   }
@@ -173,12 +168,7 @@ export class InvoiceComponent implements OnInit {
     return this.builder.group({
       referralNumber: [
         '',
-        [
-          Validators.required,
-          this.customValidator
-            .referralNumberValidator(this.referrals)
-            .bind(this.customValidator)
-        ]
+        [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]
       ],
       referralRows: this.builder.array([], Validators.required),
       totalAmount: [''],
@@ -223,16 +213,11 @@ export class InvoiceComponent implements OnInit {
    * @param event : Output event for delete
    */
   removeReferral(event: any) {
-    this.supplierService
-      .confirmModal(
-        globalConst.deleteRefferalMsg,
-        globalConst.deleteReferalButton
-      )
-      .subscribe((e) => {
-        if (e) {
-          this.referrals.removeAt(event);
-        }
-      });
+    this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+      if (e) {
+        this.referrals.removeAt(event);
+      }
+    });
   }
 
   /**

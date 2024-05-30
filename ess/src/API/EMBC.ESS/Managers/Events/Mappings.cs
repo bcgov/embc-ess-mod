@@ -61,6 +61,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.EvacuatedFrom, opts => opts.Ignore())
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedTeamMemberId, opts => opts.Ignore())
+                .ForMember(d => d.EligibilityCheck, opts => opts.Ignore())
                 .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CompletedOn == default ? DateTime.UtcNow : s.CompletedOn))
                 ;
@@ -277,6 +278,11 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Coordinates, opts => opts.MapFrom(s => new Resources.Evacuees.Coordinates(s.Coordinates.Longitude, s.Coordinates.Latitude)))
                 .ForMember(d => d.Accuracy, opts => opts.MapFrom(s => s.Score))
                 .ForMember(d => d.GeocodedOn, opts => opts.MapFrom(_ => DateTimeOffset.UtcNow))
+                ;
+
+            CreateMap<SelfServeSupportSetting, Shared.Contracts.Events.SelfServe.SelfServeSupportSetting>()
+                .ForCtorParam(nameof(Shared.Contracts.Events.SelfServe.SelfServeSupportSetting.Type), opts => opts.MapFrom(s => s.Type))
+                .ForCtorParam(nameof(Shared.Contracts.Events.SelfServe.SelfServeSupportSetting.State), opts => opts.MapFrom(s => s.State))
                 ;
         }
 

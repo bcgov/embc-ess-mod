@@ -1,20 +1,14 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import {
-  Component,
-  DoCheck,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+import { Component, DoCheck, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AppLoaderComponent } from '../app-loader/app-loader.component';
 
 @Component({
   selector: 'app-overlay-loader',
   templateUrl: './overlay-loader.component.html',
-  styleUrls: ['./overlay-loader.component.scss']
+  styleUrls: ['./overlay-loader.component.scss'],
+  standalone: true,
+  imports: [AppLoaderComponent]
 })
 export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
   @Input() showLoader: boolean;
@@ -22,7 +16,10 @@ export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
   public loaderRef: TemplateRef<any>;
   public color = '#169BD5';
   private overlayRef: OverlayRef;
-  constructor(private overlay: Overlay, private vcRef: ViewContainerRef) {}
+  constructor(
+    private overlay: Overlay,
+    private vcRef: ViewContainerRef
+  ) {}
 
   ngOnInit(): void {
     this.overlayRef = this.createOverlay();
@@ -42,11 +39,7 @@ export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
     return this.overlay.create({
       hasBackdrop: true,
       backdropClass: 'dark-backdrop',
-      positionStrategy: this.overlay
-        .position()
-        .global()
-        .centerHorizontally()
-        .centerVertically()
+      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
     });
   }
 

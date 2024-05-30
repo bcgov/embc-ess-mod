@@ -1,16 +1,16 @@
 @import '../../../../../styles/defaults.scss';
 
 button.back {
-	float: left;
-	width: 20%;
+  float: left;
+  width: 20%;
 }
 button.save {
-	float: right;
-	width: 20%;
+  float: right;
+  width: 20%;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tab-subtitle {
@@ -19,31 +19,31 @@ button.save {
   margin-bottom: 1em;
 }
 
-.mat-radio-button {
-	display: block;
-
-	::ng-deep .mat-radio-outer-circle {
-		border-color: white;
-	}
-
-	::ng-deep .mat-radio-label-content {
-		padding-left: 0.8em;
-	}
+.mat-mdc-radio-button {
+  display: block;
+  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
+  ::ng-deep .mat-radio-outer-circle {
+    border-color: white;
+  }
+  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
+  ::ng-deep .mat-radio-label-content {
+    padding-left: 0.8em;
+  }
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
 ::ng-deep .mat-checkbox-label {
-	margin-left: 0.8em;
+  margin-left: 0.8em;
 }
 
 .wizard-panel {
-	padding: 20px;
-	margin: 8px 0;
-	line-height: 2em;
+  padding: 20px;
+  margin: 8px 0;
+  line-height: 2em;
 }
 
 mat-header-row {
   background-color: #234075;
-  
 }
 
 mat-header-cell {
@@ -53,7 +53,7 @@ mat-header-cell {
   text-indent: 0px;
 }
 
-.mat-cell {
+.mat-mdc-cell {
   font-weight: 700;
   padding-right: 20px;
   overflow-wrap: anywhere;
@@ -61,26 +61,26 @@ mat-header-cell {
 }
 
 .data-panel {
-	.row:not(:first-child) {
-		margin-top: 0.5em;
-	}
+  .row:not(:first-child) {
+    margin-top: 0.5em;
+  }
 }
 
 .review-panel {
-	@extend .wizard-panel;
+  @extend .wizard-panel;
 
-	background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .confirm-panel {
-	@extend .wizard-panel;
+  @extend .wizard-panel;
 
-	background-color: #234075;
-	color: white;
+  background-color: #234075;
+  color: white;
 }
 
 .nav-buttons {
-	margin-top: 3em;
+  margin-top: 3em;
 }
 
 .primary-member {
@@ -91,7 +91,7 @@ mat-header-cell {
   display: none;
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
   .mobile-label {
     display: inline-block;
     font-weight: bold;
@@ -106,7 +106,7 @@ mat-header-cell {
   }
 
   // The row cells should display as a column, justified left, with a bit of extra padding
-  .mat-row {
+  .mat-mdc-row {
     flex-direction: column;
     align-items: start;
     padding: 5px 10px;
@@ -114,11 +114,13 @@ mat-header-cell {
   }
 
   // Tweaks for Angular Material 8
-  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+  .mat-mdc-cell:first-of-type,
+  .mat-mdc-footer-cell:first-of-type,
+  .mat-mdc-header-cell:first-of-type {
     padding-left: unset;
   }
 
-  .mat-cell {
+  .mat-mdc-cell {
     align-items: unset;
     min-height: unset;
     overflow-wrap: break-word;
@@ -127,5 +129,7 @@ mat-header-cell {
 }
 
 @media (min-width: 833px) {
-  .save {width: auto !important;}
+  .save {
+    width: auto !important;
+  }
 }

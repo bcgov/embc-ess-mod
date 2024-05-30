@@ -1,70 +1,55 @@
 <div class="mat-elevation-z8 table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        Support#
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">Support#</th>
       <td mat-cell class="bold" *matCellDef="let element">
         {{ getExternalReferralId(element) ?? element?.id }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        Support Type
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">Support Type</th>
       <td mat-cell *matCellDef="let element">
         {{ generateSupportType(element) }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="from">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        From
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">From</th>
       <td mat-cell *matCellDef="let element">
         {{ element?.from | date: 'dd-MMM-yyyy' }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="to">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        To
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">To</th>
       <td mat-cell *matCellDef="let element">
         {{ element?.to | date: 'dd-MMM-yyyy' }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="supplierName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        Supplier
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">Supplier</th>
       <td mat-cell *matCellDef="let element">
         {{ displaySupplierName(element) }}
+        @if (element?.isSelfServe) {
+          <i> (Self-Serve) </i>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="totalAmount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        Amount
-      </th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [class.warning]="checkExceedsRate(element)"
-      >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">Amount</th>
+      <td mat-cell *matCellDef="let element" [class.warning]="checkExceedsRate(element)">
         {{
           element?.totalAmount !== '' && element?.totalAmount !== undefined
-            ? '$' + [element?.totalAmount | number: '1.2-2':'en-CA']
+            ? '$' + [element?.totalAmount | number: '1.2-2' : 'en-CA']
             : 'n/a'
         }}
       </td>
     </ng-container>
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
-        Status
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">Status</th>
       <td
         mat-cell
         [ngClass]="{
@@ -85,11 +70,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      (click)="rowClicked(row)"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="rowClicked(row)"></tr>
   </table>
 
   <app-loader
@@ -101,9 +82,5 @@
     [color]="color"
   ></app-loader>
 
-  <mat-paginator
-    [pageSize]="10"
-    [pageSizeOptions]="[10, 20, 30, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>

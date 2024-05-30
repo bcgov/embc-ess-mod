@@ -3,11 +3,16 @@ import { Router } from '@angular/router';
 import { UserProfile } from 'src/app/core/api/models';
 import { UserService } from 'src/app/core/services/user.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
+import { DatePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-view-user-profile',
   templateUrl: './view-user-profile.component.html',
-  styleUrls: ['./view-user-profile.component.scss']
+  styleUrls: ['./view-user-profile.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, MatButton, DatePipe]
 })
 export class ViewUserProfileComponent implements OnInit {
   userProfile: UserProfile;

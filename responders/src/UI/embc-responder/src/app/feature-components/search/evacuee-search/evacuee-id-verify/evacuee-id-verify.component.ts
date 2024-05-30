@@ -1,16 +1,39 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { SearchFormRegistery, SearchPages } from 'src/app/core/services/helper/search-data.service';
 import {
-  SearchFormRegistery,
-  SearchPages
-} from 'src/app/core/services/helper/search-data.service';
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
+import { MatButton } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-evacuee-id-verify',
   templateUrl: './evacuee-id-verify.component.html',
-  styleUrls: ['./evacuee-id-verify.component.scss']
+  styleUrls: ['./evacuee-id-verify.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioGroup,
+    MatRadioButton,
+    MatError,
+    MatButton,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription
+  ]
 })
 export class EvacueeIdVerifyComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
@@ -28,9 +51,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    * On component init, constructs the form
    */
   ngOnInit(): void {
-    this.idVerifyForm = this.optionInjectionService?.instance?.createForm(
-      SearchFormRegistery.idVerifySearchForm
-    );
+    this.idVerifyForm = this.optionInjectionService?.instance?.createForm(SearchFormRegistery.idVerifySearchForm);
     this.idQuestion = this.optionInjectionService?.instance?.idSearchQuestion;
   }
 
@@ -48,9 +69,6 @@ export class EvacueeIdVerifyComponent implements OnInit {
     const idVerify = {
       hasShownIdentification: this.idVerifyForm.get('photoId').value
     };
-    this.optionInjectionService?.instance?.search(
-      idVerify,
-      SearchPages.idVerifySearch
-    );
+    this.optionInjectionService?.instance?.search(idVerify, SearchPages.idVerifySearch);
   }
 }

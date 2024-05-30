@@ -10,11 +10,18 @@ import { AssignedCommunityListService } from './assigned-community-list.service'
 import * as globalConst from '../../../core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
 import { AddCommunityService } from '../add-community/add-community.service';
+import { AssignedCommunityTableComponent } from '../assigned-community-table/assigned-community-table.component';
+import { MatButton } from '@angular/material/button';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-assigned-community-list',
   templateUrl: './assigned-community-list.component.html',
-  styleUrls: ['./assigned-community-list.component.scss']
+  styleUrls: ['./assigned-community-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, AlertComponent, SearchFilterComponent, MatButton, AssignedCommunityTableComponent]
 })
 export class AssignedCommunityListComponent implements OnInit {
   filterTerm: TableFilterValueModel;
@@ -54,8 +61,7 @@ export class AssignedCommunityListComponent implements OnInit {
     });
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
-    this.displayedColumns =
-      this.assignedCommunityListDataService.displayedColumns;
+    this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
   }
 
   /**
@@ -71,42 +77,25 @@ export class AssignedCommunityListComponent implements OnInit {
    * Navigates to add communities component
    */
   addCommunities(): void {
-    this.router.navigate([
-      '/responder-access/community-management/add-communities'
-    ]);
+    this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
   /**
    * Custom filter predicate for assigned community list
    */
   communitiesFilterPredicate(): void {
-    const filterPredicate = (
-      data: TeamCommunityModel,
-      filter: string
-    ): boolean => {
+    const filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.type === 'text') {
-        return (
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        );
+        return data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       } else if (searchString.type === 'array') {
         const terms = searchString.value.split(',');
         const districtTerm = terms[0];
         const typeTerm = terms[1];
         const matchFilter = [];
         const districtBoolean =
-          data.districtName
-            .trim()
-            .toLowerCase()
-            .indexOf(districtTerm.trim().toLowerCase()) !== -1;
-        const typeBoolean =
-          data.type
-            .trim()
-            .toLowerCase()
-            .indexOf(typeTerm.trim().toLowerCase()) !== -1;
+          data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
+        const typeBoolean = data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);
         return matchFilter.every(Boolean);

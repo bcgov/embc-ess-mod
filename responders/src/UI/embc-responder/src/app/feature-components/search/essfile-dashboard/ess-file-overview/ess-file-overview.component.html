@@ -1,133 +1,117 @@
 <mat-card class="overview-card data-card">
-  <div class="row card-heading-outer info-box">
-    <div class="col-md-12">
-      <p class="margins card-heading">Overview</p>
+  <mat-card-content>
+    <div class="row card-heading-outer info-box">
+      <div class="col-md-12">
+        <p class="margins card-heading">Overview</p>
+      </div>
     </div>
-  </div>
 
-  <div class="row evacuee-info-row">
-    <div class="col-md-12">
-      <div class="row section-padding">
-        <div class="col-md-3 subtitle-name">
-          <img src="/assets/images/file.svg" height="65" width="49" />
-          <p>ESS File</p>
-          <p>Details</p>
-        </div>
-        <div class="col-md-9 table-parent">
-          <table class="table-details">
-            <tr>
-              <th>ESS File Last Reviewed:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
-                {{ essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy' }}
-              </td>
-              <ng-template #notReviewed>
-                <td class="bold">N/A</td>
-              </ng-template>
-            </tr>
-            <tr>
-              <th>ESS File Last Reviewed by:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
-                {{ essFile?.needsAssessment?.reviewingTeamMemberDisplayName }}
-              </td>
-              <ng-template #notReviewed>
-                <td class="bold">N/A</td>
-              </ng-template>
-            </tr>
-            <tr>
-              <th>Supports Issued:</th>
-              <td
-                class="bold"
-                *ngIf="
-                  essFile?.status !== 'Pending' ||
-                    essFile?.status !== 'Expired';
-                  else notReviewed
-                "
-              >
-                {{ essFile?.supports?.length === 0 ? 'No' : 'Yes' }}
-              </td>
-              <ng-template #notReviewed>
-                <td class="bold">N/A</td>
-              </ng-template>
-            </tr>
-            <tr>
-              <th>Insurance:</th>
-              <td class="bold">
-                {{ essFile?.needsAssessment?.insurance }}
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-      <hr class="dotted-hr" />
-      <div class="row section-padding">
-        <div class="col-md-3 subtitle-name">
-          <img src="/assets/images/house.svg" height="56" width="58" />
-          <p>Current</p>
-          <p>Household</p>
-        </div>
-        <div class="col-md-2 bold count">
-          {{ essFile?.needsAssessment?.householdMembers?.length }}
-        </div>
-        <div class="col-md-7 count-align">
-          <div
-            *ngFor="let member of essFile?.needsAssessment?.householdMembers"
-          >
-            {{ member.lastName | uppercase }},
-            {{ member.firstName }}
+    <div class="row evacuee-info-row">
+      <div class="col-md-12">
+        <div class="row section-padding">
+          <div class="col-md-3 subtitle-name">
+            <img src="/assets/images/file.svg" height="65" width="49" />
+            <p>ESS File</p>
+            <p>Details</p>
+          </div>
+          <div class="col-md-9 table-parent">
+            <table class="table-details">
+              <tr>
+                <th>ESS File Last Reviewed:</th>
+                <td
+                  class="bold"
+                  *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed"
+                >
+                  {{ essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy' }}
+                </td>
+                <ng-template #notReviewed>
+                  <td class="bold">N/A</td>
+                </ng-template>
+              </tr>
+              <tr>
+                <th>ESS File Last Reviewed by:</th>
+                <td
+                  class="bold"
+                  *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed"
+                >
+                  {{ essFile?.needsAssessment?.reviewingTeamMemberDisplayName }}
+                </td>
+                <ng-template #notReviewed>
+                  <td class="bold">N/A</td>
+                </ng-template>
+              </tr>
+              <tr>
+                <th>Supports Issued:</th>
+                <td
+                  class="bold"
+                  *ngIf="essFile?.status !== 'Pending' || essFile?.status !== 'Expired'; else notReviewed"
+                >
+                  {{ essFile?.supports?.length === 0 ? 'No' : 'Yes' }}
+                </td>
+                <ng-template #notReviewed>
+                  <td class="bold">N/A</td>
+                </ng-template>
+              </tr>
+              <tr>
+                <th>Insurance:</th>
+                <td class="bold">
+                  {{ essFile?.needsAssessment?.insurance }}
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
-      </div>
-      <hr class="dotted-hr" />
-      <div class="row section-padding">
-        <div class="col-md-3 subtitle-name">
-          <img src="/assets/images/animal-paw.svg" height="73" width="73" />
-          <p>Pets</p>
-        </div>
-        <div class="col-md-2 bold count">
-          {{ animalCount }}
-        </div>
-        <div class="col-md-7 count-align">
-          <div *ngFor="let pet of essFile?.needsAssessment?.pets">
-            {{ pet?.quantity }} {{ pet?.type }}
+        <hr class="dotted-hr" />
+        <div class="row section-padding">
+          <div class="col-md-3 subtitle-name">
+            <img src="/assets/images/house.svg" height="56" width="58" />
+            <p>Current</p>
+            <p>Household</p>
+          </div>
+          <div class="col-md-2 bold count">
+            {{ essFile?.needsAssessment?.householdMembers?.length }}
+          </div>
+          <div class="col-md-7 count-align">
+            <div *ngFor="let member of essFile?.needsAssessment?.householdMembers">
+              {{ member.lastName | uppercase }},
+              {{ member.firstName }}
+            </div>
           </div>
         </div>
-      </div>
-      <hr class="dotted-hr" />
-      <div class="row section-padding">
-        <div class="col-md-3 subtitle-name">
-          <img
-            src="/assets/images/needs-identified.svg"
-            height="67"
-            width="44"
-          />
-          <p>Needs</p>
-          <p>Identified</p>
+        <hr class="dotted-hr" />
+        <div class="row section-padding">
+          <div class="col-md-3 subtitle-name">
+            <img src="/assets/images/animal-paw.svg" height="73" width="73" />
+            <p>Pets</p>
+          </div>
+          <div class="col-md-2 bold count">
+            {{ animalCount }}
+          </div>
+          <div class="col-md-7 count-align">
+            <div *ngFor="let pet of essFile?.needsAssessment?.pets">{{ pet?.quantity }} {{ pet?.type }}</div>
+          </div>
         </div>
-        <div class="col-md-9 table-parent">
-          <table class="table-details">
-          <tr *ngIf="getIdentifiedNeeds().length === 0">
-            <td><b>{{noAssistanceRequiredMessage}}</b></td>
-          </tr>
-            <tr *ngFor="let item of getIdentifiedNeeds()">
-              <th>{{ item }}</th>
-            </tr>
-          </table>
+        <hr class="dotted-hr" />
+        <div class="row section-padding">
+          <div class="col-md-3 subtitle-name">
+            <img src="/assets/images/needs-identified.svg" height="67" width="44" />
+            <p>Needs</p>
+            <p>Identified</p>
+          </div>
+          <div class="col-md-9 table-parent">
+            <table class="table-details">
+              <tr *ngIf="getIdentifiedNeeds().length === 0">
+                <td>
+                  <b>{{ noAssistanceRequiredMessage }}</b>
+                </td>
+              </tr>
+              <tr *ngFor="let item of getIdentifiedNeeds()">
+                <th>{{ item }}</th>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </mat-card-content>
 </mat-card>

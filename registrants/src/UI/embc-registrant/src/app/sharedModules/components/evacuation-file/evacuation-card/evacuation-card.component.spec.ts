@@ -8,7 +8,7 @@ describe('EvacuationCardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EvacuationCardComponent]
+      imports: [EvacuationCardComponent]
     }).compileComponents();
   }));
 

@@ -1,30 +1,31 @@
 .content-align {
-    padding: 10px;
+  padding: 10px;
 }
 
 .title-heading {
-    color: rgba(35, 64, 117, 1);
-    font-size: 21px;
-    margin-bottom: 30px;
+  color: rgba(35, 64, 117, 1);
+  font-size: 21px;
+  margin-bottom: 30px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 mat-table {
-    overflow: auto;
-    max-height: 500px;
-    padding: 20px 0px 50px 0px;
+  overflow: auto;
+  max-height: 500px;
+  padding: 20px 0px 50px 0px;
 }
 
 mat-header-cell {
-    background-color: rgba(0, 51, 102, 1);
-    color: white;
-    font-size: 15px;
-    text-align: center;
+  background-color: rgba(0, 51, 102, 1);
+  color: white;
+  font-size: 15px;
+  text-align: center;
 }
 
 .supplier-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .button-width {
-    width: 100%;
+  width: 100%;
 }

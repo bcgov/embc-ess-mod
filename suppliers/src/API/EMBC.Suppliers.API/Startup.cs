@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.DynamicsModule;
+using EMBC.Suppliers.API.Services;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.Utilities;
@@ -174,6 +175,13 @@ namespace EMBC.Suppliers.API
                     GetAccessToken = async (s) => await tokenProvider.AcquireToken()
                 });
             });
+
+            services.AddHttpClient("captcha");
+            services.Configure<CaptchaVerificationServiceOptions>(options =>
+            {
+                configuration.GetSection("captcha").Bind(options);
+            });
+            services.AddTransient<ICaptchaVerificationService, CaptchaVerificationService>();
         }
 
         private IPNetwork ParseNetworkFromString(string network)

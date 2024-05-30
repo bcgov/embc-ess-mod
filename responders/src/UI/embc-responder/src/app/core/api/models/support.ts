@@ -1,24 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SupportCategory } from './support-category';
-import { SupportDelivery } from './support-delivery';
-import { SupportMethod } from './support-method';
-import { SupportStatus } from './support-status';
-import { SupportSubCategory } from './support-sub-category';
+import { SupportCategory } from '../models/support-category';
+import { SupportDelivery } from '../models/support-delivery';
+import { SupportMethod } from '../models/support-method';
+import { SupportStatus } from '../models/support-status';
+import { SupportSubCategory } from '../models/support-sub-category';
 export interface Support {
   category: SupportCategory;
-  createdBy?: null | string;
-  createdByTeam?: null | string;
-  createdOn?: null | string;
-  fileId?: null | string;
+  createdBy?: string | null;
+  createdByTeam?: string | null;
+  createdOn?: string | null;
+  fileId?: string | null;
   from: string;
-  id?: null | string;
+  id?: string | null;
   includedHouseholdMembers: Array<string>;
-  issuedBy?: null | string;
-  issuedByTeam?: null | string;
-  issuedOn?: null | string;
+  isSelfServe?: boolean;
+  issuedBy?: string | null;
+  issuedByTeam?: string | null;
+  issuedOn?: string | null;
   method?: SupportMethod;
-  needsAssessmentId?: null | string;
+  needsAssessmentId?: string | null;
   status?: SupportStatus;
   subCategory?: SupportSubCategory;
   supportDelivery: SupportDelivery;

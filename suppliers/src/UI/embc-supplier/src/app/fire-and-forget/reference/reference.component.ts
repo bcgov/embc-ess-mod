@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-reference',
   templateUrl: './reference.component.html',
-  styleUrls: ['./reference.component.scss']
+  styleUrls: ['./reference.component.scss'],
+  standalone: true
 })
 export class ReferenceComponent implements OnInit {
   referenceNumber: any;

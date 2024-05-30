@@ -1,13 +1,12 @@
 /* eslint-disable prettier/prettier */
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
-import { MatAccordion } from '@angular/material/expansion';
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuation-file-search-result.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
@@ -16,13 +15,32 @@ import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { PossibleMatchedEssfilesService } from './possible-matched-essfiles.service';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, NgStyle, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-possible-matched-essfiles',
   templateUrl: './possible-matched-essfiles.component.html',
-  styleUrls: ['./possible-matched-essfiles.component.scss']
+  styleUrls: ['./possible-matched-essfiles.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    NgClass,
+    MatExpansionPanelDescription,
+    NgStyle,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
-export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
+export class PossibleMatchedEssfilesComponent implements OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() evacueeProfile: RegistrantProfileModel;
   currentlyOpenedItemIndex = -1;
@@ -37,8 +55,6 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
     private router: Router,
     private possibleMatchedEssfilesService: PossibleMatchedEssfilesService
   ) {}
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.evacueeProfile) {
@@ -85,16 +101,11 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   linkToESSFile(fileId: string) {
     this.essFileService.getFileFromId(fileId).subscribe({
       next: (essFile) => {
-        const householdMemberId =
-          this.possibleMatchedEssfilesService.getRegistrantIdToLink(
-            essFile.householdMembers,
-            this.evacueeProfile
-          );
-        this.possibleMatchedEssfilesService.setLinkMetaData(
-          fileId,
-          householdMemberId,
-          this.evacueeProfile.id
+        const householdMemberId = this.possibleMatchedEssfilesService.getRegistrantIdToLink(
+          essFile.householdMembers,
+          this.evacueeProfile
         );
+        this.possibleMatchedEssfilesService.setLinkMetaData(fileId, householdMemberId, this.evacueeProfile.id);
         this.router.navigate(['responder-access/search/security-phrase']);
       },
       error: (error) => {
@@ -111,31 +122,20 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
    * @param lastName last name of the current evacuee's profile
    * @param dateOfBirth date of birth of the current evacuee's profile
    */
-  private getEssfilesMatches(
-    firstName: string,
-    lastName: string,
-    dateOfBirth: string
-  ): void {
+  private getEssfilesMatches(firstName: string, lastName: string, dateOfBirth: string): void {
     this.isLoading = !this.isLoading;
-    this.evacueeProfileService
-      .getFileMatches(firstName, lastName, dateOfBirth)
-      .subscribe({
-        next: (essFileArray) => {
-          this.essFiles = essFileArray.sort((a, b) => {
-            return (
-              new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
-            );
-          });
-          this.isLoading = !this.isLoading;
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.getPossibleEssfileMatchError
-          );
-        }
-      });
+    this.evacueeProfileService.getFileMatches(firstName, lastName, dateOfBirth).subscribe({
+      next: (essFileArray) => {
+        this.essFiles = essFileArray.sort((a, b) => {
+          return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+        });
+        this.isLoading = !this.isLoading;
+      },
+      error: (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getPossibleEssfileMatchError);
+      }
+    });
   }
 }

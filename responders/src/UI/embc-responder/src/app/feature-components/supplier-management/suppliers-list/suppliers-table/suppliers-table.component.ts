@@ -10,9 +10,21 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSlideToggleChange, MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatSort, Sort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatTableDataSource,
+  MatTable,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderCell,
+  MatCellDef,
+  MatCell,
+  MatHeaderRowDef,
+  MatHeaderRow,
+  MatRowDef,
+  MatRow
+} from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -20,11 +32,33 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { SupplierListItem } from 'src/app/core/api/models';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-suppliers-table',
   templateUrl: './suppliers-table.component.html',
-  styleUrls: ['./suppliers-table.component.scss']
+  styleUrls: ['./suppliers-table.component.scss'],
+  standalone: true,
+  imports: [
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCellDef,
+    MatCell,
+    MatSlideToggle,
+    NgClass,
+    AppLoaderComponent,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    UpperCasePipe
+  ]
 })
 export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -89,11 +123,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
         const isAsc = sort.direction === 'asc';
         switch (sort.active) {
           case 'legalName':
-            return compare(
-              a.legalName.toLowerCase(),
-              b.legalName.toLowerCase(),
-              isAsc
-            );
+            return compare(a.legalName.toLowerCase(), b.legalName.toLowerCase(), isAsc);
           case 'name':
             return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
           case 'mutualAid':
@@ -107,11 +137,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
           case 'providesMutualAid':
             return compare(+a.providesMutualAid, +b.providesMutualAid, isAsc);
           case 'address':
-            return compare(
-              a.address?.addressLine1.toLowerCase(),
-              b.address?.addressLine1.toLowerCase(),
-              isAsc
-            );
+            return compare(a.address?.addressLine1.toLowerCase(), b.address?.addressLine1.toLowerCase(), isAsc);
           default:
             return 0;
         }
@@ -146,15 +172,8 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     if (searchString.type === 'text') {
       if (
         (data.legalName !== null &&
-          data.legalName
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
-        (data.name !== null &&
-          data.name
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1)
+          data.legalName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
+        (data.name !== null && data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1)
       ) {
         return true;
       }

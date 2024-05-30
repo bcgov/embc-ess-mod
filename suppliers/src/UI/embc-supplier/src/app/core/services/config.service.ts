@@ -50,7 +50,6 @@ export class ConfigService {
           responseType: 'code',
           scope: 'openid profile email offline_access',
           showDebugInformation: !environment.production,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           customQueryParams: { kc_idp_hint: 'bceid' }
         }))
       )
@@ -65,6 +64,10 @@ export class ConfigService {
 export interface OidcConfiguration {
   clientId?: null | string;
   issuer?: null | string;
+}
+
+export interface CaptchaConfiguration {
+  key?: string | null;
 }
 
 export interface Configuration {

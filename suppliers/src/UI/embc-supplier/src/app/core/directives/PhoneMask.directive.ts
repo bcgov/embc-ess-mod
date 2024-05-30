@@ -2,7 +2,8 @@ import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[formControlName][appPhoneMask]'
+  selector: '[formControlName][appPhoneMask]',
+  standalone: true
 })
 export class PhoneMaskDirective {
   constructor(
@@ -41,9 +42,7 @@ export class PhoneMaskDirective {
       this.ngControl.valueAccessor.writeValue(newVal);
 
       if (current.length > start) {
-        this.renderer
-          .selectRootElement(this.el)
-          .nativeElement.setSelectionRange(start, end);
+        this.renderer.selectRootElement(this.el).nativeElement.setSelectionRange(start, end);
       }
     }
   }

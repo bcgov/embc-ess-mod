@@ -18,10 +18,7 @@ import { RegistrationsService, TasksService } from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
-import {
-  SupportDeliveryModel,
-  SupportDetailsModel
-} from 'src/app/core/models/support-details.model';
+import { SupportDeliveryModel, SupportDetailsModel } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -37,10 +34,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
-  private existingSupportListVal: BehaviorSubject<Support[]> =
-    new BehaviorSubject<Support[]>([]);
-  private existingSupportListVal$: Observable<Support[]> =
-    this.existingSupportListVal.asObservable();
+  private existingSupportListVal: BehaviorSubject<Support[]> = new BehaviorSubject<Support[]>([]);
+  private existingSupportListVal$: Observable<Support[]> = this.existingSupportListVal.asObservable();
   private supportTypeToAddVal: Code;
   private supplierListVal: SupplierListItemModel[];
   private supportDetailsVal: SupportDetailsModel;
@@ -104,9 +99,7 @@ export class StepSupportsService {
   }
 
   get supportTypeToAdd(): Code {
-    return this.supportTypeToAddVal
-      ? this.supportTypeToAddVal
-      : JSON.parse(this.cacheService.get('supportType'));
+    return this.supportTypeToAddVal ? this.supportTypeToAddVal : JSON.parse(this.cacheService.get('supportType'));
   }
 
   set supplierList(supplierListVal: SupplierListItemModel[]) {
@@ -121,10 +114,7 @@ export class StepSupportsService {
     return this.essFileService.getFileFromId(essFileNumber); //'100963'
   }
 
-  public getSupports(
-    essFileNumber: string,
-    externalReferenceId?: string
-  ): Observable<Support[]> {
+  public getSupports(essFileNumber: string, externalReferenceId?: string): Observable<Support[]> {
     return this.essFileService.getSupports(essFileNumber, externalReferenceId);
   }
 
@@ -138,18 +128,14 @@ export class StepSupportsService {
           return supplierList.map((item: SupplierListItemModel) => {
             return {
               ...item,
-              address: this.locationService.getAddressModelFromAddress(
-                item.address
-              )
+              address: this.locationService.getAddressModelFromAddress(item.address)
             };
           });
         })
       );
   }
 
-  public openDataLossPopup(
-    content: DialogContent
-  ): MatDialogRef<DialogComponent, string> {
+  public openDataLossPopup(content: DialogContent): MatDialogRef<DialogComponent, string> {
     return this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
@@ -176,14 +162,12 @@ export class StepSupportsService {
                 ? 'R' + this.supportDetails.externalReferenceId
                 : '',
             issuedToPersonName:
-              (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) ? (this.supportDelivery.details.hostName) :(
-              this.supportDelivery.issuedTo !== 'Someone else'
-                ? this.supportDelivery.issuedTo.lastName +
-                  ', ' +
-                  this.supportDelivery.issuedTo.firstName
-                : this.supportDelivery.name)
-                
-                ,
+              this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+                ? this.supportDelivery.details.hostName
+                : (this.supportDelivery.issuedTo as any) !== 'Someone else'
+                  ? this.supportDelivery.issuedTo.lastName + ', ' + this.supportDelivery.issuedTo.firstName
+                  : this.supportDelivery.name,
+
             supplierAddress: this.supportDelivery.supplier.address,
             supplierId: this.supportDelivery.supplier.id,
             supplierName: this.supportDelivery.supplier.name,
@@ -194,24 +178,16 @@ export class StepSupportsService {
             method: SupportMethod.ETransfer,
             notificationEmail: this.supportDelivery.notificationEmail,
             notificationMobile: this.supportDelivery.notificationMobile,
-            receivingRegistrantId:
-              this.appBaseService?.appModel?.selectedProfile
-                ?.selectedEvacueeInContext.id
+            receivingRegistrantId: this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext.id
           };
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
       issuedOn: this.supportDetails.issuedOn,
-      from: this.dateConversionService.createDateTimeString(
-        this.supportDetails.fromDate,
-        this.supportDetails.fromTime
-      ),
+      from: this.dateConversionService.createDateTimeString(this.supportDetails.fromDate, this.supportDetails.fromTime),
       includedHouseholdMembers: members,
       // needsAssessmentId: this.evacueeSessionService?.evacFile.id,
       status: SupportStatus.Draft,
-      to: this.dateConversionService.createDateTimeString(
-        this.supportDetails.toDate,
-        this.supportDetails.toTime
-      ),
+      to: this.dateConversionService.createDateTimeString(this.supportDetails.toDate, this.supportDetails.toTime),
       category: null,
       method,
       subCategory: null,
@@ -220,57 +196,22 @@ export class StepSupportsService {
 
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       this.referralService.createMealReferral(support, this.supportDetails);
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
-    ) {
-      this.referralService.createGroceriesReferral(
-        support,
-        this.supportDetails
-      );
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries) {
+      this.referralService.createGroceriesReferral(support, this.supportDetails);
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi) {
       this.referralService.createTaxiReferral(support, this.supportDetails);
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other) {
       this.referralService.createOtherReferral(support, this.supportDetails);
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
-    ) {
-      this.referralService.createBilletingReferral(
-        support,
-        this.supportDetails,
-        this.supportDelivery
-      );
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
-    ) {
-      this.referralService.createShelterAllowanceReferral(
-        support,
-        this.supportDetails,
-        this.supportDelivery
-      );
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
-    ) {
-      this.referralService.createGroupLodgingReferral(
-        support,
-        this.supportDetails,
-        this.supportDelivery
-      );
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
-    ) {
-      this.referralService.createHotelMotelReferral(
-        support,
-        this.supportDetails
-      );
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting) {
+      this.referralService.createBilletingReferral(support, this.supportDetails, this.supportDelivery);
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) {
+      this.referralService.createShelterAllowanceReferral(support, this.supportDetails, this.supportDelivery);
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group) {
+      this.referralService.createGroupLodgingReferral(support, this.supportDetails, this.supportDelivery);
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel) {
+      this.referralService.createHotelMotelReferral(support, this.supportDetails);
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
-      this.referralService.createIncidentalsReferral(
-        support,
-        this.supportDetails
-      );
+      this.referralService.createIncidentalsReferral(support, this.supportDetails);
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
       this.referralService.createClothingReferral(support, this.supportDetails);
     }
@@ -279,29 +220,17 @@ export class StepSupportsService {
   getRateSheetContent(): DialogContent {
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       return globalConst.mealRateSheet;
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries) {
       return globalConst.groceriesRateSheet;
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi) {
       return globalConst.taxiRateSheet;
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other) {
       return globalConst.otherRateSheet;
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting) {
       return globalConst.billetingRateSheet;
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
-    ) {
-      return globalConst.hotelRateSheet; 
-    } else if (
-      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
-    ) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel) {
+      return globalConst.hotelRateSheet;
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) {
       return globalConst.needsShelterAllowanceRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       return globalConst.incidentalsRateSheet;
@@ -310,10 +239,7 @@ export class StepSupportsService {
     }
   }
 
-  getNeedsAssessmentInfo(
-    fileId: string,
-    needsAssessmentId: string
-  ): Observable<EvacuationFileModel> {
+  getNeedsAssessmentInfo(fileId: string, needsAssessmentId: string): Observable<EvacuationFileModel> {
     return this.registrationsService
       .registrationsGetFile({
         fileId,
@@ -323,13 +249,8 @@ export class StepSupportsService {
         map((file: EvacuationFile): EvacuationFileModel => {
           return {
             ...file,
-            evacuatedFromAddress:
-              this.locationService.getAddressModelFromAddress(
-                file.evacuatedFromAddress
-              ),
-            assignedTaskCommunity: this.locationService.mapCommunityFromCode(
-              file?.task?.communityCode
-            )
+            evacuatedFromAddress: this.locationService.getAddressModelFromAddress(file.evacuatedFromAddress),
+            assignedTaskCommunity: this.locationService.mapCommunityFromCode(file?.task?.communityCode)
           };
         })
       );

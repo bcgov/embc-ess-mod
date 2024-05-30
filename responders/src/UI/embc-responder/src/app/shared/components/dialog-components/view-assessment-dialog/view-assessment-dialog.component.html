@@ -25,39 +25,38 @@
   </div>
 </div>
 
-<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
-  <div class="col-md-5">Paper ESS File Number</div>
-  <div class="col-md-7 bold">{{ profileData?.manualFileId }}</div>
-</div>
+@if (evacueeSessionService.isPaperBased) {
+  <div class="row row-padding">
+    <div class="col-md-5">Paper ESS File Number</div>
+    <div class="col-md-7 bold">{{ profileData?.manualFileId }}</div>
+  </div>
+}
 
-<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
-  <div class="col-md-5">Paper ESS File Created by</div>
-  <div class="col-md-7 bold">{{ profileData?.completedBy }}</div>
-</div>
+@if (evacueeSessionService.isPaperBased) {
+  <div class="row row-padding">
+    <div class="col-md-5">Paper ESS File Created by</div>
+    <div class="col-md-7 bold">{{ profileData?.completedBy }}</div>
+  </div>
+}
 
-<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
-  <div class="col-md-5">Paper ESS File Created on</div>
-  <div class="col-md-7 bold">{{ profileData?.completedOn }}</div>
-</div>
+@if (evacueeSessionService.isPaperBased) {
+  <div class="row row-padding">
+    <div class="col-md-5">Paper ESS File Created on</div>
+    <div class="col-md-7 bold">{{ profileData?.completedOn }}</div>
+  </div>
+}
 
 <div class="row row-padding">
   <div class="col-md-5">Evacuated From</div>
   <div class="col-md-7">
-    <p
-      class="bold"
-      [innerHTML]="profileData?.evacuatedFromAddress | maskEvacuatedaddress"
-    ></p>
+    <p class="bold" [innerHTML]="profileData?.evacuatedFromAddress | maskEvacuatedaddress"></p>
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-md-5">Facility/ Registration Location</div>
   <div class="col-md-7 bold">
-    {{
-      profileData?.registrationLocation
-        ? profileData?.registrationLocation
-        : 'n/a'
-    }}
+    {{ profileData?.registrationLocation ? profileData?.registrationLocation : 'n/a' }}
   </div>
 </div>
 <div class="row row-padding">
@@ -83,45 +82,30 @@
 
 <div class="row row-padding">
   <div class="col-12">
-    <mat-table
-      class="table-outline"
-      [dataSource]="profileData?.needsAssessment?.householdMembers"
-    >
+    <mat-table class="table-outline" [dataSource]="profileData?.needsAssessment?.householdMembers">
       <ng-container matColumnDef="firstName">
-        <mat-header-cell class="header-cell" *matHeaderCellDef
-          >First Name</mat-header-cell
-        >
+        <mat-header-cell class="header-cell" *matHeaderCellDef>First Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.firstName }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="lastName">
-        <mat-header-cell class="header-cell" *matHeaderCellDef
-          >Last Name</mat-header-cell
-        >
+        <mat-header-cell class="header-cell" *matHeaderCellDef>Last Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.lastName }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="dateOfBirth">
-        <mat-header-cell class="header-cell" *matHeaderCellDef>
-          Date of Birth
-        </mat-header-cell>
+        <mat-header-cell class="header-cell" *matHeaderCellDef> Date of Birth </mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.dateOfBirth | date: 'dd-MMM-yyyy' }}
         </mat-cell>
       </ng-container>
 
-      <mat-header-row
-        class="table-header"
-        *matHeaderRowDef="memberColumns"
-      ></mat-header-row>
-      <mat-row
-        class="bold"
-        *matRowDef="let row; columns: memberColumns"
-      ></mat-row>
+      <mat-header-row class="table-header" *matHeaderRowDef="memberColumns"></mat-header-row>
+      <mat-row class="bold" *matRowDef="let row; columns: memberColumns"></mat-row>
     </mat-table>
   </div>
 </div>
@@ -139,38 +123,28 @@
     {{ profileData?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
   </div>
 </div>
-<div class="row" *ngIf="profileData?.needsAssessment?.pets?.length > 0">
-  <div class="col-md-8">
-    <mat-table
-      class="table-outline"
-      [dataSource]="profileData?.needsAssessment?.pets"
-    >
-      <ng-container matColumnDef="type">
-        <mat-header-cell class="header-cell" *matHeaderCellDef
-          >Pet Type</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element">
-          {{ element.type }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="quantity">
-        <mat-header-cell class="header-cell" *matHeaderCellDef>
-          Number
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.quantity }}
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row
-        class="table-header"
-        *matHeaderRowDef="petColumns"
-      ></mat-header-row>
-      <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
-    </mat-table>
+@if (profileData?.needsAssessment?.pets?.length > 0) {
+  <div class="row">
+    <div class="col-md-8">
+      <mat-table class="table-outline" [dataSource]="profileData?.needsAssessment?.pets">
+        <ng-container matColumnDef="type">
+          <mat-header-cell class="header-cell" *matHeaderCellDef>Pet Type</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.type }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <mat-header-cell class="header-cell" *matHeaderCellDef> Number </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.quantity }}
+          </mat-cell>
+        </ng-container>
+        <mat-header-row class="table-header" *matHeaderRowDef="petColumns"></mat-header-row>
+        <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
+      </mat-table>
+    </div>
   </div>
-</div>
+}
 
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">
@@ -179,20 +153,18 @@
   </div>
 </div>
 
-<div
-  class="row row-padding"
-  *ngFor="let item of getIdentifiedNeeds()"
->
-  <div class="col-12 bold">
-    {{ item }}
+@for (item of getIdentifiedNeeds(); track item) {
+  <div class="row row-padding">
+    <div class="col-12 bold">
+      {{ item }}
+    </div>
   </div>
-</div>
+}
 
-<div
-  class="row row-padding"
-  *ngIf="getIdentifiedNeeds().length == 0"
->
-  <div class="col-12 bold">
-    {{noAssistanceRequiredMessage}}
+@if (getIdentifiedNeeds().length === 0) {
+  <div class="row row-padding">
+    <div class="col-12 bold">
+      {{ noAssistanceRequiredMessage }}
+    </div>
   </div>
-</div>
+}

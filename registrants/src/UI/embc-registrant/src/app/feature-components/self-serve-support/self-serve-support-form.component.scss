@@ -1,0 +1,55 @@
+sup {
+  top: -0.9em;
+  font-size: 0.45em;
+  font-weight: bold;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding: 0;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none;
+}
+
+mat-card {
+  margin-bottom: var(--size-3);
+}
+
+.mat-mdc-card-content,
+.mat-mdc-card-content:first-child,
+.mat-mdc-card-content:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-3);
+  justify-content: space-between;
+  padding: var(--size-3);
+}
+
+:host .mat-mdc-checkbox ::ng-deep label {
+  font-size: var(--size-2);
+  padding: 4px 0;
+}
+
+:host .mat-mdc-checkbox ::ng-deep .mdc-form-field {
+  align-items: flex-start;
+}
+
+.self-serve-support-error-container {
+  display: block;
+  color: white;
+  background-color: orange;
+  padding: var(--size-2);
+  font-size: var(--size-3);
+}
+
+.self-serve-support-actions-container {
+  display: flex;
+  gap: var(--size-2);
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.button-s {
+  width: 240px;
+}

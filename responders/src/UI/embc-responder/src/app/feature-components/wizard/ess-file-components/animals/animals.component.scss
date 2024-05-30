@@ -5,7 +5,7 @@ mat-form-field {
 .animal-button {
   border: 2px solid rgba(35, 64, 117, 1) !important;
   color: rgba(35, 64, 117, 1);
-  background-color: #FFFFFF !important;
+  background-color: #ffffff !important;
   font-size: 16px;
   height: 55px;
 }
@@ -22,17 +22,19 @@ table {
   width: 100%;
 }
 
-.mat-table {
+.mat-mdc-table {
   overflow: auto;
   max-height: 500px;
 }
 
-.mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+.mat-mdc-cell:first-of-type,
+.mat-mdc-footer-cell:first-of-type,
+.mat-mdc-header-cell:first-of-type {
   padding-left: unset;
 }
 
-.mat-cell {
-  margin-right:24px;
+.mat-mdc-cell {
+  margin-right: 24px;
 }
 
 .mobile-label {
@@ -108,7 +110,7 @@ table {
   margin-bottom: 30px;
 }
 
-@media(max-width: 980px) {
+@media (max-width: 980px) {
   .mobile-label {
     width: 80px;
     display: inline-block;
@@ -116,12 +118,12 @@ table {
   }
 
   // Remove the header row altogether
-  .mat-header-row {
+  .mat-mdc-header-row {
     display: none;
   }
 
   // The row cells should display as a column, justified left, with a bit of extra padding
-  .mat-row {
+  .mat-mdc-row {
     flex-direction: column;
     align-items: start;
     padding: 8px 24px;
@@ -129,11 +131,13 @@ table {
   }
 
   // Tweaks for Angular Material 8
-  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+  .mat-mdc-cell:first-of-type,
+  .mat-mdc-footer-cell:first-of-type,
+  .mat-mdc-header-cell:first-of-type {
     padding-left: unset;
   }
 
-  .mat-cell {
+  .mat-mdc-cell {
     align-items: unset;
     min-height: unset;
   }

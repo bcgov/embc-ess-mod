@@ -10,18 +10,17 @@ import {
 } from '@angular/core/testing';
 
 import { EvacueeDetailsComponent } from './evacuee-details.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MaterialModule } from 'src/app/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { EvacueeDetailsService } from './evacuee-details.service';
 import { MockEvacueeDetailsService } from 'src/app/unit-tests/mockEvacueeDetails.service';
 import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeDetailsComponent', () => {
   let component: EvacueeDetailsComponent;
@@ -32,14 +31,12 @@ describe('EvacueeDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         MatDialogModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MaterialModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        EvacueeDetailsComponent
       ],
-      declarations: [EvacueeDetailsComponent],
       providers: [
         UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
@@ -50,7 +47,8 @@ describe('EvacueeDetailsComponent', () => {
         {
           provide: EvacueeDetailsService,
           useClass: MockEvacueeDetailsService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -69,18 +67,14 @@ describe('EvacueeDetailsComponent', () => {
 
   it('should display all the input elements of the form group', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#evacueeDetailsForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#evacueeDetailsForm');
     const totalElems = formElem.querySelectorAll('input');
     expect(totalElems.length).toEqual(5);
   });
 
   it('should display gender form control as a dropdown', () => {
     fixture.detectChanges();
-    const formElem = fixture.debugElement.nativeElement.querySelector(
-      '#evacueeDetailsForm'
-    );
+    const formElem = fixture.debugElement.nativeElement.querySelector('#evacueeDetailsForm');
     const totalElems = formElem.querySelectorAll('mat-select');
     expect(totalElems.length).toEqual(1);
   });
@@ -268,10 +262,9 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        detailsService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'evacuee-details'
-        );
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'evacuee-details'
+      );
 
       expect(tabMetaData.status).toEqual('complete');
     })
@@ -310,10 +303,9 @@ describe('EvacueeDetailsComponent', () => {
       flush();
       flushMicrotasks();
       discardPeriodicTasks();
-      const tabMetaData =
-        detailsService.stepEvacueeProfileService.profileTabs.find(
-          (tab) => tab.name === 'evacuee-details'
-        );
+      const tabMetaData = detailsService.stepEvacueeProfileService.profileTabs.find(
+        (tab) => tab.name === 'evacuee-details'
+      );
 
       expect(tabMetaData.status).toEqual('incomplete');
     })
@@ -346,9 +338,7 @@ describe('EvacueeDetailsComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/restriction'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/restriction']);
     })
   ));
 
@@ -379,9 +369,7 @@ describe('EvacueeDetailsComponent', () => {
 
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/ess-wizard/evacuee-profile/address'
-      ]);
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/evacuee-profile/address']);
     })
   ));
 });

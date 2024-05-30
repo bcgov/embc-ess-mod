@@ -1,12 +1,6 @@
-import {
-  ComponentFixture,
-  inject,
-  TestBed,
-  waitForAsync
-} from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { StepEvacueeProfileComponent } from './step-evacuee-profile.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
@@ -19,6 +13,7 @@ import { of } from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { provideRouter } from '@angular/router';
 
 describe('StepEvacueeProfileComponent', () => {
   let component: StepEvacueeProfileComponent;
@@ -37,12 +32,7 @@ describe('StepEvacueeProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        MatDialogModule,
-        HttpClientTestingModule
-      ],
-      declarations: [StepEvacueeProfileComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, StepEvacueeProfileComponent],
       providers: [
         WizardDataService,
         { provide: Router, useValue: routerMock },
@@ -50,7 +40,8 @@ describe('StepEvacueeProfileComponent', () => {
           provide: StepEvacueeProfileService,
           useClass: MockStepEvacueeProfileService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        provideRouter([])
       ]
     }).compileComponents();
   }));
@@ -70,10 +61,7 @@ describe('StepEvacueeProfileComponent', () => {
   it('should load evacuee profile tabs', () => {
     stepProfileService.profileTabsValue = stepProfileService.evacueeProfileTabs;
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEvacueeProfileComponent(
-      test,
-      stepProfileService
-    );
+    const testMockComponent = new StepEvacueeProfileComponent(test, stepProfileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs).toBeDefined();
   });
@@ -89,17 +77,13 @@ describe('StepEvacueeProfileComponent', () => {
       previous: '/ess-wizard/evacuee-profile/contact'
     };
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEvacueeProfileComponent(
-      test,
-      stepProfileService
-    );
+    const testMockComponent = new StepEvacueeProfileComponent(test, stepProfileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs).toContain(expectedTab);
   });
 
   it('should load evacuee profile without security questions for paper based', () => {
-    stepProfileService.profileTabsValue =
-      stepProfileService.paperEvacueeProfileTabs;
+    stepProfileService.profileTabsValue = stepProfileService.paperEvacueeProfileTabs;
     const expectedTab = {
       label: 'Security Questions',
       route: 'security-questions',
@@ -109,10 +93,7 @@ describe('StepEvacueeProfileComponent', () => {
       previous: '/ess-wizard/evacuee-profile/contact'
     };
     const test = TestBed.inject(Router);
-    const testMockComponent = new StepEvacueeProfileComponent(
-      test,
-      stepProfileService
-    );
+    const testMockComponent = new StepEvacueeProfileComponent(test, stepProfileService);
     fixture.detectChanges();
     expect(testMockComponent.tabs.indexOf(expectedTab)).toBe(-1);
   });

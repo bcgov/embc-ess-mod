@@ -1,0 +1,89 @@
+:host .support-details-form .mat-mdc-checkbox ::ng-deep label {
+  font-weight: bold;
+  line-height: var(--size-4);
+}
+
+.card-question {
+  font-size: var(--size-2);
+  margin-bottom: var(--size-2);
+}
+
+.card-heading {
+  width: 100%;
+}
+
+.show-one-time-used-message {
+  display: none;
+}
+
+:host .mat-mdc-card.support-one-time-used {
+  background: #eee;
+
+  .card-heading {
+    color: #999;
+  }
+
+  .show-one-time-used-message {
+    display: block;
+    color: red;
+    width: 100%;
+  }
+
+  .hide-on-one-time-used {
+    display: none;
+  }
+
+  .note-box {
+    display: none;
+  }
+}
+
+hr {
+  height: 1px;
+  background-color: #333;
+  margin-top: 0;
+}
+
+table {
+  min-width: 240px;
+}
+
+th {
+  font-weight: bold;
+  padding: var(--size-1);
+}
+
+td {
+  min-width: 60px;
+  word-break: break-word;
+  padding: var(--size-1);
+}
+
+tr.header-row {
+  height: 60px;
+  background: #f2f2f2;
+}
+
+.note-box {
+  flex: 0.3 0 240px;
+  max-width: 400px;
+  height: min-content;
+  padding: var(--size-2);
+}
+
+.question-box {
+  flex: 1 0 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2);
+}
+
+@media (max-width: 767px) {
+  .question-box {
+    max-width: 100%;
+  }
+
+  .meals-table-container {
+    overflow: auto;
+  }
+}

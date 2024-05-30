@@ -6,11 +6,18 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
+import { MaskFullAddressPipe } from '../../../shared/pipes/maskFullAddress.pipe';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { UpperCasePipe } from '@angular/common';
+import { MatCard } from '@angular/material/card';
 
 @Component({
   selector: 'app-supplier-review',
   templateUrl: './supplier-review.component.html',
-  styleUrls: ['./supplier-review.component.scss']
+  styleUrls: ['./supplier-review.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatButton, AppLoaderComponent, UpperCasePipe, MaskFullAddressPipe]
 })
 export class SupplierReviewComponent {
   selectedSupplier: SupplierModel;
@@ -28,8 +35,7 @@ export class SupplierReviewComponent {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras
-          .state as SupplierModel;
+        const state = this.router.getCurrentNavigation().extras.state as SupplierModel;
         this.selectedSupplier = state;
 
         const params = this.router.getCurrentNavigation().extras.queryParams;
@@ -38,8 +44,7 @@ export class SupplierReviewComponent {
         }
       }
     } else {
-      this.selectedSupplier =
-        this.supplierListDataService.getSelectedSupplier();
+      this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
     }
   }
 
@@ -48,14 +53,9 @@ export class SupplierReviewComponent {
    */
   back(): void {
     if (this.selectedSupplier.id) {
-      this.router.navigate(
-        ['/responder-access/supplier-management/edit-supplier'],
-        { state: this.selectedSupplier }
-      );
+      this.router.navigate(['/responder-access/supplier-management/edit-supplier'], { state: this.selectedSupplier });
     } else {
-      this.router.navigate([
-        '/responder-access/supplier-management/new-supplier'
-      ]);
+      this.router.navigate(['/responder-access/supplier-management/new-supplier']);
     }
   }
 
@@ -79,10 +79,7 @@ export class SupplierReviewComponent {
       next: (value) => {
         this.showLoader = !this.showLoader;
         const stateIndicator = { action: 'add' };
-        this.router.navigate(
-          ['/responder-access/supplier-management/suppliers-list'],
-          { state: stateIndicator }
-        );
+        this.router.navigate(['/responder-access/supplier-management/suppliers-list'], { state: stateIndicator });
       },
       error: (error) => {
         this.showLoader = !this.showLoader;
@@ -101,18 +98,12 @@ export class SupplierReviewComponent {
    */
   private updateSupplier(): void {
     this.supplierService
-      .updateSupplier(
-        this.editSupplierService.editedSupplier.id,
-        this.editSupplierService.getEditedSupplierDTO()
-      )
+      .updateSupplier(this.editSupplierService.editedSupplier.id, this.editSupplierService.getEditedSupplierDTO())
       .subscribe({
         next: (value) => {
           this.showLoader = !this.showLoader;
           const stateIndicator = { action: 'edit' };
-          this.router.navigate(
-            ['/responder-access/supplier-management/suppliers-list'],
-            { state: stateIndicator }
-          );
+          this.router.navigate(['/responder-access/supplier-management/suppliers-list'], { state: stateIndicator });
         },
         error: (error) => {
           this.showLoader = !this.showLoader;
@@ -131,27 +122,22 @@ export class SupplierReviewComponent {
    * Adds a new Supplier and navigates to the suppliers' list
    */
   private addSupplier(): void {
-    this.supplierService
-      .createNewSupplier(this.addSupplierService.getCreateSupplierDTO())
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          const stateIndicator = { action: 'add' };
-          this.router.navigate(
-            ['/responder-access/supplier-management/suppliers-list'],
-            { state: stateIndicator }
-          );
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.isSubmitted = !this.isSubmitted;
-          this.alertService.clearAlert();
-          if (error.title) {
-            this.alertService.setAlert('danger', error.title);
-          } else {
-            this.alertService.setAlert('danger', error.statusText);
-          }
+    this.supplierService.createNewSupplier(this.addSupplierService.getCreateSupplierDTO()).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        const stateIndicator = { action: 'add' };
+        this.router.navigate(['/responder-access/supplier-management/suppliers-list'], { state: stateIndicator });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
+        if (error.title) {
+          this.alertService.setAlert('danger', error.title);
+        } else {
+          this.alertService.setAlert('danger', error.statusText);
         }
-      });
+      }
+    });
   }
 }

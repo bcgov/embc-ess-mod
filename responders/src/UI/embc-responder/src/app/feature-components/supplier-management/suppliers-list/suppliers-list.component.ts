@@ -14,11 +14,18 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
+import { OverlayLoaderComponent } from '../../../shared/components/overlay-loader/overlay-loader.component';
+
+import { SuppliersTableComponent } from './suppliers-table/suppliers-table.component';
+import { SearchFilterComponent } from '../../../shared/components/search-filter/search-filter.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-suppliers-list',
   templateUrl: './suppliers-list.component.html',
-  styleUrls: ['./suppliers-list.component.scss']
+  styleUrls: ['./suppliers-list.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SearchFilterComponent, SuppliersTableComponent, OverlayLoaderComponent]
 })
 export class SuppliersListComponent implements OnInit {
   primarySupplierFilterTerm: TableFilterValueModel;
@@ -54,10 +61,8 @@ export class SuppliersListComponent implements OnInit {
   ngOnInit(): void {
     this.addSupplierService.clearAddedSupplier();
     this.filtersToLoad = this.supplierListDataService.filtersToLoad;
-    this.primarySuppliersColumns =
-      this.supplierListDataService.primarySupplierColumns;
-    this.mutualAidSuppliersColumns =
-      this.supplierListDataService.mutualAidSupplierColumns;
+    this.primarySuppliersColumns = this.supplierListDataService.primarySupplierColumns;
+    this.mutualAidSuppliersColumns = this.supplierListDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService?.currentProfile?.role;
 
     this.getSuppliersLists();
@@ -88,20 +93,16 @@ export class SuppliersListComponent implements OnInit {
    */
   openSupplierDetails($event: SupplierListItem): void {
     this.isLoading = true;
-    this.supplierListDataService
-      .getSupplierDetails($event.id, 'supplier')
-      .then(() => {
-        this.isLoading = false;
-      });
+    this.supplierListDataService.getSupplierDetails($event.id, 'supplier').then(() => {
+      this.isLoading = false;
+    });
   }
 
   openMutualAidDetails($event: SupplierListItem): void {
     this.isLoading = true;
-    this.supplierListDataService
-      .getSupplierDetails($event.id, 'mutualAid')
-      .then(() => {
-        this.isLoading = false;
-      });
+    this.supplierListDataService.getSupplierDetails($event.id, 'mutualAid').then(() => {
+      this.isLoading = false;
+    });
   }
 
   /**
@@ -124,22 +125,17 @@ export class SuppliersListComponent implements OnInit {
           next: (event) => {
             if (event === 'confirm') {
               this.statusLoading = !this.statusLoading;
-              this.supplierServices
-                .activateSuppliersStatus($event.id)
-                .subscribe({
-                  next: (value) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.suppliersList = value;
-                  },
-                  error: (error) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.alertService.clearAlert();
-                    this.alertService.setAlert(
-                      'danger',
-                      globalConst.activateSupplierError
-                    );
-                  }
-                });
+              this.supplierServices.activateSuppliersStatus($event.id).subscribe({
+                next: (value) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.suppliersList = value;
+                },
+                error: (error) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.activateSupplierError);
+                }
+              });
             } else {
               this.cancelPrimarySuppliersListChanges();
             }
@@ -155,10 +151,7 @@ export class SuppliersListComponent implements OnInit {
         error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.activateSupplierError
-          );
+          this.alertService.setAlert('danger', globalConst.activateSupplierError);
         }
       });
     }
@@ -184,22 +177,17 @@ export class SuppliersListComponent implements OnInit {
           next: (event) => {
             if (event === 'confirm') {
               this.statusLoading = !this.statusLoading;
-              this.supplierServices
-                .deactivateSuppliersStatus($event.id)
-                .subscribe({
-                  next: (value) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.suppliersList = value;
-                  },
-                  error: (error) => {
-                    this.statusLoading = !this.statusLoading;
-                    this.alertService.clearAlert();
-                    this.alertService.setAlert(
-                      'danger',
-                      globalConst.deActivateSupplierError
-                    );
-                  }
-                });
+              this.supplierServices.deactivateSuppliersStatus($event.id).subscribe({
+                next: (value) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.suppliersList = value;
+                },
+                error: (error) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert('danger', globalConst.deActivateSupplierError);
+                }
+              });
             } else {
               this.cancelPrimarySuppliersListChanges();
             }
@@ -215,10 +203,7 @@ export class SuppliersListComponent implements OnInit {
         error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.deActivateSupplierError
-          );
+          this.alertService.setAlert('danger', globalConst.deActivateSupplierError);
         }
       });
     }
@@ -228,9 +213,7 @@ export class SuppliersListComponent implements OnInit {
    * Navigates to add team member page
    */
   addSupplier(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/add-supplier'
-    ]);
+    this.router.navigate(['/responder-access/supplier-management/add-supplier']);
   }
 
   /**
@@ -270,10 +253,7 @@ export class SuppliersListComponent implements OnInit {
       error: (error) => {
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }
@@ -291,10 +271,7 @@ export class SuppliersListComponent implements OnInit {
       error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mainSuppliersListError);
       }
     });
   }

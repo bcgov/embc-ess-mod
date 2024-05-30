@@ -9,7 +9,6 @@ import {
 } from '@angular/core/testing';
 
 import { ListNotesComponent } from './list-notes.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StepNotesService } from '../../step-notes/step-notes.service';
@@ -17,6 +16,7 @@ import { MockStepNotesService } from 'src/app/unit-tests/mockStepNotes.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { MockUserService } from 'src/app/unit-tests/mockUser.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 describe('ListNotesComponent', () => {
   let component: ListNotesComponent;
@@ -26,16 +26,11 @@ describe('ListNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [ListNotesComponent],
+      imports: [MatDialogModule, HttpClientTestingModule, BrowserAnimationsModule, ListNotesComponent],
       providers: [
         { provide: StepNotesService, useClass: MockStepNotesService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: UserService, useClass: MockUserService },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -64,9 +59,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));
@@ -82,9 +75,7 @@ describe('ListNotesComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
     expect(dialogContent).toBeDefined();
   }));

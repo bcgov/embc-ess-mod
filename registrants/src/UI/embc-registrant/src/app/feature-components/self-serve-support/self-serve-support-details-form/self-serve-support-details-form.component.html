@@ -1,0 +1,290 @@
+@if (supportDraftForm) {
+  <form class="support-details-form">
+    <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
+    @if (showSelfServeShelterAllowanceSupport) {
+      <mat-card
+        appearance="outlined"
+        [class.support-one-time-used]="
+          supportEligibilityStateSettings[SelfServeSupportType.ShelterAllowance] ===
+          SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+        "
+      >
+        <mat-card-content>
+          <div class="card-heading">Shelter Allowance</div>
+
+          <div class="show-one-time-used-message">
+            <p><b>Shelter Allowance is only provided once during the evacuation period.</b></p>
+            <p>Your household has already been provided support for Shelter Allowance</p>
+          </div>
+
+          <div class="question-box hide-on-one-time-used">
+            <div class="card-question">
+              <label>Which <b>days</b> does your household require <b>Shelter Allowance</b>?</label>
+            </div>
+
+            <div style="display: flex; flex-direction: column">
+              @for (night of supportDraftForm.controls?.shelterAllowance?.controls?.nights?.controls; track $index) {
+                <div>
+                  <mat-checkbox [formControl]="night.controls.isSelected">
+                    {{ night.controls.date.value.format('DD MMMM') }}
+                  </mat-checkbox>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="note-box">Shelter Allowance is provided at <b>$200 per night</b> per household.</div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @if (showSelfServeFoodSupport) {
+      <mat-card
+        appearance="outlined"
+        [class.support-one-time-used]="
+          supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] ===
+            SelfServeSupportEligibilityState.UnavailableOneTimeUsed ||
+          supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] ===
+            SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+        "
+      >
+        <mat-card-content>
+          <div class="card-heading requiredField">Food</div>
+          <div class="question-box">
+            <div class="card-question">
+              <label>Would you like to be provided funds for <b>Restaurant Meals</b> or <b>Groceries</b>?</label>
+            </div>
+            <div>
+              <mat-radio-group
+                class="primary-radio-group"
+                style="display: flex; flex-direction: column"
+                [formControl]="supportDraftForm.controls.food.controls.fundsFor"
+              >
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodGroceries"
+                  [disabled]="!hasSelfServeFoodGroceriesSupport"
+                >
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+                    <b>Groceries</b>
+                  } @else {
+                    Groceries
+                  }
+                  @if (!hasSelfServeFoodGroceriesSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
+                  }
+                </mat-radio-button>
+                <div class="show-one-time-used-message">
+                  <p><b>Groceries is only provided once during the evacuation period.</b></p>
+                  <p>Your household has already been provided support for Groceries</p>
+                </div>
+                <mat-radio-button
+                  [value]="SelfServeSupportType.FoodRestaurant"
+                  [disabled]="!hasSelfServiceFoodRestaurantSupport"
+                >
+                  @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+                    <b>Restaurant Meals</b>
+                  } @else {
+                    Restaurant Meals
+                  }
+                  @if (!hasSelfServiceFoodRestaurantSupport) {
+                    <mat-error> Not available via self-serve </mat-error>
+                  }
+                </mat-radio-button>
+                <div class="show-one-time-used-message">
+                  <p><b>Restaurant Meals is only provided once during the evacuation period.</b></p>
+                  <p>Your household has already been provided support for Restaurant Meals</p>
+                </div>
+              </mat-radio-group>
+            </div>
+            @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodGroceries) {
+              <div class="card-question">
+                <label>Which <b>people</b> in your household require <b>Groceries</b>?</label>
+              </div>
+              <div>
+                <div style="display: flex; flex-direction: column">
+                  @for (
+                    person of supportDraftForm.controls?.food?.controls?.groceries?.controls?.includedHouseholdMembers
+                      ?.controls;
+                    track $index
+                  ) {
+                    <div>
+                      <mat-checkbox [formControl]="person.controls.isSelected">
+                        {{ getPersonName(person.controls.personId.value) }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                </div>
+
+                <div class="card-question">
+                  <label>Which <b>days</b> does your household require <b>Groceries</b>?</label>
+                </div>
+
+                <div style="display: flex; flex-direction: column">
+                  @for (
+                    night of supportDraftForm.controls?.food?.controls?.groceries?.controls?.nights?.controls;
+                    track $index
+                  ) {
+                    <div>
+                      <mat-checkbox [formControl]="night.controls.isSelected">
+                        {{ night.controls.date.value.format('DD MMMM') }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (supportDraftForm.controls.food.controls.fundsFor.value === SelfServeSupportType.FoodRestaurant) {
+              <label>Which <b>people</b> in your household require <b>Restaurant Meals</b>? </label>
+              <div style="display: flex; flex-direction: column">
+                @for (
+                  person of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.includedHouseholdMembers
+                    .controls;
+                  track $index
+                ) {
+                  <div>
+                    <mat-checkbox [formControl]="person.controls.isSelected">
+                      {{ getPersonName(person.controls.personId.value) }}
+                    </mat-checkbox>
+                  </div>
+                }
+              </div>
+              <div>
+                <label>What <b>meals</b> are required for your household? </label>
+
+                <button type="button" mat-icon-button class="status-info" (click)="openRestaurantMealsInfoDialog()">
+                  <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                </button>
+              </div>
+              <div class="meals-table-container">
+                <table>
+                  <tr class="header-row">
+                    <th></th>
+                    @for (date of foodRestaurantDates; track $index) {
+                      <th>{{ date.format('MMM DD, yyy') }}</th>
+                    }
+                  </tr>
+                  <tr>
+                    <th>Breakfast</th>
+                    @for (
+                      meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                      track $index
+                    ) {
+                      <td><mat-checkbox [formControl]="meal.controls.breakfast"></mat-checkbox></td>
+                    }
+                  </tr>
+                  <tr>
+                    <th>Lunch</th>
+                    @for (
+                      meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                      track $index
+                    ) {
+                      <td><mat-checkbox [formControl]="meal.controls.lunch"></mat-checkbox></td>
+                    }
+                  </tr>
+                  <tr>
+                    <th>Dinner</th>
+                    @for (
+                      meal of supportDraftForm.controls?.food?.controls?.restaurant?.controls?.mealTypes?.controls;
+                      track $index
+                    ) {
+                      <td><mat-checkbox [formControl]="meal.controls.dinner"></mat-checkbox></td>
+                    }
+                  </tr>
+                </table>
+              </div>
+            }
+
+            @if (
+              supportDraftForm.controls?.food?.touched &&
+              supportDraftForm.controls?.food?.controls?.fundsFor?.hasError('required')
+            ) {
+              <mat-error>Selection is required</mat-error>
+            }
+          </div>
+          <div class="note-box">
+            Restaurant Meals are provided at <b>$12.75</b> for breakfast, <b>$14.75</b> for lunch and <b>$25.50</b> for
+            dinner per person per day.
+            <br />
+            Groceries are provided at a daily rate of <b>$22.50 per person</b> per day.
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @if (showSelfServeClothingSupport) {
+      <mat-card
+        appearance="outlined"
+        [class.support-one-time-used]="
+          supportEligibilityStateSettings[SelfServeSupportType.Clothing] ===
+          SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+        "
+      >
+        <mat-card-content>
+          <div class="card-heading">Clothing</div>
+
+          <div class="show-one-time-used-message">
+            <p><b>Clothing is only provided once during the evacuation period.</b></p>
+            <p>Your household has already been provided support for Clothing</p>
+          </div>
+
+          <div class="question-box hide-on-one-time-used">
+            <div class="card-question">
+              <label>Which <b>people</b> in your household require <b>Clothing</b>?</label>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              @for (
+                person of supportDraftForm.controls?.clothing?.controls?.includedHouseholdMembers?.controls;
+                track $index
+              ) {
+                <div>
+                  <mat-checkbox [formControl]="person.controls.isSelected">
+                    {{ getPersonName(person.controls.personId.value) }}
+                  </mat-checkbox>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="note-box">Clothing is provided at <b>$150 per person</b> for the time you are evacuated.</div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @if (showSelfServeIncidentsSupport) {
+      <mat-card
+        appearance="outlined"
+        [class.support-one-time-used]="
+          supportEligibilityStateSettings[SelfServeSupportType.Incidentals] ===
+          SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+        "
+      >
+        <mat-card-content>
+          <div class="card-heading">Incidentals</div>
+
+          <div class="show-one-time-used-message">
+            <p><b>Incidents is only provided once during the evacuation period.</b></p>
+            <p>Your household has already been provided support for Incidents</p>
+          </div>
+
+          <div class="question-box hide-on-one-time-used">
+            <div class="card-question">
+              <label>Which <b>people</b> in your household require <b>Incidentals</b>?</label>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              @for (
+                person of supportDraftForm.controls?.incidents?.controls?.includedHouseholdMembers?.controls;
+                track $index
+              ) {
+                <div>
+                  <mat-checkbox [formControl]="person.controls.isSelected">
+                    {{ getPersonName(person.controls.personId.value) }}
+                  </mat-checkbox>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="note-box">Incidentals are provided at <b>$50 per person</b> for the time you are evacuated.</div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </form>
+}

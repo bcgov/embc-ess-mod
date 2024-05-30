@@ -11,9 +11,7 @@ import {
 
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -30,6 +28,7 @@ import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.serv
 import { Router } from '@angular/router';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { MockEvacueeProfileDashboardService } from 'src/app/unit-tests/mockEvacueeProfileDashboard.service';
+import { provideRouter } from '@angular/router';
 
 describe('EvacueeProfileDashboardComponent', () => {
   let component: EvacueeProfileDashboardComponent;
@@ -45,12 +44,10 @@ describe('EvacueeProfileDashboardComponent', () => {
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
-        CustomPipeModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        EvacueeProfileDashboardComponent
       ],
-      declarations: [EvacueeProfileDashboardComponent],
       providers: [
         EvacueeProfileDashboardComponent,
         {
@@ -73,7 +70,8 @@ describe('EvacueeProfileDashboardComponent', () => {
         {
           provide: OptionInjectionService,
           useClass: MockOptionInjectionService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -147,9 +145,7 @@ describe('EvacueeProfileDashboardComponent', () => {
 
       tick();
       fixture.detectChanges();
-      const dialogContent = document.getElementsByTagName(
-        'app-ess-file-exists'
-      )[0] as HTMLElement;
+      const dialogContent = document.getElementsByTagName('app-ess-file-exists')[0] as HTMLElement;
       expect(dialogContent).toBeTruthy();
     })
   ));
@@ -231,12 +227,8 @@ describe('EvacueeProfileDashboardComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
-    expect(dialogContent.textContent).toEqual(
-      'Please complete the evacuee profile. Close '
-    );
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
+    expect(dialogContent.textContent).toEqual('Please complete the evacuee profile. Close ');
   }));
 
   it('should open dialog ess file successfully linked', fakeAsync(() => {
@@ -259,13 +251,9 @@ describe('EvacueeProfileDashboardComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
 
-    expect(dialogContent.textContent).toEqual(
-      'ESS File Successfully Linked Close '
-    );
+    expect(dialogContent.textContent).toEqual('ESS File Successfully Linked Close ');
   }));
 
   it('should open dialog ess file error linked', fakeAsync(() => {
@@ -288,12 +276,8 @@ describe('EvacueeProfileDashboardComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
-    expect(dialogContent.textContent).toEqual(
-      'Error while linking the ESS File. Please try again later Close '
-    );
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
+    expect(dialogContent.textContent).toEqual('Error while linking the ESS File. Please try again later Close ');
   }));
 
   it('should open dialog to verify evacuee', fakeAsync(() => {
@@ -316,9 +300,7 @@ describe('EvacueeProfileDashboardComponent', () => {
     tick();
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-verify-evacuee-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-verify-evacuee-dialog')[0] as HTMLElement;
     expect(dialogContent.textContent).toBeTruthy();
   }));
 
@@ -347,9 +329,7 @@ describe('EvacueeProfileDashboardComponent', () => {
 
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
     expect(dialogContent.textContent).toBeTruthy();
   }));
 
@@ -378,12 +358,8 @@ describe('EvacueeProfileDashboardComponent', () => {
 
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-information-dialog'
-    )[0] as HTMLElement;
-    expect(dialogContent.textContent).not.toBe(
-      'Evacuee profile has been successfully verified.'
-    );
+    const dialogContent = document.getElementsByTagName('app-information-dialog')[0] as HTMLElement;
+    expect(dialogContent.textContent).not.toBe('Evacuee profile has been successfully verified.');
   }));
 
   it('should open bc services card invite dialog', fakeAsync(() => {
@@ -413,9 +389,7 @@ describe('EvacueeProfileDashboardComponent', () => {
 
     fixture.detectChanges();
 
-    const dialogContent = document.getElementsByTagName(
-      'app-bcsc-invite-dialog'
-    )[0] as HTMLElement;
+    const dialogContent = document.getElementsByTagName('app-bcsc-invite-dialog')[0] as HTMLElement;
     expect(dialogContent.textContent).toBeTruthy();
   }));
 
@@ -447,8 +421,6 @@ describe('EvacueeProfileDashboardComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.emailSuccessMessage).toBe(
-      'Email sent successfully to unit@test.com'
-    );
+    expect(component.emailSuccessMessage).toBe('Email sent successfully to unit@test.com');
   }));
 });

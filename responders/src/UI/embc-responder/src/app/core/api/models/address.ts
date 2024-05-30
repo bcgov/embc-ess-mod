@@ -2,10 +2,10 @@
 /* eslint-disable */
 export interface Address {
   addressLine1?: string;
-  addressLine2?: null | string;
-  city?: null | string;
-  communityCode?: null | string;
+  addressLine2?: string | null;
+  city?: string | null;
+  communityCode?: string | null;
   countryCode?: string;
-  postalCode?: null | string;
-  stateProvinceCode?: null | string;
+  postalCode?: string | null;
+  stateProvinceCode?: string | null;
 }

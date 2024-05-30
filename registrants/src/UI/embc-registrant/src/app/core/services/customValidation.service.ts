@@ -66,9 +66,41 @@ export class CustomValidationService {
       if (control) {
         const email = control.get('email').value;
         const confirmEmail = control.get('confirmEmail').value;
-        if (email !== undefined && confirmEmail !== undefined && email !== null && confirmEmail !== null && email !== '' && confirmEmail !== '') {
+        if (
+          email !== undefined &&
+          confirmEmail !== undefined &&
+          email !== null &&
+          confirmEmail !== null &&
+          email !== '' &&
+          confirmEmail !== ''
+        ) {
           if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
             return { emailMatch: true };
+          }
+        }
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Checks if the email and confirm email field matches
+   */
+  compare({ fieldName }: { fieldName: string }): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const value = control.parent.get(fieldName).value;
+        const confirmValue = control.value;
+        if (
+          value !== undefined &&
+          confirmValue !== undefined &&
+          value !== null &&
+          confirmValue !== null &&
+          value !== '' &&
+          confirmValue !== ''
+        ) {
+          if (value.toLowerCase() !== confirmValue.toLowerCase()) {
+            return { compare: true };
           }
         }
       }
@@ -84,7 +116,10 @@ export class CustomValidationService {
         const phone = control.get('phone').value;
 
         if (control.get('showContacts').value === true && (phone === null || phone === undefined || phone === '')) {
-          if ((email !== undefined || email !== null || email === '') && (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
+          if (
+            (email !== undefined || email !== null || email === '') &&
+            (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)
+          ) {
             return { confirmEmailRequired: true };
           }
         }
@@ -129,7 +164,8 @@ export class CustomValidationService {
    * Checks if the quantity inserted is between 1 and 999
    */
   quantityPetsValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => Validators.pattern(globalConst.petsQuantityPattern)(control);
+    return (control: AbstractControl): { [key: string]: boolean } | null =>
+      Validators.pattern(globalConst.petsQuantityPattern)(control);
   }
 
   whitespaceValidator(): ValidatorFn {
@@ -184,9 +220,12 @@ export class CustomValidationService {
   public needsValidator(): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {
       const anyNeedsIdentified =
-        group.controls['requiresShelter'].value || group.controls['requiresFood'].value || group.controls['requiresClothing'].value || group.controls['requiresIncidentals'].value;
+        group.controls.requiresShelter.value ||
+        group.controls.requiresFood.value ||
+        group.controls.requiresClothing.value ||
+        group.controls.requiresIncidentals.value;
 
-      const noNeedsIdentified = group.controls['requiresNothing'].value;
+      const noNeedsIdentified = group.controls.requiresNothing.value;
       if (!anyNeedsIdentified && !noNeedsIdentified) {
         return { invalid: true };
       }

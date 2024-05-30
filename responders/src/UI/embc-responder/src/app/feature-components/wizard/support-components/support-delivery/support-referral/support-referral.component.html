@@ -1,207 +1,167 @@
 <form [formGroup]="referralDeliveryForm">
-  <div class="row" *ngIf="
-  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
-">
-    <div class="col-md-12">
-      <p class="question-heading requiredField">
-        Who will be responsible for the purchasing of goods?
-      </p>
-    </div>
-  </div>
-  <div class="row" *ngIf="
-  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
-">
-    <div class="col-md-4">
-      <mat-form-field appearance="outline">
-        <mat-select
-          formControlName="issuedTo"
-          (selectionChange)="memberSelect($event)"
-          required
-        >
-          <mat-option
-            *ngFor="
-              let member of evacueeSessionService?.evacFile?.needsAssessment
-                ?.householdMembers
-            "
-            [value]="member"
-          >
-            {{ member.lastName | uppercase }},
-            {{ member.firstName }}
-          </mat-option>
-          <mat-option [value]="'Someone else'">Someone else</mat-option>
-        </mat-select>
-        <mat-error
-          *ngIf="
-            supportDeliveryFormControl?.issuedTo.invalid &&
-            supportDeliveryFormControl?.issuedTo.hasError('required')
-          "
-        >
-          Required</mat-error
-        >
-      </mat-form-field>
-    </div>
-
-    <div *ngIf="showTextField" class="col-md-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter Name</mat-label>
-        <input
-          formControlName="name"
-          maxlength="100"
-          matInput
-          placeholder="Enter Name"
-        />
-        <mat-error
-          class="custom-mat-error"
-          *ngIf="
-            supportDeliveryFormControl?.name.invalid &&
-            supportDeliveryFormControl?.name.hasError('whitespaceError')
-          "
-        >
-          Name is required</mat-error
-        >
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Billeting' &&
-      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group'&&
-      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
-    "
-  >
+  @if (stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance') {
     <div class="row">
       <div class="col-md-12">
-        <p class="question-heading requiredField">Select Supplier</p>
+        <p class="question-heading requiredField">Who will be responsible for the purchasing of goods?</p>
       </div>
     </div>
+  }
+  @if (stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance') {
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
-          <mat-label>Supplier</mat-label>
-          <input
-            maxlength="100"
-            type="text"
-            formControlName="supplier"
-            matInput
-            placeholder="Supplier"
-            [matAutocomplete]="auto"
-            required
-          />
-          <mat-autocomplete
-            (optionSelected)="showDetails($event)"
-            #auto="matAutocomplete"
-            [displayWith]="displaySupplier"
-          >
-            <mat-option
-              *ngFor="let option of filteredOptions | async"
-              [value]="option"
-            >
-              <div class="row">
-                <div class="col-md-6 supplier-name">
-                  <b>{{ option?.name }}</b>
-                </div>
-                <div class="col-md-4 supplier-address">
-                  {{ option?.address?.addressLine1 }}
-                  <span *ngIf="option?.address?.addressLine2">
-                    , {{ option?.address?.addressLine2 }}
-                  </span>
-                </div>
-              </div>
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl?.supplier.invalid &&
-              supportDeliveryFormControl?.supplier.hasError('required')
-            "
-          >
-            Supplier is required</mat-error
-          >
-          <mat-error *ngIf="validateSupplier()"> Supplier is invalid</mat-error>
+          <mat-select formControlName="issuedTo" (selectionChange)="memberSelect($event)" required>
+            @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
+              <mat-option [value]="member">
+                {{ member.lastName | uppercase }},
+                {{ member.firstName }}
+              </mat-option>
+            }
+            <mat-option [value]="'Someone else'">Someone else</mat-option>
+          </mat-select>
+          @if (
+            supportDeliveryFormControl?.issuedTo.invalid && supportDeliveryFormControl?.issuedTo.hasError('required')
+          ) {
+            <mat-error> Required</mat-error>
+          }
         </mat-form-field>
       </div>
-
-      <div class="col-md-4">
-        <button
-          class="search-button button-transparent"
-          mat-button
-          (click)="refreshList()"
-        >
-          <img src="/assets/images/reset.svg" height="20" width="20" /><span
-            class="reset-img"
-            >Refresh Supplier List</span
-          >
-        </button>
-      </div>
-      <div class="col-md-4">
-        <app-loader
-          [strokeWidth]="3"
-          [diameter]="25"
-          [showLoader]="showLoader"
-          [color]="color"
-        >
-        </app-loader>
-      </div>
+      @if (showTextField) {
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Enter Name</mat-label>
+            <input formControlName="name" maxlength="100" matInput placeholder="Enter Name" />
+            @if (
+              supportDeliveryFormControl?.name.invalid && supportDeliveryFormControl?.name.hasError('whitespaceError')
+            ) {
+              <mat-error class="custom-mat-error"> Name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
     </div>
+  }
 
-    <mat-card *ngIf="showSupplierFlag" class="supplier-box">
-      <p class="bold">{{ selectedSupplierItem?.name }}</p>
-      <p [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"></p>
-    </mat-card>
-  </div>
+  @if (
+    stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Billeting' &&
+    stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group' &&
+    stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
+  ) {
+    <div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="question-heading requiredField">Select Supplier</p>
+        </div>
+      </div>
+      <div class="row supplier-list">
+        <div class="col-md-8">
+          <mat-form-field appearance="outline">
+            <mat-label>Supplier</mat-label>
+            <input
+              maxlength="100"
+              type="text"
+              formControlName="supplier"
+              matInput
+              placeholder="Supplier"
+              [matAutocomplete]="auto"
+              required
+            />
+            <mat-autocomplete
+              class="supplier-list-autocomplete-control"
+              (optionSelected)="showDetails($event)"
+              #auto="matAutocomplete"
+              [displayWith]="displaySupplier"
+            >
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">
+                  <div class="row">
+                    <div class="col-md-6 supplier-name">
+                      <b>{{ option?.name }}</b>
+                    </div>
+                    <div class="col-md-4 supplier-address">
+                      {{ option?.address?.addressLine1 }}
+                      @if (option?.address?.addressLine2) {
+                        <span> , {{ option?.address?.addressLine2 }} </span>
+                      }
+                    </div>
+                  </div>
+                </mat-option>
+              }
+            </mat-autocomplete>
+            @if (
+              supportDeliveryFormControl?.supplier.invalid && supportDeliveryFormControl?.supplier.hasError('required')
+            ) {
+              <mat-error> Supplier is required</mat-error>
+            }
+            @if (validateSupplier()) {
+              <mat-error> Supplier is invalid</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-md-2">
+          <button class="search-button button-transparent" mat-button (click)="refreshList()">
+            <img src="/assets/images/reset.svg" height="20" width="20" />
+          </button>
+        </div>
+        <div class="col-md-2" style="padding: var(--size-2)">
+          <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color"> </app-loader>
+        </div>
+      </div>
+      @if (showSupplierFlag) {
+        <mat-card class="supplier-box">
+          <mat-card-content>
+            <p class="bold">{{ selectedSupplierItem?.name }}</p>
+            <p [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"></p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
 
   <!--Lodging Billeting-->
 
-  <div
-    *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Billeting'"
-  >
-    <app-billeting-delivery
-      [supportDeliveryForm]="referralDeliveryForm"
-    ></app-billeting-delivery>
-  </div>
+  @if (stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Billeting') {
+    <div>
+      <app-billeting-delivery [supportDeliveryForm]="referralDeliveryForm"></app-billeting-delivery>
+    </div>
+  }
 
-    <!--Shelter Allowance-->
+  <!--Shelter Allowance-->
 
-    <div
-    *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance'"
-  >
-    <app-shelter-allowance-delivery
-      [supportDeliveryForm]="referralDeliveryForm"
-    ></app-shelter-allowance-delivery>
-  </div>
+  @if (stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance') {
+    <div>
+      <app-shelter-allowance-delivery [supportDeliveryForm]="referralDeliveryForm"></app-shelter-allowance-delivery>
+    </div>
+  }
 
   <!--Group Lodging-->
-  <div *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'">
-    <app-group-lodging-delivery
-      [supportDeliveryForm]="referralDeliveryForm"
-    ></app-group-lodging-delivery>
-  </div>
+  @if (stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group') {
+    <div>
+      <app-group-lodging-delivery [supportDeliveryForm]="referralDeliveryForm"></app-group-lodging-delivery>
+    </div>
+  }
 
-  <div class="row"     *ngIf="
-  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
-">
-    <div class="col-md-12">
-      <p class="question-heading">Supplier Support Notes</p>
+  @if (stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance') {
+    <div class="row">
+      <div class="col-md-12">
+        <p class="question-heading">Supplier Support Notes</p>
+      </div>
     </div>
-  </div>
-  <div class="row" *ngIf="
-  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
-">
-    <div class="col-md-8">
-      <p>
-        These notes are for the supplier and will be visible on the referral
-        PDF.
-      </p>
-      <mat-form-field appearance="outline">
-        <textarea
-          rows="10"
-          formControlName="supplierNote"
-          placeholder="Add Notes"
-          maxlength="250"
-          matInput
-        ></textarea>
-      </mat-form-field>
+  }
+  @if (stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance') {
+    <div class="row">
+      <div class="col-md-8">
+        <p>These notes are for the supplier and will be visible on the referral PDF.</p>
+        <mat-form-field appearance="outline">
+          <textarea
+            rows="10"
+            formControlName="supplierNote"
+            placeholder="Add Notes"
+            maxlength="250"
+            matInput
+          ></textarea>
+        </mat-form-field>
+      </div>
     </div>
-  </div>
+  }
 </form>

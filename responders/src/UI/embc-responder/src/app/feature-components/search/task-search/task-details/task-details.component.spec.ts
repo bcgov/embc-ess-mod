@@ -1,7 +1,6 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { TaskDetailsComponent } from './task-details.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { TaskSearchService } from '../task-search.service';
@@ -11,6 +10,7 @@ import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
 import { Router } from '@angular/router';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
+import { provideRouter } from '@angular/router';
 
 describe('TaskDetailsComponent', () => {
   let component: TaskDetailsComponent;
@@ -20,8 +20,7 @@ describe('TaskDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TaskDetailsComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [HttpClientTestingModule, TaskDetailsComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -35,7 +34,8 @@ describe('TaskDetailsComponent', () => {
         {
           provide: AppBaseService,
           useClass: MockAppBaseService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -55,7 +55,6 @@ describe('TaskDetailsComponent', () => {
     spyOn(router, 'navigate').and.stub();
 
     fixture.detectChanges();
-    component.ngOnInit();
     component.signInTask();
     expect(router.navigate).toHaveBeenCalled();
   }));

@@ -1,6 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -11,6 +10,7 @@ import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession
 import { Router } from '@angular/router';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { MockUserService } from 'src/app/unit-tests/mockUser.service';
+import { provideRouter } from '@angular/router';
 
 describe('SearchOptionsComponent', () => {
   let component: SearchOptionsComponent;
@@ -21,8 +21,7 @@ describe('SearchOptionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [SearchOptionsComponent],
+      imports: [HttpClientTestingModule, SearchOptionsComponent],
       providers: [
         { provide: computeInterfaceToken, useValue: {} },
         {
@@ -36,7 +35,8 @@ describe('SearchOptionsComponent', () => {
         {
           provide: UserService,
           useClass: MockUserService
-        }
+        },
+        provideRouter([])
       ]
     }).compileComponents();
   });
@@ -63,32 +63,27 @@ describe('SearchOptionsComponent', () => {
     expect(component.selectedPathway).toEqual(SelectedPathType.paperBased);
   });
 
-  it('should navigate to the wrapper component', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  it('should navigate to the wrapper component', inject([Router], (router: Router) => {
+    spyOn(router, 'navigate').and.stub();
 
-      component.setSelection('digital');
+    component.setSelection('digital');
 
-      fixture.detectChanges();
-      component.next();
-      expect(router.navigate).toHaveBeenCalledWith(
-        ['/responder-access/search/evacuee/wrapper'],
-        Object({ skipLocationChange: true })
-      );
-    }
-  ));
+    fixture.detectChanges();
+    component.next();
+    expect(router.navigate).toHaveBeenCalledWith(
+      ['/responder-access/search/evacuee/wrapper'],
+      Object({ skipLocationChange: true })
+    );
+  }));
 
   it('should display a warning message to select search option', () => {
     component.noSelectionFlag = true;
     fixture.detectChanges();
     component.next();
 
-    const warningMessage = document.getElementsByClassName(
-      'field-error'
-    )[0] as HTMLElement;
+    const warningMessage = document.getElementsByClassName('field-error')[0] as HTMLElement;
     fixture.detectChanges();
-    expect(warningMessage.textContent).toEqual(' Please make a selection ');
+    expect(warningMessage.textContent).toEqual('Please make a selection');
   });
 
   it('should display Remote Extensions as disable if not enabled', () => {

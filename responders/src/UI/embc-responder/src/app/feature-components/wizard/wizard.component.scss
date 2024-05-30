@@ -86,7 +86,10 @@ a:not(.btn):focus {
 
 .a-mat-button {
   @extend .img-active;
+
+  display: block;
   width: 100%;
+  height: auto;
   text-align: unset;
   line-height: unset;
   color: #234075;

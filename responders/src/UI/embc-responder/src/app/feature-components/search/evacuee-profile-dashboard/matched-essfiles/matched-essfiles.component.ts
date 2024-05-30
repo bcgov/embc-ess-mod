@@ -1,6 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatAccordion } from '@angular/material/expansion';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription
+} from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileStatus, MemberRole } from 'src/app/core/api/models';
 import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
@@ -14,11 +20,32 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { NgClass, NgStyle, DatePipe } from '@angular/common';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-matched-essfiles',
   templateUrl: './matched-essfiles.component.html',
-  styleUrls: ['./matched-essfiles.component.scss']
+  styleUrls: ['./matched-essfiles.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    AppLoaderComponent,
+    MatAccordion,
+    MatButtonModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    NgClass,
+    MatExpansionPanelDescription,
+    NgStyle,
+    DatePipe,
+    MaskEvacuatedAddressPipe
+  ]
 })
 export class MatchedEssfilesComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
@@ -44,10 +71,8 @@ export class MatchedEssfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
-    this.paperBasedEssFile =
-      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
-    this.registrantId =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
+    this.paperBasedEssFile = this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
+    this.registrantId = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     this.getProfileESSFiles(this.registrantId);
   }
 
@@ -131,45 +156,13 @@ export class MatchedEssfilesComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
       next: (essFilesArray: Array<EvacuationFileSummaryModel>) => {
-        const loggedInRole = this.userService?.currentProfile?.role;
-        if (essFilesArray !== undefined || essFilesArray.length !== 0) {
-          if (this.evacueeSessionService.isPaperBased) {
-            if (loggedInRole !== MemberRole.Tier1) {
-              this.essFiles = essFilesArray;
-            } else if (
-              loggedInRole === MemberRole.Tier1 &&
-              this.evacueeSearchService?.evacueeSearchContext
-                ?.evacueeSearchParameters?.paperFileNumber
-            ) {
-              this.essFiles = essFilesArray.filter(
-                (files) =>
-                  files.manualFileId ===
-                  this.evacueeSearchService?.evacueeSearchContext
-                    ?.evacueeSearchParameters?.paperFileNumber
-              );
-            }
-          } else {
-            if (loggedInRole === MemberRole.Tier1) {
-              this.essFiles = essFilesArray.filter(
-                (files) => files.status !== EvacuationFileStatus.Completed
-              );
-            } else {
-              this.essFiles = essFilesArray;
-            }
-          }
-        } else {
-          this.essFiles = [];
-        }
-
+        this.essFiles = essFilesArray ?? [];
         this.isLoading = !this.isLoading;
       },
       error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.getProfileEssFilesError
-        );
+        this.alertService.setAlert('danger', globalConst.getProfileEssFilesError);
       }
     });
   }

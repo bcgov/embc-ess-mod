@@ -1,372 +1,249 @@
-
-  <div class="row">
-    <div class="col-12 content-container">
-      <div class="row">
-        <div class="col-8">
-          <form [formGroup]="householdForm">
-            <div *ngIf="!essFileNumber; else editEssFile">
+<div class="row">
+  <div class="col-12 content-container">
+    <div class="row">
+      <div class="col-8">
+        <form [formGroup]="householdForm">
+          @if (!essFileNumber) {
+            <div>
               <p class="no-margin requiredField">
-                Do you have any household members (including dependents) who
-                live at the same residence as you?
+                Do you have any household members (including dependents) who live at the same residence as you?
               </p>
               <p class="notes">
-                Note: Household members who are independent of each other
-                (example: roommates) must register separately.
+                Note: Household members who are independent of each other (example: roommates) must register separately.
               </p>
-
               <mat-radio-group
                 formControlName="hasHouseholdMembers"
                 class="primary-radio-group"
                 required
                 (change)="hasHouseholdMembers($event)"
               >
-                <mat-radio-button
-                  class="primary-radio-button"
-                  *ngFor="let option of radioOption"
-                  [value]="option.value"
-                >
-                  {{ option.name }}
-                </mat-radio-button>
-                <mat-error
-                  class="custom-mat-error"
-                  *ngIf="
-                    householdFormControl?.hasHouseholdMembers.touched &&
-                    householdFormControl?.hasHouseholdMembers.invalid &&
-                    householdFormControl?.hasHouseholdMembers.hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Confirm to have Household Members is required</mat-error
-                >
+                @for (option of radioOption; track option) {
+                  <mat-radio-button class="primary-radio-button" [value]="option.value">
+                    {{ option.name }}
+                  </mat-radio-button>
+                }
+                @if (
+                  householdFormControl?.hasHouseholdMembers.touched &&
+                  householdFormControl?.hasHouseholdMembers.invalid &&
+                  householdFormControl?.hasHouseholdMembers.hasError('required')
+                ) {
+                  <mat-error class="custom-mat-error"> Confirm to have Household Members is required</mat-error>
+                }
               </mat-radio-group>
-
-              <div class="row" *ngIf="memberSource.getValue().length >= 2">
-                <div class="col-md-12">
-                  <div class="col-md-4 button-justify">
-                    <!--float-right -->
-                    <button
-                      class="family-button details-button"
-                      mat-button
-                      type="button"
-                      (click)="addMembers()"
-                    >
-                      + Add Household Member
-                    </button>
+              @if (memberSource.getValue().length >= 2) {
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="col-md-4 button-justify">
+                      <!--float-right -->
+                      <button class="family-button details-button" mat-button type="button" (click)="addMembers()">
+                        + Add Household Member
+                      </button>
+                    </div>
                   </div>
                 </div>
+              }
+            </div>
+          } @else {
+            <div class="col-md-12 description-div">
+              <p id="membertip-text" [innerHTML]="memberTipText"></p>
+            </div>
+            <div class="row button-justify">
+              <div class="col-md-4">
+                <button class="family-button" mat-button type="button" (click)="addMembers()">
+                  + Add Household Member
+                </button>
               </div>
             </div>
-            <ng-template #editEssFile>
-              <div class="col-md-12 description-div">
-                <p id="membertip-text" [innerHTML]="memberTipText"></p>
-              </div>
+          }
 
-              <div class="row button-justify">
-                <div class="col-md-4">
-                  <button
-                    class="family-button"
-                    mat-button
-                    type="button"
-                    (click)="addMembers()"
-                  >
-                    + Add Household Member
-                  </button>
+          @if (showMemberForm) {
+            <div>
+              <app-person-detail-form [personalDetailsForm]="houseHoldMemberFormGroup"> </app-person-detail-form>
+              @if (duplicateFlag) {
+                <div class="duplicate-warning">
+                  <img src="../../../../../assets/images/warning-red.svg" width="22px" height="25px" />
+                  Duplicate household members are not allowed.
                 </div>
-              </div>
-            </ng-template>
-
-            <div *ngIf="showMemberForm">
-              <app-person-detail-form
-                [personalDetailsForm]="houseHoldMemberFormGroup"
-              >
-              </app-person-detail-form>
-
-              <div class="duplicate-warning" *ngIf="duplicateFlag">
-                <img
-                  src="../../../../../assets/images/warning-red.svg"
-                  width="22px"
-                  height="25px"
-                />
-                Duplicate household members are not allowed.
-              </div>
-
+              }
               <div class="row bottom-space">
                 <div class="col-12">
-                  <button
-                    class="button-s cancel-button"
-                    mat-button
-                    type="button"
-                    (click)="cancel()"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    class="save-button"
-                    mat-button
-                    type="button"
-                    (click)="save()"
-                  >
-                    Save
-                  </button>
+                  <button class="button-s cancel-button" mat-button type="button" (click)="cancel()">Cancel</button>
+                  <button class="save-button" mat-button type="button" (click)="save()">Save</button>
                 </div>
               </div>
             </div>
+          }
 
-            <div class="row">
-              <div class="col-12">
-                <mat-table
-                  class="table-outline bottom-space"
-                  [dataSource]="memberSource"
-                >
-                  <ng-container class="header-cell" matColumnDef="select">
-                    <th
-                      class="selection-header"
-                      mat-header-cell
-                      *matHeaderCellDef
+          <div class="row">
+            <div class="col-12">
+              <mat-table class="table-outline bottom-space" [dataSource]="memberSource">
+                <ng-container class="header-cell" matColumnDef="select">
+                  <th class="selection-header" mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox
+                      (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()"
                     >
-                      <mat-checkbox
-                        (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="
-                          selection.hasValue() && !isAllSelected()
-                        "
-                        [aria-label]="checkboxLabel()"
+                    </mat-checkbox>
+                  </th>
+                  <td class="cell-selection" mat-cell *matCellDef="let row">
+                    <mat-checkbox
+                      (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)"
+                    >
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="members">
+                  <mat-header-cell class="header-cell" *matHeaderCellDef>Household Members</mat-header-cell>
+                  <mat-cell class="cell-member-details" *matCellDef="let member; let index = index">
+                    <div class="row member-name">
+                      <span
+                        [ngClass]="{
+                          'main-applicant': member.isPrimaryRegistrant
+                        }"
+                        >{{ member?.lastName | uppercase }} , {{ member?.firstName }}</span
                       >
-                      </mat-checkbox>
-                    </th>
-                    <td class="cell-selection" mat-cell *matCellDef="let row">
-                      <mat-checkbox
-                        (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)"
-                      >
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
+                    </div>
+                    <div class="row">
+                      <table class="table-members-details">
+                        <tr>
+                          <th>Initials:</th>
+                          <td>
+                            <b>{{ member.initials }}</b>
+                          </td>
+                          <th class="right-tr">Type:</th>
+                          <td>
+                            <b>{{ member?.isPrimaryRegistrant ? 'Registrant' : 'Household Member' }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Gender:</th>
+                          <td>
+                            <b>{{ member?.gender }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Date of Birth:</th>
+                          <td>
+                            <b>{{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
+                          </td>
+                        </tr>
+                      </table>
 
-                  <ng-container matColumnDef="members">
-                    <mat-header-cell class="header-cell" *matHeaderCellDef
-                      >Household Members</mat-header-cell
-                    >
-                    <mat-cell
-                      class="cell-member-details"
-                      *matCellDef="let member; let index = index"
-                    >
-                      <div class="row member-name">
-                        <span
-                          [ngClass]="{
-                            'main-applicant': member.isPrimaryRegistrant
-                          }"
-                          >{{ member?.lastName | uppercase }} ,
-                          {{ member?.firstName }}</span
-                        >
-                      </div>
-                      <div class="row">
-                        <table class="table-members-details">
-                          <tr>
-                            <th>Initials:</th>
-                            <td>
-                              <b>{{ member.initials }}</b>
-                            </td>
-                            <th class="right-tr">Type:</th>
-                            <td>
-                              <b>{{
-                                member?.isPrimaryRegistrant
-                                  ? 'Registrant'
-                                  : 'Household Member'
-                              }}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>Gender:</th>
-                            <td>
-                              <b>{{ member?.gender }}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>Date of Birth:</th>
-                            <td>
-                              <b>{{
-                                member?.dateOfBirth | date: 'dd-MMM-yyyy'
-                              }}</b>
-                            </td>
-                          </tr>
-                        </table>
-
-                        <table class="mobile-table-members">
-                          <tr>
-                            <th>Initials:</th>
-                            <td>
-                              <b>{{ member.initials }}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>Gender:</th>
-                            <td>
-                              <b>{{ member?.gender }}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>Date of Birth:</th>
-                            <td>
-                              <b>{{
-                                member?.dateOfBirth | date: 'dd-MMM-yyyy'
-                              }}</b>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>Type:</th>
-                            <td>
-                              <b>{{
-                                member?.isPrimaryRegistrant
-                                  ? 'Registrant'
-                                  : 'Household Member'
-                              }}</b>
-                            </td>
-                          </tr>
-                          <tr>
+                      <table class="mobile-table-members">
+                        <tr>
+                          <th>Initials:</th>
+                          <td>
+                            <b>{{ member.initials }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Gender:</th>
+                          <td>
+                            <b>{{ member?.gender }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Date of Birth:</th>
+                          <td>
+                            <b>{{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Type:</th>
+                          <td>
+                            <b>{{ member?.isPrimaryRegistrant ? 'Registrant' : 'Household Member' }}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          @if (!editFlag && !member.isPrimaryRegistrant) {
                             <button
-                              *ngIf="!editFlag && !member.isPrimaryRegistrant"
                               class="edit-image"
                               mat-icon-button
                               aria-label="Edit"
                               (click)="editRow(member, index)"
                             >
-                              <img
-                                src="/assets/images/edit.svg"
-                                height="35"
-                                width="35"
-                              />
-                              <img
-                                src="/assets/images/edit_onhover.svg"
-                                height="35"
-                                width="35"
-                              />
+                              <img src="/assets/images/edit.svg" height="35" width="35" />
+                              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
                             </button>
+                          }
 
+                          @if (!editFlag && !member.isPrimaryRegistrant && !member.householdMemberFromDatabase) {
                             <button
-                              *ngIf="
-                                !editFlag &&
-                                !member.isPrimaryRegistrant &&
-                                !member.householdMemberFromDatabase
-                              "
                               class="delete-image"
                               mat-icon-button
                               aria-label="Remove"
                               (click)="deleteRow(member, index)"
                             >
-                              <img
-                                src="/assets/images/delete.svg"
-                                height="35"
-                                width="35"
-                              />
-                              <img
-                                src="/assets/images/delete_onhover.svg"
-                                height="35"
-                                width="35"
-                              />
+                              <img src="/assets/images/delete.svg" height="35" width="35" />
+                              <img src="/assets/images/delete_onhover.svg" height="35" width="35" />
                             </button>
-                          </tr>
-                        </table>
-                      </div>
-                    </mat-cell>
-                  </ng-container>
+                          }
+                        </tr>
+                      </table>
+                    </div>
+                  </mat-cell>
+                </ng-container>
 
-                  <ng-container matColumnDef="buttons">
-                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell
-                      class="cell-button"
-                      *matCellDef="let member; let index = index"
-                    >
-                      <button
-                        *ngIf="!editFlag && !member.isPrimaryRegistrant"
-                        class="edit-image"
-                        mat-icon-button
-                        aria-label="Edit"
-                        (click)="editRow(member, index)"
-                      >
-                        <img
-                          src="/assets/images/edit.svg"
-                          height="35"
-                          width="35"
-                        />
-                        <img
-                          src="/assets/images/edit_onhover.svg"
-                          height="35"
-                          width="35"
-                        />
+                <ng-container matColumnDef="buttons">
+                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                  <mat-cell class="cell-button" *matCellDef="let member; let index = index">
+                    @if (!editFlag && !member.isPrimaryRegistrant) {
+                      <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(member, index)">
+                        <img src="/assets/images/edit.svg" height="35" width="35" />
+                        <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
                       </button>
+                    }
 
+                    @if (!editFlag && !member.isPrimaryRegistrant && !member.householdMemberFromDatabase) {
                       <button
-                        *ngIf="
-                          !editFlag &&
-                          !member.isPrimaryRegistrant &&
-                          !member.householdMemberFromDatabase
-                        "
                         class="delete-image"
                         mat-icon-button
                         aria-label="Remove"
                         (click)="deleteRow(member, index)"
                       >
-                        <img
-                          src="/assets/images/delete.svg"
-                          height="35"
-                          width="35"
-                        />
-                        <img
-                          src="/assets/images/delete_onhover.svg"
-                          height="35"
-                          width="35"
-                        />
+                        <img src="/assets/images/delete.svg" height="35" width="35" />
+                        <img src="/assets/images/delete_onhover.svg" height="35" width="35" />
                       </button>
-                    </mat-cell>
-                  </ng-container>
+                    }
+                  </mat-cell>
+                </ng-container>
 
-                  <mat-header-row
-                    class="table-header"
-                    *matHeaderRowDef="membersColumns"
-                  ></mat-header-row>
-                  <mat-row
-                    *matRowDef="let member; columns: membersColumns"
-                  ></mat-row>
-                </mat-table>
-              </div>
+                <mat-header-row class="table-header" *matHeaderRowDef="membersColumns"></mat-header-row>
+                <mat-row *matRowDef="let member; columns: membersColumns"></mat-row>
+              </mat-table>
             </div>
-          </form>
-        </div>
-
-        <div class="col-md-4" *ngIf="essFileNumber">
-          <mat-card class="tips-card">
-            <div>
-              <img
-                class="img-align"
-                src="/assets/images/tips-lightbulb.svg"
-                height="63"
-                width="62"
-              />
-              <span class="tips-heading">
-                <span class="bold">Tip:</span> Household Members
-              </span>
-            </div>
-
-            <p class="tips-info">
-              <b>Editing Household Members</b>
-              <br />
-              Only household members NOT connected to a profile can be edited.
-            </p>
-            <p class="tips-info">
-              <b>Removing household members</b>
-              <br />
-              Household members removed from the current ESS File can NOT be
-              issued supports.
-            </p>
-          </mat-card>
-        </div>
+          </div>
+        </form>
       </div>
 
+      @if (essFileNumber) {
+        <div class="col-md-4">
+          <mat-card class="tips-card">
+            <mat-card-content>
+              <div>
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+                <span class="tips-heading"> <span class="bold">Tip:</span> Household Members </span>
+              </div>
+              <p class="tips-info">
+                <b>Editing Household Members</b>
+                <br />
+                Only household members NOT connected to a profile can be edited.
+              </p>
+              <p class="tips-info">
+                <b>Removing household members</b>
+                <br />
+                Household members removed from the current ESS File can NOT be issued supports.
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      }
     </div>
   </div>
-
+</div>

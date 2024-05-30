@@ -12,7 +12,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
@@ -24,15 +24,22 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EssFilesResultsService } from './ess-files-results.service';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgClass, AsyncPipe, UpperCasePipe, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  AccessReasonData,
+  AccessReasonGateDialogComponent
+} from '../access-reason-gate-dialog/access-reason-gate-dialog.component';
 
 @Component({
   selector: 'app-ess-files-results',
   templateUrl: './ess-files-results.component.html',
-  styleUrls: ['./ess-files-results.component.scss']
+  styleUrls: ['./ess-files-results.component.scss'],
+  standalone: true,
+  imports: [MatCard, NgClass, MatCardContent, MatPaginator, AsyncPipe, UpperCasePipe, DatePipe]
 })
-export class EssFilesResultsComponent
-  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked
-{
+export class EssFilesResultsComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();
@@ -46,7 +53,8 @@ export class EssFilesResultsComponent
     private cd: ChangeDetectorRef,
     private alertService: AlertService,
     private appBaseService: AppBaseService,
-    private essFilesResultsService: EssFilesResultsService
+    private essFilesResultsService: EssFilesResultsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,37 +73,42 @@ export class EssFilesResultsComponent
     this.cd.detectChanges();
   }
 
-  ngOnInit(): void {}
-
   /**
    * Navigates to next step based on user verified status
    *
    * @param selectedESSFile selected ess file
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
-    this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
-    const profile$ = await this.essFilesResultsService.getSearchedUserProfile(
-      selectedESSFile
+    const shouldProceed = await firstValueFrom(
+      this.dialog
+        .open<AccessReasonGateDialogComponent, AccessReasonData>(AccessReasonGateDialogComponent, {
+          data: {
+            accessEntity: this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+              ? 'essFile'
+              : 'secretWord',
+            entityId: selectedESSFile.id
+          }
+        })
+        .afterClosed()
     );
+
+    if (!shouldProceed) return;
+
+    this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
+    const profile$ = await this.essFilesResultsService.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-          ?.paperFileNumber !== selectedESSFile.manualFileId
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber !==
+        selectedESSFile.manualFileId
       ) {
         this.essFilesResultsService.openUnableAccessESSFileDialog();
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }
     } else {
-      if (
-        !this.evacueeSearchService.evacueeSearchContext
-          .hasShownIdentification &&
-        !selectedESSFile.isFileCompleted
-      ) {
+      if (!this.evacueeSearchService.evacueeSearchContext.hasShownIdentification && !selectedESSFile.isFileCompleted) {
         this.essFilesResultsService.openUnableAccessDialog();
-      } else if (
-        !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
-      ) {
+      } else if (!this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
         this.essFilesResultsService.setloadingOverlay(true);
         this.essFileSecurityPhraseService
           .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
@@ -104,18 +117,13 @@ export class EssFilesResultsComponent
               this.essFilesResultsService.setloadingOverlay(false);
               this.essFileSecurityPhraseService.securityPhrase = results;
               setTimeout(() => {
-                this.router.navigate([
-                  'responder-access/search/security-phrase'
-                ]);
+                this.router.navigate(['responder-access/search/security-phrase']);
               }, 200);
             },
             error: (error) => {
               this.essFilesResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.securityPhraseError
-              );
+              this.alertService.setAlert('danger', globalConst.securityPhraseError);
             }
           });
       } else {

@@ -1,176 +1,163 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
-using System.Security.Claims;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Telemetry;
-using IdentityModel.AspNetCore.OAuth2Introspection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using NSwag;
-using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace EMBC.Registrants.API
+namespace EMBC.Registrants.API;
+
+public class Configuration : IConfigureComponentServices, IConfigureComponentPipeline
 {
-    public class Configuration : IConfigureComponentServices, IConfigureComponentPipeline
+    public void ConfigureServices(ConfigurationServices configurationServices)
     {
-        public void ConfigureServices(ConfigurationServices configurationServices)
+        var services = configurationServices.Services;
+        var configuration = configurationServices.Configuration;
+
+        services.Configure<JsonOptions>(opts =>
         {
-            var services = configurationServices.Services;
-            var configuration = configurationServices.Configuration;
+            opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
 
-            services.Configure<JsonOptions>(opts =>
-            {
-                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            });
-
-            services.AddAuthentication()
-             //JWT tokens handling
-             .AddJwtBearer("jwt", options =>
-             {
+        services.AddAuthentication()
+         //JWT tokens handling
+         .AddJwtBearer("jwt", options =>
+         {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
-                 options.BackchannelHttpHandler = new HttpClientHandler
-                 {
-                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                 };
+             options.BackchannelHttpHandler = new HttpClientHandler
+             {
+                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+             };
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
 
-                 configuration.GetSection("auth:jwt").Bind(options);
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateAudience = false
-                 };
-
-                 // if token does not contain a dot, it is a reference token, forward to introspection auth scheme
-                 options.ForwardDefaultSelector = ctx =>
-                 {
-                     var authHeader = (string)ctx.Request.Headers["Authorization"];
-                     if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ")) return null;
-                     return authHeader.Substring("Bearer ".Length).Trim().Contains('.') ? null : "introspection";
-                 };
-                 options.Events = new JwtBearerEvents
-                 {
-                     OnTokenValidated = async ctx =>
-                     {
-                         await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                         var userInfo = ctx.Principal.FindFirstValue("userInfo");
-                         logger.LogDebug("{0}", userInfo);
-                     },
-                     OnAuthenticationFailed = async ctx =>
-                     {
-                         await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                         logger.LogError(ctx.Exception, "JWT authantication failed");
-                     }
-                 };
-             })
-             //reference tokens handling
-             .AddOAuth2Introspection("introspection", options =>
+             configuration.GetSection("auth:jwt").Bind(options);
+             options.TokenValidationParameters = new TokenValidationParameters
              {
-                 options.EnableCaching = true;
-                 options.CacheDuration = TimeSpan.FromMinutes(20);
-                 configuration.GetSection("auth:introspection").Bind(options);
-                 options.Events = new OAuth2IntrospectionEvents
-                 {
-                     OnTokenValidated = async ctx =>
-                     {
-                         await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<OAuth2IntrospectionEvents>();
-                         var userInfo = ctx.Principal?.FindFirst("userInfo");
-                         logger.LogDebug("{0}", userInfo);
-                     },
-                     OnAuthenticationFailed = async ctx =>
-                     {
-                         await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                         logger.LogError(ctx.Result?.Failure, "Introspection authantication failed");
-                     }
-                 };
-             });
+                 ValidateAudience = false,
+                 NameClaimType = JwtRegisteredClaimNames.Sub,
+             };
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
-                {
-                    policy
-                    .RequireAuthenticatedUser()
-                    .AddAuthenticationSchemes("jwt")
-                    .RequireClaim("scope", "registrants-portal-api");
-                });
+             // if token does not contain a dot, it is a reference token, forward to introspection auth scheme
+             options.ForwardDefaultSelector = ctx =>
+             {
+                 var authHeader = (string)ctx.Request.Headers["Authorization"];
+                 if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ")) return null;
+                 return authHeader.Substring("Bearer ".Length).Trim().Contains('.') ? null : "introspection";
+             };
+         })
+         //reference tokens handling
+         .AddOAuth2Introspection("introspection", options =>
+         {
+             options.EnableCaching = true;
+             options.CacheDuration = TimeSpan.FromMinutes(20);
+             options.NameClaimType = JwtRegisteredClaimNames.Sub;
+             configuration.GetSection("auth:introspection").Bind(options);
+         });
 
-                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
-            });
-
-            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
-            {
-                options.Path = "/api/openapi/{documentName}/openapi.json";
-                options.DocumentName = "Registrants Portal API";
-                options.PostProcess = (document, req) =>
-                {
-                    document.Info.Title = "Registrants Portal API";
-                };
-            });
-
-            services.Configure<SwaggerUiSettings>(options =>
-            {
-                options.Path = "/api/openapi";
-                options.DocumentTitle = "Registrants Portal API Documentation";
-                options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
-            });
-
-            services.AddOpenApiDocument(document =>
-            {
-                document.AddSecurity("bearer token", Array.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "paste token here",
-                    In = OpenApiSecurityApiKeyLocation.Header
-                });
-
-                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
-            });
-
-            services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
-            services.AddTransient<IProfileInviteService, ProfileInviteService>();
-
-            services.AddHttpClient("captcha");
-            services.Configure<CaptchaVerificationServiceOptions>(options =>
-            {
-                configuration.GetSection("captcha").Bind(options);
-            });
-            services.AddTransient<ICaptchaVerificationService, CaptchaVerificationService>();
-        }
-
-        public void ConfigurePipeline(PipelineServices services)
+        services.AddAuthorization(options =>
         {
-            var app = services.Application;
-            var env = services.Environment;
+            options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+            {
+                policy
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes("jwt")
+                .RequireClaim("scope", "registrants-portal-api");
+            });
 
-            if (!env.IsProduction())
+            options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
+        });
+
+        services.AddSwaggerGen(opts =>
+        {
+            opts.SwaggerDoc("v1", new OpenApiInfo
             {
-                IdentityModelEventSource.ShowPII = true;
-            }
-            if (!env.IsProduction())
+                Title = "Registrants Portal API",
+                Version = "v1"
+            });
+
+            opts.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
             {
-                app.UseOpenApi();
-                app.UseSwaggerUi();
-            }
-            app.UseAuthentication();
-            app.UseAuthorization();
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+            opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
+                    },
+                    new string[] {}
+                }
+            });
+            opts.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? $"{apiDesc.ActionDescriptor.RouteValues["controller"]}{methodInfo.Name}" : null);
+            opts.OperationFilter<ContentTypeOperationFilter>();
+            opts.UseOneOfForPolymorphism();
+            opts.UseAllOfForInheritance();
+        });
+
+        services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
+        services.AddTransient<IProfileInviteService, ProfileInviteService>();
+
+        services.AddHttpClient("captcha");
+        services.Configure<CaptchaVerificationServiceOptions>(options =>
+        {
+            configuration.GetSection("captcha").Bind(options);
+        });
+        services.AddTransient<ICaptchaVerificationService, CaptchaVerificationService>();
+    }
+
+    public void ConfigurePipeline(PipelineServices services)
+    {
+        var app = services.Application;
+        var env = services.Environment;
+
+        if (!env.IsProduction())
+        {
+            IdentityModelEventSource.ShowPII = true;
+        }
+        if (!env.IsProduction())
+        {
+            app.UseSwagger(opts =>
+            {
+                opts.RouteTemplate = "api/openapi/{documentName}/openapi.json";
+            });
+            app.UseSwaggerUI(opts =>
+            {
+                opts.SwaggerEndpoint("v1/openapi.json", "Registrants portal API");
+                opts.RoutePrefix = "api/openapi";
+            });
+        }
+        app.UseAuthentication();
+        app.UseAuthorization();
+    }
+}
+
+internal class ContentTypeOperationFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        foreach (var (_, response) in operation.Responses)
+        {
+            if (response.Content.ContainsKey("text/plain"))
+                response.Content.Remove("text/plain");
+            if (response.Content.ContainsKey("text/json"))
+                response.Content.Remove("text/json");
         }
     }
 }

@@ -14,11 +14,24 @@ import {
   SecurityQuestionsForm
 } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
-import { Evacuated, EvacuatedForm, HouseholdMembers, HouseholdMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm, Secret, SecretForm } from '../model/needs.model';
+import {
+  Evacuated,
+  EvacuatedForm,
+  HouseholdMembers,
+  HouseholdMembersForm,
+  IdentifyNeeds,
+  IdentifyNeedsForm,
+  Pet,
+  PetForm,
+  Secret,
+  SecretForm
+} from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
-  restrictionForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(this.formBuilder.group(new RestrictionForm(new Restriction())));
+  restrictionForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new RestrictionForm(new Restriction()))
+  );
 
   restrictionForm$: Observable<UntypedFormGroup> = this.restrictionForm.asObservable();
 
@@ -34,7 +47,9 @@ export class FormCreationService {
 
   contactDetailsForm$: Observable<UntypedFormGroup> = this.contactDetailsForm.asObservable();
 
-  addressForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
+  addressForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator))
+  );
 
   addressForm$: Observable<UntypedFormGroup> = this.addressForm.asObservable();
 
@@ -56,21 +71,30 @@ export class FormCreationService {
 
   householdMembersForm$: Observable<UntypedFormGroup> = this.householdMembersForm.asObservable();
 
-  petsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
+  petsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder))
+  );
 
   petsForm$: Observable<UntypedFormGroup> = this.petsForm.asObservable();
 
   identifyNeedsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), { validators: [this.customValidator.needsValidator()] })
+    this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), {
+      validators: [this.customValidator.needsValidator()]
+    })
   );
 
   identifyNeedsForm$: Observable<UntypedFormGroup> = this.identifyNeedsForm.asObservable();
 
-  secretForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(this.formBuilder.group(new SecretForm(new Secret())));
+  secretForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new SecretForm(new Secret()))
+  );
 
   secretForm$: Observable<UntypedFormGroup> = this.secretForm.asObservable();
 
-  constructor(private formBuilder: UntypedFormBuilder, private customValidator: CustomValidationService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private customValidator: CustomValidationService
+  ) {}
 
   getRestrictionForm(): Observable<UntypedFormGroup> {
     return this.restrictionForm$;
@@ -154,17 +178,33 @@ export class FormCreationService {
 
   clearProfileData(): void {
     this.restrictionForm.next(this.formBuilder.group(new RestrictionForm(new Restriction())));
-    this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
-    this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetailsModel(), this.customValidator)));
-    this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
-    this.securityQuestionsForm.next(this.formBuilder.group(new SecurityQuestionsForm(new SecurityQuestions(), this.formBuilder, this.customValidator)));
+    this.addressForm.next(
+      this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator))
+    );
+    this.personalDetailsForm.next(
+      this.formBuilder.group(new PersonDetailsForm(new PersonDetailsModel(), this.customValidator))
+    );
+    this.contactDetailsForm.next(
+      this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator))
+    );
+    this.securityQuestionsForm.next(
+      this.formBuilder.group(new SecurityQuestionsForm(new SecurityQuestions(), this.formBuilder, this.customValidator))
+    );
   }
 
   clearNeedsAssessmentData(): void {
-    this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
-    this.householdMembersForm.next(this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder)));
+    this.evacuatedForm.next(
+      this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator))
+    );
+    this.householdMembersForm.next(
+      this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder))
+    );
     this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
-    this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), { validators: [this.customValidator.needsValidator()] }));
+    this.identifyNeedsForm.next(
+      this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), {
+        validators: [this.customValidator.needsValidator()]
+      })
+    );
     this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
   }
 }

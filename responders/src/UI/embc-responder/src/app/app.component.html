@@ -1,24 +1,24 @@
 <div class="main-border">
-  <app-outage-banner
-    *ngIf="outageService.getShowOutageBanner() | async"
-    (closeEvent)="closeOutageBanner($event)"
-  ></app-outage-banner>
+  @if (outageService.getShowOutageBanner() | async) {
+    <app-outage-banner (closeEvent)="closeOutageBanner($event)"></app-outage-banner>
+  }
 
-  <app-environment-banner
-    *ngIf="environment !== null && environment !== undefined"
-  ></app-environment-banner>
+  @if (environment !== null && environment !== undefined) {
+    <app-environment-banner></app-environment-banner>
+  }
 
-  <app-header
-    *ngIf="show"
-    [ngStyle]="
-      environment !== null && environment !== undefined
-        ? {
-            border: 'solid ' + environment?.bannerColor,
-            'border-width': '0px 5px 0px 5px'
-          }
-        : { padding: '0px' }
-    "
-  ></app-header>
+  @if (show) {
+    <app-header
+      [ngStyle]="
+        environment !== null && environment !== undefined
+          ? {
+              border: 'solid ' + environment?.bannerColor,
+              'border-width': '0px 5px 0px 5px'
+            }
+          : { padding: '0px' }
+      "
+    ></app-header>
+  }
 
   <main
     class="fill-body main-container background"
@@ -40,31 +40,28 @@
       <app-alert></app-alert>
     </div>
 
-    <div *ngIf="!isLoading">
-      <router-outlet></router-outlet>
-    </div>
+    @if (!isLoading) {
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    }
   </main>
 
-  <div
-    *ngIf="show"
-    class="footer mt-auto"
-    [ngStyle]="
-      environment !== null && environment !== undefined
-        ? {
-            border: 'solid ' + environment?.bannerColor,
-            'border-width': '0px 5px 5px 5px'
-          }
-        : { padding: '0px' }
-    "
-  >
-    <app-footer></app-footer>
-  </div>
+  @if (show) {
+    <div
+      class="footer mt-auto"
+      [ngStyle]="
+        environment !== null && environment !== undefined
+          ? {
+              border: 'solid ' + environment?.bannerColor,
+              'border-width': '0px 5px 5px 5px'
+            }
+          : { padding: '0px' }
+      "
+    >
+      <app-footer></app-footer>
+    </div>
+  }
 
-  <app-loader
-    class="spinner"
-    [showLoader]="isLoading"
-    [strokeWidth]="10"
-    [diameter]="50"
-    [color]="color"
-  ></app-loader>
+  <app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"></app-loader>
 </div>

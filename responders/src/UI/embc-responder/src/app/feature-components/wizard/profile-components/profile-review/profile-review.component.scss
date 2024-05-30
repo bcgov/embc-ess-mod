@@ -14,7 +14,7 @@
 @media screen and (max-width: 910px) {
   .save {
     width: 100%;
-	margin-top: 1em
+    margin-top: 1em;
   }
 
   .back {
@@ -28,18 +28,19 @@
   margin-bottom: 1em;
 }
 
-.mat-radio-button {
+.mat-mdc-radio-button {
   display: block;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
   ::ng-deep .mat-radio-outer-circle {
     border-color: white;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
   ::ng-deep .mat-radio-label-content {
     padding-left: 0.8em;
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 ::ng-deep .mat-checkbox-label {
   margin-left: 0.8em;
 }
@@ -76,6 +77,19 @@
 
   background-color: #234075;
   color: white;
+
+  --mdc-theme-text-primary-on-background: white;
+
+  .mat-mdc-radio-button.mat-accent {
+    --mdc-radio-disabled-selected-icon-color: #000;
+    --mdc-radio-disabled-unselected-icon-color: #000;
+    --mdc-radio-unselected-focus-icon-color: #ffffff;
+    --mdc-radio-unselected-hover-icon-color: #ffffff;
+    --mdc-radio-unselected-icon-color: rgb(255 255 255);
+    --mdc-radio-unselected-pressed-icon-color: rgb(255 255 255 / 54%);
+    --mat-mdc-radio-ripple-color: #fff;
+    --mdc-form-field-label-text-color: #fff;
+  }
 }
 
 .e-transfer-panel {

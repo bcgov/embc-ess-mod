@@ -1,120 +1,108 @@
-<div *ngFor="let registrantResult of matchedRegistrants$ | async">
-  <mat-card
-    class="result-card"
-    [ngClass]="{
-      'outer-card': !registrantResult?.isRestricted,
-      'restricted-card': registrantResult?.isRestricted
-    }"
-  >
-    <div class="row result-heading-background">
-      <div class="col-md-8">
-        <a class="result-heading" (click)="openProfile(registrantResult)"
-          ><b>{{ registrantResult?.lastName | uppercase }},</b>
-          {{ registrantResult?.firstName | titlecase }}</a
-        >
-      </div>
-      <div class="col-md-4">
-        <div class="row">
-          <div class="col-md-12 metaData-align">
-            <p>
-              Restricted File:
-              <b>{{ registrantResult?.isRestricted ? 'Yes' : 'No' }}</b>
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 metaData-align">
-            <p>
-              Profile Created:
-              <b>{{ registrantResult?.createdOn | date: 'dd-MMM-yyyy' }}</b>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br />
-    <div class="row search-data">
-      <div class="col-md-5">
-        <div class="row">
-          <div class="col-md-1 image-col">
-            <img
-              src="/assets/images/location-pointer.svg"
-              height="34"
-              width="21"
-            />
-          </div>
-          <div class="col-md-10">
-            <p class="p-custom section-heading">Physical Address</p>
-            <p
-              class="p-custom"
-              [innerHTML]="registrantResult?.primaryAddress | maskFullAddress"
-              style="font-weight: 700"
-            ></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-1 vertical-line">
-        <img src="/assets/images/vertical-line.svg" height="136" width="2" />
-      </div>
-      <div class="col-md-1 horizontal-line">
-        <hr />
-      </div>
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-1 image-col">
-            <img src="/assets/images/file.svg" height="37" width="28" />
-          </div>
-          <div class="col-md-10">
-            <p class="p-custom section-heading">Most Recent ESS File/s</p>
-            <span *ngFor="let files of registrantResult?.evacuationFiles">
-              <p
-                *ngIf="files?.status === 'Active'"
-                class="p-custom file-active"
-              >
-                <b
-                  >ESS File # {{ files?.manualFileId || files?.id }} -
-                  {{ communityName(files?.evacuatedFrom) }}</b
-                >
-              </p>
-              <p
-                *ngIf="files?.status === 'Pending'"
-                class="p-custom file-pending"
-              >
-                <b
-                  >ESS File # {{ files?.manualFileId || files?.id }} -
-                  {{ communityName(files?.evacuatedFrom) }}</b
-                >
-              </p>
-              <p
-                *ngIf="files?.status === 'Completed'"
-                class="p-custom file-complete"
-              >
-                <b
-                  >ESS File # {{ files?.manualFileId || files?.id }} -
-                  {{ communityName(files?.evacuatedFrom) }}</b
-                >
-              </p>
-              <p
-                *ngIf="files?.status === 'Expired'"
-                class="p-custom file-expired"
-              >
-                <b
-                  >ESS File # {{ files?.manualFileId || files?.id }} -
-                  {{ communityName(files?.evacuatedFrom) }}</b
-                >
-              </p>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      *ngIf="registrantResult?.isRestricted"
-      class="row restricted-div search-data"
+@for (registrantResult of matchedRegistrants$ | async; track registrantResult) {
+  <div>
+    <mat-card
+      class="result-card"
+      [ngClass]="{
+        'outer-card': !registrantResult?.isRestricted,
+        'restricted-card': registrantResult?.isRestricted
+      }"
     >
-      <span class="restricted-text">RESTRICTED FILE</span>
-    </div>
-  </mat-card>
-  <br />
-</div>
+      <mat-card-content>
+        <div class="row result-heading-background">
+          <div class="col-md-8">
+            <a class="result-heading" (click)="openProfile(registrantResult)"
+              ><b>{{ registrantResult?.lastName | uppercase }},</b> {{ registrantResult?.firstName | titlecase }}</a
+            >
+          </div>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-12 metaData-align">
+                <p>
+                  Profile Created:
+                  <b>{{ registrantResult?.createdOn | date: 'dd-MMM-yyyy' }}</b>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row search-data">
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-1 image-col">
+                <img src="/assets/images/location-pointer.svg" height="34" width="21" />
+              </div>
+              <div class="col-md-10">
+                <p class="p-custom section-heading">Physical Address</p>
+                <p
+                  class="p-custom"
+                  [innerHTML]="registrantResult?.primaryAddress | maskFullAddress"
+                  style="font-weight: 700"
+                ></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 vertical-line">
+            <img src="/assets/images/vertical-line.svg" height="136" width="2" />
+          </div>
+          <div class="col-md-1 horizontal-line">
+            <hr />
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-1 image-col">
+                <img src="/assets/images/file.svg" height="37" width="28" />
+              </div>
+              <div class="col-md-10">
+                <p class="p-custom section-heading">Most Recent ESS File/s</p>
+                @for (files of registrantResult?.evacuationFiles; track files) {
+                  <span>
+                    @if (files?.status === 'Active') {
+                      <p class="p-custom file-active">
+                        <b
+                          >ESS File # {{ files?.manualFileId || files?.id }} -
+                          {{ communityName(files?.evacuatedFrom) }}</b
+                        >
+                      </p>
+                    }
+                    @if (files?.status === 'Pending') {
+                      <p class="p-custom file-pending">
+                        <b
+                          >ESS File # {{ files?.manualFileId || files?.id }} -
+                          {{ communityName(files?.evacuatedFrom) }}</b
+                        >
+                      </p>
+                    }
+                    @if (files?.status === 'Completed') {
+                      <p class="p-custom file-complete">
+                        <b
+                          >ESS File # {{ files?.manualFileId || files?.id }} -
+                          {{ communityName(files?.evacuatedFrom) }}</b
+                        >
+                      </p>
+                    }
+                    @if (files?.status === 'Expired') {
+                      <p class="p-custom file-expired">
+                        <b
+                          >ESS File # {{ files?.manualFileId || files?.id }} -
+                          {{ communityName(files?.evacuatedFrom) }}</b
+                        >
+                      </p>
+                    }
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        @if (registrantResult?.isRestricted) {
+          <div class="row restricted-div search-data">
+            <span class="restricted-text">RESTRICTED FILE</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+    <br />
+  </div>
+}
 <mat-paginator class="custom-paginator" [pageSizeOptions]="[3]"></mat-paginator>

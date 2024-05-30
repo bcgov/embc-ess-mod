@@ -2,25 +2,26 @@
   <div class="content-align">
     <div class="row">
       <div class="col-md-12">
-        <p class="review-heading" *ngIf="reviewAction === 'edit'">
-          Review Supplier Details
-        </p>
-        <p class="review-heading" *ngIf="reviewAction === 'add'">Step 3 of 3</p>
-        <p class="review-heading" *ngIf="reviewAction === 'add-existing'">
-          Select Supplier
-        </p>
+        @if (reviewAction === 'edit') {
+          <p class="review-heading">Review Supplier Details</p>
+        }
+        @if (reviewAction === 'add') {
+          <p class="review-heading">Step 3 of 3</p>
+        }
+        @if (reviewAction === 'add-existing') {
+          <p class="review-heading">Select Supplier</p>
+        }
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <p class="details-subtitle" *ngIf="reviewAction !== 'add-existing'">
-          Please review all of the information below before submitting.
-        </p>
-        <p class="bold" *ngIf="reviewAction === 'add-existing'">
-          Please review all of the information below prior to saving the
-          supplier.
-        </p>
+        @if (reviewAction !== 'add-existing') {
+          <p class="details-subtitle">Please review all of the information below before submitting.</p>
+        }
+        @if (reviewAction === 'add-existing') {
+          <p class="bold">Please review all of the information below prior to saving the supplier.</p>
+        }
       </div>
     </div>
     <br />
@@ -42,9 +43,7 @@
     <div class="row row-align">
       <div class="col-md-4 detail-label">GST Number</div>
       <div class="col-md-8">
-        {{ selectedSupplier?.supplierGstNumber?.part1 }}-RT-{{
-          selectedSupplier?.supplierGstNumber?.part2
-        }}
+        {{ selectedSupplier?.supplierGstNumber?.part1 }}-RT-{{ selectedSupplier?.supplierGstNumber?.part2 }}
       </div>
     </div>
 
@@ -83,43 +82,21 @@
 
     <div class="row buttons-section">
       <div class="col-md-6">
-        <button
-          class="button-s button-width button-margin"
-          mat-button
-          (click)="back()"
-        >
-          Back
-        </button>
+        <button class="button-s button-width button-margin" mat-button (click)="back()">Back</button>
 
-        <button
-          class="button-p button-width"
-          mat-button
-          [disabled]="isSubmitted"
-          (click)="save()"
-          *ngIf="reviewAction !== 'add-existing'"
-        >
-          Save Supplier
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
+        @if (reviewAction !== 'add-existing') {
+          <button class="button-p button-width" mat-button [disabled]="isSubmitted" (click)="save()">
+            Save Supplier
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
+        }
 
-        <button
-          class="button-p button-width"
-          mat-button
-          [disabled]="isSubmitted"
-          (click)="addExisting()"
-          *ngIf="reviewAction === 'add-existing'"
-        >
-          Save & Add Supplier
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-          ></app-loader>
-        </button>
+        @if (reviewAction === 'add-existing') {
+          <button class="button-p button-width" mat-button [disabled]="isSubmitted" (click)="addExisting()">
+            Save & Add Supplier
+            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
+          </button>
+        }
       </div>
     </div>
   </div>

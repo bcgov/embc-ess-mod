@@ -1,25 +1,24 @@
 <mat-card>
-  <app-alert></app-alert>
+  <mat-card-content>
+    <app-alert></app-alert>
 
-  <div class="filter-margin">
-    <app-search-filter
-      [filtersToLoad]="filtersToLoad"
-      (filterEvent)="filter($event)"
-    ></app-search-filter>
-  </div>
+    <div class="filter-margin">
+      <app-search-filter [filtersToLoad]="filtersToLoad" (filterEvent)="filter($event)"></app-search-filter>
+    </div>
 
-  <div class="data-margin">
-    <app-team-member-table
-      [incomingData]="teamMembers"
-      [displayedColumns]="displayedColumns"
-      [filterTerm]="filterTerm"
-      [isLoading]="isLoading"
-      [statusLoading]="statusLoading"
-      [loggedInRole]="loggedInRole"
-      (clickedRow)="openMemberDetails($event)"
-      (toggleActive)="activateTeamMember($event)"
-      (toggleInactive)="deactivateTeamMember($event)"
-    >
-    </app-team-member-table>
-  </div>
+    <div class="data-margin">
+      <app-team-member-table
+        [incomingData]="teamMembers"
+        [displayedColumns]="displayedColumns"
+        [filterTerm]="filterTerm"
+        [isLoading]="isLoading"
+        [statusLoading]="statusLoading"
+        [loggedInRole]="loggedInRole"
+        (clickedRow)="openMemberDetails($event)"
+        (toggleActive)="activateTeamMember($event)"
+        (toggleInactive)="deactivateTeamMember($event)"
+      >
+      </app-team-member-table>
+    </div>
+  </mat-card-content>
 </mat-card>

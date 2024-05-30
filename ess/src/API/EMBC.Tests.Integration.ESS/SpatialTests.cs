@@ -41,15 +41,18 @@ public class SpatialTests : WebAppTestBase
     public async Task CanGetGeocodeLocationProperties(string address, string? expectedTaskNumber)
     {
         var geocode = (await locationService.ResolveGeocode(new Location(address), CancellationToken.None)).ShouldNotBeNull();
-        var attributes = (await locationService.GetGeocodeAttributes(geocode.Coordinates, CancellationToken.None)).ShouldNotBeNull();
+        var features = (await locationService.GetGeocodeAttributes(geocode.Coordinates, CancellationToken.None)).ShouldNotBeNull();
         if (expectedTaskNumber == null)
         {
-            attributes.ShouldBeEmpty();
+            features.ShouldBeEmpty();
         }
         else
         {
-            attributes.ShouldNotBeNull();
-            attributes.ShouldContain(a => a.Name == "ESS_TASK_NUMBER" && a.Value == expectedTaskNumber);
+            features.ShouldNotBeEmpty();
+            foreach (var feature in features)
+            {
+                feature.ShouldContain(a => a.Name == "ESS_TASK_NUMBER" && a.Value == expectedTaskNumber);
+            }
         }
     }
 }

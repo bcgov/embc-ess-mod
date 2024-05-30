@@ -14,44 +14,43 @@
     <table mat-table [dataSource]="referralDataSource" multiTemplateDataRows>
       <!-- Position Column -->
       <ng-container matColumnDef="provider">
-        <th mat-header-cell *matHeaderCellDef style="width: 220px">
-          Support Provider
-        </th>
+        <th mat-header-cell *matHeaderCellDef style="width: 220px">Support Provider</th>
         <td *matCellDef="let element" mat-cell style="width: 220px">
-          <p
-            *ngIf="
-              element.subCategory !== 'Lodging_Billeting' &&
-              element.subCategory !== 'Lodging_Group'
-            "
-          >
-            {{ element.supplierName }}
-          </p>
-          <p *ngIf="element.subCategory === 'Lodging_Billeting'">
-            {{ getBilletingReferral(element).hostName }}
-          </p>
-          <p *ngIf="element.subCategory === 'Lodging_Group'">
-            {{ getGroupReferral(element).facilityName }}
-          </p>
-          <p *ngIf="element.subCategory === 'Lodging_Allowance'">
-            {{ element.issuedToPersonName }}
-          </p>
-          <p *ngIf="element.method === 'ETransfer'">e-Transfer</p>
+          @if (element.subCategory !== 'Lodging_Billeting' && element.subCategory !== 'Lodging_Group') {
+            <p>
+              {{ element.supplierName }}
+            </p>
+          }
+          @if (element.subCategory === 'Lodging_Billeting') {
+            <p>
+              {{ getBilletingReferral(element).hostName }}
+            </p>
+          }
+          @if (element.subCategory === 'Lodging_Group') {
+            <p>
+              {{ getGroupReferral(element).facilityName }}
+            </p>
+          }
+          @if (element.subCategory === 'Lodging_Allowance') {
+            <p>
+              {{ element.issuedToPersonName }}
+            </p>
+          }
+          @if (element.method === 'ETransfer') {
+            <p>e-Transfer{{ element?.isSelfServe ? ' (Self-serve)' : '' }}</p>
+          }
         </td>
       </ng-container>
 
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef style="width: 220px">
-          Support Type
-        </th>
+        <th mat-header-cell *matHeaderCellDef style="width: 220px">Support Type</th>
         <td mat-cell *matCellDef="let element" style="width: 220px">
           <p>{{ generateSupportType(element) }}</p>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="issuedTo">
-        <th mat-header-cell *matHeaderCellDef style="width: 220px">
-          Support Period
-        </th>
+        <th mat-header-cell *matHeaderCellDef style="width: 220px">Support Period</th>
         <td mat-cell *matCellDef="let element" style="width: 220px">
           {{ element.from | date: 'dd-MMM-yyyy' }} to
           {{ element.to | date: 'dd-MMM-yyyy' }}
@@ -59,15 +58,9 @@
       </ng-container>
 
       <ng-container matColumnDef="referral">
-        <th mat-header-cell *matHeaderCellDef style="width: 105px">
-          Support #
-        </th>
+        <th mat-header-cell *matHeaderCellDef style="width: 105px">Support #</th>
         <td mat-cell *matCellDef="let element" style="width: 105px">
-          {{
-            element.manualReferralId !== null
-              ? element.manualReferralId
-              : element.id
-          }}
+          {{ element.manualReferralId !== null ? element.manualReferralId : element.id }}
         </td>
       </ng-container>
 
@@ -75,34 +68,23 @@
         <th mat-header-cell *matHeaderCellDef style="width: 136px">Amount</th>
         <td mat-cell *matCellDef="let element" class="row amountCell">
           <div class="col-6" style="padding: 35px 20px">
-            <p *ngIf="element.totalAmount !== undefined">
-              ${{ element.totalAmount }}
-            </p>
-            <p *ngIf="element.totalAmount === undefined">n/a</p>
+            @if (element.totalAmount !== undefined) {
+              <p>${{ element.totalAmount }}</p>
+            }
+            @if (element.totalAmount === undefined) {
+              <p>n/a</p>
+            }
           </div>
           <div class="col-6" style="padding: 35px 20px">
-            <img
-              src="../../../../assets/images/record_detail_arrow.svg"
-              height="8"
-              width="14"
-            />
+            <img src="../../../../assets/images/record_detail_arrow.svg" height="8" width="14" />
           </div>
         </td>
       </ng-container>
 
       <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
       <ng-container matColumnDef="expandedDetail">
-        <td
-          mat-cell
-          *matCellDef="let element"
-          [attr.colspan]="columnsToDisplay.length"
-        >
-          <div
-            class="example-element-detail"
-            [@detailExpand]="
-              element === expandedElement ? 'expanded' : 'collapsed'
-            "
-          >
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
             <div class="row info-detail" style="width: 45%; padding-top: 15px">
               <div class="col-md-5"><b>Support Status</b></div>
               <div
@@ -112,8 +94,7 @@
                   'support-void': element?.status === 'Void',
                   'support-expired': element?.status === 'Expired',
                   'support-under-review': element?.status === 'UnderReview',
-                  'support-pending-approval':
-                    element?.status === 'PendingApproval',
+                  'support-pending-approval': element?.status === 'PendingApproval',
                   'support-cancel': element?.status === 'Cancelled',
                   'support-paid': element?.status === 'Paid',
                   'support-approved': element?.status === 'Approved'
@@ -124,90 +105,73 @@
 
               <div class="col-md-5"><b>Support Provided to</b></div>
               <div class="col-md-5">
-                <p *ngFor="let member of element.includedHouseholdMembers">
-                  {{ getMemberFullName(member) | titlecase }}
-                </p>
+                @for (member of element.includedHouseholdMembers; track member) {
+                  <p>
+                    {{ getMemberFullName(member) | titlecase }}
+                  </p>
+                }
               </div>
             </div>
-            <div
-              *ngIf="element.method === 'Referral'"
-              class="row info-detail"
-              style="width: 45%; padding-top: 15px"
-            >
-              <div class="col-md-5"><b>Support Provider</b></div>
-              <div
-                class="col-md-5"
-                *ngIf="
-                  element.subCategory !== 'Lodging_Billeting' &&
-                  element.subCategory !== 'Lodging_Group'
-                "
-              >
-                <p>{{ element.supplierName }}</p>
-                <p
-                  [innerHTML]="element?.supplierAddress | maskSupplierAddress"
-                ></p>
-              </div>
-
-              <div
-                class="col-md-5"
-                *ngIf="element.subCategory === 'Lodging_Billeting'"
-              >
-                <p>{{ getBilletingReferral(element).hostName }}</p>
-                <p>{{ getBilletingReferral(element).hostAddress }}</p>
-                <p>{{ getBilletingReferral(element).hostCity }}</p>
-              </div>
-
-              <div
-                class="col-md-5"
-                *ngIf="element.subCategory === 'Lodging_Group'"
-              >
-                <p>{{ getGroupReferral(element).facilityName }}</p>
-                <p>{{ getGroupReferral(element).facilityAddress }}</p>
-                <p>{{ getGroupReferral(element).facilityCity }}</p>
-              </div>
-
-              <div
-              class="col-md-5"
-              *ngIf="element.subCategory === 'Lodging_Allowance'"
-            >
-              <p>{{ element?.issuedToPersonName }}</p>
-              <p>{{ getShelterAllowanceReferral(element)?.contactEmail }}</p>
-              <p>{{ getShelterAllowanceReferral(element)?.contactPhone }}</p>
-            </div>
-
-              <!-- <div class="col-md-5"><b>Support Issued By</b></div>
+            @if (element.method === 'Referral') {
+              <div class="row info-detail" style="width: 45%; padding-top: 15px">
+                <div class="col-md-5"><b>Support Provider</b></div>
+                @if (element.subCategory !== 'Lodging_Billeting' && element.subCategory !== 'Lodging_Group') {
+                  <div class="col-md-5">
+                    <p>{{ element.supplierName }}</p>
+                    <p [innerHTML]="element?.supplierAddress | maskSupplierAddress"></p>
+                  </div>
+                }
+                @if (element.subCategory === 'Lodging_Billeting') {
+                  <div class="col-md-5">
+                    <p>{{ getBilletingReferral(element).hostName }}</p>
+                    <p>{{ getBilletingReferral(element).hostAddress }}</p>
+                    <p>{{ getBilletingReferral(element).hostCity }}</p>
+                  </div>
+                }
+                @if (element.subCategory === 'Lodging_Group') {
+                  <div class="col-md-5">
+                    <p>{{ getGroupReferral(element).facilityName }}</p>
+                    <p>{{ getGroupReferral(element).facilityAddress }}</p>
+                    <p>{{ getGroupReferral(element).facilityCity }}</p>
+                  </div>
+                }
+                @if (element.subCategory === 'Lodging_Allowance') {
+                  <div class="col-md-5">
+                    <p>{{ element?.issuedToPersonName }}</p>
+                    <p>{{ getShelterAllowanceReferral(element)?.contactEmail }}</p>
+                    <p>{{ getShelterAllowanceReferral(element)?.contactPhone }}</p>
+                  </div>
+                }
+                <!-- <div class="col-md-5"><b>Support Issued By</b></div>
               <div class="col-md-5">{{ element.issuingMemberTeamName }}</div> -->
-            </div>
-
-            <div
-              *ngIf="element.method === 'ETransfer'"
-              class="row info-detail"
-              style="width: 50%; padding-top: 15px"
-            >
-              <div class="col-md-5"><b>e-Transfer Recipient</b></div>
-              <div class="col-md-5">
-                <p>
-                  {{ element.recipientFirstName }}
-                  {{ element.recipientLastName }}
-                </p>
               </div>
+            }
 
-              <div class="col-md-5"><b>e-Transfer Notification</b></div>
-              <div class="col-md-5">
-                <p style="margin: 0px">{{ element.notificationEmail }}</p>
-                <p>{{ element.nofificationMobile }}</p>
+            @if (element.method === 'ETransfer') {
+              <div class="row info-detail" style="width: 50%; padding-top: 15px">
+                <div class="col-md-5"><b>e-Transfer Recipient</b></div>
+                <div class="col-md-5">
+                  <p>
+                    {{ element.recipientFirstName }}
+                    {{ element.recipientLastName }}
+                  </p>
+                </div>
+                <div class="col-md-5"><b>e-Transfer Notification</b></div>
+                <div class="col-md-5">
+                  <p style="margin: 0px">{{ element.notificationEmail }}</p>
+                  <p>{{ element.nofificationMobile }}</p>
+                </div>
+                <div class="col-md-5"><b>e-Transfer Security Answer</b></div>
+                <div class="col-md-5">
+                  <p>{{ element.securityAnswer }}</p>
+                </div>
               </div>
-
-              <div class="col-md-5"><b>e-Transfer Security Answer</b></div>
-              <div class="col-md-5">
-                <p>{{ element.securityAnswer }}</p>
-              </div>
-            </div>
+            }
           </div>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-header-row class="header-row" *matHeaderRowDef="columnsToDisplay"></tr>
       <tr
         mat-row
         *matRowDef="let element; columns: columnsToDisplay"
@@ -215,11 +179,7 @@
         [class.example-expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element"
       ></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: ['expandedDetail']"
-        class="example-detail-row"
-      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
     </table>
   </mat-expansion-panel>
 </mat-accordion>

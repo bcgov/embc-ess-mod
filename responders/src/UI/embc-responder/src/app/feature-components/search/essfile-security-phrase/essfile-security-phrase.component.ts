@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  GetSecurityPhraseResponse,
-  VerifySecurityPhraseRequest
-} from 'src/app/core/api/models';
+import { GetSecurityPhraseResponse, VerifySecurityPhraseRequest } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -19,11 +12,17 @@ import { Location } from '@angular/common';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+import { MatButton } from '@angular/material/button';
+import { SecurityPhraseCardComponent } from './security-phrase-card/security-phrase-card.component';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-essfile-security-phrase',
   templateUrl: './essfile-security-phrase.component.html',
-  styleUrls: ['./essfile-security-phrase.component.scss']
+  styleUrls: ['./essfile-security-phrase.component.scss'],
+  standalone: true,
+  imports: [MatCard, MatCardContent, SecurityPhraseCardComponent, MatButton, AppLoaderComponent]
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: UntypedFormGroup;
@@ -51,10 +50,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     this.createSecurityPhraseForm();
 
     this.securityPhrase = this.essFileSecurityPhraseService.securityPhrase;
-    if (
-      this.appBaseService?.appModel?.selectedEssFile?.id === undefined &&
-      this.securityPhrase === undefined
-    ) {
+    if (this.appBaseService?.appModel?.selectedEssFile?.id === undefined && this.securityPhrase === undefined) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else {
       this.essFileSecurityPhraseService
@@ -65,10 +61,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
           },
           error: (error) => {
             this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.securityPhraseError
-            );
+            this.alertService.setAlert('danger', globalConst.securityPhraseError);
           }
         });
     }
@@ -92,10 +85,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     };
 
     this.essFileSecurityPhraseService
-      .verifySecurityPhrase(
-        this.appBaseService?.appModel?.selectedEssFile?.id,
-        body
-      )
+      .verifySecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id, body)
       .subscribe({
         next: (results) => {
           this.showLoader = !this.showLoader;
@@ -104,27 +94,19 @@ export class EssfileSecurityPhraseComponent implements OnInit {
             this.correctAnswerFlag = true;
             this.essFileSecurityPhraseService.securityPhrase = undefined;
             if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-              this.evacueeProfileService
-                .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-                .subscribe({
-                  next: (value) => {
-                    this.evacueeSessionService.fileLinkStatus = 'S';
-                    this.router.navigate([
-                      'responder-access/search/evacuee-profile-dashboard'
-                    ]);
-                  },
-                  error: (error) => {
-                    this.evacueeSessionService.fileLinkStatus = 'E';
-                    this.router.navigate([
-                      'responder-access/search/evacuee-profile-dashboard'
-                    ]);
-                  }
-                });
+              this.evacueeProfileService.linkMemberProfile(this.evacueeSessionService.fileLinkMetaData).subscribe({
+                next: (value) => {
+                  this.evacueeSessionService.fileLinkStatus = 'S';
+                  this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+                },
+                error: (error) => {
+                  this.evacueeSessionService.fileLinkStatus = 'E';
+                  this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+                }
+              });
             } else {
               setTimeout(() => {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
+                this.router.navigate(['responder-access/search/essfile-dashboard']);
               }, 1000);
             }
           } else {
@@ -135,10 +117,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
         },
         error: (error) => {
           this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.verifySecurityPhraseError
-          );
+          this.alertService.setAlert('danger', globalConst.verifySecurityPhraseError);
         }
       });
   }

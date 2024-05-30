@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
@@ -9,11 +9,30 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from './security-questions.service';
+import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-security-questions',
   templateUrl: './security-questions.component.html',
-  styleUrls: ['./security-questions.component.scss']
+  styleUrls: ['./security-questions.component.scss'],
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatInput,
+    MatButton,
+    MaskTextPipe
+  ]
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   parentForm: UntypedFormGroup = null;
@@ -29,15 +48,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.questionForm = this.securityQuesService.createForm();
-    this.parentForm = this.securityQuesService.createParentForm(
-      this.questionForm
-    );
+    this.parentForm = this.securityQuesService.createParentForm(this.questionForm);
     this.questionForm = this.parentForm.get('questionForm') as UntypedFormGroup;
 
-    this.securityQuesService.setFormDisabled(
-      this.stepEvacueeProfileService.bypassSecurityQuestions,
-      this.questionForm
-    );
+    this.securityQuesService.setFormDisabled(this.stepEvacueeProfileService.bypassSecurityQuestions, this.questionForm);
 
     //Update value and validity for each security question dropdown when any of the questions change
     this.questionForm
@@ -49,10 +63,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
       });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-        this.securityQuesService.updateTabStatus(this.questionForm);
-      });
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
+      this.securityQuesService.updateTabStatus(this.questionForm);
+    });
 
     this.questionForm
       .get('question2')
@@ -70,8 +83,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         this.questionForm.get('question2').updateValueAndValidity();
       });
 
-    this.tabMetaData =
-      this.stepEvacueeProfileService.getNavLinks('security-questions');
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('security-questions');
   }
 
   get parentFormControl(): { [key: string]: AbstractControl } {
@@ -107,9 +119,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.stepEvacueeProfileService.nextTabUpdate.next();
 
     if (this.stepEvacueeProfileService.checkTabsStatus()) {
-      this.stepEvacueeProfileService.openModal(
-        globalConst.wizardProfileMessage
-      );
+      this.stepEvacueeProfileService.openModal(globalConst.wizardProfileMessage);
     } else {
       this.router.navigate([this.tabMetaData?.next]);
     }

@@ -1,31 +1,32 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { SupportCategory } from './support-category';
-import { SupportMethod } from './support-method';
-import { SupportStatus } from './support-status';
-import { SupportSubCategory } from './support-sub-category';
+import { Address } from '../models/address';
+import { SupportCategory } from '../models/support-category';
+import { SupportMethod } from '../models/support-method';
+import { SupportStatus } from '../models/support-status';
+import { SupportSubCategory } from '../models/support-sub-category';
 export interface Support {
   category?: SupportCategory;
   from?: string;
-  id?: string;
-  includedHouseholdMembers?: Array<string>;
+  id?: string | null;
+  includedHouseholdMembers?: Array<string> | null;
+  isSelfServe?: boolean;
   issuedOn?: string;
-  issuedToPersonName?: null | string;
-  issuingMemberTeamName?: string;
-  manualReferralId?: null | string;
+  issuedToPersonName?: string | null;
+  issuingMemberTeamName?: string | null;
+  manualReferralId?: string | null;
   method?: SupportMethod;
-  nofificationMobile?: null | string;
-  notificationEmail?: null | string;
-  recipientFirstName?: null | string;
-  recipientLastName?: null | string;
-  securityAnswer?: null | string;
-  securityQuestion?: null | string;
+  nofificationMobile?: string | null;
+  notificationEmail?: string | null;
+  recipientFirstName?: string | null;
+  recipientLastName?: string | null;
+  securityAnswer?: string | null;
+  securityQuestion?: string | null;
   status?: SupportStatus;
   subCategory?: SupportSubCategory;
-  supplierAddress?: null | Address;
-  supplierId?: null | string;
-  supplierLegalName?: null | string;
-  supplierName?: null | string;
+  supplierAddress?: Address;
+  supplierId?: string | null;
+  supplierLegalName?: string | null;
+  supplierName?: string | null;
   to?: string;
 }

@@ -2,27 +2,46 @@ import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
-  UntypedFormGroup
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
-import {
-  MemberLabelDescription,
-  MemberRole,
-  MemberRoleDescription,
-  TeamMember
-} from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AddTeamMemberService } from './add-team-member.service';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { AppLoaderComponent } from '../../../shared/components/app-loader/app-loader.component';
+
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
   selector: 'app-add-team-member',
   templateUrl: './add-team-member.component.html',
-  styleUrls: ['./add-team-member.component.scss']
+  styleUrls: ['./add-team-member.component.scss'],
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    AppLoaderComponent,
+    MatSelect,
+    MatOption,
+    MatButton
+  ]
 })
 export class AddTeamMemberComponent implements OnInit {
   addForm: UntypedFormGroup;
@@ -80,9 +99,7 @@ export class AddTeamMemberComponent implements OnInit {
    * Navigates to the team members list
    */
   cancel(): void {
-    this.router.navigate([
-      '/responder-access/responder-management/details/member-list'
-    ]);
+    this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
   /**
@@ -91,40 +108,33 @@ export class AddTeamMemberComponent implements OnInit {
   next(): void {
     // Validate if username exists before sending the form
     this.showLoader = !this.showLoader;
-    this.addTeamMemberService
-      .checkUserNameExists(this.addForm.get('userName').value)
-      .subscribe({
-        next: (value) => {
-          this.addForm
-            .get('userName')
-            .setValidators([
-              this.customValidation.whitespaceValidator(),
-              this.customValidation
-                .userNameExistsValidator(value)
-                .bind(this.customValidation)
-            ]);
+    this.addTeamMemberService.checkUserNameExists(this.addForm.get('userName').value).subscribe({
+      next: (value) => {
+        this.addForm
+          .get('userName')
+          .setValidators([
+            this.customValidation.whitespaceValidator(),
+            this.customValidation.userNameExistsValidator(value).bind(this.customValidation)
+          ]);
+        this.addForm.get('userName').updateValueAndValidity();
+        this.showLoader = !this.showLoader;
+        if (value) {
           this.addForm.get('userName').updateValueAndValidity();
-          this.showLoader = !this.showLoader;
-          if (value) {
-            this.addForm.get('userName').updateValueAndValidity();
-          } else {
-            this.addForm.updateValueAndValidity();
+        } else {
+          this.addForm.updateValueAndValidity();
 
-            const newTeamMember: TeamMember = this.addForm.getRawValue();
-            newTeamMember.teamName = this.userService.currentProfile.teamName;
-            this.addTeamMemberService.setAddedTeamMember(newTeamMember);
-            this.router.navigate(
-              ['/responder-access/responder-management/details/review'],
-              { state: newTeamMember }
-            );
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+          const newTeamMember: TeamMember = this.addForm.getRawValue();
+          newTeamMember.teamName = this.userService.currentProfile.teamName;
+          this.addTeamMemberService.setAddedTeamMember(newTeamMember);
+          this.router.navigate(['/responder-access/responder-management/details/review'], { state: newTeamMember });
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+      }
+    });
   }
 
   /**
@@ -149,32 +159,28 @@ export class AddTeamMemberComponent implements OnInit {
    */
   checkUserName($event): void {
     this.showLoader = !this.showLoader;
-    this.addTeamMemberService
-      .checkUserNameExists($event.target.value)
-      .subscribe({
-        next: (value) => {
-          this.showLoader = !this.showLoader;
-          this.addForm
-            .get('userName')
-            .setValidators([
-              this.customValidation.whitespaceValidator(),
-              this.customValidation
-                .userNameExistsValidator(value)
-                .bind(this.customValidation)
-            ]);
+    this.addTeamMemberService.checkUserNameExists($event.target.value).subscribe({
+      next: (value) => {
+        this.showLoader = !this.showLoader;
+        this.addForm
+          .get('userName')
+          .setValidators([
+            this.customValidation.whitespaceValidator(),
+            this.customValidation.userNameExistsValidator(value).bind(this.customValidation)
+          ]);
+        this.addForm.get('userName').updateValueAndValidity();
+        if (value) {
           this.addForm.get('userName').updateValueAndValidity();
-          if (value) {
-            this.addForm.get('userName').updateValueAndValidity();
-          } else {
-            this.addForm.updateValueAndValidity();
-          }
-        },
-        error: (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+        } else {
+          this.addForm.updateValueAndValidity();
         }
-      });
+      },
+      error: (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+      }
+    });
   }
 
   /**
@@ -185,24 +191,16 @@ export class AddTeamMemberComponent implements OnInit {
   filteredRoleList(): MemberRoleDescription[] {
     const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
-      return this.listService
-        .getMemberRoles()
-        .filter((role) => role.code === MemberRole.Tier1);
+      return this.listService.getMemberRoles().filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
       return this.listService
         .getMemberRoles()
-        .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
-        );
+        .filter((role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
         .getMemberRoles()
         .filter(
-          (role) =>
-            role.code === MemberRole.Tier1 ||
-            role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3
+          (role) => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3
         );
     }
   }

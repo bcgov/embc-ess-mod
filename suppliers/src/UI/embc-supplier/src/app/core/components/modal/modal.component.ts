@@ -3,7 +3,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal-content',
-  templateUrl: './modal.component.html'
+  templateUrl: './modal.component.html',
+  standalone: true
 })
 export class ModalComponent {
   @Output() clearIndicator = new EventEmitter<boolean>();

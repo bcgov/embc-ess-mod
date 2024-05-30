@@ -91,5 +91,10 @@ namespace EMBC.ESS.Managers.Admin
                 return new OutageQueryResponse { OutageInfo = unplannedOutage };
             }
         }
+
+        public async Task<AuditAccessReasonsQueryResponse> Handle(AuditAccessReasonsQuery _)
+        {
+            return new AuditAccessReasonsQueryResponse { Items = await metadataRepository.GetAuditAccessReasons() };
+        }
     }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SupplierTeam } from './supplier-team';
+import { SupplierTeam } from '../models/supplier-team';
 export interface MutualAid {
   givenByTeamId?: string;
   givenOn?: string;

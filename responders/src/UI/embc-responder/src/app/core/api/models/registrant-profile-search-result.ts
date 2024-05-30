@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Address } from './address';
-import { EvacuationFileSearchResult } from './evacuation-file-search-result';
-import { RegistrantStatus } from './registrant-status';
+import { Address } from '../models/address';
+import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
+import { RegistrantStatus } from '../models/registrant-status';
 export interface RegistrantProfileSearchResult {
   createdOn?: string;
   evacuationFiles?: Array<EvacuationFileSearchResult>;

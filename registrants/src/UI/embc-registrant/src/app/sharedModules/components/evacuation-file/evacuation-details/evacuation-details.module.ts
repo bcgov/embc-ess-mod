@@ -7,10 +7,8 @@ import { ReviewModule } from '../../../../feature-components/review/review.modul
 import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
-import { CustomPipeModule } from 'src/app/core/pipe/customPipe.module';
 
 @NgModule({
-  declarations: [EvacuationDetailsComponent, ReferralDetailsComponent],
   imports: [
     CommonModule,
     EvacuationDetailsRoutingModule,
@@ -18,7 +16,8 @@ import { CustomPipeModule } from 'src/app/core/pipe/customPipe.module';
     MatCardModule,
     MatExpansionModule,
     MatTableModule,
-    CustomPipeModule
+    EvacuationDetailsComponent,
+    ReferralDetailsComponent
   ],
   providers: [DatePipe]
 })

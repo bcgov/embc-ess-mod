@@ -3,21 +3,10 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
-        <input
-          formControlName="addressLine1"
-          matInput
-          placeholder="Address Line 1"
-          maxlength="100"
-          required
-        />
-        <mat-error
-          *ngIf="
-            addressFormControl?.addressLine1.invalid &&
-            addressFormControl?.addressLine1.hasError('required')
-          "
-        >
-          Address Line 1 is required</mat-error
-        >
+        <input formControlName="addressLine1" matInput placeholder="Address Line 1" maxlength="100" required />
+        @if (addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')) {
+          <mat-error> Address Line 1 is required</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -26,12 +15,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Address Line 2</mat-label>
-        <input
-          formControlName="addressLine2"
-          matInput
-          placeholder="Address Line 2"
-          maxlength="100"
-        />
+        <input formControlName="addressLine2" matInput placeholder="Address Line 2" maxlength="100" />
       </mat-form-field>
     </div>
   </div>
@@ -49,28 +33,19 @@
           [matAutocomplete]="auto"
           required
         />
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          [displayWith]="cityDisplayFn"
-          id="cityAutocomplete"
-        >
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-            [id]="option.name"
-          >
-            {{ option.name }}
-          </mat-option>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="cityDisplayFn" id="cityAutocomplete">
+          @for (option of filteredOptions | async; track option) {
+            <mat-option [value]="option" [id]="option.name">
+              {{ option.name }}
+            </mat-option>
+          }
         </mat-autocomplete>
-        <mat-error
-          *ngIf="
-            addressFormControl?.community.invalid &&
-            addressFormControl?.community.hasError('required')
-          "
-        >
-          City is required</mat-error
-        >
-        <mat-error *ngIf="validateCity()"> City is invalid</mat-error>
+        @if (addressFormControl?.community.invalid && addressFormControl?.community.hasError('required')) {
+          <mat-error> City is required</mat-error>
+        }
+        @if (validateCity()) {
+          <mat-error> City is invalid</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
@@ -79,12 +54,7 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline">
         <mat-label>Province</mat-label>
-        <input
-          matInput
-          placeholder="Province"
-          readonly
-          value="British Columbia"
-        />
+        <input matInput placeholder="Province" readonly value="British Columbia" />
       </mat-form-field>
     </div>
   </div>
@@ -93,23 +63,14 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline">
         <mat-label>Postal Code</mat-label>
-        <input
-          formControlName="postalCode"
-          matInput
-          placeholder="Postal Code"
-        />
+        <input formControlName="postalCode" matInput placeholder="Postal Code" />
         <!-- <mat-error
-                    *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
-                    Postal Code is required</mat-error> -->
+            *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
+          Postal Code is required</mat-error> -->
         <mat-hint>Allowed postal code format: V1V 1V1</mat-hint>
-        <mat-error
-          *ngIf="
-            addressFormControl?.postalCode.invalid &&
-            addressFormControl?.postalCode.hasError('pattern')
-          "
-        >
-          Postal Code is invalid</mat-error
-        >
+        @if (addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')) {
+          <mat-error> Postal Code is invalid</mat-error>
+        }
       </mat-form-field>
     </div>
   </div>
