@@ -1,38 +1,19 @@
 images:
-  era-responders-portal-api:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/responders-portal-api
-    tags:
-      dev: master
-  era-responders-portal-ui:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/responders-portal-ui
-    tags:
-      dev: master
-  era-registrants-portal-api:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/registrants-portal-api
-    tags:
-      dev: master
-  era-registrants-portal-ui:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/registrants-portal-ui
-    tags:
-      dev: master
-  era-suppliers-portal-api:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/suppliers-portal-api
-    tags:
-      dev: master
-  era-suppliers-portal-ui:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/suppliers-portal-ui
-    tags:
-      dev: master
-  era-ess-backend:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/ess-backend
-    tags:
-      dev: master
-  era-landing-page:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/landing-page
-    tags:
-      dev: master
-  era-oauth-server:
-    image: image-registry.openshift-image-registry.svc:5000/b5e079-tools/oauth-server
-    tags:
-      dev: master
-      
+  responders-portal-api:
+    image: responders-portal-api
+  responders-portal-ui:
+    image: responders-portal-ui
+  registrants-portal-api:
+    image: registrants-portal-api
+  registrants-portal-ui:
+    image: registrants-portal-ui
+  suppliers-portal-api:
+    image: suppliers-portal-api
+  suppliers-portal-ui:
+    image: suppliers-portal-ui
+  ess-backend:
+    image: ess-backend
+  landing-page:
+    image: landing-page
+  oauth-server:
+    image: oauth-server

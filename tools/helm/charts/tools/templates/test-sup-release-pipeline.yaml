@@ -1,22 +1,22 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: prj-prod-release-pipeline
+  name: test-sup-release-pipeline
 
 spec:
   tasks:
     {{- range $key, $value := .Values.images }}
-    - name: prod-{{ $key }}
+    - name: test-sup-{{ $key }}
       params:
         - name: imageName
           value: {{ $key }}
         - name: fromTag
-          value: training
+          value: dev-sup
         - name: toTag
-          value: prod
+          value: test-sup
         - name: referencePolicy
-          value: local
+          value: source
       taskRef:
         kind: Task
-        name: promote-image-task1
+        name: promote-image-task
     {{- end }}

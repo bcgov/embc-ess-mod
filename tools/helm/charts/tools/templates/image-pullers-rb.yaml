@@ -5,22 +5,13 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: b5e079-dev
-  - kind: ServiceAccount
-    name: default
-    namespace: b5e079-test
-  - kind: ServiceAccount
-    name: default
-    namespace: b5e079-prod
-  - kind: ServiceAccount
-    name: default
-    namespace: b5e079-dev
-  - kind: ServiceAccount
-    name: default
     namespace: e2d84f-dev
   - kind: ServiceAccount
     name: default
     namespace: e2d84f-test
+  - kind: ServiceAccount
+    name: default
+    namespace: e2d84f-prod
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
