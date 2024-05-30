@@ -227,6 +227,12 @@ export class ExistingSupportDetailsService {
         hostCity: this.parseCommunityString((selectedSupport as LodgingGroupSupport).facilityCommunityCode),
         hostPhone: (selectedSupport as LodgingGroupSupport).facilityContactPhone
       };
+    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance) {
+      return {
+        hostName: ((selectedSupport as LodgingAllowanceSupport).supportDelivery as Referral).issuedToPersonName,
+        hostPhone: (selectedSupport as LodgingAllowanceSupport).contactPhone,
+        emailAddress: (selectedSupport as LodgingAllowanceSupport).contactEmail
+      };
     }
   }
 

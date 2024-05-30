@@ -66,6 +66,15 @@
       <mat-checkbox formControlName="processEvacueeCert"
         >Evacuee confirms they understand the above statement.
       </mat-checkbox>
+      <mat-error
+        class="custom-mat-error"
+        *ngIf="
+          referralFormControl?.processEvacueeCert.invalid &&
+          referralFormControl?.processEvacueeCert.hasError('required')
+        "
+      >
+        Required</mat-error
+      >
     </div>
   </div>
 </form>
