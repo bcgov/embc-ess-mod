@@ -66,9 +66,8 @@ export class HouseholdMembersService {
   private householdEquals(newMember: HouseholdMemberModel, oldMember: HouseholdMemberModel): boolean {
     return (
       newMember.dateOfBirth === oldMember.dateOfBirth &&
-      newMember.firstName.toLowerCase() === oldMember.firstName.toLowerCase() &&
-      newMember.lastName.toLowerCase() === oldMember.lastName.toLowerCase() &&
-      newMember.gender === oldMember.gender
+      newMember.firstName.toLowerCase()?.trim() === oldMember.firstName.toLowerCase()?.trim() &&
+      newMember.lastName.toLowerCase()?.trim() === oldMember.lastName.toLowerCase()?.trim()
     );
   }
 }

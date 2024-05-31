@@ -41,6 +41,7 @@ import { PersonDetailFormComponent } from '../../../../shared/forms/person-detai
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
 import { NgClass, UpperCasePipe, DatePipe } from '@angular/common';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-household-members',
@@ -84,7 +85,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   essFileNumber: string;
   editIndex: number;
   editFlag = false;
-  duplicateFlag = false;
   addNewMember = false;
   showMemberForm = false;
   newMembersColumns: string[] = ['members', 'buttons'];
@@ -206,8 +206,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Saves householdmembers in the Evacuation File Form
    */
   save(): void {
-    this.duplicateFlag = false;
-
     if (this.householdForm.get('houseHoldMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.editFlag) {
         this.saveEditedMember();
@@ -229,7 +227,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
     this.showMemberForm = false;
     this.editFlag = false;
-    this.duplicateFlag = false;
 
     if (this.members.length < 2) {
       this.householdForm.get('hasHouseholdMembers').setValue(false);
@@ -471,7 +468,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.showMemberForm = false;
       this.addNewMember = false;
     } else {
-      this.duplicateFlag = true;
+      this.duplicateHouseholdMemberWarningDialog();
     }
   }
 
@@ -496,7 +493,21 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.showMemberForm = false;
       this.editFlag = false;
     } else {
-      this.duplicateFlag = true;
+      this.duplicateHouseholdMemberWarningDialog();
     }
+  }
+
+  public duplicateHouseholdMemberWarningDialog() {
+    this.openInfoDialog(globalConst.duplicateHouseholdMemberWarning);
+  }
+
+  private openInfoDialog(dialog: DialogContent) {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: dialog
+      },
+      maxWidth: '700px'
+    });
   }
 }
