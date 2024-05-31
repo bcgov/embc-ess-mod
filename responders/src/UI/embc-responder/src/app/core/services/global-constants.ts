@@ -643,4 +643,11 @@ export const incidentalsNeedDialog: DialogContent = {
   text: 'Incidentals could include items such as personal hygiene products like toothpaste, laundry soap and/or pet food.'
 };
 
+export const duplicateHouseholdMemberWarning: DialogContent = {
+  title: '<b>Duplicate Household Member Detected</b>',
+  text: `<p>It looks like the member you are trying to add already exists in the household.</p>
+  <p>Please review the existing members before proceeding.</p>`,
+  cancelButton: 'Close'
+};
+
 export const noAssistanceRequired = 'Household currently does not require assistance.';
