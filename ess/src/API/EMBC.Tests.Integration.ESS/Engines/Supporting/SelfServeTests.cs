@@ -220,11 +220,28 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         };
         await SaveSupports(file.Id, previousSupports);
 
+        await Task.Delay(1000);
         await UpdateTestFile(file);
 
         var eligibility2 = await RunEligibilityTest(file.Id, true);
         eligibility2.EligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
         eligibility2.OneTimePastSupportTypes.ShouldBe([SelfServeSupportType.Incidentals]);
+    }
+
+    [Fact]
+    public async Task ValidateExtensionEligibility_FileUpdatedTwiceWithMoreHouseholdMembers_False()
+    {
+        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 2, needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+
+        var newHouseholdMember = file.HouseholdMembers.Last() with { Id = null, IsPrimaryRegistrant = false, DateOfBirth = "1/19/2002" };
+        await UpdateTestFile(file, householdMembers: file.NeedsAssessment.HouseholdMembers.Append(newHouseholdMember));
+        await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
+
+        await Task.Delay(1000);
+
+        await UpdateTestFile(file);
+
+        await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
     }
 
     [Fact]
