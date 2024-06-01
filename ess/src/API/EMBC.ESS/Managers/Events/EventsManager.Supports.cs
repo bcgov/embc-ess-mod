@@ -360,7 +360,7 @@ public partial class EventsManager
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.To.Value.ToPST(),
-                file.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
+                file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
             supports = response.Supports;
         }
         else
