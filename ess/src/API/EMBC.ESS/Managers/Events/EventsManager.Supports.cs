@@ -353,9 +353,9 @@ public partial class EventsManager
         IEnumerable<SelfServeSupport> supports;
         if (query.Items == null)
         {
-            //generate the supports based on the file
+            //generate the supports based on the needs assessment
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
-                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.SupportSettings.Select(s => s.Type)),
+                mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.SupportSettings.Where(s => s.State == Resources.Evacuations.SelfServeSupportEligibilityState.Available).Select(s => s.Type)),
                 task.StartDate.ToPST(),
                 task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
