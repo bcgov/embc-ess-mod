@@ -1,41 +1,41 @@
 {
   "/api": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/login": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/token": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/signin-oidc": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/join": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "logLevel": "debug"
   },
   "/env/info.json": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/version": {
-    "target": "https://dev-era-evacuees.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
