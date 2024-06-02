@@ -3,9 +3,11 @@
     <span class="evacuatedSecondary">Evacuated From</span>
     <mat-card-title class="evacuatedTitle">
       {{ evacuationFileCard?.evacuatedAddress?.community?.name }}
-      @if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports) {
+      @if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && hasNoSupports && canExtendSupports) {
         <mat-chip disabled>Supports available</mat-chip>
-      } @else if ([EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports) {
+      } @else if (
+        [EvacuationFileStatus.Active].includes(evacuationFileCard?.status) && !hasActiveSupports && canExtendSupports
+      ) {
         <mat-chip disabled> Support extensions available</mat-chip>
       }
     </mat-card-title>

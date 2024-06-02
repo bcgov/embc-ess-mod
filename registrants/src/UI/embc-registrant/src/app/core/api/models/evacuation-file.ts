@@ -26,6 +26,7 @@ export interface EvacuationFile {
   needsAssessment: NeedsAssessment;
   secretPhrase?: string | null;
   secretPhraseEdited?: boolean | null;
+  selfServeEnabled?: boolean;
   status?: EvacuationFileStatus;
   supports?: Array<
     | ClothingSupport

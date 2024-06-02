@@ -110,6 +110,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.SecurityPhrase))
                 .ForMember(d => d.SecretPhraseEdited, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.NeedsAssessment.CompletedOn))
+                .ForMember(d => d.SelfServeEnabled, opts => opts.MapFrom(s => s.RelatedTask != null && s.RelatedTask.SelfServeEnabled))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.Support, Support>()

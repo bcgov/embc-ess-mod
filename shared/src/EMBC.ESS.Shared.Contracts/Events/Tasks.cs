@@ -38,6 +38,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string Description { get; set; }
         public IncidentTaskStatus Status { get; set; }
         public bool RemoteExtensionsEnabled { get; set; }
+        public bool SelfServeEnabled { get; set; }
     }
 
     public enum IncidentTaskStatus
