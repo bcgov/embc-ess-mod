@@ -93,7 +93,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
             var files = (await evacuationRepository.Query(caseQuery)).Items.ToArray();
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.NeedsAssessment.Pets.Count() > 0);
+            files.ShouldAllBe(f => f.NeedsAssessment.Pets.Any());
         }
 
         [Fact]
@@ -303,6 +303,44 @@ namespace EMBC.Tests.Integration.ESS.Resources
             eligibility.From.ShouldNotBeNull();
             eligibility.To.ShouldNotBeNull();
             eligibility.SupportSettings.ShouldBe(cmd.EligibleSupports, ignoreOrder: true);
+        }
+
+        [Fact]
+        public async Task GetEligibilityCheck_NeedsAssessmentUpdated_ReturnsCorrect()
+        {
+            var fileId = TestData.EvacuationFileId;
+            var taskNumber = TestData.SelfServeActiveTaskId;
+            var from = DateTimeOffset.Now;
+            var to = from.AddHours(72);
+            var cmd = new AddEligibilityCheck
+            {
+                Eligible = true,
+                EvacuationFileNumber = fileId,
+                TaskNumber = taskNumber,
+                From = from,
+                To = to,
+                Reason = "Test",
+                HomeAddressReferenceId = null,
+                EligibleSupports =
+                [
+                    new SelfServeSupportSetting(SelfServeSupportType.Clothing, SelfServeSupportEligibilityState.NotAvailableOneTimeUsed),
+                    new SelfServeSupportSetting(SelfServeSupportType.Incidentals, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.ShelterAllowance, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodRestaurant, SelfServeSupportEligibilityState.Available),
+                    new SelfServeSupportSetting(SelfServeSupportType.FoodGroceries, SelfServeSupportEligibilityState.Available)
+                ],
+            };
+
+            var response = await evacuationRepository.Manage(cmd);
+            response.Id.ShouldNotBeNull();
+
+            var file = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            file.NeedsAssessment.EligibilityCheck.ShouldNotBeNull();
+
+            await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file });
+
+            var updatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            updatedFile.NeedsAssessment.EligibilityCheck.ShouldBeNull();
         }
 
         [Fact]

@@ -275,7 +275,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var updatedNoteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
             actualNote.Content = $"{TestData.TestPrefix}-note-{updatedNoteSuffix}";
             actualNote.CreatedBy = new TeamMember { Id = TestData.OtherTeamMemberId };
-            Should.Throw<Exception>(() => manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).Message.ShouldBe($"The note may be edited only by the user who created it withing a 24 hour period.");
+            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })))
+                .Message.ShouldBe($"The note may be edited only by the user who created it withing a 24 hour period.");
         }
 
         [Fact]

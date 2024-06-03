@@ -309,16 +309,14 @@ public class EvacuationRepository : IEvacuationRepository
         ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
         if (file.era_CurrentNeedsAssessmentid.era_TaskNumber == null) await ctx.LoadPropertyAsync(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_TaskNumber), ct);
 
-        file.era_CurrentNeedsAssessmentid.era_EligibilityCheck = await ctx.era_eligibilitychecks
-            .Expand(ec => ec.era_Task)
-            .Expand(ec => ec.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck)
-            .Where(ec => ec._era_needsassessment_value == file.era_CurrentNeedsAssessmentid.era_needassessmentid)
-            .OrderByDescending(ec => ec.createdon)
-            .Take(1)
-            .SingleOrDefaultAsync(ct);
-
-        if (file.era_CurrentNeedsAssessmentid.era_EligibilityCheck != null)
+        if (file.era_CurrentNeedsAssessmentid?._era_eligibilitycheck_value.HasValue == true)
         {
+            file.era_CurrentNeedsAssessmentid.era_EligibilityCheck = await ctx.era_eligibilitychecks
+                .Expand(ec => ec.era_Task)
+                .Expand(ec => ec.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck)
+                .Where(ec => ec.era_eligibilitycheckid == file.era_CurrentNeedsAssessmentid._era_eligibilitycheck_value)
+                .SingleOrDefaultAsync(ct);
+
             await file.era_CurrentNeedsAssessmentid.era_EligibilityCheck.era_era_eligibilitycheck_era_eligiblesupport_EligibilityCheck.ForEachAsync(5, async s =>
             {
                 ctx.AttachTo(nameof(EssContext.era_eligiblesupports), s);
