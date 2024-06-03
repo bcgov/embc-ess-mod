@@ -285,7 +285,7 @@ namespace EMBC.Tests.Integration.ESS
                     {
                         era_supporttypeoption = supportType,
                         era_selfservesupportlimitsid = Guid.NewGuid(),
-                        era_extensionavailable = !selfServeOneTimeSupportTypes.Contains((int)supportType),
+                        era_extensionavailable = !selfServeOneTimeSupportTypes.Contains(supportType),
                     };
                     essContext.AddToera_selfservesupportlimitses(limit);
                     essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_Task), task);

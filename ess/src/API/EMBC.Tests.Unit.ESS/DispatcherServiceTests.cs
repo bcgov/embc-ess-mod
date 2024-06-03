@@ -62,7 +62,7 @@ namespace EMBC.Tests.Unit.ESS
             response.ShouldNotBeNull().Data.ShouldNotBeNull().ShouldNotBeEmpty();
             var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
             using var ms = new MemoryStream(response.Data.ToByteArray());
-            JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<string>().ShouldBe(cmd.Value);
+            (await JsonSerializer.DeserializeAsync(ms, responseType)).ShouldBeOfType<string>().ShouldBe(cmd.Value);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace EMBC.Tests.Unit.ESS
             response.ShouldNotBeNull().Data.ShouldNotBeNull().IsEmpty.ShouldBeFalse();
             var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
             using var ms = new MemoryStream(response.Data.ToByteArray());
-            JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
+            (await JsonSerializer.DeserializeAsync(ms, responseType)).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
         }
 
         [Fact]
