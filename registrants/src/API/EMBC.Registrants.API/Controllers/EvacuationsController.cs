@@ -164,9 +164,10 @@ public record EvacuationFile
     public string? SecretPhrase { get; set; }
     public bool? SecretPhraseEdited { get; set; }
     public DateTime LastModified { get; set; }
-    public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
+    public IEnumerable<Support> Supports { get; set; } = [];
     public string? ManualFileId { get; set; }
     public bool? IsPaper { get; set; }
+    public bool SelfServeEnabled { get; set; }
 }
 
 /// <summary>
@@ -179,10 +180,10 @@ public record NeedsAssessment
     [Required]
     public InsuranceOption Insurance { get; set; }
 
-    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
-    public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
+    public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = [];
+    public IEnumerable<Pet> Pets { get; set; } = [];
     public NeedsAssessmentType Type { get; set; }
-    public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
+    public IEnumerable<IdentifiedNeed> Needs { get; set; } = [];
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -321,7 +322,7 @@ public abstract record Support
 
     public abstract SupportSubCategory SubCategory { get; }
 
-    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> IncludedHouseholdMembers { get; set; } = [];
     public string? ManualReferralId { get; set; }
 
     public SupportMethod Method { get; set; }

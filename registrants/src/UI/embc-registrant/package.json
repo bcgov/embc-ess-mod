@@ -3,15 +3,17 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5200 --configuration=dev",
-    "startlocal": "npm run gen-api-local && ng serve --port 5200 --configuration=local",
+    "start-prj": "ng serve --port 5200 --configuration=dev-prj",
+    "start-sup": "ng serve --port 5200 --configuration=dev-sup",
+    "start": "ng serve --port 5200 --configuration=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "format:write": "prettier . --write",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i https://dev-era-evacuees.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false && npm run format:write",
-    "gen-api-local": "ng-openapi-gen -i http://localhost:5020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
+    "gen-api-prj": "ng-openapi-gen -i https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false && npm run format:write",
+    "gen-api-sup": "ng-openapi-gen -i https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false && npm run format:write",
+    "gen-api-local": "ng-openapi-gen -i http://localhost:5020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false && npm run format:write"
   },
   "private": true,
   "dependencies": {

@@ -49,5 +49,6 @@ public class TaskTests : DynamicsWebAppTestBase
         task.Id.ShouldBe(TestData.SelfServeActiveTaskId);
         task.Status.ShouldBe(EMBC.ESS.Resources.Tasks.TaskStatus.Active);
         task.EnabledSupports.ShouldNotBeEmpty();
+        task.SelfServeEnabled.ShouldBeTrue();
     }
 }
