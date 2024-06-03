@@ -303,10 +303,12 @@ export class SelfServeSupportFormComponent implements OnInit {
     switch (step) {
       case 'supportDetails':
         formGroup.setValue(this.copySupportDetailsFormValue);
+        this.isEditSupportDetailsFromReview = false;
         break;
 
       case 'eTransfer':
         formGroup.setValue(this.copyETransferDetailsFormValue);
+        this.isEditETransferFromReview = false;
         break;
 
       default:
