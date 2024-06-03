@@ -69,6 +69,26 @@ export class SelfServeSupportDetailsFormComponent {
 
   @Input()
   set draftSupports(draftSupports: DraftSupports) {
+    this.supportEligibilityStateSettings[SelfServeSupportType.ShelterAllowance] = this.getEligibilityState(
+      SelfServeSupportType.ShelterAllowance
+    );
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] = this.getEligibilityState(
+      SelfServeSupportType.FoodGroceries
+    );
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] = this.getEligibilityState(
+      SelfServeSupportType.FoodRestaurant
+    );
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.Clothing] = this.getEligibilityState(
+      SelfServeSupportType.Clothing
+    );
+
+    this.supportEligibilityStateSettings[SelfServeSupportType.Incidentals] = this.getEligibilityState(
+      SelfServeSupportType.Incidentals
+    );
+
     draftSupports.items.forEach((support) => {
       switch (support.type) {
         case SelfServeSupportType.ShelterAllowance:
@@ -124,15 +144,11 @@ export class SelfServeSupportDetailsFormComponent {
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
-    this.supportEligibilityStateSettings[SelfServeSupportType.ShelterAllowance] = this.getEligibilityState(
-      SelfServeSupportType.ShelterAllowance
-    );
-
     this.showSelfServeShelterAllowanceSupport = true;
   }
 
   getEligibilityState(type: SelfServeSupportType) {
-    return this.evacuationFileDataService.selfServeEligibilityCheck.supportSettings.find((s) => s.type === type).state;
+    return this.evacuationFileDataService.selfServeEligibilityCheck.supportSettings.find((s) => s.type === type)?.state;
   }
 
   private createSelfServeFoodGroceriesSupportForm(
@@ -147,10 +163,6 @@ export class SelfServeSupportDetailsFormComponent {
     this.createSupportDateFormArray(selfServeSupport.nights, selfServeSupportFormGroup.controls.nights);
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
-
-    this.supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] = this.getEligibilityState(
-      SelfServeSupportType.FoodGroceries
-    );
 
     this.showSelfServeFoodSupport = true;
     this.hasSelfServeFoodGroceriesSupport = true;
@@ -298,10 +310,6 @@ export class SelfServeSupportDetailsFormComponent {
 
     this.foodRestaurantDates = [...dates];
 
-    this.supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] = this.getEligibilityState(
-      SelfServeSupportType.FoodRestaurant
-    );
-
     this.showSelfServeFoodSupport = true;
     this.hasSelfServiceFoodRestaurantSupport = true;
 
@@ -323,10 +331,6 @@ export class SelfServeSupportDetailsFormComponent {
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
 
-    this.supportEligibilityStateSettings[SelfServeSupportType.Clothing] = this.getEligibilityState(
-      SelfServeSupportType.Clothing
-    );
-
     this.showSelfServeClothingSupport = true;
   }
 
@@ -339,10 +343,6 @@ export class SelfServeSupportDetailsFormComponent {
     });
 
     selfServeSupportFormGroup.controls.totalAmount.setValue(selfServeSupport.totalAmount ?? 0);
-
-    this.supportEligibilityStateSettings[SelfServeSupportType.Incidentals] = this.getEligibilityState(
-      SelfServeSupportType.Incidentals
-    );
 
     this.showSelfServeIncidentsSupport = true;
   }
