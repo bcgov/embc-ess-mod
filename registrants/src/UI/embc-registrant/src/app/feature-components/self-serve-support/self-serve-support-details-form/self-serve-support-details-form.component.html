@@ -1,7 +1,11 @@
 @if (supportDraftForm) {
   <form class="support-details-form">
     <p>Please review the following and make any necessary edits. Required fields are marked with a red asterisk.</p>
-    @if (showSelfServeShelterAllowanceSupport) {
+
+    @if (
+      supportEligibilityStateSettings[SelfServeSupportType.ShelterAllowance] ===
+      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+    ) {
       <mat-card
         appearance="outlined"
         [class.support-one-time-used]="
@@ -16,8 +20,14 @@
             <p><b>Shelter Allowance is only provided once during the evacuation period.</b></p>
             <p>Your household has already been provided support for Shelter Allowance</p>
           </div>
+        </mat-card-content>
+      </mat-card>
+    } @else if (showSelfServeShelterAllowanceSupport) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="card-heading">Shelter Allowance</div>
 
-          <div class="question-box hide-on-one-time-used">
+          <div class="question-box">
             <div class="card-question">
               <label>Which <b>days</b> does your household require <b>Shelter Allowance</b>?</label>
             </div>
@@ -211,7 +221,10 @@
       </mat-card>
     }
 
-    @if (showSelfServeClothingSupport) {
+    @if (
+      supportEligibilityStateSettings[SelfServeSupportType.Clothing] ===
+      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+    ) {
       <mat-card
         appearance="outlined"
         [class.support-one-time-used]="
@@ -226,8 +239,14 @@
             <p><b>Clothing is only provided once during the evacuation period.</b></p>
             <p>Your household has already been provided support for Clothing</p>
           </div>
+        </mat-card-content>
+      </mat-card>
+    } @else if (showSelfServeClothingSupport) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="card-heading">Clothing</div>
 
-          <div class="question-box hide-on-one-time-used">
+          <div class="question-box">
             <div class="card-question">
               <label>Which <b>people</b> in your household require <b>Clothing</b>?</label>
             </div>
@@ -249,7 +268,10 @@
       </mat-card>
     }
 
-    @if (showSelfServeIncidentsSupport) {
+    @if (
+      supportEligibilityStateSettings[SelfServeSupportType.Incidentals] ===
+      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+    ) {
       <mat-card
         appearance="outlined"
         [class.support-one-time-used]="
@@ -264,8 +286,14 @@
             <p><b>Incidents is only provided once during the evacuation period.</b></p>
             <p>Your household has already been provided support for Incidents</p>
           </div>
+        </mat-card-content>
+      </mat-card>
+    } @else if (showSelfServeIncidentsSupport) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="card-heading">Incidentals</div>
 
-          <div class="question-box hide-on-one-time-used">
+          <div class="question-box">
             <div class="card-question">
               <label>Which <b>people</b> in your household require <b>Incidentals</b>?</label>
             </div>
