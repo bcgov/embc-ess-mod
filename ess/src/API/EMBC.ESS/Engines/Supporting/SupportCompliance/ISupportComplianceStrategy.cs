@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -44,11 +45,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 
         public async Task<CheckSupportComplianceResponse> CheckCompliance(CheckSupportComplianceRequest request, CancellationToken ct = default)
         {
-            var flags = new Dictionary<Support, IEnumerable<SupportFlag>>();
-            foreach (var support in request.Supports)
+            var flags = new ConcurrentDictionary<Support, IEnumerable<SupportFlag>>();
+            await Parallel.ForEachAsync(request.Supports, ct, async (support, ct) =>
             {
-                flags.Add(support, await CheckCompliance(support, ct));
-            }
+                flags.TryAdd(support, await CheckCompliance(support, ct));
+            });
             return new CheckSupportComplianceResponse
             {
                 Flags = flags
