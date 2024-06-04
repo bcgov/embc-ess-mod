@@ -4,7 +4,6 @@ using System.Linq;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
-using FakeItEasy;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Engines.Supporting
