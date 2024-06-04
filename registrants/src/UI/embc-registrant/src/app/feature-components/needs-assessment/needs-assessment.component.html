@@ -53,7 +53,14 @@
           }
         }
         <br />
-        <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
+        @if (step.stepName === 'Needs') {
+          @if (needsFormLoaded) {
+            <app-identify-needs [identifyNeedsForm]="form"></app-identify-needs>
+          }
+        } @else {
+          <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath">
+          </app-component-wrapper>
+        }
         <br />
         <div class="row justify-content-between resp-style">
           <div class="col-md-6">
