@@ -164,7 +164,7 @@ public record SelfServeSupportEligibility(
     IEnumerable<SelfServeSupportType> EligibleSupportTypes,
     IEnumerable<SelfServeSupportType> OneTimePastSupportTypes);
 
-public record GenerateSelfServeSupports(IEnumerable<SelfServeSupportType> SupportTypes, DateTime TaskStartDate, DateTime TaskEndDate, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
+public record GenerateSelfServeSupports(IEnumerable<SelfServeSupportType> SupportTypes, DateTime SupportPeriodFrom, DateTime SupportPeriodTo, IEnumerable<SelfServeHouseholdMember> HouseholdMembersIds) : GenerateRequest;
 
 public record SelfServeHouseholdMember(string Id, bool IsMinor);
 
