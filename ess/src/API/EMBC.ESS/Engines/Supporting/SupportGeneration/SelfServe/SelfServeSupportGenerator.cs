@@ -31,7 +31,8 @@ internal class SelfServeSupportGenerator(ISelfServeSupportCreationStrategy suppo
         await Task.CompletedTask;
         var supports = req.SupportTypes
             .Select(t => supportCreationStrategy.Create(new CreateSelfServeSupport(t, req.HouseholdMembersIds, req.SupportPeriodFrom, req.SupportPeriodTo)))
-            .Where(supportCreationStrategy.Validate);
+            .Where(supportCreationStrategy.Validate)
+            .ToList();
         return new GenerateSelfServeSupportsResponse(supports);
     }
 }

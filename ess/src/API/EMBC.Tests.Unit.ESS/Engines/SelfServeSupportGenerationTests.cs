@@ -63,6 +63,16 @@ public class SelfServeSupportGenerationTests
     }
 
     [Fact]
+    public async Task Generate_ShelterAllowanceSingleDay_Created()
+    {
+        var fromDate = DateTime.Today;
+        var support = await GenerateSelfServeSupports<SelfServeShelterAllowanceSupport>(SelfServeSupportType.ShelterAllowance, overrideStartDate: fromDate, overrideEndDate: fromDate.AddHours(23));
+        support.Nights.ShouldBe([DateOnly.FromDateTime(fromDate)]);
+        support.IncludedHouseholdMembers.ShouldBe(expectedHouseholdMemberIds);
+        support.TotalAmount.ShouldBe(200d);
+    }
+
+    [Fact]
     public async Task Generate_Incidentals_Created()
     {
         var support = await GenerateSelfServeSupports<SelfServeIncidentalsSupport>(SelfServeSupportType.Incidentals);
@@ -105,9 +115,9 @@ public class SelfServeSupportGenerationTests
         restaurant.TotalAmount.ShouldBe(795d);
     }
 
-    private async Task<T> GenerateSelfServeSupports<T>(SelfServeSupportType type, IEnumerable<SelfServeHouseholdMember>? overrideHouseholdMembers = null) where T : SelfServeSupport
+    private async Task<T> GenerateSelfServeSupports<T>(SelfServeSupportType type, IEnumerable<SelfServeHouseholdMember>? overrideHouseholdMembers = null, DateTime? overrideStartDate = null, DateTime? overrideEndDate = null) where T : SelfServeSupport
     {
-        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([type], startDate, endDate, overrideHouseholdMembers ?? this.householdMembers), default);
+        var response = (GenerateSelfServeSupportsResponse)await strategy.Generate(new GenerateSelfServeSupports([type], overrideStartDate ?? startDate, overrideEndDate ?? endDate, overrideHouseholdMembers ?? householdMembers), default);
         return response.Supports.ShouldHaveSingleItem().ShouldBeOfType<T>();
     }
 
