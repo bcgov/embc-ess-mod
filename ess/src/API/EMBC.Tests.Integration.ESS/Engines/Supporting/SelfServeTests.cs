@@ -150,13 +150,10 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     public async Task GenerateSelfServeSupports_ShelterAllowance_Generated()
     {
         var (file, _) = await CreateTestSubjects();
-        var task = await GetTask(TestData.SelfServeActiveTaskId);
         var now = DateTime.UtcNow.ToPST();
         var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
                 [SelfServeSupportType.ShelterAllowance],
-                task.StartDate.ToPST(),
-                task.EndDate.ToPST(),
                 now,
                 now.AddHours(72),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
@@ -319,12 +316,6 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var mgr = Services.GetRequiredService<EventsManager>();
         return await mgr.Handle(new SaveRegistrantCommand() { Profile = registrant });
-    }
-
-    private async Task<IncidentTask> GetTask(string taskNumber)
-    {
-        var mgr = Services.GetRequiredService<EventsManager>();
-        return (await mgr.Handle(new TasksSearchQuery { TaskId = taskNumber })).Items.Single(t => t.Status == IncidentTaskStatus.Active);
     }
 
     private async Task<EvacuationFile> GetFile(string fileId)

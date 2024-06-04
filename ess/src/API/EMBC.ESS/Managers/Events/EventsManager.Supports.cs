@@ -356,8 +356,6 @@ public partial class EventsManager
             //generate the supports based on the needs assessment
             var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(new GenerateSelfServeSupports(
                 mapper.Map<IEnumerable<SelfServeSupportType>>(file.NeedsAssessment.EligibilityCheck.SupportSettings.Where(s => s.State == Resources.Evacuations.SelfServeSupportEligibilityState.Available).Select(s => s.Type)),
-                task.StartDate.ToPST(),
-                task.EndDate.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.From.Value.ToPST(),
                 file.NeedsAssessment.EligibilityCheck.To.Value.ToPST(),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor)).ToList()));
