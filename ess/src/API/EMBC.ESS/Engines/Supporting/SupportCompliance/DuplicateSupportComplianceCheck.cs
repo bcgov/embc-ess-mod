@@ -33,25 +33,27 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 
             var similarSupportTypes = SimilarSupportTypes(Enum.Parse<SupportType>(type.ToString())).Cast<int>().ToArray();
 
-            var duplicateSupports = new List<era_evacueesupport>();
-            foreach (var hm in householdMembers)
-            {
-                var duplicateSupportsQuery = ctx.era_evacueesupports
-                    .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
-                    .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
-                    .Where(s => s.era_name != support.Id)
-                    .Where(s =>
-                            s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
-                            ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to)));
-
-                duplicateSupports = duplicateSupports.Concat(await duplicateSupportsQuery.GetAllPagesAsync(ct)).DistinctBy(s => s.era_name).ToList();
-            }
+            var duplicateSupports = (await householdMembers
+                .SelectManyAsync(async hm => await GetDuplicateSupportsForHouseholdMember(ctx, support, hm, similarSupportTypes, from, to, ct)))
+                .DistinctBy(s => s.era_name).ToList();
 
             var duplicates = duplicateSupports.Select(s => new DuplicateSupportFlag { DuplicatedSupportId = s.era_name }).ToList();
 
             ctx.DetachAll();
 
             return duplicates;
+        }
+
+        private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, Support support, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
+        {
+            return await ctx.era_evacueesupports
+                .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
+                .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
+                .Where(s => s.era_name != support.Id)
+                .Where(s =>
+                        s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname) &&
+                        ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to)))
+            .GetAllPagesAsync(ct);
         }
 
         private static SupportType[] SimilarSupportTypes(SupportType type) =>
