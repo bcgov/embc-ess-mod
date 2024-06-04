@@ -23,7 +23,7 @@ internal class FoodGroceriesStrategy : ISelfServeSupportCreationStrategy<SelfSer
 
     private static IEnumerable<DateOnly> CreateSupportDays(DateTime from, DateTime to)
     {
-        while (from.Date < to.Date)
+        while (from.Date <= to.Date)
         {
             yield return DateOnly.FromDateTime(from.Date);
             from = from.AddDays(1);
