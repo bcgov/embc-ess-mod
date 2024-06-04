@@ -26,6 +26,7 @@ export class EvacuationCardComponent implements OnInit {
 
   hasActiveSupports: boolean = false;
   hasNoSupports: boolean = false;
+  canExtendSupports: boolean = false;
 
   constructor(
     private router: Router,
@@ -41,6 +42,8 @@ export class EvacuationCardComponent implements OnInit {
     this.hasActiveSupports = this.evacuationFileDataService.hasActiveSupports(this.evacuationFileCard.supports);
 
     this.hasNoSupports = this.evacuationFileDataService.hasNoSupports(this.evacuationFileCard.supports);
+
+    this.canExtendSupports = this.evacuationFileCard?.selfServeEnabled ?? false;
   }
 
   changeStatusColor(): void {

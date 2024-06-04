@@ -133,6 +133,6 @@ tr.example-element-row:not(.example-expanded-row):hover {
   .header-row th.mat-mdc-header-cell,
   .example-element-row td {
     padding: 0 2px;
-    word-break: break-all;
+    word-break: normal;
   }
 }

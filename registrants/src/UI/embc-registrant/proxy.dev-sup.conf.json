@@ -1,26 +1,30 @@
 {
-  "/api/*": {
-    "target": "http://localhost:5020",
+  "/api": {
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   },
   "/login": {
-    "target": "http://localhost:5020",
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   },
   "/token": {
-    "target": "http://localhost:5020",
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   },
   "/signin-oidc": {
-    "target": "http://localhost:5020",
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   },
   "/join": {
-    "target": "http://localhost:5020",
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "logLevel": "debug"
   },
@@ -31,7 +35,7 @@
     "logLevel": "debug"
   },
   "/version": {
-    "target": "http://localhost:5020",
+    "target": "https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

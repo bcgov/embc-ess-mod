@@ -7,7 +7,8 @@ import {
   EvacuationFileStatus,
   NeedsAssessment,
   Support,
-  SupportMethod
+  SupportMethod,
+  SupportStatus
 } from 'src/app/core/api/models';
 import { EvacuationsService, ProfileService, SupportsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
@@ -130,7 +131,9 @@ export class EvacuationFileDataService {
 
   hasActiveSupports(supports?: Array<Support>): boolean {
     // if at least one support has support.to date time greater than now, then hasActiveSupports is true
-    return supports.some((s) => moment(s.to).diff(moment()) > 0);
+    return supports.some(
+      (s) => ![SupportStatus.Void, SupportStatus.Cancelled].includes(s.status) && moment(s.to).diff(moment()) > 0
+    );
   }
 
   hasNoSupports(supports: Array<Support>): boolean {

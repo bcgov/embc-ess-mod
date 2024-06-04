@@ -113,6 +113,20 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     }
 
     [Fact]
+    public async Task ValidateEligibility_DuplicateSupportsSameDay_False()
+    {
+        var (file1, registrant) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var previousSupports = new[]
+        {
+            new ShelterAllowanceSupport{FileId = file1.Id, From = DateTime.Now.AddHours(-72), To = DateTime.Now.AddMinutes(30), IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id), SupportDelivery = new Referral() }
+        };
+        await SaveSupports(file1.Id, previousSupports);
+
+        var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress(), existingRegistrant: registrant);
+        await RunEligibilityTest(file2.Id, false, "Overlapping supports found");
+    }
+
+    [Fact]
     public async Task ValidateEligibility_NotDuplicateSupport_True()
     {
         var (file, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
@@ -136,13 +150,10 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     public async Task GenerateSelfServeSupports_ShelterAllowance_Generated()
     {
         var (file, _) = await CreateTestSubjects();
-        var task = await GetTask(TestData.SelfServeActiveTaskId);
         var now = DateTime.UtcNow.ToPST();
         var response = (GenerateSelfServeSupportsResponse)await supportingEngine.Generate(
             new GenerateSelfServeSupports(
                 [SelfServeSupportType.ShelterAllowance],
-                task.StartDate.ToPST(),
-                task.EndDate.ToPST(),
                 now,
                 now.AddHours(72),
                 file.NeedsAssessment.HouseholdMembers.Select(hm => new SelfServeHouseholdMember(hm.Id, hm.IsMinor))));
@@ -206,11 +217,28 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         };
         await SaveSupports(file.Id, previousSupports);
 
+        await Task.Delay(1000);
         await UpdateTestFile(file);
 
         var eligibility2 = await RunEligibilityTest(file.Id, true);
         eligibility2.EligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Incidentals);
         eligibility2.OneTimePastSupportTypes.ShouldBe([SelfServeSupportType.Incidentals]);
+    }
+
+    [Fact]
+    public async Task ValidateExtensionEligibility_FileUpdatedTwiceWithMoreHouseholdMembers_False()
+    {
+        var (file, _) = await CreateTestSubjects(numberOfHoldholdMembers: 2, needs: [IdentifiedNeed.Food], homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+
+        var newHouseholdMember = file.HouseholdMembers.Last() with { Id = null, IsPrimaryRegistrant = false, DateOfBirth = "1/19/2002" };
+        await UpdateTestFile(file, householdMembers: file.NeedsAssessment.HouseholdMembers.Append(newHouseholdMember));
+        await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
+
+        await Task.Delay(1000);
+
+        await UpdateTestFile(file);
+
+        await RunEligibilityTest(file.Id, false, "Current needs assessment has more household members from the previous needs asessment");
     }
 
     [Fact]
@@ -222,8 +250,8 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
             new ClothingSupport
             {
                 FileId = file1.Id,
-                From = DateTime.Now.AddDays(-3).AddHours(-3),
-                To = DateTime.Now.AddHours(-3),
+                From = DateTime.Now.AddDays(-4).AddHours(-3),
+                To = DateTime.Now.AddDays(-1).AddHours(-3),
                 IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
                 SupportDelivery = new Referral()
             }
@@ -288,12 +316,6 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
     {
         var mgr = Services.GetRequiredService<EventsManager>();
         return await mgr.Handle(new SaveRegistrantCommand() { Profile = registrant });
-    }
-
-    private async Task<IncidentTask> GetTask(string taskNumber)
-    {
-        var mgr = Services.GetRequiredService<EventsManager>();
-        return (await mgr.Handle(new TasksSearchQuery { TaskId = taskNumber })).Items.Single(t => t.Status == IncidentTaskStatus.Active);
     }
 
     private async Task<EvacuationFile> GetFile(string fileId)

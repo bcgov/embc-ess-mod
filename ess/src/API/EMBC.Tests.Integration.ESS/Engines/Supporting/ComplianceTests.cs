@@ -30,8 +30,6 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
         {
             var fileId = TestData.EvacuationFileId;
             var householdMembers = TestData.HouseholdMemberIds;
-            //var initialSupport = new ShelterHotelSupport { FileId = fileId, SupportDelivery = new Referral(), NumberOfNights = 3, NumberOfRooms = 3 };
-            //var duplicatedSupport = new ShelterAllowanceSupport { FileId = fileId, SupportDelivery = new Interac(), TotalAmount = 100m };
             await DuplicateCheck(fileId, householdMembers, initialSupport, duplicatedSupport, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
         }
 

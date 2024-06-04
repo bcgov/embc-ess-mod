@@ -120,12 +120,12 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // check if household member composition changed from the last needs assessment
-        var previousNeedsAssessment = ctx.era_needassessments
+        var initialNeedsAssessment = ctx.era_needassessments
             .Expand(na => na.era_era_householdmember_era_needassessment)
-            .Where(na => na.era_needassessmentid != currentNeedsAssessment.era_needassessmentid && na.era_EvacuationFile.era_evacuationfileid == file.era_evacuationfileid).OrderByDescending(na => na.createdon).FirstOrDefault();
-        if (previousNeedsAssessment != null)
+            .Where(na => na.era_needassessmentid != currentNeedsAssessment.era_needassessmentid && na.era_EvacuationFile.era_evacuationfileid == file.era_evacuationfileid).OrderBy(na => na.createdon).FirstOrDefault();
+        if (initialNeedsAssessment != null)
         {
-            if (previousNeedsAssessment.era_era_householdmember_era_needassessment.Count < currentNeedsAssessment.era_era_householdmember_era_needassessment.Count)
+            if (initialNeedsAssessment.era_era_householdmember_era_needassessment.Count < currentNeedsAssessment.era_era_householdmember_era_needassessment.Count)
             {
                 // current needs assessment has more household members than previous needs assessment
                 return NotEligible("Current needs assessment has more household members from the previous needs asessment",
@@ -134,7 +134,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
 #pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
             foreach (var householdMember in currentNeedsAssessment.era_era_householdmember_era_needassessment)
             {
-                var previouseHouseholdMember = previousNeedsAssessment.era_era_householdmember_era_needassessment.SingleOrDefault(hm => hm.era_householdmemberid == householdMember.era_householdmemberid);
+                var previouseHouseholdMember = initialNeedsAssessment.era_era_householdmember_era_needassessment.SingleOrDefault(hm => hm.era_householdmemberid == householdMember.era_householdmemberid);
                 if (previouseHouseholdMember == null)
                 {
                     // not found in previous needs assessment
@@ -314,6 +314,8 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
 
     private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset eligibleFrom, DateTimeOffset eligibleTo, CancellationToken ct)
     {
+        eligibleFrom = eligibleFrom.Date.ToUniversalTime();
+        eligibleTo = eligibleTo.Date.ToUniversalTime();
         return await ctx.era_evacueesupports
             .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
             .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)

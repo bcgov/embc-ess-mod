@@ -73,8 +73,12 @@
               "proxyConfig": "proxy.conf.json",
               "buildTarget": "embc-registrant:build:local"
             },
-            "dev": {
-              "proxyConfig": "proxy.dev.conf.json",
+            "dev-prj": {
+              "proxyConfig": "proxy.dev-prj.conf.json",
+              "buildTarget": "embc-registrant:build:local"
+            },
+            "dev-sup": {
+              "proxyConfig": "proxy.dev-sup.conf.json",
               "buildTarget": "embc-registrant:build:local"
             },
             "production": {
