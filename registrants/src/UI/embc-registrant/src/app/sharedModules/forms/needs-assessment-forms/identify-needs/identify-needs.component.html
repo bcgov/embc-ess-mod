@@ -21,7 +21,7 @@
               You can receive a shelter allowance and use that money to find your own shelter or be provided with a
               referral to shelter (like a cot in a gym or a hotel/motel).
             </p>
-            @if (needsFormControl['requiresShelter'].value) {
+            @if (identifyNeedsForm?.controls?.requiresShelter?.value) {
               <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option">
                 <label for="shelterAllowance">
                   <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>

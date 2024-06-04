@@ -23,6 +23,7 @@ import { DraftSupports, EligibilityCheck, EvacuationFileStatus } from 'src/app/c
 import { SupportsService } from 'src/app/core/api/services';
 import { input } from '@angular/core';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import IdentifyNeedsComponent from 'src/app/sharedModules/forms/needs-assessment-forms/identify-needs/identify-needs.component';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -35,7 +36,8 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
     MatButtonModule,
     ReviewComponent,
     AlertComponent,
-    AppLoaderComponent
+    AppLoaderComponent,
+    IdentifyNeedsComponent
   ]
 })
 export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
@@ -60,6 +62,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   editFromReview: boolean = false;
   copyCurrentStepFormValue: any;
 
+  needsFormLoaded = false;
   resetIdentifyNeeds = true;
 
   constructor(
@@ -131,6 +134,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
    * @param index index of the step
    */
   loadStepForm(index: number): void {
+    this.needsFormLoaded = false;
+
     const step = this.needsSteps?.[index]?.component as unknown as NeedsAssessmentSteps;
 
     switch (step) {
@@ -166,6 +171,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
           this.form = identifyNeedsForm;
           this.copyCurrentStepFormValue = this.form.getRawValue();
+
+          this.needsFormLoaded = true;
         });
         break;
 

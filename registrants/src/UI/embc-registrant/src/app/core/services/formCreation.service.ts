@@ -77,10 +77,12 @@ export class FormCreationService {
 
   petsForm$: Observable<UntypedFormGroup> = this.petsForm.asObservable();
 
+  createNeedsForm = () => this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), {
+    validators: [this.customValidator.needsValidator()]
+  });
+  
   identifyNeedsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), {
-      validators: [this.customValidator.needsValidator()]
-    })
+    this.createNeedsForm()
   );
 
   identifyNeedsForm$: Observable<UntypedFormGroup> = this.identifyNeedsForm.asObservable();
