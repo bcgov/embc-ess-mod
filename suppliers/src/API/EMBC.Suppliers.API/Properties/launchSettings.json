@@ -1,15 +1,13 @@
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "EMBC.Suppliers.API": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "Submission_Storage_Path": "%TEMP%",
-        //"Dynamics__Cache__CachePath": "%TEMP%",
-        "Dynamics__Cache__UpdateFrequency": "1",
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5000"
+    "$schema": "http://json.schemastore.org/launchsettings.json",
+    "profiles": {
+        "EMBC.Suppliers.API": {
+            "commandName": "Project",
+            "environmentVariables": {
+                "Dynamics__Cache__UpdateFrequency": "1",
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "applicationUrl": "http://localhost:5000"
+        }
     }
-  }
 }
