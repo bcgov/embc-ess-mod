@@ -72,7 +72,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         // calculate support eligibility period
         var eligibleFrom = DateTimeOffset.UtcNow;
         var eligibleTo = eligibleFrom.Add(SupportsPeriod);
-        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value.ToUniversalTime();
+        if (eligibleTo > task.era_taskenddate) eligibleTo = task.era_taskenddate.Value;
 
         var needs = GetIdentifiedNeeds(currentNeedsAssessment).ToArray();
 
