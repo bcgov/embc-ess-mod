@@ -314,8 +314,8 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
 
     private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset eligibleFrom, DateTimeOffset eligibleTo, CancellationToken ct)
     {
-        eligibleFrom = eligibleFrom.Date.ToUniversalTime();
-        eligibleTo = eligibleTo.Date.ToUniversalTime();
+        eligibleFrom = eligibleFrom.DateTime.ToPST().Date.FromUnspecifiedPstToUtc();
+        eligibleTo = eligibleTo.DateTime.ToPST().Date.FromUnspecifiedPstToUtc().AddDays(1).AddSeconds(-1);
         return await ctx.era_evacueesupports
             .WhereNotIn(s => s.statuscode.Value, [(int)Resources.Supports.SupportStatus.Cancelled, (int)Resources.Supports.SupportStatus.Void])
             .WhereIn(s => s.era_supporttype.Value, similarSupportTypes)
