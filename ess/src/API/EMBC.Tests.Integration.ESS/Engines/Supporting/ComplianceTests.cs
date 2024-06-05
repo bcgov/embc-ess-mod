@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,9 +11,11 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
     public class ComplianceTests : DynamicsWebAppTestBase
     {
         private readonly ISupportingEngine engine;
+        private readonly EventsManager manager;
 
         public ComplianceTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
+            manager = Services.GetRequiredService<EventsManager>();
             engine = Services.GetRequiredService<ISupportingEngine>();
         }
 
@@ -108,6 +111,44 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             var flags = response.Flags.ShouldHaveSingleItem();
             flags.Key.Id.ShouldBe(checkedSupport.Id);
             flags.Value.Where(f => f is AmountExceededSupportFlag d && d.Approver == checkedSupport.ApproverName).ShouldHaveSingleItem();
+        }
+
+        [Fact]
+        public async Task CheckSupportComplianceRequest_NoFlagsReturned()
+        {
+            var registrant = TestHelper.CreateRegistrantProfile();
+            registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
+            var file = TestHelper.CreateNewTestEvacuationFile(registrant, TestData.ActiveTaskId);
+            file.Id = await TestHelper.SaveEvacuationFile(manager, file);
+            file = await TestHelper.GetEvacuationFileById(manager, file.Id) ?? null!;
+
+            var fileId = file.Id;
+            var householdMembers = file.HouseholdMembers.Select(hm => hm.Id);
+            var from = DateTime.UtcNow.AddDays(-3);
+            var to = DateTime.UtcNow.AddDays(1);
+
+            var checkedSupport = new ClothingSupport
+            {
+                FileId = fileId,
+                SupportDelivery = new Interac(),
+                TotalAmount = 100.00m,
+                IncludedHouseholdMembers = householdMembers,
+                From = from,
+                To = to,
+                CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId }
+            };
+
+            checkedSupport.Id = ((ProcessDigitalSupportsResponse)await engine.Process(new ProcessDigitalSupportsRequest
+            {
+                FileId = fileId,
+                Supports = new[] { checkedSupport },
+                RequestingUserId = TestData.Tier4TeamMemberId
+            })).Supports.ShouldHaveSingleItem().Id;
+
+            var response = (CheckSupportComplianceResponse)await engine.Validate(new CheckSupportComplianceRequest { Supports = new[] { checkedSupport } });
+            var flags = response.Flags.ShouldHaveSingleItem();
+            flags.Key.Id.ShouldBe(checkedSupport.Id);
+            flags.Value.ShouldBeEmpty();
         }
     }
 }

@@ -504,12 +504,13 @@ mat-form-field {
 .versions-table {
   width: 100%;
 }
-@media(max-width:768px){
-  app-evacuation-card .button-align{
-    padding: 0!important;
+@media (max-width: 768px) {
+  app-evacuation-card .button-align {
+    padding: 0 !important;
   }
-  app-evacuation-card .button-p{
-  padding: 0!important;
-  max-width:95%;
-  margin: 10px auto;}
+  app-evacuation-card .button-p {
+    padding: 0 !important;
+    max-width: 95%;
+    margin: 10px auto;
   }
+}

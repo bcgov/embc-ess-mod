@@ -22,7 +22,7 @@ export function disableGaurdFn(disAllowedRoutes?: Array<string>): CanDeactivateF
   ): Observable<boolean> {
     const dialog = inject(MatDialog);
 
-    if (disAllowedRoutes && disAllowedRoutes.includes(nextState.url)) {
+    if (disAllowedRoutes && disAllowedRoutes.some((url) => nextState.url.startsWith(url))) {
       return dialog
         .open(DialogComponent, {
           data: {

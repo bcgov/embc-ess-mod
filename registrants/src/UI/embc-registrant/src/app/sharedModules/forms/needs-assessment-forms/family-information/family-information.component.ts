@@ -65,7 +65,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
   addMembers(): void {
     this.householdMemberForm.get('householdMember').reset();
     this.showFamilyForm = !this.showFamilyForm;
-    this.editFlag = !this.editFlag;
+    this.editFlag = false;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 
@@ -112,13 +112,13 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
     this.dataSource.next(this.data);
     this.householdMemberForm.get('householdMembers').setValue(this.data);
     this.showFamilyForm = !this.showFamilyForm;
-    this.editFlag = !this.editFlag;
+    this.editFlag = false;
     this.scrollToTopHousehold();
   }
 
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
-    this.editFlag = !this.editFlag;
+    this.editFlag = false;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
     this.scrollToTopHousehold();
   }
@@ -157,7 +157,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
     this.rowEdit = !this.rowEdit;
     this.householdMemberForm.get('householdMember').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
-    this.editFlag = !this.editFlag;
+    this.editFlag = true;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }

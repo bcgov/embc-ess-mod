@@ -21,7 +21,7 @@ import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { Support, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';
+import { Support, SupportCategory, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
@@ -388,36 +388,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateSupportType(element: Support): string {
-    if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService
-        .getSupportCategories()
-        .find((value) => value.value === element?.category);
-      return category?.description;
-    } else {
-      const subCategory = this.loadEvacueeListService
-        .getSupportSubCategories()
-        .find((value) => value.value === element?.subCategory);
-      return subCategory?.description;
-    }
-  }
-
-  generateSupportTypeValue(element: Support): string {
-    if (element?.subCategory === 'None') {
-      const category = this.loadEvacueeListService
-        .getSupportCategories()
-        .find((value) => value.value === element?.category);
-      return category?.value;
-    } else {
-      const subCategory = this.loadEvacueeListService
-        .getSupportSubCategories()
-        .find((value) => value.value === element?.subCategory);
-      return subCategory?.value;
-    }
-  }
-
   validateDelivery() {
-    let hasConflict = false;
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
       return;
@@ -430,25 +401,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
 
     const thisSupport = this.supportDetailsForm.getRawValue();
-    const from = this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime);
-    const to = this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime);
-    const overlappingSupports = existingSupports.filter(
-      (s) =>
-        this.generateSupportType(s) === this.stepSupportsService.supportTypeToAdd.description &&
-        moment(to).isSameOrAfter(moment(s.from)) &&
-        moment(from).isSameOrBefore(moment(s.to))
-    );
-    const overlappingFoodSupports = existingSupports.filter(
-      (s) =>
-        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Groceries.toString() &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))) ||
-        (this.generateSupportTypeValue(s) === SupportSubCategory.Food_Restaurant.toString() &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to)))
-    );
+    const from = moment(this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime));
+    const to = moment(this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime));
+    const category: SupportCategory =
+      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
 
-    hasConflict = overlappingSupports.length > 0 || overlappingFoodSupports.length > 0;
+    const hasConflict = existingSupports.some((s) => {
+      const sFrom = moment(s.from);
+      const sTo = moment(s.to);
+      return (
+        s.category === category &&
+        ((sFrom.isSameOrAfter(from) && sFrom.isSameOrBefore(to)) ||
+          (sTo.isSameOrAfter(from) && sTo.isSameOrBefore(to)) ||
+          (sFrom.isSameOrBefore(from) && sTo.isSameOrAfter(to)))
+      );
+    });
 
     if (hasConflict) {
       this.dialog
@@ -467,6 +435,31 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         });
     } else {
       this.addDelivery();
+    }
+  }
+
+  mapSubCategoryToCategory(subCategory: SupportSubCategory): SupportCategory {
+    console.debug(subCategory);
+    switch (subCategory) {
+      case SupportSubCategory.Food_Groceries:
+        return SupportCategory.Food;
+      case SupportSubCategory.Food_Restaurant:
+        return SupportCategory.Food;
+      case SupportSubCategory.Lodging_Hotel:
+        return SupportCategory.Lodging;
+      case SupportSubCategory.Lodging_Billeting:
+        return SupportCategory.Lodging;
+      case SupportSubCategory.Lodging_Group:
+        return SupportCategory.Lodging;
+      case SupportSubCategory.Lodging_Allowance:
+        return SupportCategory.Lodging;
+      case SupportSubCategory.Transportation_Taxi:
+        return SupportCategory.Transportation;
+      case SupportSubCategory.Transportation_Other:
+        return SupportCategory.Transportation;
+
+      default:
+        return SupportCategory.Unknown;
     }
   }
 

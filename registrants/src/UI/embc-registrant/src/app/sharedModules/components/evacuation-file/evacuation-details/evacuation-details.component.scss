@@ -107,8 +107,8 @@
   gap: var(--size-2);
   padding: var(--size-2);
   margin: var(--size-2);
-  @media  (max-width:768px){
-   flex-direction: column;
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 }
 

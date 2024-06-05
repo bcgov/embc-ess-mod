@@ -224,7 +224,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.householdForm.get('addMemberFormIndicator').setValue(false);
     this.householdForm.get('addMemberIndicator').setValue(false);
     this.householdForm.get('houseHoldMember').reset();
-
+    this.householdForm.get('houseHoldMember').get('dateOfBirth').setValue(null);
     this.showMemberForm = false;
     this.editFlag = false;
 
