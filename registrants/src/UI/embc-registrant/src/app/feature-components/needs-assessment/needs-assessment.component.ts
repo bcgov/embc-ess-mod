@@ -231,9 +231,17 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.needsStepper.selectedIndex = this.needsStepper.steps.length - 1;
   }
 
-  goBackToReview() {
+  goBackToReview(stepper: MatStepper, isLast: boolean, component: string | Observable<any>) {
     this.editFromReview = false;
-    this.needsStepper.selectedIndex = this.needsStepper.steps.length - 1;
+    if (this.form.status === 'VALID') {
+      this.setFormData(component as string);
+      this.form$.unsubscribe();
+      stepper.selected.completed = true;
+
+      this.needsStepper.selectedIndex = this.needsStepper.steps.length - 1;
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 
   setFormData(component: string): void {

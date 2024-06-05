@@ -74,7 +74,14 @@
           </div>
           <div class="col-md-6">
             @if (editFromReview) {
-              <button class="button-p" mat-stroked-button type="button" (click)="goBackToReview()">Save</button>
+              <button
+                class="button-p"
+                mat-stroked-button
+                type="button"
+                (click)="goBackToReview(needsStepper, step.isLast, step.component)"
+              >
+                Save
+              </button>
             } @else {
               <button
                 class="button-p"
