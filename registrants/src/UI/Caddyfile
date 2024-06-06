@@ -4,7 +4,8 @@
 }
 
 :2015 {
-	log {
+	log default {
+		output stdout
 		format console
 	}
 
@@ -36,8 +37,11 @@
 		}
 	}
 
+	handle /api* {
+		reverse_proxy {$API_URL}
+	}
+
 	handle {
-		reverse_proxy /api* {$API_URL}
 		try_files {path} {path}/ /index.html?{query}
 		file_server
 	}
