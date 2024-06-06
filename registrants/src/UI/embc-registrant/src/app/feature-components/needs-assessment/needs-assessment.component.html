@@ -55,7 +55,7 @@
         <br />
         @if (step.stepName === 'Needs') {
           @if (needsFormLoaded) {
-            <app-identify-needs [identifyNeedsForm]="form"></app-identify-needs>
+            <app-identify-needs [form]="form"></app-identify-needs>
           }
         } @else {
           <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath">
