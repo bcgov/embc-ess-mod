@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit {
           .open(SelfServeSubmissionDialogComponent, {
             data: supportData,
             width: '80%',
-            height: '750px',
+            height: 'auto',
             maxWidth: '900px'
           })
           .afterClosed()
