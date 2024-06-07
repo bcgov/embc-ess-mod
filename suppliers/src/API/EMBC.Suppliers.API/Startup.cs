@@ -167,7 +167,7 @@ namespace EMBC.Suppliers.API
             services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
             services.AddScoped(sp =>
             {
-                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpointUrl");
                 var tokenProvider = sp.GetRequiredService<ITokenProvider>();
                 return new CRMWebAPI(new CRMWebAPIConfig
                 {

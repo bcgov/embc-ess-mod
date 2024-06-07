@@ -1,0 +1,120 @@
+services:
+  registrants-portal-ui:
+    image: registrants-portal-ui
+    build:
+      context: "registrants/src/UI/"
+    environment:
+      - API_URL=registrants-portal-api:8080
+    volumes:
+      - ./tools/helm/charts/era/envs/dev-prj/registrants-portal-ui-env.json:/site/env/info.json
+    expose:
+      - 2015
+    ports:
+      - "5200:2015"
+    depends_on:
+      - registrants-portal-api
+
+  registrants-portal-api:
+    image: registrants-portal-api
+    build:
+      context: "registrants/src/API/"
+      additional_contexts:
+        - shared=shared/src
+    env_file:
+      - .env
+    environment:
+      cors__origins: http://localhost:5200
+    expose:
+      - 8080
+    ports:
+      - "5020:8080"
+    depends_on:
+      - ess-backend
+
+  responders-portal-ui:
+    image: responders-portal-ui
+    build:
+      context: "responders/src/UI/"
+    environment:
+      - API_URL=responders-portal-api:8080
+    volumes:
+      - ./tools/helm/charts/era/envs/dev-prj/responders-portal-ui-env.json:/site/env/info.json
+    expose:
+      - 2015
+    ports:
+      - "6200:2015"
+    depends_on:
+      - responders-portal-api
+
+  responders-portal-api:
+    image: responders-portal-api
+    build:
+      context: "responders/src/API/"
+      additional_contexts:
+        - shared=shared/src
+    env_file:
+      - .env
+    environment:
+      cors__origins: http://localhost:6200
+    expose:
+      - 8080
+    ports:
+      - "6020:8080"
+    depends_on:
+      - ess-backend
+
+
+  suppliers-portal-ui:
+    image: suppliers-portal-ui
+    build:
+      context: "suppliers/src/UI/"
+    environment:
+      - API_URL=suppliers-portal-api:8080
+    volumes:
+      - ./tools/helm/charts/era/envs/dev-prj/responders-portal-ui-env.json:/site/env/info.json
+    expose:
+      - 2015
+    ports:
+      - "4200:2015"
+    depends_on:
+      - suppliers-portal-api
+
+  suppliers-portal-api:
+    image: suppliers-portal-api
+    build:
+      context: "suppliers/src/API/"
+    env_file:
+      - .env
+    environment:
+      cors__origins: http://localhost:4200
+    expose:
+      - 8080
+    ports:
+      - "4020:8080"
+    depends_on:
+      - redis
+
+  ess-backend:
+    image: ess-backend
+    build:
+      context: "ess/src/API/"
+      additional_contexts:
+        - shared=shared/src
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_URLS=https://+:8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    expose:
+      - 8080
+    ports:
+      - "3020:8080"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    ports:
+    - "6379:6379"
