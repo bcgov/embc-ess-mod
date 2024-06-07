@@ -78,7 +78,11 @@
                   } @else {
                     Groceries
                   }
-                  @if (!hasSelfServeFoodGroceriesSupport) {
+                  @if (
+                    !hasSelfServeFoodGroceriesSupport &&
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] !==
+                      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                  ) {
                     <mat-error> Not available via self-serve </mat-error>
                   }
                 </mat-radio-button>
@@ -103,7 +107,11 @@
                   } @else {
                     Restaurant Meals
                   }
-                  @if (!hasSelfServiceFoodRestaurantSupport) {
+                  @if (
+                    !hasSelfServiceFoodRestaurantSupport &&
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] !==
+                      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                  ) {
                     <mat-error> Not available via self-serve </mat-error>
                   }
                 </mat-radio-button>
