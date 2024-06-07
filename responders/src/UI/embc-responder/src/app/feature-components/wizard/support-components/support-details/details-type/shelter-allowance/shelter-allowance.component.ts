@@ -55,14 +55,27 @@ export class ShelterAllowanceGroupComponent implements OnChanges, AfterViewInit 
       this.referralForm.get('noOfNights').patchValue(this.noOfDays);
       this.updateTotalAmount();
     }
-
+    if (changes.selectedHouseholdMembers) {
+      this.updateTotalAmount();
+    }
     this.referralForm.get('noOfNights').valueChanges.subscribe(() => {
       this.updateTotalAmount();
     });
   }
   updateTotalAmount() {
     this.nofNight = this.referralForm.get('noOfNights').value;
-    this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rate;
+    this.members = this.supportDetailsForm.get('members').value;
+
+    this.totalAmount = 0;
+    if (
+      this.members != null &&
+      this.members.length > 0 &&
+      this.members.length <= globalConst.shelterAllowanceRate.maxMembers
+    ) {
+      this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rate;
+    } else if (this.members != null && this.members.length > globalConst.shelterAllowanceRate.maxMembers) {
+      this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rateOverMaxMembers;
+    }
 
     if (this.totalAmount < 0) this.totalAmount = 0;
 
