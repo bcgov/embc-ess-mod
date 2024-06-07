@@ -60,7 +60,9 @@ export const billeting = {
 };
 
 export const shelterAllowanceRate = {
-  rate: 200
+  rate: 200,
+  rateOverMaxMembers: 400,
+  maxMembers: 5
 };
 
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -144,7 +146,7 @@ export const hotelRateSheet: DialogContent = {
 
 export const needsShelterAllowanceRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
-  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p><span class="bold">$200 per night</span> per household</p>',
+  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p><span class="bold">$200 per night</span> per household of 1 to 5 members</p><p><span class="bold">$400 per night</span> per household of 6 or more members</p>',
   cancelButton: 'Close'
 };
 
@@ -186,7 +188,7 @@ export const duplicateSupportMessage: DialogContent = {
 
 export const needsShelterAllowanceMessage: DialogContent = {
   title: 'Shelter',
-  text: '<p>A shelter allowance of $200 per night per household.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
+  text: '<p>A shelter allowance of $200 per night per household of 1 to 5 members.</p><p>A shelter allowance of $400 per night per household of 6 or more members.</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>'
 };
 
 export const needsShelterReferralMessage: DialogContent = {
@@ -630,7 +632,7 @@ export const caseNotesCompleteText: DashboardBanner = {
 
 export const shelterAllowanceNeedDialog: DialogContent = {
   title: 'Shelter',
-  text: '<p>A shelter allowance of $200 per night per household.</p> <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+  text: '<p>A shelter allowance of $200 per night per household of 1 to 5 members.</p><p>A shelter allowance of $400 per night per household of 6 or more members.</p> <br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
 };
 
 export const shelterReferralNeedDialog: DialogContent = {

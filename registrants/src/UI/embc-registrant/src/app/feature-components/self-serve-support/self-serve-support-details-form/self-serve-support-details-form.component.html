@@ -78,11 +78,23 @@
                   } @else {
                     Groceries
                   }
-                  @if (!hasSelfServeFoodGroceriesSupport) {
+                  @if (
+                    !hasSelfServeFoodGroceriesSupport &&
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] !==
+                      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                  ) {
                     <mat-error> Not available via self-serve </mat-error>
                   }
                 </mat-radio-button>
-                <div class="show-one-time-used-message">
+                <div
+                  [style.color]="'red'"
+                  [style.display]="
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] ===
+                    SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                      ? 'block'
+                      : 'none'
+                  "
+                >
                   <p><b>Groceries is only provided once during the evacuation period.</b></p>
                   <p>Your household has already been provided support for Groceries</p>
                 </div>
@@ -95,11 +107,23 @@
                   } @else {
                     Restaurant Meals
                   }
-                  @if (!hasSelfServiceFoodRestaurantSupport) {
+                  @if (
+                    !hasSelfServiceFoodRestaurantSupport &&
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] !==
+                      SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                  ) {
                     <mat-error> Not available via self-serve </mat-error>
                   }
                 </mat-radio-button>
-                <div class="show-one-time-used-message">
+                <div
+                  [style.color]="'red'"
+                  [style.display]="
+                    supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] ===
+                    SelfServeSupportEligibilityState.UnavailableOneTimeUsed
+                      ? 'block'
+                      : 'none'
+                  "
+                >
                   <p><b>Restaurant Meals is only provided once during the evacuation period.</b></p>
                   <p>Your household has already been provided support for Restaurant Meals</p>
                 </div>
