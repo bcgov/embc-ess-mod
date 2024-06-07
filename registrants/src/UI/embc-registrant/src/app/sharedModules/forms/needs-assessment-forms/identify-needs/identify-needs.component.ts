@@ -24,7 +24,15 @@ import { DialogContent } from 'src/app/core/model/dialog-content.model';
   imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatCheckboxModule, MatRadioModule]
 })
 export default class IdentifyNeedsComponent implements OnInit {
-  @Input() identifyNeedsForm: UntypedFormGroup = this.formCreationService.createNeedsForm();
+  _form: UntypedFormGroup;
+
+  @Input()
+  set form(form: UntypedFormGroup) {
+    this._form = form;
+    this.identifyNeedsForm = form;
+  }
+
+  identifyNeedsForm: UntypedFormGroup = this.formCreationService.createNeedsForm();
   identifyNeedsForm$: Subscription;
 
   constructor(
@@ -33,7 +41,7 @@ export default class IdentifyNeedsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.identifyNeedsForm) {
+    if (!this._form) {
       this.identifyNeedsForm$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
         this.identifyNeedsForm = identifyNeedsForm;
       });
