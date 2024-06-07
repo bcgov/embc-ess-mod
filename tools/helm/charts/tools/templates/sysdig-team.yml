@@ -1,0 +1,21 @@
+apiVersion: ops.gov.bc.ca/v1alpha1
+kind: SysdigTeam
+metadata:
+  name: e2d84f-sysdigteam
+  namespace: e2d84f-tools
+spec:
+  team:
+    description: The Sysdig Team for ERA team
+    users:
+    - name: yossi.1.tamari@gov.bc.ca
+      role: ROLE_TEAM_EDIT
+    - name: joseph.weinkam@gov.bc.ca
+      role: ROLE_TEAM_EDIT
+    - name: Anurupa.Gupta@gov.bc.ca
+      role: ROLE_TEAM_EDIT
+    - name: Erin.Leslie@gov.bc.ca
+      role: ROLE_TEAM_EDIT
+    - name: Jennifer.dowd@gov.bc.ca
+      role: ROLE_TEAM_READ
+    - name: alexander.aleshchenko@gov.bc.ca
+      role: ROLE_TEAM_READ      
