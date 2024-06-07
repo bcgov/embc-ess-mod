@@ -19,7 +19,6 @@ on:
       REGISTRY:
         required: true
         type: string
-
     secrets:
       REGISTRY_USER:
         required: true
