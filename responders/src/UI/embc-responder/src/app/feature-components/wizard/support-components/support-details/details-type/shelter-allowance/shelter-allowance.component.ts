@@ -73,7 +73,7 @@ export class ShelterAllowanceGroupComponent implements OnChanges, AfterViewInit 
       this.members.length <= globalConst.shelterAllowanceRate.maxMembers
     ) {
       this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rate;
-    } else if (this.members != null && this.members.length >= globalConst.shelterAllowanceRate.maxMembers) {
+    } else if (this.members != null && this.members.length > globalConst.shelterAllowanceRate.maxMembers) {
       this.totalAmount = this.nofNight * globalConst.shelterAllowanceRate.rateOverMaxMembers;
     }
 
