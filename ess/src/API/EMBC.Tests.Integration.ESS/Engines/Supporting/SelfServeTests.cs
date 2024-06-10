@@ -263,6 +263,29 @@ public class SelfServeTests(ITestOutputHelper output, DynamicsWebAppFixture fixt
         eligibility.EligibleSupportTypes.ShouldNotContain(SelfServeSupportType.Clothing);
     }
 
+    [Fact]
+    public async Task ValidateEligibility_OnetimeSupportCategory_TrueWithoutOneTimeSupports()
+    {
+        var (file1, registrant) = await CreateTestSubjects(taskNumber: TestData.ActiveTaskId, homeAddress: TestHelper.CreateSelfServeEligibleAddress());
+        var previousSupports = new[]
+        {
+            new FoodGroceriesSupport
+            {
+                FileId = file1.Id,
+                From = DateTime.Now.AddDays(-4).AddHours(-3),
+                To = DateTime.Now.AddDays(-1).AddHours(-3),
+                IncludedHouseholdMembers = file1.NeedsAssessment.HouseholdMembers.Select(hm=>hm.Id),
+                SupportDelivery = new Referral()
+            }
+        };
+        await SaveSupports(file1.Id, previousSupports);
+
+        var (file2, _) = await CreateTestSubjects(taskNumber: TestData.SelfServeOneTimeUseActiveTaskId, homeAddress: TestHelper.CreateOneTimeSelfServeEligibleAddress(), existingRegistrant: registrant);
+        var eligibility = await RunEligibilityTest(file2.Id, true);
+        eligibility.OneTimePastSupportTypes.ShouldContain(SelfServeSupportType.FoodGroceries);
+        eligibility.OneTimePastSupportTypes.ShouldContain(SelfServeSupportType.FoodRestaurant);
+    }
+
     private async Task<SelfServeSupportEligibility> RunEligibilityTest(string fileId, bool expectedResult, string? reason = null)
     {
         var eligibilityResponse = (ValidateSelfServeSupportsEligibilityResponse)await supportingEngine.Validate(new ValidateSelfServeSupportsEligibility(fileId));
