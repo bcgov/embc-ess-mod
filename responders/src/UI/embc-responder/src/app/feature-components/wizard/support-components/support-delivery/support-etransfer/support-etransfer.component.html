@@ -54,6 +54,7 @@
             matInput
             placeholder="Email Address"
             (input)="notificationEmailChange()"
+            autocomplete="off"
           />
           @if (
             supportDeliveryFormControl.notificationEmail.invalid &&
@@ -89,6 +90,7 @@
               matInput
               placeholder="Confirm Email Address"
               [errorStateMatcher]="emailMatcher"
+              autocomplete="off"
             />
             @if (
               supportDeliveryFormControl.notificationConfirmEmail.invalid &&
@@ -127,6 +129,7 @@
             placeholder="Mobile Number"
             [imask]="phoneMask"
             (input)="notificationMobileChange()"
+            autocomplete="off"
           />
           @if (
             supportDeliveryFormControl.notificationMobile.invalid &&
@@ -163,6 +166,7 @@
               placeholder="Confirm Mobile Number"
               [imask]="phoneMask"
               [errorStateMatcher]="mobileMatcher"
+              autocomplete="off"
             />
             @if (
               supportDeliveryFormControl.notificationConfirmMobile.invalid &&
