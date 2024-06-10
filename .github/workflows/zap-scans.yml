@@ -21,7 +21,7 @@ jobs:
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'responders_api_zap_scan'
           issue_title: 'responders_api_zap_scan'
   
@@ -39,7 +39,7 @@ jobs:
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'registrants_api_zap_scan'
           issue_title: 'registrants_api_zap_scan'
 
@@ -57,7 +57,7 @@ jobs:
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-prj-era-suppliers.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-suppliers.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'suppliers_api_zap_scan'
           issue_title: 'suppliers_api_zap_scan'
 
