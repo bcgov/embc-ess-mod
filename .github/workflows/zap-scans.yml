@@ -14,14 +14,14 @@ jobs:
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca'
+          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca'
           artifact_name: 'responders_ui_zap_scan'
           issue_title: 'responders_ui_zap_scan'
       - name: API
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'responders_api_zap_scan'
           issue_title: 'responders_api_zap_scan'
   
@@ -32,14 +32,14 @@ jobs:
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-evacuees.apps.silver.devops.gov.bc.ca'
+          target: 'https://dev-prj-era-evacuees.apps.silver.devops.gov.bc.ca'
           artifact_name: 'registrants_ui_zap_scan'
           issue_title: 'registrants_ui_zap_scan'
       - name: API
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-responders.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'registrants_api_zap_scan'
           issue_title: 'registrants_api_zap_scan'
 
@@ -50,14 +50,14 @@ jobs:
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-suppliers.apps.silver.devops.gov.bc.ca'
+          target: 'https://dev-prj-era-suppliers.apps.silver.devops.gov.bc.ca'
           artifact_name: 'suppliers_ui_zap_scan'
           issue_title: 'suppliers_ui_zap_scan'
       - name: API
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-suppliers.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json'
+          target: 'https://dev-prj-era-suppliers.apps.silver.devops.gov.bc.ca/api/swagger/v1/swagger.json'
           artifact_name: 'suppliers_api_zap_scan'
           issue_title: 'suppliers_api_zap_scan'
 
@@ -68,6 +68,6 @@ jobs:
         uses: zaproxy/action-full-scan@v0.10.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://dev-sup-era-oauth.apps.silver.devops.gov.bc.ca'
+          target: 'https://dev-prj-era-oauth.apps.silver.devops.gov.bc.ca'
           artifact_name: 'oauth_server_zap_scan'
           issue_title: 'oauth_server_zap_scan'

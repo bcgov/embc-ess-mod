@@ -52,7 +52,7 @@
         appearance="outlined"
         [class.support-one-time-used]="
           supportEligibilityStateSettings[SelfServeSupportType.FoodGroceries] ===
-            SelfServeSupportEligibilityState.UnavailableOneTimeUsed ||
+            SelfServeSupportEligibilityState.UnavailableOneTimeUsed &&
           supportEligibilityStateSettings[SelfServeSupportType.FoodRestaurant] ===
             SelfServeSupportEligibilityState.UnavailableOneTimeUsed
         "
