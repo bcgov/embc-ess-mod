@@ -21,6 +21,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly string inactiveTaskId;
         private readonly string selfServeActiveTaskId;
         private readonly string partialSelfServeActiveTaskId;
+        private readonly string selfServeOneTimeUseActiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
@@ -33,9 +34,10 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_supplier inactiveSupplier;
         private readonly era_country canada;
         private readonly era_provinceterritories bc;
+        private readonly era_support[] supports;
 
-        private static int[] selfServeSupportTypes = [174360000, 174360001, 174360005, 174360006, 174360009];
-        private static int[] selfServeOneTimeSupportTypes = [174360005, 174360006];
+        private static string[] selfServeSupportTypes = ["Clothing", "Food - Groceries", "Food - Restaurant Meals", "Incidentals", "Shelter Allowance"];
+        private static string[] selfServeOneTimeSupportTypes = ["Incidentals", "Clothing"];
         private static string[] petTypes = ["Dog", "Cat", "Fish", "Bird", "Hamster", "Rabbit"];
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
@@ -56,6 +58,7 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveTaskCommunity => inactiveTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string SelfServeActiveTaskId => selfServeActiveTaskId;
         public string PartialSelfServeActiveTaskId => partialSelfServeActiveTaskId;
+        public string SelfServeOneTimeUseActiveTaskId => selfServeOneTimeUseActiveTaskId;
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
@@ -88,6 +91,7 @@ namespace EMBC.Tests.Integration.ESS
         {
             var essContext = essContextFactory.Create();
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
+            supports = essContext.era_supports.ToArray();
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
 #if DEBUG
@@ -99,6 +103,7 @@ namespace EMBC.Tests.Integration.ESS
             this.inactiveTaskId = testPrefix + "-inactive-task";
             this.selfServeActiveTaskId = testPrefix + "-selfserve-task";
             this.partialSelfServeActiveTaskId = testPrefix + "-partial-selfserve-task";
+            this.selfServeOneTimeUseActiveTaskId = testPrefix + "-selfserve-onetime-task";
 
             this.team1 = GetOrCreateTeam(essContext, testPrefix + "-team1");
 
@@ -116,7 +121,8 @@ namespace EMBC.Tests.Integration.ESS
 
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
             if (essContext.era_tasks.Where(t => t.era_name == selfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, selfServeActiveTaskId, DateTime.UtcNow, selfServeSupportTypes);
-            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, [174360001, 174360005]);
+            if (essContext.era_tasks.Where(t => t.era_name == partialSelfServeActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, partialSelfServeActiveTaskId, DateTime.UtcNow, ["Food - Restaurant Meals", "Incidentals"]);
+            if (essContext.era_tasks.Where(t => t.era_name == selfServeOneTimeUseActiveTaskId).SingleOrDefault() == null) CreateTask(essContext, selfServeOneTimeUseActiveTaskId, DateTime.UtcNow, selfServeSupportTypes, true);
 
             this.testContact = essContext.contacts.Where(c => c.era_bcservicescardid == this.testPrefix + "-userId").SingleOrDefault() ?? CreateContact(essContext);
 
@@ -251,7 +257,7 @@ namespace EMBC.Tests.Integration.ESS
             return member;
         }
 
-        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate, int[]? selfServeSupportTypes = null)
+        private era_task CreateTask(EssContext essContext, string taskId, DateTime startDate, string[]? selfServeSupportTypes = null, bool? oneTimeUse = false)
         {
             var from = startDate;
             var to = startDate.AddHours(72);
@@ -278,17 +284,20 @@ namespace EMBC.Tests.Integration.ESS
             if (selfServe)
             {
                 task.era_createselfservesupportlimits = true;
+                var supportItems = supports.Where(s => selfServeSupportTypes.Contains(s.era_name)).ToArray();
 
-                foreach (var supportType in selfServeSupportTypes!)
+                foreach (var support in supportItems!)
                 {
                     var limit = new era_selfservesupportlimits
                     {
-                        era_supporttypeoption = supportType,
+                        era_supportlimitstartdate = DateTime.Now.AddHours(-1),
+                        era_supportlimitenddate = DateTime.Now.AddMonths(3),
                         era_selfservesupportlimitsid = Guid.NewGuid(),
-                        era_extensionavailable = !selfServeOneTimeSupportTypes.Contains(supportType),
+                        era_extensionavailable = oneTimeUse == true ? false : !selfServeOneTimeSupportTypes.Contains(support.era_name),
                     };
                     essContext.AddToera_selfservesupportlimitses(limit);
                     essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_Task), task);
+                    essContext.SetLink(limit, nameof(era_selfservesupportlimits.era_SupportType), support);
                 }
             }
             return task;
