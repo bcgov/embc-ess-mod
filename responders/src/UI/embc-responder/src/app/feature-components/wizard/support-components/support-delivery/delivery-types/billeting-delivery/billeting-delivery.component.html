@@ -16,7 +16,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>Full Name</mat-label>
-        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" />
+        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" autocomplete="off" />
         @if (
           supportDeliveryFormControl?.hostName.invalid &&
           supportDeliveryFormControl?.hostName.hasError('whitespaceError')
