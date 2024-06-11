@@ -302,7 +302,7 @@ namespace EMBC.Responders.API.Controllers
         [Description("Convergent Volunteer")]
         ConvergentVolunteer,
 
-        [Description("EMBC Employee")]
+        [Description("EMCR Employee")]
         EMBCEmployee,
 
         [Description("First Nation")]
