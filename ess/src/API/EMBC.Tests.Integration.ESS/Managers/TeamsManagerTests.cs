@@ -56,7 +56,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             existingMember.ExternalUserId.ShouldBe(newMember.ExternalUserId);
             existingMember.IsActive.ShouldBe(newMember.IsActive);
             existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
-            existingMember.AgreementSignDate.ShouldBe(now.ToPST().Date);
+            existingMember.AgreementSignDate.ShouldBe(newMember.AgreementSignDate.Value.Date);
             existingMember.Label.ShouldBe(newMember.Label);
             existingMember.Role.ShouldBe(newMember.Role);
         }
