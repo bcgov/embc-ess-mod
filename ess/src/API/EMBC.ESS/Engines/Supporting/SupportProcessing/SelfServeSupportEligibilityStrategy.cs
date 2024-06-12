@@ -96,7 +96,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // filter supports enabled for extensions
-        var oneTimeSupportTypes = GetOnetimeEnabledSupportTypesForTask(task).Cast<int>().ToArray();
+        var oneTimeSupportTypes = GetOnetimeEnabledSupportTypesForTask(task).SelectMany(s => GetMatchingTypesByCategory(s)).Distinct().Cast<int>().ToArray();
         var oneTimeReceivedSupportTypes = (await currentNeedsAssessment.era_era_householdmember_era_needassessment
             .SelectManyAsync(async hm => await GetPreviousOnetimeSupportsForHouseholdMember(ctx, hm, oneTimeSupportTypes, task.era_taskstartdate.Value, ct)))
             .Select(s => s.era_supporttype).Cast<SupportType>().SelectMany(s => GetMatchingTypesByCategory(s)).Distinct().ToList();
