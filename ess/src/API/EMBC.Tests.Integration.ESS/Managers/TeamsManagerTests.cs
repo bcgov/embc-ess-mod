@@ -2,6 +2,7 @@
 using System.Linq;
 using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Shared.Contracts.Teams;
+using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers
@@ -55,7 +56,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             existingMember.ExternalUserId.ShouldBe(newMember.ExternalUserId);
             existingMember.IsActive.ShouldBe(newMember.IsActive);
             existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
-            existingMember.AgreementSignDate.ShouldBe(newMember.AgreementSignDate.Value.Date);
+            existingMember.AgreementSignDate.ShouldBe(now.ToPST().Date);
             existingMember.Label.ShouldBe(newMember.Label);
             existingMember.Role.ShouldBe(newMember.Role);
         }
