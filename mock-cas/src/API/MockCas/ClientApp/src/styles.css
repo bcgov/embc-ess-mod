@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@import "~bootstrap/scss/bootstrap";
+@import "@angular/material/theming";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.divider {
+  color: rgb(96, 96, 96);
+  border-left: 1px solid;
+  height: 6px;
+}
+
+a:hover {
+  color: rgb(96, 96, 96) !important;
+  text-decoration: underline;
+}
+
+a:focus {
+  color: #169bd5 !important;
+}
+
+.top-nav {
+  color: rgb(96, 96, 96);
+}
+
+table {
+  width: 100%;
+}
