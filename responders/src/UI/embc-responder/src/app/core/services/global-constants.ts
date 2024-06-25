@@ -112,7 +112,7 @@ export const incidentalsRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Incidentals</span></b>',
   text: `<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children - <span class="bold">up to \$${incidentals.rate.toFixed(
     2
-  )} maximum per person (incl. PST)</span></p><div>NOTE:</div><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and shelter, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
+  )} maximum per person (incl. PST)</span></p><div>NOTE:</div><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and shelter, medication for a 3 day period, and other immediate needs as required. The Ministry of Emergency Management and Climate Readiness (EMCR) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
   cancelButton: 'Close'
 };
 

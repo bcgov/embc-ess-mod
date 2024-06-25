@@ -2,6 +2,7 @@
 using System.Linq;
 using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Shared.Contracts.Teams;
+using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers

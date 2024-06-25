@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Resources.Teams
 {
@@ -48,7 +49,7 @@ namespace EMBC.ESS.Resources.Teams
                 .ForMember(d => d.era_externalsystemtype, opts => opts.MapFrom(s => (int)ExternalSystemOptionSet.Bceid))
                 .ForMember(d => d.era_externalsystemusername, opts => opts.MapFrom(s => s.UserName))
                 .ForMember(d => d.era_electronicaccessagreementaccepteddate, opts => opts.MapFrom(s => s.AgreementSignDate.HasValue ?
-                    new DateTime(s.AgreementSignDate.Value.Year, s.AgreementSignDate.Value.Month, s.AgreementSignDate.Value.Day, 0, 0, 0, 0, DateTimeKind.Utc)
+                new DateTime(s.AgreementSignDate.Value.Year, s.AgreementSignDate.Value.Month, s.AgreementSignDate.Value.Day, 0, 0, 0, 0, DateTimeKind.Utc)
                     : (DateTime?)null))
                 .ForMember(d => d.era_label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? -1 : (int)Enum.Parse<TeamUserLabelOptionSet>(s.Label)))
                 .ForMember(d => d.era_role, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(s.Role)))

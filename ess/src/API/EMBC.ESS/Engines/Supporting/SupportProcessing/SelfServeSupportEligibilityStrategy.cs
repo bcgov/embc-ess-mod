@@ -96,10 +96,10 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
         }
 
         // filter supports enabled for extensions
-        var oneTimeSupportTypes = GetOnetimeEnabledSupportTypesForTask(task).Cast<int>().ToArray();
+        var oneTimeSupportTypes = GetOnetimeEnabledSupportTypesForTask(task).SelectMany(s => GetMatchingTypesByCategory(s)).Distinct().Cast<int>().ToArray();
         var oneTimeReceivedSupportTypes = (await currentNeedsAssessment.era_era_householdmember_era_needassessment
             .SelectManyAsync(async hm => await GetPreviousOnetimeSupportsForHouseholdMember(ctx, hm, oneTimeSupportTypes, task.era_taskstartdate.Value, ct)))
-            .Select(s => s.era_supporttype).Cast<SupportType>().Distinct().ToList();
+            .Select(s => s.era_supporttype).Cast<SupportType>().SelectMany(s => GetMatchingTypesByCategory(s)).Distinct().ToList();
 
         var receivedSupportTypes = receivedSupports.Select(s => s.era_supporttype).Distinct().Cast<SupportType>().ToArray();
         receivedSupportTypes = receivedSupportTypes.Concat(oneTimeReceivedSupportTypes).Distinct().ToArray();
@@ -335,6 +335,18 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             .Where(s => s.era_era_householdmember_era_evacueesupport.Any(h => h.era_dateofbirth == hm.era_dateofbirth && h.era_firstname == hm.era_firstname && h.era_lastname == hm.era_lastname))
             .Where(s => s.era_Task.era_taskenddate >= taskStartDate)
             .GetAllPagesAsync(ct);
+    }
+
+    private static IEnumerable<SupportType> GetMatchingTypesByCategory(SupportType supportType)
+    {
+        switch (supportType)
+        {
+            case SupportType.FoodGroceries:
+            case SupportType.FoodRestaurant:
+                return new[] { SupportType.FoodGroceries, SupportType.FoodRestaurant };
+            default:
+                return new[] { supportType };
+        }
     }
 
     private static (SupportType[] unusedSupportTypes, SupportType[] onetimeUsedSupportTypes) MapEligibleSupportTypesByUsage(SupportType[] eligibleSupportTypes, SupportType[] receivedSupportTypes, SupportType[] enabledSupportTypesForExtensions)

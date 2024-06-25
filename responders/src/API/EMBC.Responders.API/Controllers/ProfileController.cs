@@ -6,6 +6,7 @@ using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Responders.API.Services;
+using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using EMBC.Utilities.Telemetry;
 using Microsoft.AspNetCore.Authorization;
@@ -143,7 +144,7 @@ namespace EMBC.Responders.API.Controllers
             }
 
             // Set the Agreement Sign Date
-            currentMember.AgreementSignDate = DateTime.UtcNow;
+            currentMember.AgreementSignDate = DateTime.UtcNow.ToPST();
 
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
