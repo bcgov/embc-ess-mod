@@ -173,6 +173,16 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
+    this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
+      next: (supports) => {
+        this.existingSupports = supports;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+      }
+    });
+
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
       this.updateValidToDate(value);
@@ -197,16 +207,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.calculateNoOfDays();
-
-    this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
-      next: (supports) => {
-        this.existingSupports = supports;
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.supportListerror);
-      }
-    });
   }
 
   ngOnDestroy(): void {
@@ -439,7 +439,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   mapSubCategoryToCategory(subCategory: SupportSubCategory): SupportCategory {
-    console.debug(subCategory);
     switch (subCategory) {
       case SupportSubCategory.Food_Groceries:
         return SupportCategory.Food;
@@ -547,7 +546,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     } else {
       return this.stepSupportsService?.supportDetails?.fromDate
         ? this.stepSupportsService?.supportDetails?.fromDate
-        : new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')));
+        : this.createFromDate();
     }
   }
 
@@ -559,8 +558,52 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     } else {
       return this.stepSupportsService?.supportDetails?.fromTime
         ? this.stepSupportsService?.supportDetails?.fromTime
-        : this.currentTime;
+        : this.setDefaultTimes();
     }
+  }
+  private createFromDate() {
+    let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
+
+    const category: SupportCategory =
+      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+
+    const largestTo = existingSupports
+      .filter((support) => support.category === category)
+      .reduce(
+        (maxTo, support) => {
+          const supportTo = moment(support.to);
+          return supportTo.isAfter(maxTo) ? new Date(supportTo.toDate().getTime() + 60000) : maxTo;
+        },
+        new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')))
+      );
+
+    return largestTo;
+  }
+
+  private setDefaultTimes() {
+    let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
+
+    const category: SupportCategory =
+      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+    const maxToDate = existingSupports
+      .filter((support) => support.category === category)
+      .map((support) => new Date(support.to)) // Convert to Date objects
+      .reduce((max, date) => (date > max ? date : max), new Date(-8640000000000000)); // Compare dates and get the max
+
+    // Add one minute to the maxToDate
+    const maxToDatePlusOneMinute = new Date(maxToDate.getTime() + 60000);
+
+    // Get the current time
+    const currentDateTime = new Date();
+    currentDateTime.setSeconds(0);
+
+    // Compare and get the later time between maxToDatePlusOneMinute and currentTime
+    const finalTime = maxToDatePlusOneMinute > currentDateTime ? maxToDatePlusOneMinute : currentDateTime;
+    const largestToTime = finalTime.toTimeString().split(' ')[0];
+
+    return largestToTime;
   }
 
   private setToTime() {
@@ -569,7 +612,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     } else {
       return this.stepSupportsService?.supportDetails?.toTime
         ? this.stepSupportsService?.supportDetails?.toTime
-        : this.currentTime;
+        : this.setDefaultTimes();
     }
   }
 
