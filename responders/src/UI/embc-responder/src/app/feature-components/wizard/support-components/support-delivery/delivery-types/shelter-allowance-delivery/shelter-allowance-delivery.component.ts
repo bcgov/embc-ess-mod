@@ -6,6 +6,7 @@ import { IMaskDirective } from 'angular-imask';
 
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-shelter-allowance-delivery',
@@ -20,7 +21,7 @@ export class ShelterAllowanceDeliveryComponent implements OnInit, OnChanges {
 
   readonly phoneMask = globalConst.phoneMask;
 
-  constructor() {}
+  constructor(public appBaseService: AppBaseService) {}
 
   ngOnInit(): void {
     this.detailsForm
@@ -36,6 +37,15 @@ export class ShelterAllowanceDeliveryComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         this.detailsForm.get('hostPhone').updateValueAndValidity();
       });
+
+    this.detailsForm
+      .get('hostName')
+      .setValue(
+        this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantLastName +
+          ' ' +
+          this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName
+      );
+    this.detailsForm.get('hostName').disable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
