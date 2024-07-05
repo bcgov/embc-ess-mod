@@ -1,4 +1,20 @@
 <div [formGroup]="detailsForm">
+  <div class="information-notes">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="primary-paragraph">
+          <b>Important information about Shelter Allowance referral</b>
+          <br />
+          <li>Support is provided by cheque issued to the evacuee</li>
+          <li>
+            It can take 6-8 weeks to receive payment/cheque from the date the Referral<br />
+            form is received by EMCR
+          </li>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-12">
       <p class="question-heading">Payee Details</p>
@@ -7,23 +23,16 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="bold">Full Name (including middle name if applicable)</p>
-      <p class="requiredField">Enter the name of the individual to whom reimbursement should be issued.</p>
+      <p class="bold">Full Name</p>
+      <p>Name of evacuee to whom cheque will be issued.</p>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-5">
-      <mat-form-field appearance="outline">
-        <mat-label>Full Name</mat-label>
-        <input formControlName="hostName" maxlength="255" matInput placeholder="Enter Name" autocomplete="off" />
-        @if (
-          supportDeliveryFormControl?.hostName.invalid &&
-          supportDeliveryFormControl?.hostName.hasError('whitespaceError')
-        ) {
-          <mat-error class="custom-mat-error"> Full Name is required</mat-error>
-        }
-      </mat-form-field>
+      <p class="question-heading bold">
+        <input formControlName="hostName" autocomplete="off" style="border: none" />
+      </p>
     </div>
   </div>
 
