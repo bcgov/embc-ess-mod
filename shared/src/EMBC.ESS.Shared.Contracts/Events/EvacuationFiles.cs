@@ -141,6 +141,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public DateTime ModifiedOn { get; set; }
         public TeamMember CreatedBy { get; set; }
         public bool IsHidden { get; set; }
+        public bool IsImportant { get; set; }
     }
 
     public enum NoteType

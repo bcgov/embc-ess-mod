@@ -22,6 +22,7 @@
                   {{ note?.addedOn | date: 'dd-MMM-yyyy' }} at
                   {{ note?.addedOn | date: 'hh:mm a' }}
                 </p>
+                <div class="important-note-chip">Important Case Note</div>
               </div>
               @if (note?.isHidden && hasPermission('canSeeHiddenNotes')) {
                 <div class="col-md-4 image-align">

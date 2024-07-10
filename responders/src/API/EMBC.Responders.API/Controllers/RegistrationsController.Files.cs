@@ -429,6 +429,7 @@ namespace EMBC.Responders.API.Controllers
         public string? TeamName { get; set; }
         public bool IsEditable { get; set; }
         public bool IsHidden { get; set; }
+        public bool IsImportant { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
