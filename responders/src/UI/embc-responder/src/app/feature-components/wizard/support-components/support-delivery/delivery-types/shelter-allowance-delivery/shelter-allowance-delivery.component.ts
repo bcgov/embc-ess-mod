@@ -38,9 +38,7 @@ export class ShelterAllowanceDeliveryComponent implements OnInit, OnChanges {
         this.detailsForm.get('hostPhone').updateValueAndValidity();
       });
     let fullName = '';
-    if (
-      !this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName
-    )
+    if (!this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName)
       fullName = this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantLastName.toUpperCase();
     else
       fullName =
