@@ -412,6 +412,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   getFirstLastNameFormatted(firstName: string, lastName: string): string {
+    if (!firstName && !lastName) return '';
     return lastName.toUpperCase() + ', ' + firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   }
 }
