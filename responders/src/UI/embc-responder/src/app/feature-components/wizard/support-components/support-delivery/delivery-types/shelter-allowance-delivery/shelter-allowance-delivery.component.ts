@@ -37,15 +37,19 @@ export class ShelterAllowanceDeliveryComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         this.detailsForm.get('hostPhone').updateValueAndValidity();
       });
+    let fullName = '';
+    if (
+      !this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName
+    )
+      fullName = this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantLastName.toUpperCase();
+    else
+      fullName =
+        this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantLastName.toUpperCase() +
+        ', ' +
+        this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName.charAt(0).toUpperCase() +
+        this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName.slice(1).toLowerCase();
 
-    this.detailsForm
-      .get('hostName')
-      .setValue(
-        this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantLastName +
-          ' ' +
-          this.appBaseService?.appModel?.selectedEssFile?.primaryRegistrantFirstName
-      );
-    this.detailsForm.get('hostName').disable();
+    this.detailsForm.get('hostName').setValue(fullName);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
