@@ -19,6 +19,7 @@ export class DateConversionService {
   createDateTimeString(date: string, time: string) {
     if (time && date) {
       const dateToDate = new Date(date);
+      dateToDate.setHours(0, 0, 0, 0);
       const hours = +time.split(':', 1).pop();
       const minutes = +time.split(':', 2).pop();
 
