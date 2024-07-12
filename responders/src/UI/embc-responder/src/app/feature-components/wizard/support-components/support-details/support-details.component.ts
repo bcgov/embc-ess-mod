@@ -54,7 +54,6 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { Keepalive } from '@ng-idle/keepalive';
 
 @Component({
   selector: 'app-support-details',
