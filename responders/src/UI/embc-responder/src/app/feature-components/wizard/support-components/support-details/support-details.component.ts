@@ -1,5 +1,5 @@
 import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -8,7 +8,9 @@ import {
   UntypedFormGroup,
   Validators,
   FormsModule,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  ValidatorFn,
+  ValidationErrors
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -52,12 +54,14 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { Keepalive } from '@ng-idle/keepalive';
 
 @Component({
   selector: 'app-support-details',
   templateUrl: './support-details.component.html',
   styleUrls: ['./support-details.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatCard,
     MatCardContent,
@@ -137,6 +141,65 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       }
     }
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
+  }
+
+  compareTaskDateTimeValidator({ controlType, other }: { controlType: 'date' | 'time'; other: string }): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let isValid = false;
+      const error = { invalidTaskDateTime: true };
+      const otherControl = this.supportDetailsForm?.get(other);
+      // no need to validate if one of the controls does not have a value
+      if (
+        control?.value === null ||
+        control?.value === '' ||
+        control?.value === undefined ||
+        otherControl?.value === null ||
+        otherControl?.value === '' ||
+        otherControl?.value === undefined
+      ) {
+        isValid = true;
+      } else {
+        let controlDate;
+        if (controlType === 'date') {
+          controlDate = this.dateConversionService.createDateTimeString(control.value, otherControl.value);
+        } else if (controlType === 'time') {
+          controlDate = this.dateConversionService.createDateTimeString(otherControl.value, control.value);
+        }
+
+        if (this.evacueeSessionService?.evacFile?.task?.from && this.evacueeSessionService?.evacFile?.task?.to) {
+          const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
+          const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
+
+          isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
+        } else isValid = true;
+      }
+      if (!isValid) {
+        otherControl?.setErrors(error);
+        control?.setErrors(error);
+      } else {
+        if (control.errors) {
+          const errors = { ...control.errors }; // Copy the errors object
+          delete errors['invalidTaskDateTime']; // Remove the specific error
+
+          if (Object.keys(errors).length === 0) {
+            control.setErrors(null); // No errors left, set to null
+          } else {
+            control.setErrors(errors); // Set the modified errors object
+          }
+          if (otherControl.errors) {
+            const errors = { ...otherControl.errors }; // Copy the errors object
+            delete errors['invalidTaskDateTime']; // Remove the specific error
+
+            if (Object.keys(errors).length === 0) {
+              otherControl.setErrors(null); // No errors left, set to null
+            } else {
+              otherControl.setErrors(errors); // Set the modified errors object
+            }
+          }
+        }
+      }
+      return null;
+    };
   }
 
   validDateFilter = (d: Date | null): boolean => {
@@ -568,7 +631,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
       this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
 
-    const largestTo = existingSupports
+    let largestTo = existingSupports
       .filter((support) => support.category === category)
       .reduce(
         (maxTo, support) => {
@@ -577,6 +640,11 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         },
         new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')))
       );
+    const taskTo = moment(this.evacueeSessionService?.evacFile?.task?.to);
+
+    if (moment(largestTo).isAfter(taskTo)) {
+      largestTo = taskTo.toDate();
+    }
 
     return largestTo;
   }
@@ -600,9 +668,14 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     currentDateTime.setSeconds(0);
 
     // Compare and get the later time between maxToDatePlusOneMinute and currentTime
-    const finalTime = maxToDatePlusOneMinute > currentDateTime ? maxToDatePlusOneMinute : currentDateTime;
-    const largestToTime = finalTime.toTimeString().split(' ')[0];
+    let finalTime = maxToDatePlusOneMinute > currentDateTime ? maxToDatePlusOneMinute : currentDateTime;
+    const taskTo = moment(this.evacueeSessionService?.evacFile?.task?.to);
+    if (moment(finalTime).isAfter(taskTo)) {
+      finalTime = taskTo.toDate();
+      finalTime.setSeconds(0);
+    }
 
+    const largestToTime = finalTime.toTimeString().split(' ')[0];
     return largestToTime;
   }
 
@@ -621,17 +694,40 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
-      fromDate: [this.setFromDate(), [this.customValidation.validDateValidator(), Validators.required]],
-      fromTime: [this.setFromTime(), [Validators.required]],
+      fromDate: [
+        this.setFromDate(),
+        [
+          this.customValidation.validDateValidator(),
+          Validators.required,
+          this.compareTaskDateTimeValidator({
+            controlType: 'date',
+            other: 'fromTime'
+          })
+        ]
+      ],
+      fromTime: [
+        this.setFromTime(),
+        [Validators.required, this.compareTaskDateTimeValidator({ controlType: 'time', other: 'fromDate' })]
+      ],
       noOfDays: [
         this.stepSupportsService?.supportDetails?.noOfDays ? this.stepSupportsService?.supportDetails?.noOfDays : '',
         [Validators.required]
       ],
       toDate: [
         this.stepSupportsService?.supportDetails?.toDate ? this.stepSupportsService?.supportDetails?.toDate : '',
-        [this.customValidation.validDateValidator(), Validators.required]
+        [
+          this.customValidation.validDateValidator(),
+          Validators.required,
+          this.compareTaskDateTimeValidator({
+            controlType: 'date',
+            other: 'toTime'
+          })
+        ]
       ],
-      toTime: [this.setToTime(), [Validators.required]],
+      toTime: [
+        this.setToTime(),
+        [Validators.required, this.compareTaskDateTimeValidator({ controlType: 'time', other: 'toDate' })]
+      ],
       members: this.formBuilder.array([], [this.customValidation.memberCheckboxValidator()]),
       referral: this.supportDetailsService.generateDynamicForm(this.stepSupportsService?.supportTypeToAdd?.value),
       paperSupportNumber: [
