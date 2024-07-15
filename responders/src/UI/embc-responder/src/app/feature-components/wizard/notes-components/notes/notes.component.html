@@ -10,7 +10,7 @@
     <div class="col-md-12 content-container">
       <div class="row">
         <div class="col-md-8">
-          <p>{{ count }} Case Notes have been added for this ESS File.</p>
+          <p>{{ count }} Case Note(s) have been added for this ESS File.</p>
 
           <button class="button-p" [disabled]="isAddDisabled" mat-button (click)="addNotes()">Add Case Notes</button>
 
@@ -47,7 +47,13 @@
           <mat-card class="tips-card-warning">
             <mat-card-content>
               <div>
-                <img class="img-align" style="fill: red" src="/assets/images/exclamation-mark-red.svg" height="63" width="62" />
+                <img
+                  class="img-align"
+                  style="fill: red"
+                  src="/assets/images/exclamation-mark-red.svg"
+                  height="63"
+                  width="62"
+                />
                 <span class="tips-heading">Important Case Note</span>
               </div>
               <p class="tips-info">
