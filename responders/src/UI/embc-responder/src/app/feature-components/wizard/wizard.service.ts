@@ -281,10 +281,10 @@ export class WizardService {
     if (
       formAddress.addressLine1 === incomingAddress.addressLine1 &&
       formAddress.addressLine2 === incomingAddress.addressLine2 &&
-      ((formAddress.community as Community).code === (incomingAddress.community as Community).code ||
+      ((formAddress.community as Community)?.code === (incomingAddress.community as Community)?.code ||
         (formAddress.community as string) === incomingAddress.city) &&
-      formAddress.stateProvince.code === incomingAddress.stateProvince.code &&
-      formAddress.country.code === incomingAddress.country.code &&
+      formAddress.stateProvince?.code === incomingAddress.stateProvince?.code &&
+      formAddress.country?.code === incomingAddress.country?.code &&
       formAddress.postalCode === incomingAddress.postalCode
     ) {
       return false;
