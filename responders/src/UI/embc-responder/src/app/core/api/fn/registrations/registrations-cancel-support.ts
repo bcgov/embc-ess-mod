@@ -7,14 +7,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface RegistrationsCancelSupport$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * support id
-   */
   supportId: string;
 }
 

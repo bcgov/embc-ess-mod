@@ -10,9 +10,9 @@ import { CommunityCode } from '../../models/community-code';
 import { CommunityType } from '../../models/community-type';
 
 export interface ConfigurationGetCommunities$Params {
-  stateProvinceId?: string | null;
-  countryId?: string | null;
-  types?: Array<CommunityType> | null;
+  stateProvinceId?: string;
+  countryId?: string;
+  types?: Array<CommunityType>;
 }
 
 export function configurationGetCommunities(
@@ -25,7 +25,7 @@ export function configurationGetCommunities(
   if (params) {
     rb.query('stateProvinceId', params.stateProvinceId, {});
     rb.query('countryId', params.countryId, {});
-    rb.query('types', params.types, { style: 'form', explode: true });
+    rb.query('types', params.types, {});
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

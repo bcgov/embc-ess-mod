@@ -9,7 +9,7 @@ import { RequestBuilder } from '../../request-builder';
 import { CommunityCode } from '../../models/community-code';
 
 export interface ConfigurationGetStateProvinces$Params {
-  countryId?: string | null;
+  countryId?: string;
 }
 
 export function configurationGetStateProvinces(

@@ -7,12 +7,12 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface ReportsCreateSupportReport$Params {
-  taskNumber?: string | null;
-  fileId?: string | null;
-  evacuatedFrom?: string | null;
-  evacuatedTo?: string | null;
-  from?: string | null;
-  to?: string | null;
+  taskNumber?: string;
+  fileId?: string;
+  evacuatedFrom?: string;
+  evacuatedTo?: string;
+  from?: string;
+  to?: string;
 }
 
 export function reportsCreateSupportReport(

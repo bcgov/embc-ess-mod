@@ -10,15 +10,8 @@ import { VerifySecurityPhraseRequest } from '../../models/verify-security-phrase
 import { VerifySecurityPhraseResponse } from '../../models/verify-security-phrase-response';
 
 export interface RegistrationsVerifySecurityPhrase$Params {
-  /**
-   * file id
-   */
   fileId: string;
-
-  /**
-   * security phrase to verify
-   */
-  body: VerifySecurityPhraseRequest;
+  body?: VerifySecurityPhraseRequest;
 }
 
 export function registrationsVerifySecurityPhrase(
@@ -30,7 +23,7 @@ export function registrationsVerifySecurityPhrase(
   const rb = new RequestBuilder(rootUrl, registrationsVerifySecurityPhrase.PATH, 'post');
   if (params) {
     rb.path('fileId', params.fileId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

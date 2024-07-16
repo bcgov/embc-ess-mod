@@ -43,10 +43,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersGetSuppliersPath = '/api/Suppliers';
 
   /**
-   * Search Suppliers.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersGetSuppliers()` instead.
    *
@@ -60,10 +56,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Search Suppliers.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersGetSuppliers$Response()` instead.
    *
@@ -82,33 +74,25 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersCreateSupplierPath = '/api/Suppliers';
 
   /**
-   * Create Supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersCreateSupplier()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
   suppliersCreateSupplier$Response(
-    params: SuppliersCreateSupplier$Params,
+    params?: SuppliersCreateSupplier$Params,
     context?: HttpContext
   ): Observable<StrictHttpResponse<SupplierResult>> {
     return suppliersCreateSupplier(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Create Supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersCreateSupplier$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  suppliersCreateSupplier(params: SuppliersCreateSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
+  suppliersCreateSupplier(params?: SuppliersCreateSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
     return this.suppliersCreateSupplier$Response(params, context).pipe(
       map((r: StrictHttpResponse<SupplierResult>): SupplierResult => r.body)
     );
@@ -118,10 +102,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersGetSupplierByIdPath = '/api/Suppliers/{supplierId}';
 
   /**
-   * Get Supplier by id.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersGetSupplierById()` instead.
    *
@@ -135,10 +115,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Get Supplier by id.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersGetSupplierById$Response()` instead.
    *
@@ -154,14 +130,10 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersUpdateSupplierPath = '/api/Suppliers/{supplierId}';
 
   /**
-   * Update supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersUpdateSupplier()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
   suppliersUpdateSupplier$Response(
     params: SuppliersUpdateSupplier$Params,
@@ -171,14 +143,10 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Update supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersUpdateSupplier$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
   suppliersUpdateSupplier(params: SuppliersUpdateSupplier$Params, context?: HttpContext): Observable<SupplierResult> {
     return this.suppliersUpdateSupplier$Response(params, context).pipe(
@@ -190,10 +158,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersRemoveSupplierPath = '/api/Suppliers/{supplierId}/remove';
 
   /**
-   * Remove supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersRemoveSupplier()` instead.
    *
@@ -207,10 +171,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Remove supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersRemoveSupplier$Response()` instead.
    *
@@ -226,10 +186,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersActivateSupplierPath = '/api/Suppliers/{supplierId}/active';
 
   /**
-   * Activate a supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersActivateSupplier()` instead.
    *
@@ -243,10 +199,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Activate a supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersActivateSupplier$Response()` instead.
    *
@@ -265,10 +217,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersDeactivateSupplierPath = '/api/Suppliers/{supplierId}/inactive';
 
   /**
-   * Activate a supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersDeactivateSupplier()` instead.
    *
@@ -282,10 +230,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Activate a supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersDeactivateSupplier$Response()` instead.
    *
@@ -304,10 +248,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersClaimSupplierPath = '/api/Suppliers/{supplierId}/claim';
 
   /**
-   * Claim a supplier.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersClaimSupplier()` instead.
    *
@@ -321,10 +261,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Claim a supplier.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersClaimSupplier$Response()` instead.
    *
@@ -340,10 +276,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersAddSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/add-team/{sharedTeamId}';
 
   /**
-   * Add a Team the Supplier is shared with.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersAddSupplierSharedWithTeam()` instead.
    *
@@ -357,10 +289,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Add a Team the Supplier is shared with.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersAddSupplierSharedWithTeam$Response()` instead.
    *
@@ -379,10 +307,6 @@ export class SuppliersService extends BaseService {
   static readonly SuppliersRemoveSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/remove-team/{sharedTeamId}';
 
   /**
-   * Remove a Team the Supplier is shared with.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `suppliersRemoveSupplierSharedWithTeam()` instead.
    *
@@ -396,10 +320,6 @@ export class SuppliersService extends BaseService {
   }
 
   /**
-   * Remove a Team the Supplier is shared with.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `suppliersRemoveSupplierSharedWithTeam$Response()` instead.
    *

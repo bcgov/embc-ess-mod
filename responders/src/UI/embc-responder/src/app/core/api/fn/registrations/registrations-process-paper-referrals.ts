@@ -9,15 +9,8 @@ import { RequestBuilder } from '../../request-builder';
 import { ProcessPaperReferralsRequest } from '../../models/process-paper-referrals-request';
 
 export interface RegistrationsProcessPaperReferrals$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * the request with paper referrals to process
-   */
-  body: ProcessPaperReferralsRequest;
+  body?: ProcessPaperReferralsRequest;
 }
 
 export function registrationsProcessPaperReferrals(
@@ -29,7 +22,7 @@ export function registrationsProcessPaperReferrals(
   const rb = new RequestBuilder(rootUrl, registrationsProcessPaperReferrals.PATH, 'post');
   if (params) {
     rb.path('fileId', params.fileId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

@@ -10,15 +10,8 @@ import { EvacuationFile } from '../../models/evacuation-file';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsUpdateFile$Params {
-  /**
-   * fileId
-   */
   fileId: string;
-
-  /**
-   * file
-   */
-  body: EvacuationFile;
+  body?: EvacuationFile;
 }
 
 export function registrationsUpdateFile(
@@ -30,7 +23,7 @@ export function registrationsUpdateFile(
   const rb = new RequestBuilder(rootUrl, registrationsUpdateFile.PATH, 'post');
   if (params) {
     rb.path('fileId', params.fileId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

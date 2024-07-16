@@ -27,10 +27,6 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
   static readonly TeamCommunitiesAssignmentsGetAssignedCommunitiesPath = '/api/team/communities';
 
   /**
-   * Get all assigned communities.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `teamCommunitiesAssignmentsGetAssignedCommunities()` instead.
    *
@@ -44,10 +40,6 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
   }
 
   /**
-   * Get all assigned communities.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `teamCommunitiesAssignmentsGetAssignedCommunities$Response()` instead.
    *
@@ -66,36 +58,26 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
   static readonly TeamCommunitiesAssignmentsAssignCommunitiesPath = '/api/team/communities';
 
   /**
-   * Assign communities to the team, will ignore communities which were already associated with the team.
-   * It will fail if a community is already assigned to another team,.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `teamCommunitiesAssignmentsAssignCommunities()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
   teamCommunitiesAssignmentsAssignCommunities$Response(
-    params: TeamCommunitiesAssignmentsAssignCommunities$Params,
+    params?: TeamCommunitiesAssignmentsAssignCommunities$Params,
     context?: HttpContext
   ): Observable<StrictHttpResponse<void>> {
     return teamCommunitiesAssignmentsAssignCommunities(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Assign communities to the team, will ignore communities which were already associated with the team.
-   * It will fail if a community is already assigned to another team,.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `teamCommunitiesAssignmentsAssignCommunities$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
   teamCommunitiesAssignmentsAssignCommunities(
-    params: TeamCommunitiesAssignmentsAssignCommunities$Params,
+    params?: TeamCommunitiesAssignmentsAssignCommunities$Params,
     context?: HttpContext
   ): Observable<void> {
     return this.teamCommunitiesAssignmentsAssignCommunities$Response(params, context).pipe(
@@ -107,10 +89,6 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
   static readonly TeamCommunitiesAssignmentsRemoveCommunitiesPath = '/api/team/communities';
 
   /**
-   * Remove communities associations with the team, will ignore communities which are not associated.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `teamCommunitiesAssignmentsRemoveCommunities()` instead.
    *
@@ -124,10 +102,6 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
   }
 
   /**
-   * Remove communities associations with the team, will ignore communities which are not associated.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `teamCommunitiesAssignmentsRemoveCommunities$Response()` instead.
    *

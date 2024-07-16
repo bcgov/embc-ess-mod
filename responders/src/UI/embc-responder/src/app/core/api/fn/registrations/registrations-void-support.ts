@@ -9,19 +9,8 @@ import { RequestBuilder } from '../../request-builder';
 import { SupportVoidReason } from '../../models/support-void-reason';
 
 export interface RegistrationsVoidSupport$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * support id
-   */
   supportId: string;
-
-  /**
-   * reason to void the support
-   */
   voidReason?: SupportVoidReason;
 }
 

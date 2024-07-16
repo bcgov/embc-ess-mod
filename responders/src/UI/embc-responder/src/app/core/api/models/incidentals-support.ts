@@ -8,5 +8,5 @@ export type IncidentalsSupport = Support & {
   subCategory: SupportSubCategory;
   approvedItems: string;
   totalAmount: number;
-  approverName?: string;
+  approverName?: string | null;
 };

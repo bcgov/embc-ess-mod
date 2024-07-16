@@ -8,5 +8,5 @@ export type ClothingSupport = Support & {
   category: SupportCategory;
   subCategory: SupportSubCategory;
   totalAmount: number;
-  approverName?: string;
+  approverName?: string | null;
 };

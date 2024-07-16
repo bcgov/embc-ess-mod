@@ -10,15 +10,8 @@ import { VerifySecurityQuestionsRequest } from '../../models/verify-security-que
 import { VerifySecurityQuestionsResponse } from '../../models/verify-security-questions-response';
 
 export interface RegistrationsVerifySecurityQuestions$Params {
-  /**
-   * registrant id
-   */
   registrantId: string;
-
-  /**
-   * array of questions and their answers
-   */
-  body: VerifySecurityQuestionsRequest;
+  body?: VerifySecurityQuestionsRequest;
 }
 
 export function registrationsVerifySecurityQuestions(
@@ -30,7 +23,7 @@ export function registrationsVerifySecurityQuestions(
   const rb = new RequestBuilder(rootUrl, registrationsVerifySecurityQuestions.PATH, 'post');
   if (params) {
     rb.path('registrantId', params.registrantId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

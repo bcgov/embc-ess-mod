@@ -10,15 +10,8 @@ import { ProcessDigitalSupportsRequest } from '../../models/process-digital-supp
 import { ReferralPrintRequestResponse } from '../../models/referral-print-request-response';
 
 export interface RegistrationsProcessSupports$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * the request with draft supports to process
-   */
-  body: ProcessDigitalSupportsRequest;
+  body?: ProcessDigitalSupportsRequest;
 }
 
 export function registrationsProcessSupports(
@@ -30,7 +23,7 @@ export function registrationsProcessSupports(
   const rb = new RequestBuilder(rootUrl, registrationsProcessSupports.PATH, 'post');
   if (params) {
     rb.path('fileId', params.fileId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(
