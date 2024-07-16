@@ -148,6 +148,6 @@ export class ProfileResultsComponent implements OnChanges, AfterViewInit {
    * @returns community name
    */
   communityName(address: AddressModel): string {
-    return (address.community as Community).name;
+    return (address.community as Community)?.name;
   }
 }
