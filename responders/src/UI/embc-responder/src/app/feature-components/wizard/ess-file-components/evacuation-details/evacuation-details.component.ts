@@ -84,7 +84,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     public evacueeSearchService: EvacueeSearchService,
     private dateConversionService: DateConversionService,
     private appBaseService: AppBaseService
-  ) { }
+  ) {}
 
   paperCompletedDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
