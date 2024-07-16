@@ -61,7 +61,7 @@
         />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
           @for (option of filteredOptions | async; track option) {
-            <mat-option [value]="option">
+            <mat-option [value]="option" [disabled]="option.name === 'British Columbia'">
               {{ option.name }}
             </mat-option>
           }
