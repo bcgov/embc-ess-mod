@@ -32,7 +32,7 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.Splunk" Version="5.0.0" />
         <PackageReference Include="SerilogTraceListener" Version="3.2.0" />
-        <PackageReference Include="System.IO.Abstractions" Version="21.0.22" />
+        <PackageReference Include="System.IO.Abstractions" Version="21.0.26" />
         <PackageReference Include="Xrm.Tools.CRMWebAPI" Version="1.0.25" />
     </ItemGroup>
     <ItemGroup>
