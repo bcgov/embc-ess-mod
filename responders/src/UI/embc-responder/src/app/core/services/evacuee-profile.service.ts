@@ -302,7 +302,7 @@ export class EvacueeProfileService {
   private isEtransferEligible(registrant: RegistrantProfileSearchResultModel): boolean {
     return (
       registrant.isAuthenticated &&
-      registrant.primaryAddress?.stateProvince?.code === 'BC' &&
+      registrant.primaryAddress?.stateProvinceCode === 'BC' &&
       registrant.primaryAddress?.postalCode !== null &&
       !registrant.isMinor
     );
