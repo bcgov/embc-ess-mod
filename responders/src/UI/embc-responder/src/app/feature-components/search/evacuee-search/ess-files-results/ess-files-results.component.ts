@@ -5,7 +5,6 @@ import {
   Component,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -112,6 +111,7 @@ export class EssFilesResultsComponent implements OnChanges, AfterViewInit, After
               }, 200);
             },
             error: (error) => {
+              console.error(error);
               this.essFilesResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
               this.alertService.setAlert('danger', globalConst.securityPhraseError);

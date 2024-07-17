@@ -9,6 +9,7 @@ export interface RegistrantProfileSearchResult {
   firstName?: string | null;
   id?: string | null;
   isAuthenticated?: boolean;
+  isMinor?: boolean;
   isProfileCompleted?: boolean;
   isRestricted?: boolean;
   lastName?: string | null;
