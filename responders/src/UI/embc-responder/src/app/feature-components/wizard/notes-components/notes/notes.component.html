@@ -10,7 +10,7 @@
     <div class="col-md-12 content-container">
       <div class="row">
         <div class="col-md-8">
-          <p>{{ count }} Case Notes have been added for this ESS File.</p>
+          <p>{{ count }} Case Note(s) have been added for this ESS File.</p>
 
           <button class="button-p" [disabled]="isAddDisabled" mat-button (click)="addNotes()">Add Case Notes</button>
 
@@ -36,6 +36,25 @@
               <div>
                 <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
                 <span class="tips-heading"><b>Tip: </b>Case Notes</span>
+              </div>
+              <p class="tips-info">
+                Add any case notes pertaining to the evacuee and their household. Do not include any medical, personal,
+                irrelevant, and/or speculative personal details pertaining to the evacuees and/or their household
+                members. Evacuees may request to view their own records.
+              </p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="tips-card-warning">
+            <mat-card-content>
+              <div>
+                <img
+                  class="img-align"
+                  style="fill: red"
+                  src="/assets/images/exclamation-mark-red.svg"
+                  height="63"
+                  width="62"
+                />
+                <span class="tips-heading">Important Case Note</span>
               </div>
               <p class="tips-info">
                 Add any case notes pertaining to the evacuee and their household. Do not include any medical, personal,

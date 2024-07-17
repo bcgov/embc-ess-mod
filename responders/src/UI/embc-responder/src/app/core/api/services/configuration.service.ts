@@ -40,10 +40,6 @@ export class ConfigurationService extends BaseService {
   static readonly ConfigurationGetConfigurationPath = '/api/Configuration';
 
   /**
-   * Get configuration settings for clients.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `configurationGetConfiguration()` instead.
    *
@@ -57,10 +53,6 @@ export class ConfigurationService extends BaseService {
   }
 
   /**
-   * Get configuration settings for clients.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetConfiguration$Response()` instead.
    *
@@ -79,10 +71,6 @@ export class ConfigurationService extends BaseService {
   static readonly ConfigurationGetCodesPath = '/api/Configuration/codes';
 
   /**
-   * Get code values and descriptions for lookups and enum types.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `configurationGetCodes()` instead.
    *
@@ -91,23 +79,22 @@ export class ConfigurationService extends BaseService {
   configurationGetCodes$Response(
     params?: ConfigurationGetCodes$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Array<Code>>> {
+  ): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
     return configurationGetCodes(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Get code values and descriptions for lookups and enum types.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `configurationGetCodes$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCodes(params?: ConfigurationGetCodes$Params, context?: HttpContext): Observable<Array<Code>> {
+  configurationGetCodes(
+    params?: ConfigurationGetCodes$Params,
+    context?: HttpContext
+  ): Observable<Array<Code | CommunityCode>> {
     return this.configurationGetCodes$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
+      map((r: StrictHttpResponse<Array<Code | CommunityCode>>): Array<Code | CommunityCode> => r.body)
     );
   }
 

@@ -28,10 +28,6 @@ export class TasksService extends BaseService {
   static readonly TasksGetTaskPath = '/api/Tasks/{taskId}';
 
   /**
-   * Get a single ESS task.
-   *
-   *
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `tasksGetTask()` instead.
    *
@@ -42,10 +38,6 @@ export class TasksService extends BaseService {
   }
 
   /**
-   * Get a single ESS task.
-   *
-   *
-   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `tasksGetTask$Response()` instead.
    *
@@ -93,9 +85,9 @@ export class TasksService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `tasksSignIn()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  tasksSignIn$Response(params: TasksSignIn$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  tasksSignIn$Response(params?: TasksSignIn$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
     return tasksSignIn(this.http, this.rootUrl, params, context);
   }
 
@@ -103,9 +95,9 @@ export class TasksService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `tasksSignIn$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  tasksSignIn(params: TasksSignIn$Params, context?: HttpContext): Observable<void> {
+  tasksSignIn(params?: TasksSignIn$Params, context?: HttpContext): Observable<void> {
     return this.tasksSignIn$Response(params, context).pipe(map((r: StrictHttpResponse<void>): void => r.body));
   }
 }

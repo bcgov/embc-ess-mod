@@ -2,7 +2,7 @@
 /* eslint-disable */
 export interface UpdateUserProfileRequest {
   email?: string | null;
-  firstName?: string;
-  lastName?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   phone?: string | null;
 }

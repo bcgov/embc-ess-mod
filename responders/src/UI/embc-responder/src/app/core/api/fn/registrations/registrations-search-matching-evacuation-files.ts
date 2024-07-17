@@ -9,16 +9,16 @@ import { RequestBuilder } from '../../request-builder';
 import { EvacuationFileSearchResult } from '../../models/evacuation-file-search-result';
 
 export interface RegistrationsSearchMatchingEvacuationFiles$Params {
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string;
-  ManualFileId?: string | null;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  ManualFileId?: string;
 }
 
 export function registrationsSearchMatchingEvacuationFiles(
   http: HttpClient,
   rootUrl: string,
-  params?: RegistrationsSearchMatchingEvacuationFiles$Params,
+  params: RegistrationsSearchMatchingEvacuationFiles$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
   const rb = new RequestBuilder(rootUrl, registrationsSearchMatchingEvacuationFiles.PATH, 'get');

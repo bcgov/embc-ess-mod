@@ -10,7 +10,7 @@ import { AuditAccessRequest } from '../../models/audit-access-request';
 
 export interface RegistrationsAuditFileAcccess$Params {
   fileId: string;
-  body: AuditAccessRequest;
+  body?: AuditAccessRequest;
 }
 
 export function registrationsAuditFileAcccess(
@@ -22,7 +22,7 @@ export function registrationsAuditFileAcccess(
   const rb = new RequestBuilder(rootUrl, registrationsAuditFileAcccess.PATH, 'post');
   if (params) {
     rb.path('fileId', params.fileId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

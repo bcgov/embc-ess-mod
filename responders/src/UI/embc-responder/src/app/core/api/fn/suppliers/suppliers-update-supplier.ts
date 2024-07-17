@@ -10,15 +10,8 @@ import { Supplier } from '../../models/supplier';
 import { SupplierResult } from '../../models/supplier-result';
 
 export interface SuppliersUpdateSupplier$Params {
-  /**
-   * supplier id
-   */
   supplierId: string;
-
-  /**
-   * supplier
-   */
-  body: Supplier;
+  body?: Supplier;
 }
 
 export function suppliersUpdateSupplier(
@@ -30,7 +23,7 @@ export function suppliersUpdateSupplier(
   const rb = new RequestBuilder(rootUrl, suppliersUpdateSupplier.PATH, 'post');
   if (params) {
     rb.path('supplierId', params.supplierId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

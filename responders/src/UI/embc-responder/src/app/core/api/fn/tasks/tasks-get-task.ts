@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { EssTask } from '../../models/ess-task';
 
 export interface TasksGetTask$Params {
-  /**
-   * task number
-   */
   taskId: string;
 }
 

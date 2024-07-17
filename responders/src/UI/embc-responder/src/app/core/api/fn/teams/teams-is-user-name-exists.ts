@@ -8,7 +8,7 @@ import { RequestBuilder } from '../../request-builder';
 
 export interface TeamsIsUserNameExists$Params {
   userName?: string;
-  memberId?: string | null;
+  memberId?: string;
 }
 
 export function teamsIsUserNameExists(

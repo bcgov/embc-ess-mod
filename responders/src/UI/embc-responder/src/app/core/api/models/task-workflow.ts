@@ -2,5 +2,5 @@
 /* eslint-disable */
 export interface TaskWorkflow {
   enabled?: boolean;
-  name?: string;
+  name?: string | null;
 }

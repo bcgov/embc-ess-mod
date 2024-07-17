@@ -7,9 +7,6 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface TeamCommunitiesAssignmentsRemoveCommunities$Params {
-  /**
-   * list of community ids to disassociate
-   */
   communityCodes?: Array<string>;
 }
 
@@ -21,7 +18,7 @@ export function teamCommunitiesAssignmentsRemoveCommunities(
 ): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, teamCommunitiesAssignmentsRemoveCommunities.PATH, 'delete');
   if (params) {
-    rb.query('communityCodes', params.communityCodes, { style: 'form', explode: true });
+    rb.query('communityCodes', params.communityCodes, {});
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

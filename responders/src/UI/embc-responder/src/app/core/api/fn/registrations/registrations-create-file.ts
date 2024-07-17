@@ -10,21 +10,18 @@ import { EvacuationFile } from '../../models/evacuation-file';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsCreateFile$Params {
-  /**
-   * file
-   */
-  body: EvacuationFile;
+  body?: EvacuationFile;
 }
 
 export function registrationsCreateFile(
   http: HttpClient,
   rootUrl: string,
-  params: RegistrationsCreateFile$Params,
+  params?: RegistrationsCreateFile$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<RegistrationResult>> {
   const rb = new RequestBuilder(rootUrl, registrationsCreateFile.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

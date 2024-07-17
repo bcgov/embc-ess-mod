@@ -10,7 +10,7 @@ import { InviteRequest } from '../../models/invite-request';
 
 export interface RegistrationsInviteToRegistrantPortal$Params {
   registrantId: string;
-  body: InviteRequest;
+  body?: InviteRequest;
 }
 
 export function registrationsInviteToRegistrantPortal(
@@ -22,7 +22,7 @@ export function registrationsInviteToRegistrantPortal(
   const rb = new RequestBuilder(rootUrl, registrationsInviteToRegistrantPortal.PATH, 'post');
   if (params) {
     rb.path('registrantId', params.registrantId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

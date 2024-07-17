@@ -24,6 +24,7 @@ export { FoodRestaurantSupport } from './models/food-restaurant-support';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { GetSecurityQuestionsResponse } from './models/get-security-questions-response';
 export { HouseholdMemberType } from './models/household-member-type';
+export { HttpValidationProblemDetails } from './models/http-validation-problem-details';
 export { IdentifiedNeed } from './models/identified-need';
 export { IncidentalsSupport } from './models/incidentals-support';
 export { InsuranceOption } from './models/insurance-option';

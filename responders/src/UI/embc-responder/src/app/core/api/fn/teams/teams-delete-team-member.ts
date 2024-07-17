@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { TeamMemberResult } from '../../models/team-member-result';
 
 export interface TeamsDeleteTeamMember$Params {
-  /**
-   * team member id
-   */
   memberId: string;
 }
 

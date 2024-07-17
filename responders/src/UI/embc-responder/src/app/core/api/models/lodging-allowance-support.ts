@@ -7,7 +7,7 @@ export type LodgingAllowanceSupport = Support & {
   category: SupportCategory;
   subCategory: SupportSubCategory;
   numberOfNights: number;
-  contactEmail?: string;
-  contactPhone?: string;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
   totalAmount: number;
 };

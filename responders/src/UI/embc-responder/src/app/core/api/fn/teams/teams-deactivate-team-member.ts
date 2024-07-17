@@ -7,9 +7,6 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface TeamsDeactivateTeamMember$Params {
-  /**
-   * team member id
-   */
   memberId: string;
 }
 

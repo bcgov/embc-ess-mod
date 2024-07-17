@@ -7,5 +7,5 @@ export interface ProblemDetails {
   title?: string | null;
   type?: string | null;
 
-  [key: string]: any | null | number | null | string | null | undefined;
+  [key: string]: any | number | null | string | null | undefined;
 }

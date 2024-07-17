@@ -7,21 +7,18 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface TeamCommunitiesAssignmentsAssignCommunities$Params {
-  /**
-   * list of community ids
-   */
-  body: Array<string>;
+  body?: Array<string>;
 }
 
 export function teamCommunitiesAssignmentsAssignCommunities(
   http: HttpClient,
   rootUrl: string,
-  params: TeamCommunitiesAssignmentsAssignCommunities$Params,
+  params?: TeamCommunitiesAssignmentsAssignCommunities$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, teamCommunitiesAssignmentsAssignCommunities.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

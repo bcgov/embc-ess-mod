@@ -9,14 +9,7 @@ import { RequestBuilder } from '../../request-builder';
 import { SupplierResult } from '../../models/supplier-result';
 
 export interface SuppliersAddSupplierSharedWithTeam$Params {
-  /**
-   * supplier id
-   */
   supplierId: string;
-
-  /**
-   * shared team id
-   */
   sharedTeamId: string;
 }
 

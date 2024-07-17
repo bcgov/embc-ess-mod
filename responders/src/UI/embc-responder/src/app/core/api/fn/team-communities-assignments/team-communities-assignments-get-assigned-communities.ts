@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { AssignedCommunity } from '../../models/assigned-community';
 
 export interface TeamCommunitiesAssignmentsGetAssignedCommunities$Params {
-  /**
-   * indicates if a list of communities assigned to all teams should be returned
-   */
   forAllTeams?: boolean;
 }
 

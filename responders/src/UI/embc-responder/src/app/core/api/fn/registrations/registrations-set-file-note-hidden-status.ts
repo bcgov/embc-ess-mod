@@ -9,19 +9,8 @@ import { RequestBuilder } from '../../request-builder';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsSetFileNoteHiddenStatus$Params {
-  /**
-   * fileId
-   */
   fileId: string;
-
-  /**
-   * noteId
-   */
   noteId: string;
-
-  /**
-   * isHidden
-   */
   isHidden?: boolean;
 }
 

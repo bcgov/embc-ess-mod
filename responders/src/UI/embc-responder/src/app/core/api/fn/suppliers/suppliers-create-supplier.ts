@@ -10,21 +10,18 @@ import { Supplier } from '../../models/supplier';
 import { SupplierResult } from '../../models/supplier-result';
 
 export interface SuppliersCreateSupplier$Params {
-  /**
-   * supplier
-   */
-  body: Supplier;
+  body?: Supplier;
 }
 
 export function suppliersCreateSupplier(
   http: HttpClient,
   rootUrl: string,
-  params: SuppliersCreateSupplier$Params,
+  params?: SuppliersCreateSupplier$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<SupplierResult>> {
   const rb = new RequestBuilder(rootUrl, suppliersCreateSupplier.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

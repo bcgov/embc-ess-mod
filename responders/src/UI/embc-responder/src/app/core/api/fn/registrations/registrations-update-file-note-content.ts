@@ -10,20 +10,9 @@ import { Note } from '../../models/note';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsUpdateFileNoteContent$Params {
-  /**
-   * fileId
-   */
   fileId: string;
-
-  /**
-   * noteId
-   */
   noteId: string;
-
-  /**
-   * note
-   */
-  body: Note;
+  body?: Note;
 }
 
 export function registrationsUpdateFileNoteContent(
@@ -36,7 +25,7 @@ export function registrationsUpdateFileNoteContent(
   if (params) {
     rb.path('fileId', params.fileId, {});
     rb.path('noteId', params.noteId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(
