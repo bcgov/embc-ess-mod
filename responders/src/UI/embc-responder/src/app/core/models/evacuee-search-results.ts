@@ -9,8 +9,10 @@ export interface EvacueeSearchResults {
 export interface RegistrantProfileSearchResultModel extends RegistrantProfileSearchResult {
   primaryAddress?: null | AddressModel;
   evacuationFiles?: null | Array<EvacuationFileSearchResultModel>;
+  etransferEligible?: boolean;
 }
 
 export interface EvacuationFileSearchResultModel extends EvacuationFileSearchResult {
   evacuatedFrom?: null | AddressModel;
+  etransferEligible?: boolean;
 }

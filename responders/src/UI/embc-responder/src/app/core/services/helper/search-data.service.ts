@@ -187,6 +187,7 @@ export class SearchDataService extends DashboardService {
       tap({
         next: (result) => {},
         error: (error) => {
+          console.error('Error searching for evacuee:', error);
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }
