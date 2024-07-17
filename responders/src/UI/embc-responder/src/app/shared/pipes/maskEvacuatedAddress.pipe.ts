@@ -23,8 +23,6 @@ export class MaskEvacuatedAddressPipe implements PipeTransform {
    */
   transform(address: AddressModel): SafeHtml {
     if (address !== null && address !== undefined) {
-      const communities = this.locationService.getCommunityList();
-
       let line1 = address.addressLine1;
       let line2 = '';
 

@@ -29,6 +29,7 @@ import { BcAddressComponent } from '../../../../shared/forms/address-forms/bc-ad
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -196,9 +197,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    */
   private createEvacDetailsForm(): void {
     this.evacDetailsForm = this.formBuilder.group({
-      paperESSFile: [this.stepEssFileService.paperESSFile !== undefined ? this.stepEssFileService.paperESSFile : ''],
+      paperESSFile: [this.stepEssFileService.paperESSFile ?? ''],
       evacuatedFromPrimary: [
-        this.stepEssFileService.evacuatedFromPrimary !== null ? this.stepEssFileService.evacuatedFromPrimary : '',
+        this.stepEssFileService.evacuatedFromPrimary ?? '',
         this.customValidation
           .conditionalValidation(
             () => this.evacDetailsForm.get('primaryAddressIndicator').value === true,
@@ -206,14 +207,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      facilityName: [
-        this.stepEssFileService.facilityName !== undefined ? this.stepEssFileService.facilityName : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      insurance: [
-        this.stepEssFileService.insurance !== undefined ? this.stepEssFileService.insurance : '',
-        Validators.required
-      ],
+      facilityName: [this.stepEssFileService.facilityName ?? '', [this.customValidation.whitespaceValidator()]],
+      insurance: [this.stepEssFileService.insurance ?? '', Validators.required],
       primaryAddressIndicator: [true],
       evacAddress: this.createEvacAddressForm(),
       paperIssuedBy: this.formBuilder.group({
@@ -318,7 +313,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Checks if the inserted primary address is in BC Province
    */
   private checkAddress() {
-    if (this.stepEssFileService?.primaryAddress?.stateProvince?.code !== 'BC') {
+    if (
+      this.stepEssFileService?.primaryAddress?.stateProvince?.code !== 'BC' ||
+      !(this.stepEssFileService?.primaryAddress?.community as Community)?.code
+    ) {
       this.isBCAddress = false;
 
       // Make sure province/country are set to BC/Can whenever address form is displayed

@@ -148,7 +148,7 @@ export class EssFilesResultsComponent implements OnChanges, AfterViewInit, After
    * @returns community name
    */
   communityName(address: AddressModel): string {
-    return (address.community as Community).name;
+    return (address.community as Community)?.name;
   }
 
   /**
