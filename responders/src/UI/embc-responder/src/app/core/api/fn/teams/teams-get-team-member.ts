@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { TeamMember } from '../../models/team-member';
 
 export interface TeamsGetTeamMember$Params {
-  /**
-   * team member id
-   */
   memberId: string;
 }
 

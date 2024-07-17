@@ -10,21 +10,18 @@ import { TeamMember } from '../../models/team-member';
 import { TeamMemberResult } from '../../models/team-member-result';
 
 export interface TeamsCreateTeamMember$Params {
-  /**
-   * team member
-   */
-  body: TeamMember;
+  body?: TeamMember;
 }
 
 export function teamsCreateTeamMember(
   http: HttpClient,
   rootUrl: string,
-  params: TeamsCreateTeamMember$Params,
+  params?: TeamsCreateTeamMember$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<TeamMemberResult>> {
   const rb = new RequestBuilder(rootUrl, teamsCreateTeamMember.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

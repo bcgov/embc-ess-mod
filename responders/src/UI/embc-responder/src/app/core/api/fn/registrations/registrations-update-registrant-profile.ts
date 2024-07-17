@@ -10,15 +10,8 @@ import { RegistrantProfile } from '../../models/registrant-profile';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsUpdateRegistrantProfile$Params {
-  /**
-   * RegistrantId
-   */
   registrantId: string;
-
-  /**
-   * Registrant
-   */
-  body: RegistrantProfile;
+  body?: RegistrantProfile;
 }
 
 export function registrationsUpdateRegistrantProfile(
@@ -30,7 +23,7 @@ export function registrationsUpdateRegistrantProfile(
   const rb = new RequestBuilder(rootUrl, registrationsUpdateRegistrantProfile.PATH, 'post');
   if (params) {
     rb.path('registrantId', params.registrantId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

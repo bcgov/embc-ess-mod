@@ -7,6 +7,17 @@
 .tips-card {
   background-color: rgba(35, 64, 117, 1);
 }
+.tips-card-warning {
+  background-color: #f2f2f2;
+  margin-top: 10px;
+  .tips-info {
+    color: black;
+  }
+  .tips-heading {
+    color: red;
+    margin-left: 5px;
+  }
+}
 
 .tips-info {
   color: white;

@@ -9,15 +9,8 @@ import { RequestBuilder } from '../../request-builder';
 import { SupplierListItem } from '../../models/supplier-list-item';
 
 export interface SuppliersGetSuppliers$Params {
-  /**
-   * legalName
-   */
-  legalName?: string | null;
-
-  /**
-   * gstNumber
-   */
-  gstNumber?: string | null;
+  legalName?: string;
+  gstNumber?: string;
 }
 
 export function suppliersGetSuppliers(

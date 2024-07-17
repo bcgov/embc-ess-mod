@@ -7,9 +7,9 @@ export type LodgingGroupSupport = Support & {
   category: SupportCategory;
   subCategory: SupportSubCategory;
   numberOfNights: number;
-  facilityName?: string;
-  facilityAddress?: string;
-  facilityCity?: string;
-  facilityCommunityCode?: string;
-  facilityContactPhone?: string;
+  facilityName?: string | null;
+  facilityAddress?: string | null;
+  facilityCity?: string | null;
+  facilityCommunityCode?: string | null;
+  facilityContactPhone?: string | null;
 };

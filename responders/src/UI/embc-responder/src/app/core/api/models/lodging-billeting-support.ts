@@ -7,9 +7,9 @@ export type LodgingBilletingSupport = Support & {
   category: SupportCategory;
   subCategory: SupportSubCategory;
   numberOfNights: number;
-  hostName?: string;
-  hostAddress?: string;
-  hostCity?: string;
-  hostEmail?: string;
-  hostPhone?: string;
+  hostName?: string | null;
+  hostAddress?: string | null;
+  hostCity?: string | null;
+  hostEmail?: string | null;
+  hostPhone?: string | null;
 };

@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { GetSecurityQuestionsResponse } from '../../models/get-security-questions-response';
 
 export interface RegistrationsGetSecurityQuestions$Params {
-  /**
-   * registrant id
-   */
   registrantId: string;
 }
 

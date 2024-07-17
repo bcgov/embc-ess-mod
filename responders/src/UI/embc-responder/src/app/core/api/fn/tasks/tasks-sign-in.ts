@@ -9,18 +9,18 @@ import { RequestBuilder } from '../../request-builder';
 import { TaskSignin } from '../../models/task-signin';
 
 export interface TasksSignIn$Params {
-  body: TaskSignin;
+  body?: TaskSignin;
 }
 
 export function tasksSignIn(
   http: HttpClient,
   rootUrl: string,
-  params: TasksSignIn$Params,
+  params?: TasksSignIn$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, tasksSignIn.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

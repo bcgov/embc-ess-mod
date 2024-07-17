@@ -10,21 +10,18 @@ import { RegistrantProfile } from '../../models/registrant-profile';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsCreateRegistrantProfile$Params {
-  /**
-   * Registrant
-   */
-  body: RegistrantProfile;
+  body?: RegistrantProfile;
 }
 
 export function registrationsCreateRegistrantProfile(
   http: HttpClient,
   rootUrl: string,
-  params: RegistrationsCreateRegistrantProfile$Params,
+  params?: RegistrationsCreateRegistrantProfile$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<RegistrationResult>> {
   const rb = new RequestBuilder(rootUrl, registrationsCreateRegistrantProfile.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

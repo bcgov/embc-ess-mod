@@ -3,15 +3,15 @@
 export interface UserProfile {
   agreementSignDate?: string | null;
   email?: string | null;
-  firstName?: string;
-  id?: string;
-  label?: string;
+  firstName?: string | null;
+  id?: string | null;
+  label?: string | null;
   lastLoginDate?: string | null;
-  lastName?: string;
+  lastName?: string | null;
   phone?: string | null;
   requiredToSignAgreement?: boolean;
-  role?: string;
-  teamId?: string;
-  teamName?: string;
-  userName?: string;
+  role?: string | null;
+  teamId?: string | null;
+  teamName?: string | null;
+  userName?: string | null;
 }

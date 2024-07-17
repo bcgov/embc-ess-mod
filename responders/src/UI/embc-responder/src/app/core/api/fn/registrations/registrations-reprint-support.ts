@@ -10,24 +10,9 @@ import { ReferralPrintRequestResponse } from '../../models/referral-print-reques
 import { SupportReprintReason } from '../../models/support-reprint-reason';
 
 export interface RegistrationsReprintSupport$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * support if
-   */
   supportId: string;
-
-  /**
-   * reprint reason
-   */
   reprintReason?: SupportReprintReason;
-
-  /**
-   * inlcude summary
-   */
   includeSummary?: boolean;
 }
 

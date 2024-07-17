@@ -7,9 +7,9 @@ export type Referral = SupportDelivery & {
   manualReferralId?: string | null;
   method: SupportMethod;
   supplierId: string;
-  supplierName?: string;
-  supplierLegalName?: string;
+  supplierName?: string | null;
+  supplierLegalName?: string | null;
   supplierAddress?: Address;
-  supplierNotes?: string;
+  supplierNotes?: string | null;
   issuedToPersonName: string;
 };

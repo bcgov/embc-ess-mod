@@ -1,5 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface RegistrationResult {
-  id?: string;
+  id?: string | null;
 }

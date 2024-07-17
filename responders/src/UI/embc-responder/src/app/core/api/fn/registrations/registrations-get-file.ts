@@ -9,15 +9,8 @@ import { RequestBuilder } from '../../request-builder';
 import { EvacuationFile } from '../../models/evacuation-file';
 
 export interface RegistrationsGetFile$Params {
-  /**
-   * fileId
-   */
   fileId: string;
-
-  /**
-   * optional historical needs aseesment id
-   */
-  needsAssessmentId?: string | null;
+  needsAssessmentId?: string;
 }
 
 export function registrationsGetFile(

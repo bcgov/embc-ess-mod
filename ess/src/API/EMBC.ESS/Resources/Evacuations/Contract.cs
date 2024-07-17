@@ -170,6 +170,7 @@ public record Note
     public DateTime ModifiedOn { get; set; }
     public string CreatingTeamMemberId { get; set; }
     public bool IsHidden { get; set; }
+    public bool IsImportant { get; set; }
 }
 
 public record SelfServeEligibilityCheck

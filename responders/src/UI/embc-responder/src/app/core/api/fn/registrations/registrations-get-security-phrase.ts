@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { GetSecurityPhraseResponse } from '../../models/get-security-phrase-response';
 
 export interface RegistrationsGetSecurityPhrase$Params {
-  /**
-   * file id
-   */
   fileId: string;
 }
 

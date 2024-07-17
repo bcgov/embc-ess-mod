@@ -175,6 +175,7 @@ public class Mappings : Profile
             .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s._era_essteamuserid_value))
             .ForMember(d => d.Type, opts => opts.MapFrom(s => NoteType.General))
             .ForMember(d => d.IsHidden, opts => opts.MapFrom(s => s.era_ishidden == true))
+            .ForMember(d => d.IsImportant, opts => opts.MapFrom(s => s.era_important == true))
             ;
 
         CreateMap<Note, era_essfilenote>(MemberList.None)
@@ -182,6 +183,7 @@ public class Mappings : Profile
             .ForMember(d => d.era_notetext, opts => opts.MapFrom(s => s.Content))
             .ForMember(d => d._era_essteamuserid_value, opts => opts.MapFrom(s => isGuid(s.CreatingTeamMemberId) ? Guid.Parse(s.CreatingTeamMemberId) : (Guid?)null))
             .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
+            .ForMember(d => d.era_important, opts => opts.MapFrom(s => s.IsImportant))
             ;
 
         CreateMap<AddEligibilityCheck, era_eligibilitycheck>(MemberList.Source)

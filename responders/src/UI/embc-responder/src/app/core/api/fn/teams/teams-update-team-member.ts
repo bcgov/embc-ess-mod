@@ -10,15 +10,8 @@ import { TeamMember } from '../../models/team-member';
 import { TeamMemberResult } from '../../models/team-member-result';
 
 export interface TeamsUpdateTeamMember$Params {
-  /**
-   * team member id to update
-   */
   memberId: string;
-
-  /**
-   * team member
-   */
-  body: TeamMember;
+  body?: TeamMember;
 }
 
 export function teamsUpdateTeamMember(
@@ -30,7 +23,7 @@ export function teamsUpdateTeamMember(
   const rb = new RequestBuilder(rootUrl, teamsUpdateTeamMember.PATH, 'post');
   if (params) {
     rb.path('memberId', params.memberId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(

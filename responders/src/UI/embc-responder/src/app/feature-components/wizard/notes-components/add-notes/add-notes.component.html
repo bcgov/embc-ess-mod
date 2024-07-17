@@ -27,6 +27,13 @@
 
 <div class="row">
   <div class="col-md-5">
+    <mat-slide-toggle [(ngModel)]="isImportantNote" name="fieldName" ngDefaultControl
+      >Flag case note as important</mat-slide-toggle
+    >
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5">
     <button class="button-s button-width" mat-button (click)="cancel()">Cancel</button>
   </div>
 
