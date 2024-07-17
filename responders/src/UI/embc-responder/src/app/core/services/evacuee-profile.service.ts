@@ -300,6 +300,11 @@ export class EvacueeProfileService {
   }
 
   private isEtransferEligible(registrant: RegistrantProfileSearchResultModel): boolean {
-    return registrant.isAuthenticated && registrant.primaryAddress?.postalCode !== null && !registrant.isMinor;
+    return (
+      registrant.isAuthenticated &&
+      registrant.primaryAddress?.stateProvince?.code === 'BC' &&
+      registrant.primaryAddress?.postalCode !== null &&
+      !registrant.isMinor
+    );
   }
 }
