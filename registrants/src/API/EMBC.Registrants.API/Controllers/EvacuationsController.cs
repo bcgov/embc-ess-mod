@@ -217,6 +217,7 @@ public record HouseholdMember
     public bool IsPrimaryRegistrant { get; set; }
     public PersonDetails Details { get; set; }
     public bool IsMinor { get; set; }
+    public ContactDetails? ContactDetails { get; set; } = new();
 }
 
 /// <summary>
