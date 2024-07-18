@@ -14,14 +14,12 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { Router } from '@angular/router';
 import { HouseholdMembersService } from './household-members.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { SelectionModel } from '@angular/cdk/collections';
 import { WizardService } from '../../wizard.service';
-import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -192,7 +190,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     const formMember = member;
     delete formMember.isPrimaryRegistrant;
     delete formMember.type;
-
     // Set up form field with member values
     this.householdService.editRow(this.householdForm, member);
     this.editIndex = index;
@@ -325,7 +322,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       });
       this.stepEssFileService.updateEditedFormStatus();
     }
-    //this.stepEssFileService.nextTabUpdate.next();
   }
 
   /**
@@ -348,55 +344,41 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * @returns a PersonalDetails form
    */
   private createHouseholdMemberForm(): UntypedFormGroup {
+    const member = this.stepEssFileService?.tempHouseholdMember;
+    const isAddMember = () => this.householdForm.get('addMemberFormIndicator')?.value === true;
     return this.formBuilder.group({
       firstName: [
-        this.stepEssFileService?.tempHouseholdMember?.firstName ?? '',
+        member?.firstName ?? '',
         [
           this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('addMemberFormIndicator').value === true,
-              this.customValidation.whitespaceValidator()
-            )
+            .conditionalValidation(isAddMember, this.customValidation.whitespaceValidator())
             .bind(this.customValidation)
         ]
       ],
       lastName: [
-        this.stepEssFileService?.tempHouseholdMember?.lastName ?? '',
+        member?.lastName ?? '',
         [
           this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('addMemberFormIndicator').value === true,
-              this.customValidation.whitespaceValidator()
-            )
+            .conditionalValidation(isAddMember, this.customValidation.whitespaceValidator())
             .bind(this.customValidation)
         ]
       ],
       dateOfBirth: [
-        this.stepEssFileService?.tempHouseholdMember?.dateOfBirth ?? '',
+        member?.dateOfBirth ?? '',
         [
-          this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('addMemberFormIndicator').value === true,
-              Validators.required
-            )
-            .bind(this.customValidation),
+          this.customValidation.conditionalValidation(isAddMember, Validators.required).bind(this.customValidation),
           this.customValidation.dateOfBirthValidator()
         ]
       ],
       gender: [
-        this.stepEssFileService?.tempHouseholdMember?.gender ?? '',
-        [
-          this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('addMemberFormIndicator').value === true,
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
+        member?.gender ?? '',
+        [this.customValidation.conditionalValidation(isAddMember, Validators.required).bind(this.customValidation)]
       ],
-      initials: [this.stepEssFileService?.tempHouseholdMember?.initials ?? ''],
-      sameLastName: [this.stepEssFileService?.tempHouseholdMember?.sameLastName ?? ''],
-      id: ['']
+      initials: [member?.initials ?? ''],
+      sameLastName: [member?.sameLastName ?? ''],
+      id: [''],
+      email: [member?.email ?? '', [Validators.email]],
+      phone: [member?.phone ?? '', [this.customValidation.maskedNumberLengthValidator().bind(this.customValidation)]]
     });
   }
 
@@ -453,9 +435,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   private saveNewMember(): void {
-    if (!this.householdService.householdMemberExists(this.householdForm.get('houseHoldMember').value, this.members)) {
+    const memberForm = this.householdForm.get('houseHoldMember').value;
+    if (!this.householdService.householdMemberExists(memberForm, this.members)) {
       this.members.push({
-        ...this.householdForm.get('houseHoldMember').value,
+        ...memberForm,
         isPrimaryRegistrant: false,
         householdMemberFromDatabase: false,
         type: HouseholdMemberType.HouseholdMember
@@ -473,15 +456,13 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   private saveEditedMember(): void {
-    const similarMember = this.householdService.householdMemberExists(
-      this.householdForm.get('houseHoldMember').value,
-      this.members
-    );
+    const memberForm = this.householdForm.get('houseHoldMember').value;
+    const similarMember = this.householdService.householdMemberExists(memberForm, this.members);
 
     if (similarMember === this.members[this.editIndex] || similarMember === undefined) {
       this.members[this.editIndex] = {
         ...this.members[this.editIndex],
-        ...this.householdForm.get('houseHoldMember').value
+        ...memberForm
       };
 
       this.selection.select(this.members[this.editIndex]);

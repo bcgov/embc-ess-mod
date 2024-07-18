@@ -104,6 +104,17 @@
         </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="contact">
+        <mat-header-cell class="header-cell" *matHeaderCellDef>Contact</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.phone }}
+          @if (element.phone) {
+            <br />
+          }
+          {{ element.email }}
+        </mat-cell>
+      </ng-container>
+
       <mat-header-row class="table-header" *matHeaderRowDef="memberColumns"></mat-header-row>
       <mat-row class="bold" *matRowDef="let row; columns: memberColumns"></mat-row>
     </mat-table>

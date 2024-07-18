@@ -110,6 +110,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool? RestrictedAccess { get; set; }
         public bool? Verified { get; set; }
         public bool? Authenticated { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
     }
 
     public record Pet

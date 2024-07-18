@@ -196,7 +196,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
             showCloseButton: true
           },
           height: '85%',
-          width: '720px'
+          width: '90%'
         });
         this.isLoading = !this.isLoading;
       });

@@ -3,6 +3,7 @@
 import { HouseholdMemberType } from '../models/household-member-type';
 export interface EvacuationFileHouseholdMember {
   dateOfBirth?: string | null;
+  email?: string | null;
   firstName?: string | null;
   gender?: string | null;
   id?: string | null;
@@ -14,5 +15,6 @@ export interface EvacuationFileHouseholdMember {
   isVerified?: boolean | null;
   lastName?: string | null;
   linkedRegistrantId?: string | null;
+  phone?: string | null;
   type?: HouseholdMemberType;
 }

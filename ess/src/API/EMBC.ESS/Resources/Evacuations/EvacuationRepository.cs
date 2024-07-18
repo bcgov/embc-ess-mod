@@ -188,7 +188,9 @@ public class EvacuationRepository : IEvacuationRepository
         hm1.era_lastname != hm2.era_lastname ||
         hm1.era_initials != hm2.era_initials ||
         hm1.era_dateofbirth != hm2.era_dateofbirth ||
-        hm1.era_gender != hm2.era_gender;
+        hm1.era_gender != hm2.era_gender ||
+        hm1.era_emailaddress != hm2.era_emailaddress ||
+        hm1.era_telephonemobile != hm2.era_telephonemobile;
 
     private static void AssignPrimaryRegistrant(EssContext essContext, era_evacuationfile file, contact primaryContact)
     {

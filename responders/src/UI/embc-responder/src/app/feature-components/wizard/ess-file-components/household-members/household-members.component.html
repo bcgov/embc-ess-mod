@@ -100,86 +100,35 @@
                         [ngClass]="{
                           'main-applicant': member.isPrimaryRegistrant
                         }"
-                        >{{ member?.lastName | uppercase }} , {{ member?.firstName }}</span
+                        >{{ member?.lastName | uppercase }}, {{ member?.firstName }}</span
                       >
                     </div>
-                    <div class="row">
-                      <table class="table-members-details">
-                        <tr>
-                          <th>Initials:</th>
-                          <td>
-                            <b>{{ member.initials }}</b>
-                          </td>
-                          <th class="right-tr">Type:</th>
-                          <td>
-                            <b>{{ member?.isPrimaryRegistrant ? 'Registrant' : 'Household Member' }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Gender:</th>
-                          <td>
-                            <b>{{ member?.gender }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Date of Birth:</th>
-                          <td>
-                            <b>{{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
-                          </td>
-                        </tr>
-                      </table>
-
-                      <table class="mobile-table-members">
-                        <tr>
-                          <th>Initials:</th>
-                          <td>
-                            <b>{{ member.initials }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Gender:</th>
-                          <td>
-                            <b>{{ member?.gender }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Date of Birth:</th>
-                          <td>
-                            <b>{{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Type:</th>
-                          <td>
-                            <b>{{ member?.isPrimaryRegistrant ? 'Registrant' : 'Household Member' }}</b>
-                          </td>
-                        </tr>
-                        <tr>
-                          @if (!editFlag && !member.isPrimaryRegistrant) {
-                            <button
-                              class="edit-image"
-                              mat-icon-button
-                              aria-label="Edit"
-                              (click)="editRow(member, index)"
-                            >
-                              <img src="/assets/images/edit.svg" height="35" width="35" />
-                              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
-                            </button>
-                          }
-
-                          @if (!editFlag && !member.isPrimaryRegistrant && !member.householdMemberFromDatabase) {
-                            <button
-                              class="delete-image"
-                              mat-icon-button
-                              aria-label="Remove"
-                              (click)="deleteRow(member, index)"
-                            >
-                              <img src="/assets/images/delete.svg" height="35" width="35" />
-                              <img src="/assets/images/delete_onhover.svg" height="35" width="35" />
-                            </button>
-                          }
-                        </tr>
-                      </table>
+                    <div class="row table-members-details">
+                      <div class="row">
+                        <div class="column">
+                          <p><span class="label">Initials:</span>{{ member.initials }}</p>
+                          <p><span class="label">Gender:</span>{{ member.gender }}</p>
+                          <p>
+                            <span class="label">Date of Birth:</span>{{ member?.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                          </p>
+                        </div>
+                        <div class="column">
+                          <p>
+                            <span class="label">Type:</span
+                            >{{ member?.isPrimaryRegistrant ? 'Registrant' : 'Household Member' }}
+                          </p>
+                          <p>
+                            <span class="label">Contact:</span>
+                            <span>
+                              {{ member.phone }}
+                              @if (member.phone) {
+                                <br />
+                              }
+                              {{ member.email }}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </mat-cell>
                 </ng-container>

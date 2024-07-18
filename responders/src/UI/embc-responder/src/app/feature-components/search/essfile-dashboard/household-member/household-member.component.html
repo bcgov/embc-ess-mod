@@ -66,6 +66,16 @@
                       {{ member?.gender }}
                     </td>
                   </tr>
+                  <tr>
+                    <th>Contact:</th>
+                    <td class="bold">
+                      {{ member?.phone }}
+                      @if (member?.phone) {
+                        <br />
+                      }
+                      {{ member?.email }}
+                    </td>
+                  </tr>
                 </table>
               </div>
               @if (essfileDashboardService?.displayMemberButton === 'view-profile') {
