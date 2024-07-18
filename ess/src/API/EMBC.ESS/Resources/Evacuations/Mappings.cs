@@ -14,6 +14,7 @@ public class Mappings : Profile
     public Mappings()
     {
         Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
+        Func<Date?, string?> formatDateOfBirth = dob => dob == null ? null : $"{dob.Value.Month:D2}/{dob.Value.Day:D2}/{dob.Value.Year:D4}";
 
         CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
             .IncludeAllDerived()
@@ -134,14 +135,14 @@ public class Mappings : Profile
             .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_verified))
             .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_authenticated))
             .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
+            .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_Registrant == null ? s.era_firstname : s.era_Registrant.firstname))
+            .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_Registrant == null ? s.era_lastname : s.era_Registrant.lastname))
+            .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => formatDateOfBirth(s.era_Registrant == null ? s.era_dateofbirth : s.era_Registrant.birthdate)))
             .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.era_isunder19))
-            .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname.ToString()))
-            .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname.ToString()))
-            .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.era_dateofbirth.HasValue
-                ? null
-                : $"{s.era_dateofbirth.Value.Month:D2}/{s.era_dateofbirth.Value.Day:D2}/{s.era_dateofbirth.Value.Year:D4}"))
-            .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initials.ToString()))
-            .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_gender))
+            .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_Registrant == null ? s.era_initials : s.era_Registrant.era_initial))
+            .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_Registrant == null ? s.era_gender : s.era_Registrant.gendercode))
+            .ForMember(d => d.Email, opts => opts.MapFrom(s => s.era_Registrant == null ? s.era_emailaddress : s.era_Registrant.emailaddress1))
+            .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_Registrant == null ? s.era_telephonemobile : s.era_Registrant.address1_telephone1))
 
             .ReverseMap()
             .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
@@ -153,6 +154,8 @@ public class Mappings : Profile
             .ForMember(d => d.era_gender, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
             .ForMember(d => d.era_dateofbirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
             .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.LinkedRegistrantId))
+            .ForMember(d => d.era_telephonemobile, opts => opts.MapFrom(s => s.Phone))
+            .ForMember(d => d.era_emailaddress, opts => opts.MapFrom(s => s.Email))
             ;
 
         CreateMap<era_animal, Pet>()

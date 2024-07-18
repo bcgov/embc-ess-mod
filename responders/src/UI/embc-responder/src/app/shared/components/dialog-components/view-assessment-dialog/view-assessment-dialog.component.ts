@@ -44,7 +44,7 @@ export class ViewAssessmentDialogComponent {
   @Input() profileData: EvacuationFileModel;
   @Output() outputEvent = new EventEmitter<string>();
 
-  memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
+  memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth', 'contact'];
   petColumns: string[] = ['type', 'quantity'];
   noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
   constructor(

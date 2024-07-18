@@ -72,6 +72,8 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Verified, opts => opts.Ignore())
                 .ForMember(d => d.Authenticated, opts => opts.Ignore())
                 .ForMember(d => d.IsMinor, opts => opts.Ignore())
+                .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.HouseholdMember, HouseholdMember>()
@@ -80,6 +82,8 @@ namespace EMBC.Registrants.API.Mappers
                 .ForPath(d => d.Details.Gender, opts => opts.MapFrom(s => s.Gender))
                 .ForPath(d => d.Details.Initials, opts => opts.MapFrom(s => s.Initials))
                 .ForPath(d => d.Details.DateOfBirth, opts => opts.MapFrom(s => s.DateOfBirth))
+                .ForPath(d => d.ContactDetails.Phone, opts => opts.MapFrom(s => s.Phone))
+                .ForPath(d => d.ContactDetails.Email, opts => opts.MapFrom(s => s.Email))
                 ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Events.Pet>()

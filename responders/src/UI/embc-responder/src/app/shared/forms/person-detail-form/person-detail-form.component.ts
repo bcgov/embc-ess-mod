@@ -35,6 +35,7 @@ export class PersonDetailFormComponent implements OnInit {
   primaryApplicantLastName: string;
   sameLastNameOption: any;
   readonly dateMask = globalConst.dateMask;
+  readonly phoneMask = globalConst.phoneMask;
   readOnlyInput = false;
 
   constructor(private cacheService: CacheService) {}

@@ -275,6 +275,9 @@ dotnet_diagnostic.S2094.severity = suggestion
 # RCS1194: Implement exception constructors
 dotnet_diagnostic.RCS1194.severity = suggestion
 
+# S1694: An abstract class should have both abstract and concrete methods
+dotnet_diagnostic.S1694.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
