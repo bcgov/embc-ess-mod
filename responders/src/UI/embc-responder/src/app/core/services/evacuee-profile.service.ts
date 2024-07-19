@@ -4,6 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
   EvacuationFileSearchResult,
+  EvacuationFileStatus,
   EvacuationFileSummary,
   RegistrantProfile,
   RegistrationResult
@@ -119,7 +120,9 @@ export class EvacueeProfileService {
             const householdMemberProfile = registrants.find(
               (r) => r.id === file.householdMembers.find((hm) => hm.isSearchMatch === true)?.id
             );
-            file.etransferEligible = householdMemberProfile?.etransferEligible ?? false;
+            file.etransferEligible =
+              (householdMemberProfile?.etransferEligible ?? false) &&
+              [EvacuationFileStatus.Active, EvacuationFileStatus.Pending].some((s) => s === file.status);
           }
 
           searchResult?.files?.sort((a, b) => new Date(b.modifiedOn).valueOf() - new Date(a.modifiedOn).valueOf());
