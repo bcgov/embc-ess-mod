@@ -77,4 +77,28 @@
       </mat-form-field>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone/Mobile</mat-label>
+        <input maxlength="100" formControlName="phone" matInput placeholder="Phone" [imask]="phoneMask" />
+        @if (personalFormControl.phone.invalid && personalFormControl.phone.hasError('incorrectLength')) {
+          <mat-error>Telephone number must have 10 digits</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input maxlength="100" formControlName="email" matInput placeholder="Email" />
+        @if (personalFormControl.email.invalid && personalFormControl.email.hasError('email')) {
+          <mat-error>Invalid email</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
 </form>

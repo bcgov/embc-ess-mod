@@ -32,6 +32,7 @@ export class PersonDetailFormComponent implements OnInit {
   sameLastNameOption: any;
   readonly dateMask = globalConst.DateMask;
   readOnlyInput = false;
+  readonly phoneMask = { mask: '000-000-0000' };
 
   constructor(private formCreationService: FormCreationService) {}
 

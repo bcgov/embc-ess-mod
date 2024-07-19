@@ -21,7 +21,7 @@ export class CustomValidationService {
             validationError = { invalidDate: true };
           } else if (moment().diff(moment(dateOfBirth, 'MM-DD-YYYY')) <= 0) {
             validationError = { futureDate: true };
-          } else if (year !== '' && (year < 1800 || year > 2100)) {
+          } else if (year !== '' && (year < 1800 || year > moment(Date.now()).year())) {
             validationError = { invalidYear: true };
           }
         }

@@ -31,7 +31,6 @@ import { IMaskDirective } from 'angular-imask';
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: UntypedFormGroup;
   gender = globalConst.gender;
-  formBuilder: UntypedFormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
   readonly dateMask = globalConst.DateMask;
@@ -39,11 +38,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   createVerifiedProfile = '/verified-registration/create-profile';
   disableFields = false;
 
-  constructor(
-    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
-    @Inject('formCreationService') formCreationService: FormCreationService
-  ) {
-    this.formBuilder = formBuilder;
+  constructor(@Inject('formCreationService') formCreationService: FormCreationService) {
     this.formCreationService = formCreationService;
   }
 

@@ -1,8 +1,7 @@
-import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators,
   AbstractControl,
   UntypedFormControl,
   NgForm,
@@ -10,11 +9,9 @@ import {
 } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 

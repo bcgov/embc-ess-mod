@@ -17,15 +17,13 @@ import { CustomValidationService } from './customValidation.service';
 import {
   Evacuated,
   EvacuatedForm,
-  HouseholdMembers,
-  HouseholdMembersForm,
   IdentifyNeeds,
   IdentifyNeedsForm,
-  Pet,
   PetForm,
   Secret,
   SecretForm
 } from '../model/needs.model';
+import { HouseholdMembersForm } from '../model/household-member.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
@@ -66,13 +64,13 @@ export class FormCreationService {
   evacuatedForm$: Observable<UntypedFormGroup> = this.evacuatedForm.asObservable();
 
   householdMembersForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder))
+    this.formBuilder.group(new HouseholdMembersForm(this.customValidator, this.formBuilder))
   );
 
   householdMembersForm$: Observable<UntypedFormGroup> = this.householdMembersForm.asObservable();
 
   petsForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder))
+    this.formBuilder.group(new PetForm(this.customValidator, this.formBuilder))
   );
 
   petsForm$: Observable<UntypedFormGroup> = this.petsForm.asObservable();
@@ -198,9 +196,9 @@ export class FormCreationService {
       this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator))
     );
     this.householdMembersForm.next(
-      this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder))
+      this.formBuilder.group(new HouseholdMembersForm(this.customValidator, this.formBuilder))
     );
-    this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
+    this.petsForm.next(this.formBuilder.group(new PetForm(this.customValidator, this.formBuilder)));
     this.identifyNeedsForm.next(
       this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds(), this.customValidator), {
         validators: [this.customValidator.needsValidator()]

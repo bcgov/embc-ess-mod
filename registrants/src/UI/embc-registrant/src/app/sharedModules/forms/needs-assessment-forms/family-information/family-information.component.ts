@@ -20,20 +20,19 @@ import { PersonDetailFormComponent } from '../../person-detail-form/person-detai
   imports: [ReactiveFormsModule, MatCardModule, MatTableModule, MatButtonModule, PersonDetailFormComponent]
 })
 export default class FamilyInformationComponent implements OnInit, OnDestroy {
-  householdMemberForm: UntypedFormGroup;
+  householdMembersForm: UntypedFormGroup;
   radioOption = globalConst.radioButton1;
   formBuilder: UntypedFormBuilder;
-  householdMemberForm$: Subscription;
+  householdMembersForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
-  displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'buttons'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'contact', 'buttons'];
   dataSource = new BehaviorSubject([]);
   data = [];
   editIndex: number;
   rowEdit = false;
   editFlag = false;
-  personalDetailsForm$: Subscription;
-  personalDetailsForm: UntypedFormGroup;
+  // householdMembersForm$: Subscription;
 
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
@@ -45,32 +44,36 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.householdMemberForm$ = this.formCreationService.getHouseholdMembersForm().subscribe((householdMemberForm) => {
-      this.householdMemberForm = householdMemberForm;
+    this.householdMembersForm$ = this.formCreationService.getHouseholdMembersForm().subscribe((form) => {
+      this.householdMembersForm = form;
+      this.householdMembersForm.get('householdMember').disable();
     });
-    this.householdMemberForm
-      .get('addHouseholdMemberIndicator')
-      .valueChanges.subscribe((value) => this.updateOnVisibility());
-    this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
-    this.data = this.householdMemberForm.get('householdMembers').value;
-    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm().subscribe((personalDetails) => {
-      this.personalDetailsForm = personalDetails;
+
+    this.householdMembersForm.get('addHouseholdMemberIndicator').valueChanges.subscribe((value) => {
+      const form = this.householdMembersForm.get('householdMember');
+      if (value) {
+        form.enable();
+      } else {
+        form.disable();
+      }
     });
+    this.dataSource.next(this.householdMembersForm.get('householdMembers').value);
+    this.data = this.householdMembersForm.get('householdMembers').value;
   }
 
   ngOnDestroy(): void {
-    this.personalDetailsForm$.unsubscribe();
+    this.householdMembersForm$.unsubscribe();
   }
 
   addMembers(): void {
-    this.householdMemberForm.get('householdMember').reset();
+    this.householdMembersForm.get('householdMember').reset();
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = false;
-    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
+    this.householdMembersForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 
   save(): void {
-    if (this.householdMemberForm.get('householdMember').status === 'VALID') {
+    if (this.householdMembersForm.get('householdMember').status === 'VALID') {
       if (this.compareToPrimaryApplicant()) {
         this.duplicateHouseholdMemberWarningDialog();
         return;
@@ -78,10 +81,10 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
       const duplicateHouseholdMemberIndex = this.data.findIndex((element) => {
         return (
           element.firstName?.toLowerCase()?.trim() ===
-            this.householdMemberForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
+            this.householdMembersForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
           element.lastName?.toLowerCase()?.trim() ===
-            this.householdMemberForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
-          element.dateOfBirth === this.householdMemberForm.get('householdMember').value?.dateOfBirth
+            this.householdMembersForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
+          element.dateOfBirth === this.householdMembersForm.get('householdMember').value?.dateOfBirth
         );
       });
       if (this.editIndex !== undefined && this.rowEdit) {
@@ -89,7 +92,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
           this.duplicateHouseholdMemberWarningDialog();
           return;
         } else {
-          this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
+          this.data[this.editIndex] = this.householdMembersForm.get('householdMember').value;
           this.rowEdit = !this.rowEdit;
           this.editIndex = undefined;
           this.clearAddForm();
@@ -99,18 +102,18 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
           this.duplicateHouseholdMemberWarningDialog();
           return;
         } else {
-          this.data.push(this.householdMemberForm.get('householdMember').value);
+          this.data.push(this.householdMembersForm.get('householdMember').value);
           this.clearAddForm();
         }
       }
     } else {
-      this.householdMemberForm.get('householdMember').markAllAsTouched();
+      this.householdMembersForm.get('householdMember').markAllAsTouched();
     }
   }
 
   clearAddForm(): void {
     this.dataSource.next(this.data);
-    this.householdMemberForm.get('householdMembers').setValue(this.data);
+    this.householdMembersForm.get('householdMembers').setValue(this.data);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = false;
     this.scrollToTopHousehold();
@@ -119,7 +122,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = false;
-    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
+    this.householdMembersForm.get('addHouseholdMemberIndicator').setValue(false);
     this.scrollToTopHousehold();
   }
 
@@ -127,7 +130,7 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
    * Returns the control of the form
    */
   get householdFormControl(): { [key: string]: AbstractControl } {
-    return this.householdMemberForm.controls;
+    return this.householdMembersForm.controls;
   }
 
   deleteRow(index: number): void {
@@ -144,9 +147,9 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
         if (result === 'confirm') {
           this.data.splice(index, 1);
           this.dataSource.next(this.data);
-          this.householdMemberForm.get('householdMembers').setValue(this.data);
+          this.householdMembersForm.get('householdMembers').setValue(this.data);
           if (this.data.length === 0) {
-            this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
+            this.householdMembersForm.get('addHouseholdMemberIndicator').setValue(false);
           }
         }
       });
@@ -155,18 +158,10 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
   editRow(element, index): void {
     this.editIndex = index;
     this.rowEdit = !this.rowEdit;
-    this.householdMemberForm.get('householdMember').setValue(element);
+    this.householdMembersForm.get('householdMember').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = true;
-    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
-    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
-  }
-
-  updateOnVisibility(): void {
-    this.householdMemberForm.get('householdMember.firstName').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
+    this.householdMembersForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 
   public duplicateHouseholdMemberWarningDialog() {
@@ -185,12 +180,12 @@ export default class FamilyInformationComponent implements OnInit, OnDestroy {
 
   private compareToPrimaryApplicant(): boolean {
     return (
-      this.personalDetailsForm.value?.firstName?.toLowerCase()?.trim() ===
-        this.householdMemberForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
-      this.personalDetailsForm.value?.lastName?.toLowerCase()?.trim() ===
-        this.householdMemberForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
-      this.personalDetailsForm.value?.dateOfBirth?.toLowerCase()?.trim() ===
-        this.householdMemberForm.get('householdMember').value?.dateOfBirth?.toLowerCase()?.trim()
+      this.householdMembersForm.value?.firstName?.toLowerCase()?.trim() ===
+        this.householdMembersForm.get('householdMember').value?.firstName?.toLowerCase()?.trim() &&
+      this.householdMembersForm.value?.lastName?.toLowerCase()?.trim() ===
+        this.householdMembersForm.get('householdMember').value?.lastName?.toLowerCase()?.trim() &&
+      this.householdMembersForm.value?.dateOfBirth?.toLowerCase()?.trim() ===
+        this.householdMembersForm.get('householdMember').value?.dateOfBirth?.toLowerCase()?.trim()
     );
   }
 

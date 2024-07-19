@@ -1,13 +1,11 @@
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { HouseholdMember, IdentifiedNeed } from '../api/models';
+import { IdentifiedNeed } from '../api/models';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 
 export class Evacuated {
   evacuatedFromAddress: RegAddress;
   insurance: string;
-
-  constructor() {}
 }
 
 export class EvacuatedForm {
@@ -30,81 +28,9 @@ export class EvacuatedForm {
   }
 }
 
-export class HouseholdMembers {
-  householdMembers: Array<HouseholdMember>;
-
-  constructor() {}
-}
-
-export class HouseholdMembersForm {
-  householdMember: UntypedFormGroup;
-  householdMembers = new UntypedFormControl([]);
-  addHouseholdMemberIndicator = new UntypedFormControl(false);
-
-  constructor(
-    householdMembers: HouseholdMembers,
-    customValidator: CustomValidationService,
-    builder: UntypedFormBuilder
-  ) {
-    this.householdMember = builder.group({
-      firstName: [
-        '',
-        [
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
-            .bind(customValidator),
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
-            .bind(customValidator)
-        ]
-      ],
-      lastName: [
-        '',
-        [
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
-            .bind(customValidator),
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, customValidator.whitespaceValidator())
-            .bind(customValidator)
-        ]
-      ],
-      sameLastNameCheck: [''],
-      initials: [''],
-      gender: [
-        '',
-        [
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
-            .bind(customValidator)
-        ]
-      ],
-      dateOfBirth: [
-        '',
-        [
-          customValidator
-            .conditionalValidation(() => this.addHouseholdMemberIndicator.value, Validators.required)
-            .bind(customValidator),
-          customValidator
-            .conditionalValidation(
-              () => this.addHouseholdMemberIndicator.value,
-              customValidator.dateOfBirthValidator().bind(customValidator)
-            )
-            .bind(customValidator)
-        ]
-      ],
-      isPrimaryRegistrant: [''],
-      id: [''],
-      isMinor: ['']
-    });
-  }
-}
-
 export class Pet {
   quantity: number;
   type: string;
-
-  constructor() {}
 }
 
 export class PetForm {
@@ -112,7 +38,7 @@ export class PetForm {
   pet: UntypedFormGroup;
   addPetIndicator = new UntypedFormControl(false);
 
-  constructor(pet: Pet, customValidator: CustomValidationService, builder: UntypedFormBuilder) {
+  constructor(customValidator: CustomValidationService, builder: UntypedFormBuilder) {
     this.pet = builder.group({
       quantity: [
         '',
