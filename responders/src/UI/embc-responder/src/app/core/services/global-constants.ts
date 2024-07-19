@@ -346,6 +346,12 @@ export const newRegWizardEssFileCreatedMessage: DialogContent = {
   exitLink: 'Exit Wizard'
 };
 
+export const addCaseNotesMessage: DialogContent = {
+  text: '<p>Are you sure you don&#39;t want to add any <strong>case notes</strong> before exiting?</p>',
+  confirmButton: 'Add Case Notes',
+  cancelButton: 'Exit'
+};
+
 export const newRegWizardProfileUpdatedMessage: DialogContent = {
   title: 'Evacuee Profile Updated',
   text: '<p>Evacuee profile has been successfully updated.</p>',

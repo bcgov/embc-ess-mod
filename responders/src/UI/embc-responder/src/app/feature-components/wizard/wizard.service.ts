@@ -67,19 +67,23 @@ export class WizardService {
    *
    * @param navigateTo navigateTo url
    */
-  openExitModal(navigateTo: string): void {
+  openExitModal(navigateTo: string, addCaseWarning?: string): void {
+    const isSupportsPage = this.router.url.includes('/ess-wizard/add-supports');
+    const isCaseNoteWarning = isSupportsPage && addCaseWarning ? true : false;
     this.dialog
       .open(DialogComponent, {
         data: {
           component: InformationDialogComponent,
-          content: globalConst.exitWizardDialog
+          content: isCaseNoteWarning ? globalConst[addCaseWarning] : globalConst.exitWizardDialog
         },
         width: '530px'
       })
       .afterClosed()
       .subscribe((event) => {
-        if (event === 'confirm') {
+        if ((event === 'confirm' && !isCaseNoteWarning) || (event === 'cancel' && isCaseNoteWarning)) {
           this.router.navigate([navigateTo]);
+        } else if (event === 'confirm' && isCaseNoteWarning) {
+          this.router.navigate(['ess-wizard/add-notes/notes']);
         }
       });
   }
