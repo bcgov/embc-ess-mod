@@ -17,7 +17,10 @@ flex-direction: column;
   .mdc-switch .mdc-switch__track {
     height: 19px !important;
 }
-.mdc-switch__track::before, .mdc-switch__track::after {
+.mdc-switch__track::after {
+  background-color: rgba(22, 155, 213, 1) !important;
+}
+.mdc-switch:enabled .mdc-switch__track::before {
   background-color: #c9c9c9 !important;
 }
 }
