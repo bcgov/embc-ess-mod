@@ -16,6 +16,9 @@ import { HouseholdMemberComponent } from './household-member/household-member.co
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { NgIf, NgClass, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -57,7 +60,8 @@ export class EssfileDashboardComponent implements OnInit {
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
     public appBaseService: AppBaseService,
-    private optionInjectionService: OptionInjectionService
+    private optionInjectionService: OptionInjectionService,
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -75,6 +79,9 @@ export class EssfileDashboardComponent implements OnInit {
             this.loadDefaultOverviewSection(file);
             this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
             this.isLoading = !this.isLoading;
+            if (this.notesList.some((el) => el.isImportant)) {
+              this.showImportantNotesWarning();
+            }
           });
       });
     } else {
@@ -152,6 +159,9 @@ export class EssfileDashboardComponent implements OnInit {
         this.loadDefaultOverviewSection(file);
         this.displayBanner = this.optionInjectionService.instance.getDashboardBanner(file?.status);
         this.isLoading = !this.isLoading;
+        if (this.notesList.some((el) => el.isImportant)) {
+          this.showImportantNotesWarning();
+        }
       })
       .catch((error) => {
         this.isLoading = !this.isLoading;
@@ -164,5 +174,24 @@ export class EssfileDashboardComponent implements OnInit {
     this.eligibilityFirstName = this.essfileDashboardService.eligibilityFirstName();
 
     this.eligibilityLastName = this.essfileDashboardService.eligibilityLastName();
+  }
+  private showImportantNotesWarning(): void {
+    const content = globalConst.caseProfileNotesWarning;
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content
+        },
+        width: '580px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.router.navigate(['/responder-access/search/essfile-dashboard/notes'], {
+            state: { notes: this.notesList }
+          });
+        }
+      });
   }
 }

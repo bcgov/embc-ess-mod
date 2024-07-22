@@ -503,6 +503,13 @@ export const supplierStatusDefinition: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const caseProfileNotesWarning: DialogContent = {
+  title: 'Important Case Notes',
+  text: '<p><strong>This file contains important case notes.</strong></p><p>Review these notes carefully to understand key details and promptly address any necessary actions or follow-ups.</p>',
+  cancelButton: 'Close',
+  confirmButton: 'View Case Notes'
+};
+
 export const systemError = 'The service is temporarily unavailable. Please try again later';
 export const accessError = 'Access Denied';
 export const genericError = 'An error occurred while loading this page. Please refresh and try again.';
