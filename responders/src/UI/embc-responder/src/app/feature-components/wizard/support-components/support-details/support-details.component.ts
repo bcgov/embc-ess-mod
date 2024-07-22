@@ -269,6 +269,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.calculateNoOfDays();
+
+    if (this.cloneFlag) {
+      this.supportDetailsForm.get('noOfDays').patchValue(1);
+    }
   }
 
   ngOnDestroy(): void {
@@ -606,7 +610,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         ? this.stepSupportsService?.supportDetails?.fromDate
         : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.fromDate
+      return this.stepSupportsService?.supportDetails?.fromDate && !this.cloneFlag
         ? this.stepSupportsService?.supportDetails?.fromDate
         : this.createFromDate();
     }
@@ -618,13 +622,15 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         ? this.stepSupportsService?.supportDetails?.fromTime
         : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.fromTime
+      return this.stepSupportsService?.supportDetails?.fromTime && !this.cloneFlag
         ? this.stepSupportsService?.supportDetails?.fromTime
         : this.setDefaultTimes();
     }
   }
   private createFromDate() {
-    let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
+    let existingSupports = this.existingSupports.filter(
+      (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
+    );
 
     const category: SupportCategory =
       SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
@@ -649,7 +655,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setDefaultTimes() {
-    let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
+    let existingSupports = this.existingSupports.filter(
+      (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
+    );
 
     const category: SupportCategory =
       SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
@@ -682,7 +690,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (this.evacueeSessionService.isPaperBased) {
       return this.stepSupportsService?.supportDetails?.toTime ? this.stepSupportsService?.supportDetails?.toTime : '';
     } else {
-      return this.stepSupportsService?.supportDetails?.toTime
+      return this.stepSupportsService?.supportDetails?.toTime && !this.cloneFlag
         ? this.stepSupportsService?.supportDetails?.toTime
         : this.setDefaultTimes();
     }
