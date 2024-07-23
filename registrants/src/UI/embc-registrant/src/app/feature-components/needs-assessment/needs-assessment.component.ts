@@ -1,5 +1,5 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormGroup } from '@angular/forms';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, input, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService, NeedsAssessmentSteps } from '../../core/services/componentCreation.service';
@@ -12,7 +12,7 @@ import { NonVerifiedRegistrationService } from '../non-verified-registration/non
 import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { CaptchaResponse, CaptchaResponseType } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { AppLoaderComponent } from '../../core/components/app-loader/app-loader.component';
 import { AlertComponent } from '../../core/components/alert/alert.component';
@@ -21,8 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperComponent } from '../../sharedModules/components/component-wrapper/component-wrapper.component';
 import { DraftSupports, EligibilityCheck, EvacuationFileStatus } from 'src/app/core/api/models';
 import { SupportsService } from 'src/app/core/api/services';
-import { input } from '@angular/core';
-import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import IdentifyNeedsComponent from 'src/app/sharedModules/forms/needs-assessment-forms/identify-needs/identify-needs.component';
 
 @Component({
@@ -251,18 +249,21 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
         this.evacuationFileDataService.evacuatedAddress = this.form.get('evacuatedFromAddress').value;
         this.needsAssessmentService.insurance = this.form.get('insurance').value;
         break;
+
       case NeedsAssessmentSteps.FamilyAndPetsInformation:
         this.needsAssessmentService.setHouseHoldMembers(this.form.get('householdMemberForm').value.householdMembers);
-
         this.needsAssessmentService.pets = this.form.get('petsForm').value.pets;
         break;
+
       case NeedsAssessmentSteps.IdentifyNeeds:
         this.needsAssessmentService.setNeedsDetails(this.form);
         break;
+
       case NeedsAssessmentSteps.Secret:
         this.evacuationFileDataService.secretPhrase = this.form.get('secretPhrase').value;
         this.evacuationFileDataService.secretPhraseEdited = true;
         break;
+
       default:
     }
   }

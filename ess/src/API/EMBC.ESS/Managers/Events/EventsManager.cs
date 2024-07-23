@@ -88,7 +88,7 @@ public partial class EventsManager(
         if (evacuee == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
         file.PrimaryRegistrantId = evacuee.Id;
 
-        var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
+        var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
         var shouldEmailNotification = string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email) && string.IsNullOrEmpty(file.ManualFileId);
         if (shouldEmailNotification)
@@ -98,10 +98,10 @@ public partial class EventsManager(
                 SubmissionTemplateType.NewEvacuationFileSubmission,
                 email: evacuee.Email,
                 name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
+                tokens: new[] { KeyValuePair.Create("fileNumber", fileId) });
         }
 
-        return caseId;
+        return fileId;
     }
 
     public async Task<string> Handle(SaveRegistrantCommand cmd)
