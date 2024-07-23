@@ -60,7 +60,6 @@ graph LR;
 | [suppliers](./suppliers/)       | suppliers portal   |
 | [registrants](./registrants/)   | registrants portal |
 | [responders](./responders/)     | responders portal  |
-| [landing-page](./landing-page/) | ESS landing page   |
 | [oauth-server](./oauth-server/) | Oauth/OIDC service |
 | [shared](./shared/)             | shared libraries   |
 

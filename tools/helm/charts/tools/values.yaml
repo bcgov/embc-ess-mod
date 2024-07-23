@@ -13,7 +13,5 @@ images:
     image: suppliers-portal-ui
   ess-backend:
     image: ess-backend
-  landing-page:
-    image: landing-page
   oauth-server:
     image: oauth-server
