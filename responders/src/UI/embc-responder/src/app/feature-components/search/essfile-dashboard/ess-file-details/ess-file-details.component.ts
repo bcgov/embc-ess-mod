@@ -49,7 +49,7 @@ export class EssFileDetailsComponent implements OnInit {
   noAssistanceRequiredMessage = globalConst.noAssistanceRequired;
   memberListDisplay: EvacuationFileHouseholdMember[];
 
-  memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
+  memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth', 'contact'];
   petColumns: string[] = ['type', 'quantity'];
 
   constructor(
