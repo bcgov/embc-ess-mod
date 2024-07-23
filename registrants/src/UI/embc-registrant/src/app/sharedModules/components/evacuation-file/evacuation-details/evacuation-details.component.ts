@@ -10,6 +10,7 @@ import { ReferralDetailsComponent } from '../referral-details/referral-details.c
 import { ReviewComponent } from '../../../../feature-components/review/review.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -51,7 +52,8 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     private router: Router,
     public evacuationFileDataService: EvacuationFileDataService,
     private datePipe: DatePipe,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private evacuationFileMappingService: EvacuationFileMappingService
   ) {}
 
   ngOnInit(): void {
@@ -93,11 +95,19 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   }
 
   gotoUpdateDetails() {
-    this.router.navigate([
-      '/verified-registration/needs-assessment',
-      this.evacuationFileDataService.essFileId,
-      'update'
-    ]);
+    this.evacuationFilesService.getCurrentEvacuationFiles().subscribe((files) => {
+      const file = files.find((f) => f.fileId === this.evacuationFileDataService.essFileId);
+      if (!file) {
+        console.error('No current evacuation file found');
+        return;
+      }
+      this.evacuationFileMappingService.mapEvacuationFile(file);
+      this.router.navigate([
+        '/verified-registration/needs-assessment',
+        this.evacuationFileDataService.essFileId,
+        'update'
+      ]);
+    });
   }
 
   allowEdition(): boolean {
