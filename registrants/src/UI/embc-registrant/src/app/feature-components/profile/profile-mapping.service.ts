@@ -104,7 +104,6 @@ export class ProfileMappingService {
   }
 
   private setPersonalDetails(profile: Profile): void {
-    let formGroup: UntypedFormGroup;
     this.formCreationService
       .getPersonalDetailsForm()
       .pipe(first())
@@ -112,13 +111,11 @@ export class ProfileMappingService {
         details.setValue({
           ...profile.personalDetails
         });
-        formGroup = details;
       });
     this.profileDataService.personalDetails = profile.personalDetails;
   }
 
   private setAddressDetails(profile: Profile): void {
-    let formGroup: UntypedFormGroup;
     this.formCreationService
       .getAddressForm()
       .pipe(first())
@@ -132,7 +129,6 @@ export class ProfileMappingService {
           isBcMailingAddress: this.isBCAddress(profile.mailingAddress.stateProvince),
           mailingAddress
         });
-        formGroup = address;
       });
     this.profileDataService.primaryAddressDetails = this.locationService.getAddressRegFromAddress(
       profile.primaryAddress
@@ -143,8 +139,6 @@ export class ProfileMappingService {
   }
 
   private setContactDetails(profile: Profile): void {
-    let formGroup: UntypedFormGroup;
-
     this.formCreationService
       .getContactDetailsForm()
       .pipe(first())
@@ -154,7 +148,6 @@ export class ProfileMappingService {
           confirmEmail: profile.contactDetails.email,
           showContacts: this.setShowContactsInfo(profile.contactDetails.phone, profile.contactDetails.email)
         });
-        formGroup = contact;
       });
     this.profileDataService.contactDetails = profile.contactDetails;
   }
@@ -168,8 +161,6 @@ export class ProfileMappingService {
   }
 
   private setSecurityQuestions(profile: Profile): void {
-    let formGroup: UntypedFormGroup;
-
     this.formCreationService
       .getSecurityQuestionsForm()
       .pipe(first())
@@ -184,7 +175,6 @@ export class ProfileMappingService {
             answer3: profile.securityQuestions[2].answer
           }
         });
-        formGroup = securityQuestions;
       });
     this.profileDataService.securityQuestions = profile.securityQuestions;
   }

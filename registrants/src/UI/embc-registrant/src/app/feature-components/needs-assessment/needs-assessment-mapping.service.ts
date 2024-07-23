@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { HouseholdMember, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { RegAddress } from 'src/app/core/model/address';
-import { PersonDetailsModel } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { NeedsAssessmentService } from './needs-assessment.service';
 import * as _ from 'lodash';
 import { ShelterType } from 'src/app/core/services/globalConstants';
+import { HouseholdMemberModel } from 'src/app/core/model/household-member.model';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentMappingService {
@@ -63,9 +63,11 @@ export class NeedsAssessmentMappingService {
             initials: '',
             lastName: '',
             sameLastNameCheck: '',
-            isPrimaryRegistrant: '',
+            isPrimaryRegistrant: false,
             id: '',
-            isMinor: ''
+            isMinor: false,
+            email: '',
+            phone: ''
           },
           addHouseholdMemberIndicator: null
         });
@@ -112,11 +114,11 @@ export class NeedsAssessmentMappingService {
       });
   }
 
-  public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetailsModel> {
-    const householdMembersFormArray: Array<PersonDetailsModel> = [];
+  public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<HouseholdMemberModel> {
+    const householdMembersFormArray: Array<HouseholdMemberModel> = [];
 
     for (const member of householdMembers) {
-      const memberDetails: PersonDetailsModel = {
+      const memberDetails: HouseholdMemberModel = {
         firstName: member.details.firstName,
         lastName: member.details.lastName,
         initials: member.details.initials,
@@ -125,7 +127,9 @@ export class NeedsAssessmentMappingService {
         isPrimaryRegistrant: member.isPrimaryRegistrant,
         sameLastNameCheck: this.isSameLastName(member.details.lastName),
         id: member.id,
-        isMinor: member.isMinor
+        isMinor: member.isMinor,
+        email: member.contactDetails?.email,
+        phone: member.contactDetails?.phone
       };
 
       householdMembersFormArray.push(memberDetails);
@@ -134,18 +138,20 @@ export class NeedsAssessmentMappingService {
     return householdMembersFormArray;
   }
 
-  public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetailsModel> {
-    const householdMembersFormArray: Array<PersonDetailsModel> = [];
+  public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<HouseholdMemberModel> {
+    const householdMembersFormArray: Array<HouseholdMemberModel> = [];
 
     for (const member of householdMembers) {
-      const memberDetails: PersonDetailsModel = {
+      const memberDetails: HouseholdMemberModel = {
         firstName: member.details.firstName,
         lastName: member.details.lastName,
         initials: member.details.initials,
         gender: member.details.gender,
         dateOfBirth: member.details.dateOfBirth,
         sameLastNameCheck: this.isSameLastName(member.details.lastName),
-        isMinor: member.isMinor
+        isMinor: member.isMinor,
+        email: member.contactDetails?.email,
+        phone: member.contactDetails?.phone
       };
 
       householdMembersFormArray.push(memberDetails);
