@@ -17,7 +17,7 @@ export class NeedsAssessmentMappingService {
     private profileDataService: ProfileDataService,
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService
-  ) {}
+  ) { }
 
   setNeedsAssessment(evacuatedAddress: RegAddress, needsAssessment: NeedsAssessment): void {
     this.setNeedsAssessmentId(needsAssessment.id);
@@ -63,9 +63,9 @@ export class NeedsAssessmentMappingService {
             initials: '',
             lastName: '',
             sameLastNameCheck: '',
-            isPrimaryRegistrant: '',
+            isPrimaryRegistrant: false,
             id: '',
-            isMinor: '',
+            isMinor: false,
             email: '',
             phone: ''
           },
