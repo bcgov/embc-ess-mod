@@ -21,12 +21,12 @@
         <PackageReference Include="Cronos" Version="0.8.4" />
         <PackageReference Include="DistributedLock.Redis" Version="1.0.3" />
         <PackageReference Include="DistributedLock.WaitHandles" Version="1.0.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
         <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.7" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.0.3" />
+        <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.1.0" />
         <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
