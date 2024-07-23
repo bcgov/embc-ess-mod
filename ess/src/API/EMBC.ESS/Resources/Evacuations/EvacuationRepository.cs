@@ -139,7 +139,7 @@ public class EvacuationRepository : IEvacuationRepository
 
         AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
 
-        AssignToTask(essContext, file, evacuationFile.TaskId ?? currentFile.era_TaskId.era_name);
+        AssignToTask(essContext, file, evacuationFile.TaskId ?? currentFile.era_TaskId?.era_name);
 
         await essContext.SaveChangesAsync(ct);
 
