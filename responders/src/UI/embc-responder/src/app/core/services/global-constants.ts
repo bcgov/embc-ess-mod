@@ -347,9 +347,9 @@ export const newRegWizardEssFileCreatedMessage: DialogContent = {
 };
 
 export const addCaseNotesMessage: DialogContent = {
-  text: '<p>Are you sure you don&#39;t want to add any <strong>case notes</strong> before exiting?</p>',
-  confirmButton: 'Add Case Notes',
-  cancelButton: 'Exit'
+  text: '<p>Would you like to <strong>add case notes</strong> before exiting the wizard?</p>',
+  confirmButton: 'Yes, Add Case Notes',
+  cancelButton: 'No, Exit Wizard'
 };
 
 export const newRegWizardProfileUpdatedMessage: DialogContent = {
