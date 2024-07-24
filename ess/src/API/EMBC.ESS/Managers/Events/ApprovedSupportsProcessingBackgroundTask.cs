@@ -10,7 +10,7 @@ namespace EMBC.ESS.Managers.Events
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "15 * * * * *";
+        public string Schedule => "";
 
         public int DegreeOfParallelism => 1;
 
