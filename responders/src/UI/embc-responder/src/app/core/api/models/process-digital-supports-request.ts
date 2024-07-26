@@ -3,5 +3,5 @@
 import { Support } from '../models/support';
 export interface ProcessDigitalSupportsRequest {
   includeSummaryInPrintRequest?: boolean;
-  supports?: Array<Support>;
+  supports?: Array<Support> | null;
 }

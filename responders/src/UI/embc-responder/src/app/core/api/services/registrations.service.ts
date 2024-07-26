@@ -9,19 +9,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { ClothingSupport } from '../models/clothing-support';
 import { EvacuationFile } from '../models/evacuation-file';
 import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
-import { FoodGroceriesSupport } from '../models/food-groceries-support';
-import { FoodRestaurantSupport } from '../models/food-restaurant-support';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
-import { IncidentalsSupport } from '../models/incidentals-support';
-import { LodgingAllowanceSupport } from '../models/lodging-allowance-support';
-import { LodgingBilletingSupport } from '../models/lodging-billeting-support';
-import { LodgingGroupSupport } from '../models/lodging-group-support';
-import { LodgingHotelSupport } from '../models/lodging-hotel-support';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrantProfileSearchResult } from '../models/registrant-profile-search-result';
@@ -85,8 +77,7 @@ import { RegistrationsVerifySecurityQuestions$Params } from '../fn/registrations
 import { registrationsVoidSupport } from '../fn/registrations/registrations-void-support';
 import { RegistrationsVoidSupport$Params } from '../fn/registrations/registrations-void-support';
 import { SearchResults } from '../models/search-results';
-import { TransportationOtherSupport } from '../models/transportation-other-support';
-import { TransportationTaxiSupport } from '../models/transportation-taxi-support';
+import { Support } from '../models/support';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
 import { VerifySecurityQuestionsResponse } from '../models/verify-security-questions-response';
 
@@ -959,22 +950,7 @@ export class RegistrationsService extends BaseService {
   registrationsSearchSupports$Response(
     params?: RegistrationsSearchSupports$Params,
     context?: HttpContext
-  ): Observable<
-    StrictHttpResponse<
-      Array<
-        | ClothingSupport
-        | IncidentalsSupport
-        | FoodGroceriesSupport
-        | FoodRestaurantSupport
-        | LodgingHotelSupport
-        | LodgingBilletingSupport
-        | LodgingGroupSupport
-        | LodgingAllowanceSupport
-        | TransportationTaxiSupport
-        | TransportationOtherSupport
-      >
-    >
-  > {
+  ): Observable<StrictHttpResponse<Array<Support>>> {
     return registrationsSearchSupports(this.http, this.rootUrl, params, context);
   }
 
@@ -987,50 +963,9 @@ export class RegistrationsService extends BaseService {
   registrationsSearchSupports(
     params?: RegistrationsSearchSupports$Params,
     context?: HttpContext
-  ): Observable<
-    Array<
-      | ClothingSupport
-      | IncidentalsSupport
-      | FoodGroceriesSupport
-      | FoodRestaurantSupport
-      | LodgingHotelSupport
-      | LodgingBilletingSupport
-      | LodgingGroupSupport
-      | LodgingAllowanceSupport
-      | TransportationTaxiSupport
-      | TransportationOtherSupport
-    >
-  > {
+  ): Observable<Array<Support>> {
     return this.registrationsSearchSupports$Response(params, context).pipe(
-      map(
-        (
-          r: StrictHttpResponse<
-            Array<
-              | ClothingSupport
-              | IncidentalsSupport
-              | FoodGroceriesSupport
-              | FoodRestaurantSupport
-              | LodgingHotelSupport
-              | LodgingBilletingSupport
-              | LodgingGroupSupport
-              | LodgingAllowanceSupport
-              | TransportationTaxiSupport
-              | TransportationOtherSupport
-            >
-          >
-        ): Array<
-          | ClothingSupport
-          | IncidentalsSupport
-          | FoodGroceriesSupport
-          | FoodRestaurantSupport
-          | LodgingHotelSupport
-          | LodgingBilletingSupport
-          | LodgingGroupSupport
-          | LodgingAllowanceSupport
-          | TransportationTaxiSupport
-          | TransportationOtherSupport
-        > => r.body
-      )
+      map((r: StrictHttpResponse<Array<Support>>): Array<Support> => r.body)
     );
   }
 }

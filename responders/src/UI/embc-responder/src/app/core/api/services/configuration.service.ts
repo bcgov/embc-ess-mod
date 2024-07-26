@@ -79,7 +79,7 @@ export class ConfigurationService extends BaseService {
   configurationGetCodes$Response(
     params?: ConfigurationGetCodes$Params,
     context?: HttpContext
-  ): Observable<StrictHttpResponse<Array<Code | CommunityCode>>> {
+  ): Observable<StrictHttpResponse<Array<Code>>> {
     return configurationGetCodes(this.http, this.rootUrl, params, context);
   }
 
@@ -89,12 +89,9 @@ export class ConfigurationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  configurationGetCodes(
-    params?: ConfigurationGetCodes$Params,
-    context?: HttpContext
-  ): Observable<Array<Code | CommunityCode>> {
+  configurationGetCodes(params?: ConfigurationGetCodes$Params, context?: HttpContext): Observable<Array<Code>> {
     return this.configurationGetCodes$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Code | CommunityCode>>): Array<Code | CommunityCode> => r.body)
+      map((r: StrictHttpResponse<Array<Code>>): Array<Code> => r.body)
     );
   }
 

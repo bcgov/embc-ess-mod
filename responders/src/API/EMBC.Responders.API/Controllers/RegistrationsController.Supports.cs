@@ -14,6 +14,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EMBC.Responders.API.Controllers;
 
@@ -179,11 +180,13 @@ public partial class RegistrationsController
     /// <param name="fileId">evacuation file number</param>
     /// <param name="printRequestId">print request id</param>
     /// <returns>Blob of the print request results</returns>
+    [SwaggerResponse((int)HttpStatusCode.OK, "GetPrint", typeof(FileContentResult))]
     [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
     public async Task<FileContentResult> GetPrint(string fileId, string printRequestId)
     {
         var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
         Response.Headers.Append("Content-Disposition", "attachment;filename=" + result.FileName);
+        Response.Headers.Append("Content-Type", "application/octet-stream");
         return new FileContentResult(result.Content, result.ContentType);
     }
 
