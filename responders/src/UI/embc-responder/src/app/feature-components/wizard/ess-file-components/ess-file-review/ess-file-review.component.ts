@@ -10,7 +10,6 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { MaskTextPipe } from '../../../../shared/pipes/maskText.pipe';
 import { MaskEvacuatedAddressPipe } from '../../../../shared/pipes/maskEvacuatedAddress.pipe';
 import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
@@ -65,7 +64,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   insuranceDisplay: string;
   needs: string[] = [];
 
-  memberColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth'];
+  memberColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'contact'];
 
   petColumns: string[] = ['type', 'quantity'];
   tabMetaData: TabModel;

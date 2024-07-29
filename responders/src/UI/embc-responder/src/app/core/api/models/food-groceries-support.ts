@@ -8,5 +8,5 @@ export type FoodGroceriesSupport = Support & {
   subCategory: SupportSubCategory;
   numberOfDays: number;
   totalAmount: number;
-  approverName?: string;
+  approverName?: string | null;
 };

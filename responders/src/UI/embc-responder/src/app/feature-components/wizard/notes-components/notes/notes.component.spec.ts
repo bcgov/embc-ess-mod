@@ -66,7 +66,8 @@ describe('NotesComponent', () => {
         isEditable: true,
         isHidden: false,
         memberName: 'Test S.',
-        teamName: 'DEV Team'
+        teamName: 'DEV Team',
+        isImportant: false
       },
       {
         addedOn: '2022-09-07T18:53:41Z',
@@ -76,7 +77,8 @@ describe('NotesComponent', () => {
         isEditable: false,
         isHidden: false,
         memberName: 'Test S.',
-        teamName: 'DEV Team'
+        teamName: 'DEV Team',
+        isImportant: true
       }
     ];
     expect(component.notesList).toEqual(notes);

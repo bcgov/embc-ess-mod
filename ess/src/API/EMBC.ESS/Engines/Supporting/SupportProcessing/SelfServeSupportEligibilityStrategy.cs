@@ -314,6 +314,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
 
     private static async Task<IEnumerable<era_evacueesupport>> GetDuplicateSupportsForHouseholdMember(EssContext ctx, era_householdmember hm, int[] similarSupportTypes, DateTimeOffset eligibleFrom, DateTimeOffset eligibleTo, CancellationToken ct)
     {
+        // eligibility is calculate for an entire PST day to prevent getting supports for the same day twice
         eligibleFrom = eligibleFrom.DateTime.ToPST().Date.FromUnspecifiedPstToUtc();
         eligibleTo = eligibleTo.DateTime.ToPST().Date.FromUnspecifiedPstToUtc().AddDays(1).AddSeconds(-1);
         return await ctx.era_evacueesupports
@@ -344,6 +345,7 @@ internal class SelfServeSupportEligibilityStrategy(IEssContextFactory essContext
             case SupportType.FoodGroceries:
             case SupportType.FoodRestaurant:
                 return new[] { SupportType.FoodGroceries, SupportType.FoodRestaurant };
+
             default:
                 return new[] { supportType };
         }

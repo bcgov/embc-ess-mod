@@ -69,12 +69,13 @@
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Household Members</label>
             <div class="row">
-              <div class="col-8">
+              <div class="col-12">
                 @if (!this.essFileNumber) {
                   <mat-table class="bottom-space" [dataSource]="stepEssFileService?.householdMembers">
                     <ng-container matColumnDef="firstName">
@@ -106,10 +107,21 @@
                       </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="dateOfBirth">
-                      <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
+                      <mat-header-cell *matHeaderCellDef>Date of Birth</mat-header-cell>
                       <mat-cell *matCellDef="let member">
                         <span class="mobile-label">Date of Birth:</span>
                         {{ member.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="contact">
+                      <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>
+                      <mat-cell *matCellDef="let member">
+                        <span class="mobile-label">Contact:</span>
+                        {{ member.phone }}
+                        @if (member.phone) {
+                          <br />
+                        }
+                        {{ member.email }}
                       </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
@@ -151,10 +163,21 @@
                       </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="dateOfBirth">
-                      <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
+                      <mat-header-cell *matHeaderCellDef>Date of Birth</mat-header-cell>
                       <mat-cell *matCellDef="let member">
                         <span class="mobile-label">Date of Birth: &nbsp;</span>
                         {{ member.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="contact">
+                      <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>
+                      <mat-cell *matCellDef="let member">
+                        <span class="mobile-label">Contact:</span>
+                        {{ member.phone }}
+                        @if (member.phone) {
+                          <br />
+                        }
+                        {{ member.email }}
                       </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
@@ -166,6 +189,7 @@
                 }
               </div>
             </div>
+
             <div class="row">
               <div class="col-12">
                 <div class="data-panel">

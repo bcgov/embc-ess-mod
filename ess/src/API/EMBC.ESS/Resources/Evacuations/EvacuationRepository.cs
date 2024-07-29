@@ -112,6 +112,7 @@ public class EvacuationRepository : IEvacuationRepository
     public async Task<string> Update(EssContext essContext, EvacuationFile evacuationFile, CancellationToken ct)
     {
         var currentFile = await essContext.era_evacuationfiles
+            .Expand(f => f.era_CurrentNeedsAssessmentid)
             .Expand(f => f.era_TaskId)
             .Expand(f => f.era_era_evacuationfile_era_householdmember_EvacuationFileid)
             .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
@@ -128,6 +129,7 @@ public class EvacuationRepository : IEvacuationRepository
         file.era_evacuationfileid = currentFile.era_evacuationfileid;
         file.era_TaskId = currentFile.era_TaskId;
         file.era_era_evacuationfile_era_householdmember_EvacuationFileid = currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid;
+        file.era_CurrentNeedsAssessmentid.era_needsassessmenttype = (int)(file.statuscode == (int)EvacuationFileStatus.Pending ? NeedsAssessmentTypeOptionSet.Preliminary : NeedsAssessmentTypeOptionSet.Assessed);
 
         essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
         essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
@@ -137,7 +139,7 @@ public class EvacuationRepository : IEvacuationRepository
 
         AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
 
-        AssignToTask(essContext, file, evacuationFile.TaskId);
+        AssignToTask(essContext, file, evacuationFile.TaskId ?? currentFile.era_TaskId?.era_name);
 
         await essContext.SaveChangesAsync(ct);
 
@@ -188,7 +190,9 @@ public class EvacuationRepository : IEvacuationRepository
         hm1.era_lastname != hm2.era_lastname ||
         hm1.era_initials != hm2.era_initials ||
         hm1.era_dateofbirth != hm2.era_dateofbirth ||
-        hm1.era_gender != hm2.era_gender;
+        hm1.era_gender != hm2.era_gender ||
+        hm1.era_emailaddress != hm2.era_emailaddress ||
+        hm1.era_telephonemobile != hm2.era_telephonemobile;
 
     private static void AssignPrimaryRegistrant(EssContext essContext, era_evacuationfile file, contact primaryContact)
     {

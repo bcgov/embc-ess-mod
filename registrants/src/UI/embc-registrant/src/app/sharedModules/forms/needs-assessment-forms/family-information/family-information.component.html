@@ -1,4 +1,4 @@
-<form [formGroup]="householdMemberForm">
+<form [formGroup]="householdMembersForm">
   <mat-card appearance="outlined" class="card-align">
     <mat-card-content>
       <div class="row">
@@ -17,6 +17,7 @@
                   {{ element.firstName }}
                 </mat-cell>
               </ng-container>
+
               <ng-container matColumnDef="lastName">
                 <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -24,6 +25,7 @@
                   {{ element.lastName }}
                 </mat-cell>
               </ng-container>
+
               <ng-container matColumnDef="initials">
                 <mat-header-cell *matHeaderCellDef> Initials </mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -31,6 +33,7 @@
                   {{ element.initials }}
                 </mat-cell>
               </ng-container>
+
               <ng-container matColumnDef="gender">
                 <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -38,6 +41,7 @@
                   {{ element.gender }}
                 </mat-cell>
               </ng-container>
+
               <ng-container matColumnDef="dateOfBirth">
                 <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -45,10 +49,22 @@
                   {{ element.dateOfBirth }}
                 </mat-cell>
               </ng-container>
+
+              <ng-container matColumnDef="contact">
+                <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">Contact:</span>
+                  {{ element.phone }}
+                  @if (element.phone) {
+                    <br />
+                  }
+                  {{ element.email }}
+                </mat-cell>
+              </ng-container>
+
               <ng-container matColumnDef="buttons">
                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
                 <mat-cell *matCellDef="let element; let index = index">
-                  <!-- <span class="mobile-label">11</span> -->
                   @if (!editFlag) {
                     <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
                       <img src="/assets/images/edit.svg" height="35" width="35" />

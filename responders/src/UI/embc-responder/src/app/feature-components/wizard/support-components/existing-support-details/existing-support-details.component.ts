@@ -196,7 +196,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
             showCloseButton: true
           },
           height: '85%',
-          width: '720px'
+          width: '90%'
         });
         this.isLoading = !this.isLoading;
       });
@@ -412,6 +412,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   getFirstLastNameFormatted(firstName: string, lastName: string): string {
+    if (!firstName && !lastName) return '';
     return lastName.toUpperCase() + ', ' + firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   }
 }

@@ -255,18 +255,3 @@ export class AddressForm {
     return c1.code === c2.code;
   }
 }
-
-// export class Secret {
-//   secretPhrase: string;
-
-//   constructor() {}
-// }
-
-// export class SecretForm {
-//   secretPhrase = new FormControl();
-
-//   constructor(secret: Secret) {
-//     this.secretPhrase.setValue(secret.secretPhrase);
-//     this.secretPhrase.setValidators([Validators.required]);
-//   }
-// }

@@ -7,6 +7,7 @@ import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { MatAnchor, MatButton } from '@angular/material/button';
 
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { ReferralCreationService } from './step-supports/referral-creation.service';
 
 /**
  * Initializes the wizard layout by loading the appropriate wizard menu
@@ -36,7 +37,8 @@ export class WizardComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private cd: ChangeDetectorRef,
     private appBaseService: AppBaseService,
-    private wizardAdapterService: WizardAdapterService
+    private wizardAdapterService: WizardAdapterService,
+    private referralService: ReferralCreationService
   ) {
     this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
     this.wizardService.menuItems = this.appBaseService?.wizardProperties?.wizardMenu;
@@ -63,7 +65,11 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   exit(): void {
     const navigateTo = this.appBaseService?.wizardProperties?.exitLink;
-    this.wizardService.openExitModal(navigateTo);
+    if (this.referralService.getDraftSupport().length === 0) {
+      this.wizardService.openExitModal(navigateTo, 'addCaseNotesMessage');
+    } else {
+      this.wizardService.openExitModal(navigateTo);
+    }
   }
 
   /**

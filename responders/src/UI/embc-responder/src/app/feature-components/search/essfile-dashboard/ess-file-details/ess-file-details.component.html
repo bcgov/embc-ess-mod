@@ -72,7 +72,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="row">
-              <div class="col-md-8">
+              <div class="col-md-12">
                 <mat-table class="table-outline" [dataSource]="memberListDisplay">
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell class="header-cell" *matHeaderCellDef>First Name</mat-header-cell>
@@ -92,6 +92,17 @@
                     <mat-header-cell class="header-cell" *matHeaderCellDef> Date of Birth </mat-header-cell>
                     <mat-cell *matCellDef="let element">
                       {{ element.dateOfBirth | date: 'dd-MMM-yyyy' }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contact">
+                    <mat-header-cell class="header-cell" *matHeaderCellDef>Contact</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element?.phone }}
+                      @if (element?.phone) {
+                        <br />
+                      }
+                      {{ element?.email }}
                     </mat-cell>
                   </ng-container>
 

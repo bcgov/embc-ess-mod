@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { RegistrantProfile } from '../../models/registrant-profile';
 
 export interface RegistrationsGetRegistrantProfile$Params {
-  /**
-   * RegistrantId
-   */
   registrantId: string;
 }
 

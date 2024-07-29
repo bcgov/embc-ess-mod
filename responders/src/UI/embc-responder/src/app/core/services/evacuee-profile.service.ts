@@ -4,6 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
   EvacuationFileSearchResult,
+  EvacuationFileStatus,
   EvacuationFileSummary,
   RegistrantProfile,
   RegistrationResult
@@ -12,7 +13,7 @@ import { AddressModel } from '../models/address.model';
 import { EvacuationFileSearchResultModel } from '../models/evacuation-file-search-result.model';
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
 import { EvacueeDetailsModel } from '../models/evacuee-search-context.model';
-import { EvacueeSearchResults } from '../models/evacuee-search-results';
+import { EvacueeSearchResults, RegistrantProfileSearchResultModel } from '../models/evacuee-search-results';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { ComputeRulesService } from './computeRules.service';
@@ -103,6 +104,7 @@ export class EvacueeProfileService {
               ...addressModel,
               ...registrant.primaryAddress
             };
+            registrant.etransferEligible = this.isEtransferEligible(registrant);
           }
 
           for (const file of essFiles) {
@@ -115,6 +117,12 @@ export class EvacueeProfileService {
               ...fileAddressModel,
               ...file.evacuatedFrom
             };
+            const householdMemberProfile = registrants.find(
+              (r) => r.id === file.householdMembers.find((hm) => hm.isSearchMatch === true)?.id
+            );
+            file.etransferEligible =
+              (householdMemberProfile?.etransferEligible ?? false) &&
+              [EvacuationFileStatus.Active, EvacuationFileStatus.Pending].some((s) => s === file.status);
           }
 
           searchResult?.files?.sort((a, b) => new Date(b.modifiedOn).valueOf() - new Date(a.modifiedOn).valueOf());
@@ -292,5 +300,14 @@ export class EvacueeProfileService {
       community,
       country
     };
+  }
+
+  private isEtransferEligible(registrant: RegistrantProfileSearchResultModel): boolean {
+    return (
+      registrant.isAuthenticated &&
+      registrant.primaryAddress?.stateProvinceCode === 'BC' &&
+      registrant.primaryAddress?.postalCode !== null &&
+      !registrant.isMinor
+    );
   }
 }

@@ -18,17 +18,18 @@
   font-family: 'LiberationMono';
   src:
     url('/assets/LiberationMono-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
-    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
+    /* Super Modern Browsers */
+    url('/assets/LiberationMono-Regular.woff') format('woff'),
+    /* Pretty Modern Browsers */
+    url('/assets/LiberationMono-Regular.ttf') format('truetype');
+  /* Safari, Android, iOS */
 }
 
 // Include mat.core only once
 @include mat.core();
 
-$custom-typography: mat.define-typography-config(
-  $font-family: $font-family-sans-serif,
-  $body-2: mat.define-typography-level(15px, 1.6, 400)
-);
+$custom-typography: mat.define-typography-config($font-family: $font-family-sans-serif,
+    $body-2: mat.define-typography-level(15px, 1.6, 400));
 
 @include mat.all-component-typographies($custom-typography);
 
@@ -56,6 +57,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
 }
@@ -229,6 +231,7 @@ button:focus {
 
 .button-with-loader {
   position: relative;
+
   app-loader {
     position: absolute;
   }
@@ -315,6 +318,7 @@ mat-form-field {
 .mat-form-field-appearance-outline .mat-form-field-outline-end {
   border-radius: 0px !important;
 }
+
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-outline-gap {
   border-radius: 0px !important;
@@ -400,11 +404,6 @@ mat-form-field {
   --mdc-checkbox-unselected-hover-icon-color: red;
 }
 
-.requiredField::after {
-  content: '*';
-  color: red;
-}
-
 .custom-mat-error {
   font-size: 75%;
 }
@@ -464,6 +463,7 @@ mat-form-field {
   background-color: #cccccc !important;
   min-width: 250px !important;
 }
+
 /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
 .mat-tab-label,
 .mat-mdc-tab-link {
@@ -504,10 +504,12 @@ mat-form-field {
 .versions-table {
   width: 100%;
 }
+
 @media (max-width: 768px) {
   app-evacuation-card .button-align {
     padding: 0 !important;
   }
+
   app-evacuation-card .button-p {
     padding: 0 !important;
     max-width: 95%;

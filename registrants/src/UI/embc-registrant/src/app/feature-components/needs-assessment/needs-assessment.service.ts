@@ -11,7 +11,7 @@ import {
 } from 'src/app/core/api/models';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ShelterType } from 'src/app/core/services/globalConstants';
-import { PersonDetailsModel } from 'src/app/core/model/profile.model';
+import { HouseholdMemberModel } from 'src/app/core/model/household-member.model';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
@@ -99,14 +99,18 @@ export class NeedsAssessmentService {
     this.mainHouseholdMembers = value;
   }
 
-  public setHouseHoldMembers(personalDetails: PersonDetailsModel[]): void {
+  public setHouseHoldMembers(householdMemberDetails: HouseholdMemberModel[]): void {
     const householdMembersArray: Array<HouseholdMember> = [];
-    for (const member of personalDetails) {
+    for (const member of householdMemberDetails) {
       const houseHoldMember: HouseholdMember = {
         id: member.id,
         isPrimaryRegistrant: member.isPrimaryRegistrant ?? false,
         isMinor: member.isMinor ?? false,
-        details: member
+        details: member,
+        contactDetails: {
+          email: member.email,
+          phone: member.phone
+        }
       };
 
       householdMembersArray.push(houseHoldMember);

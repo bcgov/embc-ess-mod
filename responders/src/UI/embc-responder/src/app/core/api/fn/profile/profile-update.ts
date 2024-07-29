@@ -9,21 +9,18 @@ import { RequestBuilder } from '../../request-builder';
 import { UpdateUserProfileRequest } from '../../models/update-user-profile-request';
 
 export interface ProfileUpdate$Params {
-  /**
-   * The profile information
-   */
-  body: UpdateUserProfileRequest;
+  body?: UpdateUserProfileRequest;
 }
 
 export function profileUpdate(
   http: HttpClient,
   rootUrl: string,
-  params: ProfileUpdate$Params,
+  params?: ProfileUpdate$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, profileUpdate.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

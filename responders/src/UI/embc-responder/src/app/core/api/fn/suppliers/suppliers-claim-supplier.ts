@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { SupplierResult } from '../../models/supplier-result';
 
 export interface SuppliersClaimSupplier$Params {
-  /**
-   * supplier id
-   */
   supplierId: string;
 }
 

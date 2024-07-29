@@ -13,15 +13,13 @@ export class CustomValidationService {
       if (control.value !== null && control.value !== undefined) {
         let validationError = null;
         const dateOfBirth = control.value;
-        const day = dateOfBirth.substring(0, 2);
-        const month = dateOfBirth.substring(3, 5);
         const year = dateOfBirth.substring(6);
         if (dateOfBirth !== '') {
           if (!moment(dateOfBirth, 'MM/DD/YYYY', true).isValid()) {
             validationError = { invalidDate: true };
           } else if (moment().diff(moment(dateOfBirth, 'MM-DD-YYYY')) <= 0) {
             validationError = { futureDate: true };
-          } else if (year !== '' && (year < 1800 || year > 2100)) {
+          } else if (year !== '' && (year < 1800 || year > moment().year())) {
             validationError = { invalidYear: true };
           }
         }

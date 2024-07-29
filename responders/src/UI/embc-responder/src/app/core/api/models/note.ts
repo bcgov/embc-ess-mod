@@ -7,6 +7,7 @@ export interface Note {
   id?: string | null;
   isEditable?: boolean;
   isHidden?: boolean;
+  isImportant?: boolean;
   memberName?: string | null;
   teamName?: string | null;
 }

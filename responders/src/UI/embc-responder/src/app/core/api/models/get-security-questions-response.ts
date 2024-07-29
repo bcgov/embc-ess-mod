@@ -2,5 +2,5 @@
 /* eslint-disable */
 import { SecurityQuestion } from '../models/security-question';
 export interface GetSecurityQuestionsResponse {
-  questions?: Array<SecurityQuestion>;
+  questions?: Array<SecurityQuestion> | null;
 }

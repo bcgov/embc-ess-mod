@@ -8,7 +8,7 @@
 
     <div class="row section-padding">
       <div class="col-md-12">
-        <p>{{ notesList?.length }} case notes have been added for this ESS File.</p>
+        <p>{{ notesList?.length }} case note(s) have been added for this ESS File.</p>
         @for (note of notes$ | async; track note) {
           <div>
             <hr class="solid-hr" />
@@ -22,6 +22,9 @@
                   {{ note?.addedOn | date: 'dd-MMM-yyyy' }} at
                   {{ note?.addedOn | date: 'hh:mm a' }}
                 </p>
+                @if (note?.isImportant) {
+                  <div class="important-note-chip">Important Case Note</div>
+                }
               </div>
               @if (note?.isHidden && hasPermission('canSeeHiddenNotes')) {
                 <div class="col-md-4 image-align">

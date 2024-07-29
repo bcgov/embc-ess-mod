@@ -491,6 +491,16 @@
                 <div class="col-md-3">Date of Birth:</div>
                 <div class="col-md-3">{{ member.dateOfBirth | customDate }}</div>
               </div>
+              <div class="row info-detail">
+                <div class="col-md-3">Contact:</div>
+                <div class="col-md-3">
+                  {{ member.phone }}
+                  @if (member.phone) {
+                    <br />
+                  }
+                  {{ member.email }}
+                </div>
+              </div>
               <br />
             }
           </div>

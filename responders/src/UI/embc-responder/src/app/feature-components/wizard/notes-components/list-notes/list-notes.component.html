@@ -10,6 +10,9 @@
           {{ note?.addedOn | date: 'dd-MMM-yyyy' }} at
           {{ note?.addedOn | date: 'hh:mm a' }}
         </p>
+        @if (note?.isImportant) {
+          <div class="important-note-chip">Important Case Note</div>
+        }
       </div>
       <div class="col-md-4 image-align">
         @if (note?.isEditable) {

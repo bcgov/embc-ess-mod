@@ -10,7 +10,7 @@ import { AuditAccessRequest } from '../../models/audit-access-request';
 
 export interface RegistrationsAuditRegistrantAccess$Params {
   registrantId: string;
-  body: AuditAccessRequest;
+  body?: AuditAccessRequest;
 }
 
 export function registrationsAuditRegistrantAccess(
@@ -22,7 +22,7 @@ export function registrationsAuditRegistrantAccess(
   const rb = new RequestBuilder(rootUrl, registrationsAuditRegistrantAccess.PATH, 'post');
   if (params) {
     rb.path('registrantId', params.registrantId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(rb.build({ responseType: 'text', accept: '*/*', context })).pipe(

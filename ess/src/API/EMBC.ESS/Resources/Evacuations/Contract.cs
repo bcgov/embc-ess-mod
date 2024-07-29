@@ -152,6 +152,8 @@ public record HouseholdMember
     public bool? HasAccessRestriction { get; set; }
     public bool? IsVerifiedRegistrant { get; set; }
     public bool? IsAuthenticatedRegistrant { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
 }
 
 public record Pet
@@ -170,6 +172,7 @@ public record Note
     public DateTime ModifiedOn { get; set; }
     public string CreatingTeamMemberId { get; set; }
     public bool IsHidden { get; set; }
+    public bool IsImportant { get; set; }
 }
 
 public record SelfServeEligibilityCheck

@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface SupplierContact {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
+  email?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
 }

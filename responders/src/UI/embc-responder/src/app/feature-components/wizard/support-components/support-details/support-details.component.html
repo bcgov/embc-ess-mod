@@ -218,7 +218,7 @@
                       <p>Valid From:</p>
                       <div class="row">
                         <div class="col-md-6">
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outline" class="error-wrapper">
                             <mat-label>Valid From Date</mat-label>
                             <input
                               matInput
@@ -237,7 +237,12 @@
                             ) {
                               <mat-error> Please enter a valid date</mat-error>
                             }
-
+                            @if (
+                              supportDetailsFormControl.fromDate.invalid &&
+                              supportDetailsFormControl.fromDate.hasError('invalidTaskDateTime')
+                            ) {
+                              <mat-error>Date/time must fall within the task dates</mat-error>
+                            }
                             @if (
                               supportDetailsFormControl.fromDate.invalid &&
                               supportDetailsFormControl.fromDate.hasError('required')
@@ -247,7 +252,7 @@
                           </mat-form-field>
                         </div>
                         <div class="col-md-6">
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outline" class="error-wrapper">
                             <mat-label>Valid From Time</mat-label>
                             <input
                               type="time"
@@ -261,6 +266,12 @@
                               supportDetailsFormControl.fromTime.hasError('required')
                             ) {
                               <mat-error> From Time is required</mat-error>
+                            }
+                            @if (
+                              supportDetailsFormControl.fromTime.invalid &&
+                              supportDetailsFormControl.fromTime.hasError('invalidTaskDateTime')
+                            ) {
+                              <mat-error>Date/time must fall within the task dates</mat-error>
                             }
                           </mat-form-field>
                         </div>
@@ -289,7 +300,7 @@
 
                       <div class="row">
                         <div class="col-md-6">
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outline" class="error-wrapper">
                             <mat-label>Valid To Date</mat-label>
                             <input
                               matInput
@@ -308,7 +319,12 @@
                             ) {
                               <mat-error> Please enter a valid date</mat-error>
                             }
-
+                            @if (
+                              supportDetailsFormControl.toDate.invalid &&
+                              supportDetailsFormControl.toDate.hasError('invalidTaskDateTime')
+                            ) {
+                              <mat-error>Date/time must fall within the task dates</mat-error>
+                            }
                             @if (
                               supportDetailsFormControl.toDate.invalid &&
                               supportDetailsFormControl.toDate.hasError('required')
@@ -324,7 +340,7 @@
                           }
                         </div>
                         <div class="col-md-6">
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outline" class="error-wrapper">
                             <mat-label>Valid To Time</mat-label>
                             <input type="time" formControlName="toTime" matInput placeholder="Valid To Time" required />
                             @if (
@@ -332,6 +348,12 @@
                               supportDetailsFormControl.toTime.hasError('required')
                             ) {
                               <mat-error> To Time Required</mat-error>
+                            }
+                            @if (
+                              supportDetailsFormControl.toTime.invalid &&
+                              supportDetailsFormControl.toTime.hasError('invalidTaskDateTime')
+                            ) {
+                              <mat-error>Date/time must fall within the task dates</mat-error>
                             }
                           </mat-form-field>
                         </div>

@@ -5,13 +5,14 @@ import { EvacuationFileSearchResult } from '../models/evacuation-file-search-res
 import { RegistrantStatus } from '../models/registrant-status';
 export interface RegistrantProfileSearchResult {
   createdOn?: string;
-  evacuationFiles?: Array<EvacuationFileSearchResult>;
-  firstName?: string;
-  id?: string;
+  evacuationFiles?: Array<EvacuationFileSearchResult> | null;
+  firstName?: string | null;
+  id?: string | null;
   isAuthenticated?: boolean;
+  isMinor?: boolean;
   isProfileCompleted?: boolean;
   isRestricted?: boolean;
-  lastName?: string;
+  lastName?: string | null;
   modifiedOn?: string;
   primaryAddress?: Address;
   status?: RegistrantStatus;

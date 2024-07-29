@@ -61,11 +61,8 @@ export class StepNotesService {
    * @param content User entered note content
    * @returns Note object
    */
-  createNoteDTO(content: string, id?: string): Note {
-    return {
-      id,
-      content
-    };
+  createNoteDTO(params: { id?: string; note?: string; isImportant?: boolean }) {
+    return { content: params.note, id: params.id, isImportant: params.isImportant };
   }
 
   /**

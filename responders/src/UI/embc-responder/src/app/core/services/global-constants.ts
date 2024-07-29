@@ -346,6 +346,12 @@ export const newRegWizardEssFileCreatedMessage: DialogContent = {
   exitLink: 'Exit Wizard'
 };
 
+export const addCaseNotesMessage: DialogContent = {
+  text: '<p>Would you like to <strong>add case notes</strong> before exiting the wizard?</p>',
+  confirmButton: 'Yes, Add Case Notes',
+  cancelButton: 'No, Exit Wizard'
+};
+
 export const newRegWizardProfileUpdatedMessage: DialogContent = {
   title: 'Evacuee Profile Updated',
   text: '<p>Evacuee profile has been successfully updated.</p>',
@@ -495,6 +501,13 @@ export const supplierStatusDefinition: DialogContent = {
   title: 'Status Definitions',
   text: '<p class="green-info"><b>Active</b></p><p>Supplier will appear within your supplier list and can be selected on a referral.</p><p class="red-alert"><b>Deactivated</b></p><p>Supplier will NOT appear within your supplier list and cannot be selected on a referral.</b></p><p><b>All status changes will affect ESS Team access to any suppliers shared via LEP mutual aid agreements.</b></p>',
   cancelButton: 'Close'
+};
+
+export const caseProfileNotesWarning: DialogContent = {
+  title: 'Important Case Notes',
+  text: '<p><strong>This file contains important case notes.</strong></p><p>Review these notes carefully to understand key details and promptly address any necessary actions or follow-ups.</p>',
+  cancelButton: 'Close',
+  confirmButton: 'View Case Notes'
 };
 
 export const systemError = 'The service is temporarily unavailable. Please try again later';

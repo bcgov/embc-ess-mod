@@ -9,14 +9,7 @@ import { RequestBuilder } from '../../request-builder';
 import { RegistrationResult } from '../../models/registration-result';
 
 export interface RegistrationsSetRegistrantVerified$Params {
-  /**
-   * RegistrantId
-   */
   registrantId: string;
-
-  /**
-   * Verified
-   */
   verified: boolean;
 }
 

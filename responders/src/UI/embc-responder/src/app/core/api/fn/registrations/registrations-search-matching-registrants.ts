@@ -9,16 +9,16 @@ import { RequestBuilder } from '../../request-builder';
 import { RegistrantProfileSearchResult } from '../../models/registrant-profile-search-result';
 
 export interface RegistrationsSearchMatchingRegistrants$Params {
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string;
-  ManualFileId?: string | null;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  ManualFileId?: string;
 }
 
 export function registrationsSearchMatchingRegistrants(
   http: HttpClient,
   rootUrl: string,
-  params?: RegistrationsSearchMatchingRegistrants$Params,
+  params: RegistrationsSearchMatchingRegistrants$Params,
   context?: HttpContext
 ): Observable<StrictHttpResponse<Array<RegistrantProfileSearchResult>>> {
   const rb = new RequestBuilder(rootUrl, registrationsSearchMatchingRegistrants.PATH, 'get');

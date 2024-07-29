@@ -35,6 +35,10 @@ table {
   max-height: 500px;
 }
 
+.mat-mdc-cell {
+  word-break: break-word;
+}
+
 .mobile-label {
   display: none;
 }
@@ -79,7 +83,10 @@ table {
   }
 
   .mat-mdc-cell {
+    align-items: unset;
+    min-height: unset;
     border-bottom: none !important;
+    word-break: break-word;
   }
 
   // Remove the header row altogether
@@ -100,11 +107,6 @@ table {
   .mat-mdc-footer-cell:first-of-type,
   .mat-mdc-header-cell:first-of-type {
     padding-left: unset;
-  }
-
-  .mat-mdc-cell {
-    align-items: unset;
-    min-height: unset;
   }
 
   .button-s {

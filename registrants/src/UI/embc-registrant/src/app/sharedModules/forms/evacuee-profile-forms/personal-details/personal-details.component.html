@@ -57,7 +57,7 @@
               }
             </mat-select>
             @if (personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')) {
-              <mat-error> Gender is required</mat-error>
+              <mat-error>Gender is required</mat-error>
             }
           </mat-form-field>
         </div>
@@ -66,7 +66,6 @@
       <div class="row">
         <div class="col-lg-3 col-md-5">
           <mat-form-field type="date" appearance="outline">
-            <!--maxlength="10"-->
             <mat-label>Date of Birth</mat-label>
             <input
               formControlName="dateOfBirth"
@@ -87,7 +86,7 @@
               <mat-error> Date of Birth should be in the past</mat-error>
             }
             @if (personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('invalidYear')) {
-              <mat-error> Invalid year. The Year must be between 1800-2100</mat-error>
+              <mat-error> Invalid year. The Year must be between 1800-this year</mat-error>
             }
           </mat-form-field>
         </div>
@@ -96,5 +95,3 @@
   </mat-card-content>
 </mat-card>
 <br />
-<!-- {{personalDetailsForm.status}}
-              {{personalDetailsForm.value | json}} -->

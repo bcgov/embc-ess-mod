@@ -106,6 +106,10 @@ mat-expansion-panel {
     font-weight: 400;
     vertical-align: top;
   }
+
+  td {
+    word-break: break-word;
+  }
 }
 
 .button-div {

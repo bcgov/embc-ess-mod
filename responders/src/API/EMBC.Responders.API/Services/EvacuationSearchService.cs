@@ -45,6 +45,7 @@ namespace EMBC.Responders.API.Services
         public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
         public bool IsProfileCompleted { get; set; }
         public bool IsAuthenticated { get; set; }
+        public bool IsMinor { get; set; }
     }
 
     public class EvacuationFileSearchResult

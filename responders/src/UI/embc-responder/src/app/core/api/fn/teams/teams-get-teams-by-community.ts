@@ -9,9 +9,6 @@ import { RequestBuilder } from '../../request-builder';
 import { Team } from '../../models/team';
 
 export interface TeamsGetTeamsByCommunity$Params {
-  /**
-   * communityCode
-   */
   communityCode: string;
 }
 
