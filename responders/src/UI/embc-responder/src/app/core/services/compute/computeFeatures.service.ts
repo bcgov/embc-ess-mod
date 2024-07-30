@@ -43,14 +43,13 @@ export class ComputeFeaturesService implements Compute {
         etransferStatus: ETransferStatus.unavailable
       };
     } else if (
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Lodging_Hotel ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.LodgingHotel ||
       this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
-        SupportSubCategory.Lodging_Billeting ||
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.Lodging_Group ||
+        SupportSubCategory.LodgingBilleting ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.LodgingGroup ||
       this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
-        SupportSubCategory.Transportation_Other ||
-      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value ===
-        SupportSubCategory.Transportation_Taxi
+        SupportSubCategory.TransportationOther ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport?.value === SupportSubCategory.TransportationTaxi
     ) {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.notAllowed

@@ -31,21 +31,21 @@ export class SupportDetailsService {
   ) {}
 
   generateDynamicForm(supportType: string): UntypedFormGroup {
-    if (supportType === SupportSubCategory.Food_Restaurant) {
+    if (supportType === SupportSubCategory.FoodRestaurant) {
       return this.mealForm();
-    } else if (supportType === SupportSubCategory.Food_Groceries) {
+    } else if (supportType === SupportSubCategory.FoodGroceries) {
       return this.groceriesForm();
-    } else if (supportType === SupportSubCategory.Transportation_Taxi) {
+    } else if (supportType === SupportSubCategory.TransportationTaxi) {
       return this.taxiForm();
-    } else if (supportType === SupportSubCategory.Transportation_Other) {
+    } else if (supportType === SupportSubCategory.TransportationOther) {
       return this.otherTransportForm();
-    } else if (supportType === SupportSubCategory.Lodging_Hotel) {
+    } else if (supportType === SupportSubCategory.LodgingHotel) {
       return this.hotelMotelForm();
-    } else if (supportType === SupportSubCategory.Lodging_Billeting) {
+    } else if (supportType === SupportSubCategory.LodgingBilleting) {
       return this.billetingForm();
-    } else if (supportType === SupportSubCategory.Lodging_Group) {
+    } else if (supportType === SupportSubCategory.LodgingGroup) {
       return this.groupLodgingForm();
-    } else if (supportType === SupportSubCategory.Lodging_Allowance) {
+    } else if (supportType === SupportSubCategory.LodgingAllowance) {
       return this.shelterAllowanceLodgingForm();
     } else if (supportType === SupportCategory.Incidentals) {
       return this.incidentalsForm();

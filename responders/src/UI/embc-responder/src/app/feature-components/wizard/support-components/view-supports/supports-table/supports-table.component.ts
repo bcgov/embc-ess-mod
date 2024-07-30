@@ -104,11 +104,11 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
           case 'supplierName':
             if (item.method === SupportMethod.ETransfer) {
               return item.method.toLowerCase();
-            } else if (item.subCategory === SupportSubCategory.Lodging_Billeting) {
+            } else if (item.subCategory === SupportSubCategory.LodgingBilleting) {
               return (item as LodgingBilletingSupport).hostName.toLowerCase();
-            } else if (item.subCategory === SupportSubCategory.Lodging_Group) {
+            } else if (item.subCategory === SupportSubCategory.LodgingGroup) {
               return (item as LodgingGroupSupport).facilityName.toLowerCase();
-            } else if (item.subCategory === SupportSubCategory.Lodging_Allowance) {
+            } else if (item.subCategory === SupportSubCategory.LodgingAllowance) {
               return (item.supportDelivery as Referral).issuedToPersonName.toLowerCase();
             } else {
               return (item.supportDelivery as Referral).supplierName.toLowerCase();
@@ -204,11 +204,11 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
     if (element.method === SupportMethod.ETransfer) {
       return 'e-Transfer';
     }
-    if (element.subCategory === SupportSubCategory.Lodging_Billeting) {
+    if (element.subCategory === SupportSubCategory.LodgingBilleting) {
       return (element as LodgingBilletingSupport).hostName;
-    } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
+    } else if (element.subCategory === SupportSubCategory.LodgingGroup) {
       return (element as LodgingGroupSupport).facilityName;
-    } else if (element.subCategory === SupportSubCategory.Lodging_Allowance) {
+    } else if (element.subCategory === SupportSubCategory.LodgingAllowance) {
       return (element.supportDelivery as Referral).issuedToPersonName;
     } else {
       return (element.supportDelivery as Referral).supplierName;
@@ -237,7 +237,7 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
         return incidentalsSupport.totalAmount > rate;
       }
       case SupportCategory.Food: {
-        if (element?.subCategory === SupportSubCategory.Food_Groceries) {
+        if (element?.subCategory === SupportSubCategory.FoodGroceries) {
           const foodGroceriesSupport = element as FoodGroceriesSupport;
           rate =
             globalConst.groceriesRate.rate *

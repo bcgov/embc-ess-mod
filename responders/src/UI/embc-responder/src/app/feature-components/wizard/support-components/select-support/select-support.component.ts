@@ -57,7 +57,7 @@ export class SelectSupportComponent implements OnInit {
       .filter(
         (element) =>
           element.description !== '' &&
-          element.value !== SupportSubCategory.Lodging_Billeting &&
+          element.value !== SupportSubCategory.LodgingBilleting &&
           element.value !== SupportCategory.Lodging
       );
     this.stepSupportsService.supportDetails = null;

@@ -124,7 +124,7 @@ export class CloneSupportDetailsService {
    * @returns
    */
   createDeliveryDetails(selectedSupport: Support): SupplierDetailsModel {
-    if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
+    if (selectedSupport.subCategory === SupportSubCategory.LodgingBilleting) {
       return {
         hostName: (selectedSupport as LodgingBilletingSupport).hostName,
         hostAddress: (selectedSupport as LodgingBilletingSupport).hostAddress,
@@ -132,7 +132,7 @@ export class CloneSupportDetailsService {
         hostPhone: (selectedSupport as LodgingBilletingSupport).hostPhone,
         emailAddress: (selectedSupport as LodgingBilletingSupport).hostEmail
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.LodgingGroup) {
       return {
         hostName: (selectedSupport as LodgingGroupSupport).facilityName,
         hostAddress: (selectedSupport as LodgingGroupSupport).facilityAddress,
@@ -161,39 +161,39 @@ export class CloneSupportDetailsService {
     | HotelMotel
     | Incidentals
     | Clothing {
-    if (selectedSupport.subCategory === SupportSubCategory.Food_Restaurant) {
+    if (selectedSupport.subCategory === SupportSubCategory.FoodRestaurant) {
       return {
         noOfBreakfast: 1,
         noOfLunches: 1,
         noOfDinners: 1,
         totalAmount: null
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Food_Groceries) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.FoodGroceries) {
       return {
         noOfMeals: 1,
         totalAmount: null,
         userTotalAmount: null,
         approverName: null
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.TransportationTaxi) {
       return {
         fromAddress: (selectedSupport as TransportationTaxiSupport).fromAddress,
         toAddress: (selectedSupport as TransportationTaxiSupport).toAddress
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Transportation_Other) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.TransportationOther) {
       return {
         transportMode: (selectedSupport as TransportationOtherSupport).transportMode,
         totalAmount: null
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.LodgingBilleting) {
       return {
         noOfNights: 1
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Group) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.LodgingGroup) {
       return {
         noOfNights: 1
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.LodgingAllowance) {
       return {
         noOfNights: 1,
         totalAmount: null,
@@ -201,7 +201,7 @@ export class CloneSupportDetailsService {
         contactPhone: null,
         fullName: null
       };
-    } else if (selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel) {
+    } else if (selectedSupport.subCategory === SupportSubCategory.LodgingHotel) {
       return {
         noOfNights: 1,
         noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms

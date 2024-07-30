@@ -162,7 +162,7 @@ export class StepSupportsService {
                 ? 'R' + this.supportDetails.externalReferenceId
                 : '',
             issuedToPersonName:
-              this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+              this.supportTypeToAdd.value === SupportSubCategory.LodgingAllowance
                 ? this.supportDelivery.details.hostName
                 : (this.supportDelivery.issuedTo as any) !== 'Someone else'
                   ? this.supportDelivery.issuedTo.lastName + ', ' + this.supportDelivery.issuedTo.firstName
@@ -194,21 +194,21 @@ export class StepSupportsService {
       supportDelivery: referral
     };
 
-    if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
+    if (this.supportTypeToAdd.value === SupportSubCategory.FoodRestaurant) {
       this.referralService.createMealReferral(support, this.supportDetails);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.FoodGroceries) {
       this.referralService.createGroceriesReferral(support, this.supportDetails);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.TransportationTaxi) {
       this.referralService.createTaxiReferral(support, this.supportDetails);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.TransportationOther) {
       this.referralService.createOtherReferral(support, this.supportDetails);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingBilleting) {
       this.referralService.createBilletingReferral(support, this.supportDetails, this.supportDelivery);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingAllowance) {
       this.referralService.createShelterAllowanceReferral(support, this.supportDetails, this.supportDelivery);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingGroup) {
       this.referralService.createGroupLodgingReferral(support, this.supportDetails, this.supportDelivery);
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingHotel) {
       this.referralService.createHotelMotelReferral(support, this.supportDetails);
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       this.referralService.createIncidentalsReferral(support, this.supportDetails);
@@ -218,19 +218,19 @@ export class StepSupportsService {
   }
 
   getRateSheetContent(): DialogContent {
-    if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
+    if (this.supportTypeToAdd.value === SupportSubCategory.FoodRestaurant) {
       return globalConst.mealRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.FoodGroceries) {
       return globalConst.groceriesRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.TransportationTaxi) {
       return globalConst.taxiRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.TransportationOther) {
       return globalConst.otherRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingBilleting) {
       return globalConst.billetingRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingHotel) {
       return globalConst.hotelRateSheet;
-    } else if (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) {
+    } else if (this.supportTypeToAdd.value === SupportSubCategory.LodgingAllowance) {
       return globalConst.needsShelterAllowanceRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       return globalConst.incidentalsRateSheet;

@@ -103,11 +103,11 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   canExtendSupport(): boolean {
-    return this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting;
+    return this.selectedSupport?.subCategory !== SupportSubCategory.LodgingBilleting;
   }
 
   canEditSupport(): boolean {
-    return this.selectedSupport?.subCategory !== SupportSubCategory.Lodging_Billeting;
+    return this.selectedSupport?.subCategory !== SupportSubCategory.LodgingBilleting;
   }
 
   checkGroceryMaxRate(): boolean {

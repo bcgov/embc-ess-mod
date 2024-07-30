@@ -176,7 +176,7 @@ export class ReferralCreationService {
       numberOfBreakfastsPerPerson: (supportDetails.referral as RestaurantMeal).noOfBreakfast,
       numberOfDinnersPerPerson: (supportDetails.referral as RestaurantMeal).noOfDinners,
       numberOfLunchesPerPerson: (supportDetails.referral as RestaurantMeal).noOfLunches,
-      subCategory: SupportSubCategory.Food_Restaurant,
+      subCategory: SupportSubCategory.FoodRestaurant,
       totalAmount: (supportDetails.referral as RestaurantMeal).totalAmount
     };
     this.mealReferral = mealReferral;
@@ -187,7 +187,7 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Food,
       numberOfDays: (supportDetails.referral as Groceries).noOfMeals,
-      subCategory: SupportSubCategory.Food_Groceries,
+      subCategory: SupportSubCategory.FoodGroceries,
       totalAmount: this.parseTextNumber(
         (supportDetails.referral as Groceries).userTotalAmount
           ? (supportDetails.referral as Groceries).userTotalAmount
@@ -204,7 +204,7 @@ export class ReferralCreationService {
       category: SupportCategory.Transportation,
       fromAddress: (supportDetails.referral as Taxi).fromAddress,
       toAddress: (supportDetails.referral as Taxi).toAddress,
-      subCategory: SupportSubCategory.Transportation_Taxi
+      subCategory: SupportSubCategory.TransportationTaxi
     };
     this.taxiReferral = taxiReferral;
   }
@@ -215,7 +215,7 @@ export class ReferralCreationService {
       category: SupportCategory.Transportation,
       transportMode: (supportDetails.referral as OtherTransport).transportMode,
       totalAmount: this.parseTextNumber((supportDetails.referral as OtherTransport).totalAmount),
-      subCategory: SupportSubCategory.Transportation_Other
+      subCategory: SupportSubCategory.TransportationOther
     };
     this.otherReferral = otherReferral;
   }
@@ -226,7 +226,7 @@ export class ReferralCreationService {
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
       numberOfRooms: (supportDetails.referral as HotelMotel).noOfRooms,
-      subCategory: SupportSubCategory.Lodging_Hotel
+      subCategory: SupportSubCategory.LodgingHotel
     };
     this.hotelReferral = hotelMotelReferral;
   }
@@ -240,7 +240,7 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
-      subCategory: SupportSubCategory.Lodging_Billeting,
+      subCategory: SupportSubCategory.LodgingBilleting,
       hostName: supportDelivery.details.hostName,
       hostAddress: supportDelivery.details.hostAddress,
       hostCity: supportDelivery.details.hostCity as string,
@@ -259,7 +259,7 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
-      subCategory: SupportSubCategory.Lodging_Group,
+      subCategory: SupportSubCategory.LodgingGroup,
       facilityAddress: supportDelivery.details.hostAddress,
       facilityCity: this.parseCommunityName(supportDelivery.details.hostCity as Community),
       facilityCommunityCode: this.parseCommunityCode(supportDelivery.details.hostCommunityCode as Community),
@@ -285,7 +285,7 @@ export class ReferralCreationService {
           ? (supportDetails.referral as ShelterAllowance).totalAmount
           : 0
       ),
-      subCategory: SupportSubCategory.Lodging_Allowance
+      subCategory: SupportSubCategory.LodgingAllowance
     };
     this.lodgingAllowanceReferral = lodgingAllowanceReferral;
   }

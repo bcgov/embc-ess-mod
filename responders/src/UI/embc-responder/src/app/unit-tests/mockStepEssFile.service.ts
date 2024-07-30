@@ -181,7 +181,7 @@ export class MockStepEssFileService extends StepEssFileService {
     supports: [
       {
         category: SupportCategory.Food,
-        subCategory: SupportSubCategory.Food_Groceries,
+        subCategory: SupportSubCategory.FoodGroceries,
         id: 'D2035834',
         fileId: '154150',
         createdOn: '2022-03-28T23:53:59Z',
