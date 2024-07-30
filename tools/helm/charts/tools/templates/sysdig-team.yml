@@ -18,4 +18,4 @@ spec:
     - name: Jennifer.dowd@gov.bc.ca
       role: ROLE_TEAM_READ
     - name: alexander.aleshchenko@gov.bc.ca
-      role: ROLE_TEAM_READ      
+      role: ROLE_TEAM_READ

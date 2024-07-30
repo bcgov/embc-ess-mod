@@ -20,14 +20,16 @@ For an existing local copy, follow this to expand the symlinks (stash changes be
 git config core.symlinks true
 git reset --hard
 ```
+
 The simplest way to run the portals is to use [Windows Terminal](https://www.microsoft.com/en-ca/p/windows-terminal/9n0dx20hk701) shortcuts that are in the root folder:
 
 - `wt-registrants.ps1` will open a multi-pane tab for registrants portal
 - `wt-responders.ps1` will open a multi-pane tab for responders portal
 
-to run the c# services, run `dotnet watch` in the ess and api panes, to run the angular app, run `npm run startlocal` in the UI pane.
+to run the c# services, run `dotnet watch` in the ess and api panes, to run the angular app, run `npm start` in the UI pane.
 
 If you run into error: HttpRequestException: The SSL connection could not be established, run
+
 ```cmd
 dotnet dev-certs https --trust
 ```
@@ -50,18 +52,27 @@ docker build -t <tag> --build-context shared=../../../shared/src .
 
 All csproj files must have the following settings:
 
+```xml
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Nullable>enable</Nullable>
+```
 
-.editorconfig and stylecop are used to enforce code style. and are linked to each project separately from the solution folder.
+.editorconfig is used to enforce code style. and are linked to each project separately from the solution folder.
+
 
 ### Angular applications
 
-## Versioning
+The build process lints the portals' code and will fail if lint fails. It is therefor recommended to run `npm run lint -- --fix` before commiting TypeScript changes.
 
-Each component has its own semantic versioning scheme. The version is maintained  by git  tags in the format `<image name>=v<version>`.
-The individual CD workflow automatically promote the version of each component using [Angular commit message conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines).
+## CI/CD
 
-The version will be set as an environment variable in the generated container image, and the image will also be tagged with the version when pushed to the image registry.
+- The CI pipeline is described in each service's dockerfile. It will build and run unit tests and linting as part of the process. The CI is triggered automatically for every PR.
+
+- The CD pipeline is based on the CI pipeline successful completion and pushing the generated image to OpenShift registry. The following branches will result in CD pipeline and image creation:
+
+- master - will create and push images with `master` tag
+- release/* - will create and push images with `release-[branch name]` tag
+
+- Dev environments in OpenShift will automatically pick up the correct tag they're configured to watch. See [Tools Chart](./tools/helm/charts/tools/) for more details how to map a dev environment to a source tag.
