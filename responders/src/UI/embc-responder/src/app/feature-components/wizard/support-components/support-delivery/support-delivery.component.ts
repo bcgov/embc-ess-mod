@@ -298,7 +298,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   hideRateSheet(): boolean {
-    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.Lodging_Group;
+    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.LodgingGroup;
   }
 
   setSupportMethod(method: SupportMethod) {

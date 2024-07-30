@@ -2,25 +2,26 @@
   width: 100%;
 }
 :host {
-background-color: #f2f2f2;
-padding: 20px;
-display: flex;
-flex-direction: column;
+  background-color: #f2f2f2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
-::ng-deep { 
+::ng-deep {
   .mdc-switch.mdc-switch--unselected:enabled .mdc-switch__handle::after,
   .mdc-switch.mdc-switch--selected:enabled:hover:not(:focus):not(:active) .mdc-switch__handle::after,
-  .mdc-switch__handle::before, .mdc-switch__handle::after,
-  .mdc-switch .mdc-switch__handle::before{
+  .mdc-switch__handle::before,
+  .mdc-switch__handle::after,
+  .mdc-switch .mdc-switch__handle::before {
     background: #f2f2f2 !important;
   }
   .mdc-switch .mdc-switch__track {
     height: 19px !important;
-}
-.mdc-switch__track::after {
-  background-color: rgba(22, 155, 213, 1) !important;
-}
-.mdc-switch:enabled .mdc-switch__track::before {
-  background-color: #c9c9c9 !important;
-}
+  }
+  .mdc-switch__track::after {
+    background-color: rgba(22, 155, 213, 1) !important;
+  }
+  .mdc-switch:enabled .mdc-switch__track::before {
+    background-color: #c9c9c9 !important;
+  }
 }

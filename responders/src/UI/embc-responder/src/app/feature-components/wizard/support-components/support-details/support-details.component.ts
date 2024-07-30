@@ -408,7 +408,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   hideRateSheet(): boolean {
-    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.Lodging_Group;
+    return this.stepSupportsService?.supportTypeToAdd?.value !== SupportSubCategory.LodgingGroup;
   }
 
   /**
@@ -469,9 +469,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const thisSupport = this.supportDetailsForm.getRawValue();
     const from = moment(this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime));
     const to = moment(this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime));
+    const selectedSubCategory = Object.keys(SupportSubCategory).find(
+      (key) => SupportSubCategory[key] === this.stepSupportsService.supportTypeToAdd.value
+    );
+
     const category: SupportCategory =
-      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
-      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+      SupportCategory[selectedSubCategory as keyof typeof SupportCategory] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[selectedSubCategory]);
 
     const hasConflict = existingSupports.some((s) => {
       const sFrom = moment(s.from);
@@ -506,21 +510,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   mapSubCategoryToCategory(subCategory: SupportSubCategory): SupportCategory {
     switch (subCategory) {
-      case SupportSubCategory.Food_Groceries:
+      case SupportSubCategory.FoodGroceries:
         return SupportCategory.Food;
-      case SupportSubCategory.Food_Restaurant:
+      case SupportSubCategory.FoodRestaurant:
         return SupportCategory.Food;
-      case SupportSubCategory.Lodging_Hotel:
+      case SupportSubCategory.LodgingHotel:
         return SupportCategory.Lodging;
-      case SupportSubCategory.Lodging_Billeting:
+      case SupportSubCategory.LodgingBilleting:
         return SupportCategory.Lodging;
-      case SupportSubCategory.Lodging_Group:
+      case SupportSubCategory.LodgingGroup:
         return SupportCategory.Lodging;
-      case SupportSubCategory.Lodging_Allowance:
+      case SupportSubCategory.LodgingAllowance:
         return SupportCategory.Lodging;
-      case SupportSubCategory.Transportation_Taxi:
+      case SupportSubCategory.TransportationTaxi:
         return SupportCategory.Transportation;
-      case SupportSubCategory.Transportation_Other:
+      case SupportSubCategory.TransportationOther:
         return SupportCategory.Transportation;
 
       default:
@@ -632,10 +636,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
     );
 
-    const category: SupportCategory =
-      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
-      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+    const selectedSubCategory = Object.keys(SupportSubCategory).find(
+      (key) => SupportSubCategory[key] === this.stepSupportsService.supportTypeToAdd.value
+    );
 
+    const category: SupportCategory =
+      SupportCategory[selectedSubCategory as keyof typeof SupportCategory] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[selectedSubCategory]);
     let largestTo = existingSupports
       .filter((support) => support.category === category)
       .reduce(
@@ -645,6 +652,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         },
         new Date(this.dateConversionService.convertStringToDate(this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')))
       );
+
     const taskTo = moment(this.evacueeSessionService?.evacFile?.task?.to);
 
     if (moment(largestTo).isAfter(taskTo)) {
@@ -659,9 +667,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
     );
 
+    const selectedSubCategory = Object.keys(SupportSubCategory).find(
+      (key) => SupportSubCategory[key] === this.stepSupportsService.supportTypeToAdd.value
+    );
+
     const category: SupportCategory =
-      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
-      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+      SupportCategory[selectedSubCategory as keyof typeof SupportCategory] ||
+      this.mapSubCategoryToCategory(SupportSubCategory[selectedSubCategory]);
     const maxToDate = existingSupports
       .filter((support) => support.category === category)
       .map((support) => new Date(support.to)) // Convert to Date objects

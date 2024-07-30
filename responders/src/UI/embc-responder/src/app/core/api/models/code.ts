@@ -1,10 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { CommunityCode } from '../models/community-code';
 export interface Code {
   description?: string | null;
   isActive?: boolean;
-  parentCode?: (Code | CommunityCode) | null;
+  parentCode?: Code;
   type?: string | null;
   value?: string | null;
 }

@@ -7,14 +7,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 export interface RegistrationsGetPrint$Params {
-  /**
-   * evacuation file number
-   */
   fileId: string;
-
-  /**
-   * print request id
-   */
   printRequestId: string;
 }
 
@@ -30,7 +23,7 @@ export function registrationsGetPrint(
     rb.path('printRequestId', params.printRequestId, {});
   }
 
-  return http.request(rb.build({ responseType: 'blob', accept: 'application/octet-stream', context })).pipe(
+  return http.request(rb.build({ responseType: 'blob', accept: 'application/json', context })).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
       return r as StrictHttpResponse<Blob>;

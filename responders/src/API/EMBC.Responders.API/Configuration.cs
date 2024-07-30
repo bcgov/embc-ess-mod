@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Reflection;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,6 +23,12 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
     public void ConfigureServices(ConfigurationServices configurationServices)
     {
         var services = configurationServices.Services;
+
+        services.Configure<JsonOptions>(opts =>
+        {
+            opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
 
         services.AddAuthentication(options =>
         {
@@ -52,7 +59,7 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
                     var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
                     c.Principal = await userService.GetPrincipal(c.Principal);
                 }
-            };       
+            };
             options.Validate();
         });
         services.AddAuthorization(options =>
@@ -94,7 +101,6 @@ public class Configuration : IConfigureComponentServices, IConfigureComponentPip
         });
             opts.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? $"{apiDesc.ActionDescriptor.RouteValues["controller"]}{methodInfo.Name}" : null);
             opts.OperationFilter<ContentTypeOperationFilter>();
-            opts.UseOneOfForPolymorphism();
             opts.UseAllOfForInheritance();
         });
 
