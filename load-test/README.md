@@ -7,7 +7,8 @@
 
 ## Installation
 
-Prerequisite: 
+Prerequisite:
+
 - node.js
 - k6 cli (https://k6.io/docs/getting-started/installation/)
 
@@ -25,13 +26,13 @@ This can also be customized to whatever you want by updating the NormalModuleRep
 There are multiple test entry points configured in package.json (regAnonymous, regNewProfile, regExistingProfile, resNewRegistration, resExistingRegistration, loadTest, benchmark)
 e.g.
 
-```
+```sh
 npm run <scriptName>
 ```
 
 Responder and Registrant tests can be run independantly. They will by default do 1 vu and 1 iteration, but you can dynamically set those with arguments. e.g.
 
-```
+```sh
 npm run regAnonymous -- -e VUS=# -e ITERS=#
 npm run resNewRegistration -- -e VUS=# -e DUR=#t
 ```
@@ -50,11 +51,10 @@ You can pass this a parameter for the number of vus to run for this benchmark. (
 By defaul this will run for a duration of 5 minutes.
 You can optionally pass in an iteration count for each vu to do instead of a set 5m duration.
 
-```
+```sh
 npm run benchmark --- -e VUS=#
 npm run benchmark --- -e VUS=# -e ITERS=#
 ```
-
 
 ## Configuring test users
 
@@ -62,7 +62,7 @@ Oauth server supports a special test-client configuration to allow automated too
 
 The test client is configured only for non production environments and requires a pre provisioned client id/secret to authenticate.
 
-The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file. 
+The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file.
 
 ```cmd
 oc -n <repalcewith_licenseplate>-dev create configmap oauth-server-test-users --from-file .\test-users.json

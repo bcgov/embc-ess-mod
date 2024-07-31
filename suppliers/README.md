@@ -1,62 +1,59 @@
 # ERA Suppliers Portal
 
-## Features
+Supplier facing portal to submit invoices and receipts to EMCR Finance review
 
-- submit invoices and referrals to be reimbursed by the province
 ## Project Status
 
 ![webapp](https://img.shields.io/website?url=https%3A%2F%2Fera-suppliers.embc.gov.bc.ca%2F)
 
-[![ci-suppliers-portal-api](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-api.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-api.yml)
+[![suppliers-portal Build](https://github.com/bcgov/embc-ess-mod/actions/workflows/build-suppliers-portal.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/build-suppliers-portal.yml)
 
-[![ci-suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml)
+## Steps to run locally
 
+1. Configure the following as secrets of `EMBC.Registrants.API`:
 
-## Install
+```json
+{
+    "Dynamics": {
+        "DynamicsApiEndpoint": "[Dynamics server url]/api/data/v9.1/",
+        "ADFS": {
+            "OAuth2TokenEndpoint": "[ADFS token service url]",
+            "ClientId": "[ADFS client id]",
+            "ClientSecret": "[ADFS client secret]",
+            "ResourceName": "[ADFS resource name]",
+            "serviceAccountDomain": "[service account domain name]",
+            "serviceAccountName": "[service account name]",
+            "serviceAccountPassword": "[service account password]"
+        }
+    }
+}
 
-API Env vars:
-```s
-APP_NAME=local-suppliers-portal
-ASPNETCORE_ENVIRONMENT=development
-Kestrel__Limits__MaxRequestBodySize=104857600
-Dynamics__ADFS__OAuth2TokenEndpoint=<ADFS token endpoint>
-Dynamics__DynamicsApiEndpoint=<Dynamics url>/api/data/v9.0/
-MAINTENANCE_START=<start time of maintenance window in DateTime formate, i.e. 2021-04-21T11:45:00.000Z (optional)>
-NOTICE_MESSAGE=<pre maintenance window message (optional)>
-MAINTENANCE_WARNING=<warning maintenance window message (optional)>
-MAINTENANCE_PAGEDOWN=<maintenance window message (optional)>
 ```
 
-API secret env vars:
+2. run `suppliers/src/API/EMBC.Ssuppliers.API/EMBC.Suppliers.API.csproj`
+3. in `suppliers/src/UI/embc-supplier`, run
 
-```s
-Dynamics__ADFS__ClientId=<ADFS client id>
-Dynamics__ADFS__ClientSecret=<ADFS client secret>
-Dynamics__ADFS__ResourceName=<ADFS resource name>
-Dynamics__ADFS__serviceAccountDomain=<Dynamics service account domain>
-Dynamics__ADFS__serviceAccountName=<Dynamics service account name>
-Dynamics__ADFS__serviceAccountPassword=<Dynamics service account password>
-REDIS_CONNECTIONSTRING=<redis cache connection string (optional)>
-SPLUNK_URL=<Splunk collector url (optional)>
-SPLUNK_TOKEN=<Splunk token (optional)>
-```
-
-## Usage
-
-1. set the above env vars in the API project's secrets.json file
-2. in `suppliers/src/API/EMBC.Suppliers.API`, run `dotnet watch`
-3. in `suppliers/src/UI/embc-supplier`, run 
-```
+```sh
 npm install --ignore-scripts
 ```
-4. to run the UI with a local API, run
-```
-npm run startlocal
-```
-5. to run the UI and use the development environment API, run
-```
-npm run start
-```
-Note - in both cases, the UI auto generates client side proxy services using the API's OpenAPI specs (http://localhost:5000/api/openapi)
 
-1. open http://localhost:3200
+4. to run the UI with a local API, run
+
+```sh
+npm run local
+```
+
+5. to run the UI and use the a remote dev environment API, without the needs to run the API locally (step 2), run
+
+```sh
+npm run dev
+```
+
+6. before committing UI code changes, run the following to ensure the code will pass linting:
+
+```sh
+npm run format:write
+npm run lint -- --fix
+```
+
+7. before committing API code changes, run the unit tests to validate mapping and ensure all tests are green

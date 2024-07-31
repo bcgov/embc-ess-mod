@@ -11,12 +11,13 @@ A hosting service for [Identity Server 4](https://github.com/IdentityServer/Iden
 
 ## Project status
 
-[![ci-oauth-server](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-oauth-server.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-oauth-server.yml)
+[![oauth-server Build](https://github.com/bcgov/embc-ess-mod/actions/workflows/build-auth-server.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/build-auth-server.yml)
 
 ## Installation
 
 API Env vars:
-```s
+
+```sh
 APP_NAME=oauth-server
 ASPNETCORE_ENVIRONMENT=development
 IDENTITYSERVER_REDIS_KEY_PREFIX=
@@ -28,7 +29,7 @@ IDENTITYSERVER_TESTUSERS_FILE=./Data/test_users.json
 
 API secret env vars:
 
-```s
+```sh
 REDIS_CONNECTIONSTRING=<optional redis connection string>
 identityProviders__bcsc__clientId=<BCSC client id>
 identityProviders__bcsc__clientSecret=<BCSC client secret>
