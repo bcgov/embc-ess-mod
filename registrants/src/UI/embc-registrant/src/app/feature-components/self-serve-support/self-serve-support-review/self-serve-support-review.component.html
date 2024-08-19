@@ -166,7 +166,7 @@
         I acknowledge that by accepting this digital payment, I am able to meet my own needs and will not seek further
         supports during the valid timeframe of
         <b>{{ eligibilityCheck?.from ? moment(eligibilityCheck?.from)?.format('MMM D YYYY') : '' }}</b> to
-        <b>{{ eligibilityCheck?.to ? moment(eligibilityCheck?.to)?.format('MMM D YYYY') : '' }}</b
+        <b>{{ eligibilityCheck?.to ? moment(eligibilityCheck?.to)?.format('MMM D YYYY, h:mm a') : '' }}</b
         >.
       </mat-checkbox>
       @if (
