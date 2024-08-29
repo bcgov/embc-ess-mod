@@ -124,13 +124,16 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task CreateSelfServeSupportsETransferEmailContentFoodOnly()
     {
+        var endDate = DateTime.UtcNow.AddDays(3).ToPST();
         IEnumerable<KeyValuePair<string, string>> tokens = new[]
         {
                 KeyValuePair.Create("totalAmount", "120"),
                 KeyValuePair.Create("groceryAmount", "30"),
                 KeyValuePair.Create("restaurantAmount", "90"),
                 KeyValuePair.Create("recipientName","John Doe - Food Only"),
-                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com"),
+                KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
         };
 
         EmailTemplateProvider etp = new EmailTemplateProvider();
@@ -157,6 +160,7 @@ public class SelfServeSupportGenerationTests
     [Fact]
     public async Task CreateSelfServeSupportsETransferEmailContentFoodExcluded()
     {
+        var endDate = DateTime.UtcNow.AddDays(3).ToPST();
         IEnumerable<KeyValuePair<string, string>> tokens = new[]
         {
                 KeyValuePair.Create("totalAmount", "160"),
@@ -164,7 +168,9 @@ public class SelfServeSupportGenerationTests
                 KeyValuePair.Create("incidentalsAmount", "90"),
                 KeyValuePair.Create("shelterAllowanceAmount", "40"),
                 KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
-                KeyValuePair.Create("notificationEmail","John.Doe@example.com")
+                KeyValuePair.Create("notificationEmail","John.Doe@example.com"),
+                KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
         };
 
         EmailTemplateProvider etp = new EmailTemplateProvider();

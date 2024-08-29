@@ -465,6 +465,7 @@ public partial class EventsManager
             }
         }
         var totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
+        var endDate = supports.Count() > 0 ? supports.First().To.ToPST() : DateTime.UtcNow.AddDays(3).ToPST();
 
         await SendEmailNotification(
             SubmissionTemplateType.ETransferConfirmation,
@@ -478,7 +479,9 @@ public partial class EventsManager
                 KeyValuePair.Create("restaurantAmount", (restaurantAmount > 0) ? restaurantAmount.ToString("0.00") : null),
                 KeyValuePair.Create("shelterAllowanceAmount", (shelterAllowanceAmount > 0) ? shelterAllowanceAmount.ToString("0.00") : null),
                 KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
-                KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail)
+                KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
+                KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
             ]);
     }
 }
