@@ -133,7 +133,7 @@ public class SelfServeSupportGenerationTests
                 KeyValuePair.Create("recipientName","John Doe - Food Only"),
                 KeyValuePair.Create("notificationEmail","John.Doe@example.com"),
                 KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
-                KeyValuePair.Create("endTime", endDate.ToString("h:mm:ss tt")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
         };
 
         EmailTemplateProvider etp = new EmailTemplateProvider();
@@ -170,7 +170,7 @@ public class SelfServeSupportGenerationTests
                 KeyValuePair.Create("recipientName","John Doe - Food Excluded"),
                 KeyValuePair.Create("notificationEmail","John.Doe@example.com"),
                 KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
-                KeyValuePair.Create("endTime", endDate.ToString("h:mm:ss tt")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
         };
 
         EmailTemplateProvider etp = new EmailTemplateProvider();
