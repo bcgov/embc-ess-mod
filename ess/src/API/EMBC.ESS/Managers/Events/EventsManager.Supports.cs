@@ -481,7 +481,7 @@ public partial class EventsManager
                 KeyValuePair.Create("recipientName", eTransferDetails.RecipientName),
                 KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
                 KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
-                KeyValuePair.Create("endTime", endDate.ToString("h:mm:ss tt")),
+                KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
             ]);
     }
 }
