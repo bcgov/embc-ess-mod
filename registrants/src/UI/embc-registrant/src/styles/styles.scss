@@ -18,18 +18,18 @@
   font-family: 'LiberationMono';
   src:
     url('/assets/LiberationMono-Regular.woff2') format('woff2'),
-    /* Super Modern Browsers */
-    url('/assets/LiberationMono-Regular.woff') format('woff'),
-    /* Pretty Modern Browsers */
-    url('/assets/LiberationMono-Regular.ttf') format('truetype');
+    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff') format('woff'),
+    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf') format('truetype');
   /* Safari, Android, iOS */
 }
 
 // Include mat.core only once
 @include mat.core();
 
-$custom-typography: mat.define-typography-config($font-family: $font-family-sans-serif,
-    $body-2: mat.define-typography-level(15px, 1.6, 400));
+$custom-typography: mat.define-typography-config(
+  $font-family: $font-family-sans-serif,
+  $body-2: mat.define-typography-level(15px, 1.6, 400)
+);
 
 @include mat.all-component-typographies($custom-typography);
 
