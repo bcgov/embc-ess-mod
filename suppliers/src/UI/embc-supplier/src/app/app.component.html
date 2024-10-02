@@ -1,3 +1,4 @@
+<app-toasts></app-toasts>
 <app-header></app-header>
 
 <main class="fill-body background">
@@ -8,7 +9,6 @@
     @if (noticeMsg && !siteDown) {
       <app-banner [bannerMsg]="noticeMsg" bannerType="Notice"></app-banner>
     }
-
     <router-outlet></router-outlet>
   </div>
 </main>
