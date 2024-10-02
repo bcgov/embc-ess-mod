@@ -184,7 +184,8 @@ export class SupportDetailsService {
           this.customValidation.totalZeroValidator()
         ]
       ],
-      processEvacueeCert: ['', [Validators.requiredTrue]]
+      processEvacueeCert: ['', [Validators.requiredTrue]],
+      processEvacueeCert2: ['', [Validators.requiredTrue]]
     });
   }
 
