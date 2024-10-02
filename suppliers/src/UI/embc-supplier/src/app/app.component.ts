@@ -9,13 +9,14 @@ import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { SupplierService } from './core/services/supplier.service';
 import { SupplierHttpService } from './core/services/supplierHttp.service';
+import { ToastsContainer } from './core/components/toasts/toasts-container.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [BannerComponent, FooterComponent, HeaderComponent, RouterOutlet]
+  imports: [BannerComponent, FooterComponent, HeaderComponent, RouterOutlet, ToastsContainer]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'embc-supplier';

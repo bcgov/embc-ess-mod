@@ -1,0 +1,13 @@
+<div class="toast-container">
+  @for (toast of toastService.toasts; track toast) {
+    <ngb-toast
+      [class]="toast.classname"
+      [autohide]="true"
+      [delay]="toast.delay || 5000"
+      (hidden)="toastService.remove(toast)"
+    >
+      {{ toast.text }}
+      <fa-icon class="close-icon" [icon]="closeIcon" (click)="toastService.remove(toast)"></fa-icon>
+    </ngb-toast>
+  }
+</div>

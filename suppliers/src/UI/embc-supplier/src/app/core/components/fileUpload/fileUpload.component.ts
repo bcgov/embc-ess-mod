@@ -1,25 +1,28 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { Toast, ToastService } from 'src/app/core/services/toast.service';
 import { WarningService } from 'src/app/core/services/warning.service';
 import * as constant from 'src/app/core/services/globalConstants';
 import { DragDropDirective } from '../../directives/DragDrop.directive';
-import { ToastsComponent } from '../toasts/toasts.component';
+import { faFileImage, faFilePdf, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-file-upload',
   templateUrl: './fileUpload.component.html',
   styleUrls: ['./fileUpload.component.scss'],
   standalone: true,
-  imports: [ToastsComponent, DragDropDirective]
+  imports: [DragDropDirective, FontAwesomeModule]
 })
 export class FileUploadComponent implements OnInit {
   @Output() attachedFile = new EventEmitter<any>();
   @Output() deleteFile = new EventEmitter<any>();
   @Input() reloadedFiles: any;
   @Input() noOfAttachments: number;
-  showToast = false;
   invoiceAttachments: string[] = [];
   attachSizeError = false;
+  faTrash = faTrash;
+  faFilePdf = faFilePdf;
+  faFileImage = faFileImage;
 
   constructor(
     public toastService: ToastService,
@@ -41,9 +44,6 @@ export class FileUploadComponent implements OnInit {
    * @param event : File drop event
    */
   onInvoiceDropped(event: any) {
-    if (this.showToast) {
-      this.showToast = !this.showToast;
-    }
     if (this.attachSizeError) {
       this.attachSizeError = !this.attachSizeError;
     }
@@ -72,6 +72,7 @@ export class FileUploadComponent implements OnInit {
       } else {
         this.invoiceAttachments.push(e.name);
         this.attachedFile.emit(e);
+        this.toastService.show(e.name + " uploaded successfully", { classname: 'bg-success text-light', delay: 3000, })
       }
     }
   }
@@ -84,5 +85,13 @@ export class FileUploadComponent implements OnInit {
   deleteAttachedInvoice(fileIndex: number) {
     this.invoiceAttachments.splice(fileIndex, 1);
     this.deleteFile.emit(fileIndex);
+  }
+
+  getFileImage(file: string) {
+    if (file.includes('.pdf')) {
+      return faFilePdf;
+    } else {
+      return faFileImage;
+    }
   }
 }

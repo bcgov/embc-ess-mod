@@ -1,0 +1,13 @@
+.toast-container {
+    z-index: 1200;
+    top: 0 !important;
+    right: 0 !important;
+    position: fixed;
+    padding: 10px;
+
+    .close-icon {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+}
+
