@@ -47,6 +47,7 @@ export class SelfServeSupportReviewComponent {
     )?.nights.map((d) => moment(d, 'YYYY-MM-DD'));
 
     this._draftSupports = draftSupports;
+    this.updateShelterAllowanceValidator();
   }
 
   get draftSupports() {
@@ -63,5 +64,20 @@ export class SelfServeSupportReviewComponent {
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService,
     public profileDataService: ProfileDataService
-  ) {}
+  ) { }
+
+  shelterAllowanceSelected() {
+    return this.draftSupports.items.some(
+      (support) => support.type === SelfServeSupportType.ShelterAllowance
+    );
+  }
+
+  updateShelterAllowanceValidator() {
+    if (this.shelterAllowanceSelected()) {
+      this.reviewAcknowledgeForm.controls.shelterAllowance.setValidators(Validators.requiredTrue);
+    } else {
+      this.reviewAcknowledgeForm.controls.shelterAllowance.clearValidators();
+    }
+    this.reviewAcknowledgeForm.controls.shelterAllowance.updateValueAndValidity();
+  }
 }
