@@ -33,7 +33,8 @@ export class SelfServeSupportReviewComponent {
   @Input() reviewAcknowledgeForm = new FormGroup({
     fundsExclusive: new FormControl('', Validators.requiredTrue),
     meetMyOwnNeeds: new FormControl('', Validators.requiredTrue),
-    information: new FormControl('', Validators.requiredTrue)
+    information: new FormControl('', Validators.requiredTrue),
+    shelterAllowance: new FormControl('', Validators.requiredTrue)
   });
 
   _draftSupports: DraftSupports;

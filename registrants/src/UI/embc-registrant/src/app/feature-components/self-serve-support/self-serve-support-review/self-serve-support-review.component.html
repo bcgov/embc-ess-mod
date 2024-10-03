@@ -184,6 +184,16 @@
       ) {
         <mat-error>Acknowledgment is required</mat-error>
       }
+      <mat-checkbox [formControl]="reviewAcknowledgeForm.controls.shelterAllowance">
+        I confirm that neither I, nor anyone living with me, have received a Shelter Allowance or referral for the
+        timeframe noted on this file.
+      </mat-checkbox>
+      @if (
+        reviewAcknowledgeForm.controls.shelterAllowance.touched &&
+        reviewAcknowledgeForm.controls.shelterAllowance.hasError('required')
+      ) {
+        <mat-error>Acknowledgment is required</mat-error>
+      }
 
       <div
         style="
