@@ -477,6 +477,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       const sFrom = moment(s.from);
       const sTo = moment(s.to);
       return (
+        s.status !== SupportStatus.Void &&
         s.category === category &&
         ((sFrom.isSameOrAfter(from) && sFrom.isSameOrBefore(to)) ||
           (sTo.isSameOrAfter(from) && sTo.isSameOrBefore(to)) ||

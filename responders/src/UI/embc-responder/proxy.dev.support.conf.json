@@ -1,19 +1,19 @@
 {
   "/api": {
-    "target": "https://era-responders-dev.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
 
   "/env/info.json": {
-    "target": "https://era-responders-dev.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/version": {
-    "target": "https://era-responders-dev.apps.silver.devops.gov.bc.ca",
+    "target": "https://dev-sup-era-responders.apps.silver.devops.gov.bc.ca",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
