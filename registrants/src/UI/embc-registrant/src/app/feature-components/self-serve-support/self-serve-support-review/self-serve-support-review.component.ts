@@ -64,12 +64,10 @@ export class SelfServeSupportReviewComponent {
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService,
     public profileDataService: ProfileDataService
-  ) { }
+  ) {}
 
   shelterAllowanceSelected() {
-    return this.draftSupports.items.some(
-      (support) => support.type === SelfServeSupportType.ShelterAllowance
-    );
+    return this.draftSupports.items.some((support) => support.type === SelfServeSupportType.ShelterAllowance);
   }
 
   updateShelterAllowanceValidator() {
