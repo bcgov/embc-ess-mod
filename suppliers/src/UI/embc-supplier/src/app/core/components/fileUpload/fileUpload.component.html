@@ -21,11 +21,6 @@
   </p>
   <p class="file-upload-size-warning">MAX FILE SIZE: 25MB</p>
 </div>
-@if (attachSizeError) {
-  <div style="color: red">
-    <p>Only one attachment allowed</p>
-  </div>
-}
 @for (attach of invoiceAttachments; track attach; let fileIndex = $index) {
   <div class="attach-list">
     <div class="row file-style">

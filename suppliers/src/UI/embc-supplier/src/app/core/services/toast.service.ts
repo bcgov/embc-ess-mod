@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 export interface Toast {
   text: string;
   classname?: string;
   delay?: number;
+  icon?: IconDefinition;
 }
 
 @Injectable({ providedIn: 'root' })
