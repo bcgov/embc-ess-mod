@@ -51,7 +51,7 @@ export class FileUploadComponent implements OnInit {
         this.toastService.show(constant.fileTypeMessage, { classname: 'bg-danger text-light', delay: constant.toastDelay, icon: faWarning  });
       } else if (!constant.fileNameFormat.test(e.name)) {
         this.toastService.show(constant.invalidFileNameMessage, { classname: 'bg-danger text-light', delay: constant.toastDelay, icon: faWarning  });
-      } else if (e.size > 25000000) {
+      } else if (e.size > constant.maxFileSize) {
         this.toastService.show(constant.fileTooLargeMessage, { classname: 'bg-danger text-light', delay: constant.toastDelay, icon: faWarning  });
       } else if (this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
         this.toastService.show(constant.tooManyFilesMessage, { classname: 'bg-danger text-light', delay: constant.toastDelay, icon: faWarning  });
