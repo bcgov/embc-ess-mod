@@ -6,8 +6,13 @@
       [delay]="toast.delay || 5000"
       (hidden)="toastService.remove(toast)"
     >
-      {{ toast.text }}
-      <fa-icon class="close-icon" [icon]="closeIcon" (click)="toastService.remove(toast)"></fa-icon>
+      <div class="toast-content">
+        @if (toast.icon) {
+          <fa-icon class="toast-icon" [icon]="toast.icon"></fa-icon>
+        }
+        <span class="toast-text">{{ toast.text }}</span>
+        <fa-icon class="close-icon" [icon]="closeIcon" (click)="toastService.remove(toast)"></fa-icon>
+      </div>
     </ngb-toast>
   }
 </div>

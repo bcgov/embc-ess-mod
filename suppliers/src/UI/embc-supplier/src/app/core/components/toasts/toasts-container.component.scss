@@ -5,9 +5,25 @@
     position: fixed;
     padding: 10px;
 
+    .toast-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .toast-icon {
+        margin-right: 10px;
+    }
+
+    .toast-text {
+        flex: 1;
+        text-align: left;
+        overflow-wrap: break-word;
+    }
+
     .close-icon {
         cursor: pointer;
         margin-left: 5px;
     }
 }
-

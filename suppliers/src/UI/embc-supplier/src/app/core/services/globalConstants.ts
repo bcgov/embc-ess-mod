@@ -5,7 +5,8 @@ export const referralList: any = [
   { id: 4, name: '4' },
   { id: 5, name: '5' }
 ];
-
+export const maxFileSize = 200000000; // 200mb
+export const toastDelay = 5000; // 5s
 export const captchaErr = 'Please complete the captcha above.';
 export const appSubmitErr = 'The service is temporarily unavailable. Please try again later.';
 export const showInvoiceMsg =
@@ -33,8 +34,10 @@ export const usDefaultObject = {
 };
 export const allowedFileTypes = ['application/pdf', 'image/jpg', 'image/jpeg', 'image/png'];
 export const zeroFileMessage = 'Attachment file size must be greater than 0Kb';
-export const fileTypeMessage = 'File type pdf, jpg, jpeg, png allowed';
+export const fileTypeMessage = 'Only files with type pdf, jpg, jpeg, and png are allowed';
 export const datePattern = '^([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[0-1])/[0-9]{4}$';
 export const fileNameFormat = /^[\w,\s-_()]+\.[A-Za-z]{3,4}$/;
 export const invalidFileNameMessage =
   'File name must not contain the following characters: ~ " . # % & * : < > ? /  { | }. Leading and trailing spaces are not allowed.';
+export const fileTooLargeMessage = 'File size must be less than ' + maxFileSize / 1000000 + 'MB';
+export const tooManyFilesMessage = 'You have reached the maximum number of files allowed';
