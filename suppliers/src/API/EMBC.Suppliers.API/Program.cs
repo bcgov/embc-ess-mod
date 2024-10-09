@@ -76,6 +76,10 @@ namespace EMBC.Suppliers.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel((context, options) =>
+                    {
+                        options.Limits.MaxRequestBodySize = 200 * 1024 * 1024; // 200MB
+                    });
                 }).ConfigureServices((ctx, services) =>
                 {
                     services.AddHostedService<ConfigurationServiceWorker>();
