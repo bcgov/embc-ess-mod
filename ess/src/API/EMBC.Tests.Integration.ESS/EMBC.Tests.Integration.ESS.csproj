@@ -13,7 +13,7 @@
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Bogus" Version="35.6.0" />
         <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="shouldly" Version="4.2.1" />
