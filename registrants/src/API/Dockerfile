@@ -35,7 +35,7 @@ COPY --from=shared . .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release
+RUN dotnet test -c Release "EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj"
 
 # build
 FROM build AS publish
