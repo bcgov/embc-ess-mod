@@ -27,14 +27,14 @@ RUN cat EMBC.Responders.sln \
 | xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
 
 # restore dependencies
-RUN dotnet restore .
+RUN dotnet restore EMBC.Responders.sln
 
 # copy the rest of the files
 COPY --from=shared . .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release
+RUN dotnet test -c Release "EMBC.Tests.Unit.Responders.API/EMBC.Tests.Unit.Responders.API.csproj"
 
 # build
 FROM build AS publish

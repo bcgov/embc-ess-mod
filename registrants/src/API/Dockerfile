@@ -28,14 +28,14 @@ RUN cat EMBC.Registrants.sln \
 | xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
 
 # restore dependencies
-RUN dotnet restore .
+RUN dotnet restore EMBC.Registrants.sln
 
 # copy the rest of the files
 COPY --from=shared . .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release
+RUN dotnet test -c Release "EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj"
 
 # build
 FROM build AS publish

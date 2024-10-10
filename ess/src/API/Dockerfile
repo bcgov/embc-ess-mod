@@ -28,14 +28,14 @@ RUN cat EMBC.ESS.sln \
 | xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
 
 # restore dependencies
-RUN dotnet restore .
+RUN dotnet restore EMBC.ESS.sln
 
 # copy the rest of the files
 COPY --from=shared . .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release --filter "Category!=IntegrationTest"
+RUN dotnet test -c Release --filter "Category!=IntegrationTest" "EMBC.Tests.Unit.ESS/EMBC.Tests.Unit.ESS.csproj"
 
 FROM build AS publish
 # build
