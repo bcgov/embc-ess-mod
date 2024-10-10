@@ -28,7 +28,7 @@ RUN cat EMBC.ESS.sln \
 | xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
 
 # restore dependencies
-RUN dotnet restore .
+RUN dotnet restore EMBC.ESS.sln
 
 # copy the rest of the files
 COPY --from=shared . .
