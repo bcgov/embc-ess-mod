@@ -1,4 +1,8 @@
-<p>Please enter your address</p>
+@if (isMailingAddress) {
+  <p>Enter your mailing address</p>
+} @else {
+  <p>Enter the address of your primary residence</p>
+}
 <form [formGroup]="addressForm">
   <div class="row">
     <div class="col-md-5">

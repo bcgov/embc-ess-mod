@@ -90,6 +90,7 @@
         <app-can-address
           *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'CAN'; else usa"
           [addressForm]="primaryAddressFormControl?.address"
+          [isMailingAddress]="false"
         >
         </app-can-address>
         <ng-template #usa>
@@ -190,7 +191,7 @@
           <div formGroupName="mailingAddress">
             <div class="row">
               <div class="col-md-5">
-                <p>In what <b>country</b> is your primary residence located?</p>
+                <p>In what <b>country</b> is your Mailing Address located?</p>
                 <mat-form-field appearance="outline">
                   <input
                     type="text"
@@ -228,6 +229,7 @@
           <app-can-address
             *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'CAN'; else usa"
             [addressForm]="primaryAddressFormControl?.mailingAddress"
+            [isMailingAddress]="true"
           >
           </app-can-address>
           <ng-template #usa>
