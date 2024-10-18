@@ -42,6 +42,7 @@
       </div>
 
       <div *ngIf="primaryAddressFormControl?.isBcAddress?.value === 'Yes'" class="row">
+        <p>Enter the address of your primary residence</p>
         <div class="col-md-12">
           <app-bc-address [addressForm]="primaryAddressFormControl?.address"></app-bc-address>
         </div>
@@ -86,29 +87,27 @@
             </div>
           </div>
         </div>
-
-        <app-can-address
-          *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'CAN'; else usa"
-          [addressForm]="primaryAddressFormControl?.address"
-        >
-        </app-can-address>
+        <div *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'CAN'; else usa">
+          <p>Enter the address of your primary residence</p>
+          <app-can-address [addressForm]="primaryAddressFormControl?.address"> </app-can-address>
+        </div>
         <ng-template #usa>
-          <app-usa-address
-            *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'USA'; else other"
-            [addressForm]="primaryAddressFormControl?.address"
-          >
-          </app-usa-address>
+          <div *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'USA'; else other">
+            <p>Enter the address of your primary residence</p>
+            <app-usa-address [addressForm]="primaryAddressFormControl?.address"> </app-usa-address>
+          </div>
         </ng-template>
         <ng-template #other>
-          <app-other-address
+          <div
             *ngIf="
               primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'USA' &&
               primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'CAN' &&
               primaryAddressFormControl?.address?.controls?.country?.value !== null
             "
-            [addressForm]="primaryAddressFormControl?.address"
           >
-          </app-other-address>
+            <p>Enter the address of your primary residence</p>
+            <app-other-address [addressForm]="primaryAddressFormControl?.address"> </app-other-address>
+          </div>
         </ng-template>
       </div>
       <!-- </form> -->
@@ -125,7 +124,7 @@
       <div class="row">
         <div class="col-md-12">
           <label id="isNewMailingAddress-radio-group-label" class="requiredField"
-            >Is your <b>mailing address</b> the same as their primary residence above?</label
+            >Is your <b>mailing address</b> the same as your primary residence above?</label
           >
           <mat-radio-group
             formControlName="isNewMailingAddress"
@@ -181,6 +180,7 @@
         </div>
 
         <div *ngIf="primaryAddressFormControl?.isBcMailingAddress.value === 'Yes'" class="row">
+          <p>Enter your mailing address</p>
           <div class="col-md-12">
             <app-bc-address [addressForm]="primaryAddressFormControl?.mailingAddress"></app-bc-address>
           </div>
@@ -190,7 +190,7 @@
           <div formGroupName="mailingAddress">
             <div class="row">
               <div class="col-md-5">
-                <p>In what <b>country</b> is your primary residence located?</p>
+                <p>In what <b>country</b> is your mailing address located?</p>
                 <mat-form-field appearance="outline">
                   <input
                     type="text"
@@ -224,29 +224,29 @@
               </div>
             </div>
           </div>
-
-          <app-can-address
-            *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'CAN'; else usa"
-            [addressForm]="primaryAddressFormControl?.mailingAddress"
-          >
-          </app-can-address>
+          <div *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'CAN'; else usa">
+            <p>Enter your mailing address</p>
+            <app-can-address [addressForm]="primaryAddressFormControl?.mailingAddress"> </app-can-address>
+          </div>
           <ng-template #usa>
-            <app-usa-address
+            <div
               *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'USA'; else other"
-              [addressForm]="primaryAddressFormControl?.mailingAddress"
             >
-            </app-usa-address>
+              <p>Enter your mailing address</p>
+              <app-usa-address [addressForm]="primaryAddressFormControl?.mailingAddress"> </app-usa-address>
+            </div>
           </ng-template>
           <ng-template #other>
-            <app-other-address
+            <div
               *ngIf="
                 primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'USA' &&
                 primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'CAN' &&
                 primaryAddressFormControl?.mailingAddress?.controls?.country?.value !== null
               "
-              [addressForm]="primaryAddressFormControl?.mailingAddress"
             >
-            </app-other-address>
+              <p>Enter your mailing address</p>
+              <app-other-address [addressForm]="primaryAddressFormControl?.mailingAddress"> </app-other-address>
+            </div>
           </ng-template>
         </div>
       </div>
