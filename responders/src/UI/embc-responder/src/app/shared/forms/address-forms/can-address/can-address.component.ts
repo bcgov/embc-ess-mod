@@ -29,7 +29,6 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 })
 export class CanAddressComponent implements OnInit {
   @Input() addressForm: UntypedFormGroup;
-  @Input() isMailingAddress: boolean;
   filteredOptions: Observable<StateProvince[]>;
   provinces: StateProvince[] = [];
   country = { countryCode: 'CAN' };
