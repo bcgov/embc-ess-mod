@@ -119,15 +119,6 @@
                       ) {
                         <mat-error> Only digits allowed</mat-error>
                       }
-                      @if (
-                        supportDetailsFormControl?.paperSupportNumber.invalid &&
-                        supportDetailsFormControl?.paperSupportNumber.hasError('userNameExists')
-                      ) {
-                        <mat-error>
-                          Paper Referral Number already exists for the same Support type:
-                          {{ stepSupportsService?.supportTypeToAdd?.description }}</mat-error
-                        >
-                      }
                     </mat-form-field>
                   </div>
                   <div class="col-md-4">

@@ -810,7 +810,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     this.supportDetailsForm
       .get('paperSupportNumber')
       .setValidators([
-        this.customValidation.userNameExistsValidator(filteredReferrals.length > 0).bind(this.customValidation),
         this.customValidation
           .conditionalValidation(
             () => this.evacueeSessionService.isPaperBased,
