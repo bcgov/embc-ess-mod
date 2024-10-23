@@ -396,7 +396,7 @@ public class EvacuationRepository : IEvacuationRepository
 
         return (await memberQuery.GetAllPagesAsync(ct))
             .Select(m => m.era_EvacuationFileid)
-            .Where(f => f.statecode == (int)EntityState.Active);
+            .Where(f => f != null && f.statecode == (int)EntityState.Active);
     }
 
     private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, EvacuationFilesQuery query, CancellationToken ct)
