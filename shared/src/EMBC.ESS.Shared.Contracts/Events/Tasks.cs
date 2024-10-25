@@ -53,13 +53,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public SupportType SupportType { get; set; }
         public DateTime SupportLimitStartDate { get; set; }
         public DateTime SupportLimitEndDate { get; set; }
-        public SupportExtensionAvailable ExtensionAvailable { get; set; }
-    }
-
-    public enum SupportExtensionAvailable
-    {
-        No = 0,
-        Yes = 1
+        public bool ExtensionAvailable { get; set; }
     }
 
     public enum SupportType

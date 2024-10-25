@@ -76,7 +76,6 @@ namespace EMBC.ESS.Resources.Tasks
 
                 var supportLimits = (await essContext.era_supportlimits.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
                 t.era_era_task_era_supportlimit_Task = new System.Collections.ObjectModel.Collection<era_supportlimit>(supportLimits);
-
             });
 
             return tasks;
