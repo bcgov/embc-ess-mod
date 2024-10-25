@@ -61,14 +61,14 @@ namespace EMBC.Responders.API.Controllers
             return workflows;
         }
 
-        private static IEnumerable<SupportConfiguration> GetTaskSupportLimits(IncidentTask incidentTask)
+        private static IEnumerable<SupportLimits> GetTaskSupportLimits(IncidentTask incidentTask)
         {
             if (incidentTask.SupportLimits == null || !incidentTask.SupportLimits.Any())
             {
-                return Enumerable.Empty<SupportConfiguration>();
+                return Enumerable.Empty<SupportLimits>();
             }
 
-            var supportLimits = incidentTask.SupportLimits.Select(sl => new SupportConfiguration
+            var supportLimits = incidentTask.SupportLimits.Select(sl => new SupportLimits
             {
                 SupportType = sl.SupportType,
                 SupportLimitStartDate = sl.SupportLimitStartDate,
@@ -115,7 +115,7 @@ namespace EMBC.Responders.API.Controllers
         public string Description { get; set; }
         public string Status { get; set; }
         public IEnumerable<TaskWorkflow> Workflows { get; set; } = Array.Empty<TaskWorkflow>();
-        public IEnumerable<SupportConfiguration> SupportLimits { get; set; } = Array.Empty<SupportConfiguration>();
+        public IEnumerable<SupportLimits> SupportLimits { get; set; } = Array.Empty<SupportLimits>();
     }
 
     public class TaskWorkflow
