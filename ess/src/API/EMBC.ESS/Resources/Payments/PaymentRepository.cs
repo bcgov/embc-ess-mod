@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.Utilities.Extensions;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -80,6 +81,20 @@ namespace EMBC.ESS.Resources.Payments
             {
                 // link to payee
                 var payee = await ctx.contacts.ByKey(payment._era_payee_value).GetValueAsync();
+
+                if (payee.birthdate != null)
+                {
+                    DateTime dob = new DateTime(payee.birthdate.Value.Year, payee.birthdate.Value.Month, payee.birthdate.Value.Day);
+                    if (DateTimeEx.IsMinor(dob))
+                    {
+                        throw new InvalidOperationException("Payee is a minor. Minors are not eligible for e-transfer.");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Could not validate payee birthdate for e-transfer.");
+                }
+
                 ctx.SetLink(payment, nameof(era_etransfertransaction.era_Payee_contact), payee);
                 //Supplier Info should not be copied here. It should be copied just before send.
                 //There can be seconds or hours before actual send
