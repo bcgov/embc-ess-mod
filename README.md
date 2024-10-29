@@ -20,6 +20,12 @@ If you would like to contribute, please see our [Contributing](./CONTRIBUTING.md
 
 Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
+### Contributing to Helm
+
+Helm is utilized as ERA's Infrastructure as Code (IaC) tool, outlining and templating all of the resources required to operate and deploy the application on a Kubernetes cluster.
+
+This part of the code base can be found in [`tools/helm/charts/era`](tools/helm/charts/era).
+
 ## Architecture
 
 ```mermaid
