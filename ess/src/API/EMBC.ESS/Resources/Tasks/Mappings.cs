@@ -40,10 +40,5 @@ public class Mappings : Profile
             .ForMember(dest => dest.SupportLimitEndDate, opts => opts.MapFrom(src => src.SupportLimitEndDate))
             .ForMember(dest => dest.ExtensionAvailable, opts => opts.MapFrom(src => src.ExtensionAvailable))
         ;
-
-        CreateMap<EMBC.ESS.Resources.Tasks.EssTask, EMBC.ESS.Shared.Contracts.Events.IncidentTask>()
-            .ForMember(dest => dest.SupportLimits, opts => opts.MapFrom(src => src.SupportLimits))
-            .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status))
-        ;
     }
 }
