@@ -250,7 +250,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.showLoader = false;
-        console.error("Error fetching support limits: ", error);
+        console.error('Error fetching support limits: ', error);
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supportListerror);
         this.cdr.detectChanges();
@@ -332,10 +332,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   allMembersEligible(): boolean {
-    return this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers
-      .every(member => this.isHouseholdMemberEligibleForSupport(member));
+    return this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.every((member) =>
+      this.isHouseholdMemberEligibleForSupport(member)
+    );
   }
-
 
   checkDateRange(): boolean {
     const selectedFromDate = new Date(this.supportDetailsForm.get('fromDate').value);

@@ -58,7 +58,7 @@ export class StepSupportsService {
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeSessionService: EvacueeSessionService
-  ) { }
+  ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
     this.selectedSupportDetailVal = selectedSupportDetailVal;
@@ -101,23 +101,25 @@ export class StepSupportsService {
   }
 
   fetchSupportLimits(): Observable<SupportLimit[]> {
-    return this.taskService.tasksGetTask({
-      taskId: this.userService?.currentProfile?.taskNumber
-    }).pipe(
-      map((task) => {
-        const supportLimits: SupportLimit[] = task.supportLimits.map((supportLimit) => {
-          return {
-            supportLimitStartDate: supportLimit.supportLimitStartDate,
-            supportLimitEndDate: supportLimit.supportLimitEndDate,
-            extensionAvailable: supportLimit.extensionAvailable,
-            supportType: supportLimit.supportType
-          };
-        });
-
-        this.setStoredSupportLimits(supportLimits);
-        return supportLimits;
+    return this.taskService
+      .tasksGetTask({
+        taskId: this.userService?.currentProfile?.taskNumber
       })
-    );
+      .pipe(
+        map((task) => {
+          const supportLimits: SupportLimit[] = task.supportLimits.map((supportLimit) => {
+            return {
+              supportLimitStartDate: supportLimit.supportLimitStartDate,
+              supportLimitEndDate: supportLimit.supportLimitEndDate,
+              extensionAvailable: supportLimit.extensionAvailable,
+              supportType: supportLimit.supportType
+            };
+          });
+
+          this.setStoredSupportLimits(supportLimits);
+          return supportLimits;
+        })
+      );
   }
 
   set supportTypeToAdd(supportTypeToAddVal: Code) {
@@ -188,29 +190,29 @@ export class StepSupportsService {
     const referral: Referral | Interac =
       method === SupportMethod.Referral
         ? {
-          manualReferralId:
-            this.supportDetails.externalReferenceId !== undefined
-              ? 'R' + this.supportDetails.externalReferenceId
-              : '',
-          issuedToPersonName:
-            this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
-              ? this.supportDelivery.details.hostName
-              : (this.supportDelivery.issuedTo as any) !== 'Someone else'
-                ? this.supportDelivery.issuedTo.lastName + ', ' + this.supportDelivery.issuedTo.firstName
-                : this.supportDelivery.name,
+            manualReferralId:
+              this.supportDetails.externalReferenceId !== undefined
+                ? 'R' + this.supportDetails.externalReferenceId
+                : '',
+            issuedToPersonName:
+              this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+                ? this.supportDelivery.details.hostName
+                : (this.supportDelivery.issuedTo as any) !== 'Someone else'
+                  ? this.supportDelivery.issuedTo.lastName + ', ' + this.supportDelivery.issuedTo.firstName
+                  : this.supportDelivery.name,
 
-          supplierAddress: this.supportDelivery.supplier.address,
-          supplierId: this.supportDelivery.supplier.id,
-          supplierName: this.supportDelivery.supplier.name,
-          supplierNotes: this.supportDelivery.supplierNote,
-          method: SupportMethod.Referral
-        }
+            supplierAddress: this.supportDelivery.supplier.address,
+            supplierId: this.supportDelivery.supplier.id,
+            supplierName: this.supportDelivery.supplier.name,
+            supplierNotes: this.supportDelivery.supplierNote,
+            method: SupportMethod.Referral
+          }
         : {
-          method: SupportMethod.ETransfer,
-          notificationEmail: this.supportDelivery.notificationEmail,
-          notificationMobile: this.supportDelivery.notificationMobile,
-          receivingRegistrantId: this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext.id
-        };
+            method: SupportMethod.ETransfer,
+            notificationEmail: this.supportDelivery.notificationEmail,
+            notificationMobile: this.supportDelivery.notificationMobile,
+            receivingRegistrantId: this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext.id
+          };
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
       issuedOn: this.supportDetails.issuedOn,
