@@ -47,11 +47,15 @@ public record EssTask : Task
     public bool RemoteExtensionsEnabled { get; set; }
     public bool SelfServeEnabled { get; set; }
     public IEnumerable<SupportConfiguration> EnabledSupports { get; set; } = [];
+    public IEnumerable<SupportConfiguration> SupportLimits { get; set; } = [];
 }
 
 public record SupportConfiguration
 {
     public SupportType SupportType { get; set; }
+    public DateTime SupportLimitStartDate { get; set; }
+    public DateTime SupportLimitEndDate { get; set; }
+    public bool ExtensionAvailable { get; set; }
 }
 
 public enum SupportType

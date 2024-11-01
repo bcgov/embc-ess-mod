@@ -45,6 +45,7 @@ namespace EMBC.Responders.API.Controllers
             if (task == null) return NotFound(taskId);
             var mappedTask = mapper.Map<ESSTask>(task);
             mappedTask.Workflows = GetTaskWorkflows(task);
+            mappedTask.SupportLimits = GetTaskSupportLimits(task);
             return Ok(mappedTask);
         }
 
@@ -58,6 +59,24 @@ namespace EMBC.Responders.API.Controllers
                 new TaskWorkflow { Name = "case-notes",  Enabled = incidentTask.Status == IncidentTaskStatus.Active || incidentTask.Status == IncidentTaskStatus.Expired },
             };
             return workflows;
+        }
+
+        private static IEnumerable<SupportLimits> GetTaskSupportLimits(IncidentTask incidentTask)
+        {
+            if (incidentTask.SupportLimits == null || !incidentTask.SupportLimits.Any())
+            {
+                return Enumerable.Empty<SupportLimits>();
+            }
+
+            var supportLimits = incidentTask.SupportLimits.Select(sl => new SupportLimits
+            {
+                SupportType = sl.SupportType,
+                SupportLimitStartDate = sl.SupportLimitStartDate,
+                SupportLimitEndDate = sl.SupportLimitEndDate,
+                ExtensionAvailable = sl.ExtensionAvailable
+            });
+
+            return supportLimits;
         }
 
         [HttpGet("{taskId}/suppliers")]
@@ -96,6 +115,7 @@ namespace EMBC.Responders.API.Controllers
         public string Description { get; set; }
         public string Status { get; set; }
         public IEnumerable<TaskWorkflow> Workflows { get; set; } = Array.Empty<TaskWorkflow>();
+        public IEnumerable<SupportLimits> SupportLimits { get; set; } = Array.Empty<SupportLimits>();
     }
 
     public class TaskWorkflow
@@ -125,7 +145,8 @@ namespace EMBC.Responders.API.Controllers
         public TaskMapping()
         {
             CreateMap<IncidentTask, ESSTask>()
-                .ForMember(d => d.Workflows, opts => opts.Ignore());
+                .ForMember(d => d.Workflows, opts => opts.Ignore())
+                .ForMember(d => d.SupportLimits, opts => opts.MapFrom(s => s.SupportLimits));
             CreateMap<SupplierDetails, SuppliersListItem>();
         }
     }

@@ -377,38 +377,50 @@
                       </p>
                     </div>
                   </div>
-
-                  <div class="row">
-                    <div class="col-md-12">
-                      <mat-checkbox
-                        id="allMembers"
-                        [checked]="isChecked()"
-                        [indeterminate]="isIndeterminate()"
-                        (change)="$event ? selectAll($event) : null"
-                        ><span class="bold">All household members</span></mat-checkbox
-                      >
-                    </div>
+                  <div class="col-md-4" *ngIf="showLoader">
+                    <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color">
+                    </app-loader>
                   </div>
-                  @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
+                  <div *ngIf="!showLoader">
                     <div class="row">
                       <div class="col-md-12">
                         <mat-checkbox
-                          (click)="$event.stopPropagation()"
-                          (change)="$event ? onChange($event, member) : null"
-                          [checked]="exists(member)"
-                        >
-                          {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}</mat-checkbox
+                          id="allMembers"
+                          [checked]="isChecked()"
+                          [indeterminate]="isIndeterminate()"
+                          (change)="selectAll($event)"
+                          ><span class="bold">All household members</span></mat-checkbox
                         >
                       </div>
                     </div>
-                  }
-                  @if (
-                    supportDetailsFormControl.members.invalid &&
-                    supportDetailsFormControl.members.hasError('noSelection')
-                  ) {
-                    <mat-error class="custom-mat-error"> Required</mat-error>
-                  }
-
+                    @for (member of evacueeSessionService?.evacFile?.needsAssessment?.householdMembers; track member) {
+                      <div class="row">
+                        <div class="col-md-12">
+                          <mat-checkbox
+                            (click)="$event.stopPropagation()"
+                            (change)="$event ? onChange($event, member) : null"
+                            [disabled]="!isHouseholdMemberEligibleForSupport(member)"
+                            [checked]="exists(member)"
+                          >
+                            {{ member.lastName | uppercase }}, {{ member.firstName | titlecase }}
+                          </mat-checkbox>
+                          <!-- Display error message if the checkbox is disabled -->
+                          @if (!isHouseholdMemberEligibleForSupport(member)) {
+                            <mat-error class="custom-mat-info">
+                              {{ member.firstName | titlecase }} {{ member.lastName | titlecase }} has already received
+                              this support. Extensions for this support are not available at this time.
+                            </mat-error>
+                          }
+                        </div>
+                      </div>
+                    }
+                    @if (
+                      supportDetailsFormControl.members.invalid &&
+                      supportDetailsFormControl.members.hasError('noSelection')
+                    ) {
+                      <mat-error class="custom-mat-error"> Required</mat-error>
+                    }
+                  </div>
                   <div>
                     @switch (stepSupportsService?.supportTypeToAdd?.value) {
                       <!-- Shelter-Allowance -->

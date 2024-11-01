@@ -65,6 +65,7 @@ namespace EMBC.ESS.Resources.Tasks
                    essContext.era_tasks
                    .Expand(t => t.era_JurisdictionID)
                    .Expand(t => t.era_era_task_era_selfservesupportlimits_Task)
+                   .Expand(t => t.era_era_task_era_supportlimit_Task)
                    .Where(t => t.era_name == query.ById)
                    .GetAllPagesAsync(ct)).ToList();
 
@@ -72,6 +73,9 @@ namespace EMBC.ESS.Resources.Tasks
             {
                 var selfServeSupports = (await essContext.era_selfservesupportlimitses.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
                 t.era_era_task_era_selfservesupportlimits_Task = new System.Collections.ObjectModel.Collection<era_selfservesupportlimits>(selfServeSupports);
+
+                var supportLimits = (await essContext.era_supportlimits.Expand(sl => sl.era_SupportType).Where(sl => sl._era_task_value == t.era_taskid).GetAllPagesAsync(ct1)).ToList();
+                t.era_era_task_era_supportlimit_Task = new System.Collections.ObjectModel.Collection<era_supportlimit>(supportLimits);
             });
 
             return tasks;

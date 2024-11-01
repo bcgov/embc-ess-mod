@@ -1,5 +1,5 @@
-import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe, CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -54,6 +54,7 @@ import { AppLoaderComponent } from '../../../../shared/components/app-loader/app
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-support-details',
@@ -80,6 +81,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatSelect,
     MatOption,
     MatCheckbox,
+    MatTooltipModule,
     ShelterAllowanceGroupComponent,
     FoodMealsComponent,
     FoodGroceriesComponent,
@@ -93,7 +95,8 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     MatButton,
     UpperCasePipe,
     TitleCasePipe,
-    DatePipe
+    DatePipe,
+    CommonModule
   ]
 })
 export class SupportDetailsComponent implements OnInit, OnDestroy {
@@ -112,6 +115,8 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   originalSupport: Support;
   existingSupports: Support[];
   supportListSubscription: Subscription;
+  supportLimits: any;
+  supportLimitsSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -126,6 +131,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     private referralCreationService: ReferralCreationService,
     private dateConversionService: DateConversionService,
     private computeState: ComputeRulesService,
+    private cdr: ChangeDetectorRef,
     private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
@@ -235,6 +241,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
+    this.showLoader = true;
+    this.supportLimitsSubscription = this.stepSupportsService.fetchSupportLimits().subscribe({
+      next: (supportLimits) => {
+        this.supportLimits = supportLimits;
+        this.showLoader = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.showLoader = false;
+        console.error('Error fetching support limits: ', error);
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supportListerror);
+        this.cdr.detectChanges();
+      }
+    });
+
     this.supportListSubscription = this.stepSupportsService.getExistingSupportList().subscribe({
       next: (supports) => {
         this.existingSupports = supports;
@@ -277,6 +299,42 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.supportListSubscription.unsubscribe();
+    this.supportLimitsSubscription.unsubscribe();
+  }
+
+  isHouseholdMemberEligibleForSupport(member: EvacuationFileHouseholdMember): boolean {
+    if (!this.supportLimits || this.supportLimits.length === 0) {
+      return true;
+    }
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.description;
+    const matchingSupportLimit = this.supportLimits.find(
+      (limit) => this.mapSupportType(limit.supportType) === currentSupportType
+    );
+    if (!matchingSupportLimit) {
+      return true;
+    }
+    if (matchingSupportLimit.extensionAvailable) {
+      return true;
+    }
+    const supportLimitStartDate = moment(matchingSupportLimit.supportLimitStartDate);
+    const supportLimitEndDate = moment(matchingSupportLimit.supportLimitEndDate);
+    const hasReceivedSupport = this.existingSupports.some((support) => {
+      const supportDate = moment(support.from);
+      return (
+        support.category === currentSupportType &&
+        support.includedHouseholdMembers?.some((m) => m === member.id) &&
+        support.status !== SupportStatus.Cancelled.toString() &&
+        support.status !== SupportStatus.Void.toString() &&
+        supportDate.isBetween(supportLimitStartDate, supportLimitEndDate, 'days', '[]')
+      );
+    });
+    return !hasReceivedSupport;
+  }
+
+  allMembersEligible(): boolean {
+    return this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.every((member) =>
+      this.isHouseholdMemberEligibleForSupport(member)
+    );
   }
 
   checkDateRange(): boolean {
@@ -378,7 +436,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if ($event.checked) {
       members.clear();
       this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach((member) => {
-        members.push(new UntypedFormControl(member));
+        if (this.isHouseholdMemberEligibleForSupport(member)) {
+          members.push(new UntypedFormControl(member));
+        }
       });
     } else {
       members.clear();
@@ -685,6 +745,33 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
     const largestToTime = finalTime.toTimeString().split(' ')[0];
     return largestToTime;
+  }
+
+  private mapSupportType(supportType: number): SupportSubCategory | SupportCategory {
+    switch (supportType) {
+      case 174360000:
+        return SupportSubCategory.Food_Groceries;
+      case 174360001:
+        return SupportSubCategory.Food_Restaurant;
+      case 174360002:
+        return SupportSubCategory.Lodging_Hotel;
+      case 174360003:
+        return SupportSubCategory.Lodging_Billeting;
+      case 174360004:
+        return SupportSubCategory.Lodging_Group;
+      case 174360005:
+        return SupportCategory.Incidentals;
+      case 174360006:
+        return SupportCategory.Clothing;
+      case 174360007:
+        return SupportSubCategory.Transportation_Taxi;
+      case 174360008:
+        return SupportSubCategory.Transportation_Other;
+      case 174360009:
+        return SupportSubCategory.Lodging_Allowance;
+      default:
+        return SupportCategory.Unknown;
+    }
   }
 
   private setToTime() {
