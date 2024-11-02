@@ -5,17 +5,43 @@ metadata:
   namespace: e2d84f-tools
 spec:
   team:
-    description: The Sysdig Team for ERA team
+    description: The Sysdig Team for ESS/ERA Portal
     users:
-    - name: yossi.1.tamari@gov.bc.ca
-      role: ROLE_TEAM_EDIT
-    - name: joseph.weinkam@gov.bc.ca
-      role: ROLE_TEAM_EDIT
-    - name: Anurupa.Gupta@gov.bc.ca
-      role: ROLE_TEAM_EDIT
-    - name: Erin.Leslie@gov.bc.ca
-      role: ROLE_TEAM_EDIT
-    - name: Jennifer.dowd@gov.bc.ca
-      role: ROLE_TEAM_READ
-    - name: alexander.aleshchenko@gov.bc.ca
-      role: ROLE_TEAM_READ
+      - name: alainjoseph.podeziel@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: alexander.aleshchenko@gov.bc.ca
+        role: ROLE_TEAM_READ
+      - name: alen.george@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: anurupa.gupta@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: christopher.tihor@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: erin.leslie@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: fahad.khan@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: gary.jipp2@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: george.walker@gov.bc.ca
+        role: ROLE_TEAM_EDIT
+      - name: jason.kelly@gov.bc.ca
+        role: ROLE_TEAM_READ
+      - name: jennifer.dowd@gov.bc.ca
+        role: ROLE_TEAM_READ
+      - name: joseph.weinkam@gov.bc.ca
+        role: ROLE_TEAM_EDIT      
+      - name: leo.pham2@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: manovikas.anupoju@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: richard.jacquard@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: sai.madderla@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: samuel.warren@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: susmitha.gajwada@gov.bc.ca
+        role: ROLE_TEAM_STANDARD
+      - name: yossi.1.tamari@gov.bc.ca
+        role: ROLE_TEAM_EDIT
