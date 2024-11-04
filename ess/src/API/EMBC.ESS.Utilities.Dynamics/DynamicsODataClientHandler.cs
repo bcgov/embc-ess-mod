@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
+using Microsoft.OData;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
@@ -26,8 +27,9 @@ namespace EMBC.ESS.Utilities.Dynamics
             client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
             client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
             {
-                // do not send reference properties and null values to Dynamics
-                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
+                arg.Entry.Properties = arg.Entry.Properties
+                    .OfType<ODataProperty>()
+                    .Where(prop => !prop.Name.StartsWith('_') && prop.Value != null);
             });
             client.BuildingRequest += Client_BuildingRequest;
             client.SendingRequest2 += Client_SendingRequest2;
