@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -403,6 +404,22 @@ public partial class EventsManager
         }
 
         return cmd.EvacuationFileNumber;
+    }
+
+    public async Task<FindDuplicateSupportsCommandResult> Handle(EMBC.ESS.Shared.Contracts.Events.GetDuplicateSupportsCommand cmd)
+    {
+        var supports = ((FindDuplicateSupportsCommandResult)await supportRepository.Manage(new FindDuplicateSupportsCommand
+        {
+            Category = cmd.Category,
+            FromDate = cmd.FromDate,
+            ToDate = cmd.ToDate,
+            Members = cmd.Members
+        })).DuplicateSupports;
+
+        return new FindDuplicateSupportsCommandResult
+        {
+            DuplicateSupports = mapper.Map<IEnumerable<Resources.Supports.Support>>(supports)
+        };
     }
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
