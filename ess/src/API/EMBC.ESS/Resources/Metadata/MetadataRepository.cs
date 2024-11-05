@@ -17,6 +17,7 @@ namespace EMBC.ESS.Resources.Metadata
         internal const string PlannedOutagesCacheKey = "metadata:plannedoutages";
 
         internal static readonly TimeSpan CacheEntryLifetime = TimeSpan.FromDays(1);
+        internal static readonly TimeSpan CommunitiesCacheEntryLifetime = TimeSpan.FromHours(1);
 
         private readonly InternalMetadataRepository internalRepository;
         private readonly ICache cache;
@@ -39,7 +40,7 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            return await cache.GetOrSet(CommunitiesCacheKey, internalRepository.GetCommunities, CacheEntryLifetime);
+            return await cache.GetOrSet(CommunitiesCacheKey, internalRepository.GetCommunities, CommunitiesCacheEntryLifetime);
         }
 
         public async Task<string[]> GetSecurityQuestions()
