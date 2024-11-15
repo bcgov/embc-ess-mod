@@ -43,13 +43,13 @@ export class AccessReasonGateDialogComponent {
   label: Record<AccessEntity, string> = {
     profile: 'evacuee profile',
     essFile: 'ESS File',
-    secretWord: 'Secret Word'
+    secretWord: 'ESS File'
   };
 
   buttonLabel: Record<AccessEntity, string> = {
     profile: 'Profile',
     essFile: 'ESS File',
-    secretWord: 'Secret Word'
+    secretWord: 'ESS File'
   };
 
   constructor(
