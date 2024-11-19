@@ -43,6 +43,7 @@ namespace EMBC.ESS.Resources.Supports
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
                 ApproveSupportCommand c => await Handle(c, ct),
                 SubmitSupportForReviewCommand c => await Handle(c, ct),
+                FindDuplicateSupportsCommand c => await Handle(c, ct),
 
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
@@ -57,6 +58,15 @@ namespace EMBC.ESS.Resources.Supports
 
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
+        }
+
+        private async Task<FindDuplicateSupportsCommandResult> Handle(FindDuplicateSupportsCommand cmd, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+
+            var supports = (await ctx.era_evacueesupports.GetAllPagesAsync(ct)).ToList();
+
+            return new FindDuplicateSupportsCommandResult { DuplicateSupports = mapper.Map<IEnumerable<Support>>(supports) };
         }
 
         private async Task<SubmitSupportForApprovalCommandResult> Handle(SubmitSupportForApprovalCommand cmd, CancellationToken ct)
