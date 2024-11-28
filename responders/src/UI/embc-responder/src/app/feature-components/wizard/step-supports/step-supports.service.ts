@@ -60,7 +60,7 @@ export class StepSupportsService {
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeSessionService: EvacueeSessionService
-  ) { }
+  ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
     this.selectedSupportDetailVal = selectedSupportDetailVal;
@@ -171,18 +171,19 @@ export class StepSupportsService {
   }
 
   checkPossibleDuplicateSupports(supportDetails: any): Observable<Support[]> {
-    return this.supportService.supportsGetDuplicateSupports({
-      members: supportDetails.members,
-      toDate: supportDetails.toDate,
-      fromDate: supportDetails.fromDate,
-      category: supportDetails.category
-    }).pipe(
-      map((supports: Support[]) => {
-        return supports;
+    return this.supportService
+      .supportsGetDuplicateSupports({
+        members: supportDetails.members,
+        toDate: supportDetails.toDate,
+        fromDate: supportDetails.fromDate,
+        category: supportDetails.category
       })
-    );
+      .pipe(
+        map((supports: Support[]) => {
+          return supports;
+        })
+      );
   }
-
 
   public openDataLossPopup(content: DialogContent): MatDialogRef<DialogComponent, string> {
     return this.dialog.open(DialogComponent, {

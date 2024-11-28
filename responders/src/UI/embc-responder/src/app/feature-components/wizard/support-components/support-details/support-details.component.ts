@@ -208,7 +208,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     };
   }
 
-  private supportMapping: Map<number, SupportSubCategory | SupportCategory> = new Map<number, SupportSubCategory | SupportCategory>([
+  private supportMapping: Map<number, SupportSubCategory | SupportCategory> = new Map<
+    number,
+    SupportSubCategory | SupportCategory
+  >([
     [174360000, SupportSubCategory.Food_Groceries],
     [174360001, SupportSubCategory.Food_Restaurant],
     [174360002, SupportSubCategory.Lodging_Hotel],
@@ -218,12 +221,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     [174360006, SupportCategory.Clothing],
     [174360007, SupportSubCategory.Transportation_Taxi],
     [174360008, SupportSubCategory.Transportation_Other],
-    [174360009, SupportSubCategory.Lodging_Allowance],
+    [174360009, SupportSubCategory.Lodging_Allowance]
   ]);
 
-  private inverseSupportMapping: Map<SupportSubCategory | SupportCategory, number> = new Map<SupportSubCategory | SupportCategory, number>(
-    Array.from(this.supportMapping.entries()).map(([key, value]) => [value, key])
-  );
+  private inverseSupportMapping: Map<SupportSubCategory | SupportCategory, number> = new Map<
+    SupportSubCategory | SupportCategory,
+    number
+  >(Array.from(this.supportMapping.entries()).map(([key, value]) => [value, key]));
 
   validDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
@@ -570,9 +574,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         .open(DialogComponent, {
           data: {
             component: InformationDialogComponent,
-            content: globalConst.duplicateSupportMessage,
+            content: globalConst.duplicateSupportMessage
           },
-          width: '720px',
+          width: '720px'
         })
         .afterClosed()
         .subscribe((event) => {
@@ -586,7 +590,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         members,
         toDate: to.toISOString(),
         fromDate: from.toISOString(),
-        category: this.mapSupport(category),
+        category: this.mapSupport(category)
       };
 
       try {
@@ -601,9 +605,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
             .open(DialogComponent, {
               data: {
                 component: InformationDialogComponent,
-                content: message,
+                content: message
               },
-              width: '720px',
+              width: '720px'
             })
             .afterClosed()
             .subscribe((event) => {
@@ -612,7 +616,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
                 this.addDelivery();
               }
             });
-        // If there are no potential duplicates found, add the delivery
+          // If there are no potential duplicates found, add the delivery
         } else {
           this.addDelivery();
         }
@@ -626,18 +630,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   generateDuplicateSupportDialog(potentialDuplicateSupports: Support[], category: string): DialogContent {
     return {
       title: 'Possible Support Conflict',
-      text: 'The support you are trying to add may conflict with the following existing supports:' +
-        potentialDuplicateSupports.map((s) => {
-          return `<br><strong>Evacuee Name:</strong> ${s.supportDelivery.issuedToPersonName}<br/><strong>Support Type:</strong> ${category}<br/><strong>Support Period:</strong> ${s.from.split("T")[0]} to ${s.to.split("T")[0]}`;
-        }
-        ).join('\n') +
+      text:
+        'The support you are trying to add may conflict with the following existing supports:' +
+        potentialDuplicateSupports
+          .map((s) => {
+            return `<br><strong>Evacuee Name:</strong> ${s.supportDelivery.issuedToPersonName}<br/><strong>Support Type:</strong> ${category}<br/><strong>Support Period:</strong> ${s.from.split('T')[0]} to ${s.to.split('T')[0]}`;
+          })
+          .join('\n') +
         '<br><br>Do you want to continue?',
 
       confirmButton: 'Yes, Continue',
       cancelButton: 'No, Cancel'
     };
   }
-
 
   mapSubCategoryToCategory(subCategory: SupportSubCategory): SupportCategory {
     switch (subCategory) {
@@ -822,11 +827,18 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   // Two-way mapping between SupportCategory / SupportSubCategory and their associated numerical value in Dynamics
-  private mapSupport(value: number | SupportSubCategory | SupportCategory): SupportSubCategory | SupportCategory | number {
+  private mapSupport(
+    value: number | SupportSubCategory | SupportCategory
+  ): SupportSubCategory | SupportCategory | number {
     if (typeof value === 'number') {
       return this.supportMapping.get(value) || SupportCategory.Unknown;
     } else {
-      return this.inverseSupportMapping.get(value) || (() => { throw new Error(`Unknown SupportSubCategory or SupportCategory: ${value}`); })();
+      return (
+        this.inverseSupportMapping.get(value) ||
+        (() => {
+          throw new Error(`Unknown SupportSubCategory or SupportCategory: ${value}`);
+        })()
+      );
     }
   }
 
