@@ -330,7 +330,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
     const currentSupportType = this.stepSupportsService.supportTypeToAdd.description;
     const matchingSupportLimit = this.supportLimits.find(
-      (limit) => this.mapSupport(limit.supportType) === currentSupportType
+      (limit) => this.mapSupportType(limit.supportType) === currentSupportType
     );
     if (!matchingSupportLimit) {
       return true;
@@ -585,12 +585,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      // Do a deeper check of possible duplicate supports if there are no conflicts within the same ESS file
+      const supportCategory = SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] || SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
       const duplicateSupportRequest = {
         members,
         toDate: to.toISOString(),
         fromDate: from.toISOString(),
-        category: this.mapSupport(category)
+        category: this.mapSupportTypeInverse(supportCategory)
       };
 
       try {
@@ -826,21 +826,61 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     return largestToTime;
   }
 
-  // Two-way mapping between SupportCategory / SupportSubCategory and their associated numerical value in Dynamics
-  private mapSupport(
-    value: number | SupportSubCategory | SupportCategory
-  ): SupportSubCategory | SupportCategory | number {
-    if (typeof value === 'number') {
-      return this.supportMapping.get(value) || SupportCategory.Unknown;
-    } else {
-      return (
-        this.inverseSupportMapping.get(value) ||
-        (() => {
-          throw new Error(`Unknown SupportSubCategory or SupportCategory: ${value}`);
-        })()
-      );
+  private mapSupportType(supportType: number): SupportSubCategory | SupportCategory {
+    switch (supportType) {
+      case 174360000:
+        return SupportSubCategory.Food_Groceries;
+      case 174360001:
+        return SupportSubCategory.Food_Restaurant;
+      case 174360002:
+        return SupportSubCategory.Lodging_Hotel;
+      case 174360003:
+        return SupportSubCategory.Lodging_Billeting;
+      case 174360004:
+        return SupportSubCategory.Lodging_Group;
+      case 174360005:
+        return SupportCategory.Incidentals;
+      case 174360006:
+        return SupportCategory.Clothing;
+      case 174360007:
+        return SupportSubCategory.Transportation_Taxi;
+      case 174360008:
+        return SupportSubCategory.Transportation_Other;
+      case 174360009:
+        return SupportSubCategory.Lodging_Allowance;
+      default:
+        return SupportCategory.Unknown;
     }
   }
+
+  private mapSupportTypeInverse(support: SupportSubCategory | SupportCategory): number {
+    console.log("Support: ", support);
+    switch (support) {
+      case SupportSubCategory.Food_Groceries:
+        return 174360000;
+      case SupportSubCategory.Food_Restaurant:
+        return 174360001;
+      case SupportSubCategory.Lodging_Hotel:
+        return 174360002;
+      case SupportSubCategory.Lodging_Billeting:
+        return 174360003;
+      case SupportSubCategory.Lodging_Group:
+        return 174360004;
+      case SupportCategory.Incidentals:
+        return 174360005;
+      case SupportCategory.Clothing:
+        return 174360006;
+      case SupportSubCategory.Transportation_Taxi:
+        return 174360007;
+      case SupportSubCategory.Transportation_Other:
+        return 174360008;
+      case SupportSubCategory.Lodging_Allowance:
+        return 174360009;
+      default:
+        throw new Error(`Unknown SupportSubCategory or SupportCategory: ${support}`);
+    }
+  }
+  
 
   private setToTime() {
     if (this.evacueeSessionService.isPaperBased) {
