@@ -406,19 +406,18 @@ public partial class EventsManager
         return cmd.EvacuationFileNumber;
     }
 
-    public async Task<FindDuplicateSupportsCommandResult> Handle(EMBC.ESS.Shared.Contracts.Events.GetDuplicateSupportsCommand cmd)
+    public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
     {
-        var supports = ((FindDuplicateSupportsCommandResult)await supportRepository.Manage(new FindDuplicateSupportsCommand
-        {
-            Category = cmd.Category,
-            FromDate = cmd.FromDate,
-            ToDate = cmd.ToDate,
-            Members = cmd.Members
-        })).DuplicateSupports;
+        var supports = ((Resources.Supports.PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new Resources.Supports.PotentialDuplicateSupportsQuery { 
+            Category = query.Category,
+            FromDate = query.FromDate,
+            ToDate = query.ToDate,
+            Members = query.Members
+         }));
 
-        return new FindDuplicateSupportsCommandResult
+        return new DuplicateSupportsQueryResult
         {
-            DuplicateSupports = mapper.Map<IEnumerable<Resources.Supports.Support>>(supports)
+            DuplicateSupports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports.DuplicateSupports)
         };
     }
 

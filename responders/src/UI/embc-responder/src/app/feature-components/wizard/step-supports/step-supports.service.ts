@@ -32,6 +32,7 @@ import { ComputeRulesService } from 'src/app/core/services/computeRules.service'
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SupportLimit } from 'src/app/core/api/models/support-limit';
+import { SupportsService } from 'src/app/core/api/services/supports.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -49,6 +50,7 @@ export class StepSupportsService {
     private essFileService: EssFileService,
     private cacheService: CacheService,
     private taskService: TasksService,
+    private supportService: SupportsService,
     private userService: UserService,
     private locationService: LocationsService,
     private dialog: MatDialog,
@@ -164,6 +166,21 @@ export class StepSupportsService {
               address: this.locationService.getAddressModelFromAddress(item.address)
             };
           });
+        })
+      );
+  }
+
+  checkPossibleDuplicateSupports(supportDetails: any): Observable<Support[]> {
+    return this.supportService
+      .supportsGetDuplicateSupports({
+        members: supportDetails.members,
+        toDate: supportDetails.toDate,
+        fromDate: supportDetails.fromDate,
+        category: supportDetails.category
+      })
+      .pipe(
+        map((supports: Support[]) => {
+          return supports;
         })
       );
   }

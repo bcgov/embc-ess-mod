@@ -99,7 +99,7 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Items { get; set; }
     }
 
-    public class FindDuplicateSupportsCommand : ManageSupportCommand
+    public class PotentialDuplicateSupportsQuery : SupportQuery
     {
         public string Category { get; set; }
         public string FromDate { get; set; }
@@ -107,7 +107,7 @@ namespace EMBC.ESS.Resources.Supports
         public string[] Members { get; set; }
     }
 
-    public class FindDuplicateSupportsCommandResult : ManageSupportCommandResult
+    public class PotentialDuplicateSupportsQueryResult : SupportQueryResult
     {
         public IEnumerable<Support> DuplicateSupports { get; set; }
     }
