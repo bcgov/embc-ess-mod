@@ -585,7 +585,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      const supportCategory = SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] || SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
+      const supportCategory =
+        SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+        SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
       const duplicateSupportRequest = {
         members,
         toDate: to.toISOString(),
@@ -854,7 +856,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   private mapSupportTypeInverse(support: SupportSubCategory | SupportCategory): number {
-    console.log("Support: ", support);
+    console.log('Support: ', support);
     switch (support) {
       case SupportSubCategory.Food_Groceries:
         return 174360000;
@@ -880,7 +882,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         throw new Error(`Unknown SupportSubCategory or SupportCategory: ${support}`);
     }
   }
-  
 
   private setToTime() {
     if (this.evacueeSessionService.isPaperBased) {
