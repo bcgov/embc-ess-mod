@@ -39,8 +39,7 @@ public class SupportsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetDuplicateSupports([FromQuery] CheckDuplicateSupportsRequest request)
     {
-        Console.WriteLine("Request: {0}", JsonSerializer.Serialize(request));
-        var response = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.GetDuplicateSupportsCommand
+        var response = await messagingClient.Send(new DuplicateSupportsQuery
         {
             Category = request.Category,
             FromDate = request.FromDate,
@@ -48,9 +47,7 @@ public class SupportsController : ControllerBase
             Members = request.Members
         });
 
-        Console.WriteLine("Response: {0}", JsonSerializer.Serialize(response));
-
-        return Ok(response);
+        return Ok(response.DuplicateSupports);
     }
 }
 
