@@ -29,7 +29,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { firstValueFrom, Subscription } from 'rxjs';
+import {firstValueFrom, from, Subscription} from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
 import {
   MatDatepickerInputEvent,
@@ -291,11 +291,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
+      console.log('value', value);
       this.updateValidToDate(value);
     });
 
     this.supportDetailsForm.get('fromDate').valueChanges.subscribe((value) => {
       if (value === null || value === '' || value === undefined) {
+        console.log('value', value);
         this.supportDetailsForm.get('noOfDays').patchValue(1);
       }
     });
@@ -513,9 +515,17 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   updateToDate(event: MatDatepickerInputEvent<Date>) {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const fromTime = this.supportDetailsForm.get('fromTime').value
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, "00:00:00", "06:00:00")
     const date = new Date(currentVal);
-    const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
-    this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    if(afterMidnightBeforeSix){
+      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days -1), 'MM/dd/yyyy');
+      this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    }else{
+      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
+      this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    }
+
   }
 
   /**
@@ -525,13 +535,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   updateNoOfDays(event: MatDatepickerInputEvent<Date>) {
     const fromDate = this.datePipe.transform(this.supportDetailsForm.get('fromDate').value, 'dd-MMM-yyyy');
+    const fromTime = this.supportDetailsForm.get('fromTime').value
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
-    const days = dateDiff / (1000 * 60 * 60 * 24);
+    let days = dateDiff / (1000 * 60 * 60 * 24);
+
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, "00:00:00", "06:00:00")
 
     if (days > 30) {
       this.supportDetailsForm.get('noOfDays').patchValue(null);
     } else {
+      if(afterMidnightBeforeSix){
+        days = days + 1
+      }
       this.supportDetailsForm.get('noOfDays').patchValue(days);
     }
   }
@@ -984,4 +1000,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       ]);
     this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();
   }
+
+  private isTimeBetween(time, from, to) {
+    // Split the times into hours, minutes, and seconds
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    const [fromHours, fromMinutes, fromSeconds] = from.split(':').map(Number);
+    const [toHours, toMinutes, toSeconds] = to.split(':').map(Number);
+    // Create Date objects for both times
+    const imputTime = new Date();
+    imputTime.setHours(hours, minutes, seconds ? seconds : 0);
+    const fromTime = new Date();
+    fromTime.setHours(fromHours, fromMinutes, fromSeconds);
+    const toTime = new Date();
+    toTime.setHours(toHours, toMinutes, toSeconds);
+  //  Compare the times
+    return imputTime >= fromTime && imputTime <= toTime;
+  }
+  // Example usage:console.log(isTimeBefore("12:30:45", "14:20:15")); // trueconsole.log(isTimeBefore("18:00:00", "10:00:00")); // false
 }
