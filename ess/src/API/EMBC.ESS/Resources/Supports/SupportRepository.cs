@@ -113,7 +113,8 @@ namespace EMBC.ESS.Resources.Supports
             var potentialDuplicates = new ConcurrentBag<era_evacueesupport>();
 
             // Iterate through each of the supports that matched the query
-            Parallel.ForEach(supports, support => {
+            Parallel.ForEach(supports, support =>
+            {
                 // Iterate through each household member in the support
                 foreach (var supportMember in support.era_era_householdmember_era_evacueesupport.ToList())
                 {

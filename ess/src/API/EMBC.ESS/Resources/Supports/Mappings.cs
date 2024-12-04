@@ -32,6 +32,13 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(h => new HouseholdMemberDto
+                {
+                    DateOfBirth = h.era_dateofbirth.ToString(),
+                    FirstName = h.era_firstname,
+                    LastName = h.era_lastname
+                })))
+               
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))
                 .ForMember(d => d.IsSelfServe, opts => opts.MapFrom(s => s.era_selfservesupport))
