@@ -634,14 +634,20 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const uniqueHouseholdMembers = new Map<string, string>();
     potentialDuplicateSupports.forEach((s) => {
       s.householdMembers.forEach((m) => {
-        uniqueHouseholdMembers.set(m.firstName + m.lastName + m.dateOfBirth, `<br><strong>Name:</strong> ${m.firstName} ${m.lastName} <br><strong>Date of Birth:</strong> ${m.dateOfBirth}`);
+        uniqueHouseholdMembers.set(
+          m.firstName + m.lastName + m.dateOfBirth,
+          `<br><strong>Name:</strong> ${m.firstName} ${m.lastName} <br><strong>Date of Birth:</strong> ${m.dateOfBirth}`
+        );
       });
     });
     return {
       title: 'Possible Support Conflict',
       text:
-        'The support you are trying to add may have conflicts with previously issued supports. The following evacuees received a ' + category + ' support during the same time period: <br>'
-        + Array.from(uniqueHouseholdMembers.values()).join('<br>') + '.<br><br>Do you want to continue?',
+        'The support you are trying to add may have conflicts with previously issued supports. The following evacuees received a ' +
+        category +
+        ' support during the same time period: <br>' +
+        Array.from(uniqueHouseholdMembers.values()).join('<br>') +
+        '.<br><br>Do you want to continue?',
 
       confirmButton: 'Yes, Continue',
       cancelButton: 'No, Cancel'
