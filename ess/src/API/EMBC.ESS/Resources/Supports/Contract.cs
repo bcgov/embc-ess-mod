@@ -99,6 +99,19 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Items { get; set; }
     }
 
+    public class PotentialDuplicateSupportsQuery : SupportQuery
+    {
+        public string Category { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string[] Members { get; set; }
+    }
+
+    public class PotentialDuplicateSupportsQueryResult : SupportQueryResult
+    {
+        public IEnumerable<Support> DuplicateSupports { get; set; }
+    }
+
     public abstract record Support
     {
         public string Id { get; set; }

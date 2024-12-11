@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -403,6 +404,21 @@ public partial class EventsManager
         }
 
         return cmd.EvacuationFileNumber;
+    }
+
+    public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
+    {
+        var supports = ((Resources.Supports.PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new Resources.Supports.PotentialDuplicateSupportsQuery { 
+            Category = query.Category,
+            FromDate = query.FromDate,
+            ToDate = query.ToDate,
+            Members = query.Members
+         }));
+
+        return new DuplicateSupportsQueryResult
+        {
+            DuplicateSupports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports.DuplicateSupports)
+        };
     }
 
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)

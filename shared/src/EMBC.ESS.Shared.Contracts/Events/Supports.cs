@@ -62,6 +62,20 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public DateTime PrintedOn { get; set; }
     }
 
+
+    public class DuplicateSupportsQuery : Query<DuplicateSupportsQueryResult>
+    {
+        public string Category { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string[] Members { get; set; }
+    }
+
+    public class DuplicateSupportsQueryResult
+    {
+        public IEnumerable<Support> DuplicateSupports { get; set; }
+    }
+
     /// <summary>
     /// create a new support reprint request, returns the new print request id
     /// </summary>
