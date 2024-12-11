@@ -28,6 +28,7 @@ namespace EMBC.ESS.Resources.Supports
                     ? s.era_paperreferralcompletedon.Value.UtcDateTime
                     : s.createdon.Value.UtcDateTime))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
+                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
