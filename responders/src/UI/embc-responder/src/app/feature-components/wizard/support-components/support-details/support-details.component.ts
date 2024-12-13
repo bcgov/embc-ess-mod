@@ -29,7 +29,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import {firstValueFrom, from, Subscription} from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
 import {
   MatDatepickerInputEvent,
@@ -515,17 +515,16 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   updateToDate(event: MatDatepickerInputEvent<Date>) {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
-    const fromTime = this.supportDetailsForm.get('fromTime').value
-    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, "00:00:00", "06:00:00")
+    const fromTime = this.supportDetailsForm.get('fromTime').value;
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
     const date = new Date(currentVal);
-    if(afterMidnightBeforeSix){
-      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days -1), 'MM/dd/yyyy');
+    if (afterMidnightBeforeSix) {
+      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days - 1), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
-    }else{
+    } else {
       let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
-
   }
 
   /**
@@ -535,18 +534,18 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   updateNoOfDays(event: MatDatepickerInputEvent<Date>) {
     const fromDate = this.datePipe.transform(this.supportDetailsForm.get('fromDate').value, 'dd-MMM-yyyy');
-    const fromTime = this.supportDetailsForm.get('fromTime').value
+    const fromTime = this.supportDetailsForm.get('fromTime').value;
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
     let days = dateDiff / (1000 * 60 * 60 * 24);
 
-    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, "00:00:00", "06:00:00")
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
 
     if (days > 30) {
       this.supportDetailsForm.get('noOfDays').patchValue(null);
     } else {
-      if(afterMidnightBeforeSix){
-        days = days + 1
+      if (afterMidnightBeforeSix) {
+        days = days + 1;
       }
       this.supportDetailsForm.get('noOfDays').patchValue(days);
     }
@@ -1013,7 +1012,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     fromTime.setHours(fromHours, fromMinutes, fromSeconds);
     const toTime = new Date();
     toTime.setHours(toHours, toMinutes, toSeconds);
-  //  Compare the times
+    //Compare the times
     return imputTime >= fromTime && imputTime <= toTime;
   }
   // Example usage:console.log(isTimeBefore("12:30:45", "14:20:15")); // trueconsole.log(isTimeBefore("18:00:00", "10:00:00")); // false
