@@ -60,7 +60,7 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeMembers(s => s.SupportDelivery as Referral, s => s.SupportDelivery as Interac)
                 // support delivery must be mapped at this level, can't be at the included mapping
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => resolveSupportDelieveryType(s.SupportDelivery)))
-                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                .ForSourceMember(s => s.HouseholdMembers, opts => opts.DoNotValidate()) 
                 .ForSourceMember(s => s.SupportDelivery, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IncludedHouseholdMembers, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Status, opts => opts.DoNotValidate())
