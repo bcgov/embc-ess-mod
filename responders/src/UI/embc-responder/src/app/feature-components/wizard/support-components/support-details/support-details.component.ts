@@ -504,7 +504,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       const fromTime = this.supportDetailsForm.get('fromTime').value;
       const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
       let totalDays = days;
-      if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
+      if (
+        afterMidnightBeforeSix &&
+        (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+          currentSupportType === SupportSubCategory.Lodging_Allowance ||
+          currentSupportType === SupportSubCategory.Lodging_Group)
+      ) {
         totalDays -= 1;
       }
       const finalValue = this.datePipe.transform(date.setDate(date.getDate() + totalDays), 'MM/dd/yyyy');
@@ -525,7 +530,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
     const date = new Date(currentVal);
     let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
-    if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
+    if (
+      afterMidnightBeforeSix &&
+      (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+        currentSupportType === SupportSubCategory.Lodging_Allowance ||
+        currentSupportType === SupportSubCategory.Lodging_Group)
+    ) {
       finalValue = this.datePipe.transform(date.setDate(date.getDate() + days - 1), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     } else {
@@ -551,7 +561,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (days > 30) {
       this.supportDetailsForm.get('noOfDays').patchValue(null);
     } else {
-      if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
+      if (
+        afterMidnightBeforeSix &&
+        (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+          currentSupportType === SupportSubCategory.Lodging_Allowance ||
+          currentSupportType === SupportSubCategory.Lodging_Group)
+      ) {
         days = days + 1;
       }
       this.supportDetailsForm.get('noOfDays').patchValue(days);
@@ -789,6 +804,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         : this.setDefaultTimes();
     }
   }
+
   private createFromDate() {
     let existingSupports = this.existingSupports.filter(
       (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
