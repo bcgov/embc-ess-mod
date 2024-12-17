@@ -500,9 +500,16 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   updateValidToDate(days?: number): void {
     const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
     if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
-      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
+      const fromTime = this.supportDetailsForm.get('fromTime').value;
+      const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
+      let totalDays = days;
+      if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
+        totalDays -= 1;
+      }
+      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + totalDays), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
   }
@@ -516,13 +523,14 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     const fromTime = this.supportDetailsForm.get('fromTime').value;
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
     const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
     const date = new Date(currentVal);
-    if (afterMidnightBeforeSix) {
-      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days - 1), 'MM/dd/yyyy');
+    let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
+    if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
+      finalValue = this.datePipe.transform(date.setDate(date.getDate() + days - 1), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     } else {
-      let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
   }
@@ -537,6 +545,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const fromTime = this.supportDetailsForm.get('fromTime').value;
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
     let days = dateDiff / (1000 * 60 * 60 * 24);
 
     const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
@@ -544,7 +553,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (days > 30) {
       this.supportDetailsForm.get('noOfDays').patchValue(null);
     } else {
-      if (afterMidnightBeforeSix) {
+      if (afterMidnightBeforeSix && (currentSupportType === SupportSubCategory.Lodging_Hotel || currentSupportType === SupportSubCategory.Lodging_Allowance || currentSupportType === SupportSubCategory.Lodging_Group)) {
         days = days + 1;
       }
       this.supportDetailsForm.get('noOfDays').patchValue(days);
