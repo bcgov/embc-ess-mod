@@ -291,13 +291,11 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
-      console.log('value', value);
       this.updateValidToDate(value);
     });
 
     this.supportDetailsForm.get('fromDate').valueChanges.subscribe((value) => {
       if (value === null || value === '' || value === undefined) {
-        console.log('value', value);
         this.supportDetailsForm.get('noOfDays').patchValue(1);
       }
     });
@@ -1024,5 +1022,4 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     //Compare the times
     return imputTime >= fromTime && imputTime <= toTime;
   }
-  // Example usage:console.log(isTimeBefore("12:30:45", "14:20:15")); // trueconsole.log(isTimeBefore("18:00:00", "10:00:00")); // false
 }
