@@ -5,6 +5,7 @@ import { SupportDelivery } from '../models/support-delivery';
 import { SupportMethod } from '../models/support-method';
 import { SupportStatus } from '../models/support-status';
 import { SupportSubCategory } from '../models/support-sub-category';
+import { HouseholdMemberDto } from './househod-member-dto';
 export interface Support {
   category: SupportCategory;
   createdBy?: string | null;
@@ -14,6 +15,7 @@ export interface Support {
   from: string;
   id?: string | null;
   includedHouseholdMembers: Array<string>;
+  householdMembers?: Array<HouseholdMemberDto>;
   isSelfServe?: boolean;
   issuedBy?: string | null;
   issuedByTeam?: string | null;

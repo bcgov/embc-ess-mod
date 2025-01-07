@@ -123,9 +123,17 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public DateTime To { get; set; }
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+        public IEnumerable<HouseholdMemberDto> HouseholdMembers { get; set; } = Array.Empty<HouseholdMemberDto>();
         public SupportDelivery SupportDelivery { get; set; }
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
         public bool IsSelfServe { get; set; }
+    }
+
+    public record HouseholdMemberDto
+    {
+        public string DateOfBirth { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     [JsonConverter(typeof(PolymorphicJsonConverter<SupportDelivery>))]
