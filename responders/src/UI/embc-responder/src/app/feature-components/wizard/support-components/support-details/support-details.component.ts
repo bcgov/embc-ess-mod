@@ -152,60 +152,50 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   compareTaskDateTimeValidator({ controlType, other }: { controlType: 'date' | 'time'; other: string }): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let isValid = false;
-      const error = { invalidTaskDateTime: true };
       const otherControl = this.supportDetailsForm?.get(other);
-      // no need to validate if one of the controls does not have a value
-      if (
-        control?.value === null ||
-        control?.value === '' ||
-        control?.value === undefined ||
-        otherControl?.value === null ||
-        otherControl?.value === '' ||
-        otherControl?.value === undefined
-      ) {
+      const error = { invalidTaskDateTime: true };
+
+      if (!control?.value || !otherControl?.value) {
         isValid = true;
       } else {
         let controlDate;
         if (controlType === 'date') {
           controlDate = this.dateConversionService.createDateTimeString(control.value, otherControl.value);
-        } else if (controlType === 'time') {
+        } else {
           controlDate = this.dateConversionService.createDateTimeString(otherControl.value, control.value);
         }
 
         if (this.evacueeSessionService?.evacFile?.task?.from && this.evacueeSessionService?.evacFile?.task?.to) {
           const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
           const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
-
           isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
-        } else isValid = true;
-      }
-      if (!isValid) {
-        otherControl?.setErrors(error);
-        control?.setErrors(error);
-      } else {
-        if (control.errors) {
-          const errors = { ...control.errors }; // Copy the errors object
-          delete errors['invalidTaskDateTime']; // Remove the specific error
-
-          if (Object.keys(errors).length === 0) {
-            control.setErrors(null); // No errors left, set to null
-          } else {
-            control.setErrors(errors); // Set the modified errors object
-          }
-          if (otherControl.errors) {
-            const errors = { ...otherControl.errors }; // Copy the errors object
-            delete errors['invalidTaskDateTime']; // Remove the specific error
-
-            if (Object.keys(errors).length === 0) {
-              otherControl.setErrors(null); // No errors left, set to null
-            } else {
-              otherControl.setErrors(errors); // Set the modified errors object
-            }
-          }
+        } else {
+          isValid = true;
         }
       }
+
+      if (!isValid) {
+        control.setErrors({ ...control.errors, ...error });
+        otherControl.setErrors({ ...otherControl.errors, ...error });
+      } else {
+        this.removeError(control, 'invalidTaskDateTime');
+        this.removeError(otherControl, 'invalidTaskDateTime');
+      }
+
       return null;
     };
+  }
+
+  private removeError(control: AbstractControl, errorKey: string): void {
+    if (control && control.errors && control.errors[errorKey]) {
+      const errors = { ...control.errors };
+      delete errors[errorKey];
+      if (Object.keys(errors).length === 0) {
+        control.setErrors(null);
+      } else {
+        control.setErrors(errors);
+      }
+    }
   }
 
   private supportMapping: Map<number, SupportSubCategory | SupportCategory> = new Map<
