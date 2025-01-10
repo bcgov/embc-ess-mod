@@ -100,9 +100,13 @@
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationSupplierPartial.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\ETransferConfirmationTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\Images\emcr-logo.png" />
         <None Remove="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\ResponderAnonymousNewTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\ResponderNewTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\ResponderRegisterNewTemplate.hbs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -196,9 +200,21 @@
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationDeliverySummaryPartial.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\ETransferConfirmationTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\Images\emcr-logo.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
       <EmbeddedResource Include="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\Images\attention-logo.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\ResponderAnonymousNewTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\ResponderNewTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\ResponderRegisterNewTemplate.hbs" />
     </ItemGroup>
 
 </Project>

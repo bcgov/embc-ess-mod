@@ -9,6 +9,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class SaveRegistrantCommand : Command
     {
         public RegistrantProfile Profile { get; set; }
+        public bool IsFromResponder { get; set; } = false;
     }
 
     /// <summary>
