@@ -9,6 +9,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class SubmitEvacuationFileCommand : Command
     {
         public EvacuationFile File { get; set; }
+        public bool IsFromResponder { get; set; } = false;
     }
 
     /// <summary>

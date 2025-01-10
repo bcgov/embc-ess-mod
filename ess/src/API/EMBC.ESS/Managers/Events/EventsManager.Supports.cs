@@ -482,6 +482,7 @@ public partial class EventsManager
         }
         var totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
         var endDate = supports.Count() > 0 ? supports.First().To.ToPST() : DateTime.UtcNow.AddDays(3).ToPST();
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
 
         await SendEmailNotification(
             SubmissionTemplateType.ETransferConfirmation,
@@ -498,6 +499,7 @@ public partial class EventsManager
                 KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
                 KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
                 KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
+                KeyValuePair.Create("emcrLogoImage", logoImage)
             ]);
     }
 }

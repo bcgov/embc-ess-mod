@@ -73,7 +73,8 @@ public partial class RegistrationsController : ControllerBase
         var profile = mapper.Map<ESS.Shared.Contracts.Events.RegistrantProfile>(registrant);
         var id = await messagingClient.Send(new SaveRegistrantCommand
         {
-            Profile = profile
+            Profile = profile,
+            IsFromResponder = true
         });
         return Ok(new RegistrationResult { Id = id });
     }
@@ -96,7 +97,8 @@ public partial class RegistrationsController : ControllerBase
         var profile = mapper.Map<ESS.Shared.Contracts.Events.RegistrantProfile>(registrant);
         var id = await messagingClient.Send(new SaveRegistrantCommand
         {
-            Profile = profile
+            Profile = profile,
+            IsFromResponder = true
         });
         return Ok(new RegistrationResult { Id = id });
     }

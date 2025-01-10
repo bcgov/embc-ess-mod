@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Anywhere.ArcGIS.Operation;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
@@ -27,6 +29,8 @@ using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using static System.Net.Mime.MediaTypeNames;
+using Location = EMBC.ESS.Utilities.Spatial.Location;
 
 namespace EMBC.ESS.Managers.Events;
 
@@ -57,6 +61,9 @@ public partial class EventsManager(
     private readonly EvacuationFileLoader evacuationFileLoader = new(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
     private static TeamMemberStatus[] activeOnlyStatus = [TeamMemberStatus.Active];
 
+    private const string attentionImageFileName = $"Managers/Events/Notifications/Templates/Images/attention-logo.png";
+    private const string emcrLogoImageFileName = $"Managers/Events/Notifications/Templates/Images/emcr-logo.png";
+
     public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
     {
         var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
@@ -66,6 +73,8 @@ public partial class EventsManager(
         file.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = file.PrimaryRegistrantId;
 
         var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
+        string attentionImage = this.ConvertImageToBase64(attentionImageFileName);
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
 
         if (!string.IsNullOrEmpty(evacuee.Email))
         {
@@ -73,7 +82,11 @@ public partial class EventsManager(
                 SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
                 email: evacuee.Email,
                 name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
+                tokens: new[] { 
+                    KeyValuePair.Create("fileNumber", caseId),
+                    KeyValuePair.Create("attentionImage", attentionImage),
+                    KeyValuePair.Create("emcrLogoImage", logoImage)
+                });
         }
 
         return caseId;
@@ -89,16 +102,33 @@ public partial class EventsManager(
         file.PrimaryRegistrantId = evacuee.Id;
 
         var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
+        string attentionImage = this.ConvertImageToBase64(attentionImageFileName);
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
 
         var shouldEmailNotification = string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email) && string.IsNullOrEmpty(file.ManualFileId);
         if (shouldEmailNotification)
         {
+            /* DEVOPS-32: Set the email template to use based on where the request came from. */
+            SubmissionTemplateType templateType;
+            if (cmd.IsFromResponder)
+            {
+                templateType = SubmissionTemplateType.NewResponderEvacuationFileSubmission;
+            }
+            else
+            {
+                templateType = SubmissionTemplateType.NewEvacuationFileSubmission;
+            }
+
             //notify registrant of the new file and has email
             await SendEmailNotification(
-                SubmissionTemplateType.NewEvacuationFileSubmission,
+                templateType,
                 email: evacuee.Email,
                 name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: new[] { KeyValuePair.Create("fileNumber", fileId) });
+                tokens: new[] { 
+                    KeyValuePair.Create("fileNumber", fileId), 
+                    KeyValuePair.Create("attentionImage", attentionImage),
+                    KeyValuePair.Create("emcrLogoImage", logoImage)
+                });
         }
 
         return fileId;
@@ -138,15 +168,31 @@ public partial class EventsManager(
         }
 
         var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
+        string attentionImage = this.ConvertImageToBase64(attentionImageFileName);
 
         var newEvacuee = string.IsNullOrEmpty(evacuee.Id);
         if (newEvacuee && !string.IsNullOrEmpty(evacuee.Email))
         {
+            /* DEVOPS-32: Set template based on where the request came from. */
+            SubmissionTemplateType templateType;
+            if (cmd.IsFromResponder)
+            {
+                templateType = SubmissionTemplateType.NewResponderAnonymousEvacuationFileSubmission;
+            }
+            else
+            {
+                templateType = SubmissionTemplateType.NewProfileRegistration;
+            }
+
             await SendEmailNotification(
-                SubmissionTemplateType.NewProfileRegistration,
+                templateType,
                 email: evacuee.Email,
                 name: $"{evacuee.LastName}, {evacuee.FirstName}",
-                tokens: Array.Empty<KeyValuePair<string, string>>());
+                tokens: new[] {
+                    KeyValuePair.Create("attentionImage", attentionImage),
+                    KeyValuePair.Create("emcrLogoImage", logoImage)
+                });
         }
 
         return result.EvacueeId;
@@ -438,6 +484,8 @@ public partial class EventsManager(
         var invite = (await invitationRepository.Query(new EmailInvitationQuery { InviteId = inviteId })).Items.Single();
         var dp = dataProtectionProvider.CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
         var encryptedInviteId = dp.Protect(inviteId, invite.ExpiryDate);
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
+
         await SendEmailNotification(
             SubmissionTemplateType.InviteProfile,
             email: cmd.Email,
@@ -445,7 +493,8 @@ public partial class EventsManager(
             tokens: new[]
             {
                 KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
-                KeyValuePair.Create("inviteUrl", $"{configuration.GetValue<string>("REGISTRANTS_PORTAL_BASE_URL")}/verified-registration?inviteId={WebUtility.UrlEncode(encryptedInviteId)}")
+                KeyValuePair.Create("inviteUrl", $"{configuration.GetValue<string>("REGISTRANTS_PORTAL_BASE_URL")}/verified-registration?inviteId={WebUtility.UrlEncode(encryptedInviteId)}"),
+                KeyValuePair.Create("emcrLogoImage", logoImage)
             });
 
         return inviteId;
@@ -515,5 +564,20 @@ public partial class EventsManager(
             EvacuationFileNumber = cmd.EvacuationFileNumber,
             RegistrantId = cmd.RegistrantId
         });
+    }
+
+    private string ConvertImageToBase64(string imageFileName)
+    {
+        string base64Image = string.Empty;
+        try
+        {
+            byte[] imageArray = System.IO.File.ReadAllBytes(imageFileName);
+            base64Image = Convert.ToBase64String(imageArray);
+        }
+        catch (Exception ex)
+        {
+            string message = ex.Message;
+        }
+        return base64Image;
     }
 }
