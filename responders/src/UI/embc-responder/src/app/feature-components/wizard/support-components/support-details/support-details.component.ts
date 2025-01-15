@@ -29,7 +29,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
 import {
   MatDatepickerInputEvent,
@@ -55,6 +55,7 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-support-details',
@@ -151,61 +152,72 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   compareTaskDateTimeValidator({ controlType, other }: { controlType: 'date' | 'time'; other: string }): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let isValid = false;
-      const error = { invalidTaskDateTime: true };
       const otherControl = this.supportDetailsForm?.get(other);
-      // no need to validate if one of the controls does not have a value
-      if (
-        control?.value === null ||
-        control?.value === '' ||
-        control?.value === undefined ||
-        otherControl?.value === null ||
-        otherControl?.value === '' ||
-        otherControl?.value === undefined
-      ) {
+      const error = { invalidTaskDateTime: true };
+
+      if (!control?.value || !otherControl?.value) {
         isValid = true;
       } else {
         let controlDate;
         if (controlType === 'date') {
           controlDate = this.dateConversionService.createDateTimeString(control.value, otherControl.value);
-        } else if (controlType === 'time') {
+        } else {
           controlDate = this.dateConversionService.createDateTimeString(otherControl.value, control.value);
         }
 
         if (this.evacueeSessionService?.evacFile?.task?.from && this.evacueeSessionService?.evacFile?.task?.to) {
           const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
           const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
-
           isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
-        } else isValid = true;
-      }
-      if (!isValid) {
-        otherControl?.setErrors(error);
-        control?.setErrors(error);
-      } else {
-        if (control.errors) {
-          const errors = { ...control.errors }; // Copy the errors object
-          delete errors['invalidTaskDateTime']; // Remove the specific error
-
-          if (Object.keys(errors).length === 0) {
-            control.setErrors(null); // No errors left, set to null
-          } else {
-            control.setErrors(errors); // Set the modified errors object
-          }
-          if (otherControl.errors) {
-            const errors = { ...otherControl.errors }; // Copy the errors object
-            delete errors['invalidTaskDateTime']; // Remove the specific error
-
-            if (Object.keys(errors).length === 0) {
-              otherControl.setErrors(null); // No errors left, set to null
-            } else {
-              otherControl.setErrors(errors); // Set the modified errors object
-            }
-          }
+        } else {
+          isValid = true;
         }
       }
+
+      if (!isValid) {
+        control.setErrors({ ...control.errors, ...error });
+        otherControl.setErrors({ ...otherControl.errors, ...error });
+      } else {
+        this.removeError(control, 'invalidTaskDateTime');
+        this.removeError(otherControl, 'invalidTaskDateTime');
+      }
+
       return null;
     };
   }
+
+  private removeError(control: AbstractControl, errorKey: string): void {
+    if (control && control.errors && control.errors[errorKey]) {
+      const errors = { ...control.errors };
+      delete errors[errorKey];
+      if (Object.keys(errors).length === 0) {
+        control.setErrors(null);
+      } else {
+        control.setErrors(errors);
+      }
+    }
+  }
+
+  private supportMapping: Map<number, SupportSubCategory | SupportCategory> = new Map<
+    number,
+    SupportSubCategory | SupportCategory
+  >([
+    [174360000, SupportSubCategory.Food_Groceries],
+    [174360001, SupportSubCategory.Food_Restaurant],
+    [174360002, SupportSubCategory.Lodging_Hotel],
+    [174360003, SupportSubCategory.Lodging_Billeting],
+    [174360004, SupportSubCategory.Lodging_Group],
+    [174360005, SupportCategory.Incidentals],
+    [174360006, SupportCategory.Clothing],
+    [174360007, SupportSubCategory.Transportation_Taxi],
+    [174360008, SupportSubCategory.Transportation_Other],
+    [174360009, SupportSubCategory.Lodging_Allowance]
+  ]);
+
+  private inverseSupportMapping: Map<SupportSubCategory | SupportCategory, number> = new Map<
+    SupportSubCategory | SupportCategory,
+    number
+  >(Array.from(this.supportMapping.entries()).map(([key, value]) => [value, key]));
 
   validDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
@@ -476,9 +488,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   updateValidToDate(days?: number): void {
     const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
     if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
-      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
+      const fromTime = this.supportDetailsForm.get('fromTime').value;
+      const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
+      let totalDays = days;
+      if (
+        afterMidnightBeforeSix &&
+        (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+          currentSupportType === SupportSubCategory.Lodging_Allowance ||
+          currentSupportType === SupportSubCategory.Lodging_Group)
+      ) {
+        totalDays -= 1;
+      }
+      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + totalDays), 'MM/dd/yyyy');
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
     }
   }
@@ -491,9 +515,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   updateToDate(event: MatDatepickerInputEvent<Date>) {
     const days = this.supportDetailsForm.get('noOfDays').value;
     const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const fromTime = this.supportDetailsForm.get('fromTime').value;
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
     const date = new Date(currentVal);
-    const finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
-    this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    let finalValue = this.datePipe.transform(date.setDate(date.getDate() + days), 'MM/dd/yyyy');
+    if (
+      afterMidnightBeforeSix &&
+      (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+        currentSupportType === SupportSubCategory.Lodging_Allowance ||
+        currentSupportType === SupportSubCategory.Lodging_Group)
+    ) {
+      finalValue = this.datePipe.transform(date.setDate(date.getDate() + days - 1), 'MM/dd/yyyy');
+      this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    } else {
+      this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+    }
   }
 
   /**
@@ -503,18 +540,30 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    */
   updateNoOfDays(event: MatDatepickerInputEvent<Date>) {
     const fromDate = this.datePipe.transform(this.supportDetailsForm.get('fromDate').value, 'dd-MMM-yyyy');
+    const fromTime = this.supportDetailsForm.get('fromTime').value;
     const toDate = this.datePipe.transform(event.value, 'dd-MMM-yyyy');
     const dateDiff = new Date(toDate).getTime() - new Date(fromDate).getTime();
-    const days = dateDiff / (1000 * 60 * 60 * 24);
+    const currentSupportType = this.stepSupportsService.supportTypeToAdd.value;
+    let days = dateDiff / (1000 * 60 * 60 * 24);
+
+    const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
 
     if (days > 30) {
       this.supportDetailsForm.get('noOfDays').patchValue(null);
     } else {
+      if (
+        afterMidnightBeforeSix &&
+        (currentSupportType === SupportSubCategory.Lodging_Hotel ||
+          currentSupportType === SupportSubCategory.Lodging_Allowance ||
+          currentSupportType === SupportSubCategory.Lodging_Group)
+      ) {
+        days = days + 1;
+      }
       this.supportDetailsForm.get('noOfDays').patchValue(days);
     }
   }
 
-  validateDelivery() {
+  async validateDelivery() {
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
       return;
@@ -532,6 +581,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const category: SupportCategory =
       SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
       this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
+    const members: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get('members').value.map((m) => m.id);
 
     const hasConflict = existingSupports.some((s) => {
       const sFrom = moment(s.from);
@@ -545,6 +595,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       );
     });
 
+    // Initial check for duplicate supports within the same ESS file
     if (hasConflict) {
       this.dialog
         .open(DialogComponent, {
@@ -561,8 +612,73 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      this.addDelivery();
+      const supportCategory =
+        SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+        SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
+      const duplicateSupportRequest = {
+        members,
+        toDate: to.toISOString(),
+        fromDate: from.toISOString(),
+        category: this.mapSupportTypeInverse(supportCategory)
+      };
+
+      try {
+        // Get potential duplicates based on fuzzy search from API
+        const potentialDuplicateSupports = await firstValueFrom(
+          this.stepSupportsService.checkPossibleDuplicateSupports(duplicateSupportRequest)
+        );
+        // If there are potential duplicates, show a dialog to confirm
+        if (potentialDuplicateSupports.length > 0) {
+          const message: DialogContent = this.generateDuplicateSupportDialog(potentialDuplicateSupports, category);
+          this.dialog
+            .open(DialogComponent, {
+              data: {
+                component: InformationDialogComponent,
+                content: message
+              },
+              width: '720px'
+            })
+            .afterClosed()
+            .subscribe((event) => {
+              if (event === 'confirm') {
+                // If confirmed, add the delivery
+                this.addDelivery();
+              }
+            });
+          // If there are no potential duplicates found, add the delivery
+        } else {
+          this.addDelivery();
+        }
+      } catch (error) {
+        console.error('Error fetching duplicate supports: ', error);
+        return;
+      }
     }
+  }
+
+  generateDuplicateSupportDialog(potentialDuplicateSupports: Support[], category: string): DialogContent {
+    console.log(potentialDuplicateSupports);
+    const uniqueHouseholdMembers = new Map<string, string>();
+    potentialDuplicateSupports.forEach((s) => {
+      s.householdMembers.forEach((m) => {
+        uniqueHouseholdMembers.set(
+          m.firstName + m.lastName + m.dateOfBirth,
+          `<br><strong>Name:</strong> ${m.firstName} ${m.lastName} <br><strong>Date of Birth:</strong> ${m.dateOfBirth}`
+        );
+      });
+    });
+    return {
+      title: 'Possible Support Conflict',
+      text:
+        'The support you are trying to add may have conflicts with previously issued supports. The following evacuees received a ' +
+        category +
+        ' support during the same time period: <br>' +
+        Array.from(uniqueHouseholdMembers.values()).join('<br>') +
+        '.<br><br>Do you want to continue?',
+
+      confirmButton: 'Yes, Continue',
+      cancelButton: 'No, Cancel'
+    };
   }
 
   mapSubCategoryToCategory(subCategory: SupportSubCategory): SupportCategory {
@@ -688,6 +804,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         : this.setDefaultTimes();
     }
   }
+
   private createFromDate() {
     let existingSupports = this.existingSupports.filter(
       (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
@@ -771,6 +888,34 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         return SupportSubCategory.Lodging_Allowance;
       default:
         return SupportCategory.Unknown;
+    }
+  }
+
+  private mapSupportTypeInverse(support: SupportSubCategory | SupportCategory): number {
+    console.log('Support: ', support);
+    switch (support) {
+      case SupportSubCategory.Food_Groceries:
+        return 174360000;
+      case SupportSubCategory.Food_Restaurant:
+        return 174360001;
+      case SupportSubCategory.Lodging_Hotel:
+        return 174360002;
+      case SupportSubCategory.Lodging_Billeting:
+        return 174360003;
+      case SupportSubCategory.Lodging_Group:
+        return 174360004;
+      case SupportCategory.Incidentals:
+        return 174360005;
+      case SupportCategory.Clothing:
+        return 174360006;
+      case SupportSubCategory.Transportation_Taxi:
+        return 174360007;
+      case SupportSubCategory.Transportation_Other:
+        return 174360008;
+      case SupportSubCategory.Lodging_Allowance:
+        return 174360009;
+      default:
+        throw new Error(`Unknown SupportSubCategory or SupportCategory: ${support}`);
     }
   }
 
@@ -915,5 +1060,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           .bind(this.customValidation)
       ]);
     this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();
+  }
+
+  private isTimeBetween(time, from, to) {
+    // Split the times into hours, minutes, and seconds
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    const [fromHours, fromMinutes, fromSeconds] = from.split(':').map(Number);
+    const [toHours, toMinutes, toSeconds] = to.split(':').map(Number);
+    // Create Date objects for both times
+    const imputTime = new Date();
+    imputTime.setHours(hours, minutes, seconds ? seconds : 0);
+    const fromTime = new Date();
+    fromTime.setHours(fromHours, fromMinutes, fromSeconds);
+    const toTime = new Date();
+    toTime.setHours(toHours, toMinutes, toSeconds);
+    //Compare the times
+    return imputTime >= fromTime && imputTime <= toTime;
   }
 }

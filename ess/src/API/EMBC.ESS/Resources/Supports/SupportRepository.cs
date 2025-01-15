@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Supports
@@ -43,7 +45,6 @@ namespace EMBC.ESS.Resources.Supports
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
                 ApproveSupportCommand c => await Handle(c, ct),
                 SubmitSupportForReviewCommand c => await Handle(c, ct),
-
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -54,9 +55,87 @@ namespace EMBC.ESS.Resources.Supports
             return query switch
             {
                 SearchSupportsQuery q => await Handle(q, ct),
+                PotentialDuplicateSupportsQuery q => await Handle(q, ct),
 
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
+        }
+
+        private async Task<PotentialDuplicateSupportsQueryResult> Handle(PotentialDuplicateSupportsQuery query, CancellationToken ct)
+        {
+            var ctx = essContextFactory.CreateReadOnly();
+
+            if (!Enum.TryParse<SupportType>(query.Category, out var supportType))
+            {
+                throw new ArgumentException($"Invalid support type: {query.Category}");
+            }
+
+            if (!DateTime.TryParse(query.FromDate, out var fromDate))
+            {
+                throw new ArgumentException($"Invalid FromDate: {query.FromDate}");
+            }
+
+            if (!DateTime.TryParse(query.ToDate, out var toDate))
+            {
+                throw new ArgumentException($"Invalid ToDate: {query.ToDate}");
+            }
+
+            List<Guid> memberGuids = new List<Guid>();
+            foreach (var id in query.Members)
+            {
+                if (Guid.TryParse(id, out var guid))
+                {
+                    memberGuids.Add(guid);
+                }
+                else
+                {
+                    // Handle invalid GUID
+                    throw new ArgumentException($"Invalid member ID: {id}");
+                }
+            }
+
+            // Build a LINQ filter for the member GUIDs
+            var filter = string.Join(" or ", memberGuids.Select(g => $"era_householdmemberid eq {g}"));
+            // Fetch information about household members passed into the query
+            var householdMembers = (await ((DataServiceQuery<era_householdmember>)ctx.era_householdmembers
+                .AddQueryOption("$filter", filter))
+                .GetAllPagesAsync(ct)).ToList();
+
+            // Get all supports of matching type that are active during the date range passed into query
+            var supports = (await ctx.era_evacueesupports
+                .Expand(s => s.era_era_householdmember_era_evacueesupport)
+                .Where(s => s.era_supporttype == (int)supportType
+                    && s.era_validfrom <= toDate
+                    && s.era_validto >= fromDate)
+                .GetAllPagesAsync(ct)).ToList();
+
+            // Create a new ConcurrentBag to store potential duplicates
+            var potentialDuplicates = new ConcurrentBag<era_evacueesupport>();
+
+            // Iterate through each of the supports that matched the query
+            Parallel.ForEach(supports, support =>
+            {
+                // Iterate through each household member in the support
+                foreach (var supportMember in support.era_era_householdmember_era_evacueesupport.ToList())
+                {
+                    // Iterate through each household member passed into the query
+                    foreach (var member in householdMembers)
+                    {
+                        // Check name similarity
+                        var firstNameSimilarity = member.era_firstname.CombinedSimilarity(supportMember.era_firstname);
+                        var lastNameSimilarity = member.era_lastname.CombinedSimilarity(supportMember.era_lastname);
+
+                        // If the similarity is above 70%, consider the support a potential duplicate
+                        if (firstNameSimilarity > 0.7 && lastNameSimilarity > 0.7)
+                        {
+                            potentialDuplicates.Add(support);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            return new PotentialDuplicateSupportsQueryResult { DuplicateSupports = mapper.Map<IEnumerable<Support>>(potentialDuplicates) };
         }
 
         private async Task<SubmitSupportForApprovalCommandResult> Handle(SubmitSupportForApprovalCommand cmd, CancellationToken ct)

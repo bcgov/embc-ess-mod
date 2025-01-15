@@ -72,6 +72,7 @@ public class Mapping : Profile
             .ForMember(d => d.SupportDelivery, opts => opts.Ignore())
             .ForMember(d => d.Flags, opts => opts.Ignore())
             .ForMember(d => d.IncludedHouseholdMembers, opts => opts.Ignore())
+            .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
     ;
 
         CreateMap<SelfServeClothingSupport, ClothingSupport>()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -405,6 +406,21 @@ public partial class EventsManager
         return cmd.EvacuationFileNumber;
     }
 
+    public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
+    {
+        var supports = ((Resources.Supports.PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new Resources.Supports.PotentialDuplicateSupportsQuery { 
+            Category = query.Category,
+            FromDate = query.FromDate,
+            ToDate = query.ToDate,
+            Members = query.Members
+         }));
+
+        return new DuplicateSupportsQueryResult
+        {
+            DuplicateSupports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports.DuplicateSupports)
+        };
+    }
+
     public async Task<EligibilityCheckQueryResponse> Handle(EligibilityCheckQuery query)
     {
         var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = query.EvacuationFileNumber })).Items.SingleOrDefault();
@@ -466,6 +482,7 @@ public partial class EventsManager
         }
         var totalAmount = clothingAmount + incidentalsAmount + groceryAmount + restaurantAmount + shelterAllowanceAmount;
         var endDate = supports.Count() > 0 ? supports.First().To.ToPST() : DateTime.UtcNow.AddDays(3).ToPST();
+        string logoImage = this.ConvertImageToBase64(emcrLogoImageFileName);
 
         await SendEmailNotification(
             SubmissionTemplateType.ETransferConfirmation,
@@ -482,6 +499,7 @@ public partial class EventsManager
                 KeyValuePair.Create("notificationEmail", eTransferDetails.ETransferEmail),
                 KeyValuePair.Create("endDate", endDate.ToString("MMMM d, yyyy")),
                 KeyValuePair.Create("endTime", endDate.ToString("h:mm tt")),
+                KeyValuePair.Create("emcrLogoImage", logoImage)
             ]);
     }
 }

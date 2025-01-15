@@ -99,6 +99,19 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Items { get; set; }
     }
 
+    public class PotentialDuplicateSupportsQuery : SupportQuery
+    {
+        public string Category { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string[] Members { get; set; }
+    }
+
+    public class PotentialDuplicateSupportsQueryResult : SupportQueryResult
+    {
+        public IEnumerable<Support> DuplicateSupports { get; set; }
+    }
+
     public abstract record Support
     {
         public string Id { get; set; }
@@ -111,6 +124,7 @@ namespace EMBC.ESS.Resources.Supports
         public DateTime To { get; set; }
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+        public IEnumerable<HouseholdMemberDto> HouseholdMembers { get; set; } = Array.Empty<HouseholdMemberDto>();
         public SupportDelivery SupportDelivery { get; set; }
         public bool IsPaperReferral => SupportDelivery is Referral r && r.ManualReferralId != null;
         public bool IsReferral => SupportDelivery is Referral;
@@ -118,6 +132,13 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<SupportFlag> Flags { get; set; }
         public string TaskId { get; set; }
         public bool IsSelfServe { get; set; }
+    }
+
+    public record HouseholdMemberDto
+    {
+        public string DateOfBirth { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public abstract record SupportDelivery

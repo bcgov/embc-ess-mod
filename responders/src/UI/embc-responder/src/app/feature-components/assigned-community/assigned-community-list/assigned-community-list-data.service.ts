@@ -89,7 +89,9 @@ export class AssignedCommunityListDataService {
   }
 
   private getTeamCommunityList(): TeamCommunityModel[] {
-    return this.teamCommunityList ? this.teamCommunityList : JSON.parse(this.cacheService.get('teamCommunityList'));
+    //return this.teamCommunityList ? this.teamCommunityList : JSON.parse(this.cacheService.get('teamCommunityList'));
+    this.getCommunitiesToAddList();
+    return this.teamCommunityList;
   }
 
   private mergedCommunityList(): TeamCommunityModel[] {
