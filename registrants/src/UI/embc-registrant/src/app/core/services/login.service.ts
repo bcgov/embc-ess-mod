@@ -20,7 +20,7 @@ export class LoginService {
   public async login(targetUrl: string = undefined): Promise<boolean> {
     return await this.oauthService.tryLoginImplicitFlow().then(() => {
       if (!this.oauthService.hasValidAccessToken()) {
-        if (this.verifiedRegistrationFlow(targetUrl)) {
+        if (this.verifiedRegistrationFlow(targetUrl) || this.nonVerifiedRegistrationFlow(targetUrl)) {
           this.oauthService.initImplicitFlow(targetUrl);
           this.isLoggedIn$.next(false);
           return Promise.resolve(false);
@@ -65,6 +65,16 @@ export class LoginService {
       url.searchParams.has('inviteId') &&
       url.searchParams.get('inviteId')?.trim() !== ''
     );
+  }
+
+  private nonVerifiedRegistrationFlow(targetUrl: string): boolean {
+    if (!targetUrl) {
+      return false;
+    }
+
+    const url = new URL(targetUrl, window.location.origin);
+
+    return url.pathname === '/verified-registration' && !url.searchParams.has('inviteId');
   }
 
   public async tryLogin(): Promise<void> {
