@@ -32,6 +32,13 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(h => new HouseholdMemberDto
+                {
+                    DateOfBirth = h.era_dateofbirth.ToString(),
+                    FirstName = h.era_firstname,
+                    LastName = h.era_lastname
+                })))
+               
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))
                 .ForMember(d => d.IsSelfServe, opts => opts.MapFrom(s => s.era_selfservesupport))
@@ -53,6 +60,7 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeMembers(s => s.SupportDelivery as Referral, s => s.SupportDelivery as Interac)
                 // support delivery must be mapped at this level, can't be at the included mapping
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => resolveSupportDelieveryType(s.SupportDelivery)))
+                .ForSourceMember(s => s.HouseholdMembers, opts => opts.DoNotValidate()) 
                 .ForSourceMember(s => s.SupportDelivery, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IncludedHouseholdMembers, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Status, opts => opts.DoNotValidate())

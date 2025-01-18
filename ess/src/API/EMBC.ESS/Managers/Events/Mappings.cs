@@ -162,6 +162,8 @@ namespace EMBC.ESS.Managers.Events
                     }
                 })
                 ;
+            CreateMap<EMBC.ESS.Resources.Supports.HouseholdMemberDto, EMBC.ESS.Shared.Contracts.Events.HouseholdMemberDto>()
+                .ReverseMap();
 
             CreateMap<SupportFlag, Shared.Contracts.Events.SupportFlag>()
                 .IncludeAllDerived()

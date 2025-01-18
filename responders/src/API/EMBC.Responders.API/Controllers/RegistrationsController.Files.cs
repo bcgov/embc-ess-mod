@@ -95,7 +95,8 @@ public partial class RegistrationsController
         mappedFile.NeedsAssessment.CompletedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = currentUserId };
         var id = await messagingClient.Send(new SubmitEvacuationFileCommand
         {
-            File = mappedFile
+            File = mappedFile,
+            IsFromResponder = true
         });
 
         return Ok(new RegistrationResult { Id = id });
@@ -120,7 +121,8 @@ public partial class RegistrationsController
 
         var id = await messagingClient.Send(new SubmitEvacuationFileCommand
         {
-            File = mappedFile
+            File = mappedFile,
+            IsFromResponder = true
         });
 
         return Ok(new RegistrationResult { Id = id });

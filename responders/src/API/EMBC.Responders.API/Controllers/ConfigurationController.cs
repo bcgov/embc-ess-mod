@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -27,13 +28,15 @@ namespace EMBC.Responders.API.Controllers
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfiguration configuration;
+        private readonly ILogger<ConfigurationController> logger;
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
         private const int cacheDuration = 60 * 1; //1 minute
 
-        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
+        public ConfigurationController(IConfiguration configuration, ILogger<ConfigurationController> logger, IMessagingClient client, IMapper mapper, ICache cache)
         {
+            this.logger = logger;
             this.configuration = configuration;
             this.client = client;
             this.mapper = mapper;
@@ -154,15 +157,37 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpGet("outage-info")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<OutageInformation>> GetOutageInfo()
         {
-            var outageInfo = await cache.GetOrSet(
-                "outageInfo",
-                async () => (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo,
-                TimeSpan.FromSeconds(30));
-            return Ok(mapper.Map<OutageInformation>(outageInfo));
+            try
+            {
+                var outageInfo = await cache.GetOrSet<ESS.Shared.Contracts.Metadata.OutageInformation>(
+                    "outageInfo",
+                    async () =>
+                    {
+                        try
+                        {
+                            var result = await client.Send(new OutageQuery { PortalType = PortalType.Responders });
+                            return result.OutageInfo;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogInformation(ex, "Failed to get outage information via gRPC");
+                            return new ESS.Shared.Contracts.Metadata.OutageInformation();
+                        }
+                    },
+                    TimeSpan.FromSeconds(30)
+                );
+
+                return Ok(mapper.Map<OutageInformation>(outageInfo));
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation(ex, "Unexpected error fetching outage information");
+                return Ok(new OutageInformation());
+            }
         }
 
         [HttpGet("access-reasons")]

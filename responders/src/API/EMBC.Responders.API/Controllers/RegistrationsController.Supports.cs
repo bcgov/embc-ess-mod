@@ -827,6 +827,7 @@ public class SupportMapping : Profile
             .IncludeAllDerived()
             .ValidateMemberList(MemberList.Destination)
             .ForMember(d => d.CreatedBy, opts => opts.Ignore())
+            .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
             .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => new EMBC.ESS.Shared.Contracts.Events.TeamMember { DisplayName = s.IssuedBy }))
             .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
             .ForMember(d => d.SupportDelivery, opts => opts.MapFrom((s, d, m, ctx) => new SupportDeliveryTypeConverter().Convert(s.SupportDelivery, m, ctx)))
