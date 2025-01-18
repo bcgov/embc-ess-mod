@@ -176,7 +176,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
           const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
           const current = moment(controlDate);
-          
+
           if (current.isSame(to, 'day') && current.isAfter(to)) {
             isValid = false;
           } else {
