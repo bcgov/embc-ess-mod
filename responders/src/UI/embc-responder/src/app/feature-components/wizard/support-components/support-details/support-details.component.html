@@ -224,15 +224,9 @@
 
                             @if (
                               supportDetailsFormControl.fromDate.invalid &&
-                              supportDetailsFormControl.fromDate.hasError('invalidDate')
+                              supportDetailsFormControl.fromDate.hasError('invalidTaskDate')
                             ) {
-                              <mat-error> Please enter a valid date</mat-error>
-                            }
-                            @if (
-                              supportDetailsFormControl.fromDate.invalid &&
-                              supportDetailsFormControl.fromDate.hasError('invalidTaskDateTime')
-                            ) {
-                              <mat-error>Date/time must fall within the task dates</mat-error>
+                              <mat-error>Date must fall within the task dates</mat-error>
                             }
                             @if (
                               supportDetailsFormControl.fromDate.invalid &&
@@ -262,13 +256,7 @@
                               supportDetailsFormControl.fromTime.invalid &&
                               supportDetailsFormControl.fromTime.hasError('invalidTaskTime')
                             ) {
-                              <mat-error>Time must fall within task start and end times</mat-error>
-                            }
-                            @if (
-                              supportDetailsFormControl.fromTime.invalid &&
-                              supportDetailsFormControl.fromTime.hasError('invalidTaskDateTime')
-                            ) {
-                              <mat-error>Date/time must fall within the task dates</mat-error>
+                              <mat-error>Time must fall within the task dates</mat-error>
                             }
                           </mat-form-field>
                         </div>
@@ -312,15 +300,9 @@
 
                             @if (
                               supportDetailsFormControl.toDate.invalid &&
-                              supportDetailsFormControl.toDate.hasError('invalidDate')
+                              supportDetailsFormControl.toDate.hasError('invalidTaskDate')
                             ) {
-                              <mat-error> Please enter a valid date</mat-error>
-                            }
-                            @if (
-                              supportDetailsFormControl.toDate.invalid &&
-                              supportDetailsFormControl.toDate.hasError('invalidTaskDateTime')
-                            ) {
-                              <mat-error>Date/time must fall within the task dates</mat-error>
+                              <mat-error>Date must fall within the task dates</mat-error>
                             }
                             @if (
                               supportDetailsFormControl.toDate.invalid &&
@@ -350,13 +332,7 @@
                               supportDetailsFormControl.toTime.invalid &&
                               supportDetailsFormControl.toTime.hasError('invalidTaskTime')
                             ) {
-                              <mat-error>Time must fall within task start and end times</mat-error>
-                            }
-                            @if (
-                              supportDetailsFormControl.toTime.invalid &&
-                              supportDetailsFormControl.toTime.hasError('invalidTaskDateTime')
-                            ) {
-                              <mat-error>Date/time must fall within the task dates</mat-error>
+                              <mat-error>Time must fall within the task dates</mat-error>
                             }
                           </mat-form-field>
                         </div>

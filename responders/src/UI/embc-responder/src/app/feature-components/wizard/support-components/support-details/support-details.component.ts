@@ -151,7 +151,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   compareTaskDateTimeValidator({ controlType, other }: { controlType: 'date' | 'time'; other: string }): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let isValid = false;
-      const error = { invalidTaskDateTime: true };
+      const error = controlType === 'date' ? { invalidTaskDate: true } : { invalidTaskTime: true };
       const otherControl = this.supportDetailsForm?.get(other);
 
       if (
@@ -174,14 +174,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         if (this.evacueeSessionService?.evacFile?.task?.from && this.evacueeSessionService?.evacFile?.task?.to) {
           const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
           const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
-
-          isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
+          const current = moment(controlDate);
+          
+          if (current.isSame(to, 'day') && current.isAfter(to)) {
+            isValid = false;
+          } else {
+            isValid = current.isBetween(from, to, 'm', '[]');
+          }
         } else isValid = true;
       }
 
       if (!isValid) {
         otherControl?.setErrors(error);
-        return error; // Return the error instead of null
+        return error;
       }
 
       otherControl?.setErrors(null);
