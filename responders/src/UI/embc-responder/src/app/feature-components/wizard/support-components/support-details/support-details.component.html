@@ -256,7 +256,13 @@
                               supportDetailsFormControl.fromTime.invalid &&
                               supportDetailsFormControl.fromTime.hasError('required')
                             ) {
-                              <mat-error> From Time is required</mat-error>
+                              <mat-error>From Time is required</mat-error>
+                            }
+                            @if (
+                              supportDetailsFormControl.fromTime.invalid &&
+                              supportDetailsFormControl.fromTime.hasError('invalidTaskTime')
+                            ) {
+                              <mat-error>Time must fall within task start and end times</mat-error>
                             }
                             @if (
                               supportDetailsFormControl.fromTime.invalid &&
@@ -338,7 +344,13 @@
                               supportDetailsFormControl.toTime.invalid &&
                               supportDetailsFormControl.toTime.hasError('required')
                             ) {
-                              <mat-error> To Time Required</mat-error>
+                              <mat-error>To Time is required</mat-error>
+                            }
+                            @if (
+                              supportDetailsFormControl.toTime.invalid &&
+                              supportDetailsFormControl.toTime.hasError('invalidTaskTime')
+                            ) {
+                              <mat-error>Time must fall within task start and end times</mat-error>
                             }
                             @if (
                               supportDetailsFormControl.toTime.invalid &&

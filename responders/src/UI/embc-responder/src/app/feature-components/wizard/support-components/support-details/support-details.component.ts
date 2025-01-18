@@ -153,7 +153,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       let isValid = false;
       const error = { invalidTaskDateTime: true };
       const otherControl = this.supportDetailsForm?.get(other);
-      // no need to validate if one of the controls does not have a value
+
       if (
         control?.value === null ||
         control?.value === '' ||
@@ -178,31 +178,13 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
         } else isValid = true;
       }
+
       if (!isValid) {
         otherControl?.setErrors(error);
-        control?.setErrors(error);
-      } else {
-        if (control.errors) {
-          const errors = { ...control.errors }; // Copy the errors object
-          delete errors['invalidTaskDateTime']; // Remove the specific error
-
-          if (Object.keys(errors).length === 0) {
-            control.setErrors(null); // No errors left, set to null
-          } else {
-            control.setErrors(errors); // Set the modified errors object
-          }
-          if (otherControl.errors) {
-            const errors = { ...otherControl.errors }; // Copy the errors object
-            delete errors['invalidTaskDateTime']; // Remove the specific error
-
-            if (Object.keys(errors).length === 0) {
-              otherControl.setErrors(null); // No errors left, set to null
-            } else {
-              otherControl.setErrors(errors); // Set the modified errors object
-            }
-          }
-        }
+        return error; // Return the error instead of null
       }
+
+      otherControl?.setErrors(null);
       return null;
     };
   }
