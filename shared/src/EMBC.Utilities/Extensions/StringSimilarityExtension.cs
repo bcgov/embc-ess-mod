@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EMBC.Utilities.Extensions
@@ -7,61 +8,71 @@ namespace EMBC.Utilities.Extensions
     {
         /// <summary>
         /// Combines Double Metaphone, Dice Coefficient, Levenshtein Distance, and Longest Common Subsequence
-        /// to compute an overall similarity score between two strings.
+        /// to compute an overall similarity score between two strings, with multi-word support and forgiving scoring.
         /// </summary>
-        /// <param name="input">The first string to compare.</param>
-        /// <param name="comparedTo">The second string to compare.</param>
-        /// <returns>A score between 0 and 1 representing the similarity of the strings.</returns>
         public static double CombinedSimilarity(this string input, string comparedTo)
         {
-            // Reject empty strings
             if (string.IsNullOrWhiteSpace(input) || string.IsNullOrWhiteSpace(comparedTo))
                 return 0.0;
 
-            // Direct equality check
-            if (string.Equals(input, comparedTo, StringComparison.OrdinalIgnoreCase))
-                return 1.0;
-
-            // Normalize and optionally lowercase the strings
             input = NormalizeString(input);
             comparedTo = NormalizeString(comparedTo);
 
-            // Compute double metaphone similarity
+            if (input.Equals(comparedTo, StringComparison.OrdinalIgnoreCase))
+                return 1.0;
+
+            // Handle multi-word strings
+            if (input.Contains(' ') || comparedTo.Contains(' '))
+            {
+                var inputWords = input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var comparedToWords = comparedTo.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (inputWords.Length == 0 || comparedToWords.Length == 0)
+                    return 0.0;
+
+                // Calculate best matches for each word and average the scores
+                double totalScore = inputWords
+                    .Select(word => comparedToWords.Max(cw => CalculateWordScore(word, cw)))
+                    .Sum();
+
+                return totalScore / inputWords.Length;
+            }
+
+            // Single-word comparison
+            return CalculateWordScore(input, comparedTo);
+        }
+
+        private static double CalculateWordScore(string input, string comparedTo)
+        {
+            // Double Metaphone partial match
             string metaInput = input.ToDoubleMetaphone();
             string metaComparedTo = comparedTo.ToDoubleMetaphone();
-            double metaphoneScore = metaInput == metaComparedTo ? 1.0 : 0.0;
+            int metaMatch = 0;
+            for (int i = 0; i < Math.Max(metaInput.Length, metaComparedTo.Length); i++)
+            {
+                if (i < metaInput.Length && i < metaComparedTo.Length && metaInput[i] == metaComparedTo[i])
+                    metaMatch++;
+            }
+            double metaphoneScore = metaMatch / (double)Math.Max(metaInput.Length, metaComparedTo.Length);
 
-            // Compute dice coefficient
-            double diceCoefficient = input.DiceCoefficient(comparedTo);
+            // Dice Coefficient
+            double dice = input.DiceCoefficient(comparedTo);
 
-            // Compute levenshtein distance and score
-            int maxLen = Math.Max(input.Length, comparedTo.Length);
+            // Levenshtein Score: 1 / (distance + 0.2)
             int levenshteinDistance = input.LevenshteinDistance(comparedTo);
-            double levenshteinScore = 1.0 - ((double)levenshteinDistance / maxLen);
+            double levenshteinScore = 1.0 / (levenshteinDistance + 0.2);
 
-            // Compute longest common subsequence and score
-            var lcsResult = input.LongestCommonSubsequence(comparedTo);
-            double lcsScore = lcsResult.Item2;
+            // Longest Common Subsequence
+            double lcsScore = input.LongestCommonSubsequence(comparedTo).Item2;
 
-            // Combine the scores with weights
-            const double metaphoneWeight = 0.4;
-            const double diceWeight = 0.3;
-            const double levenshteinWeight = 0.2;
-            const double lcsWeight = 0.1;
-
-            // Compute the overall weighted score
-            double combinedScore =
-                (metaphoneScore * metaphoneWeight) +
-                (diceCoefficient * diceWeight) +
-                (levenshteinScore * levenshteinWeight) +
-                (lcsScore * lcsWeight);
-
-            return combinedScore;
+            // Equal weights for all metrics
+            return (metaphoneScore + dice + levenshteinScore + lcsScore) / 4;
         }
 
         private static string NormalizeString(string input)
         {
-            return Regex.Replace(input, @"[^a-zA-Z]+", "").ToLower();
+            // Keep alphanumeric and spaces, then lowercase
+            return Regex.Replace(input, @"[^a-zA-Z0-9 ]+", "").ToLowerInvariant();
         }
     }
 }
