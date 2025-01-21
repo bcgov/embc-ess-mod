@@ -10,10 +10,10 @@ This guide will help you set up a local development environment.
 
 - Windows Terminal (recommended)
 - .NET SDK
-- Node.js version 18.x and npm
+- Node.js version 18.x
+- npm
 - Git
 - Docker or Podman (optional - for Redis)
-- TODO: Add nvm instructions
 
 ### Initial Setup
 
@@ -39,7 +39,7 @@ Set up user secrets for each API using the following templates. Configure the se
 dotnet user-secrets init
 ```
 
-For the user secrets file structure, please see the Confluence page [here](https://www.google.com). (todo: add user secrets structure confluence link)
+For the user secrets file structure, please see the Confluence page for this project or ask a developer on the team.
 
 User secrets are stored in:
 - Windows: `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
