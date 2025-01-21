@@ -152,10 +152,17 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   compareTaskDateTimeValidator({ controlType, other }: { controlType: 'date' | 'time'; other: string }): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let isValid = false;
+      const error = controlType === 'date' ? { invalidTaskDate: true } : { invalidTaskTime: true };
       const otherControl = this.supportDetailsForm?.get(other);
-      const error = { invalidTaskDateTime: true };
 
-      if (!control?.value || !otherControl?.value) {
+      if (
+        control?.value === null ||
+        control?.value === '' ||
+        control?.value === undefined ||
+        otherControl?.value === null ||
+        otherControl?.value === '' ||
+        otherControl?.value === undefined
+      ) {
         isValid = true;
       } else {
         let controlDate;
@@ -168,20 +175,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         if (this.evacueeSessionService?.evacFile?.task?.from && this.evacueeSessionService?.evacFile?.task?.to) {
           const from = moment(this.evacueeSessionService?.evacFile?.task?.from);
           const to = moment(this.evacueeSessionService?.evacFile?.task?.to);
-          isValid = moment(controlDate).isBetween(from, to, 'm', '[]');
-        } else {
-          isValid = true;
-        }
+          const current = moment(controlDate);
+
+          if (current.isSame(to, 'day') && current.isAfter(to)) {
+            isValid = false;
+          } else {
+            isValid = current.isBetween(from, to, 'm', '[]');
+          }
+        } else isValid = true;
       }
 
       if (!isValid) {
-        control.setErrors({ ...control.errors, ...error });
-        otherControl.setErrors({ ...otherControl.errors, ...error });
-      } else {
-        this.removeError(control, 'invalidTaskDateTime');
-        this.removeError(otherControl, 'invalidTaskDateTime');
+        otherControl?.setErrors(error);
+        return error;
       }
 
+      otherControl?.setErrors(null);
       return null;
     };
   }
