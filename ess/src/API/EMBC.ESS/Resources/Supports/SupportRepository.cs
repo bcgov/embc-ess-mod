@@ -111,7 +111,7 @@ namespace EMBC.ESS.Resources.Supports
 
             // Create a new ConcurrentBag to store potential duplicates
             var potentialDuplicates = new ConcurrentBag<era_evacueesupport>();
-
+            var lockObj = new object();
             // Iterate through each of the supports that matched the query
             Parallel.ForEach(supports, support =>
             {
@@ -122,14 +122,19 @@ namespace EMBC.ESS.Resources.Supports
                     foreach (var member in householdMembers)
                     {
                         // Check name similarity
-                        var firstNameSimilarity = member.era_firstname.CombinedSimilarity(supportMember.era_firstname);
-                        var lastNameSimilarity = member.era_lastname.CombinedSimilarity(supportMember.era_lastname);
+                        var firstNameSimilarity = member.era_firstname.ToLower().CombinedSimilarity(supportMember.era_firstname);
+                        var lastNameSimilarity = member.era_lastname.ToLower().CombinedSimilarity(supportMember.era_lastname);
 
                         // If the similarity is above 70%, consider the support a potential duplicate
-                        if (firstNameSimilarity > 0.7 && lastNameSimilarity > 0.7)
+                        var combinedScore = (firstNameSimilarity + lastNameSimilarity) / 2;
+                        if (combinedScore >= 0.7)
                         {
-                            potentialDuplicates.Add(support);
-                            break;
+                            lock (lockObj)
+                            {
+                                potentialDuplicates.Add(support);
+
+                            }
+                            return;
                         }
                     }
                 }
