@@ -29,6 +29,7 @@ namespace EMBC.ESS.Resources.Supports
             public Guid QueueId { get; private set; }
         }
 
+
         public SupportRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
             this.essContextFactory = essContextFactory;
@@ -89,7 +90,6 @@ namespace EMBC.ESS.Resources.Supports
                 }
                 else
                 {
-                    // Handle invalid GUID
                     throw new ArgumentException($"Invalid member ID: {id}");
                 }
             }
@@ -101,12 +101,13 @@ namespace EMBC.ESS.Resources.Supports
                 .AddQueryOption("$filter", filter))
                 .GetAllPagesAsync(ct)).ToList();
 
-            // Get all supports of matching type that are active during the date range passed into query
-            var supports = (await ctx.era_evacueesupports
+            var relatedSupportTypes = SimilarSupportTypes(supportType).Select(t => (int)t).ToArray();
+            var supportTypesFilter = string.Join(" or ", relatedSupportTypes.Select(t => $"era_supporttype eq {t}"));
+
+            // Modified query to use string-based filter
+            var supports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
                 .Expand(s => s.era_era_householdmember_era_evacueesupport)
-                .Where(s => s.era_supporttype == (int)supportType
-                    && s.era_validfrom <= toDate
-                    && s.era_validto >= fromDate)
+                .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDate:yyyy-MM-dd} and era_validto ge {fromDate:yyyy-MM-dd}"))
                 .GetAllPagesAsync(ct)).ToList();
 
             // Create a new ConcurrentBag to store potential duplicates
@@ -132,7 +133,6 @@ namespace EMBC.ESS.Resources.Supports
                             lock (lockObj)
                             {
                                 potentialDuplicates.Add(support);
-
                             }
                             return;
                         }
@@ -508,6 +508,37 @@ namespace EMBC.ESS.Resources.Supports
             var teamMember = await ctx.era_essteamusers.ByKey(support._era_issuedbyid_value).GetValueAsync(ct);
             if (teamMember == null || teamMember.statecode != (int)EntityState.Active) throw new InvalidOperationException($"team member {support._era_issuedbyid_value} not found or is not active");
             ctx.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
+        }
+
+        private static SupportType[] SimilarSupportTypes(SupportType type) =>
+            type switch
+            {
+                SupportType.Food_Groceries or SupportType.Food_Restaurant => 
+                    [SupportType.Food_Groceries, SupportType.Food_Restaurant],
+                
+                SupportType.Lodging_Group or SupportType.Lodging_Billeting or 
+                SupportType.Lodging_Hotel or SupportType.Lodging_Shelter => 
+                    [SupportType.Lodging_Group, SupportType.Lodging_Billeting, 
+                     SupportType.Lodging_Hotel, SupportType.Lodging_Shelter],
+                
+                SupportType.Transportation_Other or SupportType.Transportation_Taxi => 
+                    [SupportType.Transportation_Other, SupportType.Transportation_Taxi],
+
+                _ => [type]
+            };
+
+        private enum SupportType
+        {
+            Food_Groceries = 174360000,
+            Food_Restaurant = 174360001,
+            Lodging_Hotel = 174360002,
+            Lodging_Billeting = 174360003,
+            Lodging_Group = 174360004,
+            Incidentals = 174360005,
+            Clothing = 174360006,
+            Transportation_Taxi = 174360007,
+            Transportation_Other = 174360008,
+            Lodging_Shelter = 174360009,
         }
     }
 }
