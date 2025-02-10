@@ -155,6 +155,7 @@ public class ReportRepository : IReportRepository
             .Expand(s => s.era_SupplierId)
             .Expand(s => s.era_GroupLodgingCityID)
             .Expand(s => s.era_era_householdmember_era_evacueesupport)
+            .Expand(s => s.era_PayeeId)
             .Where(s => s._era_evacuationfileid_value == file.era_evacuationfileid))
             .GetAllPagesAsync(ct))
             .ToList();
