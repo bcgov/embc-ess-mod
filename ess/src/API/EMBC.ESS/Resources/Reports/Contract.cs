@@ -234,6 +234,12 @@ public record Support
     [Display(Name = "Sub Support Type")]
     public string SubSupportType { get; set; }
 
+    [Display(Name = "Support Status")]
+    public string SupportStatus { get; set; }
+
+    [Display(Name = "Support Status Reason")]
+    public string SupportStatusReason { get; set; }
+
     [Display(Name = "Support Delivery Type")]
     public string SupportDeliveryType { get; set; }
 

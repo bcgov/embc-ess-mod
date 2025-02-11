@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Extensions;
 
@@ -146,6 +147,65 @@ namespace EMBC.ESS.Resources.Reports
                 return res;
             };
 
+            Func<int?, string> resolveSupportStatus = s =>
+            {
+                var res = string.Empty;
+                switch (s)
+                {
+                    case (int)SupportStatus.Void:
+                        res = "Void";
+                        break;
+                    case (int)SupportStatus.Paid:
+                        res = "Paid";
+                        break;
+                    case (int)SupportStatus.Issued:
+                        res = "Issued";
+                        break;
+                    case (int)SupportStatus.PendingScan:
+                        res = "Pending Scan";
+                        break;
+                    case (int)SupportStatus.Expired:
+                        res = "Expired";
+                        break;
+                    case (int)SupportStatus.UnderReview:
+                        res = "Under Review";
+                        break;
+                    case (int)SupportStatus.Active:
+                        res = "Active";
+                        break;
+                    case (int)SupportStatus.Approved:
+                        res = "Approved";
+                        break;
+                    case (int)SupportStatus.Cancelled:
+                        res = "Cancelled";
+                        break;
+                    case (int)SupportStatus.PendingApproval:
+                        res = "Pending Approval";
+                        break;
+                    default:
+                        break;
+                }
+                return res;
+            };
+
+            Func<int?, string> resolveSupportVoidReasonStatus = s =>
+            {
+                var res = string.Empty;
+                switch (s)
+                {
+                    case (int)SupportVoidReason.SupplierCouldNotMeetNeed:
+                        res = "Supplier Could Not Meet Need";
+                        break;
+                    case (int)SupportVoidReason.NewSupplierRequired:
+                        res = "New Supplier Required";
+                        break;
+                    case (int)SupportVoidReason.ErrorOnPrintedReferral:
+                        res = "Error On Printed Referral";
+                        break;
+                }
+                return res;
+            };
+
             Func<era_evacueesupport?, string> resolveSupportDeliveryType = s =>
             {
                 var res = string.Empty;
@@ -182,6 +242,8 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.RegistrationCompletedTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileId.era_registrationcompleteddate.Value.UtcDateTime.ToPST().ToString("hh:mm tt") : null))
                 .ForMember(d => d.PurchaserOfGoods, opts => opts.MapFrom(s => s.era_purchaserofgoods))
                 .ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_manualsupport ?? s.era_name))
+                .ForMember(d => d.SupportStatus, opts => opts.MapFrom(s => resolveSupportStatus(s.statuscode)))
+                .ForMember(d => d.SupportStatusReason, opts => opts.MapFrom(s => resolveSupportVoidReasonStatus(s.era_voidreason)))
                 .ForMember(d => d.SupportType, opts => opts.MapFrom(s => resolveSupportType(s.era_supporttype)))
                 .ForMember(d => d.SubSupportType, opts => opts.MapFrom(s => resolveSupportSubType(s.era_supporttype)))
                 .ForMember(d => d.SupportDeliveryType, opts => opts.MapFrom(s => resolveSupportDeliveryType(s)))
