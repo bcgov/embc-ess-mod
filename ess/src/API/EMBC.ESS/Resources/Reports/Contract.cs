@@ -258,6 +258,9 @@ public record Support
     [Display(Name = "Total Amount")]
     public decimal TotalAmount { get; set; }
 
+    [Display(Name = "Payee")]
+    public string Payee { get; set; }
+
     [Display(Name = "Breakfasts per Person")]
     public string Breakfasts { get; set; }
 

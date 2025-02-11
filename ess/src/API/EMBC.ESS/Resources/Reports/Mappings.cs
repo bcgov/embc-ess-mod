@@ -192,6 +192,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.ValidToTime, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime.ToPST().ToString("hh:mm tt") : null))
                 .ForMember(d => d.NumberOfEvacuees, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Count))
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
+                .ForMember(d => d.Payee, opts => opts.MapFrom(s => s._era_payeeid_value == null || s.era_PayeeId == null ? null : $"{s.era_PayeeId.firstname} {s.era_PayeeId.lastname}"))
                 .ForMember(d => d.Breakfasts, opts => opts.MapFrom(s => s.era_numberofbreakfasts))
                 .ForMember(d => d.Lunches, opts => opts.MapFrom(s => s.era_numberoflunches))
                 .ForMember(d => d.Dinners, opts => opts.MapFrom(s => s.era_numberofdinners))
