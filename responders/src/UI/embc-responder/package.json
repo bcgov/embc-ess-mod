@@ -70,6 +70,7 @@
     "prettier": "^3.2.5",
     "protractor": "~7.0.0",
     "ts-node": "^8.10.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "mermaid": ">=10.9.3"
   }
 }
