@@ -90,7 +90,6 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
-      console.log(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }
