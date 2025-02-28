@@ -1,5 +1,6 @@
 ﻿using System;
 using EMBC.Registrants.API.Controllers;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.Registrants.API.Mappers
 {
@@ -47,6 +48,7 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Events.Address>()
+                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode.ToUpperCaseNoSpacePostalCode()))
                 .ReverseMap()
                 ;
 
