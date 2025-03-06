@@ -133,7 +133,7 @@ public partial class EventsManager
         var support = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ById = cmd.SupportId })).Items.SingleOrDefault();
         if (support == null) throw new NotFoundException($"Support {cmd.SupportId} not found");
         if (support.SupportDelivery is not Resources.Supports.ETransfer) throw new BusinessValidationException($"Support {cmd.SupportId} is not an etransfer and cannot be cancelled");
-        var relatedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByLinkedSupportId = cmd.SupportId })).Items;
+        var relatedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByLinkedSupportId = cmd.SupportId })).Items.Where(p => p.Status != PaymentStatus.Cancelled);
         if (relatedPayments.Any()) throw new BusinessValidationException($"Support {cmd.SupportId} already has associated payments");
 
         var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
