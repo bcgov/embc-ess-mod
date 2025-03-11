@@ -4,6 +4,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.Mappers;
 using EMBC.Registrants.API.Services;
+using EMBC.Utilities.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -105,14 +106,14 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.PrimaryAddress.Community.ShouldBe(profile.PrimaryAddress.Community);
             registrantProfile.PrimaryAddress.StateProvince.ShouldBe(profile.PrimaryAddress.StateProvince);
             registrantProfile.PrimaryAddress.Country.ShouldBe(profile.PrimaryAddress.Country);
-            registrantProfile.PrimaryAddress.PostalCode.ShouldBe(profile.PrimaryAddress.PostalCode);
+            registrantProfile.PrimaryAddress.PostalCode.ShouldBe(profile.PrimaryAddress.PostalCode?.ToUpperCaseNoSpacePostalCode() ?? string.Empty);
 
             registrantProfile.MailingAddress.AddressLine1.ShouldBe(profile.MailingAddress.AddressLine1);
             registrantProfile.MailingAddress.AddressLine2.ShouldBe(profile.MailingAddress.AddressLine2);
             registrantProfile.MailingAddress.Community.ShouldBe(profile.MailingAddress.Community);
             registrantProfile.MailingAddress.StateProvince.ShouldBe(profile.MailingAddress.StateProvince);
             registrantProfile.MailingAddress.Country.ShouldBe(profile.MailingAddress.Country);
-            registrantProfile.MailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode);
+            registrantProfile.MailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode?.ToUpperCaseNoSpacePostalCode() ?? string.Empty);
         }
 
         [Fact]
