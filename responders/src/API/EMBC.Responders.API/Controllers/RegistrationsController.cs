@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Responders.API.Services;
+using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -295,6 +296,7 @@ public class RegistrationsMapping : Profile
            .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
            .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
            .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+           .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode.ToUpperCaseNoSpacePostalCode()))
            ;
 
         CreateMap<ESS.Shared.Contracts.Events.Address, Address>()
@@ -347,7 +349,7 @@ public class RegistrationsMapping : Profile
                 string.Equals(s.MailingAddress.StateProvince, s.PrimaryAddress.StateProvince, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(s.MailingAddress.Community, s.PrimaryAddress.Community, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(s.MailingAddress.City, s.PrimaryAddress.City, StringComparison.InvariantCultureIgnoreCase) &&
-                string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode.ToUpperCaseNoSpacePostalCode(), StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(s.MailingAddress.AddressLine1, s.PrimaryAddress.AddressLine1, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.InvariantCultureIgnoreCase)))
             ;
