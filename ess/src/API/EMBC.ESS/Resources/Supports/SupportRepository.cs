@@ -107,7 +107,7 @@ namespace EMBC.ESS.Resources.Supports
             // Modified query to use string-based filter
             var supports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
                 .Expand(s => s.era_era_householdmember_era_evacueesupport)
-                .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDate:yyyy-MM-dd} and era_validto ge {fromDate:yyyy-MM-dd}"))
+                .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDate:yyyy-MM-dd} and era_validto ge {fromDate:yyyy-MM-dd} and statuscode ne {(int)SupportStatus.Cancelled} and statuscode ne {(int)SupportStatus.Void}"))
                 .GetAllPagesAsync(ct)).ToList();
 
             // Create a new ConcurrentBag to store potential duplicates
