@@ -22,7 +22,6 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-select formControlName="notificationPreference" (selectionChange)="preferenceSelect($event)" required>
-          <mat-option value=""> Select-- </mat-option>
           @for (preference of notificationPreferences; track preference) {
             <mat-option [value]="preference">
               {{ preference }}
