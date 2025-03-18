@@ -34,6 +34,7 @@ export class SupportDeliveryModel {
   method: SupportMethod;
   notificationEmail?: string;
   notificationMobile?: string;
+  etransferWarning?: boolean;
 }
 
 export class SupplierDetailsModel {

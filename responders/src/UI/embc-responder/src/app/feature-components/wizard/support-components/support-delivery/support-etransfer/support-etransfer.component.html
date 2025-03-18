@@ -189,5 +189,19 @@
         </div>
       </div>
     }
+    <div *ngIf="showEtransferWarning()" class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-checkbox #etransferWarning id="etransferWarning" formControlName="etransferWarning"  required>
+              I acknowledge that I have read and understood the e-Transfer warning.
+            </mat-checkbox>
+            <ng-container *ngIf="supportDeliveryFormControl?.etransferWarning?.invalid">
+              <mat-error class="custom-mat-error">You must confirm this action when selecting the Mobile option.</mat-error>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 </form>
