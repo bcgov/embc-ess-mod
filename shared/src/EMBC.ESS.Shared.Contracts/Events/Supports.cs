@@ -69,6 +69,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string[] Members { get; set; }
+        public string FileId { get; set; }
+        public string IssuedBy { get; set; }
     }
 
     public class DuplicateSupportsQueryResult

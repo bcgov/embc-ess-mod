@@ -408,12 +408,15 @@ public partial class EventsManager
 
     public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
     {
-        var supports = ((Resources.Supports.PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new Resources.Supports.PotentialDuplicateSupportsQuery { 
+        var supports = (PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new PotentialDuplicateSupportsQuery
+        {
             Category = query.Category,
             FromDate = query.FromDate,
             ToDate = query.ToDate,
-            Members = query.Members
-         }));
+            Members = query.Members,
+            FileId = query.FileId,
+            IssuedBy = string.IsNullOrEmpty(query.IssuedBy) ? (Guid?)null : Guid.Parse(query.IssuedBy)
+        });
 
         return new DuplicateSupportsQueryResult
         {

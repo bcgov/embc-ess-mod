@@ -176,7 +176,9 @@ export class StepSupportsService {
         members: supportDetails.members,
         toDate: supportDetails.toDate,
         fromDate: supportDetails.fromDate,
-        category: supportDetails.category
+        category: supportDetails.category,
+        fileId: supportDetails.fileId,
+        issuedBy: this.userService?.currentProfile?.id
       })
       .pipe(
         map((supports: Support[]) => {

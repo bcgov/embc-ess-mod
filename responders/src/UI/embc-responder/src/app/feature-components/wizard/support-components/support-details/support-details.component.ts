@@ -56,6 +56,7 @@ import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-support-details',
@@ -133,6 +134,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     private dateConversionService: DateConversionService,
     private computeState: ComputeRulesService,
     private cdr: ChangeDetectorRef,
+    private userService: UserService,
     private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
@@ -628,9 +630,11 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         members,
         toDate: to.toISOString(),
         fromDate: from.toISOString(),
-        category: this.mapSupportTypeInverse(supportCategory)
+        category: this.mapSupportTypeInverse(supportCategory),
+        fileId: this.evacueeSessionService?.evacFile?.id,
+        issuedBy: this.userService?.currentProfile?.userName
       };
-
+      
       try {
         // Get potential duplicates based on fuzzy search from API
         const potentialDuplicateSupports = await firstValueFrom(
