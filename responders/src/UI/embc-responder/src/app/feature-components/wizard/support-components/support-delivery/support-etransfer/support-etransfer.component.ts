@@ -48,7 +48,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
   @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
   @ViewChild('etransferWarning') etransferWarning: MatCheckbox;
-  
+
   readonly phoneMask = globalConst.phoneMask;
 
   supplierList: SupplierListItemModel[];
@@ -59,7 +59,6 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   showLoader = false;
   color = '#169BD5';
 
-  
   notificationPreferences = ['Email', 'Mobile', 'Email & Mobile'];
   selectedPreference = 'Email'; // Default selected value
   emailMatcher = new CustomErrorMailMatcher();
@@ -94,7 +93,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
     //this.previousMobile = this.cacheService.get('previousMobile');
 
     if (!this.cloneFlag && (this.mobileOnFile || this.previousMobile)) this.showMobileCheckBox = true;
-    
+
     this.supportDeliveryForm?.get('notificationPreference')?.setValue(this.selectedPreference);
     this.preferenceSubscription = this.supportDeliveryForm
       ?.get('notificationPreference')
@@ -120,7 +119,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
           // Remove the validator
           etransferWarningControl?.clearValidators();
         }
-    
+
         etransferWarningControl?.updateValueAndValidity();
       });
 
