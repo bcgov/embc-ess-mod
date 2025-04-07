@@ -22,7 +22,6 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-select formControlName="notificationPreference" (selectionChange)="preferenceSelect($event)" required>
-          <mat-option value=""> Select-- </mat-option>
           @for (preference of notificationPreferences; track preference) {
             <mat-option [value]="preference">
               {{ preference }}
@@ -190,5 +189,29 @@
         </div>
       </div>
     }
+    <div *ngIf="showEtransferWarning()" class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div style="display: flex; align-items: flex-start">
+              <mat-checkbox #etransferWarning id="etransferWarning" formControlName="etransferWarning" required>
+              </mat-checkbox>
+              <span style="margin-left: 8px">
+                You acknowledge that you have previously used this phone number to receive an Interac e-Transfer, and
+                therefore it is not registered for auto-deposit to any other bank account. The Ministry of Emergency
+                Management and Climate Readiness will not be responsible for funds sent to an incorrect recipient as a
+                result of using this phone number, and you will not be eligible for any other supports for this
+                timeframe. If you are unsure, please do not use a phone number, and use an email address instead.
+              </span>
+            </div>
+            <ng-container *ngIf="supportDeliveryFormControl?.etransferWarning?.invalid">
+              <mat-error class="custom-mat-error"
+                >You must confirm this action when selecting the Mobile option.</mat-error
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 </form>

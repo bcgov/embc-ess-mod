@@ -319,6 +319,17 @@ export class CustomValidationService {
   }
 
   /**
+   * Checks if a single checkbox is checked
+   *
+   * @returns validation error
+   */
+  singleCheckboxValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      return control.value === true ? null : { notChecked: true };
+    };
+  }
+
+  /**
    * Checks if at least one field has a value
    *
    * @returns validation error
