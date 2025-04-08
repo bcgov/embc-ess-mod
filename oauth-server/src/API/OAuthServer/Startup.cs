@@ -41,6 +41,8 @@ namespace OAuthServer
             this.configuration = configuration;
         }
 
+        private readonly string MyPolicy = "_myPolicy";
+
         private IConfiguration configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -72,6 +74,21 @@ namespace OAuthServer
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
 
+            var corsAllowedDomainsString = configuration.GetValue<string>("AllowedCorsOrigins", null);
+
+            if (corsAllowedDomainsString != null)
+            {
+                var corsAllowedDomains = corsAllowedDomainsString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(name: MyPolicy,
+                        builder =>
+                        {
+                            builder.WithOrigins(corsAllowedDomains)
+                            .WithMethods("PUT", "POST", "DELETE", "GET", "OPTIONS");
+                        });
+                });
+            }
             services.AddControllers();
 
             var configFile = configuration.GetValue("IDENTITYSERVER_CONFIG_FILE", (string)null);
@@ -273,6 +290,8 @@ namespace OAuthServer
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(MyPolicy);
 
             app.UseEndpoints(endpoints =>
             {
