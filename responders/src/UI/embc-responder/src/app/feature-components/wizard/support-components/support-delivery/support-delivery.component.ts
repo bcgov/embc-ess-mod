@@ -205,6 +205,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               this.customValidation.whitespaceValidator()
             )
           ]
+        ],
+        etransferWarning: [
+          this.stepSupportsService?.supportDelivery?.etransferWarning ?? false,
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              this.supportDeliveryForm.get('notificationPreference')?.value === 'Mobile',
+            this.customValidation.singleCheckboxValidator()
+          )
         ]
       },
       {

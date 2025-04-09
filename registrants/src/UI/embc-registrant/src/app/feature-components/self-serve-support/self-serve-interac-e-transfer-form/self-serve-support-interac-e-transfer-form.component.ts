@@ -40,6 +40,8 @@ export class SelfServeSupportInteracETransfterFormComponent implements OnInit {
   hasEmailAddressOnFile = false;
   hasPhoneOnFile = false;
 
+  selectedPreference = ETransferNotificationPreference.Email; // Default selected value for the dropdown
+
   constructor(
     public profileDataService: ProfileDataService,
     private customValidation: CustomValidationService
@@ -51,6 +53,8 @@ export class SelfServeSupportInteracETransfterFormComponent implements OnInit {
     this.eTransferDetailsForm.controls.recipientName.setValue(
       `${profile.personalDetails.firstName ?? ''} ${profile.personalDetails.lastName ?? ''}`
     );
+
+    this.eTransferDetailsForm.controls.notificationPreference.setValue(this.selectedPreference);
 
     this.eTransferDetailsForm.valueChanges.subscribe({
       next: (eTransferDetails) => {
@@ -89,6 +93,11 @@ export class SelfServeSupportInteracETransfterFormComponent implements OnInit {
         } else {
           this.eTransferDetailsForm.controls.contactEmail.disable({ emitEvent: false });
           this.eTransferDetailsForm.controls.confirmContactEmail.disable({ emitEvent: false });
+        }
+        if (ETransferNotificationPreference.Mobile === eTransferDetails.notificationPreference) {
+          this.eTransferDetailsForm.controls.agreeToTermsMobile.enable({ emitEvent: false });
+        } else {
+          this.eTransferDetailsForm.controls.agreeToTermsMobile.disable({ emitEvent: false });
         }
       }
     });
