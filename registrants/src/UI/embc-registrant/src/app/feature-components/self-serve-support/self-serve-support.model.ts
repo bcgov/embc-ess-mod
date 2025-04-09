@@ -83,4 +83,5 @@ export interface ETransferDetailsForm {
   confirmMobile: FormControl<string>;
   useMobileOnFile: FormControl<boolean>;
   recipientName: FormControl<string>;
+  agreeToTermsMobile: FormControl<boolean>;
 }
