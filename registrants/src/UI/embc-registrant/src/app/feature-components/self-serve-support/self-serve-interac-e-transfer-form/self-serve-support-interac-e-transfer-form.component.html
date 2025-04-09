@@ -37,11 +37,7 @@
           </div>
           <div class="card-question requiredField">How would you prefer to be <b>notified</b> of your transfer?</div>
           <mat-form-field appearance="outline">
-            <mat-select
-              [formControl]="eTransferDetailsForm.controls.notificationPreference"
-              required
-              placeholder="-- Select One"
-            >
+            <mat-select [formControl]="eTransferDetailsForm.controls.notificationPreference" required>
               @for (preference of eTransferNotificationPreferenceOptions; track preference) {
                 <mat-option [value]="preference">
                   {{ preference }}
@@ -197,6 +193,21 @@
                   <mat-error> Email Address Mismatch </mat-error>
                 }
               </mat-form-field>
+            }
+            @if (
+              eTransferDetailsForm.controls.notificationPreference.value === ETransferNotificationPreference.Mobile
+            ) {
+              <mat-checkbox [formControl]="eTransferDetailsForm.controls.agreeToTermsMobile" required>
+                I acknowledge that I have previously used this phone number to receive an Interac e-Transfer, and
+                therefore it is not registered for auto-deposit to any other bank account. The Ministry of Emergency
+                Management and Climate Readiness will not be responsible for funds sent to an incorrect recipient as a
+                result of using this phone number, and I will not be eligible for any other supports for this timeframe.
+                <br /><br />
+                If you are unsure, please do not use a phone number, and use an email address instead.
+              </mat-checkbox>
+              @if (eTransferDetailsForm.controls.agreeToTermsMobile.hasError('required')) {
+                <mat-error> You must agree to the terms and conditions </mat-error>
+              }
             }
           }
         </div>
