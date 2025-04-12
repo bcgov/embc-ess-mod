@@ -78,11 +78,14 @@ namespace EMBC.ESS.Resources.Supports
     public class CreateSupportConflictCommand : ManageSupportCommand
     {
         public ConflictMessage ConflictMessage { get; set; }
+        public string SupportId { get; set; }
+        public string FileId { get; set; }
+        public Guid IssuedBy { get; set; }
     }
 
     public class CreateSupportConflictCommandResult : ManageSupportCommandResult
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
     }
 
 

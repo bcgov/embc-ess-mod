@@ -11,6 +11,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { supportsGetDuplicateSupports, SupportsGetDuplicateSupports$Params } from '../fn/supports/supports-get-duplicate-supports';
 import { Support } from '../models';
+import { SupportAddDuplicateSupportConflict$Params } from '../fn/supports/supports-add-duplicate-support-conflict';
 
 @Injectable({ providedIn: 'root' })
 export class SupportsService extends BaseService {
@@ -40,5 +41,28 @@ export class SupportsService extends BaseService {
     supportsGetDuplicateSupports(params: SupportsGetDuplicateSupports$Params, context?: HttpContext): Observable<Support[]> {
         return this.supportsGetDuplicateSupports$Response(params, context).pipe(map((r: StrictHttpResponse<Support[]>): Support[] => r.body));
     }
+    
+    /** Path part for operation supportAddDuplicateSupportConflict() */
+    static readonly SupportAddDuplicateSupportConflictPath = '/api/Reports/create-duplicate-support-conflict';
 
+    /**
+     * This method provides access to the full HttpResponse, allowing access to response headers.
+     * To access only the response body, use supportAddDuplicateSupportConflict() instead.
+     *
+     * This method expects a request body.
+     */
+    supportAddDuplicateSupportConflict$Response(params: SupportAddDuplicateSupportConflict$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+        const url = `${this.rootUrl}${SupportsService.SupportAddDuplicateSupportConflictPath}`;
+        return this.http.post<boolean>(url, params, { observe: 'response', context });
+    }
+
+    /**
+     * This method provides access only to the response body.
+     * To access the full response (for headers, for example), supportAddDuplicateSupportConflict$Response() instead.
+     *
+     * This method expects a request body.
+     */
+    supportAddDuplicateSupportConflict(params: SupportAddDuplicateSupportConflict$Params, context?: HttpContext): Observable<boolean> {
+        return this.supportAddDuplicateSupportConflict$Response(params, context).pipe(map((r: StrictHttpResponse<boolean>): boolean => r.body));
+    }
 }

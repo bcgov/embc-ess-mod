@@ -11,6 +11,7 @@ using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
 using EMBC.ESS.Resources.Reports;
+using AutoMapper.Execution;
 
 namespace EMBC.ESS.Resources.Supports
 {
@@ -168,10 +169,11 @@ namespace EMBC.ESS.Resources.Supports
                                 }
                                 potentialDuplicates.Add(support);
 
+                                Guid guid = new Guid();
                                 era_supportconflictmessage eraConflictMessage = new era_supportconflictmessage
                                 {
-                                    era_supportconflictmessageid = Guid.NewGuid(),
-                                    era_name = Guid.NewGuid().ToString(),
+                                    era_supportconflictmessageid = guid,
+                                    era_name = guid.ToString(),
                                     era_EvacueeSupport = support,
                                     era_ESSFile = file,
                                     era_ESSTask = file.era_TaskId,
@@ -327,21 +329,64 @@ namespace EMBC.ESS.Resources.Supports
             var ctx = essContextFactory.Create();
  
             var conflictMessage = mapper.Map<era_supportconflictmessage>(cmd.ConflictMessage);
+
+            //load the file 
+            var file = await ctx.era_evacuationfiles
+                 .Expand(s => s.era_TaskId)
+                .Expand(f => f.era_Registrant)
+                .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+                .Where(f => f.era_name == cmd.FileId).SingleOrDefaultAsync(ct);
+
+            Guid id = Guid.NewGuid();
+            conflictMessage.era_supportconflictmessageid = id;
+            conflictMessage.era_name = id.ToString();
+
+            var responder = ctx.era_essteamusers.Where(u => u.era_essteamuserid == cmd.IssuedBy).SingleOrDefault();
+            conflictMessage.era_supportconflictmessageid = id;
+            conflictMessage.era_ESSFile = file;
+            conflictMessage.era_MatchedESSFile = file;
+            conflictMessage.era_Registrant = file.era_Registrant;
+            conflictMessage.era_ESSTask = file.era_TaskId;
+            // load support info
+            var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
+            conflictMessage.era_EvacueeSupport = support;
+            conflictMessage.era_evacueename = $"{file.era_Registrant.firstname} {file.era_Registrant.lastname}";
+            conflictMessage.era_matchedname = $"{file.era_Registrant.firstname} {file.era_Registrant.lastname}";
+            conflictMessage.era_evacueedob = file.era_Registrant.birthdate;
+            conflictMessage.era_matcheddob = file.era_Registrant.birthdate;
+            conflictMessage.era_Responder = responder;
+
             CreateConflictMessage(ctx, conflictMessage, ct);
- 
+
             await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
 
-            return new CreateSupportConflictCommandResult { Id = conflictMessage.era_supportconflictmessageid };
+            return new CreateSupportConflictCommandResult { Id = id };
         }
 
-        private static void  CreateConflictMessage(EssContext ctx, era_supportconflictmessage conflictMessage, CancellationToken ct)
+        private static void CreateConflictMessage(EssContext ctx, era_supportconflictmessage conflictMessage, CancellationToken ct)
         {
             //conflictMessage.era_supportconflictmessageid = Guid.NewGuid();
             ctx.AddToera_supportconflictmessages(conflictMessage);
             if (conflictMessage.era_EvacueeSupport != null)
             {
-            //    ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_EvacueeSupport), conflictMessage.era_EvacueeSupport);
+                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_EvacueeSupport), conflictMessage.era_EvacueeSupport);
+            }
+            if (conflictMessage.era_ESSTask != null)
+            {
+                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_ESSTask), conflictMessage.era_ESSTask);
+            }
+            if (conflictMessage.era_Registrant != null)
+            {
+                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_Registrant), conflictMessage.era_Registrant);
+            }
+            if (conflictMessage.era_Responder != null)
+            {
+                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_Responder), conflictMessage.era_Responder);
+            }
+            if (conflictMessage.era_MatchedESSFile != null)
+            {
+                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_MatchedESSFile), conflictMessage.era_MatchedESSFile);
             }
             ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_ESSFile), conflictMessage.era_ESSFile);
         }

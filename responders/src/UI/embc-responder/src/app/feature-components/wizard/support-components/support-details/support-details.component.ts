@@ -594,7 +594,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
     const members: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get('members').value.map((m) => m.id);
 
-    const hasConflict = existingSupports.some((s) => {
+    const conflictSupports = existingSupports.filter((s) => {
       const sFrom = moment(s.from);
       const sTo = moment(s.to);
       return (
@@ -606,8 +606,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       );
     });
 
-    // Initial check for duplicate supports within the same ESS file
+    const hasConflict = conflictSupports.length > 0;
+
+    // Create duplicate support within the same ESS file conflict record
     if (hasConflict) {
+      const createDuplicateSupportConflictRequest = {
+        members,
+        fileId: this.evacueeSessionService?.evacFile?.id,
+        issuedBy: this.userService?.currentProfile?.id,
+        conflictSupportId: conflictSupports[0].id
+      };
+
+      const conflictDetails = await firstValueFrom(
+        this.stepSupportsService.addDuplicateSupportConflicts(createDuplicateSupportConflictRequest)
+      );
+
       this.dialog
         .open(DialogComponent, {
           data: {
@@ -634,7 +647,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         fileId: this.evacueeSessionService?.evacFile?.id,
         issuedBy: this.userService?.currentProfile?.userName
       };
-      
+
       try {
         // Get potential duplicates based on fuzzy search from API
         const potentialDuplicateSupports = await firstValueFrom(

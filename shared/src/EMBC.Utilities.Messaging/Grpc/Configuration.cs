@@ -78,7 +78,12 @@ namespace EMBC.Utilities.Messaging.Grpc
                                     userToken = userToken[0]!.Replace("bearer ", string.Empty, true, null);
                                     if (!jwtHandler.CanReadToken(userToken)) throw new InvalidOperationException($"can't read user token");
                                 }
-                                logger.LogDebug("token validated for {0}", c.Principal?.Identity?.Name);
+                                logger.LogDebug("token validated1 for {0}", c);
+                                logger.LogDebug("token validated2 for {0}", c.Principal);
+                                logger.LogDebug("token validated3 for {0}", c.Principal?.Identity);
+
+                                
+                                logger.LogDebug("token validated4 for {0}", c.Principal?.Identity?.Name);
                             }
                         };
                         opts.Validate();
