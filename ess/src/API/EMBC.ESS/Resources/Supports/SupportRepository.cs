@@ -169,7 +169,7 @@ namespace EMBC.ESS.Resources.Supports
                                 }
                                 potentialDuplicates.Add(support);
 
-                                Guid guid = new Guid();
+                                Guid guid = Guid.NewGuid();
                                 era_supportconflictmessage eraConflictMessage = new era_supportconflictmessage
                                 {
                                     era_supportconflictmessageid = guid,

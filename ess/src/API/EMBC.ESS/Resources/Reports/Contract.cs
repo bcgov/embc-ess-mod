@@ -345,11 +345,11 @@ public record ConflictMessage
     [Display(Name = "Task")]
     public EssTask EssTask { get; set; }
 
-    [Display(Name = "ESS File")]
-    public EvacuationFile EvacuationFile { get; set; }
+    //[Display(Name = "ESS File")]
+    //public EvacuationFile EvacuationFile { get; set; }
 
-    [Display(Name = "Evacuee")]
-    public Evacuee Evacuee { get; set; }
+    //[Display(Name = "Evacuee")]
+    //public Evacuee Evacuee { get; set; }
 
     [Display(Name = "Evacuee Name")]
     public string EvacueeName { get; set; }
@@ -363,24 +363,16 @@ public record ConflictMessage
     [Display(Name = "Scenario")]
     public ConflictMessageScenario Scenario { get; set; }
 
-    [Display(Name = "Matched File")]
-    public EvacuationFile MatchedEvacuationFile { get; set; }
+    //[Display(Name = "Matched File")]
+    //public EvacuationFile MatchedEvacuationFile { get; set; }
 
     [Display(Name = "Matched Name")]
     public string MatchedName { get; set; }
 
     [Display(Name = "Matched DOB")]
     public string MatchedDOB { get; set; }
-
-    [Display(Name = "Notes")]
-    public string Notes { get; set; }
-
-    [Display(Name = "Name match Score")]
-    public decimal NameMatchScore { get; set; }
-
-    [Display(Name = "Type mismatch score")]
-    public decimal TypeMismatchScore { get; set; }
-
+   // [Display(Name = "Name match Score")]
+   // public decimal NameMatchScore { get; set; }
     [Display(Name = "Evacuee Support")]
     public Support EvacueeSupport { get; set; }
 

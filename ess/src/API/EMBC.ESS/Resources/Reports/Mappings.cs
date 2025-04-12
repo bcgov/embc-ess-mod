@@ -284,28 +284,20 @@ namespace EMBC.ESS.Resources.Reports
 
             // New mapping for era_supportconflictmessage to ConflictMessage
             CreateMap<era_supportconflictmessage, ConflictMessage>()
-            //.ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_supportconflictmessageid))
-            //.ForMember(d => d.Message, opts => opts.MapFrom(s => s.era_message))
-            //.ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.HasValue ? s.createdon.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd hh:mm tt") : null))
-            //.ForMember(d => d.SupportId, opts => opts.MapFrom(s => s._era_supportid_value))
-            //.ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_SupportId == null ? null : s.era_SupportId.era_manualsupport ?? s.era_SupportId.era_name))
-            //.ForMember(d => d.SupportType, opts => opts.MapFrom(s => s.era_SupportId == null ? null : resolveSupportType(s.era_SupportId.era_supporttype)))
-            //.ForMember(d => d.SupportStatus, opts => opts.MapFrom(s => s.era_SupportId == null ? null : resolveSupportStatus(s.era_SupportId.statuscode)))
-            //.ForMember(d => d.SupportDeliveryType, opts => opts.MapFrom(s => s.era_SupportId == null ? null : resolveSupportDeliveryType(s.era_SupportId)))
             .ForMember(d => d.EssTask, opts => opts.MapFrom(s => s.era_ESSTask))
-            .ForMember(d => d.EvacuationFile, opts => opts.MapFrom(s => s.era_ESSFile))
+            //.ForMember(d => d.EvacuationFile, opts => opts.MapFrom(s => s.era_ESSFile))
             .ForMember(d => d.EvacueeSupport, opts => opts.MapFrom(s => s.era_EvacueeSupport))
-            .ForMember(d => d.MatchedEvacuationFile, opts => opts.MapFrom(s => s.era_MatchedESSFile))
-            .ForMember(d => d.Evacuee, opts => opts.MapFrom(s => s.era_Registrant))
+            //.ForMember(d => d.MatchedEvacuationFile, opts => opts.MapFrom(s => s.era_MatchedESSFile))
+            //.ForMember(d => d.Evacuee, opts => opts.MapFrom(s => s.era_Registrant))
             .ForMember(d => d.Responder, opts => opts.MapFrom(s => s.era_Responder))
             .ForMember(d => d.EvacueeDOB, opts => opts.MapFrom(s => s.era_evacueedob))
             .ForMember(d => d.EvacueeName, opts => opts.MapFrom(s => s.era_evacueename))
             .ForMember(d => d.MatchedDOB, opts => opts.MapFrom(s => s.era_matcheddob))
             .ForMember(d => d.MatchedName, opts => opts.MapFrom(s => s.era_matchedname))
-            .ForMember(d => d.EvacueeName, opts => opts.MapFrom(s => s.era_name))
-            .ForMember(d => d.Scenario, opts => opts.MapFrom(s => s.era_scenario))
-            .ReverseMap()
-            ;
+           // .ForMember(d => d.nam, opts => opts.MapFrom(s => s.era_name))
+
+            .ForMember(d => d.Scenario, opts => opts.MapFrom(s => s.era_scenario)) 
+            .ReverseMap();
         }
     }
 

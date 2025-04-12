@@ -257,10 +257,10 @@ namespace EMBC.ESS.Resources.Supports
             // New mapping for era_supportconflictmessage to ConflictMessage
             CreateMap<era_supportconflictmessage, ConflictMessage>()
                 .ForMember(d => d.EssTask, opts => opts.MapFrom(s => s.era_ESSTask))
-                .ForMember(d => d.EvacuationFile, opts => opts.MapFrom(s => s.era_ESSFile))
+                //.ForMember(d => d.EvacuationFile, opts => opts.MapFrom(s => s.era_ESSFile))
                 .ForMember(d => d.MatchedEvacueeSupport, opts => opts.MapFrom(s => s.era_EvacueeSupport))
-                .ForMember(d => d.MatchedEvacuationFile, opts => opts.MapFrom(s => s.era_MatchedESSFile))
-                .ForMember(d => d.Evacuee, opts => opts.MapFrom(s => s.era_Registrant))
+                //.ForMember(d => d.MatchedEvacuationFile, opts => opts.MapFrom(s => s.era_MatchedESSFile))
+                //.ForMember(d => d.Evacuee, opts => opts.MapFrom(s => s.era_Registrant))
                 .ForMember(d => d.Responder, opts => opts.MapFrom(s => s.era_Responder))
                 .ForMember(d => d.EvacueeDOB, opts => opts.MapFrom(s => s.era_evacueedob))
                 .ForMember(d => d.EvacueeName, opts => opts.MapFrom(s => s.era_evacueename))
@@ -268,6 +268,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.MatchedName, opts => opts.MapFrom(s => s.era_matchedname))
                 .ForMember(d => d.EvacueeName, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.Scenario, opts => opts.MapFrom(s => s.era_scenario))
+                //.ForMember(d => d.NameMatchScore, opts => opts.MapFrom(s => s.))
+
                 .ReverseMap()
                 ;
         }

@@ -155,7 +155,7 @@ public partial class EventsManager
             ConflictMessage = new Resources.Supports.ConflictMessage
             {
                 Scenario = ConflictMessageScenario.ExactMatchSameFile,
-                NameMatchScore = 1
+              //  NameMatchScore = 1
             },
             SupportId = cmd.SupportId,
             FileId = cmd.FileId,
