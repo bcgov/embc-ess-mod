@@ -1,5 +1,4 @@
 ﻿using System;
-using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.ESS.Shared.Contracts.Reports
 {
@@ -63,13 +62,5 @@ namespace EMBC.ESS.Shared.Contracts.Reports
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public object IncludePersonalInfo { get; set; }
-    }
-
-    public record CreateDuplicateSupportConflictRequest
-    {
-        public string[] Members { get; set; }
-        public string FileId { get; set; }
-        public string IssuedBy { get; set; }
-        public string ConflictSupportId { get; set; }
     }
 }
