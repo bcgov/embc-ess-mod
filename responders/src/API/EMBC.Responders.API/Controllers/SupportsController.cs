@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -44,9 +44,7 @@ public class SupportsController : ControllerBase
             Category = request.Category,
             FromDate = request.FromDate,
             ToDate = request.ToDate,
-            Members = request.Members,
-            FileId = request.FileId,
-            IssuedBy = request.IssuedBy
+            Members = request.Members
         });
 
         return Ok(response.DuplicateSupports);
@@ -59,6 +57,4 @@ public record CheckDuplicateSupportsRequest
     public string FromDate { get; set; }
     public string ToDate { get; set; }
     public string[] Members { get; set; }
-    public string FileId { get; set; }
-    public string IssuedBy { get; set; }
 }

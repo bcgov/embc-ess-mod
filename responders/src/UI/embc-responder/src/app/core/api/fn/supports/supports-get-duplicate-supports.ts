@@ -12,8 +12,6 @@ export interface SupportsGetDuplicateSupports$Params {
     toDate: string
     fromDate: string
     category: string
-    fileId: string
-    issuedBy: string
 }
 
 export function supportsGetDuplicateSupports(
@@ -29,9 +27,7 @@ export function supportsGetDuplicateSupports(
     rb.query('fromDate', params.fromDate);
     rb.query('category', params.category);
     rb.query('members', params.members);
-    rb.query('fileId', params.fileId);
-    rb.query('issuedBy', params.issuedBy);
-  
+    
     return http.request(rb.build({ responseType: 'json', accept: 'application/json', context })).pipe(
         filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
         map((r: HttpResponse<any>) => {

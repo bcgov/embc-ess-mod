@@ -10,8 +10,6 @@ using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
-using EMBC.ESS.Resources.Reports;
-using AutoMapper.Execution;
 
 namespace EMBC.ESS.Resources.Supports
 {
@@ -48,8 +46,6 @@ namespace EMBC.ESS.Resources.Supports
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
                 ApproveSupportCommand c => await Handle(c, ct),
                 SubmitSupportForReviewCommand c => await Handle(c, ct),
-                CreateSupportConflictCommand c => await Handle(c, ct),
-
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -68,7 +64,7 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<PotentialDuplicateSupportsQueryResult> Handle(PotentialDuplicateSupportsQuery query, CancellationToken ct)
         {
-            var ctx = essContextFactory.Create();
+            var ctx = essContextFactory.CreateReadOnly();
 
             if (!Enum.TryParse<SupportType>(query.Category, out var supportType))
             {
@@ -111,28 +107,12 @@ namespace EMBC.ESS.Resources.Supports
             // Modified query to use string-based filter
             var supports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
                 .Expand(s => s.era_era_householdmember_era_evacueesupport)
-                .Expand(s => s.era_EvacuationFileId)
-                .Expand(s => s.era_Task)
-                .Expand(s => s.era_IssuedById)
                 .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDate:yyyy-MM-dd} and era_validto ge {fromDate:yyyy-MM-dd} and statuscode ne {(int)SupportStatus.Cancelled} and statuscode ne {(int)SupportStatus.Void}"))
                 .GetAllPagesAsync(ct)).ToList();
 
             // Create a new ConcurrentBag to store potential duplicates
             var potentialDuplicates = new ConcurrentBag<era_evacueesupport>();
             var lockObj = new object();
-
-            //load the responder 
-            var responder = ctx.era_essteamusers.Where(u => u.era_essteamuserid == query.IssuedBy).SingleOrDefault();
-
-            //load the file 
-            var file = await ctx.era_evacuationfiles
-                 .Expand(s => s.era_TaskId)
-                .Expand(f => f.era_Registrant)
-                .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
-                .Where(f => f.era_name == query.FileId).SingleOrDefaultAsync(ct);
-
-            if (file == null) throw new InvalidOperationException($"Evacuation file {query.FileId} not found");
-         
             // Iterate through each of the supports that matched the query
             Parallel.ForEach(supports, support =>
             {
@@ -152,47 +132,7 @@ namespace EMBC.ESS.Resources.Supports
                         {
                             lock (lockObj)
                             {
-                                ConflictMessageScenario scenario;
-                                if (query.FileId == support.era_EvacuationFileId.era_name)
-                                {
-                                    scenario = ConflictMessageScenario.PartialMatchSameFile;
-
-                                    if (member.era_firstname == supportMember.era_firstname && member.era_lastname == supportMember.era_lastname)
-                                        scenario = ConflictMessageScenario.ExactMatchSameFile;
-                                }
-                                else
-                                {
-                                    scenario = ConflictMessageScenario.PartialMatchOnDifferentEssFile;
-
-                                    if (member.era_firstname == supportMember.era_firstname && member.era_lastname == supportMember.era_lastname)
-                                        scenario = ConflictMessageScenario.ExactMatchOnDifferentEssFile;
-                                }
                                 potentialDuplicates.Add(support);
-
-                                Guid guid = Guid.NewGuid();
-                                era_supportconflictmessage eraConflictMessage = new era_supportconflictmessage
-                                {
-                                    era_supportconflictmessageid = guid,
-                                    era_name = guid.ToString(),
-                                    era_EvacueeSupport = support,
-                                    era_ESSFile = file,
-                                    era_ESSTask = file.era_TaskId,
-                                    era_Registrant = file.era_Registrant,
-
-                                    // era_Registrant = support.era_EvacuationFileId.era_Registrant,
-                                    era_Responder = responder,
-
-                                    era_evacueedob = member.era_dateofbirth,
-                                    era_evacueename = $"{member.era_firstname} {member.era_lastname}",
-                                    createdon = DateTime.Now,
-
-                                    era_MatchedESSFile = support.era_EvacuationFileId,
-                                    era_matchedname = $"{supportMember.era_firstname} {supportMember.era_lastname}",
-                                    era_matcheddob = supportMember.era_dateofbirth,
-                                    era_scenario = (int)scenario,
-                                };
-
-                                CreateConflictMessage(ctx, eraConflictMessage, ct);
                             }
                             return;
                         }
@@ -200,8 +140,6 @@ namespace EMBC.ESS.Resources.Supports
                 }
             });
 
-            await ctx.SaveChangesAsync(ct);
-            ctx.DetachAll();
             return new PotentialDuplicateSupportsQueryResult { DuplicateSupports = mapper.Map<IEnumerable<Support>>(potentialDuplicates) };
         }
 
@@ -322,73 +260,6 @@ namespace EMBC.ESS.Resources.Supports
             await ctx.SaveChangesAsync(ct);
 
             return new SubmitSupportForReviewCommandResult();
-        }
-
-        private async Task<CreateSupportConflictCommandResult> Handle(CreateSupportConflictCommand cmd, CancellationToken ct)
-        {
-            var ctx = essContextFactory.Create();
- 
-            var conflictMessage = mapper.Map<era_supportconflictmessage>(cmd.ConflictMessage);
-
-            //load the file 
-            var file = await ctx.era_evacuationfiles
-                 .Expand(s => s.era_TaskId)
-                .Expand(f => f.era_Registrant)
-                .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
-                .Where(f => f.era_name == cmd.FileId).SingleOrDefaultAsync(ct);
-
-            Guid id = Guid.NewGuid();
-            conflictMessage.era_supportconflictmessageid = id;
-            conflictMessage.era_name = id.ToString();
-
-            var responder = ctx.era_essteamusers.Where(u => u.era_essteamuserid == cmd.IssuedBy).SingleOrDefault();
-            conflictMessage.era_supportconflictmessageid = id;
-            conflictMessage.era_ESSFile = file;
-            conflictMessage.era_MatchedESSFile = file;
-            conflictMessage.era_Registrant = file.era_Registrant;
-            conflictMessage.era_ESSTask = file.era_TaskId;
-            // load support info
-            var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
-            conflictMessage.era_EvacueeSupport = support;
-            conflictMessage.era_evacueename = $"{file.era_Registrant.firstname} {file.era_Registrant.lastname}";
-            conflictMessage.era_matchedname = $"{file.era_Registrant.firstname} {file.era_Registrant.lastname}";
-            conflictMessage.era_evacueedob = file.era_Registrant.birthdate;
-            conflictMessage.era_matcheddob = file.era_Registrant.birthdate;
-            conflictMessage.era_Responder = responder;
-
-            CreateConflictMessage(ctx, conflictMessage, ct);
-
-            await ctx.SaveChangesAsync(ct);
-            ctx.DetachAll();
-
-            return new CreateSupportConflictCommandResult { Id = id };
-        }
-
-        private static void CreateConflictMessage(EssContext ctx, era_supportconflictmessage conflictMessage, CancellationToken ct)
-        {
-            //conflictMessage.era_supportconflictmessageid = Guid.NewGuid();
-            ctx.AddToera_supportconflictmessages(conflictMessage);
-            if (conflictMessage.era_EvacueeSupport != null)
-            {
-                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_EvacueeSupport), conflictMessage.era_EvacueeSupport);
-            }
-            if (conflictMessage.era_ESSTask != null)
-            {
-                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_ESSTask), conflictMessage.era_ESSTask);
-            }
-            if (conflictMessage.era_Registrant != null)
-            {
-                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_Registrant), conflictMessage.era_Registrant);
-            }
-            if (conflictMessage.era_Responder != null)
-            {
-                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_Responder), conflictMessage.era_Responder);
-            }
-            if (conflictMessage.era_MatchedESSFile != null)
-            {
-                ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_MatchedESSFile), conflictMessage.era_MatchedESSFile);
-            }
-            ctx.SetLink(conflictMessage, nameof(era_supportconflictmessage.era_ESSFile), conflictMessage.era_ESSFile);
         }
 
         private static void AssignSupportToQueue(EssContext ctx, era_evacueesupport support, queue queue)

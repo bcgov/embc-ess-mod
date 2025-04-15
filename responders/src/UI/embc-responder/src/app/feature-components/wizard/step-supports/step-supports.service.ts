@@ -176,24 +176,13 @@ export class StepSupportsService {
         members: supportDetails.members,
         toDate: supportDetails.toDate,
         fromDate: supportDetails.fromDate,
-        category: supportDetails.category,
-        fileId: supportDetails.fileId,
-        issuedBy: this.userService?.currentProfile?.id
+        category: supportDetails.category
       })
       .pipe(
         map((supports: Support[]) => {
           return supports;
         })
       );
-  }
-
-  addDuplicateSupportConflicts(conflictRequest: any): Observable<boolean> {
-    return this.supportService.supportAddDuplicateSupportConflict({
-      members: conflictRequest.members,
-      fileId: conflictRequest.fileId,
-      issuedBy: conflictRequest.issuedBy,
-      conflictSupportId: conflictRequest.conflictSupportId
-    });
   }
 
   public openDataLossPopup(content: DialogContent): MatDialogRef<DialogComponent, string> {
