@@ -48,6 +48,7 @@ public record EssTask : Task
     public bool SelfServeEnabled { get; set; }
     public IEnumerable<SupportConfiguration> EnabledSupports { get; set; } = [];
     public IEnumerable<SupportConfiguration> SupportLimits { get; set; } = [];
+    public bool ExtremeWeatherConditionsEnabled { get; set; }
 }
 
 public record SupportConfiguration

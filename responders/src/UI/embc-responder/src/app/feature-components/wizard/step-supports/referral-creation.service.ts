@@ -295,6 +295,7 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Clothing,
       extremeWinterConditions: (supportDetails.referral as Clothing).extremeWinterConditions,
+      extremeWeatherConditionsEnabled: (supportDetails.referral as Clothing).extremeWeatherConditionsEnabled,
       totalAmount: this.parseTextNumber(
         (supportDetails.referral as Clothing).userTotalAmount
           ? (supportDetails.referral as Clothing).userTotalAmount

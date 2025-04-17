@@ -310,6 +310,7 @@ public record ClothingSupport : Support
     public double TotalAmount { get; set; }
 
     public string ApproverName { get; set; }
+    public bool ExtremeWeatherConditionsEnabled { get; set; }
 }
 
 public record IncidentalsSupport : Support

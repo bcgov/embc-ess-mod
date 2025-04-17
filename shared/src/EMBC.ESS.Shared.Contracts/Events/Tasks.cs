@@ -40,6 +40,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool RemoteExtensionsEnabled { get; set; }
         public bool SelfServeEnabled { get; set; }
         public IEnumerable<SupportLimits> SupportLimits { get; set; }
+        public bool ExtremeWeatherConditionsEnabled { get; set; }
     }
 
     public enum IncidentTaskStatus

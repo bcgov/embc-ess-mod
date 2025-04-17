@@ -194,6 +194,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool ExtremeWinterConditions { get; set; }
         public decimal TotalAmount { get; set; }
         public string ApproverName { get; set; }
+        public bool ExtremeWeatherConditionsEnabled { get; set; }
     }
 
     public class IncidentalsSupport : Support

@@ -11,4 +11,5 @@ export interface EssTask {
   status?: string | null;
   workflows?: Array<TaskWorkflow> | null;
   supportLimits?: Array<SupportLimit> | null;
+  extremeWeatherConditionsEnabled?: boolean;
 }
