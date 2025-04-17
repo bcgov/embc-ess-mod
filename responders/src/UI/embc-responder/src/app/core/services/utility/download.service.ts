@@ -5,6 +5,14 @@ import { Injectable } from '@angular/core';
 })
 export class DownloadService {
   public downloadFile(win: Window, blob: Blob, fileName: string) {
+    // For Android tablets, force download for all content types
+    const isAndroidTablet = /android/i.test(navigator.userAgent) &&
+                           (window.innerWidth >= 600);
+
+    if (isAndroidTablet) {
+      return this.savePDF(win, blob, `${fileName}.pdf`);
+    }
+
     switch (blob.type) {
       case 'application/pdf':
         return this.savePDF(win, blob, fileName);
