@@ -40,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    IssuedOn = now,
                    TotalAmount = 655.29m,
                    ApproverName = "name",
-                   ExtremeWinterConditions = false
+                   ExtremeWeatherConditionsEnabled = false
                },
                new IncidentalsSupport {
                    SupportDelivery = new Interac

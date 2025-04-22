@@ -188,7 +188,7 @@ namespace EMBC.ESS.Resources.Supports
 
     public record ClothingSupport : Support
     {
-        public bool ExtremeWinterConditions { get; set; }
+        public bool ExtremeWeatherConditionsEnabled { get; set; }
         public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
