@@ -45,6 +45,19 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string Reason { get; set; }
     }
 
+    public class CreateSupportConflictCommandRequest : Command
+    {
+        public string[] Members { get; set; }
+        public string SupportId { get; set; }
+        public string FileId { get; set; }
+        public string IssuedBy { get; set; }
+    }
+
+    public class CreateSupportConflictCommandResult
+    {
+        public Guid Id { get; set; }
+    }
+
     /// <summary>
     /// query a print request's content
     /// </summary>
@@ -69,6 +82,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string[] Members { get; set; }
+        public string FileId { get; set; }
+        public string IssuedBy { get; set; }
     }
 
     public class DuplicateSupportsQueryResult
