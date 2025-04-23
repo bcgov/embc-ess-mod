@@ -126,9 +126,11 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the current support surpasses the max rate allow or not
    */
   checkClothingMaxRate(support: Support): boolean {
-    const rate = (support as ClothingSupport).extremeWinterConditions
-      ? globalConst.extremeConditions.rate
-      : globalConst.normalConditions.rate;
+    const isWinterConditionEnabled = (support as ClothingSupport).extremeWeatherConditionsEnabled;
+    const rate =
+      (support as ClothingSupport).extremeWinterConditions && isWinterConditionEnabled
+        ? globalConst.extremeConditions.rate
+        : globalConst.normalConditions.rate;
     const maxRate = rate * (support as ClothingSupport).includedHouseholdMembers.length;
     return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }

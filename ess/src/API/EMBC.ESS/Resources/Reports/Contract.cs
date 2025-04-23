@@ -292,7 +292,7 @@ public record Support
     public string SupportCreatedTime { get; set; }
 
     [Display(Name = "Clothing Extreme Weather Conditions")]
-    public bool ExtremeWinterConditions { get; set; }
+    public bool ExtremeWeatherConditionsEnabled { get; set; }
 
     [Display(Name = "Groceries Number of Meals")]
     public string NumberOfMeals { get; set; }

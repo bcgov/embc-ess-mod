@@ -76,9 +76,9 @@ public class Mapping : Profile
     ;
 
         CreateMap<SelfServeClothingSupport, ClothingSupport>()
-            .ForMember(d => d.ExtremeWinterConditions, opts => opts.Ignore())
             .ForMember(d => d.ApproverName, opts => opts.Ignore())
             .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.IncludedHouseholdMembers))
+            .ForMember(d => d.ExtremeWeatherConditionsEnabled, opts => opts.Ignore())
             ;
 
         CreateMap<SelfServeIncidentalsSupport, IncidentalsSupport>()

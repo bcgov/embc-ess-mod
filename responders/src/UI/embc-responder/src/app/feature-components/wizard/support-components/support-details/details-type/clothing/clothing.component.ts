@@ -43,6 +43,7 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   referralForm: UntypedFormGroup;
   totalAmount = 0;
   isPaperBased = false;
+  disableExtremeWinterConditions = false;
   userTotalAmountSubscription: Subscription;
   constructor(
     private cd: ChangeDetectorRef,
@@ -59,6 +60,16 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     this.userTotalAmountSubscription = this.referralForm.get('userTotalAmount').valueChanges.subscribe((value) => {
       this.referralForm.get('approverName').updateValueAndValidity();
     });
+    if (this.appBaseService.appModel.selectedEssTask.extremeWeatherConditionsEnabled === false) {
+      const extremeWinterConditions = false; // Default selected value
+      this.referralForm.get('extremeWinterConditions').patchValue(extremeWinterConditions);
+      this.disableExtremeWinterConditions = true;
+    }
+    if (this.disableExtremeWinterConditions) {
+      this.referralForm.get('extremeWinterConditions').disable();
+    } else {
+      this.referralForm.get('extremeWinterConditions').enable();
+    }
   }
 
   ngAfterViewInit(): void {

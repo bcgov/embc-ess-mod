@@ -116,6 +116,7 @@ namespace EMBC.Responders.API.Controllers
         public string Status { get; set; }
         public IEnumerable<TaskWorkflow> Workflows { get; set; } = Array.Empty<TaskWorkflow>();
         public IEnumerable<SupportLimits> SupportLimits { get; set; } = Array.Empty<SupportLimits>();
+        public bool ExtremeWeatherConditionsEnabled { get; set; }
     }
 
     public class TaskWorkflow

@@ -9,4 +9,5 @@ export type ClothingSupport = Support & {
   subCategory: SupportSubCategory;
   totalAmount: number;
   approverName?: string | null;
+  extremeWeatherConditionsEnabled: boolean;
 };

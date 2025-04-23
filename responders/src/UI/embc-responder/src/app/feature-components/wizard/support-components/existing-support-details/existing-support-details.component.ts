@@ -125,9 +125,11 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   checkClothingMaxRate(): boolean {
-    const rate = (this.selectedSupport as ClothingSupport).extremeWinterConditions
-      ? globalConst.extremeConditions.rate
-      : globalConst.normalConditions.rate;
+    const isWinterConditionEnabled = (this.selectedSupport as ClothingSupport).extremeWeatherConditionsEnabled;
+    const rate =
+      (this.selectedSupport as ClothingSupport).extremeWinterConditions && isWinterConditionEnabled
+        ? globalConst.extremeConditions.rate
+        : globalConst.normalConditions.rate;
     const maxRate = rate * (this.selectedSupport as ClothingSupport).includedHouseholdMembers.length;
     return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount ? false : true;
   }

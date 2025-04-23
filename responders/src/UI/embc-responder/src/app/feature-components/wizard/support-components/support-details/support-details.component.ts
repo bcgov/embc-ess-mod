@@ -683,7 +683,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   generateDuplicateSupportDialog(potentialDuplicateSupports: Support[], category: string): DialogContent {
-    console.log(potentialDuplicateSupports);
     const uniqueHouseholdMembers = new Map<string, string>();
     potentialDuplicateSupports.forEach((s) => {
       s.householdMembers.forEach((m) => {
@@ -918,7 +917,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   }
 
   private mapSupportTypeInverse(support: SupportSubCategory | SupportCategory): number {
-    console.log('Support: ', support);
     switch (support) {
       case SupportSubCategory.Food_Groceries:
         return 174360000;

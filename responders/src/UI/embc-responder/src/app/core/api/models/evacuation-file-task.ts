@@ -8,4 +8,5 @@ export interface EvacuationFileTask {
   status?: string | null;
   taskNumber: string;
   to?: string | null;
+  extremeWeatherConditionsEnabled?: boolean;
 }

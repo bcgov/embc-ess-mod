@@ -191,9 +191,9 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public class ClothingSupport : Support
     {
-        public bool ExtremeWinterConditions { get; set; }
         public decimal TotalAmount { get; set; }
         public string ApproverName { get; set; }
+        public bool ExtremeWeatherConditionsEnabled { get; set; }
     }
 
     public class IncidentalsSupport : Support

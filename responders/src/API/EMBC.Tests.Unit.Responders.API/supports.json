@@ -30,43 +30,43 @@
         "to": "2022-04-26T21:58:14.290Z",
         "totalAmount": 125
     },
-    {
-        "category": "Clothing",
-        "extremeWinterConditions": false,
-        "from": "2022-04-25T21:58:14.291Z",
-        "includedHouseholdMembers": [
-            "1a1aafbf-5d08-4d6f-84a1-0d2932794d8f",
-            "73eab430-34e0-497e-b294-2b9f5319e2ae",
-            "466053c4-f019-4d84-b478-378d0c9748f8",
-            "f2301fdc-c3a6-46e5-be0a-434b83920217",
-            "46e2368f-9771-4345-a83a-9b1ed01bec0f",
-            "5944a456-2582-4604-8bec-b1d3b2344d09",
-            "971eba1b-a3b8-439a-b37c-caf060d70f9d",
-            "12043608-8c90-4d80-a7fd-de7a0615da46"
-        ],
-        "method": "Referral",
-        "needsAssessmentId": "f7febae0-e455-4785-a701-0614ccdf70d7",
-        "status": "Draft",
-        "subCategory": "None",
-        "supportDelivery": {
-            "issuedToPersonName": "autotest-load-0,autotest-load-4",
-            "method": "Referral",
-            "supplierAddress": {
-                "addressLine1": "123 Douglas St.",
-                "addressLine2": "Store 345-900",
-                "city": null,
-                "communityCode": "986adfaf-9f97-ea11-b813-005056830319",
-                "countryCode": "CAN",
-                "postalCode": "V8Z3D6",
-                "stateProvinceCode": "BC"
-            },
-            "supplierId": "89e0e8a3-4ee3-43a5-8b11-648ea57db19a",
-            "supplierName": "Fresh Ingredients Inc.",
-            "supplierNotes": "notes"
-        },
-        "to": "2022-04-27T21:58:14.291Z",
-        "totalAmount": 130
+  {
+    "category": "Clothing",
+    "ExtremeWeatherConditionsEnabled": false,
+    "from": "2022-04-25T21:58:14.291Z",
+    "includedHouseholdMembers": [
+      "1a1aafbf-5d08-4d6f-84a1-0d2932794d8f",
+      "73eab430-34e0-497e-b294-2b9f5319e2ae",
+      "466053c4-f019-4d84-b478-378d0c9748f8",
+      "f2301fdc-c3a6-46e5-be0a-434b83920217",
+      "46e2368f-9771-4345-a83a-9b1ed01bec0f",
+      "5944a456-2582-4604-8bec-b1d3b2344d09",
+      "971eba1b-a3b8-439a-b37c-caf060d70f9d",
+      "12043608-8c90-4d80-a7fd-de7a0615da46"
+    ],
+    "method": "Referral",
+    "needsAssessmentId": "f7febae0-e455-4785-a701-0614ccdf70d7",
+    "status": "Draft",
+    "subCategory": "None",
+    "supportDelivery": {
+      "issuedToPersonName": "autotest-load-0,autotest-load-4",
+      "method": "Referral",
+      "supplierAddress": {
+        "addressLine1": "123 Douglas St.",
+        "addressLine2": "Store 345-900",
+        "city": null,
+        "communityCode": "986adfaf-9f97-ea11-b813-005056830319",
+        "countryCode": "CAN",
+        "postalCode": "V8Z3D6",
+        "stateProvinceCode": "BC"
+      },
+      "supplierId": "89e0e8a3-4ee3-43a5-8b11-648ea57db19a",
+      "supplierName": "Fresh Ingredients Inc.",
+      "supplierNotes": "notes"
     },
+    "to": "2022-04-27T21:58:14.291Z",
+    "totalAmount": 130
+  },
     {
         "category": "Food",
         "from": "2022-04-25T21:58:14.291Z",

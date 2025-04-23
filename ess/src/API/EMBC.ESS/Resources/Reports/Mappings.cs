@@ -262,7 +262,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.SupportCreatedDate, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd")))
                 .ForMember(d => d.SupportCreatedTime, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime.ToPST().ToString("hh:mm tt")))
-                .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
+                .ForMember(d => d.ExtremeWeatherConditionsEnabled, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
                 .ForMember(d => d.NumberOfMeals, opts => opts.MapFrom(s => s.era_numberofmeals))
                 .ForMember(d => d.SupplierLegalName, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_name : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_suppliername : null))

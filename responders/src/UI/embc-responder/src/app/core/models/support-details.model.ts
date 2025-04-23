@@ -103,4 +103,5 @@ export class Clothing {
   totalAmount: number;
   userTotalAmount: number;
   approverName: string;
+  extremeWeatherConditionsEnabled: boolean;
 }

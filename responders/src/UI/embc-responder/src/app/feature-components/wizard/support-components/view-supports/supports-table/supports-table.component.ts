@@ -224,7 +224,8 @@ export class SupportsTableComponent implements OnInit, AfterViewInit, OnChanges 
     switch (element?.category) {
       case SupportCategory.Clothing: {
         const clothingSupport = element as ClothingSupport;
-        if (clothingSupport.extremeWinterConditions) {
+        const isWinterConditionEnabled = clothingSupport.extremeWeatherConditionsEnabled;
+        if (clothingSupport.extremeWinterConditions && isWinterConditionEnabled) {
           rate = globalConst.extremeConditions.rate * clothingSupport.includedHouseholdMembers.length;
         } else {
           rate = globalConst.normalConditions.rate * clothingSupport.includedHouseholdMembers.length;

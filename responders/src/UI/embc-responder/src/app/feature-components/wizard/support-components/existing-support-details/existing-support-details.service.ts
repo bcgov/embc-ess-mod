@@ -312,7 +312,8 @@ export class ExistingSupportDetailsService {
         extremeWinterConditions: (selectedSupport as ClothingSupport).extremeWinterConditions,
         totalAmount: (selectedSupport as ClothingSupport).totalAmount,
         userTotalAmount: (selectedSupport as ClothingSupport).totalAmount,
-        approverName: (selectedSupport as FoodGroceriesSupport).approverName
+        approverName: (selectedSupport as FoodGroceriesSupport).approverName,
+        extremeWeatherConditionsEnabled: (selectedSupport as ClothingSupport).extremeWeatherConditionsEnabled
       };
     }
   }

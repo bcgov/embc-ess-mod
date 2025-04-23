@@ -21,6 +21,7 @@ public class Mappings : Profile
             .ForMember(d => d.AutoApprovedEnabled, opts => opts.Ignore())
             .ForMember(d => d.EnabledSupports, opts => opts.MapFrom(s => s.era_era_task_era_selfservesupportlimits_Task.Where(sl => sl.statuscode == 1)))
             .ForMember(d => d.SupportLimits, opts => opts.MapFrom(s => s.era_era_task_era_supportlimit_Task.Where(sl => sl.statuscode == 1)))
+            .ForMember(d => d.ExtremeWeatherConditionsEnabled, opts => opts.MapFrom(s => s.era_clothingwinterconditionallowance))
             ;
 
         CreateMap<era_selfservesupportlimits, SupportConfiguration>()

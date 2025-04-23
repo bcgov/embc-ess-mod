@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  ClothingSupport,
   IncidentalsSupport,
   Interac,
   LodgingBilletingSupport,
@@ -218,7 +219,8 @@ export class CloneSupportDetailsService {
         extremeWinterConditions: null,
         totalAmount: null,
         userTotalAmount: null,
-        approverName: null
+        approverName: null,
+        extremeWeatherConditionsEnabled: (selectedSupport as ClothingSupport).extremeWeatherConditionsEnabled
       };
     }
   }
