@@ -297,7 +297,7 @@ public abstract record Support
 
 public record ClothingSupport : Support
 {
-    public bool ExtremeWinterConditions { get; set; }
+    public bool ExtremeWeatherConditionsEnabled { get; set; }
 
     [Required]
     public override SupportCategory Category => SupportCategory.Clothing;
@@ -310,7 +310,6 @@ public record ClothingSupport : Support
     public double TotalAmount { get; set; }
 
     public string ApproverName { get; set; }
-    public bool ExtremeWeatherConditionsEnabled { get; set; }
 }
 
 public record IncidentalsSupport : Support

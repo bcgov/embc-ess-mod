@@ -346,7 +346,7 @@ public abstract record Support
 
 public record ClothingSupport : Support
 {
-    public bool ExtremeWinterConditions { get; set; }
+    public bool ExtremeWeatherConditionsEnabled { get; set; }
 
     public override SupportCategory Category => SupportCategory.Clothing;
 
