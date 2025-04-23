@@ -126,7 +126,7 @@ namespace EMBC.ESS.Resources.Supports
 
             //load the file 
             var file = await ctx.era_evacuationfiles
-                 .Expand(s => s.era_TaskId)
+                .Expand(s => s.era_TaskId)
                 .Expand(f => f.era_Registrant)
                 .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
                 .Where(f => f.era_name == query.FileId).SingleOrDefaultAsync(ct);
@@ -136,9 +136,13 @@ namespace EMBC.ESS.Resources.Supports
             // Iterate through each of the supports that matched the query
             Parallel.ForEach(supports, support =>
             {
+                // remove household members that are not in the support inside the temp support and cast tempSupport to a list in a warning
+                var tempSupport = support;
+                bool addSupport = false;
                 // Iterate through each household member in the support
-                foreach (var supportMember in support.era_era_householdmember_era_evacueesupport.ToList())
+                foreach (var supportMember in tempSupport.era_era_householdmember_era_evacueesupport.ToList())
                 {
+                    bool removeSupportMember = true;
                     // Iterate through each household member passed into the query
                     foreach (var member in householdMembers)
                     {
@@ -150,6 +154,8 @@ namespace EMBC.ESS.Resources.Supports
                         var combinedScore = (firstNameSimilarity + lastNameSimilarity) / 2;
                         if (combinedScore >= 0.7)
                         {
+                            removeSupportMember = false;
+                            addSupport = true;
                             lock (lockObj)
                             {
                                 ConflictMessageScenario scenario;
@@ -167,8 +173,6 @@ namespace EMBC.ESS.Resources.Supports
                                     if (member.era_firstname == supportMember.era_firstname && member.era_lastname == supportMember.era_lastname)
                                         scenario = ConflictMessageScenario.ExactMatchOnDifferentEssFile;
                                 }
-                                potentialDuplicates.Add(support);
-
                                 Guid guid = Guid.NewGuid();
                                 era_supportconflictmessage eraConflictMessage = new era_supportconflictmessage
                                 {
@@ -194,9 +198,19 @@ namespace EMBC.ESS.Resources.Supports
 
                                 CreateConflictMessage(ctx, eraConflictMessage, ct);
                             }
-                            return;
                         }
                     }
+                    if (removeSupportMember)
+                    {
+                        // If no household member matched, remove the support member from the support
+                        tempSupport.era_era_householdmember_era_evacueesupport.Remove(supportMember);
+                    }
+                }
+                if (addSupport)
+                {
+                    // If any household member matched, add the tempSupport to the potential duplicates
+                    // tempSupport would contain only members who matched Duplicate members
+                    potentialDuplicates.Add(tempSupport);
                 }
             });
 
