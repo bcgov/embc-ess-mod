@@ -163,14 +163,16 @@ namespace EMBC.ESS.Resources.Supports
                                 {
                                     scenario = ConflictMessageScenario.PartialMatchSameFile;
 
-                                    if (member.era_firstname == supportMember.era_firstname && member.era_lastname == supportMember.era_lastname)
+                                    if (string.Equals(member.era_firstname?.Trim(), supportMember.era_firstname?.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                        string.Equals(member.era_lastname?.Trim(), supportMember.era_lastname?.Trim(), StringComparison.OrdinalIgnoreCase))
                                         scenario = ConflictMessageScenario.ExactMatchSameFile;
                                 }
                                 else
                                 {
                                     scenario = ConflictMessageScenario.PartialMatchOnDifferentEssFile;
 
-                                    if (member.era_firstname == supportMember.era_firstname && member.era_lastname == supportMember.era_lastname)
+                                    if (string.Equals(member.era_firstname?.Trim(), supportMember.era_firstname?.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                        string.Equals(member.era_lastname?.Trim(), supportMember.era_lastname?.Trim(), StringComparison.OrdinalIgnoreCase))
                                         scenario = ConflictMessageScenario.ExactMatchOnDifferentEssFile;
                                 }
                                 Guid guid = Guid.NewGuid();
