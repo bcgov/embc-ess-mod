@@ -25,10 +25,8 @@ public class ReportRepository : IReportRepository
     public async Task<EvacueeQueryResult> QueryEvacuee(ReportQuery query)
     {
         var ct = new CancellationTokenSource().Token;
-        var files = (await QueryEvacuationFiles(readCtx, query, ct)).Concat(await QueryTasks(readCtx, query, ct));
-
+        var files = (await QueryEvacuationFiles(readCtx, query, ct, true)).Concat(await QueryTasks(readCtx, query, ct)); 
         var results = await ParallelLoadEvacueesAsync(readCtx, files, ct);
-
         return new EvacueeQueryResult
         {
             Items = mapper.Map<IEnumerable<Evacuee>>(results)
@@ -38,17 +36,15 @@ public class ReportRepository : IReportRepository
     public async Task<SupportQueryResult> QuerySupport(ReportQuery query)
     {
         var ct = new CancellationTokenSource().Token;
-        var files = (await QueryEvacuationFiles(readCtx, query, ct)).Concat(await QueryTasks(readCtx, query, ct)).ToList();
-
+        var files = (await QueryEvacuationFiles(readCtx, query, ct, false)).Concat(await QueryTasks(readCtx, query, ct)).ToList();
         var results = await ParallelLoadSupportsAsync(readCtx, files, ct);
-
         return new SupportQueryResult
         {
             Items = mapper.Map<IEnumerable<Support>>(results)
         };
     }
 
-    private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, ReportQuery query, CancellationToken ct)
+    private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, ReportQuery query, CancellationToken ct, bool includeAnimalsToQuery)
     {
         bool getAllFiles = string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.TaskNumber) && string.IsNullOrEmpty(query.EvacuatedFrom) && string.IsNullOrEmpty(query.EvacuatedTo);
         var shouldQueryFiles =
@@ -58,18 +54,25 @@ public class ReportRepository : IReportRepository
 
         if (!shouldQueryFiles) return Array.Empty<era_evacuationfile>();
 
-        var filesQuery = ctx.era_evacuationfiles
-            .Expand(f => f.era_TaskId)
-            .Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid)
-            .Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId)
-            .Expand(f => f.era_EvacuatedFromID)
-            .AsQueryable();
+        bool includeAnimals = includeAnimalsToQuery, includeTask = true, includeSupports = false, includeEvacuatedFrom = false;
+
+        var filesQueryTemp = ctx.era_evacuationfiles;
+
+        if (includeTask)
+            filesQueryTemp = filesQueryTemp.Expand(f => f.era_TaskId);
+        if (includeAnimals)
+            filesQueryTemp = filesQueryTemp.Expand(f => f.era_era_evacuationfile_era_animal_ESSFileid);
+        if (includeSupports)
+            filesQueryTemp = filesQueryTemp.Expand(f => f.era_era_evacuationfile_era_evacueesupport_ESSFileId);
+        if (includeEvacuatedFrom)
+            filesQueryTemp = filesQueryTemp.Expand(f => f.era_EvacuatedFromID);
+
+        var filesQuery = filesQueryTemp.AsQueryable();
 
         if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId || f.era_paperbasedessfile == query.FileId);
         if (!string.IsNullOrEmpty(query.EvacuatedFrom)) filesQuery = filesQuery.Where(f => f._era_evacuatedfromid_value == Guid.Parse(query.EvacuatedFrom));
         if (query.StartDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.StartDate.Value);
         if (query.EndDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.EndDate.Value);
-
         IEnumerable<era_evacuationfile> files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToList();
         if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase));
         if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo));
