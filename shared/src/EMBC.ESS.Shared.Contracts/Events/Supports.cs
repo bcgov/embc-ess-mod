@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Text.Json.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Events
@@ -86,9 +87,24 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string IssuedBy { get; set; }
     }
 
+    public class DuplicateSupportResult
+    {
+        public string essFileId { get; set; }
+        public string supportStartDate { get; set; }
+        public string supportEndDate { get; set; }
+        public int duplicateSupportScenario { get; set; }
+        public string householdMemberFirstName { get; set; }
+        public string householdMemberLastName { get; set; }
+        public string supportMemberDOB { get; set; }
+
+        public string supportCategory { get; set; }
+        public string supportMemberFirstName { get; set; }
+        public string supportMemberLastName { get; set; }
+    }
+
     public class DuplicateSupportsQueryResult
     {
-        public IEnumerable<Support> DuplicateSupports { get; set; }
+        public IEnumerable<DuplicateSupportResult> DuplicateSupports { get; set; }
     }
 
     /// <summary>

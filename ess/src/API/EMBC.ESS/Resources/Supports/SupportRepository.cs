@@ -12,6 +12,8 @@ using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
 using EMBC.ESS.Resources.Reports;
 using AutoMapper.Execution;
+using EMBC.ESS.Shared.Contracts.Events;
+using System.ComponentModel.DataAnnotations;
 
 namespace EMBC.ESS.Resources.Supports
 {
@@ -60,6 +62,16 @@ namespace EMBC.ESS.Resources.Supports
             return query switch
             {
                 SearchSupportsQuery q => await Handle(q, ct),
+
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
+        }
+
+        public async Task<DuplicateSupportQueryResult> DuplicateQuery(SupportQuery query)
+        {
+            var ct = CreateCancellationToken();
+            return query switch
+            {
                 PotentialDuplicateSupportsQuery q => await Handle(q, ct),
 
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
@@ -119,6 +131,7 @@ namespace EMBC.ESS.Resources.Supports
 
             // Create a new ConcurrentBag to store potential duplicates
             var potentialDuplicates = new ConcurrentBag<era_evacueesupport>();
+            var potentianExtendedDuplicateSupports = new ConcurrentBag<DuplicateSupportResult>();
             var lockObj = new object();
 
             //load the responder 
@@ -138,11 +151,10 @@ namespace EMBC.ESS.Resources.Supports
             {
                 // remove household members that are not in the support inside the temp support and cast tempSupport to a list in a warning
                 var tempSupport = support;
-                bool addSupport = false;
+                ConflictMessageScenario scenario = ConflictMessageScenario.ExactMatchSameFile;
                 // Iterate through each household member in the support
                 foreach (var supportMember in tempSupport.era_era_householdmember_era_evacueesupport.ToList())
                 {
-                    bool removeSupportMember = true;
                     // Iterate through each household member passed into the query
                     foreach (var member in householdMembers)
                     {
@@ -154,11 +166,8 @@ namespace EMBC.ESS.Resources.Supports
                         var combinedScore = (firstNameSimilarity + lastNameSimilarity) / 2;
                         if (combinedScore >= 0.7)
                         {
-                            removeSupportMember = false;
-                            addSupport = true;
                             lock (lockObj)
                             {
-                                ConflictMessageScenario scenario;
                                 if (query.FileId == support.era_EvacuationFileId.era_name)
                                 {
                                     scenario = ConflictMessageScenario.PartialMatchSameFile;
@@ -199,26 +208,44 @@ namespace EMBC.ESS.Resources.Supports
                                 };
 
                                 CreateConflictMessage(ctx, eraConflictMessage, ct);
+
+                                var supportTypeEnum = (SupportType)support.era_supporttype.Value;
+                                var supportTypeDisplayName = supportTypeEnum.GetType()
+                                    .GetField(supportTypeEnum.ToString())
+                                    ?.GetCustomAttributes(typeof(DisplayAttribute), false)
+                                    .Cast<DisplayAttribute>()
+                                    .FirstOrDefault()?.Name;
+
+                                if (string.IsNullOrEmpty(supportTypeDisplayName))
+                                {
+                                    supportTypeDisplayName = "None";
+                                }
+                               
+                                potentianExtendedDuplicateSupports.Add(
+                                new DuplicateSupportResult
+                                {
+                                    duplicateSupportScenario = (int)scenario,
+                                    essFileId = tempSupport.era_EvacuationFileId.era_name,
+                                    supportStartDate = tempSupport.era_validfrom.Value.UtcDateTime.ToPST().ToString("MM-dd-yyyy"),
+                                    supportEndDate = tempSupport.era_validto.Value.UtcDateTime.ToPST().ToString("MM-dd-yyyy"),
+
+                                    householdMemberFirstName = $"{member.era_firstname}",
+                                    householdMemberLastName = $"{member.era_lastname}",
+                                    supportCategory = supportTypeDisplayName.ToString(),
+                                    supportMemberFirstName = $"{supportMember.era_firstname}",
+                                    supportMemberLastName = $"{supportMember.era_lastname}",
+                                    supportMemberDOB = supportMember.era_dateofbirth.Value.ToString()
+                                });
+
                             }
                         }
                     }
-                    if (removeSupportMember)
-                    {
-                        // If no household member matched, remove the support member from the support
-                        tempSupport.era_era_householdmember_era_evacueesupport.Remove(supportMember);
-                    }
-                }
-                if (addSupport)
-                {
-                    // If any household member matched, add the tempSupport to the potential duplicates
-                    // tempSupport would contain only members who matched Duplicate members
-                    potentialDuplicates.Add(tempSupport);
                 }
             });
 
             await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
-            return new PotentialDuplicateSupportsQueryResult { DuplicateSupports = mapper.Map<IEnumerable<Support>>(potentialDuplicates) };
+            return new PotentialDuplicateSupportsQueryResult { DuplicateSupports = mapper.Map<IEnumerable<DuplicateSupportResult>>(potentianExtendedDuplicateSupports.OrderBy(t => t.duplicateSupportScenario))};
         }
 
         private async Task<SubmitSupportForApprovalCommandResult> Handle(SubmitSupportForApprovalCommand cmd, CancellationToken ct)
@@ -674,15 +701,34 @@ namespace EMBC.ESS.Resources.Supports
 
         private enum SupportType
         {
+            [Display(Name = "Food Groceries")]
             Food_Groceries = 174360000,
+
+            [Display(Name = "Food Restaurant")]
             Food_Restaurant = 174360001,
+
+            [Display(Name = "Lodging Hotel")]
             Lodging_Hotel = 174360002,
+
+            [Display(Name = "Lodging Billeting")]
             Lodging_Billeting = 174360003,
+
+            [Display(Name = "Lodging Group")]
             Lodging_Group = 174360004,
+
+            [Display(Name = "Incidentals")]
             Incidentals = 174360005,
+
+            [Display(Name = "Clothing")]
             Clothing = 174360006,
+
+            [Display(Name = "Transportation Taxi")]
             Transportation_Taxi = 174360007,
+
+            [Display(Name = "Transportation Other")]
             Transportation_Other = 174360008,
+
+            [Display(Name = "Lodging Shelter")]
             Lodging_Shelter = 174360009,
         }
     }

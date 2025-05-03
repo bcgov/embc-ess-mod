@@ -29,7 +29,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { first, firstValueFrom, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
 import {
   MatDatepickerInputEvent,
@@ -57,6 +57,8 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
+import { DuplicateSupportModel } from 'src/app/core/models/duplicate-support.model';
+import { ConflictMessageScenario } from 'src/app/core/api/models/conflict-message-scenario';
 
 @Component({
   selector: 'app-support-details',
@@ -653,6 +655,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         const potentialDuplicateSupports = await firstValueFrom(
           this.stepSupportsService.checkPossibleDuplicateSupports(duplicateSupportRequest)
         );
+
         // If there are potential duplicates, show a dialog to confirm
         if (potentialDuplicateSupports.length > 0) {
           const message: DialogContent = this.generateDuplicateSupportDialog(potentialDuplicateSupports, category);
@@ -682,18 +685,55 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateDuplicateSupportDialog(potentialDuplicateSupports: Support[], category: string): DialogContent {
+  generateDuplicateSupportDialog(potentialDuplicateSupports: DuplicateSupportModel[], category: string): DialogContent {
     const uniqueHouseholdMembers = new Map<string, string>();
-    potentialDuplicateSupports.forEach((s) => {
-      s.householdMembers.forEach((m) => {
-        uniqueHouseholdMembers.set(
-          m.firstName + m.lastName + m.dateOfBirth,
-          `<br><strong>Name:</strong> ${m.firstName} ${m.lastName} <br><strong>Date of Birth:</strong> ${m.dateOfBirth}`
-        );
-      });
-    });
+    const firstDuplicateSupport = potentialDuplicateSupports[0];
+    if (
+      firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchSameFile ||
+      firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchOnDifferentEssFile
+    ) {
+      let firstPiece = 'this';
+      let secondPiece = '';
+      if (firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchOnDifferentEssFile) {
+        firstPiece = 'a separate';
+        secondPiece = '<li>Verify if this evacuee has multiple active ESS files.</li><br/>';
+      }
+      return {
+        title: '<span class="bold field-error">Duplicate Support Detected</span>',
+        text:
+          'The support you are attempting to issue for ' +
+          firstDuplicateSupport.householdMemberFirstName +
+          ' ' +
+          firstDuplicateSupport.householdMemberLastName +
+          ' overlaps with a previously issued support on ' +
+          firstPiece +
+          ' ESS file. The following evacuee has already received a ' +
+          firstDuplicateSupport.supportCategory +
+          ' support during an overlapping time period.<br>' +
+          `<ul>
+      <br/>
+        <strong>Evacuee Details:</strong>
+      <br/>
+      <br/>
+        <li><strong>Name:</strong> ${firstDuplicateSupport.supportMemberFirstName} ${firstDuplicateSupport.supportMemberLastName}</li>
+      <br/>
+        <li><strong>Date of Birth:</strong> ${firstDuplicateSupport.supportMemberDOB}</li>
+      <br/>
+        <li><strong>ESS File Number:</strong> ${firstDuplicateSupport.essFileId}</li>
+      <br/>
+        <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] 00:00 - [${firstDuplicateSupport.supportEndDate}] 23:59</li>
+      </ul><br/><br/>
+      <strong>Next Steps:</strong><br/><br/>` +
+          secondPiece +
+          `<li>Review the previously issued support details above and adjust the support period you are currently trying to issue to ensure there is no overlap before proceeding.</li><br/>` +
+          `<li>If the support cannot be modified to avoid overlap, you will be unable to issue the duplicate support.</li>`,
+
+        confirmButton: 'Yes, Continue',
+        cancelButton: 'No, Cancel'
+      };
+    }
     return {
-      title: 'Possible Support Conflict',
+      title: '<span class="bold field-error">Potential Duplicate Support Detected</span>',
       text:
         'The support you are trying to add may have conflicts with previously issued supports. The following evacuees received a ' +
         category +
