@@ -9,4 +9,5 @@ export interface DuplicateSupportModel {
   supportCategory: string;
   supportMemberFirstName: string;
   supportMemberLastName: string;
+  householdMemberDOB: string;
 }

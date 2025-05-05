@@ -100,6 +100,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string supportCategory { get; set; }
         public string supportMemberFirstName { get; set; }
         public string supportMemberLastName { get; set; }
+        public string householdMemberDOB { get; set; }
     }
 
     public class DuplicateSupportsQueryResult

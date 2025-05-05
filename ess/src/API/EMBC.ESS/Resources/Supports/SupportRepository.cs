@@ -234,7 +234,9 @@ namespace EMBC.ESS.Resources.Supports
                                     supportCategory = supportTypeDisplayName.ToString(),
                                     supportMemberFirstName = $"{supportMember.era_firstname}",
                                     supportMemberLastName = $"{supportMember.era_lastname}",
-                                    supportMemberDOB = supportMember.era_dateofbirth.Value.ToString()
+                                    supportMemberDOB = supportMember.era_dateofbirth.Value.ToString(),
+                                    householdMemberDOB = member.era_dateofbirth.Value.ToString()
+
                                 });
 
                             }

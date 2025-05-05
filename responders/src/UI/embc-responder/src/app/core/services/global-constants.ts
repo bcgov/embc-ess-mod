@@ -86,6 +86,9 @@ export const radioButtonOptions = [
   { name: 'No', value: 'No', apiValue: false }
 ];
 
+export const confirmDuplicateSupportMessage =
+  'I have reviewed the evacuee details and confirm that they are not the same person';
+
 export const mealRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Meals</span></b>',
   text: `<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">\$${mealRate.breakfast.toFixed(
@@ -180,10 +183,9 @@ export const extendSupportMessage: DialogContent = {
 };
 
 export const duplicateSupportMessage: DialogContent = {
-  title: 'Possible Support Conflict',
-  text: '<p>There is already a support associated with this ESS File of the same support type with the same or overlapping support period. Do you wish to continue?</p>',
-  confirmButton: 'Yes, Continue',
-  cancelButton: 'No, Cancel'
+  title: 'Duplicate Support Detected',
+  text: '<p>The support you are attempting to issue overlaps with a previously issued support on this ESS file. The following evacuee has already received support during an overlapping time period.</p><br/><strong>Next Steps:</strong><br/><br/><li>Review the previously issued support details above and adjust the support period you are currently trying to issue to ensure there is no overlap before proceeding.</li><br/><li>If the support cannot be modified to avoid overlap, you will be unable to issue the duplicate support.</li>',
+  cancelButton: 'Edit Support'
 };
 
 export const needsShelterAllowanceMessage: DialogContent = {
