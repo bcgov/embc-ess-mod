@@ -33,6 +33,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SupportLimit } from 'src/app/core/api/models/support-limit';
 import { SupportsService } from 'src/app/core/api/services/supports.service';
+import { DuplicateSupportModel } from 'src/app/core/models/duplicate-support.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -170,7 +171,7 @@ export class StepSupportsService {
       );
   }
 
-  checkPossibleDuplicateSupports(supportDetails: any): Observable<Support[]> {
+  checkPossibleDuplicateSupports(supportDetails: any): Observable<DuplicateSupportModel[]> {
     return this.supportService
       .supportsGetDuplicateSupports({
         members: supportDetails.members,
@@ -181,7 +182,7 @@ export class StepSupportsService {
         issuedBy: this.userService?.currentProfile?.id
       })
       .pipe(
-        map((supports: Support[]) => {
+        map((supports: DuplicateSupportModel[]) => {
           return supports;
         })
       );

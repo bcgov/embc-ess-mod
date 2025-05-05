@@ -12,6 +12,8 @@ namespace EMBC.ESS.Resources.Supports
         public Task<ManageSupportCommandResult> Manage(ManageSupportCommand cmd);
 
         public Task<SupportQueryResult> Query(SupportQuery query);
+        public Task<DuplicateSupportQueryResult> DuplicateQuery(SupportQuery query);
+
     }
 
     public abstract class ManageSupportCommand
@@ -27,6 +29,10 @@ namespace EMBC.ESS.Resources.Supports
     }
 
     public abstract class SupportQueryResult
+    {
+    }
+
+    public abstract class DuplicateSupportQueryResult
     {
     }
 
@@ -128,9 +134,9 @@ namespace EMBC.ESS.Resources.Supports
 
     }
 
-    public class PotentialDuplicateSupportsQueryResult : SupportQueryResult
+    public class PotentialDuplicateSupportsQueryResult : DuplicateSupportQueryResult
     {
-        public IEnumerable<Support> DuplicateSupports { get; set; }
+        public IEnumerable<DuplicateSupportResult> DuplicateSupports { get; set; }
     }
 
     public abstract record Support
@@ -266,8 +272,8 @@ namespace EMBC.ESS.Resources.Supports
     public record ConflictMessage
     {
         public EssTask EssTask { get; set; }
-       // public EvacuationFile EvacuationFile { get; set; }
-       // public Reports.Evacuee Evacuee { get; set; }
+        // public EvacuationFile EvacuationFile { get; set; }
+        // public Reports.Evacuee Evacuee { get; set; }
         public string EvacueeName { get; set; }
         public string EvacueeDOB { get; set; }
         public Teams.TeamMember Responder { get; set; }
@@ -275,7 +281,7 @@ namespace EMBC.ESS.Resources.Supports
         //public EvacuationFile MatchedEvacuationFile { get; set; }
         public string MatchedName { get; set; }
         public string MatchedDOB { get; set; }
-     //   public decimal NameMatchScore { get; set; }
+        //   public decimal NameMatchScore { get; set; }
         public Reports.Support MatchedEvacueeSupport { get; set; }
     }
 
@@ -351,4 +357,5 @@ namespace EMBC.ESS.Resources.Supports
         internal const string FlagTypeId = "8f3487d4-b8ab-ec11-b831-00505683fbf4";
         public string DuplicatedSupportId { get; set; }
     }
+    
 }

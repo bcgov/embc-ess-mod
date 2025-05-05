@@ -430,7 +430,7 @@ public partial class EventsManager
 
     public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
     {
-        var supports = (PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new PotentialDuplicateSupportsQuery
+        var supports = (PotentialDuplicateSupportsQueryResult)await supportRepository.DuplicateQuery(new PotentialDuplicateSupportsQuery
         {
             Category = query.Category,
             FromDate = query.FromDate,
@@ -442,7 +442,7 @@ public partial class EventsManager
 
         return new DuplicateSupportsQueryResult
         {
-            DuplicateSupports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports.DuplicateSupports)
+            DuplicateSupports = mapper.Map<IEnumerable<DuplicateSupportResult>>(supports.DuplicateSupports)
         };
     }
 
