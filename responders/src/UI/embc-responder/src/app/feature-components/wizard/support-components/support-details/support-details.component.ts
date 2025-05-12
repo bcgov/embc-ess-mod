@@ -591,108 +591,77 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const thisSupport = this.supportDetailsForm.getRawValue();
     const from = moment(this.dateConversionService.createDateTimeString(thisSupport.fromDate, thisSupport.fromTime));
     const to = moment(this.dateConversionService.createDateTimeString(thisSupport.toDate, thisSupport.toTime));
-    const category: SupportCategory =
-      SupportCategory[this.stepSupportsService.supportTypeToAdd.value] ||
-      this.mapSubCategoryToCategory(SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value]);
     const members: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get('members').value.map((m) => m.id);
 
-    const conflictSupports = existingSupports.filter((s) => {
-      const sFrom = moment(s.from);
-      const sTo = moment(s.to);
-      return (
-        s.status !== SupportStatus.Void &&
-        s.category === category &&
-        ((sFrom.isSameOrAfter(from) && sFrom.isSameOrBefore(to)) ||
-          (sTo.isSameOrAfter(from) && sTo.isSameOrBefore(to)) ||
-          (sFrom.isSameOrBefore(from) && sTo.isSameOrAfter(to)))
-      );
-    });
+    const supportCategory =
+      SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] ||
+      SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
+    const duplicateSupportRequest = {
+      members,
+      toDate: to.toISOString(),
+      fromDate: from.toISOString(),
+      category: this.mapSupportTypeInverse(supportCategory),
+      fileId: this.evacueeSessionService?.evacFile?.id,
+      issuedBy: this.userService?.currentProfile?.userName
+    };
 
-    const hasConflict = conflictSupports.length > 0;
-
-    // Create duplicate support within the same ESS file conflict record
-    if (hasConflict) {
-      const createDuplicateSupportConflictRequest = {
-        members,
-        fileId: this.evacueeSessionService?.evacFile?.id,
-        issuedBy: this.userService?.currentProfile?.id,
-        conflictSupportId: conflictSupports[0].id
-      };
-
-      const conflictDetails = await firstValueFrom(
-        this.stepSupportsService.addDuplicateSupportConflicts(createDuplicateSupportConflictRequest)
+    try {
+      // Get potential duplicates based on fuzzy search from API
+      const potentialDuplicateSupports = await firstValueFrom(
+        this.stepSupportsService.checkPossibleDuplicateSupports(duplicateSupportRequest)
       );
 
-      this.dialog
-        .open(DialogComponent, {
-          data: {
-            component: InformationDialogComponent,
-            content: globalConst.duplicateSupportMessage
-          },
-          width: '720px'
-        })
-        .afterClosed()
-        .subscribe((event) => {
-          if (event === 'confirm') {
-            this.addDelivery();
-          }
-        });
-    } else {
-      const supportCategory =
-        SupportSubCategory[this.stepSupportsService.supportTypeToAdd.value] ||
-        SupportCategory[this.stepSupportsService.supportTypeToAdd.value];
-      const duplicateSupportRequest = {
-        members,
-        toDate: to.toISOString(),
-        fromDate: from.toISOString(),
-        category: this.mapSupportTypeInverse(supportCategory),
-        fileId: this.evacueeSessionService?.evacFile?.id,
-        issuedBy: this.userService?.currentProfile?.userName
-      };
-
-      try {
-        // Get potential duplicates based on fuzzy search from API
-        const potentialDuplicateSupports = await firstValueFrom(
-          this.stepSupportsService.checkPossibleDuplicateSupports(duplicateSupportRequest)
-        );
-
-        // If there are potential duplicates, show a dialog to confirm
-        if (potentialDuplicateSupports.length > 0) {
-          const message: DialogContent = this.generateDuplicateSupportDialog(potentialDuplicateSupports);
-          this.dialog
-            .open(DialogComponent, {
-              data: {
-                component: InformationDialogComponent,
-                content: message
-              },
-              width: '720px'
-            })
-            .afterClosed()
-            .subscribe((event) => {
-              if (event === 'confirm') {
-                // If confirmed, add the delivery
-                this.addDelivery();
-              }
-            });
-          // If there are no potential duplicates found, add the delivery
-        } else {
-          this.addDelivery();
-        }
-      } catch (error) {
-        console.error('Error fetching duplicate supports: ', error);
-        return;
+      // If there are potential duplicates, show a dialog to confirm
+      if (potentialDuplicateSupports.length > 0) {
+        const message: DialogContent = this.generateDuplicateSupportDialog(potentialDuplicateSupports);
+        this.dialog
+          .open(DialogComponent, {
+            data: {
+              component: InformationDialogComponent,
+              content: message
+            },
+            width: '720px'
+          })
+          .afterClosed()
+          .subscribe((event) => {
+            if (event === 'confirm') {
+              // If confirmed, add the delivery
+              this.addDelivery();
+            }
+          });
+        // If there are no potential duplicates found, add the delivery
+      } else {
+        this.addDelivery();
       }
+    } catch (error) {
+      console.error('Error fetching duplicate supports: ', error);
+      return;
     }
   }
 
   generateDuplicateSupportDialog(potentialDuplicateSupports: DuplicateSupportModel[]): DialogContent {
     const firstDuplicateSupport = potentialDuplicateSupports[0];
+    let allowDuplicateSupport = false;
+    let supportSubCategory = this.mapSupportType(Number(firstDuplicateSupport.supportSubCategory));
+
     if (
       firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchSameFile ||
       firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchOnDifferentEssFile
     ) {
       let firstPiece = 'this';
       let secondPiece = '';
+      let exactMatch = '';
+      if (firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchSameFile) {
+        if (
+          supportSubCategory === SupportSubCategory.Food_Groceries ||
+          supportSubCategory === SupportSubCategory.Food_Restaurant ||
+          supportSubCategory === SupportCategory.Incidentals
+        ) {
+          allowDuplicateSupport = true;
+          exactMatch = `<li><strong>If you wish to proceed and issue the support, you must choose from the following mandatory fields:</strong></li>`;
+        }
+      }
+
       if (firstDuplicateSupport.duplicateSupportScenario === ConflictMessageScenario.ExactMatchOnDifferentEssFile) {
         firstPiece = 'a separate';
         secondPiece = '<li>Verify if this evacuee has multiple active ESS files.</li>';
@@ -708,7 +677,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           firstPiece +
           ' ESS file. The following evacuee has already received a ' +
           firstDuplicateSupport.supportCategory +
-          ' support during an overlapping time period.<br>' +
+          ' support during an overlapping time period.' +
           `<br/>
         <strong>Evacuee Details:</strong>
       <br/><ul>
@@ -716,13 +685,16 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         <li><strong>Date of Birth:</strong> ${firstDuplicateSupport.supportMemberDOB}</li>
         <li><strong>ESS File Number:</strong> ${firstDuplicateSupport.essFileId}</li>
         <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] 00:00 - [${firstDuplicateSupport.supportEndDate}] 23:59</li>
-      </ul><br/>
+      </ul>
       <strong>Next Steps:</strong><br/>` +
           secondPiece +
           `<li>Review the previously issued support details above and adjust the support period you are currently trying to issue to ensure there is no overlap before proceeding.</li>` +
-          `<li>If the support cannot be modified to avoid overlap, you will be unable to issue the duplicate support.</li>`,
+          `<li>If the support cannot be modified to avoid overlap, you will be unable to issue the duplicate support.</li>` +
+          exactMatch,
 
-        cancelButton: 'Edit Support'
+        cancelButton: 'Edit Support',
+        checkboxLabelToConfirm: allowDuplicateSupport ? globalConst.confirmApprovedDuplicateSupportMessage : null,
+        confirmButton: allowDuplicateSupport ? 'Proceed with Issuance' : null
       };
     }
 
@@ -746,15 +718,14 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
           ') may conflict with a previously issued support on ' +
           firstPiece +
           ' ESS file. The evacuee details have minor discrepancies in name or date of birth, but there is a potential match.' +
-          `<br/><br/>
+          `<br/>
           <strong>Possible Match Details:</strong>
-          <br/>
           <ul>
         <li><strong>Name:</strong> ${firstDuplicateSupport.supportMemberFirstName} ${firstDuplicateSupport.supportMemberLastName}</li>
         <li><strong>Date of Birth:</strong> ${firstDuplicateSupport.supportMemberDOB}</li>
         <li><strong>ESS File Number:</strong> ${firstDuplicateSupport.essFileId}</li>
         <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] 00:00 - [${firstDuplicateSupport.supportEndDate}] 23:59</li>
-      </ul><br/>
+      </ul>
       <strong>Next Steps:</strong><br/>` +
           `<li>Review the evacuee's information to confirm their full legal name and date of birth for accuracy.</li>` +
           `<li>Verify the support details to determine if the evacuee has already received this support.</li>` +
