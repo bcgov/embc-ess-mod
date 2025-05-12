@@ -89,6 +89,9 @@ export const radioButtonOptions = [
 export const confirmDuplicateSupportMessage =
   'I have reviewed the evacuee details and confirm that they are not the same person';
 
+export const confirmApprovedDuplicateSupportMessage =
+  'I have reviewed and confirmed that this is an approved duplicate support';
+
 export const mealRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Meals</span></b>',
   text: `<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">\$${mealRate.breakfast.toFixed(

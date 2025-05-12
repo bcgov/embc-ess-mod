@@ -96,8 +96,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string householdMemberFirstName { get; set; }
         public string householdMemberLastName { get; set; }
         public string supportMemberDOB { get; set; }
-
         public string supportCategory { get; set; }
+        public string supportSubCategory { get; set; }
         public string supportMemberFirstName { get; set; }
         public string supportMemberLastName { get; set; }
         public string householdMemberDOB { get; set; }
