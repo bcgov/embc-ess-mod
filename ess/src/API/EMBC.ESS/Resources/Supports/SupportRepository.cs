@@ -97,6 +97,9 @@ namespace EMBC.ESS.Resources.Supports
                 throw new ArgumentException($"Invalid ToDate: {query.ToDate}");
             }
 
+            var toDateOffset = DateTime.SpecifyKind(toDate, DateTimeKind.Local).ToUniversalTime();
+            var fromDateOffset = DateTime.SpecifyKind(fromDate, DateTimeKind.Local).ToUniversalTime();
+
             List<Guid> memberGuids = new List<Guid>();
             foreach (var id in query.Members)
             {
@@ -126,7 +129,7 @@ namespace EMBC.ESS.Resources.Supports
                 .Expand(s => s.era_EvacuationFileId)
                 .Expand(s => s.era_Task)
                 .Expand(s => s.era_IssuedById)
-                .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDate:yyyy-MM-dd} and era_validto ge {fromDate:yyyy-MM-dd} and statuscode ne {(int)SupportStatus.Cancelled} and statuscode ne {(int)SupportStatus.Void}"))
+                .AddQueryOption("$filter", $"({supportTypesFilter}) and era_validfrom le {toDateOffset:yyyy-MM-ddTHH:mm:ss.fffZ} and era_validto ge {fromDateOffset:yyyy-MM-ddTHH:mm:ss.fffZ} and statuscode ne {(int)SupportStatus.Cancelled} and statuscode ne {(int)SupportStatus.Void}"))
                 .GetAllPagesAsync(ct)).ToList();
 
             // Create a new ConcurrentBag to store potential duplicates
@@ -228,11 +231,11 @@ namespace EMBC.ESS.Resources.Supports
                                     essFileId = tempSupport.era_EvacuationFileId.era_name,
                                     supportStartDate = tempSupport.era_validfrom.Value.UtcDateTime.ToPST().ToString("MM-dd-yyyy"),
                                     supportEndDate = tempSupport.era_validto.Value.UtcDateTime.ToPST().ToString("MM-dd-yyyy"),
-
+                                    supportStartTime = tempSupport.era_validfrom.Value.UtcDateTime.ToPST().ToString("hh:mm"),
+                                    supportEndTime = tempSupport.era_validto.Value.UtcDateTime.ToPST().ToString("hh:mm"),
                                     householdMemberFirstName = $"{member.era_firstname}",
                                     householdMemberLastName = $"{member.era_lastname}",
                                     supportCategory = supportTypeDisplayName.ToString(),
-
                                     supportSubCategory = support.era_supporttype.Value.ToString(),
                                     supportMemberFirstName = $"{supportMember.era_firstname}",
                                     supportMemberLastName = $"{supportMember.era_lastname}",

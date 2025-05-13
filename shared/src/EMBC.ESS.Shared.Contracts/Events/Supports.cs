@@ -92,6 +92,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string essFileId { get; set; }
         public string supportStartDate { get; set; }
         public string supportEndDate { get; set; }
+        public string supportStartTime { get; set; }
+        public string supportEndTime { get; set; }
         public int duplicateSupportScenario { get; set; }
         public string householdMemberFirstName { get; set; }
         public string householdMemberLastName { get; set; }
