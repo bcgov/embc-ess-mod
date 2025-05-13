@@ -3,6 +3,8 @@ export interface DuplicateSupportModel {
   essFileId: string;
   supportStartDate: string;
   supportEndDate: string;
+  supportStartTime: string;
+  supportEndTime: string;
   householdMemberFirstName: string;
   householdMemberLastName: string;
   supportMemberDOB: string;

@@ -684,7 +684,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         <li><strong>Name:</strong> ${firstDuplicateSupport.supportMemberFirstName} ${firstDuplicateSupport.supportMemberLastName}</li>
         <li><strong>Date of Birth:</strong> ${firstDuplicateSupport.supportMemberDOB}</li>
         <li><strong>ESS File Number:</strong> ${firstDuplicateSupport.essFileId}</li>
-        <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] 00:00 - [${firstDuplicateSupport.supportEndDate}] 23:59</li>
+        <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] ${firstDuplicateSupport.supportStartTime} - [${firstDuplicateSupport.supportEndDate}] ${firstDuplicateSupport.supportEndTime}</li>
       </ul>
       <strong>Next Steps:</strong><br/>` +
           secondPiece +
@@ -724,7 +724,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         <li><strong>Name:</strong> ${firstDuplicateSupport.supportMemberFirstName} ${firstDuplicateSupport.supportMemberLastName}</li>
         <li><strong>Date of Birth:</strong> ${firstDuplicateSupport.supportMemberDOB}</li>
         <li><strong>ESS File Number:</strong> ${firstDuplicateSupport.essFileId}</li>
-        <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] 00:00 - [${firstDuplicateSupport.supportEndDate}] 23:59</li>
+        <li><strong>Support Period:</strong> [Start Date ${firstDuplicateSupport.supportStartDate}] ${firstDuplicateSupport.supportStartTime} - [${firstDuplicateSupport.supportEndDate}] ${firstDuplicateSupport.supportEndTime}</li>
       </ul>
       <strong>Next Steps:</strong><br/>` +
           `<li>Review the evacuee's information to confirm their full legal name and date of birth for accuracy.</li>` +
