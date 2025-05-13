@@ -26,8 +26,6 @@ export interface WizardProperties {
   profileTabs?: Array<TabModel>;
   essFileTabs?: Array<TabModel>;
   wizardMenu?: WizardSidenavModel[];
-  checkboxLabelToConfirm?: null | string;
-  isCheckboxChecked?: boolean;
 }
 
 export enum WizardExitMap {
