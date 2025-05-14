@@ -33,7 +33,6 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SupportLimit } from 'src/app/core/api/models/support-limit';
 import { SupportsService } from 'src/app/core/api/services/supports.service';
-import { DuplicateSupportModel } from 'src/app/core/models/duplicate-support.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -171,30 +170,19 @@ export class StepSupportsService {
       );
   }
 
-  checkPossibleDuplicateSupports(supportDetails: any): Observable<DuplicateSupportModel[]> {
+  checkPossibleDuplicateSupports(supportDetails: any): Observable<Support[]> {
     return this.supportService
       .supportsGetDuplicateSupports({
         members: supportDetails.members,
         toDate: supportDetails.toDate,
         fromDate: supportDetails.fromDate,
-        category: supportDetails.category,
-        fileId: supportDetails.fileId,
-        issuedBy: this.userService?.currentProfile?.id
+        category: supportDetails.category
       })
       .pipe(
-        map((supports: DuplicateSupportModel[]) => {
+        map((supports: Support[]) => {
           return supports;
         })
       );
-  }
-
-  addDuplicateSupportConflicts(conflictRequest: any): Observable<boolean> {
-    return this.supportService.supportAddDuplicateSupportConflict({
-      members: conflictRequest.members,
-      fileId: conflictRequest.fileId,
-      issuedBy: conflictRequest.issuedBy,
-      conflictSupportId: conflictRequest.conflictSupportId
-    });
   }
 
   public openDataLossPopup(content: DialogContent): MatDialogRef<DialogComponent, string> {

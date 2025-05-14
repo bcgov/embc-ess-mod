@@ -1,7 +1,4 @@
-﻿using EMBC.ESS.Resources.Reports;
-using EMBC.ESS.Resources.Tasks;
-using EMBC.ESS.Shared.Contracts.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,8 +9,6 @@ namespace EMBC.ESS.Resources.Supports
         public Task<ManageSupportCommandResult> Manage(ManageSupportCommand cmd);
 
         public Task<SupportQueryResult> Query(SupportQuery query);
-        public Task<DuplicateSupportQueryResult> DuplicateQuery(SupportQuery query);
-
     }
 
     public abstract class ManageSupportCommand
@@ -29,10 +24,6 @@ namespace EMBC.ESS.Resources.Supports
     }
 
     public abstract class SupportQueryResult
-    {
-    }
-
-    public abstract class DuplicateSupportQueryResult
     {
     }
 
@@ -80,21 +71,6 @@ namespace EMBC.ESS.Resources.Supports
     public class SubmitSupportForReviewCommandResult : ManageSupportCommandResult
     { }
 
-
-    public class CreateSupportConflictCommand : ManageSupportCommand
-    {
-        public ConflictMessage ConflictMessage { get; set; }
-        public string SupportId { get; set; }
-        public string FileId { get; set; }
-        public Guid IssuedBy { get; set; }
-    }
-
-    public class CreateSupportConflictCommandResult : ManageSupportCommandResult
-    {
-        public Guid Id { get; set; }
-    }
-
-
     public class SupportStatusTransition
     {
         public static SupportStatusTransition VoidSupport(string supportId, SupportVoidReason reason) => new SupportStatusTransition
@@ -129,14 +105,11 @@ namespace EMBC.ESS.Resources.Supports
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string[] Members { get; set; }
-        public string FileId { get; set; }
-        public Guid? IssuedBy { get; set; }
-
     }
 
-    public class PotentialDuplicateSupportsQueryResult : DuplicateSupportQueryResult
+    public class PotentialDuplicateSupportsQueryResult : SupportQueryResult
     {
-        public IEnumerable<DuplicateSupportResult> DuplicateSupports { get; set; }
+        public IEnumerable<Support> DuplicateSupports { get; set; }
     }
 
     public abstract record Support
@@ -267,25 +240,6 @@ namespace EMBC.ESS.Resources.Supports
         public string TransportMode { get; set; }
     }
 
-
-
-    public record ConflictMessage
-    {
-        public EssTask EssTask { get; set; }
-        // public EvacuationFile EvacuationFile { get; set; }
-        // public Reports.Evacuee Evacuee { get; set; }
-        public string EvacueeName { get; set; }
-        public string EvacueeDOB { get; set; }
-        public Teams.TeamMember Responder { get; set; }
-        public ConflictMessageScenario Scenario { get; set; }
-        //public EvacuationFile MatchedEvacuationFile { get; set; }
-        public string MatchedName { get; set; }
-        public string MatchedDOB { get; set; }
-        //   public decimal NameMatchScore { get; set; }
-        public Reports.Support MatchedEvacueeSupport { get; set; }
-    }
-
-
 #pragma warning disable CA1008 // Enums should have zero value
 
     public enum SupportStatus
@@ -357,5 +311,4 @@ namespace EMBC.ESS.Resources.Supports
         internal const string FlagTypeId = "8f3487d4-b8ab-ec11-b831-00505683fbf4";
         public string DuplicatedSupportId { get; set; }
     }
-    
 }
