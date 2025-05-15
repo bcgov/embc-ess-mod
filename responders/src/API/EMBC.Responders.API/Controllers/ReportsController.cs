@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Shared.Contracts.Reports;
 using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
@@ -95,5 +96,26 @@ public class ReportsController : ControllerBase
         {
             return errorParser.Parse(e);
         }
+    }
+
+    /// <summary>
+    /// Create Duplicate Support Conflict record
+    /// </summary>
+    /// <param name="request">request</param>
+    /// <returns>success of saving</returns>
+    [HttpPost("create-duplicate-support-conflict")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<bool>> CreateDuplicateSupportConflict([FromBody] CreateDuplicateSupportConflictRequest request)
+    {
+        var response = await messagingClient.Send(new CreateSupportConflictCommandRequest
+        {
+            Members = request.Members,
+            SupportId = request.ConflictSupportId,
+            FileId = request.FileId,
+            IssuedBy = request.IssuedBy
+        });
+
+        return Ok(true);
     }
 }

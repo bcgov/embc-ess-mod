@@ -5,6 +5,8 @@ export interface DialogContent {
   confirmButton?: null | string;
   cancelButton?: null | string;
   exitLink?: null | string;
+  checkboxLabelToConfirm?: null | string;
+  isCheckboxChecked?: boolean;
 }
 
 export interface DashboardBanner {
