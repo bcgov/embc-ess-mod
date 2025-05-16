@@ -18,6 +18,7 @@ using EMBC.ESS.Shared.Contracts.Events.SelfServe;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Hosting;
+using EMBC.ESS.Resources.Reports;
 
 namespace EMBC.ESS.Managers.Events;
 
@@ -141,6 +142,27 @@ public partial class EventsManager
             Items = [new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }]
         })).Ids.SingleOrDefault();
         return id;
+    }
+
+    public async Task<string> Handle(CreateSupportConflictCommandRequest cmd)
+    {
+        if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+        if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
+        if (string.IsNullOrEmpty(cmd.IssuedBy)) throw new ArgumentNullException("IssuedBy is required");
+     
+        var guid = await supportRepository.Manage(new CreateSupportConflictCommand
+        {
+            ConflictMessage = new Resources.Supports.ConflictMessage
+            {
+                Scenario = ConflictMessageScenario.ExactMatchSameFile,
+              //  NameMatchScore = 1
+            },
+            SupportId = cmd.SupportId,
+            FileId = cmd.FileId,
+            IssuedBy = Guid.Parse(cmd.IssuedBy)
+        });
+
+        return guid.ToString();
     }
 
     public async Task<PrintRequestQueryResult> Handle(PrintRequestQuery query)
@@ -408,16 +430,19 @@ public partial class EventsManager
 
     public async Task<DuplicateSupportsQueryResult> Handle(DuplicateSupportsQuery query)
     {
-        var supports = ((Resources.Supports.PotentialDuplicateSupportsQueryResult)await supportRepository.Query(new Resources.Supports.PotentialDuplicateSupportsQuery { 
+        var supports = (PotentialDuplicateSupportsQueryResult)await supportRepository.DuplicateQuery(new PotentialDuplicateSupportsQuery
+        {
             Category = query.Category,
             FromDate = query.FromDate,
             ToDate = query.ToDate,
-            Members = query.Members
-         }));
+            Members = query.Members,
+            FileId = query.FileId,
+            IssuedBy = string.IsNullOrEmpty(query.IssuedBy) ? (Guid?)null : Guid.Parse(query.IssuedBy)
+        });
 
         return new DuplicateSupportsQueryResult
         {
-            DuplicateSupports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports.DuplicateSupports)
+            DuplicateSupports = mapper.Map<IEnumerable<DuplicateSupportResult>>(supports.DuplicateSupports)
         };
     }
 
