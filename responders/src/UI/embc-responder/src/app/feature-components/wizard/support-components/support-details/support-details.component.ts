@@ -809,7 +809,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     } else {
       return this.stepSupportsService?.supportDetails?.fromTime && !this.cloneFlag
         ? this.stepSupportsService?.supportDetails?.fromTime
-        : this.setDefaultTimes();
+        : this.setDefaultTimes(false);
     }
   }
 
@@ -840,7 +840,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     return largestTo;
   }
 
-  private setDefaultTimes() {
+  private setDefaultTimes(isToTime = true) {
     let existingSupports = this.existingSupports.filter(
       (x) => x.status !== SupportStatus.Cancelled.toString() && x.status !== SupportStatus.Void.toString()
     );
@@ -860,10 +860,21 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     const currentDateTime = new Date();
     currentDateTime.setSeconds(0);
 
+    // Add number of the days to compare with taskTo
+    let numberofDays = 0;
+    if (isToTime)
+      numberofDays = this.stepSupportsService?.supportDetails?.noOfDays
+        ? this.stepSupportsService?.supportDetails?.noOfDays
+        : 1;
+
     // Compare and get the later time between maxToDatePlusOneMinute and currentTime
     let finalTime = maxToDatePlusOneMinute > currentDateTime ? maxToDatePlusOneMinute : currentDateTime;
     const taskTo = moment(this.evacueeSessionService?.evacFile?.task?.to);
-    if (moment(finalTime).isAfter(taskTo)) {
+    let taskToDate = new Date(taskTo.toDate());
+
+    const updatedFinalTime = new Date(finalTime);
+    updatedFinalTime.setDate(updatedFinalTime.getDate() + numberofDays);
+    if (moment(updatedFinalTime).isAfter(taskTo)) {
       finalTime = taskTo.toDate();
       finalTime.setSeconds(0);
     }

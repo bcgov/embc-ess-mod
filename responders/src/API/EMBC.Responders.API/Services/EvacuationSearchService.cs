@@ -6,6 +6,7 @@ using AutoMapper;
 using EMBC.Responders.API.Controllers;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Bcpg;
 
 namespace EMBC.Responders.API.Services
 {
@@ -116,7 +117,10 @@ namespace EMBC.Responders.API.Services
             {
                 if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
                 mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile);
+                mappedFile.Task.To = DateTime.SpecifyKind(mappedFile.Task.To.Value, DateTimeKind.Utc).ToLocalTime();
+                mappedFile.Task.From = DateTime.SpecifyKind(mappedFile.Task.From.Value, DateTimeKind.Utc).ToLocalTime();
             }
+
             return mappedFile;
         }
 
@@ -150,6 +154,8 @@ namespace EMBC.Responders.API.Services
             if (mappedFile != null && mappedFile.Task != null)
             {
                 var task = (await messagingClient.Send(new ESS.Shared.Contracts.Events.TasksSearchQuery { TaskId = mappedFile.Task.TaskNumber })).Items.SingleOrDefault();
+                task.StartDate = DateTime.SpecifyKind(task.StartDate, DateTimeKind.Utc).ToLocalTime();
+                task.EndDate = DateTime.SpecifyKind(task.EndDate, DateTimeKind.Utc).ToLocalTime();
                 mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile, task);
             }
 
