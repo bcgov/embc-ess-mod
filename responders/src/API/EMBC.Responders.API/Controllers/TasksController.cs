@@ -43,6 +43,8 @@ namespace EMBC.Responders.API.Controllers
             var reply = await messagingClient.Send(new TasksSearchQuery { TaskId = taskId });
             var task = reply.Items.SingleOrDefault();
             if (task == null) return NotFound(taskId);
+            task.StartDate = DateTime.SpecifyKind(task.StartDate, DateTimeKind.Utc).ToLocalTime();
+            task.EndDate = DateTime.SpecifyKind(task.EndDate, DateTimeKind.Utc).ToLocalTime();
             var mappedTask = mapper.Map<ESSTask>(task);
             mappedTask.Workflows = GetTaskWorkflows(task);
             mappedTask.SupportLimits = GetTaskSupportLimits(task);
@@ -71,8 +73,8 @@ namespace EMBC.Responders.API.Controllers
             var supportLimits = incidentTask.SupportLimits.Select(sl => new SupportLimits
             {
                 SupportType = sl.SupportType,
-                SupportLimitStartDate = sl.SupportLimitStartDate,
-                SupportLimitEndDate = sl.SupportLimitEndDate,
+                SupportLimitStartDate = DateTime.SpecifyKind(sl.SupportLimitStartDate, DateTimeKind.Local).ToUniversalTime(),
+                SupportLimitEndDate = DateTime.SpecifyKind(sl.SupportLimitEndDate, DateTimeKind.Local).ToUniversalTime(),
                 ExtensionAvailable = sl.ExtensionAvailable
             });
 
