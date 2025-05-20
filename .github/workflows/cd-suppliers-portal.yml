@@ -1,0 +1,42 @@
+name: cd-suppliers-portal
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Git branch to build'
+        required: true
+        default: 'master'
+
+jobs:
+  build-api:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: suppliers/src/API
+      IMAGE_FILE: suppliers/src/API/Dockerfile
+      IMAGE_NAME: suppliers-portal-api
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+      BRANCH: ${{ github.event.inputs.branch }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  
+  build-ui:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: suppliers/src/UI
+      IMAGE_FILE: suppliers/src/UI/Dockerfile
+      IMAGE_NAME: suppliers-portal-ui
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+      BRANCH: ${{ github.event.inputs.branch }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
