@@ -2,7 +2,6 @@
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Resources.Tasks;
 
@@ -35,8 +34,8 @@ public class Mappings : Profile
         CreateMap<era_supportlimit, SupportConfiguration>()
             .ForMember(d => d.SupportType, opts => opts.MapFrom(s => s.era_supporttypeoption))
             .ForMember(d => d.ExtensionAvailable, opts => opts.MapFrom(s => s.era_extensionavailable))
-            .ForMember(d => d.SupportLimitStartDate, opts => opts.MapFrom(s => s.era_supportlimitstartdate.HasValue ? s.era_supportlimitstartdate.Value.UtcDateTime.ToPST() : (DateTime?)null))
-            .ForMember(d => d.SupportLimitEndDate, opts => opts.MapFrom(s => s.era_supportlimitenddate.HasValue ? s.era_supportlimitenddate.Value.UtcDateTime.ToPST() : (DateTime?)null))
+            .ForMember(d => d.SupportLimitStartDate, opts => opts.MapFrom(s => s.era_supportlimitstartdate.HasValue ? s.era_supportlimitstartdate.Value.UtcDateTime : (DateTime?)null))
+            .ForMember(d => d.SupportLimitEndDate, opts => opts.MapFrom(s => s.era_supportlimitenddate.HasValue ? s.era_supportlimitenddate.Value.UtcDateTime : (DateTime?)null))
         ;
 
         CreateMap<EMBC.ESS.Resources.Tasks.SupportConfiguration, EMBC.ESS.Shared.Contracts.Events.SupportLimits>()
