@@ -17,6 +17,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+
+      # Debugging step to check login and image pull
+      - name: Debugging Docker login and image pull
+        run: |
+          echo "Logging into Docker registry..."
+          docker login ${{ env.IMAGE_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "Pulling the image..."
+          docker pull ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_CURRENT_ENV_TAG }}
+
       
       - name: Promote registrants-portal-ui to test
         uses: tinact/docker.image-retag@master
