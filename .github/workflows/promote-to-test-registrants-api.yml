@@ -17,7 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          ref: 'master'
+                
       - name: Promote registrants-portal-api to test
         uses: tinact/docker.image-retag@master
         with:
