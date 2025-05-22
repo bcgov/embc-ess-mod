@@ -1,0 +1,29 @@
+name: promote-to-prod-oauth-server
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: oauth-server
+  IMAGE_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+  IMAGE_CURRENT_ENV_TAG: test
+  IMAGE_PROMOTE_ENV_TAG: prod
+  IMAGE_PROMOTE_ENV_BACKUP_TAG: prod-backup
+
+jobs:
+  promote-oauth-server-prod:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'bcgov'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Promote oauth-server to prod
+        uses: tinact/docker.image-retag@master
+        with:
+          image_name: ${{ env.IMAGE_NAME }}
+          image_old_tag: ${{ env.IMAGE_CURRENT_ENV_TAG }}
+          image_new_tag: ${{ env.IMAGE_PROMOTE_ENV_TAG }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+          registry_username: ${{ secrets.DOCKER_USERNAME }}
+          registry_password: ${{ secrets.DOCKER_PASSWORD }}

@@ -1,0 +1,29 @@
+name: promote-to-training-registrants-ui
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: registrants-portal-ui
+  IMAGE_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+  IMAGE_CURRENT_ENV_TAG: test
+  IMAGE_PROMOTE_ENV_TAG: training
+  IMAGE_PROMOTE_ENV_BACKUP_TAG: training-backup
+
+jobs:
+  promote-registrants-portal-ui-training:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'bcgov'
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Promote registrants-portal-ui to training
+        uses: tinact/docker.image-retag@master
+        with:
+          image_name: ${{ env.IMAGE_NAME }}
+          image_old_tag: ${{ env.IMAGE_CURRENT_ENV_TAG }}
+          image_new_tag: ${{ env.IMAGE_PROMOTE_ENV_TAG }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+          registry_username: ${{ secrets.DOCKER_USERNAME }}
+          registry_password: ${{ secrets.DOCKER_PASSWORD }}

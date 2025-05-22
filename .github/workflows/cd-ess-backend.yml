@@ -1,0 +1,27 @@
+name: cd-ess-backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Git branch to build'
+        required: true
+        default: 'master'
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: ess/src/API
+      BUILD_CONTEXT: "shared=./shared/src"
+      IMAGE_FILE: ess/src/API/Dockerfile
+      IMAGE_NAME: ess-backend
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+      BRANCH: ${{ github.event.inputs.branch }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

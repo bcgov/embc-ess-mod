@@ -1,0 +1,43 @@
+name: cd-registrant-portal
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Git branch to build'
+        required: true
+        default: 'master'
+
+jobs:
+  build-api:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: registrants/src/API
+      BUILD_CONTEXT: "shared=./shared/src"
+      IMAGE_FILE: registrants/src/API/Dockerfile
+      IMAGE_NAME: registrants-portal-api
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+      BRANCH: ${{ github.event.inputs.branch }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  build-ui:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: registrants/src/UI
+      IMAGE_FILE: registrants/src/UI/Dockerfile
+      IMAGE_NAME: registrants-portal-ui
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+      BRANCH: ${{ github.event.inputs.branch }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
