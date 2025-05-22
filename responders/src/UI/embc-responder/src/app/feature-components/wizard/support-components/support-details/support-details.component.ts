@@ -526,7 +526,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       // Format time as HH:mm (no seconds)
       const pad = (n: number) => n.toString().padStart(2, '0');
       const timeString = `${pad(finalEnd.getHours())}:${pad(finalEnd.getMinutes())}`;
-
       this.supportDetailsForm.get('toDate').patchValue(new Date(finalEnd));
       this.supportDetailsForm.get('toTime').patchValue(timeString);
 
