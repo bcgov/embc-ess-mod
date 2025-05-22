@@ -1,61 +1,61 @@
-import { DatePipe, NgStyle, UpperCasePipe, TitleCasePipe, CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, DatePipe, NgStyle, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
+  ValidationErrors,
   ValidatorFn,
-  ValidationErrors
+  Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { StepSupportsService } from '../../step-supports/step-supports.service';
-import * as globalConst from '../../../../core/services/global-constants';
-import * as moment from 'moment';
-import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
-import { SupportDetailsService } from './support-details.service';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { Support, SupportCategory, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { ReferralCreationService } from '../../step-supports/referral-creation.service';
-import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
-import {
-  MatDatepickerInputEvent,
-  MatDatepickerInput,
-  MatDatepickerToggle,
-  MatDatepicker
-} from '@angular/material/datepicker';
 import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatOption } from '@angular/material/core';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerInputEvent,
+  MatDatepickerToggle
+} from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { MatError, MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { Support, SupportCategory, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';
+import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import * as globalConst from '../../../../core/services/global-constants';
+import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
+import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
+import { ReferralCreationService } from '../../step-supports/referral-creation.service';
+import { StepSupportsService } from '../../step-supports/step-supports.service';
 import { ClothingComponent } from './details-type/clothing/clothing.component';
-import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
-import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
-import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
-import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
-import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
-import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
 import { FoodGroceriesComponent } from './details-type/food-groceries/food-groceries.component';
 import { FoodMealsComponent } from './details-type/food-meals/food-meals.component';
+import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
+import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
+import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
+import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
+import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
 import { ShelterAllowanceGroupComponent } from './details-type/shelter-allowance/shelter-allowance.component';
-import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
-import { AppLoaderComponent } from '../../../../shared/components/app-loader/app-loader.component';
-import { MatInput } from '@angular/material/input';
-import { MatFormField, MatPrefix, MatError, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
+import { SupportDetailsService } from './support-details.service';
 
 @Component({
   selector: 'app-support-details',
@@ -501,6 +501,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
       const fromTime = this.supportDetailsForm.get('fromTime').value;
+      // Combine date and time for accurate calculation
+      const [hours, minutes] = fromTime.split(':').map(Number);
+      date.setHours(hours, minutes, 0, 0);
       const afterMidnightBeforeSix = this.isTimeBetween(fromTime, '00:00:00', '06:00:00');
       let totalDays = days;
       if (
@@ -511,8 +514,22 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       ) {
         totalDays -= 1;
       }
-      const finalValue = this.datePipe.transform(date.setDate(date.getDate() + totalDays), 'MM/dd/yyyy');
-      this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
+      // Calculate intended end date/time
+      const intendedEnd = new Date(date);
+      intendedEnd.setDate(intendedEnd.getDate() + totalDays);
+
+      // Get task end date/time
+      const taskEnd = new Date(this.evacueeSessionService?.evacFile?.task?.to);
+
+      // If intended end is after task end, use task end
+      const finalEnd = intendedEnd > taskEnd ? taskEnd : intendedEnd;
+      // Format time as HH:mm (no seconds)
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const timeString = `${pad(finalEnd.getHours())}:${pad(finalEnd.getMinutes())}`;
+      this.supportDetailsForm.get('toDate').patchValue(new Date(finalEnd));
+      this.supportDetailsForm.get('toTime').patchValue(timeString);
+
+      this.cdr.detectChanges();
     }
   }
 
