@@ -630,38 +630,6 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
         fromDate: from.toISOString(),
         category: this.mapSupportTypeInverse(supportCategory)
       };
-
-      try {
-        // Get potential duplicates based on fuzzy search from API
-        const potentialDuplicateSupports = await firstValueFrom(
-          this.stepSupportsService.checkPossibleDuplicateSupports(duplicateSupportRequest)
-        );
-        // If there are potential duplicates, show a dialog to confirm
-        if (potentialDuplicateSupports.length > 0) {
-          const message: DialogContent = this.generateDuplicateSupportDialog(potentialDuplicateSupports, category);
-          this.dialog
-            .open(DialogComponent, {
-              data: {
-                component: InformationDialogComponent,
-                content: message
-              },
-              width: '720px'
-            })
-            .afterClosed()
-            .subscribe((event) => {
-              if (event === 'confirm') {
-                // If confirmed, add the delivery
-                this.addDelivery();
-              }
-            });
-          // If there are no potential duplicates found, add the delivery
-        } else {
-          this.addDelivery();
-        }
-      } catch (error) {
-        console.error('Error fetching duplicate supports: ', error);
-        return;
-      }
     }
   }
 
